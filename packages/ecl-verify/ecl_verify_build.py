@@ -20,8 +20,20 @@ import json
 import shutil
 from pathlib import Path
 
+from setuptools import build_meta as _build_meta
 from setuptools.command.build_py import build_py
 from setuptools.errors import FileError
+
+# PEP 517 requires a backend named alongside backend-path to live in that path.
+# Keep this module importable for the cmdclass and delegate the standard hooks.
+build_wheel = _build_meta.build_wheel
+build_sdist = _build_meta.build_sdist
+get_requires_for_build_wheel = _build_meta.get_requires_for_build_wheel
+get_requires_for_build_sdist = _build_meta.get_requires_for_build_sdist
+prepare_metadata_for_build_wheel = _build_meta.prepare_metadata_for_build_wheel
+build_editable = _build_meta.build_editable
+get_requires_for_build_editable = _build_meta.get_requires_for_build_editable
+prepare_metadata_for_build_editable = _build_meta.prepare_metadata_for_build_editable
 
 PROJECT = Path(__file__).resolve().parent
 REPOSITORY = PROJECT.parent.parent
