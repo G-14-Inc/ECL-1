@@ -1,7 +1,7 @@
 [build-system]
 requires = ["setuptools==83.0.0"]
-build-backend = "setuptools.build_meta"
-# The build step that bundles the data (ecl_verify_build.py) is imported from this folder.
+build-backend = "ecl_verify_build"
+# The local backend delegates to setuptools and supplies the data-copy build step.
 backend-path = ["."]
 
 [project]
