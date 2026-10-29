@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/registry/2",
+  "title": "ECL Registry v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "registry_id",
+    "registry_version",
+    "status",
+    "change_control",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_registry_v2"
+    },
+    "registry_id": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "frozen",
+        "superseded"
+      ]
+    },
+    "change_control": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entries": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "owner_class",
+        "introduced_in",
+        "compatibility",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:ecl\\.[a-z0-9][a-z0-9._-]*\\.v[0-9]+|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._~/-]+)$"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "deprecated",
+            "prohibited",
+            "superseded",
+            "reserved"
+          ]
+        },
+        "owner_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "introduced_in": {
+          "type": "string",
+          "minLength": 1
+        },
+        "compatibility": {
+          "enum": [
+            "additive",
+            "additive-critical",
+            "behavioral",
+            "breaking",
+            "not-applicable"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "superseded_by": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

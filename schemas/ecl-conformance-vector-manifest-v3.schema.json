@@ -1,0 +1,1011 @@
+{
+  "$id": "https://externalcontrollayer.ai/ns/schema/conformance-vector-manifest/3",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidate_version": {
+      "const": "1.0"
+    },
+    "export_keys_path": {
+      "description": "The published test export keys of a suite (OTEL-EVIDENCE-EXPORT-1, OE1-010): an ecl_otel_export_keys_v1 file, with which the binding stage compares keyed digests.",
+      "pattern": "^conformance/suites/[a-z0-9._/-]+$",
+      "type": "string"
+    },
+    "schema_shadowed_rules": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "justification": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "rule": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "vector": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "rule",
+          "vector",
+          "justification"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "ecl_conformance_vector_manifest_v3"
+    },
+    "suite": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "trust_policy_path": {
+      "pattern": "^conformance/suites/[a-z0-9._/-]+$",
+      "type": "string"
+    },
+    "vectors": {
+      "items": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "stage": {
+                  "enum": [
+                    "protocol",
+                    "semantic",
+                    "safe-state-profile",
+                    "trust-policy",
+                    "envelope",
+                    "binding",
+                    "document"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "schema"
+              ]
+            }
+          },
+          {
+            "else": {
+              "not": {
+                "required": [
+                  "expected_primary_id"
+                ]
+              },
+              "properties": {
+                "expected_secondary_ids": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "expected": {
+                  "const": "fail"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "expected_primary_id"
+              ]
+            }
+          },
+          {
+            "else": {
+              "not": {
+                "required": [
+                  "expected_canonical_sha256"
+                ]
+              }
+            },
+            "if": {
+              "properties": {
+                "stage": {
+                  "const": "canonical"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "expected_canonical_sha256"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "expected": {
+                  "const": "fail"
+                },
+                "stage": {
+                  "const": "canonical"
+                }
+              },
+              "required": [
+                "expected",
+                "stage"
+              ]
+            },
+            "then": {
+              "properties": {
+                "expected_canonical_sha256": {
+                  "const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "expected": {
+                  "const": "pass"
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "negates"
+                ]
+              }
+            }
+          },
+          {
+            "else": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "evaluated_at"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "expected_verdict"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "trust_policy_path"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "trust_policy_history_paths"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "require_trusted_time"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "register_path"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "accept_current_trust_failure"
+                    ]
+                  }
+                ]
+              }
+            },
+            "if": {
+              "properties": {
+                "stage": {
+                  "enum": [
+                    "evidence-bundle",
+                    "package"
+                  ]
+                }
+              },
+              "required": [
+                "stage"
+              ]
+            },
+            "then": {
+              "required": [
+                "evaluated_at",
+                "expected_verdict",
+                "trust_policy_path",
+                "trust_policy_history_paths"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "stage": {
+                  "const": "evidence-bundle"
+                }
+              },
+              "required": [
+                "stage"
+              ]
+            },
+            "then": {
+              "required": [
+                "schema"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "stage": {
+                  "const": "package"
+                }
+              },
+              "required": [
+                "stage"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "schema"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "stage": {
+                  "const": "evidence-bundle"
+                }
+              },
+              "required": [
+                "stage"
+              ]
+            },
+            "else": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "expected_scope"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "expected_effects"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "expected_verdict": {
+                  "const": "invalid"
+                }
+              },
+              "required": [
+                "expected_verdict"
+              ]
+            },
+            "then": {
+              "properties": {
+                "expected_effects": {
+                  "items": {
+                    "properties": {
+                      "level": {
+                        "not": {
+                          "const": "corroborated"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "not": {
+                "properties": {
+                  "stage": {
+                    "const": "evidence-bundle"
+                  },
+                  "expected_verdict": {
+                    "const": "incomplete"
+                  }
+                },
+                "required": [
+                  "stage",
+                  "expected_verdict"
+                ]
+              }
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "expected_unresolved_predecessor_ids"
+                ]
+              }
+            }
+          }
+        ],
+        "properties": {
+          "accept_current_trust_failure": {
+            "description": "An evidence-bundle or package vector whose caller explicitly accepts current trust failures for the run (EBMP2-060). The acceptance changes a current-trust-failed verdict to verified and no other verdict.",
+            "type": "boolean"
+          },
+          "covers": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "evaluated_at": {
+            "description": "The evaluation time of an evidence-bundle or package vector: RFC 3339 UTC with 0, 3 or 6 fractional digits.",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{3}|\\.[0-9]{6})?Z$",
+            "type": "string"
+          },
+          "expected": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "expected_canonical_sha256": {
+            "description": "For a canonical vector that passes, the lowercase hexadecimal SHA-256 of the RFC 8785 canonical bytes of its value. A canonical vector that fails has no canonical bytes and carries the SHA-256 of zero bytes; a runner compares this digest only when canonicalization succeeds.",
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "expected_effects": {
+            "description": "For an evidence-bundle vector, the evidence level that EBMP2-061 requires for the terminal effect of each listed action: every reported level of that action's terminal effects equals it. On a row whose verdict is invalid only a level other than corroborated may be named, since an invalid report establishes neither envelope-signatures nor causal-completeness, which corroborated requires.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "action_id",
+                "level"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "level": {
+                  "enum": [
+                    "none",
+                    "issuer-asserted",
+                    "corroborated"
+                  ]
+                }
+              }
+            }
+          },
+          "expected_primary_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "expected_scope": {
+            "description": "For an evidence-bundle vector, the scope that EBMP2-076 requires with its verdict: the items established and the items not established, each in the order of the scope table, and the reason that the table names for an item not established. An item is in at most one list. A runner compares both lists, in order, and the reasons exactly; the order within a list is checked only by that comparison.",
+            "type": "object",
+            "required": [
+              "established",
+              "not_established",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "established": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "envelope-signatures",
+                    "current-trust",
+                    "trusted-time",
+                    "object-rules",
+                    "decision-basis-recorded",
+                    "decision-basis-register",
+                    "bindings",
+                    "release-within-authority",
+                    "causal-completeness",
+                    "prerelease-obligations-discharge-recorded",
+                    "prerelease-obligations-proofs-verified",
+                    "prerelease-obligations-met",
+                    "post-release-obligations-met",
+                    "recorded-times-true",
+                    "effects-occurred",
+                    "deployment-assessed",
+                    "statements-true"
+                  ]
+                }
+              },
+              "not_established": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "envelope-signatures",
+                    "current-trust",
+                    "trusted-time",
+                    "object-rules",
+                    "decision-basis-recorded",
+                    "decision-basis-register",
+                    "bindings",
+                    "release-within-authority",
+                    "causal-completeness",
+                    "prerelease-obligations-discharge-recorded",
+                    "prerelease-obligations-proofs-verified",
+                    "prerelease-obligations-met",
+                    "post-release-obligations-met",
+                    "recorded-times-true",
+                    "effects-occurred",
+                    "deployment-assessed",
+                    "statements-true"
+                  ]
+                }
+              },
+              "reasons": {
+                "type": "object",
+                "propertyNames": {
+                  "enum": [
+                    "envelope-signatures",
+                    "current-trust",
+                    "trusted-time",
+                    "object-rules",
+                    "decision-basis-recorded",
+                    "decision-basis-register",
+                    "bindings",
+                    "release-within-authority",
+                    "causal-completeness",
+                    "prerelease-obligations-discharge-recorded",
+                    "prerelease-obligations-proofs-verified",
+                    "prerelease-obligations-met",
+                    "post-release-obligations-met",
+                    "recorded-times-true",
+                    "effects-occurred",
+                    "deployment-assessed",
+                    "statements-true"
+                  ]
+                },
+                "additionalProperties": {
+                  "enum": [
+                    "no-release-recorded",
+                    "proof-not-ecl-object",
+                    "issuer-not-named"
+                  ]
+                }
+              }
+            },
+            "allOf": [
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "envelope-signatures"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "envelope-signatures"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "current-trust"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "current-trust"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "trusted-time"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "trusted-time"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "object-rules"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "object-rules"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "decision-basis-recorded"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "decision-basis-recorded"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "decision-basis-register"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "decision-basis-register"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "bindings"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "bindings"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "release-within-authority"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "release-within-authority"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "causal-completeness"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "causal-completeness"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "prerelease-obligations-discharge-recorded"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "prerelease-obligations-discharge-recorded"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "prerelease-obligations-proofs-verified"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "prerelease-obligations-proofs-verified"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "prerelease-obligations-met"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "prerelease-obligations-met"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "post-release-obligations-met"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "post-release-obligations-met"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "recorded-times-true"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "recorded-times-true"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "effects-occurred"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "effects-occurred"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "deployment-assessed"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "deployment-assessed"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "statements-true"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "statements-true"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "expected_secondary_ids": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "expected_unresolved_predecessor_ids": {
+            "description": "For an evidence-bundle vector whose verdict is incomplete, the identifiers that EBMP2-076 requires the report to list in unresolved_predecessor_ids: the predecessors that the verifier could not resolve, sorted and without repetition here. The text fixes no order, so a runner compares them as a set. An empty list states that none is unresolved.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "expected_verdict": {
+            "description": "The one verdict that EBMP2-060 requires for an evidence-bundle vector, and IE1-022 for a package vector.",
+            "enum": [
+              "verified",
+              "invalid",
+              "incomplete",
+              "current-trust-failed"
+            ]
+          },
+          "id": {
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "negates": {
+            "description": "The requirements this failing vector demonstrates the runner enforces; each is also in requirement_ids.",
+            "items": {
+              "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$",
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "path": {
+            "pattern": "^conformance/(vectors|suites)/[a-z0-9._/-]+$",
+            "type": "string"
+          },
+          "register_path": {
+            "description": "The Consequential Action Register against which an evidence-bundle or package vector checks each decision basis (DCMP2-053).",
+            "pattern": "^conformance/suites/[a-z0-9._/-]+$",
+            "type": "string"
+          },
+          "require_trusted_time": {
+            "description": "An evidence-bundle or package vector verified under a profile that requires trusted time (IE1-035).",
+            "type": "boolean"
+          },
+          "requirement_ids": {
+            "items": {
+              "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$",
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "schema": {
+            "type": "string"
+          },
+          "source": {
+            "additionalProperties": false,
+            "properties": {
+              "base_vector": {
+                "type": "string"
+              },
+              "generator": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "authored",
+                  "mutation"
+                ]
+              },
+              "mutation": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "generator"
+            ],
+            "type": "object"
+          },
+          "stage": {
+            "description": "The evaluation stage. `document` validates a claim or assessment document (an action register, conformance claim, assessment package, mapping packet, deployment profile, evidence lifecycle policy, offline verification package or work intent) against the schema the vector names. `package` verifies an offline package, an `ecl.zip.store.v1` archive rather than a JSON value, and the evidence bundle it carries under the caller's trust policy (IE1-021, IE1-022). conformance/README.md states the input, steps and output of each stage.",
+            "enum": [
+              "strict-json",
+              "protocol",
+              "semantic",
+              "bundle",
+              "safe-state-profile",
+              "trust-policy",
+              "canonical",
+              "envelope",
+              "evidence-bundle",
+              "binding",
+              "document",
+              "package"
+            ]
+          },
+          "strict_json_limits": {
+            "additionalProperties": false,
+            "description": "The declared limits (IE1-028) under which the Parse step reads this vector's artifact as strict JSON: its encoded bytes, its nesting depth counted from 0 for the top-level value, and its number of values (IE1-037, checks 1 and 3). Without it, an implementation applies its own declared limits, which no other vector comes near. Each limit is an exact positive integer within the ceiling that IE1-028 gives it: 2,147,483,647 bytes, 4,096 levels of nesting and 100,000,000 values.",
+            "properties": {
+              "max_bytes": {
+                "minimum": 1,
+                "type": "integer",
+                "maximum": 2147483647
+              },
+              "max_depth": {
+                "minimum": 1,
+                "type": "integer",
+                "maximum": 4096
+              },
+              "max_nodes": {
+                "minimum": 1,
+                "type": "integer",
+                "maximum": 100000000
+              }
+            },
+            "required": [
+              "max_bytes",
+              "max_depth",
+              "max_nodes"
+            ],
+            "type": "object"
+          },
+          "trust_policy_history_paths": {
+            "description": "Earlier versions of the same trust policy, supplied by the caller.",
+            "items": {
+              "pattern": "^conformance/suites/[a-z0-9._/-]+$",
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "trust_policy_path": {
+            "description": "The caller's current trust policy for an evidence-bundle or package vector.",
+            "pattern": "^conformance/suites/[a-z0-9._/-]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "stage",
+          "expected",
+          "requirement_ids",
+          "source",
+          "expected_secondary_ids",
+          "covers"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "suite",
+    "candidate_version",
+    "vectors"
+  ],
+  "title": "ECL Conformance Vector Manifest v3",
+  "type": "object"
+}

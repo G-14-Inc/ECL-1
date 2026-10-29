@@ -1,0 +1,696 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+  "title": "ECL Deployment Profile v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "profile_version",
+    "profile_digest",
+    "system_of_interest",
+    "claim_level",
+    "model",
+    "delivery_surfaces",
+    "release_path",
+    "dependencies",
+    "timing_case",
+    "fallback",
+    "evidence_custody",
+    "topology_controls"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_deployment_profile_v1"
+    },
+    "profile_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "profile_version": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+    },
+    "profile_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "system_of_interest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    },
+    "claim_level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "model": {
+      "enum": [
+        "centralized-distributed-enforcement",
+        "federated-multi-domain",
+        "sovereign-self-managed",
+        "offline-edge",
+        "air-gapped-segmented"
+      ]
+    },
+    "delivery_surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "local_gate",
+          "hosted_control_plane",
+          "self_managed_control_plane",
+          "offline_verifier",
+          "air_gap_transfer_station"
+        ]
+      },
+      "contains": {
+        "const": "local_gate"
+      }
+    },
+    "release_path": {
+      "type": "object",
+      "required": [
+        "enforcement_location",
+        "remote_dependency_in_hot_path",
+        "signed_local_or_cached_state",
+        "decision_timeout_milliseconds",
+        "network_loss_disposition"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "enforcement_location": {
+          "enum": [
+            "in_process",
+            "same_host_sidecar",
+            "local_network_appliance"
+          ]
+        },
+        "remote_dependency_in_hot_path": {
+          "const": false
+        },
+        "signed_local_or_cached_state": {
+          "const": true
+        },
+        "decision_timeout_milliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "network_loss_disposition": {
+          "enum": [
+            "bounded_degraded_then_restricted",
+            "bounded_degraded_then_emergency_halt",
+            "immediate_restricted",
+            "immediate_emergency_halt"
+          ]
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "timing_case": {
+      "$ref": "#/$defs/timingCase"
+    },
+    "fallback": {
+      "$ref": "#/$defs/fallback"
+    },
+    "evidence_custody": {
+      "$ref": "#/$defs/evidenceCustody"
+    },
+    "topology_controls": {
+      "$ref": "#/$defs/topologyControls"
+    },
+    "sector_profile_references": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 8192
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "centralized-distributed-enforcement"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "delivery_surfaces": {
+            "contains": {
+              "const": "hosted_control_plane"
+            }
+          },
+          "topology_controls": {
+            "required": [
+              "centralized"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "federated-multi-domain"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "topology_controls": {
+            "required": [
+              "federated"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "sovereign-self-managed"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "delivery_surfaces": {
+            "contains": {
+              "const": "self_managed_control_plane"
+            }
+          },
+          "topology_controls": {
+            "required": [
+              "sovereign"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "offline-edge"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "delivery_surfaces": {
+            "contains": {
+              "const": "offline_verifier"
+            }
+          },
+          "topology_controls": {
+            "required": [
+              "offline"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "air-gapped-segmented"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "delivery_surfaces": {
+            "contains": {
+              "const": "air_gap_transfer_station"
+            }
+          },
+          "topology_controls": {
+            "required": [
+              "air_gapped"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "dependency": {
+      "type": "object",
+      "required": [
+        "dependency_id",
+        "class",
+        "control_state_staleness_seconds",
+        "integrity_required",
+        "failure_disposition"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "dependency_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "class": {
+          "enum": [
+            "local_hot_path",
+            "signed_cached",
+            "asynchronous_export",
+            "advisory"
+          ]
+        },
+        "control_state_staleness_seconds": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+        },
+        "integrity_required": {
+          "const": true
+        },
+        "failure_disposition": {
+          "enum": [
+            "degraded",
+            "restricted",
+            "quarantine",
+            "emergency_halt"
+          ]
+        }
+      }
+    },
+    "timingCase": {
+      "type": "object",
+      "required": [
+        "uses_default_baseline",
+        "connected_revocation_seconds",
+        "offline_staleness_seconds",
+        "evidence_export_seconds",
+        "trusted_time_or_secure_monotonic",
+        "measurement_plan"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "uses_default_baseline": {
+          "type": "boolean"
+        },
+        "connected_revocation_seconds": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+        },
+        "offline_staleness_seconds": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+        },
+        "evidence_export_seconds": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+        },
+        "federated_exchange_seconds": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+        },
+        "trusted_time_or_secure_monotonic": {
+          "type": "boolean"
+        },
+        "measurement_plan": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "variance_rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "control_assumptions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "residual_risk": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "assessor_deviation_approval": {
+          "description": "The assessor's recorded approval of a value less strict than the default for the claim level (ECL1N-0098).",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "uses_default_baseline": {
+                "const": false
+              }
+            },
+            "required": [
+              "uses_default_baseline"
+            ]
+          },
+          "then": {
+            "required": [
+              "variance_rationale",
+              "control_assumptions",
+              "residual_risk"
+            ]
+          }
+        }
+      ]
+    },
+    "fallback": {
+      "type": "object",
+      "required": [
+        "degraded",
+        "restricted",
+        "emergency_halt",
+        "precedence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "degraded": {
+          "$ref": "#/$defs/degradedMode"
+        },
+        "restricted": {
+          "$ref": "#/$defs/restrictedMode"
+        },
+        "emergency_halt": {
+          "$ref": "#/$defs/emergencyMode"
+        },
+        "precedence": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "emergency_halt"
+            },
+            {
+              "const": "restricted"
+            },
+            {
+              "const": "degraded"
+            },
+            {
+              "const": "ordinary"
+            }
+          ],
+          "items": false,
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    },
+    "degradedMode": {
+      "type": "object",
+      "required": [
+        "entry_conditions",
+        "signed_cached_state_required",
+        "bounded_actions",
+        "expires_to"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entry_conditions": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "signed_cached_state_required": {
+          "const": true
+        },
+        "bounded_actions": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "expires_to": {
+          "enum": [
+            "restricted",
+            "emergency_halt"
+          ]
+        }
+      }
+    },
+    "restrictedMode": {
+      "type": "object",
+      "required": [
+        "entry_conditions",
+        "allowed_actions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entry_conditions": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "allowed_actions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "diagnose",
+              "recover",
+              "contain",
+              "safe_shutdown"
+            ]
+          }
+        }
+      }
+    },
+    "emergencyMode": {
+      "type": "object",
+      "required": [
+        "entry_conditions",
+        "release_allowed",
+        "separately_authenticated"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entry_conditions": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "release_allowed": {
+          "const": false
+        },
+        "separately_authenticated": {
+          "const": true
+        }
+      }
+    },
+    "evidenceCustody": {
+      "type": "object",
+      "required": [
+        "local_append_only_buffer",
+        "export_integrity",
+        "retention_profile",
+        "independent_verification_path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "local_append_only_buffer": {
+          "const": true
+        },
+        "export_integrity": {
+          "const": true
+        },
+        "retention_profile": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "independent_verification_path": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "transfer_custody": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      }
+    },
+    "topologyControls": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "centralized": {
+          "type": "object",
+          "required": [
+            "low_latency_policy_distribution",
+            "central_audit",
+            "rapid_revocation"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "low_latency_policy_distribution": {
+              "const": true
+            },
+            "central_audit": {
+              "const": true
+            },
+            "rapid_revocation": {
+              "const": true
+            }
+          }
+        },
+        "federated": {
+          "type": "object",
+          "required": [
+            "trust_bundle_exchange",
+            "delegation_semantics",
+            "cross_domain_verification",
+            "authority_context_fields"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "trust_bundle_exchange": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "delegation_semantics": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "cross_domain_verification": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "authority_context_fields": {
+              "$ref": "#/$defs/federatedFields"
+            }
+          }
+        },
+        "sovereign": {
+          "type": "object",
+          "required": [
+            "local_policy_control",
+            "local_key_control",
+            "local_evidence_control",
+            "residency_boundary"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "local_policy_control": {
+              "const": true
+            },
+            "local_key_control": {
+              "const": true
+            },
+            "local_evidence_control": {
+              "const": true
+            },
+            "residency_boundary": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            }
+          }
+        },
+        "offline": {
+          "type": "object",
+          "required": [
+            "policy_cache_staleness_seconds",
+            "trust_cache_staleness_seconds",
+            "stale_transition",
+            "reconnect_reconciliation"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "policy_cache_staleness_seconds": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+            },
+            "trust_cache_staleness_seconds": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+            },
+            "stale_transition": {
+              "enum": [
+                "restricted",
+                "emergency_halt",
+                "quarantine"
+              ]
+            },
+            "reconnect_reconciliation": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            }
+          }
+        },
+        "air_gapped": {
+          "type": "object",
+          "required": [
+            "update_media_integrity",
+            "export_integrity",
+            "emergency_policy_dual_control",
+            "disconnected_revocation_workflow",
+            "disconnected_incident_workflow"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "update_media_integrity": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "export_integrity": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "emergency_policy_dual_control": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "disconnected_revocation_workflow": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            },
+            "disconnected_incident_workflow": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            }
+          }
+        }
+      }
+    },
+    "federatedFields": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "trust_domain",
+          "issuer_or_trust_bundle",
+          "decision_contract_version",
+          "root_trace_id",
+          "actor",
+          "subject",
+          "authorization_or_capability",
+          "resource_scope",
+          "expiry",
+          "policy_reference",
+          "evidence_profile",
+          "unique_token_id",
+          "delegation_depth"
+        ]
+      }
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048
+      }
+    }
+  }
+}

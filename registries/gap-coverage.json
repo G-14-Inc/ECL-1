@@ -1,0 +1,514 @@
+{
+  "schema_version": "ecl_gap_coverage_v1",
+  "classification": {
+    "name": "Control Gap Classification",
+    "version": "0.2",
+    "url": "https://externalcontrollayer.ai/classification",
+    "licensor": "\u00a9 2026 G-14, Inc.",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "record": {
+    "name": "Control Gap Record",
+    "version": "0.2",
+    "url": "https://externalcontrollayer.ai",
+    "entry_url": "https://externalcontrollayer.ai/record-{n}",
+    "licensor": "\u00a9 2026 G-14, Inc.",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "9c98a90cd1f88798e6c6d0a050634f48db879a535b044e4c6d97deed539c3796",
+    "entries": {
+      "1": "Knight Capital, 2012",
+      "2": "Michigan MiDAS, 2013–2015",
+      "3": "Tesla Autopilot, 2016",
+      "4": "Robodebt, Australia, 2016–2019",
+      "5": "Uber ATG, Tempe, 2018",
+      "6": "Boeing 737 MAX, 2018–2019",
+      "7": "Rite Aid, 2012–2020",
+      "8": "Detroit Police, 2020",
+      "9": "Zillow Offers, 2021",
+      "10": "Air Canada, 2022–2024",
+      "11": "Mata v. Avianca, 2023",
+      "12": "NEDA's Tessa, 2023",
+      "13": "Cruise, San Francisco, 2023",
+      "14": "Chevrolet dealer, 2023",
+      "15": "NYC MyCity, 2024–2026",
+      "16": "Whisper in clinics, 2024",
+      "17": "OpenAI Operator, 2025",
+      "18": "Cursor, 2025",
+      "19": "xAI Grok, 2025",
+      "20": "Deloitte Australia, 2025",
+      "21": "Amazon Q Developer, 2025",
+      "22": "Replit, 2025",
+      "23": "postmark-mcp, 2025",
+      "24": "Google Antigravity, 2025",
+      "25": "OpenClaw, 2026",
+      "26": "Irregular's test environments, 2026",
+      "27": "OpenAI–Hugging Face, 2026",
+      "28": "UK AISI cyber range, 2026",
+      "29": "OpenAI DNS escape, 2026"
+    }
+  },
+  "gaps": [
+    {
+      "id": "G1",
+      "label": "Instruction-only limit",
+      "adapted": false,
+      "definition": "The rule that should have stopped the action existed only as an instruction, prompt, or trained behavior of the AI system, so it held only as long as the system followed it.",
+      "requirements": [
+        "ECL1N-0033",
+        "ECL1N-0036",
+        "ECL1N-0046",
+        "ECL1N-0179",
+        "ECL1N-0180",
+        "FR-001"
+      ],
+      "profile_requirements": [
+        "AB1-010",
+        "AC1-002"
+      ],
+      "checklist": [
+        "IA-01",
+        "EA-22",
+        "EA-04",
+        "EA-25"
+      ],
+      "machine_checks": [
+        "ecl.rule.decision-basis-one-way.v1",
+        "ecl.rule.non-admit-prohibits-authority.v1"
+      ],
+      "open": "Whether the enforcement point is in fact out of the AI system's reach is a property of the deployment. An assessor establishes it from the enumerated effect paths and interception tests (ECL1N-0039 with checklist item EA-25 at every level) and, from L2, the assessor's own negative tests (FR-101 with checklist item EA-04); no single artifact can show it.",
+      "record_entries": [
+        14,
+        17,
+        22,
+        25,
+        28
+      ]
+    },
+    {
+      "id": "G2",
+      "label": "Direct access",
+      "adapted": false,
+      "definition": "The system held the credentials or connection to carry out the action itself, so nothing outside it stood between its decision and the effect.",
+      "requirements": [
+        "ECL1N-0008",
+        "ECL1N-0033",
+        "ECL1N-0039",
+        "ECL1N-0141",
+        "FR-101",
+        "FR-106"
+      ],
+      "profile_requirements": [
+        "AB1-012",
+        "MG1-009",
+        "OA1-004"
+      ],
+      "checklist": [
+        "BC-01",
+        "EA-04",
+        "EA-07",
+        "EA-25"
+      ],
+      "machine_checks": [],
+      "open": "Whether the AI system holds a credential that reaches a target directly is a property of the deployment that no message shows. At L1 the register is reconciled with the reachable capability inventory (ECL1N-0008), and each point of effect is called directly with every credential the AI system holds or can obtain through its tools (checklist item EA-25); the assessor's own negative tests and keeping secrets out of the AI system's context start at L2 (FR-101, FR-106).",
+      "record_entries": [
+        1,
+        17,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "id": "G3",
+      "label": "Unchecked statement",
+      "adapted": false,
+      "definition": "Words the system produced reached customers or the public in the organization's name, on matters people rely on such as prices, policy, law, or health, and nothing checked them first.",
+      "requirements": [
+        "ECL1N-0017",
+        "ECL1N-0163"
+      ],
+      "profile_requirements": [],
+      "checklist": [
+        "BC-03"
+      ],
+      "machine_checks": [],
+      "open": "ECL-1 requires that such a statement be compared with approved reference content, or approved by a person, before it is sent. The accuracy and coverage of the approved content remain the organization's responsibility, and no machine check of the comparison is defined.",
+      "record_entries": [
+        10,
+        12,
+        14,
+        15,
+        18
+      ]
+    },
+    {
+      "id": "G4",
+      "label": "Boundary not enforced",
+      "adapted": false,
+      "definition": "The action reached systems, data, or operating conditions outside those the system was built or approved for, and nothing enforced that boundary when it acted.",
+      "requirements": [
+        "ECL1N-0007",
+        "ECL1N-0008",
+        "ECL1N-0043",
+        "ECL1N-0186",
+        "ECL1N-0187",
+        "ECL1N-0188",
+        "FR-003",
+        "FR-006",
+        "FR-007"
+      ],
+      "profile_requirements": [
+        "AC1-003",
+        "MG1-001",
+        "MG1-002",
+        "MG1-005",
+        "MG1-007",
+        "OA1-005"
+      ],
+      "checklist": [
+        "BC-01",
+        "BC-02",
+        "EA-01",
+        "EA-27"
+      ],
+      "machine_checks": [],
+      "open": "Inside the claim boundary, actions are mediated and fail closed. A path that the claim excludes is disclosed in the Negative Boundary Annex rather than blocked (ECL1N-0010, ECL1N-0038), so the boundary a reader relies on is the declared one. An enforcement point establishes the authority's validity and use, the control state and every before-release obligation at the release boundary itself (ECL1N-0186 to ECL1N-0188); where the effect takes place later and elsewhere, that check does not show that the authority was still valid when the effect occurred.",
+      "record_entries": [
+        3,
+        22,
+        24,
+        26,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "id": "G5",
+      "label": "Blind to the total",
+      "adapted": true,
+      "definition": "Each action was allowed one at a time, and nothing tracked what the actions added up to in volume, rate, exposure, or repetition until the total did the harm.",
+      "requirements": [
+        "ECL1N-0172",
+        "ECL1N-0173",
+        "DCMP2-052"
+      ],
+      "profile_requirements": [],
+      "checklist": [
+        "EA-13",
+        "EA-14"
+      ],
+      "machine_checks": [
+        "ecl.rule.coupling-results-permit-admit.v1"
+      ],
+      "open": "At L1 the register states each action class's largest hourly and daily aggregate effect, and no budget is required. Budgets that count every session, workflow and instance start at L2, for the consequence classes that ECL1N-0173 names. A single message shows only that an admit carried an exhausted budget; counting across sessions is checked by an assessor.",
+      "record_entries": [
+        1,
+        6,
+        7,
+        9,
+        25,
+        27,
+        28
+      ]
+    },
+    {
+      "id": "G6",
+      "label": "No independent evidence",
+      "adapted": true,
+      "definition": "The action, or the approval of it, was based on the system's own output or on a single unverified input, and evidence that would have shown the error was never gathered, was thrown away, or was available and not consulted.",
+      "requirements": [
+        "ECL1N-0164",
+        "ECL1N-0165",
+        "ECL1N-0178",
+        "ECL1N-0179",
+        "ECL1N-0180",
+        "ECL1N-0181",
+        "ECL1N-0187",
+        "DCMP2-052",
+        "DCMP2-053"
+      ],
+      "profile_requirements": [
+        "AB1-003",
+        "AB1-006",
+        "AB1-013",
+        "AC1-004",
+        "AC1-012"
+      ],
+      "checklist": [
+        "EA-15",
+        "EA-16",
+        "EA-21",
+        "EA-22",
+        "EA-23",
+        "EA-27"
+      ],
+      "machine_checks": [
+        "ecl.rule.decision-basis-one-way.v1",
+        "ecl.rule.coupling-results-permit-admit.v1"
+      ],
+      "open": "At every level, no admit rests on the AI system's own output or on a model's judgment. An input from a system of record, an independent state witness or an authenticated external party is required from L2, for the consequence classes that ECL1N-0165 names. The machine check reads the recorded basis of a decision; an assessor checks the record against the register (EA-23). A state witness that a decision defers to enforcement is satisfied only by proof that the enforcement point checks before the release, never by the signed admit alone (ECL1N-0187).",
+      "record_entries": [
+        2,
+        4,
+        6,
+        8,
+        11,
+        16,
+        20
+      ]
+    },
+    {
+      "id": "G7",
+      "label": "Review in name only",
+      "adapted": false,
+      "definition": "A person was supposed to catch the error but lacked the information, time, training, or practical means to do it, so the review did not work as a check.",
+      "requirements": [
+        "ECL1N-0174",
+        "ECL1N-0175",
+        "ECL1N-0176",
+        "EBMP2-063"
+      ],
+      "profile_requirements": [],
+      "checklist": [
+        "EA-17",
+        "EA-18",
+        "EA-19"
+      ],
+      "machine_checks": [
+        "ecl.rule.approval-review-time-respected.v1"
+      ],
+      "open": "The text fixes what the approver is shown, a minimum review time from L2, and monitoring of approval rates and review times from L3. Whether an approver understood what was shown cannot be read from a record.",
+      "record_entries": [
+        3,
+        5,
+        6,
+        7,
+        8,
+        11,
+        16,
+        20,
+        27
+      ]
+    },
+    {
+      "id": "G8",
+      "label": "No human decision",
+      "adapted": true,
+      "definition": "A decision that needed a person went through without one; the need can come from law, from policy, from the product's own design, or from the user's explicit instruction.",
+      "requirements": [
+        "ECL1N-0007",
+        "ECL1N-0177",
+        "FR-109"
+      ],
+      "profile_requirements": [
+        "AB1-005",
+        "AC1-007"
+      ],
+      "checklist": [
+        "EA-20",
+        "EA-08"
+      ],
+      "machine_checks": [],
+      "open": "An action is held until a person approves it when the register declares an approval threshold for its class. Which actions need a person, under law, policy or the user's instruction, is for the claimant to declare in the register.",
+      "record_entries": [
+        2,
+        4,
+        17,
+        22,
+        25
+      ]
+    },
+    {
+      "id": "G9",
+      "label": "Warning with no authority",
+      "adapted": false,
+      "definition": "Signs that the action was wrong existed before or during the harm, but none of them could stop or hold the action, and nothing required anyone to act on them.",
+      "requirements": [
+        "ECL1N-0052",
+        "ECL1N-0167",
+        "ECL1N-0168",
+        "FR-111"
+      ],
+      "profile_requirements": [],
+      "checklist": [
+        "VF-06",
+        "VF-07",
+        "VF-02"
+      ],
+      "machine_checks": [],
+      "open": "At L1 each declared detection has a declared response, which may still wait for a person. From L2 the response takes effect at the Decision Layer without a person's action, within the declared bound. The connection between detections and decisions is checked by negative tests, not by one artifact.",
+      "record_entries": [
+        1,
+        4,
+        5,
+        7,
+        8,
+        11,
+        15,
+        27,
+        28
+      ]
+    },
+    {
+      "id": "G10",
+      "label": "No independent stop",
+      "adapted": true,
+      "definition": "Nothing could stop the system in time without relying on the system itself.",
+      "requirements": [
+        "FR-004",
+        "FR-303",
+        "DCMP2-025",
+        "TS1-035"
+      ],
+      "profile_requirements": [],
+      "checklist": [
+        "EA-02",
+        "IA-07"
+      ],
+      "machine_checks": [
+        "ecl.rule.emergency-control-plane-required.v1"
+      ],
+      "open": "Every level requires a separately authenticated emergency control plane, and the claim declares its halt acknowledgment bound. ECL-1 sets no production value for that bound.",
+      "record_entries": [
+        1,
+        22,
+        25
+      ]
+    },
+    {
+      "id": "G11",
+      "label": "Safeguard off",
+      "adapted": false,
+      "definition": "A check that could have caught the action existed but was switched off, bypassed, set to approve automatically, or not working when the action happened.",
+      "requirements": [
+        "ECL1N-0166",
+        "ECL1N-0169",
+        "EBMP2-064"
+      ],
+      "profile_requirements": [
+        "AC1-006"
+      ],
+      "checklist": [
+        "VF-08",
+        "VF-09"
+      ],
+      "machine_checks": [
+        "ecl.rule.control-change-approved-and-bounded.v1"
+      ],
+      "open": "A recorded change that switches a control off is checked by a rule. Detecting a control that is off without any recorded change is required from L2 and is shown by negative tests.",
+      "record_entries": [
+        5,
+        6,
+        21,
+        24,
+        26,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "id": "G12",
+      "label": "Unreviewed change",
+      "adapted": true,
+      "definition": "The change that introduced the harmful behavior went live without independent review; the change can be code, a prompt, a model, a package, a configuration, or a procedure.",
+      "requirements": [
+        "ECL1N-0170",
+        "ECL1N-0171",
+        "EBMP2-064",
+        "XR1-023"
+      ],
+      "profile_requirements": [
+        "MG1-003",
+        "MG1-008"
+      ],
+      "checklist": [
+        "VF-10",
+        "VF-11"
+      ],
+      "machine_checks": [
+        "ecl.rule.control-change-approved-and-bounded.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "open": "Changes to the policy, the register, the reachable tool manifest, enforcement configuration, the trust policy and detection responses are reviewed at every level. Changes to the AI system's model and instructions are recorded by version and digest from L2 but not reviewed under ECL-1, whose scope is the control layer (Section 2.10).",
+      "record_entries": [
+        1,
+        6,
+        12,
+        19,
+        21,
+        23,
+        26,
+        28
+      ]
+    },
+    {
+      "id": "G13",
+      "label": "Self-reported record",
+      "adapted": false,
+      "definition": "After the action, the only account of what the system did, or of what could be undone, came from the system itself or from the party that ran it, and that account was wrong or incomplete.",
+      "requirements": [
+        "ECL1N-0181",
+        "FR-108",
+        "EBMP2-057",
+        "EBMP2-058",
+        "EBMP2-059",
+        "EBMP2-060",
+        "EBMP2-061",
+        "EBMP2-062",
+        "IE1-032",
+        "IE1-033",
+        "IE1-034",
+        "IE1-035",
+        "IE1-036",
+        "ECL1N-0155",
+        "ECL1N-0156",
+        "ECL1N-0157",
+        "ECL1N-0158",
+        "ECL1N-0159",
+        "ECL1N-0160",
+        "ECL1N-0161",
+        "ECL1N-0162",
+        "ECL1N-0189",
+        "ECL1N-0190",
+        "ECL1N-0194"
+      ],
+      "profile_requirements": [
+        "AB1-008",
+        "AC1-009",
+        "MG1-010",
+        "OE1-001"
+      ],
+      "checklist": [
+        "PA-02",
+        "PA-08",
+        "PA-09",
+        "PA-10",
+        "PA-11",
+        "PA-12",
+        "EA-23",
+        "EA-28",
+        "VF-12"
+      ],
+      "machine_checks": [
+        "suite:evidence-bundle",
+        "suite:key-roles",
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "open": "Evidence that an effect occurred is issuer-asserted unless a separately keyed observer corroborates it, and no level requires such an observer. Verification outside the primary control plane is required from L2 (FR-108); at L1 the evidence is tamper-evident. A verifier keeps a producer's assertion apart from corroboration and reports a check it did not make as unchecked (ECL1N-0194). What is needed to recover an attempt is kept before its release, and an attempt whose outcome cannot be established stays unresolved rather than being reported as known (ECL1N-0189).",
+      "record_entries": [
+        13,
+        22
+      ]
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+  "title": "ECL Safe-State Deployment Profile v1",
+  "type": "object",
+  "required": [
+    "profile_id",
+    "version",
+    "digest",
+    "claimed_profiles",
+    "action_classes",
+    "dependencies",
+    "evidence_buffer",
+    "latency_measurement",
+    "recovery"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "profile_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "claimed_profiles": {
+      "description": "SF1-004: the ECL profiles this document claims, by profile identifier, for example STRICT-FAILURE-1.",
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-[1-9][0-9]*$"
+      }
+    },
+    "action_classes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "action_class",
+          "timeout_disposition",
+          "dependency_disposition",
+          "stale_dependency_disposition",
+          "buffer_exhaustion_disposition",
+          "restricted_operations",
+          "fail_open_prohibited_conditions"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action_class": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+          },
+          "timeout_disposition": {
+            "$ref": "#/$defs/disposition"
+          },
+          "dependency_disposition": {
+            "$ref": "#/$defs/disposition"
+          },
+          "stale_dependency_disposition": {
+            "$ref": "#/$defs/disposition"
+          },
+          "buffer_exhaustion_disposition": {
+            "$ref": "#/$defs/disposition"
+          },
+          "restricted_operations": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "fail_open_prohibited_conditions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "law",
+                "contract",
+                "irreversible_risk",
+                "missing_policy",
+                "missing_identity",
+                "missing_authority",
+                "invalid_integrity",
+                "critical_extension",
+                "critical_verification_failure"
+              ]
+            }
+          },
+          "fail_open_authorization": {
+            "type": "object",
+            "required": [
+              "owner",
+              "rationale",
+              "expires_at",
+              "evidence_profile"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "owner": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expires_at": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+              },
+              "evidence_profile": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "timeout_disposition": {
+                      "const": "fail_open"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "dependency_disposition": {
+                      "const": "fail_open"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "stale_dependency_disposition": {
+                      "const": "fail_open"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "buffer_exhaustion_disposition": {
+                      "const": "fail_open"
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "required": [
+                "fail_open_authorization"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "class",
+          "staleness_budget_seconds",
+          "supplies_required_proof",
+          "loss_disposition"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          },
+          "class": {
+            "enum": [
+              "hot_path",
+              "cached",
+              "asynchronous",
+              "advisory"
+            ]
+          },
+          "staleness_budget_seconds": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+          },
+          "supplies_required_proof": {
+            "type": "boolean"
+          },
+          "loss_disposition": {
+            "$ref": "#/$defs/disposition"
+          }
+        }
+      }
+    },
+    "evidence_buffer": {
+      "type": "object",
+      "required": [
+        "capacity_bytes",
+        "durable",
+        "encrypted",
+        "ordering",
+        "overflow"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "capacity_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "durable": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "ordering": {
+          "enum": [
+            "causal",
+            "sequence_domain",
+            "append_order"
+          ]
+        },
+        "overflow": {
+          "$ref": "#/$defs/disposition"
+        }
+      }
+    },
+    "latency_measurement": {
+      "type": "object",
+      "required": [
+        "start_boundary",
+        "end_boundary",
+        "percentiles",
+        "sampling_interval",
+        "warmup_handling",
+        "environment_class"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "start_boundary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "end_boundary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "percentiles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "p50",
+              "p90",
+              "p95",
+              "p99",
+              "p99.9",
+              "max"
+            ]
+          }
+        },
+        "sampling_interval": {
+          "type": "string",
+          "minLength": 1
+        },
+        "warmup_handling": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment_class": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "required": [
+        "required_frontiers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "required_frontiers": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "policy_epochs",
+              "revocations",
+              "consumed_authorities",
+              "buffered_evidence",
+              "unresolved_effects",
+              "clock_discontinuities"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "disposition": {
+      "enum": [
+        "fail_open",
+        "fail_closed",
+        "restricted",
+        "degraded",
+        "quarantine",
+        "emergency_halt"
+      ]
+    }
+  }
+}

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Distributed and Long-Running Workflow Semantics 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-distributed-and-long-running-workflow-semantics-1">ECL Distributed and Long-Running Workflow Semantics 1</h1>
+<p>Version: 1.0
+Status: normative companion of ECL-1 Version 1.0, a published version</p>
+<h2 id="1-scope">1. Scope</h2>
+<p>This profile defines semantics for multi-agent, multi-service, delegated,
+retried, concurrent, partially completed, and long-running actions. It does not
+require a central coordinator or global consensus.</p>
+<p><span id="DW1-001"><strong>DW1-001</strong></span><a class="requirement-link" href="#DW1-001" aria-label="Link to DW1-001">§</a> — Every action workflow MUST have a workflow identifier and root
+trace identifier.</p>
+<p><span id="DW1-002"><strong>DW1-002</strong></span><a class="requirement-link" href="#DW1-002" aria-label="Link to DW1-002">§</a> — A child workflow MUST identify its parent workflow and the exact
+causal object that created or delegated it.</p>
+<p><span id="DW1-003"><strong>DW1-003</strong></span><a class="requirement-link" href="#DW1-003" aria-label="Link to DW1-003">§</a> — Every retry MUST create a new attempt identity. Prior attempt
+state and side effects remain evidence.</p>
+<p><span id="DW1-004"><strong>DW1-004</strong></span><a class="requirement-link" href="#DW1-004" aria-label="Link to DW1-004">§</a> — An idempotency key identifies an intended effect boundary and
+MUST NOT be treated as proof that a duplicate effect did not occur.</p>
+<h2 id="2-causal-graph">2. Causal graph</h2>
+<p><span id="DW1-005"><strong>DW1-005</strong></span><a class="requirement-link" href="#DW1-005" aria-label="Link to DW1-005">§</a> — Causality MUST be represented by logical identifier plus
+canonical digest.</p>
+<p><span id="DW1-006"><strong>DW1-006</strong></span><a class="requirement-link" href="#DW1-006" aria-label="Link to DW1-006">§</a> — The causal graph MUST be acyclic.</p>
+<p><span id="DW1-007"><strong>DW1-007</strong></span><a class="requirement-link" href="#DW1-007" aria-label="Link to DW1-007">§</a> — Sequence numbers provide ordering only within their declared
+sequence domain. A consumer MUST NOT infer global order from unrelated
+sequences.</p>
+<p><span id="DW1-008"><strong>DW1-008</strong></span><a class="requirement-link" href="#DW1-008" aria-label="Link to DW1-008">§</a> — Wall-clock order MUST NOT override an authenticated causal edge.</p>
+<p><span id="DW1-009"><strong>DW1-009</strong></span><a class="requirement-link" href="#DW1-009" aria-label="Link to DW1-009">§</a> — A fork MUST preserve the common predecessor. A join MUST
+reference every branch whose completion or disposition is required.</p>
+<p><span id="DW1-010"><strong>DW1-010</strong></span><a class="requirement-link" href="#DW1-010" aria-label="Link to DW1-010">§</a> — Missing required branches make a join incomplete or
+indeterminate; they MUST NOT default to success.</p>
+<h2 id="3-delegation-and-multi-agent-action">3. Delegation and multi-agent action</h2>
+<p><span id="DW1-011"><strong>DW1-011</strong></span><a class="requirement-link" href="#DW1-011" aria-label="Link to DW1-011">§</a> — Delegation MUST preserve root actor, immediate actor, subject,
+scope, audience, expiry, and attenuation at every hop.</p>
+<p><span id="DW1-012"><strong>DW1-012</strong></span><a class="requirement-link" href="#DW1-012" aria-label="Link to DW1-012">§</a> — An agent that plans an action, an agent that executes it, and a
+service that admits it MUST remain separately attributable.</p>
+<p><span id="DW1-013"><strong>DW1-013</strong></span><a class="requirement-link" href="#DW1-013" aria-label="Link to DW1-013">§</a> — Two agents emitting the same logical request MUST still have
+distinct message and attempt identities.</p>
+<p><span id="DW1-014"><strong>DW1-014</strong></span><a class="requirement-link" href="#DW1-014" aria-label="Link to DW1-014">§</a> — Conflicting decisions, authorities, or execution observations
+MUST be retained and reconciled by a declared precedence or adjudication rule.
+Last-writer-wins is prohibited for security-relevant conflicts unless a
+profile explicitly defines and justifies it.</p>
+<p><span id="DW1-015"><strong>DW1-015</strong></span><a class="requirement-link" href="#DW1-015" aria-label="Link to DW1-015">§</a> — An agent's declared intent is not execution authority. Intent,
+Decision, Authority, Enforcement, and observed effect MUST remain distinct.</p>
+<h2 id="4-epochs-and-stale-work">4. Epochs and stale work</h2>
+<p><span id="DW1-016"><strong>DW1-016</strong></span><a class="requirement-link" href="#DW1-016" aria-label="Link to DW1-016">§</a> — A long-running workflow MUST bind the relevant policy, trust,
+registry, capability, and source epochs at each decision boundary.</p>
+<p><span id="DW1-017"><strong>DW1-017</strong></span><a class="requirement-link" href="#DW1-017" aria-label="Link to DW1-017">§</a> — A changed dependency or epoch MUST trigger the profile's
+re-evaluation rule before any affected unreleased action.</p>
+<p><span id="DW1-018"><strong>DW1-018</strong></span><a class="requirement-link" href="#DW1-018" aria-label="Link to DW1-018">§</a> — An epoch change MUST NOT retroactively mark previously released
+work unauthorized; that work MUST instead be evaluated under revocation,
+interruption, compensation, and incident policy.</p>
+<p><span id="DW1-019"><strong>DW1-019</strong></span><a class="requirement-link" href="#DW1-019" aria-label="Link to DW1-019">§</a> — A stale worker MUST NOT merge, release, or certify work whose
+required source or policy epoch no longer matches.</p>
+<h2 id="5-partial-and-uncertain-outcome">5. Partial and uncertain outcome</h2>
+<p><span id="DW1-020"><strong>DW1-020</strong></span><a class="requirement-link" href="#DW1-020" aria-label="Link to DW1-020">§</a> — A timeout, lost response, process crash, or partition MUST NOT be
+reported as a failed external effect unless failure is actually observed.</p>
+<p><span id="DW1-021"><strong>DW1-021</strong></span><a class="requirement-link" href="#DW1-021" aria-label="Link to DW1-021">§</a> — <code>unknown</code> MUST be treated as a terminal observation state and
+MUST carry residual-uncertainty evidence and reconciliation policy.</p>
+<p><span id="DW1-022"><strong>DW1-022</strong></span><a class="requirement-link" href="#DW1-022" aria-label="Link to DW1-022">§</a> — Partial success MUST enumerate known completed, failed, pending,
+and unknown sub-effects.</p>
+<p><span id="DW1-023"><strong>DW1-023</strong></span><a class="requirement-link" href="#DW1-023" aria-label="Link to DW1-023">§</a> — Compensation and rollback MUST be separately authorized,
+executed, and evidenced.</p>
+<p><span id="DW1-024"><strong>DW1-024</strong></span><a class="requirement-link" href="#DW1-024" aria-label="Link to DW1-024">§</a> — A parent workflow MUST NOT claim complete success while a
+required child is open, unknown, or causally unresolved.</p>
+<h2 id="6-human-and-automated-coordination">6. Human and automated coordination</h2>
+<p><span id="DW1-025"><strong>DW1-025</strong></span><a class="requirement-link" href="#DW1-025" aria-label="Link to DW1-025">§</a> — Human approval, rejection, cancellation, override, and emergency
+action MUST be represented as first-class causal events with authority and
+expiry.</p>
+<p><span id="DW1-026"><strong>DW1-026</strong></span><a class="requirement-link" href="#DW1-026" aria-label="Link to DW1-026">§</a> — A human review of one attempt MUST NOT silently authorize a later
+attempt whose parameters, target, policy, or evidence digest changed.</p>
+<p><span id="DW1-027"><strong>DW1-027</strong></span><a class="requirement-link" href="#DW1-027" aria-label="Link to DW1-027">§</a> — Automated adjudication of conflicts MUST itself have a Decision,
+Authority, Provenance, and Verification boundary appropriate to consequence.</p>
+<h2 id="7-bundle-closure">7. Bundle closure</h2>
+<p><span id="DW1-028"><strong>DW1-028</strong></span><a class="requirement-link" href="#DW1-028" aria-label="Link to DW1-028">§</a> — A complete workflow bundle MUST have causal closure for every
+required decision, authority, execution attempt, intervention, terminal
+outcome, and invoked lifecycle event.</p>
+<p><span id="DW1-029"><strong>DW1-029</strong></span><a class="requirement-link" href="#DW1-029" aria-label="Link to DW1-029">§</a> — External predecessors MAY remain outside the bundle only when
+their immutable references and retrieval or inclusion policy permit the
+intended offline verification claim.</p>
+<p><span id="DW1-030"><strong>DW1-030</strong></span><a class="requirement-link" href="#DW1-030" aria-label="Link to DW1-030">§</a> — Closure tools MUST report complete, incomplete, or indeterminate
+and enumerate open actions and unresolved predecessors.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>protocols/DISTRIBUTED-WORKFLOW-1.md</code>, SHA-256 <code>fa723afef20a01eae249564190d4274c150f65e3e1f2db59649c0ea73bf2dabc</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

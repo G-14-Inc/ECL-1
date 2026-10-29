@@ -1,0 +1,107 @@
+{
+  "decision_id": "https://externalcontrollayer.ai/ns/decision/example-001",
+  "evaluated_at": "2026-07-27T04:30:00.090000Z",
+  "expires_at": "2026-07-27T04:30:05.100000Z",
+  "extensions": [
+    {
+      "critical": true,
+      "id": "ecl.ext.consequence-coupling.v1",
+      "value": {
+        "budget_result": {
+          "budget_id": "urn:example:budget:daily-transfers",
+          "outcome": "approved",
+          "remaining": "0"
+        },
+        "quorum_result": {
+          "checkers": [
+            "urn:example:checker:rules-engine",
+            "urn:example:checker:ledger-model"
+          ],
+          "outcome": "met",
+          "rule": "urn:example:quorum:two-of-three"
+        },
+        "witness_result": {
+          "observed_at": "2026-07-27T04:30:00.050000Z",
+          "outcome": "satisfied",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "uri": "urn:example:witness:balance-before-transfer"
+          },
+          "source": "urn:example:system-of-record:core-ledger"
+        }
+      },
+      "version": 1
+    }
+  ],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:decision-service-1"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:decision-service-1"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "epoch": 11,
+      "id": "urn:example:policy:trust-control",
+      "version": "2026-07-27"
+    },
+    "verification_time_policy": "ecl.time.issued-at.v1"
+  },
+  "issued_at": "2026-07-27T04:30:00.100000Z",
+  "issuer": {
+    "id": "urn:example:decision-service:payments",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.service.v1"
+  },
+  "message_id": "https://externalcontrollayer.ai/ns/message/resp-001",
+  "message_type": "decision_response",
+  "obligations": [],
+  "outcome": "deny",
+  "policy": {
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "epoch": 42,
+    "id": "urn:example:policy:transfer-control",
+    "version": "42"
+  },
+  "protocol": "DCMP-2",
+  "reasons": [
+    {
+      "code": "ecl.reason.native-policy-disposition.v1"
+    }
+  ],
+  "request_id": "https://externalcontrollayer.ai/ns/message/req-001",
+  "safe_state": "ecl.state.restricted.v1",
+  "schema_version": "2.0",
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [
+      {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "id": "https://externalcontrollayer.ai/ns/message/req-001",
+        "relation": "ecl.relation.responds-to.v1"
+      }
+    ],
+    "root_trace_id": "https://externalcontrollayer.ai/ns/trace/example-001",
+    "sequence": 2,
+    "workflow_id": "https://externalcontrollayer.ai/ns/workflow/example-001"
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/cross-implementation-report/1",
+  "title": "ECL Cross-Implementation Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_version",
+    "profile_version",
+    "decision",
+    "implementation",
+    "suite",
+    "network_used",
+    "vector_results",
+    "evidence",
+    "limitations",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_cross_implementation_report_v1"
+    },
+    "candidate_version": {
+      "const": "1.0-rc.3"
+    },
+    "profile_version": {
+      "const": "1"
+    },
+    "decision": {
+      "enum": [
+        "not_run",
+        "pass",
+        "fail"
+      ]
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "source_repository",
+        "source_revision",
+        "source_tree_sha256",
+        "language",
+        "runtime",
+        "maintainer",
+        "relationship_disclosure",
+        "imports_ecl_reference"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_tree_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maintainer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relationship_disclosure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "imports_ecl_reference": {
+          "const": false
+        }
+      }
+    },
+    "suite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "manifest_sha256",
+        "vector_count"
+      ],
+      "properties": {
+        "id": {
+          "const": "ecl-1-v1.0-rc.3-foundation"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "vector_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "network_used": {
+      "type": "boolean"
+    },
+    "vector_results": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "artifact_sha256",
+          "expected",
+          "observed_primary_ids",
+          "expectation_met",
+          "raw_result_sha256"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "expected": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "observed_primary_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "expectation_met": {
+            "type": "boolean"
+          },
+          "raw_result_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._/-]+$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "claim_boundary": {
+      "const": "cross-implementation-replay-only-not-independent-assessment"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "not_run"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "vector_results": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "vector_results": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

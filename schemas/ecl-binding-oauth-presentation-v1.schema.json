@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+  "title": "ECL OAuth presentation record v1",
+  "description": "OA1-010: one presentation of an OAuth access token that expresses an ECL admit, as a resource server or enforcement point retains it: the admit and its request, the token, the issuer keys the verifier configures, the presented request with its proof of possession, and whether the presentation was accepted.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "issuer",
+    "issuer_keys",
+    "resource_server",
+    "request",
+    "response",
+    "token",
+    "presentation",
+    "result"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_oauth_presentation_v1"
+    },
+    "issuer": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "issuer_keys": {
+      "description": "OA1-007: the issuer's public keys from the verifier's own configuration.",
+      "type": "object",
+      "required": [
+        "keys"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/publicJwk"
+          }
+        }
+      }
+    },
+    "resource_server": {
+      "description": "The identity of the resource server, which a token's aud must be.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "max_token_lifetime_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 300
+    },
+    "dpop_proof_window_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 300
+    },
+    "clock_skew_seconds": {
+      "description": "OA1-003: the clock-skew allowance that the resource server applies to nbf and exp; zero when absent.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 60
+    },
+    "request": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest"
+    },
+    "response": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse"
+    },
+    "token": {
+      "$ref": "#/$defs/compactJws"
+    },
+    "presentation": {
+      "type": "object",
+      "required": [
+        "method",
+        "uri",
+        "target",
+        "operation",
+        "parameters_digest",
+        "presented_at",
+        "use_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "pattern": "^[A-Z]{1,16}$"
+        },
+        "uri": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "target": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "operation": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+        },
+        "parameters_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "presented_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "use_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "dpop_proof": {
+          "$ref": "#/$defs/compactJws"
+        },
+        "client_certificate_sha256": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "seen_dpop_jti": {
+          "type": "array",
+          "maxItems": 1024,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "result": {
+      "description": "OA1-011: the resource server's decision; a refusal names the code of the first check of the presentation table that the presentation fails.",
+      "type": "object",
+      "required": [
+        "accepted"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "type": "boolean"
+        },
+        "error": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        }
+      },
+      "if": {
+        "properties": {
+          "accepted": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "error"
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "compactJws": {
+      "type": "string",
+      "maxLength": 16384,
+      "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*$"
+    },
+    "publicJwk": {
+      "description": "A public JWK with its kid; private key members are refused.",
+      "type": "object",
+      "required": [
+        "kid",
+        "kty",
+        "crv",
+        "x"
+      ],
+      "properties": {
+        "kid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "kty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "crv": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "x": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "y": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
+      "not": {
+        "required": [
+          "d"
+        ]
+      }
+    }
+  }
+}

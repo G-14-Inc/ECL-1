@@ -1,0 +1,154 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-canonical",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_canonical_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_primary_id": "ecl.rule.json-no-duplicate-members.v1",
+      "expected_secondary_ids": [],
+      "id": "canonical-invalid-duplicate-member",
+      "negates": [
+        "IE1-002"
+      ],
+      "path": "conformance/suites/canonical/canonical-invalid-duplicate-member.json",
+      "requirement_ids": [
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_canonical_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_primary_id": "ecl.rule.json-restricted-numbers.v1",
+      "expected_secondary_ids": [],
+      "id": "canonical-invalid-negative-zero",
+      "negates": [
+        "IE1-002",
+        "IE1-004"
+      ],
+      "path": "conformance/suites/canonical/canonical-invalid-negative-zero.json",
+      "requirement_ids": [
+        "IE1-002",
+        "IE1-004"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_canonical_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "canonical-invalid-noncharacter",
+      "negates": [
+        "IE1-002"
+      ],
+      "path": "conformance/suites/canonical/canonical-invalid-noncharacter.json",
+      "requirement_ids": [
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_canonical_sha256": "f04a7d4cd4b380da7355b2095e0e93ca64974662f8cda8eab3e3debecdb4010f",
+      "expected_secondary_ids": [],
+      "id": "canonical-valid-escaping",
+      "path": "conformance/suites/canonical/canonical-valid-escaping.json",
+      "requirement_ids": [
+        "IE1-001",
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_canonical_sha256": "96800f711edd6780b27c203b227a9d77227df8fd906a5236c3a17b6dea82d193",
+      "expected_secondary_ids": [],
+      "id": "canonical-valid-integer-boundaries",
+      "path": "conformance/suites/canonical/canonical-valid-integer-boundaries.json",
+      "requirement_ids": [
+        "IE1-001",
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_canonical_sha256": "b55af27c4bd5f02ebeca8f901b84d2940b22e7bea7230e4d06f275d903bfdd72",
+      "expected_secondary_ids": [],
+      "id": "canonical-valid-key-order",
+      "path": "conformance/suites/canonical/canonical-valid-key-order.json",
+      "requirement_ids": [
+        "IE1-001",
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_canonical_sha256": "e54dcfa9e4c2bb3e6a1c0f00e06c80a3dc1704c5795f30d322a07fd29885c4c3",
+      "expected_secondary_ids": [],
+      "id": "canonical-valid-nested",
+      "path": "conformance/suites/canonical/canonical-valid-nested.json",
+      "requirement_ids": [
+        "IE1-001",
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_canonical_sha256": "9d4cdc71dda603c42f9b21d88d0c2ffc31a76cd1bd461d7359406cf169845f1e",
+      "expected_secondary_ids": [],
+      "id": "canonical-valid-utf16-key-order",
+      "path": "conformance/suites/canonical/canonical-valid-utf16-key-order.json",
+      "requirement_ids": [
+        "IE1-001",
+        "IE1-002"
+      ],
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "canonical"
+    }
+  ]
+}

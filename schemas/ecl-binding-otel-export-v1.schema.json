@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+  "title": "ECL OpenTelemetry export record v1",
+  "description": "OE1-009: one export of an ECL object as an OpenTelemetry log record, as an exporter retains it: the object it read, the OTLP log record it made in the JSON Protobuf encoding (OE1-007), the attributes the export policy declares, the outcome of the export, and the object as the evidence held it afterwards.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile",
+    "object",
+    "log_record",
+    "export"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_otel_export_record_v1"
+    },
+    "profile": {
+      "const": "OTEL-EVIDENCE-EXPORT-1/1.0"
+    },
+    "bundle_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "declared_attributes": {
+      "description": "OE1-005: the attributes that the export policy declares, with the data class each carries: attributes beyond the attribute table, and the table's identifiers of people and records (ecl.actor.id, ecl.subject.id, ecl.action.target), which a record carries only when they are declared; the name body declares a log record body.",
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "data_class"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "data_class": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "object": {
+      "$ref": "#/$defs/eclObject"
+    },
+    "log_record": {
+      "$ref": "#/$defs/logRecord"
+    },
+    "export": {
+      "type": "object",
+      "required": [
+        "status",
+        "attempted_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "exported",
+            "failed"
+          ]
+        },
+        "attempted_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "error": {
+          "type": "string",
+          "maxLength": 1024
+        }
+      }
+    },
+    "evidence_after": {
+      "description": "The same object as the evidence held it after the export attempt.",
+      "$ref": "#/$defs/eclObject"
+    }
+  },
+  "$defs": {
+    "eclObject": {
+      "description": "A DCMP-2 message or an EBMP-2 event record.",
+      "oneOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2"
+        },
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        }
+      ]
+    },
+    "logRecord": {
+      "description": "An OTLP 1.11.1 LogRecord in the JSON Protobuf encoding: 64-bit integers as decimal strings, enums as integers, identifiers in hexadecimal.",
+      "type": "object",
+      "required": [
+        "timeUnixNano",
+        "observedTimeUnixNano",
+        "severityNumber",
+        "severityText",
+        "eventName",
+        "attributes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "timeUnixNano": {
+          "$ref": "#/$defs/fixed64"
+        },
+        "observedTimeUnixNano": {
+          "$ref": "#/$defs/fixed64"
+        },
+        "severityNumber": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 24
+        },
+        "severityText": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "eventName": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^ecl\\.(dcmp|ebmp)\\.[a-z_]+$"
+        },
+        "body": {
+          "$ref": "#/$defs/anyValue"
+        },
+        "attributes": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/keyValue"
+          }
+        },
+        "droppedAttributesCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "traceId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "spanId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16}$"
+        }
+      }
+    },
+    "keyValue": {
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "value": {
+          "$ref": "#/$defs/anyValue"
+        }
+      }
+    },
+    "anyValue": {
+      "description": "An OTLP AnyValue in the JSON Protobuf encoding, with exactly one member. A record carries no doubleValue: exchange records keep to the restricted canonical profile.",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "stringValue": {
+          "type": "string",
+          "maxLength": 65536
+        },
+        "boolValue": {
+          "type": "boolean"
+        },
+        "intValue": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]{0,18})$"
+        },
+        "bytesValue": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]*={0,2}$"
+        },
+        "arrayValue": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "values": {
+              "type": "array",
+              "maxItems": 256,
+              "items": {
+                "$ref": "#/$defs/anyValue"
+              }
+            }
+          }
+        },
+        "kvlistValue": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "values": {
+              "type": "array",
+              "maxItems": 256,
+              "items": {
+                "$ref": "#/$defs/keyValue"
+              }
+            }
+          }
+        }
+      }
+    },
+    "fixed64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$"
+    }
+  }
+}

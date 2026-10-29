@@ -1,0 +1,131 @@
+{
+  "copyright": "Copyright 2026 G-14, Inc.",
+  "description": "The license of every file of the ECL-1 repository. The rules apply in order, and the first rule whose package and paths match a file decides its class. A rule's package is public (the files of the standard's public repository), platform (G-14's own implementation, which is not part of it) or any. In a glob, ** matches any number of path segments and * matches within one segment.",
+  "licenses": {
+    "Apache-2.0": {
+      "copies": [
+        "go/crosscheck/LICENSE",
+        "packages/ecl-ts/LICENSE",
+        "packages/ecl-verify/LICENSE"
+      ],
+      "name": "Apache License, Version 2.0",
+      "path": "LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "source": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+    },
+    "CC-BY-4.0": {
+      "copies": [],
+      "name": "Creative Commons Attribution 4.0 International",
+      "path": "LICENSE-CC-BY-4.0",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+      "source": "https://creativecommons.org/licenses/by/4.0/legalcode.txt"
+    },
+    "LicenseRef-G14-Proprietary": {
+      "name": "Proprietary. Copyright G-14, Inc. All rights reserved.",
+      "scope": "G-14's own implementation of ECL-1 and its tooling, which are not part of the standard and are not published"
+    }
+  },
+  "maintainer": "G-14, Inc.",
+  "open_licenses": [
+    "Apache-2.0",
+    "CC-BY-4.0"
+  ],
+  "patent_pledge": "PATENTS.md",
+  "rules": [
+    {
+      "class": "third-party-nist-acvp",
+      "description": "A bounded extraction from the NIST ACVP-Server ML-DSA signature-verification data; the source's terms apply.",
+      "license": "NOASSERTION",
+      "match": [
+        "conformance/vectors/integrity/mldsa65-nist-acvp-sigver-tc123.json"
+      ],
+      "package": "any",
+      "third_party": true
+    },
+    {
+      "class": "third-party-cyclonedx",
+      "description": "The CycloneDX 1.6.1 validation schemas and their upstream license, retained unmodified under their own terms.",
+      "license": "Apache-2.0",
+      "license_text": "third_party/cyclonedx-specification-1.6.1/LICENSE",
+      "match": [
+        "third_party/**"
+      ],
+      "package": "any",
+      "third_party": true
+    },
+    {
+      "class": "license-texts",
+      "description": "The license texts and the Developer Certificate of Origin, each reproduced verbatim under the terms its steward publishes.",
+      "license": "NOASSERTION",
+      "match": [
+        "LICENSE",
+        "LICENSE-CC-BY-4.0",
+        "packages/ecl-ts/LICENSE",
+        "packages/ecl-verify/LICENSE",
+        "go/crosscheck/LICENSE",
+        "governance/DCO.txt"
+      ],
+      "package": "any",
+      "third_party": true
+    },
+    {
+      "class": "g14-implementation",
+      "description": "G-14's own implementation of ECL-1 and its tooling: every file outside the public repository that is not material of others.",
+      "license": "LicenseRef-G14-Proprietary",
+      "match": [
+        "**"
+      ],
+      "package": "platform",
+      "third_party": false
+    },
+    {
+      "class": "browser-verifier-bundle",
+      "description": "The browser verifier's generated script: ECL-1 code under Apache-2.0, bundled with the @noble/curves and @noble/hashes code under the MIT License, whose full notice the file carries.",
+      "license": "Apache-2.0 AND MIT",
+      "match": [
+        "web/verifier/verifier.js"
+      ],
+      "package": "public",
+      "third_party": false,
+      "third_party_parts": [
+        "@noble/curves (MIT, by its author)",
+        "@noble/hashes (MIT, by its author)"
+      ]
+    },
+    {
+      "class": "verifier-code",
+      "description": "The verifier packages, as wholes, their README files included: the TypeScript package and the browser verifier, the Python package ecl-verify and the Go module.",
+      "license": "Apache-2.0",
+      "match": [
+        "packages/ecl-ts/**",
+        "packages/ecl-verify/**",
+        "go/crosscheck/**",
+        "web/**"
+      ],
+      "package": "public",
+      "third_party": false
+    },
+    {
+      "class": "text-and-documentation",
+      "description": "The standard, the companion protocols and profiles, the guides, the governance, community and rights papers, the rendered pages, the README and every other prose document.",
+      "license": "CC-BY-4.0",
+      "match": [
+        "**/*.md",
+        "render/**"
+      ],
+      "package": "public",
+      "third_party": false
+    },
+    {
+      "class": "machine-readable-and-code",
+      "description": "Schemas, registries, the conformance corpus, suites, vectors, fixtures and manifests, the version set, examples, templates, the formal models with their runner and recorded results, the public scripts and every other machine-readable file.",
+      "license": "Apache-2.0",
+      "match": [
+        "**"
+      ],
+      "package": "public",
+      "third_party": false
+    }
+  ],
+  "schema_version": "ecl_license_map_v3"
+}

@@ -1,0 +1,4794 @@
+{
+  "candidate_version": "1.0",
+  "optional_capabilities": [
+    "schema-validation",
+    "trust-policy-load",
+    "envelope-signature-verification",
+    "evidence-bundle-verification",
+    "control-extension-rules",
+    "binding-profile-rules",
+    "decision-basis-rule",
+    "document-validation",
+    "extension-version-rule",
+    "document-extension-rules",
+    "key-role-separation",
+    "binding-basis-agreement-rule",
+    "otel-export-keyed-digests",
+    "offline-package-verification"
+  ],
+  "required_capabilities": [
+    "strict-json",
+    "canonical-digest",
+    "semantic-rules",
+    "safe-state-profile-rules"
+  ],
+  "schema_version": "ecl_shared_corpus_v1",
+  "vectors": [
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-admit-without-verifiable-basis",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-decision-outside-enum",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-defer-fail-open",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-defer-outlasts-deadline",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-deny-admitted",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-input-class-outside-enum",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-intent-alignment-verifiable",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-judgment-basis-of-admit",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-judgment-source-decision-unlabelled",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-judgment-source-output-verifiable",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-invalid-modification-drops-required-input",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modification-response-without-request",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-invalid-modification-rests-on-intent-alignment",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-invalid-modification-rests-on-judgment-source-decision",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modify-boolean-carried-as-number",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modify-other-actor",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modify-other-operation",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modify-other-parameters",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modify-released-under-original",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-modify-unlinked",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-new-request-without-modify",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-receipt-altered",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-receipt-decision-disagrees",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-receipt-other-parameters",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-released-after-window",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-released-other-parameters",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-released-without-admit",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-requirement-outside-enum",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-invalid-role-outside-enum",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-receipt-invalid-decision-outside-enum",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-receipt-valid-terminal-event",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-allow-released",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-defer-held",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-deny-recorded",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-judgment-source-admit",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-modify-new-request",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-modify-not-applied-denied",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "aarm-valid-step-up-challenged",
+      "suite": "ecl-1-v1.0-aarm-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-decision-invalid-disposition-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-decision-invalid-evaluator-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-decision-valid-response",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-agent-guardian-unmarked",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-agent-guardian-verifiable",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-ask-fail-open-expiry",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-chain-head-not-the-step",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-chain-rewritten",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-channel-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-decided-without-channel",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-decision-failure-admitted",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-decision-failure-proceeds",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-decision-not-recorded",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-defer-outlasts-deadline",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-deny-admitted",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-deterministic-guardian-over-session-context-verifiable",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-disposition-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-evaluator-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-failure-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-forbidden-modification-new-request",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-guardian-basis-of-admit",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-guardian-evaluator-unstated-verifiable",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-hook-carried-guardian-verifiable",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-input-class-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-invalid-modification-drops-required-input",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-invalid-modification-records-other-inputs",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-modification-response-without-request",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-invalid-modification-rests-on-agent-guardian",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-invalid-modification-rests-on-hook-carried-guardian",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-invalid-modification-upgrades-session-context",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-modify-boolean-carried-as-number",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-modify-other-action-class",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-modify-other-target",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-modify-redaction-dropped",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-modify-released-under-original",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-new-request-without-modify",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-posture-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-posture-proceed",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-released-after-ask-expired",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-released-without-admit",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-request-negative-debit",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-signed-guardian-request-digest-not-sha-256",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-signed-guardian-without-key",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-status-outside-enum",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-invalid-verifiable-guardian-without-derivation",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-allow-released",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-ask-allow-timeout-challenged",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-decision-failure-denied",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-defer-held",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-deny",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-deterministic-guardian-over-session-context",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-forbidden-modification-denied",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-guardian-derived-from-case-variant",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-hook-carried-guardian-actor-supplied",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-late-decision-denied",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-modify-new-request",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-modify-not-applied-denied",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "acs-valid-signed-guardian-names-key-and-request",
+      "suite": "ecl-1-v1.0-acs-binding"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-admit-after-verifiable-only-deny",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-admit-required-input-unavailable",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-basis-missing",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-basis-twice",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-input-listed-twice",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-input-missing-from-basis",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-input-missing-from-record",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-input-obtained-after-decision",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-judgment-verifiable-in-basis",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-modification-admitted-on-judgment",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-modification-without-basis",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-other-digest",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-other-effect",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-invalid-verifiable-derived-from-judgment",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-valid-allow-released",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "aarm-basis-valid-deny-input-unavailable",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-admit-required-input-unavailable",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-basis-missing",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-judgment-verifiable-in-basis",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-modification-without-basis",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-other-digest",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-received-after-decision",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-received-before-issued",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-invalid-verifiable-input-from-actor",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-valid-allow-released",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "binding-basis-agreement-rule",
+      "id": "acs-basis-valid-failure-guardian-unavailable",
+      "suite": "ecl-1-v1.0-binding-basis"
+    },
+    {
+      "capability": "strict-json",
+      "id": "canonical-invalid-duplicate-member",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "strict-json",
+      "id": "canonical-invalid-negative-zero",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "strict-json",
+      "id": "canonical-invalid-noncharacter",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "canonical-digest",
+      "id": "canonical-valid-escaping",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "canonical-digest",
+      "id": "canonical-valid-integer-boundaries",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "canonical-digest",
+      "id": "canonical-valid-key-order",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "canonical-digest",
+      "id": "canonical-valid-nested",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "canonical-digest",
+      "id": "canonical-valid-utf16-key-order",
+      "suite": "ecl-1-v1.0-canonical"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "approval-invalid-decided-too-soon",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "approval-invalid-presentation-without-digest",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "approval-valid-review-time-respected",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "control-change-invalid-change-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "control-change-invalid-disable-without-expiry",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "control-change-invalid-self-approved-disable",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "control-change-invalid-self-reviewed-policy-change",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "control-change-valid-reviewed-policy-change",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "control-change-valid-time-limited-disable",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-admit-blocker-reason",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-admit-budget-exhausted",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-admit-deferred-witness-without-obligation",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-admit-quorum-not-met",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-admit-witness-unsatisfied",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-budget-outcome-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-quorum-outcome-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-satisfied-witness-without-digest",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-invalid-witness-outcome-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-valid-admit-permitting-results",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "coupling-valid-deny-exhausted-budget",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-admit-required-input-derived-from-late-input",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-admit-required-input-unavailable",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-admit-supported-by-actor-supplied-input",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-admit-supported-by-judgment",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-admit-without-verifiable-support",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-available-input-obtained-after-decision",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-available-input-untimed",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-available-input-without-digest",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-challenge-after-verifiable-only-deny",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-class-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-derivation-cycle",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-derived-from-unlisted-input",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-duplicate-input",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-effect-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-hold-supported-by-judgment",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-https-host-case-variant-duplicate",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-late-input-supports",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-malformed-input-supports",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-obtained-without-received-at",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-percent-case-variant-duplicate",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-received-after-decision",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-register-without-digest",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-source-missing",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-status-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-supports-derived-from-late-input",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-supports-under-verifiable-only-deny",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-urn-case-variant-duplicate",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-value-after-decision",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-value-after-obtained",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-verifiable-derived-from-judgment",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-verifiable-only-admit-required-input-unavailable",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-verifiable-only-outcome-outside-enum",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-invalid-without-register",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-admit-on-verifiable-inputs",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-admit-optional-judgment-late",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-deny-no-declared-input",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-deny-required-input-unavailable",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-deny-required-judgment-unavailable",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-derived-inputs",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-hold-restricted-by-judgment",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "decision-basis-valid-times-and-verifiable-only-outcome",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "extension-invalid-coupling-unknown-member",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "obligation-discharge-invalid-fresh-until-not-an-instant",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "obligation-discharge-invalid-proof-without-digest",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "obligation-discharge-invalid-unmet-obligation",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "obligation-discharge-valid-fresh-until",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "obligation-discharge-valid-release",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "outcome-reason-invalid-free-text",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "outcome-reason-valid-expired-before-release",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "runtime-configuration-invalid-without-digest",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "control-extension-rules",
+      "id": "runtime-configuration-valid-request",
+      "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-artifact-role-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-boundary-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-checklist-result-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-claim-status-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-class-a-at-l2",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-conditional-at-l4",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-finding-disposition-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-finding-severity-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-independence-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-not-applicable-without-predicate-evidence",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-procurement-decision-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-result-without-evidence",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-invalid-risk-treatment-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-valid-l1-class-a",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-valid-l4-class-c",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-valid-not-applicable-item",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "assessment-valid-published-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-boundary-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-class-a-at-l2",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-class-a-without-disclosure",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-conditional-at-l4",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-conditional-without-conditions",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-independence-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-mapping-support-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-mapping-validation-state-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-status-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-valid-conditional-l3-class-c",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-valid-full-l4-class-c",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-valid-l1-class-a-disclosed",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-valid-published-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-air-gapped-without-controls",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-centralized-without-controls",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-degraded-expiry-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-delivery-surface-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-dependency-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-dependency-failure-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-enforcement-location-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-federated-field-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-federated-without-controls",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-model-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-network-loss-disposition-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-nondefault-timing-without-rationale",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-offline-without-controls",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-restricted-action-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-sovereign-without-controls",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-invalid-stale-transition-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-valid-air-gapped-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-valid-centralized-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-valid-federated-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-valid-offline-edge-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-valid-sovereign-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "deployment-valid-stricter-timing-case",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-invalid-destruction-over-legal-hold",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-invalid-without-destruction-rules",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-valid-policy",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "mapping-invalid-direct-support-without-surface",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "mapping-invalid-obligation-support-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "mapping-invalid-obligation-validation-state-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "mapping-invalid-validation-state-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "mapping-valid-published-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "offline-package-invalid-artifact-role-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "offline-package-invalid-without-registry-snapshot",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "offline-package-invalid-without-revocation-snapshot",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "offline-package-valid",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "register-invalid-action-class-declared-twice",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-approval-threshold-parameter-and-measure",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-approval-threshold-parameter-not-a-pointer",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-approval-threshold-without-approvers",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-approval-threshold-without-measure",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-approval-threshold-without-parameter",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-classification-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-consequence-dimension-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-consequential-without-affected-resources",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-consequential-without-decision-inputs",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-decision-input-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-decision-input-without-maximum-age",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "register-invalid-derivation-cycle",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "register-invalid-derived-from-undeclared-input",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-enforcement-class-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "register-invalid-input-declared-twice",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "register-invalid-input-declared-twice-urn-case",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-invalid-interception-result-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "register-invalid-verifiable-derived-from-judgment",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-valid-pending-review-and-confined-entries",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "register-valid-published-example",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "work-intent-invalid-carries-authority",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "work-intent-invalid-target-kind-outside-enum",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "work-intent-invalid-without-dependency-epochs",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "work-intent-valid",
+      "suite": "ecl-1-v1.0-document-coverage"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-key-not-yet-valid",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "envelope-invalid-missing-signatures",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-mixed-order",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-noncanonical-s",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-p256-high-s",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-policy-digest-string-for-object",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-policy-epoch-boolean-for-number",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-policy-required-number-for-boolean",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-revoked-key",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-tampered-payload",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-threshold-not-met",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-torsion-r",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-wrong-key",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-invalid-wrong-purpose",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-valid-ed25519-signed",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-valid-mixed-order",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "envelope-valid-p256-low-s",
+      "suite": "ecl-1-v1.0-envelope"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-added-signature-key-revoked",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-carried-proof-signer-revoked-after",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-observation-signer-revoked-after",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-order",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-revoked-after-use",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-signer-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-signer-key-material-changed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-signer-retired",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-time-authority-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-time-authority-key-material-changed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-time-authority-retired",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-time-authority-revoked-after",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-current-trust-failed-two-attestations",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-incomplete-continuation-approval-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-incomplete-no-terminal",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-incomplete-observation-names-absent-message",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-incomplete-observation-predecessor-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-incomplete-release-predecessor-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-admit-on-judgment",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-attempt-identity",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-attestation-payload-type",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-authority-consumed-after-later-revocation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-authorization-audience",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-authorization-window-too-long",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-backdated-after-revocation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-carried-proof-sequence-not-after-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-carried-proof-signer-revoked-before-own-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-carried-proof-signer-revoked-before-own-time-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-challenge-after-verifiable-only-deny",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-challenge-and-admit-to-one-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-consumed-other-authorization",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-expired-at-evaluation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-key-without-approval-purpose",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-listed-with-wrong-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-not-approve",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-not-listed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-of-another-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-other-root-trace",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-approval-signed-by-actor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-attempt-not-greater",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-changes-action",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-changes-actor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-changes-authority-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-changes-subject",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-changes-subject-approval-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-names-challenge-to-another-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-of-non-challenge",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-other-root-trace",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-other-workflow",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-predecessors-not-listed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-response-not-listed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-second-of-one-challenge",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-second-of-one-challenge-approval-absent",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-continuation-sequence-not-after-approval",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-countersignature-unregistered-claim",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-hidden-derivation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-input-after-deadline",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-input-without-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-other-register-version",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-received-before-issued",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-undeclared-input",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-value-after-decision",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-basis-value-older-than-maximum-age",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-event-contradicts-response",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-decision-key-of-another-principal",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-denied-after-consumption",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-denied-without-reason",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-derivation-cycle",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-approval-by-another-approver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-approval-of-another-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-approval-rejects",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-approval-signed-without-approval-purpose",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-carried-proof-other-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-checked-after-release",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-checked-before-decision",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-entry-duplicated",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-fresh-until-beyond-proof-bound",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-of-obligation-not-carried",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-digest-of-bundle-object",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-envelope-invalid",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-expired-at-release",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-is-the-decision-response",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-not-from-named-source",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-obtained-after-check",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-of-another-type",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-proof-signed-by-actor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-result-not-satisfied",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-uncarried-proof-stale",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-discharge-witness-result-of-another-witness",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-duplicate-decision-input",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-embedded-trust-policy",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-evaluated-before-attested-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-evaluated-before-evidence",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-evaluated-before-observation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-mcp-released-after-valid-until",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-mcp-success-without-response-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-mcp-terminal-names-another-call",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-missing-decision-basis",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-negative-budget-debit",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-nested-time-attestation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-cycle",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-duplicated",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-earlier-attempt",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-not-a-verification-event",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-other-workflow",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-predecessor-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-reuses-event-identifier",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-sequence-equal-to-predecessor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-sequence-not-after-predecessor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-signer-revoked-before-own-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-signer-revoked-before-own-time-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-time-authority-revoked",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-unrelated-root-trace",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-observation-without-countersignature-required",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-order-response-before-event",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-order-signers-before-pairing",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-order-within-event-binding",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-order-within-signers",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-prerelease-approval-unmet",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-prerelease-obligations-partly-discharged",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-prerelease-witness-unmet",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-release-at-window-end",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-release-guard-reaches-valid-until",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-release-operation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-release-sequence-not-after-consumption",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-release-without-consumption-absent-predecessor-elsewhere",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-request-countersignature-unregistered-claim-observed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-responds-to-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-response-before-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-response-sequence-not-after-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-scope-digest-of-whole-request",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-relisted-under-new-identifier-revoked",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-relisted-under-new-identifier-revoked-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-reused-key-id-revoked",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-revoked-before-attested-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-revoked-before-own-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-revoked-before-own-time-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-signer-revoked-before-use",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-single-use-consumed-twice",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-single-use-release-without-consumption",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-succeeded-without-release",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-supports-derived-from-late-input",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-terminal-authority-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-terminal-decision-digest",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-time-authority-conflicting-histories",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-time-authority-reused-key-id-revoked",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-time-authority-revoked-at-attestation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-time-authority-revoked-before-attestation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-time-authority-revoked-before-attestation-reference-profile",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-time-authority-revoked-before-attestation-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-added-signature-required",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-attestation-without-covered-signatures",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-before-own-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-covered-key-id-changed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-covered-key-id-changed-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-covered-signature-named-twice",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-covered-signatures-out-of-order",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-covered-suite-changed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-covered-suite-changed-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-of-another-payload",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-replaced-signature",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-replaced-signature-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-required",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-self-attested",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-substituted-signature",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-substituted-signature-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-trusted-time-without-purpose",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-two-attestations-one-invalid",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-two-attestations-one-invalid-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-two-responses",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-use-count-beyond-policy",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-invalid-verifiable-input-from-actor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-added-signature-key-revoked-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-attestation-extra-signature-not-verifying",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-authority-revoked-twice-then-denied",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-cancelled-after-consumption",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-carried-proof-signer-revoked-after-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-continuation-after-challenge",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-continuation-denied-on-approval-without-purpose",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-continuation-denied-on-expired-approval",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-decision-basis-declared-derivation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-decision-basis-matches-register",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-decision-basis-times-within-register",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-denied-without-response-with-register",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-discharge-issuer-label-is-actor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-discharge-issuer-label-percent-encoded",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-discharge-issuer-mislabeled",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-discharge-uncarried-proof-digest-not-checked",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-discharge-uncarried-proof-fresh",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-discharge-witness-source-not-named",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-evaluated-at-attested-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-evaluated-at-last-object-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-mcp-forward-completed-after-valid-until",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-mcp-forward-within-authority",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-observation-child-workflow-not-corroborating",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-observation-corroborates",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-observation-later-attempt-not-corroborating",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-observation-request-predecessor",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-observation-signer-revoked-after-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-observation-without-countersignature",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-one-envelope-countersigned",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-post-release-obligation",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-prerelease-obligations-discharged",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-prerelease-proofs-carried",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-prerelease-proofs-not-carried",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-prerelease-witness-proof-carried",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-recovered-outcome-unknown",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-release-guard-inside-window",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-release-prepared-before-release",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-signer-key-material-changed-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-signer-retired-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-succeeded",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-succeeded-with-register",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-terminal-extra-signature-not-verifying",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-time-authority-absent-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-time-authority-key-material-changed-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-time-authority-retired-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-time-authority-revoked-after-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-trusted-time",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-trusted-time-added-signature",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-trusted-time-two-signatures-covered",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-two-attestations-waiver",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-two-side-effects-both-observed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "bundle-valid-two-side-effects-one-observed",
+      "suite": "ecl-1-v1.0-evidence-bundle"
+    },
+    {
+      "capability": "extension-version-rule",
+      "id": "extension-version-invalid-critical-unallocated-version",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "extension-version-rule",
+      "id": "extension-version-invalid-envelope-extension-at-two-versions",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "extension-version-rule",
+      "id": "extension-version-invalid-private-extension-at-two-versions",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "extension-version-rule",
+      "id": "extension-version-invalid-unknown-version-counts",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "extension-version-valid-distinct-extensions",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "document-extension-rules",
+      "id": "work-intent-extension-invalid-duplicate-pair",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "document-extension-rules",
+      "id": "work-intent-extension-invalid-two-versions",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "document-extension-rules",
+      "id": "work-intent-extension-invalid-unallocated-ecl-identifier",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "document-extension-rules",
+      "id": "work-intent-extension-invalid-unknown-critical",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "document-validation",
+      "id": "work-intent-extension-valid-private-extension",
+      "suite": "ecl-1-v1.0-extension-rules"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-binding-body-digest",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-binding-identity",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-coverage-out-of-order",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-coverage-without-listing-object",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-created-at-not-a-calendar-date",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-digest-trailing-newline",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-loss-class",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-media-type-for-protocol",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-profile-id-bracketed-name",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-profile-id-percent-encoding",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-repeated-derived-object",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-repeated-source-field",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-invalid-target-outside-derived-objects",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-valid-native-binding",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-valid-profile-id-ip-literal",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-valid-two-derived-objects",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-admit-authority-without-scope-digest",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-admit-reversed-authority-window",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-admit-without-authority",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-admit-without-authority-or-issue-time",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-challenge-missing-binding",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-challenge-response-without-evidence",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-control-unknown-operation",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-control-without-authority",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-deny-with-authority",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-deprecated-critical-extension",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-duplicate-extension",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-halt-on-ordinary-plane",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-integrity-threshold",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-message-without-issuer",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-negative-budget-debit",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-request-parameters-digest",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-request-without-expiry",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp2-invalid-response-policy-without-digest",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-reversed-expiry",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-self-causation",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-unallocated-ecl-extension",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-invalid-unknown-critical-extension",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-challenge",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-challenge-response",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-control",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-decision-request",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-decision-response-admit",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-deprecated-non-critical-extension",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-halt-on-emergency-plane",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-private-extensions",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-required-key-without-eligible-list",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp2-valid-threshold-above-eligible-count",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-causal-cycle",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-causal-sequence",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-duplicate-object-id",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-event-type-kind-mismatch",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-event-type-state-mismatch",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp2-invalid-intervention-without-authority",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-missing-predecessor",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-predecessor-digest",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp2-invalid-redaction-without-derivative",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-redaction-without-manifest",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-schema-valid-redaction-without-derivative",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-terminal-revival",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-terminal-running-state",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-transition-after-terminal",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-transition-skips-release",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-invalid-uncertain-outcome-without-residual",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp2-invalid-verification-without-findings",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-causal-bundle",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-cross-workflow-sequence",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-execution-terminal",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-human-intervention",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-redaction",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-uncertain-outcome",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp2-valid-verification-event",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-at-limit-ceilings",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-at-limits",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-byte-order-mark",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-duplicate-member",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-invalid-utf8",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-lone-surrogate",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-malformed-text",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-non-json-constant",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-noncharacter",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-byte-limit-before-syntax",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-depth-ceiling",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-depth-limit",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-depth-limit-then-syntax",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-value-limit",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-value-limit-before-later-defects",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-value-limit-then-invalid-utf8",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-over-value-limit-then-syntax",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-repeated-name-before-number",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-restricted-number",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-surrogate-after-repeated-name-and-number",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "strict-json",
+      "id": "strict-json-syntax-before-repeated-name",
+      "suite": "ecl-1-v1.0-foundation"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-challenge-by-requester-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-challenge-response-by-decision-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-control-by-decision-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-observation-and-trusted-time",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-request-and-response",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-request-and-trusted-time",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-request-by-decision-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-response-and-control",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-response-and-observation",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-invalid-response-by-requester-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-valid-challenge-by-decision-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-valid-challenge-response-by-requester-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-valid-control-by-control-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-valid-one-role-per-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-valid-request-by-requester-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "key-role-separation",
+      "id": "key-roles-valid-response-by-decision-key",
+      "suite": "ecl-1-v1.0-key-roles"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-binding-invalid-method-outside-enum",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-binding-valid-request",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-admit-on-judgment-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-cancelled-refusal-as-expired-before-release",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-decision-request-negative-debit",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-duplicated-obligation-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-early-refusal-as-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-call-jsonrpc-1-0",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-call-not-base64",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-call-null-id-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-call-null-id-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-content-not-canonical",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-content-within-profile",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-admit-without-basis",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-after-expiry",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-approval-undischarged",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-at-earlier-sample",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-changed-arguments",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-id-boolean-for-number",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-id-string-for-number",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-obligations-undischarged",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-twice",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-unbound-member",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-unmapped-tool",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-unreviewed-change",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-when-unavailable",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-within-release-guard",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-without-admit",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-forwarded-witness-undischarged",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-input-required-succeeded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-record-without-returned",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-recovered-unknown-as-succeeded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-recovery-classification-outside-enum",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-as-result",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-id-boolean-for-number",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-id-string-for-number",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-not-first-cause",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-obligation-as-evidence-unavailable",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-obligation-as-expired",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-without-ecl-data",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-refusal-wrong-code",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-release-guard-differs",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-release-marked-late",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-release-without-guard",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-request-class-not-mapped",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-request-meta-unbound",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-request-parameters-not-arguments",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-request-without-binding",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-response-neither-result-nor-error",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-result-not-bound",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-result-substituted",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-returned-number-for-boolean",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-server-error-table-code-returned",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-status-outside-enum",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-tool-definition-without-name",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-unanswered-forward-as-result",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-unbound-member-decided-and-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-unmapped-method-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-verifiable-input-from-actor",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-wide-number-decided-and-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-authorization-expired-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-challenged-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-changed-tool-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-clock-regressed-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-decision-invalid-holds-refused-response",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-decision-invalid-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-decision-unavailable-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-denied-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-duplicated-obligation-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-evidence-unavailable-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-evidence-unavailable-pending-obligation-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-evidence-unavailable-unprepared-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-final-check-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-first-cause-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-float-arguments-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-float-content-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-forward-failed-unknown",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-forwarded-obligations-discharged",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-forwarded-on-admit",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-forwarded-release-order",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-held-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-input-required-unknown",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-late-answer-inside-window",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-noncharacter-id-forwarded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-null-arguments-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-obligation-unproven-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-obligation-unsupported-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-recovered-not-released",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-recovered-outcome-unknown",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-release-guard-exceeded-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-server-error-recoded",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-stale-proof-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-unbound-member-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-underivable-target-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-unmapped-method-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-unmapped-tool-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-wide-number-refused",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-accepted-outside-entry-window",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-alg-none-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-delegation-without-act",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-ed448-token-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-entry-decision-null",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-entry-max-uses-boolean",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-entry-other-parameters",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-expired-token-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-forged-proof-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-fractional-iat-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-header-key-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-lifetime-beyond-window",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-lifetime-zero",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-list-alg-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-noncanonical-signature-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-not-sender-constrained",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-null-thumbprint-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-obligation-after-execution",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-obligation-before-release",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-obligation-during-execution",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-other-audience-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-other-target-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-oversized-integer-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-proof-jti-empty-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-proof-jti-too-long-refused-as-replay",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-proof-other-key-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-proof-without-jti-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-refusal-other-error",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-refusal-without-error",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-replayed-proof-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-second-use-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-token-for-deny",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-token-without-jti",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-invalid-token-without-kid-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-valid-accepted-within-clock-skew",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-valid-dpop-es256-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-valid-first-cause-refused",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-valid-mtls-eddsa-accepted",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-valid-other-audience-refused",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "oauth-valid-replayed-proof-refused",
+      "suite": "ecl-1-v1.0-oauth-authority"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-current-trust-failed-expired",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-current-trust-failed-revoked",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-incomplete-artifact-missing",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-incomplete-payload-missing",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-artifact-digest",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-carried-trust-is-evidence",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-entry-name-over-limit",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-manifest-path-outside-portable-set",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-name-case-alias",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-name-outside-portable-set",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-not-stored",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-parent-traversal",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-payload-not-in-evidence",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-invalid-unnamed-member",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-valid-corroborated",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "offline-package-verification",
+      "id": "package-valid-verified",
+      "suite": "ecl-1-v1.0-offline-package"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-attempt-as-boolean",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-attribute-key-repeated",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-body-undeclared",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-control-carries-safe-state",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-deny-as-info",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-digest-misstated",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-digest-without-export-key",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-evidence-changed-after-failed-export",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-exported-before-recorded",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-identifier-undeclared",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-key-id-as-boolean",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-key-named-without-digest",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-key-named-without-parameters-digest",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-object-digest-unkeyed",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-object-not-ecl",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-observed-before-recorded",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-observed-time-beyond-fixed64",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-outcome-as-bytes",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-outcome-misstated",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-parameters-digest-unkeyed",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-parameters-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-request-event-without-request-id",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-response-carries-parameters-digest",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-severity-enum-name",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-severity-text-misstated",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-status-outside-enum",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-unkeyed-digest-as-bytes",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-invalid-unkeyed-digest-as-bytes-of-its-bytes",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-admit-response-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-challenge-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-declared-attribute",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-deny-response-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-failed-export-evidence-unchanged",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-halt-control-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-identifiers-declared",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-outcome-reason-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-request-event-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-request-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-request-exported-without-export-key",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "otel-export-keyed-digests",
+      "id": "otel-valid-terminal-event-exported",
+      "suite": "ecl-1-v1.0-otel-export"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-authority-boundary-number-for-boolean",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-direction-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-field-disposition-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-loss-class-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-mapped-field-without-target",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-object-media-type-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-object-protocol-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-represented-without-objects",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-responsibility-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-responsibility-status-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-retained-field-with-target",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "adapter-invalid-unrepresented-with-objects",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "adapter-valid-retained-source-field",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-admit-use-policy-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-admit-without-authorization-object",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-challenge-on-timeout-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-challenge-outcome-with-authorization",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-challenge-outcome-without-challenge-id",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-control-operation-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-control-plane-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-not-an-object",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-obligation-satisfaction-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-private-extension-token-without-version",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-private-extension-uri-in-ecl-namespace",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-registry-extension-identifier-case",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-request-use-policy-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-response-outcome-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "dcmp-invalid-supersede-without-replacement",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp-valid-admit-bounded-multi-use",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp-valid-challenge-hold-on-timeout",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp-valid-challenge-outcome-response",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp-valid-extension-identifier-forms",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp-valid-request-bounded-multi-use",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "dcmp-valid-supersede-control",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-authority-event-without-identifier",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-authority-state-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-bundle-manifest-without-closure",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-closure-status-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-decision-event-without-policy",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-decision-outcome-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-event-type-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-execution-event-without-attempt",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-execution-observed-with-release-guard",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-execution-released-without-release-guard",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-execution-state-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-intervention-operation-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-intervention-without-reason",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-lifecycle-operation-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-lifecycle-without-prior-digest",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-monotonic-unit-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-request-event-without-reference",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-state-event-without-trigger",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-verification-decision-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "ebmp-invalid-verification-without-boundary",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-authority-issued",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-bundle-manifest",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-decision-recorded",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-execution-released",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-indeterminate-verification",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-lifecycle-seal",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-rejecting-intervention",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-request-received",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "ebmp-valid-safe-state-transition",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-buffer-exhaustion-fail-open-unauthorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-buffer-ordering-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-dependency-class-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-dependency-fail-open-unauthorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-disposition-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-percentile-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-prohibited-condition-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-recovery-frontier-outside-enum",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-stale-dependency-fail-open-unauthorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-invalid-timeout-fail-open-unauthorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-valid-buffer-exhaustion-fail-open-authorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-valid-dependency-fail-open-authorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-valid-stale-dependency-fail-open-authorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-valid-timeout-fail-open-authorized",
+      "suite": "ecl-1-v1.0-schema-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "strict-failure-invalid-missing-flag",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-invalid-proof-dependency-degraded",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-invalid-proof-dependency-fail-open",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-invalid-proof-dependency-restricted",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-invalid-strict-profile-fail-open",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "strict-failure-invalid-unstated-claims",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-valid-profile",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-valid-proof-dependencies-quarantine-and-halt",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "strict-failure-valid-unclaimed-advisory-fail-open",
+      "suite": "ecl-1-v1.0-strict-failure"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-bad-point",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-duplicate-key-id",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-qualifying-purpose-alone",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-reversed-validity",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-revocation-unknown-key",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-00",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-01",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-02",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-03",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-04",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-05",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-06",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-07",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-08",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-09",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-10",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-11",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-12",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-13",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-small-order-key",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "trust-policy-invalid-trailing-newline",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "trust-policy-invalid-unknown-member",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-invalid-unregistered-purpose",
+      "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "trust-policy-load",
+      "id": "trust-policy-valid",
+      "suite": "ecl-1-v1.0-trust-policy"
+    }
+  ],
+  "version": 1
+}

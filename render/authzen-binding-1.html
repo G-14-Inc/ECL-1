@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL AuthZEN Binding Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-authzen-binding-profile-1">ECL AuthZEN Binding Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile specifies a policy-engine contribution to an ECL decision. The
+guide <code>docs/authzen-binding.md</code> explains it and gives the exact capability table.
+A native capability belongs to ECL's own path; its disposition assigns that
+responsibility and does not assert that a deployment implements every operation.</p>
+<p>An AuthZEN evaluation is a decision input and has no release boundary in the
+sense of <a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a>: it releases no action, and an action is released, if at
+all, by an enforcement point on an ECL <code>admit</code> (<a href="authzen-binding-1.html#AZB1-001">AZB1-001</a>).</p>
+<p><span id="AZB1-001"><strong>AZB1-001</strong></span><a class="requirement-link" href="#AZB1-001" aria-label="Link to AZB1-001">§</a> — An AuthZEN permit MUST NOT create, widen, extend or revive ECL
+authority, and the decision point MUST still apply its native grant, scope,
+generation, halt, validity and use checks.</p>
+<p><span id="AZB1-002"><strong>AZB1-002</strong></span><a class="requirement-link" href="#AZB1-002" aria-label="Link to AZB1-002">§</a> — A decision other than an unqualified JSON boolean true MUST NOT
+contribute to admit; a permit qualified by a non-empty context MUST be denied
+rather than flattened into an unqualified permit.</p>
+<p><span id="AZB1-003"><strong>AZB1-003</strong></span><a class="requirement-link" href="#AZB1-003" aria-label="Link to AZB1-003">§</a> — A valid false decision MUST deny with
+<code>ecl.reason.authzen-denied.v1</code>; qualified permits MUST deny with
+<code>ecl.error.binding-unsupported.v1</code>; malformed, missing, non-boolean, unknown-member,
+wrong-media-type or oversized responses MUST deny with
+<code>ecl.error.dependency-response-invalid.v1</code>; redirects, non-success statuses,
+truncated bodies, transport or TLS failures and total-deadline timeouts MUST deny
+with <code>ecl.error.dependency-unavailable.v1</code>.</p>
+<p><span id="AZB1-004"><strong>AZB1-004</strong></span><a class="requirement-link" href="#AZB1-004" aria-label="Link to AZB1-004">§</a> — The request mapping MUST be injective over ECL identifiers, MUST NOT
+send raw identifiers whose character set the bound engines reject, and MUST
+reject any DCMP-2 message type other than decision_request rather than approximate it.</p>
+<p><span id="AZB1-005"><strong>AZB1-005</strong></span><a class="requirement-link" href="#AZB1-005" aria-label="Link to AZB1-005">§</a> — The client MUST NOT follow redirects, retry within a decision
+attempt or discover endpoints, and MUST authenticate the server with TLS under
+a caller-configured trust anchor unless plain HTTP is explicitly enabled for
+loopback testing.</p>
+<p><span id="AZB1-006"><strong>AZB1-006</strong></span><a class="requirement-link" href="#AZB1-006" aria-label="Link to AZB1-006">§</a> — A deployment MUST publish the binding's exact capability table with
+each capability supported, native or unsupported, in which outcome-hold,
+outcome-challenge, obligations, validity-window, use-policy, safe-state,
+control-cancel, control-revoke, control-supersede, control-quarantine and
+control-halt MUST be native responsibilities of ECL.</p>
+<p><span id="AZB1-007"><strong>AZB1-007</strong></span><a class="requirement-link" href="#AZB1-007" aria-label="Link to AZB1-007">§</a> — A policy-service change MUST affect only subsequent evaluations;
+outstanding authorizations MUST remain bounded by their validity windows, and
+immediate effect MUST use ECL's own control path without a policy-service bypass.</p>
+<p><span id="AZB1-008"><strong>AZB1-008</strong></span><a class="requirement-link" href="#AZB1-008" aria-label="Link to AZB1-008">§</a> — Deviations from the bound protocol's requirements MUST be declared
+in binding documentation, including this binding's strict-JSON acceptance beyond
+the I-JSON recommendation and denial of unknown response members.</p>
+<p>An empty context does not qualify the boolean decision. A valid false is a
+policy denial, not a transport failure. The additional check supplies no
+authority, validity window, use policy or obligation. The table's native
+responsibilities preserve cancel, revoke, supersede, quarantine, halt, hold and
+challenge as ECL semantics; this binding supports neither batch evaluation nor
+endpoint discovery. Outstanding authority staleness is bounded by its existing
+window, not by polling the policy engine.</p>
+<h2 id="evidence">Evidence</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>ECL object semantics separately from external engine behavior</td>
+</tr>
+<tr>
+<td>Deployment tests</td>
+<td>The decision point's client and its handling of the policy engine's responses</td>
+</tr>
+</tbody>
+</table>
+<p>Vectors check ECL objects, not an exchange with a policy engine. A claim of
+this profile shows the client's behavior with tests of its own deployment: the
+strict acceptance of <a href="authzen-binding-1.html#AZB1-002">AZB1-002</a> and <a href="authzen-binding-1.html#AZB1-003">AZB1-003</a>, an injective mapping that refuses
+what it cannot map (<a href="authzen-binding-1.html#AZB1-004">AZB1-004</a>), the transport rules of <a href="authzen-binding-1.html#AZB1-005">AZB1-005</a>, and the boundary
+of <a href="authzen-binding-1.html#AZB1-001">AZB1-001</a>, under which a permit never replaces a native check such as
+revocation. The guide gives the exact capability table and the declared
+deviations (<a href="authzen-binding-1.html#AZB1-006">AZB1-006</a>, <a href="authzen-binding-1.html#AZB1-008">AZB1-008</a>). These tests do not establish assessor
+independence or a production deployment claim.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/AUTHZEN-BINDING-1.md</code>, SHA-256 <code>5949c7e58236b0faed86a534ef451c193a967499114cc30ba58582dc0fd8e801</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

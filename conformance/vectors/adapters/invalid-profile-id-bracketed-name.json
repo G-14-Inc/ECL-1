@@ -1,0 +1,118 @@
+{
+  "authority_boundary": {
+    "conflict_disposition": "fail_closed_no_release",
+    "ecl_is_portable_evidence_only": true,
+    "inbound_requires_native_reevaluation": true,
+    "native_authoritative_for_effects": true
+  },
+  "binding_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "4fb25b34a751a97844e0a6c365752dc17dab87370575d9eb47d006c503148e58"
+  },
+  "binding_id": "https://externalcontrollayer.ai/ns/adapter-binding/sha256/5177fef9b5df83997284238dbf0d8c04bbafbaadbe95224b50eafb101bed089a",
+  "created_at": "2026-07-27T04:30:00.000000Z",
+  "derived_fields": [
+    {
+      "derivation": "The portable message identifier is deterministically derived by the adapter.",
+      "source_paths": [
+        "/actor",
+        "/operation"
+      ],
+      "target_path": "/0/message_id"
+    }
+  ],
+  "direction": "native_to_ecl",
+  "ecl_objects": [
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "925cb6590bb1417d80587f2262850af5bdd5f04774aae1df0bcd6d534b3df158"
+      },
+      "media_type": "application/vnd.ecl.dcmp+json",
+      "object_id": "https://externalcontrollayer.ai/ns/message/req-001",
+      "protocol": "DCMP-2",
+      "responsibilities": [
+        "Decision",
+        "Provenance"
+      ]
+    }
+  ],
+  "field_accounting": [
+    {
+      "disposition": "mapped",
+      "note": "Native actor identity is preserved in the DCMP actor.",
+      "source_path": "/actor",
+      "target_paths": [
+        "/0/actor/id"
+      ]
+    },
+    {
+      "disposition": "mapped",
+      "note": "Native action operation is preserved in the DCMP action.",
+      "source_path": "/operation",
+      "target_paths": [
+        "/0/action/operation"
+      ]
+    }
+  ],
+  "loss_class": "lossless",
+  "profile_id": "https://[externalcontrollayer.ai]/ns/profile/adapter-foundation/1",
+  "provenance": {
+    "adapter_id": "https://externalcontrollayer.ai/ns/adapter/foundation-example",
+    "adapter_version": "1",
+    "mapping_id": "https://externalcontrollayer.ai/ns/mapping/foundation-example",
+    "mapping_version": "1",
+    "source_revision": "fixture-1"
+  },
+  "responsibility_coverage": {
+    "Authority": {
+      "note": "This source contract does not perform this responsibility.",
+      "object_ids": [],
+      "status": "not_applicable"
+    },
+    "Decision": {
+      "note": "Represented by the listed derived ECL object or objects.",
+      "object_ids": [
+        "https://externalcontrollayer.ai/ns/message/req-001"
+      ],
+      "status": "represented"
+    },
+    "Enforcement": {
+      "note": "This source contract does not perform this responsibility.",
+      "object_ids": [],
+      "status": "not_applicable"
+    },
+    "Fleet": {
+      "note": "This source contract does not perform this responsibility.",
+      "object_ids": [],
+      "status": "not_applicable"
+    },
+    "Provenance": {
+      "note": "Represented by the listed derived ECL object or objects.",
+      "object_ids": [
+        "https://externalcontrollayer.ai/ns/message/req-001"
+      ],
+      "status": "represented"
+    },
+    "Verification": {
+      "note": "This source contract does not perform this responsibility.",
+      "object_ids": [],
+      "status": "not_applicable"
+    }
+  },
+  "schema_version": "ecl_adapter_binding_v1",
+  "source": {
+    "contract": "example.action.v1",
+    "object_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "95cdc5257b6c03a214eb724a86d51162e2ef34d73e915895dfe62cf690bae33f"
+    },
+    "object_id": "native-action-001",
+    "retained": true,
+    "schema_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "system": "example-native-runtime"
+  }
+}

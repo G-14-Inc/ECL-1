@@ -1,0 +1,76 @@
+name: Public review comment
+description: Comment on a version of ECL-1 during its public review window.
+title: "Review: "
+labels: ["public-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every comment gets a published disposition (`governance/PUBLIC_REVIEW.md`). Do not report an exploitable weakness here: send it privately, as `governance/SECURITY.md` says.
+  - type: input
+    id: version
+    attributes:
+      label: Version under review
+      description: The version that the review's announcement names, for example 1.1.
+    validations:
+      required: true
+  - type: input
+    id: document
+    attributes:
+      label: Document
+      description: The path of the document, for example standard/ECL-1_Standard.md.
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: The section number or heading.
+    validations:
+      required: false
+  - type: input
+    id: requirements
+    attributes:
+      label: Requirement IDs
+      description: The requirement identifiers concerned, for example ECL1N-0078.
+    validations:
+      required: false
+  - type: textarea
+    id: comment
+    attributes:
+      label: Comment
+      description: The problem, and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: The change you propose, as exact text where you can.
+    validations:
+      required: false
+  - type: dropdown
+    id: credit
+    attributes:
+      label: Credit in the disposition log
+      description: How the published disposition log credits you. This issue itself shows your GitHub account.
+      options:
+        - By name
+        - By organization only
+        - Not at all
+    validations:
+      required: true
+  - type: input
+    id: organization
+    attributes:
+      label: Name or organization for the credit
+      description: The name, or the organization, that the log should show.
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Proposed text
+      options:
+        - label: Text I propose here is offered under the contribution terms of `governance/CONTRIBUTING.md`.
+          required: false

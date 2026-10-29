@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+  "title": "ECL Evidence Lifecycle Policy v1",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "version",
+    "digest",
+    "effective_at",
+    "retention_rules",
+    "hold_precedence",
+    "export",
+    "redaction",
+    "destruction"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "policy_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "effective_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "retention_rules": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_class",
+          "start_event",
+          "duration",
+          "shortening_authority_class"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "evidence_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start_event": {
+            "type": "string",
+            "minLength": 1
+          },
+          "duration": {
+            "type": "string",
+            "pattern": "^P(?!$).+$"
+          },
+          "shortening_authority_class": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "hold_precedence": {
+      "const": "legal_hold_over_scheduled_destruction"
+    },
+    "export": {
+      "type": "object",
+      "required": [
+        "custody_manifest_required",
+        "receipt_event_required",
+        "offline_material_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "custody_manifest_required": {
+          "const": true
+        },
+        "receipt_event_required": {
+          "const": true
+        },
+        "offline_material_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "required": [
+        "derivative_identity_required",
+        "sealed_source_binding_required",
+        "manifest_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "derivative_identity_required": {
+          "const": true
+        },
+        "sealed_source_binding_required": {
+          "const": true
+        },
+        "manifest_required": {
+          "const": true
+        }
+      }
+    },
+    "destruction": {
+      "type": "object",
+      "required": [
+        "proof_required",
+        "observation_boundary_required",
+        "minimum_lifecycle_proof_retained"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "proof_required": {
+          "type": "boolean"
+        },
+        "observation_boundary_required": {
+          "const": true
+        },
+        "minimum_lifecycle_proof_retained": {
+          "const": true
+        }
+      }
+    }
+  }
+}

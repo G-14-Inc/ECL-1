@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/implementers-registry/1",
+  "title": "ECL-1 implementers registry",
+  "description": "The implementers registry of ECL-1 (community/implementers.yaml): self-declared conformance claims, each with a link to its conformance report. The procedure in governance/CONFORMANCE_CLAIMS.md defines what the editors check before they list a claim. A listing certifies nothing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementers"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_implementers_registry_v1"
+    },
+    "implementers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "https_url": {
+      "type": "string",
+      "pattern": "^https://[^\\s]+$",
+      "maxLength": 2048
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "organization",
+        "url",
+        "claim",
+        "level",
+        "status",
+        "listed",
+        "report"
+      ],
+      "properties": {
+        "name": {
+          "description": "The implementation's name, with its version.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "organization": {
+          "description": "The organization, or the person, that makes the claim.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "url": {
+          "description": "The implementation's page.",
+          "$ref": "#/$defs/https_url"
+        },
+        "claim": {
+          "description": "The claim's public statement, with every element that Section 7.7 of the standard requires (ECL1N-0078).",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "level": {
+          "description": "The claimed conformance level.",
+          "enum": [
+            "L1",
+            "L2",
+            "L3",
+            "L4"
+          ]
+        },
+        "status": {
+          "description": "The listing's status. Every claim in the registry is self-declared; the claim status of Section 7.6 is part of the claim's statement.",
+          "const": "self-declared"
+        },
+        "listed": {
+          "description": "The date on which the editors listed the claim.",
+          "type": "string",
+          "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$"
+        },
+        "report": {
+          "description": "The conformance report: the conformance tests' results and the offline verifier's output on the implementation's evidence.",
+          "$ref": "#/$defs/https_url"
+        },
+        "assessment": {
+          "description": "An assessor's assessment of the claim, listed separately when the implementer provides it.",
+          "$ref": "#/$defs/https_url"
+        }
+      }
+    }
+  }
+}

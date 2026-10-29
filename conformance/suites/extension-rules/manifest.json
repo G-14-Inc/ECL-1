@@ -1,0 +1,227 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-extension-rules",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.extension-single-version.v1"
+      ],
+      "id": "extension-version-invalid-critical-unallocated-version",
+      "negates": [
+        "XR1-006",
+        "XR1-010"
+      ],
+      "path": "conformance/suites/extension-rules/extension-version-invalid-critical-unallocated-version.json",
+      "requirement_ids": [
+        "XR1-006",
+        "XR1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-private-extensions.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry the critical ecl.ext.consequence-coupling.v1 at version 2, which the registry never allocated, beside version 1"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-single-version.v1",
+      "expected_secondary_ids": [],
+      "id": "extension-version-invalid-envelope-extension-at-two-versions",
+      "negates": [
+        "XR1-010"
+      ],
+      "path": "conformance/suites/extension-rules/extension-version-invalid-envelope-extension-at-two-versions.json",
+      "requirement_ids": [
+        "XR1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-private-extensions.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "sign the request in an ECL-IE-1 envelope that carries com.example.audit-tag.v1 at version 1 and at version 2"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-single-version.v1",
+      "expected_secondary_ids": [],
+      "id": "extension-version-invalid-private-extension-at-two-versions",
+      "negates": [
+        "XR1-010"
+      ],
+      "path": "conformance/suites/extension-rules/extension-version-invalid-private-extension-at-two-versions.json",
+      "requirement_ids": [
+        "XR1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/extension-rules/extension-version-valid-distinct-extensions.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry com.example.audit-tag.v1 at version 2 as well as at version 1"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-single-version.v1",
+      "expected_secondary_ids": [],
+      "id": "extension-version-invalid-unknown-version-counts",
+      "negates": [
+        "XR1-010"
+      ],
+      "path": "conformance/suites/extension-rules/extension-version-invalid-unknown-version-counts.json",
+      "requirement_ids": [
+        "XR1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/outcome-reason-valid-expired-before-release.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry ecl.ext.outcome-reason.v1 at version 3, which the registry never allocated, beside version 1, both non-critical"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "extension-version-valid-distinct-extensions",
+      "path": "conformance/suites/extension-rules/extension-version-valid-distinct-extensions.json",
+      "requirement_ids": [
+        "XR1-009",
+        "XR1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-private-extensions.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "add another private extension at version 2 beside extensions at version 1"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-identifiers-unique.v1",
+      "expected_secondary_ids": [],
+      "id": "work-intent-extension-invalid-duplicate-pair",
+      "negates": [
+        "XR1-009"
+      ],
+      "path": "conformance/suites/extension-rules/work-intent-extension-invalid-duplicate-pair.json",
+      "requirement_ids": [
+        "XR1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+      "source": {
+        "base_vector": "conformance/suites/extension-rules/work-intent-extension-valid-private-extension.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry com.example.review-ticket.v1 at version 1 twice"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-single-version.v1",
+      "expected_secondary_ids": [],
+      "id": "work-intent-extension-invalid-two-versions",
+      "negates": [
+        "XR1-010"
+      ],
+      "path": "conformance/suites/extension-rules/work-intent-extension-invalid-two-versions.json",
+      "requirement_ids": [
+        "XR1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+      "source": {
+        "base_vector": "conformance/suites/extension-rules/work-intent-extension-valid-private-extension.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry com.example.review-ticket.v1 at version 2 as well as at version 1"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-namespace-allocated.v1",
+      "expected_secondary_ids": [],
+      "id": "work-intent-extension-invalid-unallocated-ecl-identifier",
+      "negates": [
+        "XR1-017"
+      ],
+      "path": "conformance/suites/extension-rules/work-intent-extension-invalid-unallocated-ecl-identifier.json",
+      "requirement_ids": [
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+      "source": {
+        "base_vector": "conformance/suites/extension-rules/work-intent-extension-valid-private-extension.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a non-critical extension whose ecl.* identifier the registry never allocated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [],
+      "id": "work-intent-extension-invalid-unknown-critical",
+      "negates": [
+        "XR1-006"
+      ],
+      "path": "conformance/suites/extension-rules/work-intent-extension-invalid-unknown-critical.json",
+      "requirement_ids": [
+        "XR1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+      "source": {
+        "base_vector": "conformance/suites/extension-rules/work-intent-extension-valid-private-extension.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a critical private extension that the consumer does not know"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "work-intent-extension-valid-private-extension",
+      "path": "conformance/suites/extension-rules/work-intent-extension-valid-private-extension.json",
+      "requirement_ids": [
+        "XR1-006",
+        "XR1-009",
+        "XR1-010",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/work-intent-valid.json",
+        "generator": "scripts/generate_extension_rule_vectors.py",
+        "kind": "mutation",
+        "mutation": "add the non-critical private extension com.example.review-ticket.v1 at version 1"
+      },
+      "stage": "document"
+    }
+  ]
+}

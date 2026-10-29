@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Integrity Envelope 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-integrity-envelope-1">ECL Integrity Envelope 1</h1>
+<p>Version: 1.0
+Status: normative companion of ECL-1 Version 1.0, a published version
+Schemas: <code>schemas/ecl-integrity-envelope-v1.schema.json</code>,
+<code>schemas/ecl-time-attestation-v1.schema.json</code></p>
+<p>This protocol is ECL Integrity Envelope 1, published as the document
+<code>INTEGRITY-ENVELOPE-1</code>. An envelope it defines carries the <code>envelope_version</code>
+<code>ECL-IE-1</code> and is called an ECL-IE-1 envelope; its requirements carry the prefix
+<code>IE1</code>.</p>
+<p>Requirement identifiers are allocated in the order requirements were added and
+never reused, so a later identifier appears among earlier ones where its subject
+belongs: <a href="integrity-envelope-1.html#IE1-037">IE1-037</a> and <a href="integrity-envelope-1.html#IE1-038">IE1-038</a> follow <a href="integrity-envelope-1.html#IE1-004">IE1-004</a>, and <a href="integrity-envelope-1.html#IE1-039">IE1-039</a> and <a href="integrity-envelope-1.html#IE1-040">IE1-040</a> are in
+section 11.</p>
+<h2 id="1-security-goal">1. Security goal</h2>
+<p>The envelope authenticates payload bytes and payload type under a trust policy
+declared inside the signed payload. It is designed for offline verification and
+algorithm transition without allowing untrusted envelope metadata to weaken
+the signed policy.</p>
+<p><span id="IE1-001"><strong>IE1-001</strong></span><a class="requirement-link" href="#IE1-001" aria-label="Link to IE1-001">§</a> — A signed ECL JSON payload MUST first satisfy the restricted ECL
+canonical JSON profile.</p>
+<p><span id="IE1-002"><strong>IE1-002</strong></span><a class="requirement-link" href="#IE1-002" aria-label="Link to IE1-002">§</a> — The JSON profile MUST conform to I-JSON (RFC 7493) and RFC 8785
+behavior, including I-JSON's prohibition of surrogate code points and
+noncharacters in strings and member names, subject to these additional
+restrictions: floating-point values are prohibited, negative zero is
+prohibited, integers are limited to the exact interoperable range, and
+duplicate members are prohibited. The noncharacters are U+FDD0 to U+FDEF and
+the last two code points of each of the 17 Unicode planes (U+FFFE, U+FFFF,
+U+1FFFE, U+1FFFF and so on to U+10FFFF).</p>
+<p><span id="IE1-003"><strong>IE1-003</strong></span><a class="requirement-link" href="#IE1-003" aria-label="Link to IE1-003">§</a> — Decimal quantities, currency, durations, integers outside the
+exact range, and other precision-sensitive values MUST use registered string
+representations.</p>
+<p><span id="IE1-004"><strong>IE1-004</strong></span><a class="requirement-link" href="#IE1-004" aria-label="Link to IE1-004">§</a> — A consumer MUST apply the verified RFC 8785 erratum relevant to
+negative zero (Errata ID 7920) and MUST reject rather than normalize ambiguous
+input.</p>
+<p>A strict parser can meet several defects in one input. The checks below have a
+fixed order, so that every conforming parser refuses the same input with the
+same finding whatever the position of each defect in the text.</p>
+<p><span id="IE1-037"><strong>IE1-037</strong></span><a class="requirement-link" href="#IE1-037" aria-label="Link to IE1-037">§</a> — A consumer MUST refuse a configured limit that <a href="integrity-envelope-1.html#IE1-028">IE1-028</a> does not
+allow before it reads any input, as a configuration error and never as the
+finding of a check below. It MUST check strict JSON input in this order, and
+MUST refuse input that fails a check with that check's finding and no other,
+unless the protocol that reads the input names another error for the refusal
+(<a href="integrity-envelope-1.html#IE1-040">IE1-040</a> for the payload of an envelope, TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-002">TP1-002</a> and <a href="trust-policy-1.html#TP1-007">TP1-007</a> for
+a trust-policy document):</p>
+<ol>
+<li>its size in bytes is within the consumer&#x27;s declared limit (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>), or the finding is <code>ecl.error.resource-limit-exceeded.v1</code>;</li>
+<li>it is UTF-8 without a byte order mark and is exactly one JSON value under the grammar of RFC 8259, which excludes the constants <code>NaN</code>, <code>Infinity</code> and <code>-Infinity</code>, or the finding is <code>ecl.rule.json-strict-syntax.v1</code>; a consumer MAY end this check at a value nested deeper than both 10,000 levels and its declared nesting limit, and the finding is then <code>ecl.error.resource-limit-exceeded.v1</code>;</li>
+<li>its nesting depth, counted from 0 for the top-level value, and its number of values are within the consumer's declared limits, or the finding is <code>ecl.error.resource-limit-exceeded.v1</code>;</li>
+<li>every string and member name, after escapes are decoded, holds only Unicode scalar values that are not noncharacters (<a href="integrity-envelope-1.html#IE1-002">IE1-002</a>), or the finding is <code>ecl.rule.json-strict-syntax.v1</code>;</li>
+<li>no object repeats a member name, after escapes are decoded, or the finding is <code>ecl.rule.json-no-duplicate-members.v1</code>;</li>
+<li>every number is an integer within the exact interoperable range, written without a fraction, an exponent or a negative zero, or the finding is <code>ecl.rule.json-restricted-numbers.v1</code>.</li>
+</ol>
+<p>Checks 3 to 6 read every value of the input, including each value of a repeated
+member name. The limits are each consumer&#x27;s own (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>), so whether an input
+near a limit passes check 1 or check 3 can differ between consumers; the order
+of the other checks does not.</p>
+<p>Check 2 comes before check 3 wherever each defect lies in the text: an input
+that goes beyond a nesting or value limit and departs from the grammar only
+later in the text has the finding of check 2. A consumer keeps this order
+without building an oversized value (<a href="integrity-envelope-1.html#IE1-029">IE1-029</a>): it counts values and nesting as
+it parses, drops what it has built at the first value beyond a limit, and reads
+the rest of the text for check 2 alone, keeping only the kind of each open
+container. Every consumer completes check 2 on an input nested no deeper than
+10,000 levels, so the finding of such an input does not depend on the parser.</p>
+<p>Input that passes these checks is then validated against its schema. The ECL
+schemas are JSON Schema documents of draft 2020-12, and two of its keywords
+need a convention that every validator shares.</p>
+<p><span id="IE1-038"><strong>IE1-038</strong></span><a class="requirement-link" href="#IE1-038" aria-label="Link to IE1-038">§</a> — A validator MUST evaluate the <code>pattern</code> keyword of an ECL schema
+as an ECMA-262 regular expression that may match anywhere in the string unless
+the pattern anchors it, so that <code>$</code> matches only at the end of the string, never
+before a final line terminator, and <code>.</code> matches no line terminator. It MUST
+treat the <code>format</code> keyword as an assertion for the two formats that the ECL
+schemas use, and a string satisfies them as follows:</p>
+<ol>
+<li><code>date-time</code>: the string matches the pattern of <code>rfc3339Utc</code> in the common schema (<code>schemas/ecl-common-v1.schema.json</code>) and names a date from 0001-01-01 to 9999-12-31 that exists in the Gregorian calendar;</li>
+<li><code>uri</code>: every character is an ASCII letter or digit or one of <code>-._~:/?#[]@!$&amp;'()*+,;=%</code>; every <code>%</code> is followed by two hexadecimal digits; the string begins with a scheme (a letter followed by letters, digits, <code>+</code>, <code>-</code> and <code>.</code>) and <code>:</code>; the characters after that <code>:</code> up to the first <code>?</code> or <code>#</code> are neither empty nor exactly <code>//</code>; and when those characters begin with <code>//</code>, the authority that follows, up to the next <code>/</code>, holds <code>[</code> or <code>]</code> only around an IP literal: after its last <code>@</code> the authority begins with <code>[</code> and holds a <code>]</code>, the characters between that <code>[</code> and the first <code>]</code> are an IPv6 address in the text form of RFC 4291 section 2.2 (with no leading zero in an octet of an embedded IPv4 address), optionally followed by <code>%</code> and one or more characters other than <code>%</code>, or are a lowercase <code>v</code>, one or more hexadecimal digits, <code>.</code> and one or more characters, and any characters after that <code>]</code> begin with <code>:</code>.</li>
+</ol>
+<p>The ECL schemas give every member that carries a format the type <code>string</code>, so
+a value of another type fails the schema whatever a validator does with its
+format.</p>
+<h2 id="2-payload-digest-and-logical-identity">2. Payload digest and logical identity</h2>
+<p><span id="IE1-005"><strong>IE1-005</strong></span><a class="requirement-link" href="#IE1-005" aria-label="Link to IE1-005">§</a> — The envelope MUST carry the payload bytes as canonical base64,
+payload media type, and payload digest.</p>
+<p><span id="IE1-006"><strong>IE1-006</strong></span><a class="requirement-link" href="#IE1-006" aria-label="Link to IE1-006">§</a> — The verifier MUST recompute the payload digest before signature
+policy evaluation.</p>
+<p><span id="IE1-007"><strong>IE1-007</strong></span><a class="requirement-link" href="#IE1-007" aria-label="Link to IE1-007">§</a> — SHA-256 is the ECL v1 universal digest floor. Profiles MAY require
+an additional registered digest but MUST NOT remove SHA-256 without a
+versioned core transition.</p>
+<p><span id="IE1-008"><strong>IE1-008</strong></span><a class="requirement-link" href="#IE1-008" aria-label="Link to IE1-008">§</a> — A logical protocol identifier and canonical content digest
+together identify an immutable object version. Systems MUST report conflicting
+digests rather than selecting one silently.</p>
+<h2 id="3-signing-input">3. Signing input</h2>
+<p>The signing input is the DSSE v1 pre-authentication encoding:</p>
+<p><code>&quot;DSSEv1&quot; SP LEN(payloadType) SP payloadType SP LEN(payload) SP payload</code></p>
+<p>Lengths are the decimal octet lengths of the immediately following byte
+strings.</p>
+<p><span id="IE1-009"><strong>IE1-009</strong></span><a class="requirement-link" href="#IE1-009" aria-label="Link to IE1-009">§</a> — Signers and verifiers MUST compute this domain-separated input
+over the exact payload type and decoded payload bytes.</p>
+<p><span id="IE1-010"><strong>IE1-010</strong></span><a class="requirement-link" href="#IE1-010" aria-label="Link to IE1-010">§</a> — A signature valid for one payload type MUST NOT validate for
+another payload type.</p>
+<p><span id="IE1-011"><strong>IE1-011</strong></span><a class="requirement-link" href="#IE1-011" aria-label="Link to IE1-011">§</a> — A verifier MUST NOT re-serialize a parsed payload before
+signature verification. The verifier MUST verify the transported canonical
+bytes and then separately prove that those bytes are canonical.</p>
+<h2 id="4-payload-bound-policy">4. Payload-bound policy</h2>
+<p>The signed payload carries:</p>
+<ul>
+<li>the <code>required</code> flag, which states whether integrity applies;</li>
+<li>accepted suite identifiers;</li>
+<li>eligible key identifiers, when bounded;</li>
+<li>required key identifiers, when any signer is mandatory;</li>
+<li>signature threshold;</li>
+<li>trust-policy identifier, version, digest, and epoch;</li>
+<li>verification-time policy;</li>
+<li>revocation policy.</li>
+</ul>
+<p><span id="IE1-012"><strong>IE1-012</strong></span><a class="requirement-link" href="#IE1-012" aria-label="Link to IE1-012">§</a> — Envelope fields MUST NOT weaken the payload-bound policy.</p>
+<p><span id="IE1-013"><strong>IE1-013</strong></span><a class="requirement-link" href="#IE1-013" aria-label="Link to IE1-013">§</a> — The threshold MUST be an integer, MUST be at least one when
+integrity is required, MUST be zero when integrity is declared optional, and
+MUST NOT be lower than the number of mandatory signers; when the policy lists
+eligible keys, every mandatory signer MUST be one of them. A consumer MUST
+reject a payload-bound policy that fails any of these conditions with
+<code>ecl.rule.integrity-threshold-consistent.v1</code>.</p>
+<p>These are the only conditions of that rule. An empty list of eligible keys
+leaves the eligible keys unbounded, so mandatory signers need no eligible list.
+A threshold higher than the number of eligible keys, or a key whose suite the
+policy does not accept, is not a consistency failure: no envelope can then meet
+the policy, and verification refuses each one under <a href="integrity-envelope-1.html#IE1-040">IE1-040</a>.</p>
+<p><span id="IE1-014"><strong>IE1-014</strong></span><a class="requirement-link" href="#IE1-014" aria-label="Link to IE1-014">§</a> — Each valid signer MUST count at most once toward threshold,
+independent of duplicate signature entries.</p>
+<p><span id="IE1-015"><strong>IE1-015</strong></span><a class="requirement-link" href="#IE1-015" aria-label="Link to IE1-015">§</a> — A key MUST be acceptable under the trust policy, eligible-key
+set, suite binding, validity interval, usage constraint, and revocation policy
+before its signature counts.</p>
+<h2 id="5-initial-suite-registry">5. Initial suite registry</h2>
+<p>The initial registry includes:</p>
+<ul>
+<li><code>ecl.sig.ed25519.v1</code></li>
+<li><code>ecl.sig.ecdsa-p256-sha256.v1</code></li>
+<li><code>ecl.sig.ml-dsa-65.v1</code></li>
+</ul>
+<p><span id="IE1-016"><strong>IE1-016</strong></span><a class="requirement-link" href="#IE1-016" aria-label="Link to IE1-016">§</a> — Ed25519 encoding and verification MUST follow RFC 8032.</p>
+<p><span id="IE1-017"><strong>IE1-017</strong></span><a class="requirement-link" href="#IE1-017" aria-label="Link to IE1-017">§</a> — ECDSA P-256 signatures MUST use minimally encoded ASN.1 DER and a
+low-S value. Non-minimal or high-S signatures MUST be rejected.</p>
+<p><span id="IE1-018"><strong>IE1-018</strong></span><a class="requirement-link" href="#IE1-018" aria-label="Link to IE1-018">§</a> — ML-DSA-65 use MUST follow FIPS 204, read with the potential
+updates (errata) that NIST lists for it, and MUST be explicitly enabled by
+profile and trust policy. The
+<code>ecl.sig.ml-dsa-65.v1</code> suite signs the exact DSSE v1 pre-authentication input
+as the FIPS 204 external message with an empty ML-DSA context. Implementations
+MUST reject any other public-key or signature length, MUST bind provider and
+backend identity to conformance evidence, and MUST pass a source-locked NIST
+ACVP ML-DSA-65 verification case plus a mutation rejection before enabling
+the suite.</p>
+<p><span id="IE1-019"><strong>IE1-019</strong></span><a class="requirement-link" href="#IE1-019" aria-label="Link to IE1-019">§</a> — A post-quantum signature MUST NOT silently replace a required
+classical signature during a transition. Hybrid or threshold policy MUST state
+whether both, either, or a specified quorum is required.</p>
+<p><span id="IE1-020"><strong>IE1-020</strong></span><a class="requirement-link" href="#IE1-020" aria-label="Link to IE1-020">§</a> — Recognition of an algorithm name is not trust. Unregistered,
+deprecated, prohibited, or policy-ineligible suites MUST NOT count.</p>
+<h2 id="6-verification-material-and-time">6. Verification material and time</h2>
+<p><span id="IE1-021"><strong>IE1-021</strong></span><a class="requirement-link" href="#IE1-021" aria-label="Link to IE1-021">§</a> — An offline package (OFFLINE-VERIFICATION-1) MUST carry one
+signed evidence bundle (EBMP-2 section 11) and every certificate, raw public
+key, trust root, registry snapshot, revocation statement, transparency proof,
+timestamp, and policy artifact required to reproduce verification without a
+network. The bundle's envelopes and observations are the package's <code>envelope</code>
+and <code>observation</code> artifacts, and their canonical payloads are its <code>payload</code>
+artifacts. The package MUST carry at least one artifact of each of the roles
+<code>payload</code>, <code>envelope</code>, <code>trust_policy</code>, <code>verification_key</code>,
+<code>revocation_snapshot</code>, <code>registry_snapshot</code> and <code>time_evidence</code>, and the
+artifact whose digest each <code>trust_policy</code>, <code>revocation_snapshot</code>,
+<code>registry_snapshots</code> and <code>time_evidence</code> reference of its manifest gives. The
+bundle itself carries none of this material (<a href="trust-policy-1.html#TP1-001">TP1-001</a>); <a href="integrity-envelope-1.html#IE1-022">IE1-022</a> states how a
+verifier treats it.</p>
+<p><span id="IE1-022"><strong>IE1-022</strong></span><a class="requirement-link" href="#IE1-022" aria-label="Link to IE1-022">§</a> — Verification material that an envelope or an offline package
+carries MUST be treated as evidence and MUST NOT automatically be treated as a
+trust anchor. A verifier MUST verify an offline package under the trust
+policy, the earlier versions of that policy and the evaluation time that its
+caller supplies, never under a policy or time that the package carries. The
+manifest is not authenticated: its <code>expires_at</code> is the producer's statement and
+limits only a holder who does not change it. The verifier MUST make these
+checks in order and report the verdict of <a href="ebmp-2.html#EBMP2-060">EBMP2-060</a> and the error code that the
+first check to fail gives; a package that exceeds a declared limit of the
+verifier (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>) is <code>invalid</code>, with <code>ecl.error.resource-limit-exceeded.v1</code>,
+at the check that meets the limit:</p>
+<ol>
+<li>the archive is in <code>ecl.zip.store.v1</code> form (<a href="integrity-envelope-1.html#IE1-030">IE1-030</a>, <a href="integrity-envelope-1.html#IE1-031">IE1-031</a>): <code>invalid</code>, <code>ecl.error.semantic-invalid.v1</code>;</li>
+<li>the archive holds <code>manifest.json</code>: <code>incomplete</code>, <code>ecl.error.causal-closure-incomplete.v1</code>;</li>
+<li>the manifest is strict JSON (<a href="integrity-envelope-1.html#IE1-002">IE1-002</a>) that satisfies <code>https://externalcontrollayer.ai/ns/schema/offline-verification-package/1</code>, its <code>created_at</code> and <code>expires_at</code> are valid instants, and every artifact entry and every <code>trust_policy</code>, <code>revocation_snapshot</code>, <code>registry_snapshots</code> and <code>time_evidence</code> reference in it has an <code>ecl.digest.sha-256.v1</code> digest: <code>invalid</code>, <code>ecl.error.schema-invalid.v1</code>;</li>
+<li>the manifest's artifact paths could be the entry names of one <code>ecl.zip.store.v1</code> archive together with <code>manifest.json</code> (<a href="integrity-envelope-1.html#IE1-030">IE1-030</a>, <a href="integrity-envelope-1.html#IE1-031">IE1-031</a>), and they name every other member of the archive: <code>invalid</code>, <code>ecl.error.semantic-invalid.v1</code>;</li>
+<li>the manifest's <code>expires_at</code> is later than its <code>created_at</code>: <code>invalid</code>, <code>ecl.error.expired.v1</code>;</li>
+<li>every artifact that the archive holds has the size and SHA-256 digest of its manifest entry: <code>invalid</code>, <code>ecl.error.integrity-invalid.v1</code>;</li>
+<li>every <code>envelope</code> and <code>observation</code> artifact is strict JSON and a JSON object: <code>invalid</code>, <code>ecl.error.schema-invalid.v1</code>; these artifacts are the envelopes and observations of the package's evidence bundle;</li>
+<li>every <code>payload</code> artifact is the payload of a packaged envelope or observation: <code>invalid</code>, <code>ecl.error.integrity-invalid.v1</code>;</li>
+<li>when the package carries an envelope, its bundle, verified with the caller&#x27;s inputs as <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a> to <a href="ebmp-2.html#EBMP2-062">EBMP2-062</a> require, is not <code>invalid</code>: <code>invalid</code>, with the bundle's findings;</li>
+<li>the archive holds every artifact that the manifest names or <a href="integrity-envelope-1.html#IE1-021">IE1-021</a> requires and the payload of every packaged envelope and observation, and the package carries an envelope: <code>incomplete</code>, <code>ecl.error.causal-closure-incomplete.v1</code>;</li>
+<li>the bundle is not <code>incomplete</code>: <code>incomplete</code>, with the bundle's findings;</li>
+<li>otherwise the package has its bundle's verdict and findings, except that a package whose <code>expires_at</code> is not later than the evaluation time is <code>current-trust-failed</code>, with <code>ecl.error.expired.v1</code>, where its bundle is <code>verified</code>.</li>
+</ol>
+<p><span id="IE1-023"><strong>IE1-023</strong></span><a class="requirement-link" href="#IE1-023" aria-label="Link to IE1-023">§</a> — Verification at issue time, observation time, trusted timestamp
+time, current time, or another declared time are distinct policies. A verifier
+MUST state which policy it applied.</p>
+<p><span id="IE1-024"><strong>IE1-024</strong></span><a class="requirement-link" href="#IE1-024" aria-label="Link to IE1-024">§</a> — A signature MUST NOT count, even when its cryptographic check
+passes, if its key is not acceptable under the trust policy, suite, purpose or
+policy context, or is revoked or outside its validity interval at the
+evaluation time; an envelope whose counted signatures do not meet its threshold
+or its required keys MUST NOT be reported as valid. A verifier MUST report such
+an envelope with the error code that <a href="integrity-envelope-1.html#IE1-040">IE1-040</a> assigns.</p>
+<h2 id="7-countersignature-and-transition">7. Countersignature and transition</h2>
+<p><span id="IE1-025"><strong>IE1-025</strong></span><a class="requirement-link" href="#IE1-025" aria-label="Link to IE1-025">§</a> — A countersignature, notarization, or timestamp MUST bind the
+digest and media type of the exact object it covers and identify its distinct
+claim.</p>
+<p><span id="IE1-026"><strong>IE1-026</strong></span><a class="requirement-link" href="#IE1-026" aria-label="Link to IE1-026">§</a> — Adding verification material or a countersignature creates a new
+envelope version or bundle artifact; it MUST NOT change the signed payload.</p>
+<p><span id="IE1-027"><strong>IE1-027</strong></span><a class="requirement-link" href="#IE1-027" aria-label="Link to IE1-027">§</a> — Algorithm deprecation and emergency prohibition MUST be
+registry-versioned, time-bounded, appealable, and reflected in offline trust
+bundles.</p>
+<h2 id="8-resource-safety-and-deterministic-containers">8. Resource safety and deterministic containers</h2>
+<p>The ECL deterministic ZIP profile is <code>ecl.zip.store.v1</code>. It contains only
+regular-file entries with the entry names defined below and no language-encoding
+(UTF-8) flag, in bytewise order of their names, with the ZIP epoch
+<code>1980-01-01T00:00:00Z</code>, Unix creator semantics, mode <code>0644</code>, empty entry and
+archive comments, no extra fields, and the ZIP <code>stored</code> method. Directory,
+link, device, encrypted, compressed, and data-descriptor entries are outside
+this profile. An outer transport may compress the complete package, but that
+wrapper is not the deterministic ECL package identity.</p>
+<p>An entry name of <code>ecl.zip.store.v1</code> is a relative POSIX path of one or more
+components separated by <code>/</code>. Each component consists of one or more characters
+of the POSIX portable filename character set (<code>A</code> to <code>Z</code>, <code>a</code> to <code>z</code>, <code>0</code> to
+<code>9</code>, <code>.</code>, <code>_</code> and <code>-</code>), is not <code>.</code> or <code>..</code>, does not end in <code>.</code>, and is not a
+Windows device name (<code>CON</code>, <code>PRN</code>, <code>AUX</code>, <code>NUL</code>, <code>COM0</code> to <code>COM9</code>, <code>LPT0</code> to
+<code>LPT9</code>) in any letter case, alone or before a <code>.</code>. Two entry names are aliases
+when they are equal once each letter <code>A</code> to <code>Z</code> is replaced by the
+corresponding letter <code>a</code> to <code>z</code>. An archive holds no two aliases, and no entry
+name that is an alias of the leading components of another (such as <code>docs</code>
+beside <code>Docs/a.json</code>). The artifact paths of an offline package's manifest are
+entry names of its archive, and the paths of an offline package held as a
+directory are entry names under the same rules (<a href="integrity-envelope-1.html#IE1-030">IE1-030</a>). Entry names need no
+Unicode normalization or case-folding table, so every verifier of the profile,
+and every verifier of a package held as a directory, reaches the same result
+whatever Unicode version its platform implements. In an offline package's
+manifest, the <code>deterministic_assembly</code> value <code>utf8-nfc-posix-relative</code> of
+<code>path_encoding_policy</code> names this entry-name rule, and the value
+<code>utf8-bytewise-path</code> of <code>entry_order</code> names the bytewise order of entry names;
+an entry name is ASCII, so its UTF-8 bytes are its ASCII bytes.</p>
+<p><span id="IE1-028"><strong>IE1-028</strong></span><a class="requirement-link" href="#IE1-028" aria-label="Link to IE1-028">§</a> — Every conforming parser, verifier, and offline-package processor
+MUST operate under a declared profile of finite, positive resource limits
+covering, as applicable, encoded input bytes, canonical JSON nesting and node
+counts, envelope and signature counts, archive member counts, per-member and
+total expanded bytes, compression ratio, and causal-record or predecessor
+counts. Each limit MUST be an exact positive integer no greater than the ceiling
+that this profile gives it: 4,096 for nesting depth, counted from 0 for the
+top-level value, 100,000,000 for the number of values, and 2,147,483,647 for
+encoded input bytes; an implementation MUST refuse a configured limit that is
+not, such as <code>null</code>, a fraction, NaN, an infinity, a string, zero, a negative
+number or a value above its ceiling, before it reads any input, as a
+configuration error that it reports with <code>ecl.error.configuration-invalid.v1</code>
+where it reports a code, and never as a finding about the input. A limit that a
+configuration leaves out takes the implementation's declared default.
+Conformance evidence MUST identify the exact limits applied. A profile MUST NOT
+silently replace a finite limit with an unlimited value.</p>
+<p>The libraries of this repository declare the same defaults for strict JSON input
+in every lane: a nesting depth of 256, counted from 0 for the top-level value,
+and 1,000,000 values; the byte limit is each lane's declared one (the reference
+library's is 64 MiB). The ceilings above bound what a configuration can raise a
+limit to, so a configured limit is the same number in every lane, and an input
+at or beyond a ceiling has the same finding everywhere.</p>
+<p><span id="IE1-029"><strong>IE1-029</strong></span><a class="requirement-link" href="#IE1-029" aria-label="Link to IE1-029">§</a> — An implementation MUST enforce applicable resource limits before
+unbounded allocation, decompression, recursive traversal, or cryptographic
+work. It MUST use bounded or incremental processing where an input can exceed
+the declared in-memory budget: it MUST stop reading an input from a file or a
+stream once the input exceeds its byte limit, a strict JSON parser MUST NOT
+build a value beyond its declared nesting and value limits (<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>), and an
+archive reader MUST NOT hold more member entries than its member limit.
+Malformed input or a resource-limit violation MUST fail closed with a stable
+error classification and MUST NOT yield a partially verified artifact,
+decision, or conformance result.</p>
+<p><span id="IE1-030"><strong>IE1-030</strong></span><a class="requirement-link" href="#IE1-030" aria-label="Link to IE1-030">§</a> — Archive and package processing MUST reject absolute paths,
+platform drive paths, parent traversal, control characters, non-canonical
+Unicode path aliases, duplicate paths after canonical normalization, links,
+encrypted members, and non-regular members unless a stricter registered
+profile defines and verifies their complete semantics. Filesystem verification
+MUST also reject a path whose parent resolution crosses a link outside the
+verified package root. The paths of an offline package held as a directory
+MUST be entry names of <code>ecl.zip.store.v1</code> (section 8), no two of them aliases
+and none an alias of the leading components of another.</p>
+<p><span id="IE1-031"><strong>IE1-031</strong></span><a class="requirement-link" href="#IE1-031" aria-label="Link to IE1-031">§</a> — A package format that claims deterministic construction MUST
+define canonical entry names and order, timestamps, permissions, platform
+attributes, encoding flags, storage method, container comments and extra
+fields, and source-byte selection. An <code>ecl.zip.store.v1</code> producer rebuilding
+the same declared inputs MUST produce byte-identical output, and a verifier
+for that profile MUST reject entry names, container metadata or ordering that
+depart from the rules above.</p>
+<h2 id="9-trusted-time">9. Trusted time</h2>
+<p>An object's own time (<code>issued_at</code> for DCMP-2, <code>observed_at</code> for EBMP-2) is asserted
+by its signer, so a holder of a compromised key can date new evidence before the
+key's revocation. A trusted-time countersignature is a separate time authority's
+signed statement that the covered payload and the signatures it names existed no
+later than an attested time, which a verifier can use in place of the asserted
+one for those signatures. A statement about the payload alone would not do: a
+signature made later over the same payload has the same payload digest.</p>
+<p><span id="IE1-032"><strong>IE1-032</strong></span><a class="requirement-link" href="#IE1-032" aria-label="Link to IE1-032">§</a> — A trusted-time countersignature MUST be an entry of the envelope's
+<code>countersignatures</code> member with <code>counter_id</code>, <code>claim</code> set to
+<code>ecl.claim.trusted-time.v1</code>, and <code>attestation</code>: an ECL-IE-1 envelope, without
+countersignatures of its own, whose payload type is
+<code>application/vnd.ecl.time-attestation+json</code> and whose payload satisfies
+<code>https://externalcontrollayer.ai/ns/schema/time-attestation/1</code>. Adding one MUST
+NOT change the covered envelope's payload, payload type, payload digest or
+signatures, and the producer that adds it MUST increase
+<code>envelope_artifact_version</code> by one (<a href="integrity-envelope-1.html#IE1-026">IE1-026</a>). The increment is a producer
+obligation: a verifier sees one envelope, not its predecessor, and does not
+check it.</p>
+<p><span id="IE1-033"><strong>IE1-033</strong></span><a class="requirement-link" href="#IE1-033" aria-label="Link to IE1-033">§</a> — A time attestation MUST bind in <code>covered</code> the covered envelope's
+payload type (<code>media_type</code>), its payload digest (<code>digest</code>) and the signatures
+that it attests (<code>signatures</code>): for each signature entry of the envelope that it
+covers, in the envelope's order, the entry's <code>key_id</code>, its <code>suite_id</code> as
+<code>suite</code>, and as <code>signature_digest</code> the <code>ecl.digest.sha-256.v1</code> digest of the
+signature bytes that the entry's <code>signature</code> encodes. It MUST carry the attested
+time in <code>issued_at</code> and the time authority in <code>issuer</code>, MUST carry an
+<code>attestation_id</code> equal to the entry's <code>counter_id</code>, and MUST be signed under its
+own payload-bound integrity policy, with the verification-time policy
+<code>ecl.time.issued-at.v1</code>, by keys whose trust-policy purpose is
+<code>ecl.purpose.trusted-time.v1</code> and whose principal is the issuer. An attestation
+attests that the covered payload and the covered signatures existed no later
+than the attested time; it attests nothing about a signature that it does not
+cover.</p>
+<p><span id="IE1-034"><strong>IE1-034</strong></span><a class="requirement-link" href="#IE1-034" aria-label="Link to IE1-034">§</a> — A verifier that evaluates a trusted-time countersignature MUST
+verify the attestation under the trust-policy version the attestation names, at
+its attested time, and MUST apply to each of its signing keys the revocations of
+the caller&#x27;s current trust policy (TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>). A countersignature
+is invalid, and the covered envelope is not historically valid, with
+<code>ecl.error.trusted-time-invalid.v1</code>, when its claim is not a registered
+countersignature claim; when the attestation fails that verification, <a href="trust-policy-1.html#TP1-006">TP1-006</a>,
+<a href="integrity-envelope-1.html#IE1-032">IE1-032</a> or <a href="integrity-envelope-1.html#IE1-033">IE1-033</a>; when an entry of <code>covered.signatures</code> names no signature
+entry of the envelope with that <code>key_id</code>, that suite and that signature digest,
+or the entries are not in the envelope's order or name one signature twice; when
+its issuer (the attestation's <code>issuer.id</code>) is the covered object's own
+principal, which is <code>issuer.id</code> for a DCMP-2 message and <code>producer.id</code> for an
+EBMP-2 record; or when the covered object's own time is later than the attested
+time. When every trusted-time countersignature of an envelope is valid, the
+verifier MUST evaluate the historical validity of each signature that a
+countersignature covers at the earliest attested time among the
+countersignatures that cover it, and of each other signature at the object's own
+time, and MUST report the time at which it evaluated each signature. A
+signature that no countersignature covers, such as one added to the envelope
+after the attestation, has no attested time; a signature replaced after the
+attestation makes the countersignature invalid. The threshold of <a href="integrity-envelope-1.html#IE1-040">IE1-040</a> step 7
+counts each signature as evaluated at the time this rule gives it. Version 1.0
+defines no archive renewal: an attestation carries no countersignature of its
+own (<a href="integrity-envelope-1.html#IE1-032">IE1-032</a>), so a later attestation is one more countersignature, verified on
+its own, and does not protect an earlier one.</p>
+<p>Note (informative), countersignature and backdating: an evidence signer that a
+revocation in the current policy, whatever its reason (TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>),
+makes untrusted from a time between an object's own time and its attested time
+makes a countersigned envelope not historically valid, while the same
+envelope without a countersignature is only not acceptable now
+(<code>current-trust-failed</code> in a bundle, EBMP-2 <a href="ebmp-2.html#EBMP2-060">EBMP2-060</a>). The difference is
+intended. A trusted time is independent evidence; when it shows the signature
+existing only after the compromise, the signer's earlier own time cannot be
+relied on. Without a trusted time a verifier cannot detect backdating, and can
+only report that the signer is not acceptable now.</p>
+<p><span id="IE1-035"><strong>IE1-035</strong></span><a class="requirement-link" href="#IE1-035" aria-label="Link to IE1-035">§</a> — A verification profile MAY require trusted time. Under such a
+profile a verifier MUST refuse an envelope that carries no trusted-time
+countersignature, or one of whose signature entries no trusted-time
+countersignature covers, as not historically valid, with
+<code>ecl.error.trusted-time-required.v1</code>. The registered profile
+<code>ecl.verification-profile.reference-trusted-time.v1</code> is the reference
+verification profile with this requirement.</p>
+<p><span id="IE1-036"><strong>IE1-036</strong></span><a class="requirement-link" href="#IE1-036" aria-label="Link to IE1-036">§</a> — A claim at <code>L3</code> or <code>L4</code> MUST meet <a href="ecl-1_standard.html#ECL1N-0100">ECL1N-0100</a> for its signed evidence
+in one of two ways: a trusted-time countersignature on every signed evidence
+object, verified under a verification profile that requires trusted time; or a
+declared secure monotonic sequencing mechanism, stating its sequencing authority,
+its observation points and the procedure by which a verifier checks the sequence
+offline. A claim that uses neither MUST NOT be made at <code>L3</code> or <code>L4</code>.</p>
+<h2 id="10-claim-boundary">10. Claim boundary</h2>
+<p>A valid envelope proves that accepted keys signed the typed payload bytes under
+the evaluated policy. It does not by itself prove that the payload was true,
+that the signer observed the external world correctly, that the signer was
+independent, or that an action was safely executed.</p>
+<h2 id="11-envelope-verification">11. Envelope verification</h2>
+<p>A verifier checks an envelope with three inputs: the envelope, the trust policy
+that its caller supplies (TRUST-POLICY-1, never one that the envelope or a
+bundle carries), and an evaluation time. Standalone verification takes the
+evaluation time from its caller. Historical validity in a signed evidence
+bundle (<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>), and the <code>envelope</code> stage of the conformance runner, use the
+object's own time: <code>issued_at</code> for a DCMP-2 message and <code>observed_at</code> for an
+EBMP-2 record, which the object's integrity policy names as
+<code>ecl.time.issued-at.v1</code> or <code>ecl.time.observed-at.v1</code>. Current status in a bundle
+uses the caller&#x27;s current policy and evaluation time (<a href="trust-policy-1.html#TP1-006">TP1-006</a>).</p>
+<p>Each payload belongs to one component role, and only a key that holds the
+purpose of that role signs it acceptably. The roles follow TRUST-POLICY-1: the
+requester of a decision also answers its challenges, the decision point answers
+a request with a response or a challenge, and the control plane issues control
+messages.</p>
+<p><span id="IE1-039"><strong>IE1-039</strong></span><a class="requirement-link" href="#IE1-039" aria-label="Link to IE1-039">§</a> — A verifier MUST count a signature only under a key whose
+trust-policy purposes include the purpose of the payload that this table
+gives:</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Payload</th>
+<th scope="col">Payload media type</th>
+<th scope="col">Purpose of its signing key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCMP-2 <code>decision_request</code> or <code>challenge_response</code></td>
+<td><code>application/vnd.ecl.dcmp+json</code></td>
+<td><code>ecl.purpose.decision-request.v1</code></td>
+</tr>
+<tr>
+<td>DCMP-2 <code>decision_response</code> or <code>challenge</code></td>
+<td><code>application/vnd.ecl.dcmp+json</code></td>
+<td><code>ecl.purpose.decision-response.v1</code></td>
+</tr>
+<tr>
+<td>DCMP-2 <code>control</code></td>
+<td><code>application/vnd.ecl.dcmp+json</code></td>
+<td><code>ecl.purpose.control.v1</code></td>
+</tr>
+<tr>
+<td>EBMP-2 record</td>
+<td><code>application/vnd.ecl.ebmp+json</code></td>
+<td><code>ecl.purpose.evidence-event.v1</code> or <code>ecl.purpose.observation.v1</code></td>
+</tr>
+<tr>
+<td>Time attestation (section 9)</td>
+<td><code>application/vnd.ecl.time-attestation+json</code></td>
+<td><code>ecl.purpose.trusted-time.v1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Standalone verification cannot tell an evidence event from an observation,
+because both are EBMP-2 records; a bundle verifier tells them apart by where
+the record sits in the bundle and requires the purpose of that place
+(<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>, <a href="trust-policy-1.html#TP1-004">TP1-004</a>).</p>
+<p><span id="IE1-040"><strong>IE1-040</strong></span><a class="requirement-link" href="#IE1-040" aria-label="Link to IE1-040">§</a> — A verifier MUST check an envelope in this order, and MUST refuse
+an envelope at the first step it fails, with that step's error code:</p>
+<ol>
+<li>the envelope satisfies its schema, or <code>ecl.error.schema-invalid.v1</code>;</li>
+<li>its encoded payload, its number of signature entries and each encoded signature value are within the verifier&#x27;s declared limits (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>), or <code>ecl.error.resource-limit-exceeded.v1</code>;</li>
+<li>the payload is canonical base64, its digest is the <code>ecl.digest.sha-256.v1</code> digest of the decoded bytes, the bytes are canonical strict JSON (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>, <a href="integrity-envelope-1.html#IE1-011">IE1-011</a>, <a href="integrity-envelope-1.html#IE1-037">IE1-037</a>) whose value is an object with an <code>integrity_policy</code> object, and the payload media type and the payload's <code>protocol</code> name the same protocol (<a href="integrity-envelope-1.html#IE1-010">IE1-010</a>), or <code>ecl.error.integrity-invalid.v1</code>; a declared limit that the strict parse reaches (<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>, checks 1 and 3) gives <code>ecl.error.resource-limit-exceeded.v1</code> instead;</li>
+<li>the lists of the payload-bound policy are within the verifier's declared limits, or <code>ecl.error.resource-limit-exceeded.v1</code>; then the policy requires integrity, its threshold is at least one and not lower than the number of required keys, its key and suite lists are lists of distinct identifiers with at least one accepted suite, and its trust-policy reference, verification-time policy and revocation policy are those of the trust policy and evaluation the verifier applies, or <code>ecl.error.signature-policy-invalid.v1</code>;</li>
+<li>every signature entry names a key and a suite, and no two entries name the same key and suite, or <code>ecl.error.integrity-invalid.v1</code>;</li>
+<li>each signature entry is examined in turn: (a) the payload&#x27;s policy accepts its suite, the trust policy allows the suite, the key is eligible when the policy lists eligible keys, the trust policy holds the key with that suite, and the key holds the purpose of the payload (<a href="integrity-envelope-1.html#IE1-039">IE1-039</a>), or the signature does not count because its key is not acceptable; (b) the key is not revoked at the evaluation time, or the signature does not count because its key is revoked; (c) the evaluation time is within the key&#x27;s validity interval, or the signature does not count because its key is expired or not yet valid; (d) the signature value is canonical base64, a P-256 signature is minimally encoded DER with a low S value (<a href="integrity-envelope-1.html#IE1-017">IE1-017</a>) and an ML-DSA-65 signature is 3309 bytes long (<a href="integrity-envelope-1.html#IE1-018">IE1-018</a>), or the verifier refuses the envelope with <code>ecl.error.integrity-invalid.v1</code>; (e) the signature verifies, for Ed25519 with S below the group order under the cofactorless equation (<a href="trust-policy-1.html#TP1-008">TP1-008</a>), or it does not count because it does not verify;</li>
+<li>the keys whose signatures count include every required key and number at least the threshold, or the error code is that of the earliest reason in step 6 that some signature has: a key that is not acceptable gives <code>ecl.error.signature-policy-invalid.v1</code>, a revoked key <code>ecl.error.revoked.v1</code>, a key outside its validity interval <code>ecl.error.expired.v1</code>, and a signature that does not verify <code>ecl.error.signature-policy-invalid.v1</code>; when no signature has any of these reasons, the error code is <code>ecl.error.threshold-not-met.v1</code>.</li>
+</ol>
+<p>A signature that does not count does not make an envelope invalid while the
+other signatures meet the policy (<a href="integrity-envelope-1.html#IE1-015">IE1-015</a>). A bundle verifier is stricter: every
+signature of a bundle's envelope, counted or not, passes steps 6 (a) to (c)
+under the object&#x27;s purpose and principal (<a href="trust-policy-1.html#TP1-004">TP1-004</a>, <a href="trust-policy-1.html#TP1-005">TP1-005</a>, <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>).</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>protocols/INTEGRITY-ENVELOPE-1.md</code>, SHA-256 <code>e62354456ea1bb398f318e2453debef08a0625058d6580eb8dd75c4008680afe</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

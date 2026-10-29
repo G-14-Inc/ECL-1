@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL AARM Binding Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-aarm-binding-profile-1">ECL AARM Binding Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile states how a control plane that implements AARM (Autonomous Action
+Runtime Management) connects to an ECL-1 deployment without weakening the
+guarantee: every in-scope action crosses an enforcement boundary that the
+governed AI system cannot bypass, under a decision that the governed AI system
+cannot change, a failure that leaves the action without required proof ends
+closed, and every decision leaves evidence that a third party can check and,
+from <code>L2</code>, verify offline. An AARM control plane takes one of two
+roles for each in-scope action class. It implements the ECL Decision Layer, and
+then answers DCMP-2 decision requests itself; or it supplies <code>judgment</code> inputs
+to a separate ECL Decision Layer, and then its outputs can make an outcome
+stricter and nothing else. In both roles the signed ECL evidence bundle is the
+record of whether an action was released, and an AARM receipt is bound to it by
+digest.</p>
+<p>The profile adds requirements to a claim that declares it. It removes none of
+the core requirements or of the requirements of DCMP-2, EBMP-2 and
+TRUST-POLICY-1.</p>
+<p>Under this profile an action crosses its release boundary (<a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a>) when an
+ECL enforcement point releases it on the verified <code>admit</code> of its DCMP-2 decision
+request (<a href="aarm-binding-1.html#AB1-002">AB1-002</a>, <a href="aarm-binding-1.html#AB1-004">AB1-004</a>); where an AARM deployment issues a credential for an
+admitted action under R9 (<a href="aarm-binding-1.html#AB1-012">AB1-012</a>), the boundaries to name are the credential&#x27;s
+issuance and the resource server's use of it, as OAUTH-AUTHORITY-1 names them
+for an OAuth access token.</p>
+<h2 id="pinned-sources">Pinned sources</h2>
+<p>The AARM text this profile binds to is fixed by revision and SHA-256 digest of
+the raw UTF-8 bytes, as <code>docs/crosswalk.md</code> fixes the sources it maps. The
+machine-readable record is <code>conformance/binding-sources.json</code>.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">Revision</th>
+<th scope="col">File</th>
+<th scope="col">SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AARM specification version 1.0 (February 2026), rendered at https://aarm.dev/spec</td>
+<td><code>aarm-dev/aarm</code> commit <code>c1f9b27cef60f7035cc8d854b0ae6d1ea9781680</code></td>
+<td><code>src/app/spec/page.tsx</code></td>
+<td><code>9794ca90b4899538459cf25478419fbfe147353dd8e206c31fc6a157c2d1ec11</code></td>
+</tr>
+<tr>
+<td>AARM conformance requirements (last updated 2026-03-26)</td>
+<td><code>aarm-dev/docs</code> commit <code>5bd02fdb5d5f6483a16a42539e38cfe8743c3a97</code>, unchanged at <code>8eff208b98786b2c9a578b26cb7eaca440ec4020</code></td>
+<td><code>conformance/requirements.mdx</code></td>
+<td><code>d5b88e2343114a282d04a4b421bf0d13b27eba82f82b9acee0cb62723bb6b5c2</code></td>
+</tr>
+<tr>
+<td>AARM receipt schema (informative component page)</td>
+<td><code>aarm-dev/docs</code> commit <code>8eff208b98786b2c9a578b26cb7eaca440ec4020</code></td>
+<td><code>components/receipts.mdx</code></td>
+<td><code>a105fd2ad75b00fa416fcb3defbfce1f0e4dc2f444506f3ca96dc374c89720c0</code></td>
+</tr>
+</tbody>
+</table>
+<p>The conformance requirements file has the same bytes that the mapping packet
+<code>conformance/crosswalks/aarm-r1-r9.json</code> records. The names of the five
+AARM authorization decisions (ALLOW, DENY, MODIFY, STEP_UP and DEFER) and of
+requirements R1 to R9 are used as the pinned text spells them.</p>
+<h2 id="roles-and-declarations">Roles and declarations</h2>
+<p><span id="AB1-001"><strong>AB1-001</strong></span><a class="requirement-link" href="#AB1-001" aria-label="Link to AB1-001">§</a> — A claim of this profile MUST identify the AARM revision it
+implements by the version, revisions and digests that this profile pins, and
+MUST declare, for each in-scope action class, whether the AARM control plane
+implements the ECL Decision Layer for that class or supplies <code>judgment</code> inputs
+to a separate ECL Decision Layer.</p>
+<p><span id="AB1-002"><strong>AB1-002</strong></span><a class="requirement-link" href="#AB1-002" aria-label="Link to AB1-002">§</a> — When the AARM control plane implements the Decision Layer, it MUST
+answer each DCMP-2 decision request with a DCMP-2 decision response that binds
+the exact request (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-051">DCMP2-051</a>) and is signed under the claim&#x27;s trust
+policy with a key that the policy accepts for the decision-response purpose
+(TRUST-POLICY-1), and an enforcement point MUST release an action only on such a
+response; an AARM decision, receipt or other AARM artifact MUST NOT release an
+action by itself.</p>
+<h2 id="decisions">Decisions</h2>
+<p><span id="AB1-003"><strong>AB1-003</strong></span><a class="requirement-link" href="#AB1-003" aria-label="Link to AB1-003">§</a> — The ECL outcome for an action that an AARM decision governs MUST be
+at least as strict, in the strictness order of the core standard (Section 4.3),
+as the outcome this mapping gives: ALLOW maps to <code>admit</code> only
+when policy evaluated over <code>verifiable</code> inputs permits the action under the
+one-way rule of the core standard (Section 5.2), and otherwise to <code>deny</code>; DENY
+maps to <code>deny</code>; STEP_UP maps to <code>challenge</code> naming the approval required
+(<a href="ecl-1_standard.html#ECL1N-0174">ECL1N-0174</a>, <a href="ecl-1_standard.html#ECL1N-0177">ECL1N-0177</a>), or to <code>hold</code>; DEFER maps to <code>hold</code>; MODIFY maps to
+<code>deny</code> of the original request, with the modified action handled under <a href="aarm-binding-1.html#AB1-004">AB1-004</a>.</p>
+<p><span id="AB1-004"><strong>AB1-004</strong></span><a class="requirement-link" href="#AB1-004" aria-label="Link to AB1-004">§</a> — A MODIFY decision MUST NOT release the original action. The
+modified action, if it is to go ahead, MUST be submitted as a new DCMP-2
+decision request that carries the modified parameters, as the same JSON values,
+in <code>action.parameters</code> and <code>action.parameters_digest</code>, carries the original
+request's <code>issuer</code>, <code>actor</code>, <code>subject</code>, <code>delegation_chain</code>, <code>authority_request</code>,
+<code>constraints</code> and <code>integrity_policy</code>, and its <code>action</code> with only <code>action_id</code>,
+<code>parameters</code> and <code>parameters_digest</code> changed, names the original request as a
+causal predecessor by identifier and digest with the relation
+<code>ecl.relation.modification-of.v1</code>, and is evaluated and admitted on its own; an
+enforcement point MUST release only the parameters that the new request's
+<code>admit</code> binds. A MODIFY whose modified parameters change the action's target or
+operation, as the deployment derives them from the parameters, MUST end in
+<code>deny</code> of the original with no new request. An exchange record of a MODIFY that
+holds neither a <code>modification_request</code> nor a <code>release</code> records a <code>deny</code> of the
+original with no new request and MUST NOT be reported for the missing new
+request, since the record does not show why the modified action did not go
+ahead; one that holds a <code>modification_response</code> without its
+<code>modification_request</code> MUST be reported as
+<code>ecl.rule.aarm-modification-new-request.v1</code>. A decision other than MODIFY has no
+new request: the enforcement point MUST release the action, if at all, only on
+the <code>admit</code> of the original request, and an exchange record whose
+<code>aarm_decision</code> is not MODIFY and that holds a <code>modification_request</code> or a
+<code>modification_response</code> MUST be reported as
+<code>ecl.rule.aarm-modification-new-request.v1</code>.</p>
+<p>The new request keeps the original's target and operation, so a MODIFY that
+changed the parameter from which the deployment derives the target, such as the
+account to be debited, would release, under an <code>admit</code> for one resource,
+parameters that act on another. An exchange record does not show how the
+deployment derives the target and operation from the parameters. A checker of
+the record accepts the record of a MODIFY that ends as <a href="aarm-binding-1.html#AB1-004">AB1-004</a> requires, with no
+new request and no release, as it accepts that of any MODIFY whose modified
+action did not go ahead. It cannot see whether the modified parameters of a new
+request that went ahead changed the target or operation; the assessor checks
+that against the deployment's mapping, which for an MCP tool is the mapping that
+<a href="mcp-gateway-1.html#MG1-003">MG1-003</a> declares.</p>
+<p><span id="AB1-005"><strong>AB1-005</strong></span><a class="requirement-link" href="#AB1-005" aria-label="Link to AB1-005">§</a> — A <code>hold</code> or <code>challenge</code> mapped from DEFER or STEP_UP MUST carry an
+<code>expires_at</code> no later than the deadline of the deferral or approval, and a
+<code>safe_state</code> under which the waiting action is not released:
+<code>ecl.state.fail-closed.v1</code>, <code>ecl.state.quarantine.v1</code>,
+<code>ecl.state.emergency-halt.v1</code> or <code>ecl.state.restricted.v1</code>. The expiry of that
+deadline, or the AARM control plane's failure to answer within its declared
+timeout, MUST end in an outcome that releases nothing (<a href="dcmp-2.html#DCMP2-018">DCMP2-018</a>, <a href="dcmp-2.html#DCMP2-041">DCMP2-041</a>).</p>
+<p>The registry of operational values marks the first three states
+<code>permits_new_effects</code> false. It marks <code>ecl.state.restricted.v1</code> and
+<code>ecl.state.degraded.v1</code> profile-bounded, but the two differ for a waiting
+action: the restricted state permits only bounded diagnosis, recovery and
+safe-shutdown operations, while the degraded state permits a declared subset of
+ordinary operations, which can include the action that waits. A fail-open or
+degraded state therefore never decides an expiry.</p>
+<h2 id="judgment-inputs">Judgment inputs</h2>
+<p><span id="AB1-006"><strong>AB1-006</strong></span><a class="requirement-link" href="#AB1-006" aria-label="Link to AB1-006">§</a> — The outputs of AARM R2 (context accumulation, including the data
+classifications it records), R3 (policy evaluation with intent alignment,
+including any confidence score) and R7 (semantic distance), and in the
+judgment-source role every AARM output including the AARM decision itself
+(R4), MUST be treated as <code>judgment</code> inputs: the Consequential Action Register
+MUST declare each of them <code>judgment</code>; the exchange record MUST list each one
+that the decision consulted in <code>inputs</code> with that class and its
+<code>aarm_requirement</code>, and the decision response MUST record it in
+<code>ecl.ext.decision-basis.v1</code> with that class (<a href="aarm-binding-1.html#AB1-013">AB1-013</a>); each of them MUST NOT be
+part of the basis of an <code>admit</code>, and an <code>admit</code> MUST rest on <code>verifiable</code>
+inputs only. An AARM DENY, STEP_UP or DEFER that rests on them MAY make the
+outcome stricter. In the judgment-source role, the inputs MUST include exactly
+one input whose <code>aarm_requirement</code> is <code>R4</code>, of class <code>judgment</code>. These classes
+hold in every decision basis that the exchange record holds: an entry of the
+<code>ecl.ext.decision-basis.v1</code> of the record's <code>modification_response</code> whose
+<code>input</code> is an input that the record lists with an <code>aarm_requirement</code> that this
+requirement makes <code>judgment</code> MUST have the class <code>judgment</code>.</p>
+<p>R3 covers both static policy and intent alignment. Because the profile classes
+all R3 output as <code>judgment</code>, a deterministic AARM policy result can support an
+<code>admit</code> only when the ECL decision point evaluates the same policy over
+<code>verifiable</code> inputs itself.</p>
+<h2 id="receipts-and-evidence">Receipts and evidence</h2>
+<p><span id="AB1-007"><strong>AB1-007</strong></span><a class="requirement-link" href="#AB1-007" aria-label="Link to AB1-007">§</a> — Each AARM receipt for an in-scope action MUST be bound to the ECL
+evidence of that action: the action's <code>execution_terminal</code> event MUST carry the
+registered extension <code>ecl.ext.aarm-receipt.v1</code> with the receipt's identifier
+(its <code>receipt_id</code>), the <code>ecl.digest.sha-256.v1</code> digest of the RFC 8785 canonical
+form of the receipt as retained, signature included, and the AARM decision that
+the receipt records in <code>decision.result</code>; that decision MUST be the decision the
+exchange record holds and consistent with the ECL outcome under <a href="aarm-binding-1.html#AB1-003">AB1-003</a>, and the
+receipt's <code>action.parameters</code> MUST have, under <a href="dcmp-2.html#DCMP2-007">DCMP2-007</a>, the digest that the
+decision request carries in <code>action.parameters_digest</code>.</p>
+<p><span id="AB1-008"><strong>AB1-008</strong></span><a class="requirement-link" href="#AB1-008" aria-label="Link to AB1-008">§</a> — The signed ECL evidence bundle MUST be treated as the record of
+whether an action was authorized and released (<a href="ebmp-2.html#EBMP2-045">EBMP2-045</a>): an AARM receipt
+supports claims about the AARM evaluation, such as the context it accumulated,
+the intent alignment it computed, the policy it matched and its reasons, and
+MUST NOT be used to establish that an action was authorized or released; a
+receipt that disagrees with the ECL evidence MUST be reported as a verification
+finding, and the ECL evidence governs.</p>
+<p><span id="AB1-009"><strong>AB1-009</strong></span><a class="requirement-link" href="#AB1-009" aria-label="Link to AB1-009">§</a> — An adapter that retains exchange records for this profile MUST
+write each one as <code>ecl_aarm_exchange_v1</code>, valid against
+<code>https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1</code>, and every
+value of <code>ecl.ext.aarm-receipt.v1</code> it emits MUST validate against
+<code>https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1</code>.</p>
+<h2 id="interception-telemetry-and-credentials">Interception, telemetry and credentials</h2>
+<p><span id="AB1-010"><strong>AB1-010</strong></span><a class="requirement-link" href="#AB1-010" aria-label="Link to AB1-010">§</a> — An AARM interception point (a protocol gateway, SDK
+instrumentation, a kernel eBPF hook or a vendor integration) MUST NOT be claimed
+as an ECL enforcement point unless it meets <a href="ecl-1_standard.html#ECL1N-0043">ECL1N-0043</a> and <a href="ecl-1_standard.html#ECL1N-0046">ECL1N-0046</a> and the
+Consequential Action Register records its enforcement class with its rationale
+and residual bypass risk (<a href="ecl-1_standard.html#ECL1N-0044">ECL1N-0044</a>, <a href="ecl-1_standard.html#ECL1N-0045">ECL1N-0045</a>). An interception point that
+runs in a process, container or account in which the governed AI system can
+execute code, or that the governed AI system can start, stop or reconfigure,
+MUST NOT be claimed as an ECL enforcement point; it MAY carry an AARM decision
+to an ECL decision point.</p>
+<p><span id="AB1-011"><strong>AB1-011</strong></span><a class="requirement-link" href="#AB1-011" aria-label="Link to AB1-011">§</a> — Telemetry that the AARM control plane exports under R8 MUST be
+treated as a copy: when it carries ECL decisions or evidence it MUST follow
+OTEL-EVIDENCE-EXPORT-1, and it MUST NOT be the record a claim relies on for
+<a href="ecl-1_standard.html#ECL1N-0047">ECL1N-0047</a>, <a href="ecl-1_standard.html#FR-107">FR-107</a> or <a href="ecl-1_standard.html#FR-108">FR-108</a>.</p>
+<p><span id="AB1-012"><strong>AB1-012</strong></span><a class="requirement-link" href="#AB1-012" aria-label="Link to AB1-012">§</a> — A credential that an AARM deployment issues for an admitted action
+under R9 MUST NOT carry more authority than the action's ECL authorization: no
+wider scope, no other audience, no later expiry and no more uses; it MUST NOT be
+held by the governed AI system; an OAuth access token meets this requirement
+when it follows OAUTH-AUTHORITY-1.</p>
+<h2 id="decision-basis">Decision basis</h2>
+<p><span id="AB1-013"><strong>AB1-013</strong></span><a class="requirement-link" href="#AB1-013" aria-label="Link to AB1-013">§</a> — The <code>inputs</code> of an exchange record MUST be the entries of the
+decision basis that its <code>response</code> records in <code>ecl.ext.decision-basis.v1</code>: each
+input of the record, without its <code>aarm_requirement</code>, MUST equal the entry of the
+extension's value whose <code>input</code> is the same, and each entry MUST appear in the
+record exactly once. A response that does not carry the extension records no
+inputs, and a response that carries it more than once matches no record. A
+record that breaks this MUST be reported as the verification finding
+<code>ecl.rule.aarm-inputs-match-basis.v1</code>. The record's <code>response</code>, and its
+<code>modification_response</code> when it holds one, MUST each carry exactly one
+<code>ecl.ext.decision-basis.v1</code> and MUST also satisfy <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>, each with the
+record's <code>request</code> or <code>modification_request</code> as the request it answers, with the
+response clock-skew allowance of the reference verification profile, zero
+(<a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>); a record whose response fails either MUST be reported with
+<code>ecl.rule.decision-basis-one-way.v1</code>. Each DCMP-2 message that the record holds
+MUST satisfy the semantic rules of DCMP-2, and a record that holds one that
+fails a rule MUST be reported with that rule. The decision basis of the record's
+<code>modification_response</code> MUST carry the <code>register</code> reference of the decision
+basis of the <code>response</code>, member for member, and MUST record the same inputs,
+compared as input names are, each with the <code>class</code>, <code>required</code>, <code>source</code> and
+<code>derived_from</code> that the record's <code>inputs</code> give it; a record that breaks this
+MUST be reported as <code>ecl.rule.aarm-inputs-match-basis.v1</code>.</p>
+<p>The record is the adapter's account of a decision, and the response is the
+decision point's signed account of the same decision. If the two could
+disagree, each could pass its own check: a record could class an AARM output as
+<code>judgment</code> while the signed basis classes it <code>verifiable</code> and rests the <code>admit</code>
+on it. The record's inputs use the vocabulary of the decision basis (an entry
+of <code>ecl.ext.decision-basis.v1</code> with the AARM requirement added), so every
+member is compared, including the status and reference of an input that was
+unavailable, late or malformed and the effect of each input. Agreement alone
+would let a record and its response agree on a basis that breaks the one-way
+rule, such as an <code>admit</code> while a required input was unavailable, or a
+<code>verifiable</code> input computed from the intent-alignment score; the response is
+therefore held to <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> as it would be in a signed evidence bundle.</p>
+<p>The decision basis of the modification response is compared with the record for
+the same reason, since its <code>admit</code> releases the modified action. The new request
+is the original action with the modified parameters (<a href="aarm-binding-1.html#AB1-004">AB1-004</a>), of the same
+action class, so the register version declares the same inputs for both
+decisions; the status, effect, reference and times of each input describe the
+new decision and may differ. The new request is decided under the register
+version of the first decision; if that version is no longer in force, the
+modification is not admitted.</p>
+<h2 id="decision-mapping-informative">Decision mapping (informative)</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">AARM decision</th>
+<th scope="col">ECL outcome</th>
+<th scope="col">Release</th>
+<th scope="col">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALLOW</td>
+<td><code>admit</code>, or <code>deny</code> when ECL policy over <code>verifiable</code> inputs does not permit the action</td>
+<td>Only on a verified <code>admit</code></td>
+<td>The AARM decision is one input; ECL's own authority, scope, validity, budget and approval checks still apply.</td>
+</tr>
+<tr>
+<td>DENY</td>
+<td><code>deny</code></td>
+<td>None</td>
+<td>The reason code <code>ecl.reason.native-policy-disposition.v1</code> keeps the AARM reason in its detail.</td>
+</tr>
+<tr>
+<td>MODIFY</td>
+<td><code>deny</code> of the original; a new request for the modified action, if it is to go ahead</td>
+<td>Only the new request's admitted parameters</td>
+<td>The new request names the original with <code>ecl.relation.modification-of.v1</code>. A MODIFY that changes the target or operation has no new request (<a href="aarm-binding-1.html#AB1-004">AB1-004</a>).</td>
+</tr>
+<tr>
+<td>STEP_UP</td>
+<td><code>challenge</code> (or <code>hold</code>) until the approval is recorded</td>
+<td>None until a new evaluation admits</td>
+<td>The approval follows <a href="ecl-1_standard.html#ECL1N-0174">ECL1N-0174</a> and <a href="ebmp-2.html#EBMP2-063">EBMP2-063</a>.</td>
+</tr>
+<tr>
+<td>DEFER</td>
+<td><code>hold</code></td>
+<td>None</td>
+<td>The deadline and a <code>safe_state</code> that releases nothing decide expiry (<a href="aarm-binding-1.html#AB1-005">AB1-005</a>).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="receipt-fields-informative">Receipt fields (informative)</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">AARM receipt field (pinned R5 list)</th>
+<th scope="col">ECL counterpart</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Action: tool, operation, parameters, timestamp</td>
+<td>DCMP-2 request <code>action.operation</code>, <code>action.parameters</code> and <code>action.parameters_digest</code>, <code>issued_at</code></td>
+</tr>
+<tr>
+<td>Context: session identifier, accumulated context</td>
+<td><code>workflow.workflow_id</code>; accumulated context is a <code>judgment</code> input recorded by digest</td>
+</tr>
+<tr>
+<td>Identity: human principal, service identity, agent identity, role or privilege scope</td>
+<td><code>subject</code>, <code>issuer</code>, <code>actor</code>; scope is checked against the ECL authorization</td>
+</tr>
+<tr>
+<td>Decision: result, policy matched, reason</td>
+<td>DCMP-2 response <code>outcome</code>, <code>policy</code> and <code>reasons</code></td>
+</tr>
+<tr>
+<td>Approval</td>
+<td>EBMP-2 <code>human_intervention</code> event with <code>ecl.ext.approval-record.v1</code></td>
+</tr>
+<tr>
+<td>Deferral</td>
+<td><code>hold</code> response, its deadline and the follow-up evaluation</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td><code>execution_terminal</code> event state and <code>side_effects</code></td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>Not mapped: ECL evidence carries its own INTEGRITY-ENVELOPE-1 signatures, and the receipt keeps its own</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exchange-record-informative">Exchange record (informative)</h2>
+<p>An <code>ecl_aarm_exchange_v1</code> record holds one action's exchange. Its members are
+the <code>role</code>; the <code>aarm_decision</code> with its <code>decision</code>, <code>decided_at</code>, the
+<code>deadline</code> of a DEFER or STEP_UP and the <code>modified_parameters</code> of a MODIFY; the
+<code>inputs</code> of the ECL decision, each an entry of the decision basis (<code>input</code>,
+<code>class</code>, <code>required</code>, <code>status</code>, <code>effect</code> and, where they apply, <code>reference</code>,
+<code>source</code> and <code>derived_from</code>) with the <code>aarm_requirement</code> it comes from, the AARM
+decision itself listed once as <code>R4</code> in the judgment-source role; the DCMP-2
+<code>request</code> and <code>response</code>, and for a MODIFY whose modified action went ahead the
+<code>modification_request</code> and <code>modification_response</code>; a <code>release</code> member only when
+the action was released; and the <code>receipt</code> with the <code>terminal</code> event that binds
+it. The <code>inputs</code> are the inputs that the response records in
+<code>ecl.ext.decision-basis.v1</code> (<a href="aarm-binding-1.html#AB1-013">AB1-013</a>). The rules registered for this profile,
+whose names begin <code>ecl.rule.aarm-</code>, check a record after its schema.</p>
+<h2 id="security-considerations">Security considerations</h2>
+<p>In the Decision Layer role a compromised control plane is a compromised
+decision point: it can admit requests that policy does not permit, within what
+<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a> bind; the claim&#x27;s independence class and Section 9.8 of
+the core standard bound that risk. In the judgment-source role its outputs
+cannot be the basis of an <code>admit</code>, so a compromised control plane can make
+outcomes stricter and cannot widen ECL authority. Intent alignment and semantic
+distance are computed over content that the governed AI system influences, and
+an embedding model can be steered; that is why the profile classes them as
+<code>judgment</code>. An AARM receipt signed with a key that the governed AI system can
+use gives no assurance against that system; the ECL evidence-signing key
+custody rules (Section 9.8 of the core standard) apply to the ECL evidence that
+binds the receipt. Instrumentation inside the governed AI system's own process
+can be disabled or bypassed by that system, which is why <a href="aarm-binding-1.html#AB1-010">AB1-010</a> never lets it
+count as an enforcement point. SDK instrumentation can also miss paths it does
+not instrument, so the register's reconciliation with the reachable capability
+inventory (<a href="ecl-1_standard.html#ECL1N-0008">ECL1N-0008</a>) decides which paths the claim covers.</p>
+<h2 id="conformance">Conformance</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>The <code>aarm-binding</code> suite accepts a MODIFY that ends in <code>deny</code> with no new request and no release, and refuses an outcome weaker than the mapped decision, a modification released under the original request, not linked to it, or whose new request carries a number where the modified parameters hold a boolean, a modification response without its new request, a new request recorded, and released, after a decision other than MODIFY, a deferral that outlasts its deadline or expires into a fail-open state, an AARM output classed as anything but <code>judgment</code> or used as the basis of an <code>admit</code>, the <code>admit</code> that releases a modification among them, an AARM decision listed without its requirement in the judgment-source role, a release without an <code>admit</code>, outside its window or with other parameters, and a receipt whose digest, decision or parameters disagree with the ECL evidence; the <code>binding-basis</code> suite refuses a record whose inputs disagree with the decision basis of its response, and a record whose response or modification response carries no decision basis, or records one that breaks <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a></td>
+</tr>
+<tr>
+<td>Assessor procedure</td>
+<td>Role declarations, interception points, telemetry, credential scoping, and how the deployment derives each action&#x27;s target and operation from its parameters, which decides whether a MODIFY can be applied, so that no modification that changes them is released (<a href="aarm-binding-1.html#AB1-004">AB1-004</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The vectors establish the behavior of exchange records, not the conformance of
+an AARM product, and this profile claims no AARM conformance or endorsement.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/AARM-BINDING-1.md</code>, SHA-256 <code>e9e5fb4ef76c840acff993082ff10659802213153b8905c717dd158fb3f7460c</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

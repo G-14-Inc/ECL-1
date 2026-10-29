@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Offline Verification Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-offline-verification-profile-1">ECL Offline Verification Profile 1</h1>
+<p>Status: informative guide for ECL-1 Version 1.0, a published version. It states no
+requirement of its own: every obligation it describes is allocated, with an ID, in
+the core standard or a normative companion it cites.<br />
+Profile identifier: <code>https://externalcontrollayer.ai/ns/profile/offline-verification/1</code><br />
+Manifest schema: <code>https://externalcontrollayer.ai/ns/schema/offline-verification-package/1</code><br />
+Media type: <code>application/vnd.ecl.bundle+zip</code><br />
+Container profile: <code>ecl.zip.store.v1</code></p>
+<h2 id="purpose">Purpose</h2>
+<p>An offline package lets a reader verify ECL evidence without a network path to
+its producer or to any control plane: on a disconnected edge, in an air-gapped
+or sovereign enclave, at a transfer station, in an assessor hand-off, or when
+evidence is preserved for later. The normative rules are <a href="integrity-envelope-1.html#IE1-021">IE1-021</a> and <a href="integrity-envelope-1.html#IE1-022">IE1-022</a>
+of <code>INTEGRITY-ENVELOPE-1</code> (what a package carries and how a verifier treats
+it), <a href="integrity-envelope-1.html#IE1-028">IE1-028</a> to <a href="integrity-envelope-1.html#IE1-031">IE1-031</a> (resource limits and the <code>ecl.zip.store.v1</code> container),
+<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a> to <a href="ebmp-2.html#EBMP2-062">EBMP2-062</a> of <code>EBMP-2</code> (verification of a signed evidence bundle
+and its verdicts) and <code>TRUST-POLICY-1</code>. A package does not turn the material it
+carries into a trust anchor, and it does not make its assertions true because
+it is internally consistent.</p>
+<h2 id="a-package-and-its-evidence-bundle">A package and its evidence bundle</h2>
+<p>A package is an <code>ecl.zip.store.v1</code> archive that holds <code>manifest.json</code> and the
+artifacts the manifest names. The manifest binds each artifact by path, media
+type, role, byte length and SHA-256 digest. A package carries exactly one
+signed evidence bundle (EBMP-2 section 11), split into artifacts (<a href="integrity-envelope-1.html#IE1-021">IE1-021</a>):</p>
+<ul>
+<li>each envelope of the bundle is an <code>envelope</code> artifact and each observation
+an <code>observation</code> artifact;</li>
+<li>the canonical payload of each is a <code>payload</code> artifact;</li>
+<li>the artifacts of the other roles (<code>trust_policy</code>, <code>verification_key</code>,
+<code>trust_root</code>, <code>revocation_snapshot</code>, <code>registry_snapshot</code>, <code>time_evidence</code>,
+<code>transparency_proof</code> and <code>conformance_result</code>) hold the material that the
+producer verified the bundle with.</li>
+</ul>
+<p><a href="integrity-envelope-1.html#IE1-021">IE1-021</a> requires at least one artifact of each of the roles <code>payload</code>,
+<code>envelope</code>, <code>trust_policy</code>, <code>verification_key</code>, <code>revocation_snapshot</code>,
+<code>registry_snapshot</code> and <code>time_evidence</code>, and the artifacts whose digests the
+manifest's <code>trust_policy</code>, <code>revocation_snapshot</code>, <code>registry_snapshots</code> and
+<code>time_evidence</code> references give. A bundle sent as JSON carries no trust root
+(<a href="trust-policy-1.html#TP1-001">TP1-001</a>); a package carries the producer&#x27;s material beside its bundle, so that
+a reader can see what the producer relied on.</p>
+<h2 id="the-callers-trust-policy">The caller's trust policy</h2>
+<p>A verifier takes three inputs from its caller: the current trust policy,
+earlier versions of the same policy, and the evaluation time (<a href="trust-policy-1.html#TP1-001">TP1-001</a>,
+<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>). It verifies a package&#x27;s bundle with those inputs, exactly as it
+verifies a bundle that arrives as JSON. The trust policy, keys and snapshots in
+the package are evidence (<a href="integrity-envelope-1.html#IE1-022">IE1-022</a>). A reader can compare them with the policy
+the caller holds, and a caller that decides, outside the package, to trust the
+producer's policy supplies that policy as its own input. A package whose
+evidence is signed with a key that only the package's own trust policy holds is
+therefore <code>invalid</code>; the vector <code>package-invalid-carried-trust-is-evidence</code>
+tests this.</p>
+<h2 id="verdicts">Verdicts</h2>
+<p>A package receives one of the four verdicts of <a href="ebmp-2.html#EBMP2-060">EBMP2-060</a>. <a href="integrity-envelope-1.html#IE1-022">IE1-022</a> lists the
+checks in their order, with the error code of each, so that every verifier
+gives the same verdict and code for the same package under the same declared
+limits (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>). Verifiers with different limits can disagree on a package
+that exceeds the limits of only one of them: the browser verifier, for example,
+reads an archive of at most 16 MiB, and the three verifier commands one of at
+most 1 GiB. In summary:</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Verdict</th>
+<th scope="col">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invalid</code></td>
+<td>The archive departs from <code>ecl.zip.store.v1</code>; the manifest is not strict JSON, fails its schema, lacks a SHA-256 digest, has a path that is not an entry name of the profile or that aliases another, leaves a member of the archive unnamed, or expires no later than it was created; an artifact's size or digest differs from the manifest; an <code>envelope</code> or <code>observation</code> artifact is not a JSON object; a <code>payload</code> artifact is the payload of no packaged envelope; or the bundle is <code>invalid</code>.</td>
+</tr>
+<tr>
+<td><code>incomplete</code></td>
+<td>The archive has no manifest; an artifact that the manifest names or <a href="integrity-envelope-1.html#IE1-021">IE1-021</a> requires is missing, or so is the payload of a packaged envelope; the package carries no envelope; or the bundle is <code>incomplete</code>.</td>
+</tr>
+<tr>
+<td><code>current-trust-failed</code></td>
+<td>The bundle is <code>current-trust-failed</code>, or the bundle is <code>verified</code> and the package's <code>expires_at</code> is not later than the evaluation time.</td>
+</tr>
+<tr>
+<td><code>verified</code></td>
+<td>None of the above.</td>
+</tr>
+</tbody>
+</table>
+<p>There is no fifth result. Missing material makes a package <code>incomplete</code>, and a
+package is never reported as partly verified.</p>
+<p>Nobody signs the manifest, so it is not authenticated (<a href="integrity-envelope-1.html#IE1-022">IE1-022</a>). Its
+<code>expires_at</code> is the producer's statement and limits only a holder who does not
+change it: anyone who holds a package can extend its expiry. What the package
+carries is authenticated only through the signatures of its evidence bundle,
+which the verifier checks under the caller's trust policy.</p>
+<h2 id="deterministic-container">Deterministic container</h2>
+<p><code>ecl.zip.store.v1</code> is the only deterministic ZIP profile of this version:</p>
+<ul>
+<li>entry names are relative POSIX paths whose components use only the POSIX
+portable filename characters (<code>A</code> to <code>Z</code>, <code>a</code> to <code>z</code>, <code>0</code> to <code>9</code>, <code>.</code>, <code>_</code>
+and <code>-</code>), and entries sort by the bytes of their names;</li>
+<li>absolute, drive, parent, empty-component, trailing-dot, device-name, link,
+encrypted and duplicate entries are rejected, and so are two names that are
+equal after ASCII case folding, or a name that so equals the leading
+components of another;</li>
+<li>only regular files with Unix creator semantics and mode <code>0644</code> are present;</li>
+<li>every timestamp is the ZIP epoch <code>1980-01-01T00:00:00Z</code>;</li>
+<li>no entry sets the language-encoding (UTF-8) flag;</li>
+<li>entry and archive comments and extra fields are empty;</li>
+<li>entries use ZIP storage without compression or data descriptors;</li>
+<li>the manifest itself is an ordinary profile-conforming entry.</li>
+</ul>
+<p>The manifest's artifact paths are entry names of the archive under the same
+rules (<a href="integrity-envelope-1.html#IE1-022">IE1-022</a>, check 4). Section 8 of <code>INTEGRITY-ENVELOPE-1</code> defines entry
+names. They need no Unicode table, so verifiers on different platforms, and
+under different Unicode versions, accept and refuse the same archives. The
+manifest's <code>path_encoding_policy</code> value <code>utf8-nfc-posix-relative</code> and
+<code>entry_order</code> value <code>utf8-bytewise-path</code> name these rules. A package held as a
+directory follows the same rules (<a href="integrity-envelope-1.html#IE1-030">IE1-030</a>): its paths are entry names, compared
+after ASCII case folding, so its result does not depend on the verifier's
+platform either.</p>
+<p>An outer transport can compress or segment the complete package. The receiver
+first reconstructs and obtains, through a channel the receiver trusts, the
+exact inner package bytes; the outer wrapper is not part of the deterministic
+ECL package identity.</p>
+<h2 id="resource-declaration">Resource declaration</h2>
+<p>The verifier records its finite positive limits for encoded archive bytes,
+member count, per-entry and total expanded bytes, compression ratio used to
+reject non-profile input before extraction, path bytes, canonical JSON bytes,
+nesting, nodes, signatures, and causal graph size. Limits are applied before
+unbounded allocation, extraction, graph traversal, or cryptographic work. A
+profile may lower or otherwise tune a finite bound for its deployment but
+cannot silently remove it. A package that exceeds a limit is <code>invalid</code>, with
+<code>ecl.error.resource-limit-exceeded.v1</code> (<a href="integrity-envelope-1.html#IE1-022">IE1-022</a>). A limit can be one that no
+package reaches: an <code>ecl.zip.store.v1</code> archive has no ZIP64 records, so its
+end-of-central-directory record counts at most 65,535 members, and the member
+limit of 100,000 that the conformance tests declare for the <code>package</code> stage is
+never the check that refuses an archive.</p>
+<h2 id="conformance">Conformance</h2>
+<p>The suite <code>conformance/suites/offline-package/</code> holds the package vectors; its
+stage is <code>package</code>, and <code>conformance/README.md</code> states its input, steps and
+output. Its capability, <code>offline-package-verification</code>, is optional, and an
+implementation that declares it also declares <code>evidence-bundle-verification</code>.
+The offline verifier implements the capability: <code>verifyOfflinePackage</code> of the
+TypeScript package <code>packages/ecl-ts</code>, which the browser verifier also uses, and
+the command <code>ecl-verify-ts</code>, which verifies a package as well as a bundle. A
+file that begins with the bytes <code>PK</code> is read as a package of at most 1 GiB, the
+command's declared archive limit, and is verified under the same inputs and
+reported with the same output and exit statuses as a bundle. A larger file is a
+usage error (exit status 2): the command refuses to read it, so it gets no
+verdict, and in particular not <code>invalid</code> with
+<code>ecl.error.resource-limit-exceeded.v1</code>.</p>
+<h2 id="air-gap-transfer">Air-gap transfer</h2>
+<p>Transfer media custody is evidence distinct from package integrity. A transfer
+record binds source package digest, sender, receiver, media or channel
+identity, dispatch and receipt observations, transformations, and destination
+boundary. Dispatch alone is not receipt, and receipt alone is not successful
+verification. Import into a native runtime requires current native policy
+evaluation and effect authority.</p>
+<h2 id="claim-boundary">Claim boundary</h2>
+<p>A successful offline verification supports only the claims actually evaluated
+against the included evidence and declared observation boundary. It is not a
+live revocation check, an availability statement, an independent assessment,
+an authorization to execute, or evidence that a later environment retained the
+same state. Those claims require their own current evidence and authority.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/OFFLINE-VERIFICATION-1.md</code>, SHA-256 <code>fcf4ab18cca8fb47dd601b550e066ff52df2868b35859c4242bbe85027f2e278</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

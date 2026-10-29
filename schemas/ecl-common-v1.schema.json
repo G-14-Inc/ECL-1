@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/common/1",
+  "title": "ECL common protocol types",
+  "type": "object",
+  "$defs": {
+    "asciiToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[\\x21-\\x7E]+$"
+    },
+    "uri": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "format": "uri",
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:"
+    },
+    "eclRegistryId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 256,
+      "pattern": "^ecl\\.[a-z0-9][a-z0-9._-]*\\.v[1-9][0-9]*$"
+    },
+    "privateExtensionUri": {
+      "description": "XR1-017: a private-use extension identifier that is an absolute URI under a namespace its owner controls; the ECL namespace is excluded.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/uri"
+        },
+        {
+          "not": {
+            "pattern": "^https?://externalcontrollayer\\.ai(?:[/:?#]|$)"
+          }
+        }
+      ]
+    },
+    "privateExtensionToken": {
+      "description": "XR1-017: a private-use extension identifier that is a reverse-domain token of a domain its owner controls, ending in a version; the ecl. prefix is excluded.",
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 256,
+      "pattern": "^[a-z0-9-]+(?:\\.[a-z0-9-]+)+\\.v[1-9][0-9]*$",
+      "not": {
+        "pattern": "^ecl\\."
+      }
+    },
+    "extensionId": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/eclRegistryId"
+        },
+        {
+          "$ref": "#/$defs/privateExtensionUri"
+        },
+        {
+          "$ref": "#/$defs/privateExtensionToken"
+        }
+      ]
+    },
+    "rfc3339Utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,9})?Z$"
+    },
+    "safeInteger": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "nonNegativeSafeInteger": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "base64": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 16777216,
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+      "contentEncoding": "base64"
+    },
+    "digest": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "$ref": "#/$defs/eclRegistryId"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{2}){16,128}$"
+        }
+      }
+    },
+    "principal": {
+      "type": "object",
+      "required": [
+        "id",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uri"
+        },
+        "type": {
+          "$ref": "#/$defs/eclRegistryId"
+        },
+        "trust_domain": {
+          "$ref": "#/$defs/uri"
+        },
+        "proof_reference": {
+          "$ref": "#/$defs/resourceReference"
+        }
+      }
+    },
+    "resourceReference": {
+      "type": "object",
+      "required": [
+        "uri"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "uri": {
+          "$ref": "#/$defs/uri"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+(?:;[ -~]+)?$"
+        },
+        "version": {
+          "$ref": "#/$defs/asciiToken"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "policyReference": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "digest"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "$ref": "#/$defs/asciiToken"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "epoch": {
+          "$ref": "#/$defs/nonNegativeSafeInteger"
+        }
+      }
+    },
+    "extension": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "critical",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/extensionId"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "critical": {
+          "type": "boolean"
+        },
+        "value": true
+      }
+    },
+    "extensionSet": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/extension"
+      }
+    },
+    "integrityPolicy": {
+      "type": "object",
+      "required": [
+        "required",
+        "accepted_suites",
+        "threshold",
+        "trust_policy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "accepted_suites": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/eclRegistryId"
+          }
+        },
+        "eligible_key_ids": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/uri"
+          }
+        },
+        "required_key_ids": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/uri"
+          }
+        },
+        "threshold": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "trust_policy": {
+          "$ref": "#/$defs/policyReference"
+        },
+        "verification_time_policy": {
+          "$ref": "#/$defs/eclRegistryId"
+        },
+        "revocation_policy": {
+          "$ref": "#/$defs/eclRegistryId"
+        }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/eclRegistryId"
+        },
+        "detail": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "obligation": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "value",
+        "satisfaction"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uri"
+        },
+        "type": {
+          "$ref": "#/$defs/eclRegistryId"
+        },
+        "value": true,
+        "satisfaction": {
+          "type": "string",
+          "enum": [
+            "before_release",
+            "during_execution",
+            "after_execution"
+          ]
+        },
+        "evidence_profile": {
+          "$ref": "#/$defs/eclRegistryId"
+        }
+      }
+    },
+    "causalReference": {
+      "type": "object",
+      "required": [
+        "id",
+        "digest"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uri"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "relation": {
+          "$ref": "#/$defs/eclRegistryId"
+        }
+      }
+    },
+    "workflowContext": {
+      "type": "object",
+      "required": [
+        "workflow_id",
+        "root_trace_id",
+        "attempt",
+        "sequence",
+        "causal_predecessors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "workflow_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "root_trace_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "parent_workflow_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "attempt": {
+          "$ref": "#/$defs/nonNegativeSafeInteger"
+        },
+        "sequence": {
+          "$ref": "#/$defs/nonNegativeSafeInteger"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/asciiToken"
+        },
+        "causal_predecessors": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/causalReference"
+          }
+        }
+      }
+    }
+  }
+}

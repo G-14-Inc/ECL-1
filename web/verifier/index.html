@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'sha256-hA2ASQ96y3sJq41run3nP2dJaHCjZm/VB9uqu4eCRFU='; img-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'; require-trusted-types-for 'script'; trusted-types 'none'">
+<meta name="referrer" content="no-referrer">
+<title>ECL-1 evidence verifier</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --text: #1a1a1a;
+  --muted: #4a4a4a;
+  --background: #ffffff;
+  --panel: #f2f4f7;
+  --border: #5f6368;
+  --accent: #0a4d8c;
+  --accent-text: #ffffff;
+  --focus: #0a4d8c;
+  --verified: #1d6b2c;
+  --invalid: #a0141c;
+  --incomplete: #7a4d00;
+  --trust: #8a3b00;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #eef0f2;
+    --muted: #c3c7cc;
+    --background: #121417;
+    --panel: #1e2227;
+    --border: #9aa0a6;
+    --accent: #9cc7ff;
+    --accent-text: #0b1320;
+    --focus: #ffcc4d;
+    --verified: #6fcf83;
+    --invalid: #ff8f8f;
+    --incomplete: #e8b44c;
+    --trust: #ffa25c;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--background); color: var(--text); }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: var(--background);
+  color: var(--text);
+}
+header, main, footer { max-width: 46rem; margin: 0 auto; padding: 0 1rem; }
+header { padding-top: 1.5rem; }
+footer { padding-bottom: 2rem; color: var(--muted); font-size: 0.9375rem; }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 1rem; }
+h2 { font-size: 1.375rem; margin: 2rem 0 0.75rem; }
+h3 { font-size: 1.125rem; margin: 1.5rem 0 0.5rem; }
+p { margin: 0 0 0.75rem; }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.875em; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--panel); color: var(--text); padding: 0.75rem; margin: 0.5rem 0 0; }
+fieldset { border: 1px solid var(--border); margin: 0 0 1rem; padding: 0.75rem 1rem 0.25rem; min-width: 0; }
+legend { font-weight: 600; padding: 0 0.25rem; }
+.field { margin: 0 0 1rem; }
+.field label { display: block; font-weight: 600; }
+.check { display: flex; gap: 0.5rem; align-items: flex-start; }
+.check input { width: 1.25rem; height: 1.25rem; margin: 0.15rem 0 0; flex: none; accent-color: var(--accent); }
+.check label { font-weight: 600; }
+.hint { color: var(--muted); margin: 0.125rem 0 0.375rem; font-size: 0.9375rem; }
+.check-block { margin: 0 0 1rem; }
+.check-block .hint { margin-left: 1.75rem; }
+input[type="text"] {
+  font: inherit;
+  width: 100%;
+  max-width: 22rem;
+  padding: 0.375rem 0.5rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  background: var(--background);
+  color: var(--text);
+}
+input[type="file"] { font: inherit; width: 100%; max-width: 100%; color: var(--text); }
+button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.25rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  cursor: pointer;
+}
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+h2:focus { outline: none; }
+h2:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.status { min-height: 1.5rem; margin: 1rem 0 0; }
+.problem { border-left: 0.375rem solid var(--invalid); background: var(--panel); padding: 0.75rem 1rem 0.25rem; margin: 1rem 0 0; }
+.verdict { border-left: 0.5rem solid var(--border); background: var(--panel); padding: 0.75rem 1rem; font-size: 1.25rem; }
+.verdict[data-verdict="verified"] { border-left-color: var(--verified); }
+.verdict[data-verdict="invalid"] { border-left-color: var(--invalid); }
+.verdict[data-verdict="incomplete"] { border-left-color: var(--incomplete); }
+.verdict[data-verdict="current-trust-failed"] { border-left-color: var(--trust); }
+.note { border-left: 0.375rem solid var(--trust); background: var(--panel); padding: 0.5rem 0.75rem; }
+.detail { color: var(--muted); overflow-wrap: anywhere; }
+.items, .findings, .bindings { padding-left: 1.5rem; }
+.items > li, .findings > li { margin: 0 0 1rem; }
+.bindings > li { margin: 0 0 0.375rem; }
+.item-title { font-weight: 600; margin: 0 0 0.25rem; overflow-wrap: anywhere; }
+dl { margin: 0; }
+dt { font-weight: 600; }
+dd { margin: 0 0 0.5rem; overflow-wrap: anywhere; }
+details { margin: 1.5rem 0 0; }
+summary { cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+<h1>Verify ECL-1 evidence</h1>
+</header>
+<main>
+<p>This page checks an ECL-1 evidence bundle, or an offline package that carries one, against a trust policy that you supply. It verifies each signature, the bindings between requests, decisions and events, whether the record of each action is complete, whether each decision's record of its inputs shows that only verifiable inputs supported it, and whether each release records a discharge of the obligations that its decision left to enforcement before the release. For an offline package it first checks the archive and its manifest, and it treats the trust policy, keys and snapshots inside the package as evidence: only the trust policy you supply decides. It runs the TypeScript library of the ECL-1 command-line verifier, <code>ecl-verify-ts</code>, and reaches the same verdicts as that command on the shared conformance vectors.</p>
+<p>Your files stay on this device. The page reads them in the browser and makes no network request: its content security policy forbids every connection.</p>
+<p>The records of a bundle make different claims: the authorization in a decision says what an action may do and under which conditions, the enforcement point's events say what it checked and released, and the record of the outcome, or an observer's record, says what happened. A verified bundle shows which keys signed which statements, and that the statements are consistent with each other and complete. It does not show that the statements are true, such as that the enforcement point checked and released as its events record or that the effects happened, and it is not a certification. Each result lists, with its verdict, what the verdict does not establish, such as that the recorded times are the true times of the events or that the obligations a decision left to enforcement were met, and then the checks that held.</p>
+<noscript><p class="problem">This page needs JavaScript to verify evidence. The script is the file <code>verifier.js</code> next to this page.</p></noscript>
+<p id="script-state" class="hint">The verifier script has not loaded. Keep the file <code>verifier.js</code> in the same folder as this page.</p>
+<form id="verify-form" novalidate>
+<fieldset>
+<legend>Files</legend>
+<div class="field">
+<label for="bundle">Evidence bundle or offline package</label>
+<p class="hint" id="bundle-hint">An evidence bundle, a JSON file of at most 1 MiB, or an offline package, a ZIP file of at most 16 MiB.</p>
+<input type="file" id="bundle" name="bundle" accept=".json,.zip,application/json,application/zip,application/vnd.ecl.bundle+zip" aria-describedby="bundle-hint">
+</div>
+<div class="field">
+<label for="policy">Trust policy</label>
+<p class="hint" id="policy-hint">The keys you trust, what each key may sign, and which keys are revoked. A JSON file of at most 256 KiB.</p>
+<input type="file" id="policy" name="policy" accept=".json,application/json" aria-describedby="policy-hint">
+</div>
+<div class="field">
+<label for="history">Earlier trust-policy versions (optional)</label>
+<p class="hint" id="history-hint">Each object names the trust-policy version in force when it was signed. If that is not the version above, add the version it names here. You can choose several files.</p>
+<input type="file" id="history" name="history" accept=".json,application/json" multiple aria-describedby="history-hint">
+</div>
+<div class="field">
+<label for="register">Consequential Action Register (optional)</label>
+<p class="hint" id="register-hint">The register under which the decisions were made. Each decision basis must then name this version of the register and list exactly the decision inputs that it declares for the action, with the declared class. A JSON file of at most 1 MiB.</p>
+<input type="file" id="register" name="register" accept=".json,application/json" aria-describedby="register-hint">
+</div>
+</fieldset>
+<fieldset>
+<legend>Evaluation</legend>
+<div class="field">
+<label for="now">Evaluation time (UTC)</label>
+<p class="hint" id="now-hint">Use the instant at which you verify, written like 2026-10-01T00:00:00Z. Each signing key's current status is checked then, and evidence dated later is invalid. Version 1.0 offers no as-of assessment. Leave it empty to use the current time.</p>
+<input type="text" id="now" name="now" autocomplete="off" spellcheck="false" inputmode="text" aria-describedby="now-hint">
+</div>
+<div class="check-block">
+<div class="check">
+<input type="checkbox" id="trusted-time" name="trusted-time" aria-describedby="trusted-time-hint">
+<label for="trusted-time">Require trusted time</label>
+</div>
+<p class="hint" id="trusted-time-hint">Every signature of every envelope and observation must be covered by a valid countersignature from a time authority in your trust policy. Each covered signature is judged at its attested time.</p>
+</div>
+<div class="check-block">
+<div class="check">
+<input type="checkbox" id="accept" name="accept" aria-describedby="accept-hint">
+<label for="accept">Accept a current trust failure</label>
+</div>
+<p class="hint" id="accept-hint">Choose this only after deciding to rely on evidence signed by a key that your trust policy no longer accepts. A result whose only failure is current trust then says verified and states that you accepted the failure. Invalid and incomplete results stay unchanged.</p>
+</div>
+</fieldset>
+<button type="submit" id="verify" disabled>Verify</button>
+</form>
+<p id="status" class="status" role="status"></p>
+<div id="problem" class="problem" role="alert" hidden></div>
+<section id="result" aria-labelledby="result-heading" hidden>
+<h2 id="result-heading" tabindex="-1">Result</h2>
+<div id="result-body"></div>
+</section>
+</main>
+<footer>
+<p>ECL-1 Version 1.0, browser verifier. Copyright 2026 G-14, Inc. Licensed under the Apache License, Version 2.0; G-14's patent pledge for implementations of ECL-1 is in PATENTS.md. Patents pending. The script includes @noble/curves and @noble/hashes under the MIT License; their notices are in <code>verifier.js</code>.</p>
+</footer>
+<script src="verifier.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Extension and Registry Protocol 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-extension-and-registry-protocol-1">ECL Extension and Registry Protocol 1</h1>
+<p>Version: 1.0
+Status: normative companion of ECL-1 Version 1.0, a published version</p>
+<h2 id="1-extension-descriptor">1. Extension descriptor</h2>
+<p><span id="XR1-001"><strong>XR1-001</strong></span><a class="requirement-link" href="#XR1-001" aria-label="Link to XR1-001">§</a> — Every extension MUST declare identifier, version, criticality,
+applicable object types, affected fields, interpretation or schema, owner
+class, status, and compatibility class.</p>
+<p><span id="XR1-002"><strong>XR1-002</strong></span><a class="requirement-link" href="#XR1-002" aria-label="Link to XR1-002">§</a> — An identifier MUST be globally collision-resistant within the
+ECL registry namespace.</p>
+<p><span id="XR1-003"><strong>XR1-003</strong></span><a class="requirement-link" href="#XR1-003" aria-label="Link to XR1-003">§</a> — An extension version MUST be immutable after allocation. A
+semantic change creates a new version.</p>
+<p><span id="XR1-004"><strong>XR1-004</strong></span><a class="requirement-link" href="#XR1-004" aria-label="Link to XR1-004">§</a> — Criticality MUST be evaluated per occurrence and MAY be
+constrained by the registry or active profile.</p>
+<p><span id="XR1-005"><strong>XR1-005</strong></span><a class="requirement-link" href="#XR1-005" aria-label="Link to XR1-005">§</a> — A sender MUST mark an extension critical when ignoring it could
+change admission, authority, enforcement, evidence interpretation, safe state,
+or conformance result.</p>
+<p>A registry entry states the descriptor in its attributes: <code>applies_to</code> (the
+object types), <code>affected_fields</code>, <code>interpretation</code>, and, when the value has a
+defined form, <code>value_schema</code>, the identifier of the JSON Schema that the value
+satisfies. An entry whose versions may appear together in one object sets
+<code>composable_versions</code> to <code>true</code>; that is the registry's explicit definition of
+composability for <a href="extension-registry-1.html#XR1-010">XR1-010</a>.</p>
+<p><span id="XR1-023"><strong>XR1-023</strong></span><a class="requirement-link" href="#XR1-023" aria-label="Link to XR1-023">§</a> — When the registry entry of an extension that a consumer processes
+names a value schema, the consumer MUST validate the extension's <code>value</code> against
+that schema and MUST reject a value that does not validate with
+<code>ecl.rule.extension-value-valid.v1</code>; a critical extension whose value does not
+validate MUST prevent admission or release.</p>
+<h2 id="2-consumer-behavior">2. Consumer behavior</h2>
+<p>The rules of this section apply to every ECL object that carries an
+<code>extensions</code> member: DCMP-2 messages, EBMP-2 objects, ECL-IE-1 envelopes and
+ECL-WI-1 work intents. Their registered rules name each of these object types in
+<code>applies_to</code>.</p>
+<p><span id="XR1-006"><strong>XR1-006</strong></span><a class="requirement-link" href="#XR1-006" aria-label="Link to XR1-006">§</a> — Unknown critical extensions MUST be rejected. An extension
+occurrence is unknown to a consumer unless the registry snapshot that the
+consumer applies holds an active entry with the occurrence's identifier and
+version and the consumer implements that entry; a deprecated, prohibited,
+superseded or reserved entry does not make an occurrence known. A consumer MUST
+reject an unknown critical extension with
+<code>ecl.rule.unknown-critical-extension-rejected.v1</code>.</p>
+<p>The shared conformance vectors expect a consumer that implements every active
+entry of this version's extension registry. An identifier that the registry
+holds under any status is allocated for <a href="extension-registry-1.html#XR1-017">XR1-017</a> all the same.</p>
+<p><span id="XR1-007"><strong>XR1-007</strong></span><a class="requirement-link" href="#XR1-007" aria-label="Link to XR1-007">§</a> — Unknown non-critical extensions MUST be preserved intact and
+reported when the object is forwarded, transformed, or re-emitted.</p>
+<p><span id="XR1-008"><strong>XR1-008</strong></span><a class="requirement-link" href="#XR1-008" aria-label="Link to XR1-008">§</a> — A non-critical extension MUST NOT alter core semantics.</p>
+<p><span id="XR1-009"><strong>XR1-009</strong></span><a class="requirement-link" href="#XR1-009" aria-label="Link to XR1-009">§</a> — Duplicate extension identifier/version pairs in one object MUST
+be rejected.</p>
+<p><span id="XR1-010"><strong>XR1-010</strong></span><a class="requirement-link" href="#XR1-010" aria-label="Link to XR1-010">§</a> — Conflicting versions of one extension in one object MUST be
+rejected unless the registry explicitly defines composability. Two occurrences
+of one extension identifier with different versions conflict, whether or not
+the consumer knows either version, unless the registry entry of that identifier
+sets <code>composable_versions</code> to <code>true</code>; a consumer MUST reject an object that
+carries a conflict with <code>ecl.rule.extension-single-version.v1</code>.</p>
+<h2 id="3-registry-operations">3. Registry operations</h2>
+<p><span id="XR1-011"><strong>XR1-011</strong></span><a class="requirement-link" href="#XR1-011" aria-label="Link to XR1-011">§</a> — Registry entries MUST have an append-only allocation history.</p>
+<p><span id="XR1-012"><strong>XR1-012</strong></span><a class="requirement-link" href="#XR1-012" aria-label="Link to XR1-012">§</a> — Active, deprecated, prohibited, superseded, and reserved status
+MUST be distinguishable.</p>
+<p><span id="XR1-013"><strong>XR1-013</strong></span><a class="requirement-link" href="#XR1-013" aria-label="Link to XR1-013">§</a> — Deprecation MUST identify replacement, transition window, and
+compatibility impact where applicable.</p>
+<p><span id="XR1-014"><strong>XR1-014</strong></span><a class="requirement-link" href="#XR1-014" aria-label="Link to XR1-014">§</a> — Emergency prohibition MUST identify security rationale,
+effective time, affected profiles, and review or appeal path.</p>
+<p><span id="XR1-015"><strong>XR1-015</strong></span><a class="requirement-link" href="#XR1-015" aria-label="Link to XR1-015">§</a> — An offline verification package MUST bind the registry snapshot
+used by the verifier.</p>
+<p><span id="XR1-016"><strong>XR1-016</strong></span><a class="requirement-link" href="#XR1-016" aria-label="Link to XR1-016">§</a> — Registry recognition MUST NOT grant trust or authority. Policy
+MUST still determine whether an allocated item is acceptable.</p>
+<h2 id="4-private-use-extensions">4. Private-use extensions</h2>
+<p><span id="XR1-017"><strong>XR1-017</strong></span><a class="requirement-link" href="#XR1-017" aria-label="Link to XR1-017">§</a> — A private-use extension identifier MUST be either an absolute URI
+under a namespace its owner controls, other than
+<code>https://externalcontrollayer.ai/</code>, or a reverse-domain token of a domain its
+owner controls that ends in a version (for example <code>com.example.audit-tag.v1</code>).
+An extension identifier in the <code>ecl.*</code> namespace MUST be allocated in the
+registry snapshot the consumer applies; a consumer MUST reject an unallocated
+<code>ecl.*</code> identifier, critical or not, with
+<code>ecl.rule.extension-namespace-allocated.v1</code>.</p>
+<p><span id="XR1-018"><strong>XR1-018</strong></span><a class="requirement-link" href="#XR1-018" aria-label="Link to XR1-018">§</a> — A conformance claim MUST disclose critical private extensions
+needed to interpret the claim package.</p>
+<p><span id="XR1-019"><strong>XR1-019</strong></span><a class="requirement-link" href="#XR1-019" aria-label="Link to XR1-019">§</a> — A public interoperability claim MUST NOT depend on an
+undocumented private critical extension.</p>
+<h2 id="5-compatibility">5. Compatibility</h2>
+<p><span id="XR1-020"><strong>XR1-020</strong></span><a class="requirement-link" href="#XR1-020" aria-label="Link to XR1-020">§</a> — Adding an optional non-critical extension MUST be treated as an
+additive change.</p>
+<p><span id="XR1-021"><strong>XR1-021</strong></span><a class="requirement-link" href="#XR1-021" aria-label="Link to XR1-021">§</a> — Making an extension critical, changing its interpretation,
+narrowing accepted values, or changing core state behavior MUST be treated as
+breaking unless a versioned profile explicitly provides compatibility.</p>
+<p><span id="XR1-022"><strong>XR1-022</strong></span><a class="requirement-link" href="#XR1-022" aria-label="Link to XR1-022">§</a> — A converter MUST report preserved, translated, defaulted,
+dropped, and impossible extension mappings.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>protocols/EXTENSION-REGISTRY-1.md</code>, SHA-256 <code>81bc3dbaff54a17778cc413128f3acdc1bb49cdb722f8ab7063486fc99a7ffa8</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

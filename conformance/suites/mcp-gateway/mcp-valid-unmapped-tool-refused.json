@@ -1,0 +1,40 @@
+{
+  "call": {
+    "id": 7,
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "_meta": {
+        "io.modelcontextprotocol/clientCapabilities": {},
+        "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+      },
+      "arguments": {
+        "repository": "urn:example:repo:payments-service"
+      },
+      "name": "delete_repository"
+    }
+  },
+  "mcp_revision": "2026-07-28",
+  "received_at": "2026-09-30T09:00:00.000000Z",
+  "returned": {
+    "error": {
+      "code": -31007,
+      "data": {
+        "ecl": {
+          "code": "not-mapped",
+          "reason": "ecl.error.binding-unsupported.v1"
+        }
+      },
+      "message": "The request has no reviewed mapping."
+    },
+    "id": 7,
+    "jsonrpc": "2.0"
+  },
+  "returned_at": "2026-09-30T09:00:00.450000Z",
+  "schema_version": "ecl_mcp_gateway_exchange_v1",
+  "server": {
+    "id": "urn:example:mcp-server:issues",
+    "name": "issue-tracker",
+    "version": "2.3.0"
+  }
+}

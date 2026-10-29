@@ -1,0 +1,1417 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-acs-binding",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1#/properties/decision/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-decision-invalid-disposition-outside-enum",
+      "negates": [
+        "AC1-010",
+        "XR1-023"
+      ],
+      "path": "conformance/suites/acs-binding/acs-decision-invalid-disposition-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-decision-valid-response.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a disposition the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1#/properties/evaluator/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-decision-invalid-evaluator-outside-enum",
+      "negates": [
+        "AC1-010",
+        "XR1-023"
+      ],
+      "path": "conformance/suites/acs-binding/acs-decision-invalid-evaluator-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-decision-valid-response.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record an evaluator the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1#/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1#/properties/evaluator/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-decision-valid-response",
+      "path": "conformance/suites/acs-binding/acs-decision-valid-response.json",
+      "requirement_ids": [
+        "AC1-008",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-agent-guardian-unmarked",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-agent-guardian-unmarked.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record an agent evaluator's allow on the response, and list that allow as a verifiable input that supports the admit without marking it as the Guardian's"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-agent-guardian-verifiable",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-agent-guardian-verifiable.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "class an agent evaluator's allow as a verifiable input"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-expiry-no-release.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-ask-fail-open-expiry",
+      "negates": [
+        "AC1-007"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-ask-fail-open-expiry.json",
+      "requirement_ids": [
+        "AC1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-ask-allow-timeout-challenged.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "challenge with the fail-open safe state"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-chain-head-not-the-step",
+      "negates": [
+        "AC1-008",
+        "AC1-009"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-chain-head-not-the-step.json",
+      "requirement_ids": [
+        "AC1-008",
+        "AC1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record as the step's head the head of the chain before the step"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-chain-rewritten",
+      "negates": [
+        "AC1-009"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-chain-rewritten.json",
+      "requirement_ids": [
+        "AC1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "change a chain entry after its hash was published"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-channel-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-channel-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a channel the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-decided-without-channel",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-decided-without-channel.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out how the decision point obtained the Guardian's decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-failure-closed.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-decision-failure-admitted",
+      "negates": [
+        "AC1-006"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-decision-failure-admitted.json",
+      "requirement_ids": [
+        "AC1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-decision-failure-denied.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit the action after the Guardian timed out"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-failure-closed.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-release-requires-admit.v1"
+      ],
+      "id": "acs-invalid-decision-failure-proceeds",
+      "negates": [
+        "AC1-003",
+        "AC1-006"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-decision-failure-proceeds.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-decision-failure-denied.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "negotiate the ACS default proceed and release the action after the Guardian timed out, with no ECL response"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-decision-not-recorded",
+      "negates": [
+        "AC1-008"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-decision-not-recorded.json",
+      "requirement_ids": [
+        "AC1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit without recording the Guardian decision in the response"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-expiry-no-release.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-defer-outlasts-deadline",
+      "negates": [
+        "AC1-007"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-defer-outlasts-deadline.json",
+      "requirement_ids": [
+        "AC1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-defer-held.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "let the hold expire 30 s after the Guardian's resolution deadline"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-outcome-no-weaker.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-deny-admitted",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-deny-admitted.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-deny.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit the action that the Guardian denied"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "id": "acs-invalid-deterministic-guardian-over-session-context-verifiable",
+      "negates": [
+        "AC1-004",
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-deterministic-guardian-over-session-context-verifiable.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-deterministic-guardian-over-session-context.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "class as verifiable a deterministic allow computed from the agent's SessionContext, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-disposition-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-disposition-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-deny.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a disposition the pinned response envelope does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-evaluator-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-evaluator-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-deny.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an evaluator the pinned response envelope does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/failure/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-failure-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-failure-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-decision-failure-denied.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a kind of decision failure the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-forbidden-modification-new-request",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-forbidden-modification-new-request.json",
+      "requirement_ids": [
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-forbidden-modification-denied.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "make and release a new request for a modifications object that combines wholesale replacement with a redaction"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "id": "acs-invalid-guardian-basis-of-admit",
+      "negates": [
+        "AC1-004",
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-guardian-basis-of-admit.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-defer-held.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit on a composite evaluator's allow as part of the basis, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-guardian-evaluator-unstated-verifiable",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-guardian-evaluator-unstated-verifiable.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the Guardian's evaluator and class its allow as a verifiable input that supports the admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-hook-carried-guardian-verifiable",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-hook-carried-guardian-verifiable.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-hook-carried-guardian-actor-supplied.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "class as verifiable, and rest the admit on alone, a deterministic allow that the hook point carried to the decision point"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-input-class-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-input-class-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a decision-input class that the core standard does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modification-drops-required-input",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modification-drops-required-input.json",
+      "requirement_ids": [
+        "AC1-005",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record in the modification's response the required records policy as an optional input that was unavailable, and admit the modified action on the Guardian's decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modification-records-other-inputs",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modification-records-other-inputs.json",
+      "requirement_ids": [
+        "AC1-005",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record in the modification's response only the target's record, an input that the record does not list, and none of the record's inputs"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modification-response-without-request",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modification-response-without-request.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-forbidden-modification-denied.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "keep the response of the valid modify's new request, an admit, in the record of a modifications object that cannot be applied and has no new request"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-inputs-match-basis.v1"
+      ],
+      "id": "acs-invalid-modification-rests-on-agent-guardian",
+      "negates": [
+        "AC1-004",
+        "AC1-012"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modification-rests-on-agent-guardian.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-005",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the Guardian an agent evaluator, whose modify the record classes judgment, and rest the admit of the modification's response on it alone as a verifiable input"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-inputs-match-basis.v1"
+      ],
+      "id": "acs-invalid-modification-rests-on-hook-carried-guardian",
+      "negates": [
+        "AC1-004",
+        "AC1-012"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modification-rests-on-hook-carried-guardian.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-005",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry the deterministic modify through the hook point, so that the record classes it actor_supplied, and rest the admit of the modification's response on it alone as a verifiable input"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modification-upgrades-session-context",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modification-upgrades-session-context.json",
+      "requirement_ids": [
+        "AC1-005",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the hook's session context as an actor_supplied input of the record and of the first response, and rest the admit of the modification's response on the same input alone, recorded there as verifiable"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modify-boolean-carried-as-number",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modify-boolean-carried-as-number.json",
+      "requirement_ids": [
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "set dry_run to true in the Guardian's parameter overrides and carry 1 for it in the new request, which the decision point admits and under which the step is released"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modify-other-action-class",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modify-other-action-class.json",
+      "requirement_ids": [
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the action class ecl.action.financial-transfer.v1 in the new request, which the decision point admits"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modify-other-target",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modify-other-target.json",
+      "requirement_ids": [
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name another record of the cases table as the target of the new request, which the decision point admits"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-modify-redaction-dropped",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modify-redaction-dropped.json",
+      "requirement_ids": [
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit a new request whose parameters keep the field the Guardian redacted"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-release-requires-admit.v1"
+      ],
+      "id": "acs-invalid-modify-released-under-original",
+      "negates": [
+        "AC1-003",
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-modify-released-under-original.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release the action under the original request and parameters"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-new-request-without-modify",
+      "negates": [
+        "AC1-005"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-new-request-without-modify.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a Guardian deny, which the ECL response denies, and keep a new request for the operation records.delete on another record, which its own response admits and under which the hooked step is released"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-posture-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-posture-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a failure posture the pinned handshake does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-failure-closed.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-posture-proceed",
+      "negates": [
+        "AC1-006"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-posture-proceed.json",
+      "requirement_ids": [
+        "AC1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "negotiate on_decision_failure proceed"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-expiry-no-release.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-release-requires-admit.v1"
+      ],
+      "id": "acs-invalid-released-after-ask-expired",
+      "negates": [
+        "AC1-003",
+        "AC1-007"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-released-after-ask-expired.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-ask-allow-timeout-challenged.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release the action when the challenge expires, as timeout_disposition allow asks"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-release-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-released-without-admit",
+      "negates": [
+        "AC1-003"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-released-without-admit.json",
+      "requirement_ids": [
+        "AC1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-deny.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release the action that the ECL response denied"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.budget-debit-non-negative.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-request-negative-debit",
+      "negates": [
+        "AC1-012",
+        "DCMP2-055"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-request-negative-debit.json",
+      "requirement_ids": [
+        "AC1-012",
+        "DCMP2-055"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare a budget debit of -7 in the request, with the admit bound to that request"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-signed-guardian-request-digest-not-sha-256",
+      "negates": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-signed-guardian-request-digest-not-sha-256.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-signed-guardian-names-key-and-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "give the digest of the Guardian's request under ecl.digest.sha-512.v1"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-signed-guardian-without-key",
+      "negates": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-signed-guardian-without-key.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-signed-guardian-names-key-and-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the key whose signature the decision point verified"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-status-outside-enum",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-status-outside-enum.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a Guardian status the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-invalid-verifiable-guardian-without-derivation",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/acs-binding/acs-invalid-verifiable-guardian-without-derivation.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-deterministic-guardian-over-session-context.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "class a deterministic allow as verifiable without naming the inputs the Guardian's request carried"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-allow-released",
+      "path": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-008",
+        "AC1-009",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-ask-allow-timeout-challenged",
+      "path": "conformance/suites/acs-binding/acs-valid-ask-allow-timeout-challenged.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-007",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/failure/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-decision-failure-denied",
+      "path": "conformance/suites/acs-binding/acs-valid-decision-failure-denied.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-006",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-defer-held",
+      "path": "conformance/suites/acs-binding/acs-valid-defer-held.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-007",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-deny",
+      "path": "conformance/suites/acs-binding/acs-valid-deny.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-008",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-deterministic-guardian-over-session-context",
+      "path": "conformance/suites/acs-binding/acs-valid-deterministic-guardian-over-session-context.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "the Guardian's request carries the agent's SessionContext, so its deterministic allow is an actor_supplied input that the admit does not rest on"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-forbidden-modification-denied",
+      "path": "conformance/suites/acs-binding/acs-valid-forbidden-modification-denied.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-005",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-guardian-derived-from-case-variant",
+      "path": "conformance/suites/acs-binding/acs-valid-guardian-derived-from-case-variant.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the records policy in the Guardian decision's derived_from with its URN scheme in upper case, the same input compared as input names are"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-hook-carried-guardian-actor-supplied",
+      "path": "conformance/suites/acs-binding/acs-valid-hook-carried-guardian-actor-supplied.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "the deterministic allow reaches the decision point through the hook point, so it is an actor_supplied input that the admit does not rest on"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-late-decision-denied",
+      "path": "conformance/suites/acs-binding/acs-valid-late-decision-denied.json",
+      "requirement_ids": [
+        "AC1-006",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-modify-new-request",
+      "path": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-005",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-modify-not-applied-denied",
+      "path": "conformance/suites/acs-binding/acs-valid-modify-not-applied-denied.json",
+      "requirement_ids": [
+        "AC1-003",
+        "AC1-004",
+        "AC1-005",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "override, in the Guardian's modifications, the argument record_id from which the deployment derives the target, so that the modification cannot be applied, and deny the original with no new request and no release"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/1/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/channel/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/result/properties/metadata/properties/evaluator/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/on_decision_failure/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-valid-signed-guardian-names-key-and-request",
+      "path": "conformance/suites/acs-binding/acs-valid-signed-guardian-names-key-and-request.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-allow-released.json",
+        "generator": "scripts/generate_acs_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "obtain the deterministic allow by verifying the Guardian's signature, and name the key and the digest of the Guardian's request"
+      },
+      "stage": "binding"
+    }
+  ]
+}

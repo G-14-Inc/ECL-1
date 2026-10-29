@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Evidence Lifecycle Protocol 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-evidence-lifecycle-protocol-1">ECL Evidence Lifecycle Protocol 1</h1>
+<p>Version: 1.0
+Status: normative companion of ECL-1 Version 1.0, a published version</p>
+<h2 id="1-principle">1. Principle</h2>
+<p>Evidence lifecycle actions are new, authenticated facts. They do not mutate
+history in place.</p>
+<p><span id="EL1-001"><strong>EL1-001</strong></span><a class="requirement-link" href="#EL1-001" aria-label="Link to EL1-001">§</a> — Evidence MUST have a declared lifecycle policy at or before
+sealing.</p>
+<p><span id="EL1-002"><strong>EL1-002</strong></span><a class="requirement-link" href="#EL1-002" aria-label="Link to EL1-002">§</a> — The policy MUST identify retention, legal hold, export, redaction,
+supersession, revocation, destruction, residency, encryption, and access
+requirements applicable to the evidence class.</p>
+<p><span id="EL1-003"><strong>EL1-003</strong></span><a class="requirement-link" href="#EL1-003" aria-label="Link to EL1-003">§</a> — A lifecycle transition MUST record actor, authority, policy,
+prior digest, operation, time, and resulting artifact or proof where
+applicable.</p>
+<h2 id="2-sealing-and-verification">2. Sealing and verification</h2>
+<p><span id="EL1-004"><strong>EL1-004</strong></span><a class="requirement-link" href="#EL1-004" aria-label="Link to EL1-004">§</a> — Sealing MUST establish canonical content identity and the
+integrity policy used.</p>
+<p><span id="EL1-005"><strong>EL1-005</strong></span><a class="requirement-link" href="#EL1-005" aria-label="Link to EL1-005">§</a> — Verification MUST produce a separate verification event.
+Verification status MUST NOT be written into and thereby alter the sealed
+source.</p>
+<p><span id="EL1-006"><strong>EL1-006</strong></span><a class="requirement-link" href="#EL1-006" aria-label="Link to EL1-006">§</a> — Verification failure MUST retain the failed object and finding
+unless a higher legal or safety requirement prohibits retention.</p>
+<h2 id="3-retention-and-hold">3. Retention and hold</h2>
+<p><span id="EL1-007"><strong>EL1-007</strong></span><a class="requirement-link" href="#EL1-007" aria-label="Link to EL1-007">§</a> — Retention periods MUST be calculated from explicit events and
+policy, not filesystem modification time.</p>
+<p><span id="EL1-008"><strong>EL1-008</strong></span><a class="requirement-link" href="#EL1-008" aria-label="Link to EL1-008">§</a> — Legal hold MUST suspend destruction for its scope unless the
+recorded legal determination under <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to <a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a> requires otherwise.</p>
+<p><span id="EL1-009"><strong>EL1-009</strong></span><a class="requirement-link" href="#EL1-009" aria-label="Link to EL1-009">§</a> — Releasing a hold MUST require separate authority and MUST NOT
+itself destroy evidence.</p>
+<p><span id="EL1-010"><strong>EL1-010</strong></span><a class="requirement-link" href="#EL1-010" aria-label="Link to EL1-010">§</a> — Retention extension MUST be non-destructive. Retention shortening
+MUST require the change-control and authority class defined by the profile.</p>
+<h2 id="4-export-and-chain-of-custody">4. Export and chain of custody</h2>
+<p><span id="EL1-011"><strong>EL1-011</strong></span><a class="requirement-link" href="#EL1-011" aria-label="Link to EL1-011">§</a> — Export MUST produce a manifest binding source objects, exported
+objects, transformations, custody actors, transfer times, and destination
+boundary.</p>
+<p><span id="EL1-012"><strong>EL1-012</strong></span><a class="requirement-link" href="#EL1-012" aria-label="Link to EL1-012">§</a> — An air-gapped export MUST preserve offline verification material
+and record removable-media or transfer-channel custody where the profile
+requires it.</p>
+<p><span id="EL1-013"><strong>EL1-013</strong></span><a class="requirement-link" href="#EL1-013" aria-label="Link to EL1-013">§</a> — Receipt of an export MUST be a separate event; dispatch does not
+prove receipt.</p>
+<h2 id="5-redaction-and-minimization">5. Redaction and minimization</h2>
+<p><span id="EL1-014"><strong>EL1-014</strong></span><a class="requirement-link" href="#EL1-014" aria-label="Link to EL1-014">§</a> — Redaction MUST create a new derivative and redaction manifest.</p>
+<p><span id="EL1-015"><strong>EL1-015</strong></span><a class="requirement-link" href="#EL1-015" aria-label="Link to EL1-015">§</a> — The manifest MUST identify the sealed source digest, redaction
+policy, transformation implementation, removed data classes, preserved
+verifier-critical fields, producer, and resulting digest.</p>
+<p><span id="EL1-016"><strong>EL1-016</strong></span><a class="requirement-link" href="#EL1-016" aria-label="Link to EL1-016">§</a> — Selective disclosure MUST NOT be described as proof of an
+undisclosed field unless a registered cryptographic disclosure scheme supports
+that exact claim.</p>
+<p><span id="EL1-017"><strong>EL1-017</strong></span><a class="requirement-link" href="#EL1-017" aria-label="Link to EL1-017">§</a> — A verifier MUST downgrade or reject a claim when redaction removes
+evidence required for that claim.</p>
+<h2 id="6-supersession-and-revocation">6. Supersession and revocation</h2>
+<p><span id="EL1-018"><strong>EL1-018</strong></span><a class="requirement-link" href="#EL1-018" aria-label="Link to EL1-018">§</a> — Supersession MUST identify a preferred successor while preserving
+the predecessor and its historical validity interval.</p>
+<p><span id="EL1-019"><strong>EL1-019</strong></span><a class="requirement-link" href="#EL1-019" aria-label="Link to EL1-019">§</a> — Revocation MUST state that an artifact is no longer acceptable
+for a specified purpose and time, and MUST NOT assert that the artifact never
+existed.</p>
+<p><span id="EL1-020"><strong>EL1-020</strong></span><a class="requirement-link" href="#EL1-020" aria-label="Link to EL1-020">§</a> — A revocation MUST identify scope, effective time, reason,
+authority, and replacement where one exists.</p>
+<h2 id="7-destruction">7. Destruction</h2>
+<p><span id="EL1-021"><strong>EL1-021</strong></span><a class="requirement-link" href="#EL1-021" aria-label="Link to EL1-021">§</a> — Destruction MUST be prohibited while a governing hold is active
+unless the recorded legal determination under <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to <a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a> requires otherwise.</p>
+<p><span id="EL1-022"><strong>EL1-022</strong></span><a class="requirement-link" href="#EL1-022" aria-label="Link to EL1-022">§</a> — A destruction event MUST identify the target digest, method,
+scope, actor, authority, time, replicas or media addressed, residual limits,
+and proof required by the profile.</p>
+<p><span id="EL1-023"><strong>EL1-023</strong></span><a class="requirement-link" href="#EL1-023" aria-label="Link to EL1-023">§</a> — A producer MUST NOT claim destruction outside its observable or
+controlled boundary.</p>
+<p><span id="EL1-024"><strong>EL1-024</strong></span><a class="requirement-link" href="#EL1-024" aria-label="Link to EL1-024">§</a> — Destruction of data MUST NOT destroy the minimum lifecycle proof
+required to establish that authorized destruction occurred, unless law or the
+active profile requires otherwise.</p>
+<h2 id="8-precedence">8. Precedence</h2>
+<p><span id="EL1-025"><strong>EL1-025</strong></span><a class="requirement-link" href="#EL1-025" aria-label="Link to EL1-025">§</a> — Legal hold MUST take precedence over scheduled destruction,
+subject to the recorded legal determination under <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to <a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a>.</p>
+<p><span id="EL1-026"><strong>EL1-026</strong></span><a class="requirement-link" href="#EL1-026" aria-label="Link to EL1-026">§</a> — Emergency preservation may extend retention but MUST be reviewed
+and bounded.</p>
+<p><span id="EL1-027"><strong>EL1-027</strong></span><a class="requirement-link" href="#EL1-027" aria-label="Link to EL1-027">§</a> — Conflicting lifecycle instructions MUST enter hold or
+indeterminate state until an authorized precedence decision is recorded under
+<a href="ecl-1_standard.html#ECL1N-0050">ECL1N-0050</a>, within the applicable deadline. A hold MUST NOT authorize retention
+that the legal determination prohibits. Unavailable evidence MUST remain
+disclosed, with verification and assessment limited to the evidence retained.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>protocols/EVIDENCE-LIFECYCLE-1.md</code>, SHA-256 <code>6f1b0be7b15c0cb737adfa3baf0f7c3e1bf818b67fca7c694069960482c24e74</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

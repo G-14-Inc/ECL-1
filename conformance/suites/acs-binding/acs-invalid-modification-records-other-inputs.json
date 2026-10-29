@@ -1,0 +1,516 @@
+{
+  "acs_version": "0.1.0",
+  "guardian": {
+    "channel": "direct",
+    "observed_at": "2026-09-30T09:00:00.080000Z",
+    "result": {
+      "acs_version": "0.1.0",
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "metadata": {
+        "evaluator": "deterministic",
+        "evaluator_version": "1.4.0"
+      },
+      "modifications": {
+        "parameter_overrides": {
+          "patch": {
+            "status": "on_hold"
+          }
+        },
+        "redactions": [
+          {
+            "path": "/note"
+          }
+        ]
+      },
+      "reasoning": "The Guardian's policy returned modify.",
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b",
+      "type": "final"
+    },
+    "status": "decided"
+  },
+  "hook": "steps/toolCallRequest",
+  "inputs": [
+    {
+      "class": "verifiable",
+      "effect": "none",
+      "input": "urn:example:input:records-policy",
+      "reference": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "d393bf4ad89de8035c052c84e3e49c28879b80271d3cfef6360e53372a9a5643"
+        },
+        "uri": "urn:example:input-value:records-policy"
+      },
+      "required": true,
+      "source": "urn:example:source:records-policy",
+      "status": "available"
+    },
+    {
+      "class": "verifiable",
+      "derived_from": [],
+      "effect": "none",
+      "guardian": true,
+      "input": "urn:example:input:acs-guardian-decision",
+      "reference": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "9bbba3552da21818bb63019ac94d09b997d3e95050a5251928866cf230caaa15"
+        },
+        "uri": "urn:example:input-value:acs-guardian-decision"
+      },
+      "required": true,
+      "source": "urn:example:source:acs-guardian-decision",
+      "status": "available"
+    }
+  ],
+  "modification_request": {
+    "action": {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "action_id": "urn:example:action:acs-modify-other-inputs-modified",
+      "operation": "records.update",
+      "parameters": {
+        "note": "[REDACTED]",
+        "patch": {
+          "status": "on_hold"
+        },
+        "record_id": "r-17"
+      },
+      "parameters_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "43c274dbd96216d7bf0b188dafdb2ab62589d39fa49c9e01f99c71ab179300df"
+      },
+      "required_evidence_profile": "ecl.evidence.standard.v1",
+      "risk_class": "ecl.risk.high.v1",
+      "target": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "012957913534d275cb76eac18acf965fab30e67eea609b33053a002fa0276945"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/target/sha256/012957913534d275cb76eac18acf965fab30e67eea609b33053a002fa0276945"
+      }
+    },
+    "actor": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "authority_request": {
+      "audience": "urn:example:enforcement-point:bindings",
+      "requested_validity_seconds": 30,
+      "use_policy": "single_use"
+    },
+    "constraints": {},
+    "delegation_chain": [],
+    "expires_at": "2026-09-30T09:00:30.150000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.150000Z",
+    "issuer": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "urn:example:message:acs-modify-other-inputs-modified",
+    "message_type": "decision_request",
+    "protocol": "DCMP-2",
+    "schema_version": "2.0",
+    "subject": {
+      "id": "urn:example:tenant:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.tenant.v1"
+    },
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "2ddeff2100b5ad1861116efec9d5c690dceedbcce907d58bde75ab3234ddc432"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/82c5dd15bb431a28868969a5f3c5e305ab87e19e1aab68bfd06c9eb8fcd95cf9",
+          "relation": "ecl.relation.modification-of.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:acs-modify-other-inputs",
+      "sequence": 3,
+      "workflow_id": "urn:example:workflow:acs-modify-other-inputs"
+    }
+  },
+  "modification_response": {
+    "authorization": {
+      "audience": "urn:example:enforcement-point:bindings",
+      "authorization_id": "https://externalcontrollayer.ai/ns/authority/sha256/875e30a0364e0fca44b3dc74eaff7a548d8fc10c5ab9c35c35300e7536a78c61",
+      "max_uses": 1,
+      "scope_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "eab25ab0bf45a93a72f2a92f100deb013e16444f4a61bd8a66547ae160b86365"
+      },
+      "use_policy": "single_use",
+      "valid_from": "2026-09-30T09:00:00.200000Z",
+      "valid_until": "2026-09-30T09:00:15.200000Z"
+    },
+    "decision_id": "https://externalcontrollayer.ai/ns/decision/sha256/e352910baafdee0b536146ce4b74f44ccf957983eb562bc3fd3a1d9c8d5270c4",
+    "evaluated_at": "2026-09-30T09:00:00.200000Z",
+    "expires_at": "2026-09-30T09:00:15.200000Z",
+    "extensions": [
+      {
+        "critical": true,
+        "id": "ecl.ext.decision-basis.v1",
+        "value": {
+          "inputs": [
+            {
+              "class": "verifiable",
+              "effect": "supports",
+              "input": "urn:example:input:bindings-target-record",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "65c40a329b6c8cb587a47e844a1734bd8f0382dfc32f0f8e22ad450840a518b5"
+                },
+                "uri": "urn:example:input-value:bindings-target-record"
+              },
+              "required": true,
+              "source": "urn:example:system-of-record:bindings",
+              "status": "available"
+            }
+          ],
+          "register": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "623fcf140727bacfacf4eb3a651ee945cfd430fb62107390354108c08603c52b"
+            },
+            "uri": "urn:example:register:bindings",
+            "version": "2026-09-30"
+          }
+        },
+        "version": 1
+      }
+    ],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.200000Z",
+    "issuer": {
+      "id": "urn:example:decision-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.service.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/065fffee894fdc6b19a3f05f5bb949d4d090c59219af21fdefa7458012e1feb3",
+    "message_type": "decision_response",
+    "obligations": [],
+    "outcome": "admit",
+    "policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "epoch": 1,
+      "id": "urn:example:policy:bindings",
+      "version": "2026-09-30"
+    },
+    "protocol": "DCMP-2",
+    "reasons": [],
+    "request_id": "urn:example:message:acs-modify-other-inputs-modified",
+    "safe_state": "ecl.state.restricted.v1",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "3bdd28a2204990d34645019ae44f54c1959cebfdef8778937fb819db94ac42da"
+          },
+          "id": "urn:example:message:acs-modify-other-inputs-modified",
+          "relation": "ecl.relation.responds-to.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:acs-modify-other-inputs",
+      "sequence": 4,
+      "workflow_id": "urn:example:workflow:acs-modify-other-inputs"
+    }
+  },
+  "on_decision_failure": "deny",
+  "release": {
+    "parameters_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "43c274dbd96216d7bf0b188dafdb2ab62589d39fa49c9e01f99c71ab179300df"
+    },
+    "released_at": "2026-09-30T09:00:00.400000Z",
+    "request_id": "urn:example:message:acs-modify-other-inputs-modified"
+  },
+  "request": {
+    "action": {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "action_id": "https://externalcontrollayer.ai/ns/action/sha256/e12fb9e29d82a5484b219863ecee0bc8e592a53236ffb42a5351ffef77627c36",
+      "operation": "records.update",
+      "parameters": {
+        "note": "The customer asked to close case 4411",
+        "patch": {
+          "status": "closed"
+        },
+        "record_id": "r-17"
+      },
+      "parameters_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "fba2059ded1ad7e06ac84aa15b5448420eaec4c15be0039208d956939f8bc371"
+      },
+      "required_evidence_profile": "ecl.evidence.standard.v1",
+      "risk_class": "ecl.risk.high.v1",
+      "target": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "012957913534d275cb76eac18acf965fab30e67eea609b33053a002fa0276945"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/target/sha256/012957913534d275cb76eac18acf965fab30e67eea609b33053a002fa0276945"
+      }
+    },
+    "actor": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "authority_request": {
+      "audience": "urn:example:enforcement-point:bindings",
+      "requested_validity_seconds": 30,
+      "use_policy": "single_use"
+    },
+    "constraints": {},
+    "delegation_chain": [],
+    "expires_at": "2026-09-30T09:00:30.000000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.000000Z",
+    "issuer": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/82c5dd15bb431a28868969a5f3c5e305ab87e19e1aab68bfd06c9eb8fcd95cf9",
+    "message_type": "decision_request",
+    "protocol": "DCMP-2",
+    "schema_version": "2.0",
+    "subject": {
+      "id": "urn:example:tenant:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.tenant.v1"
+    },
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:acs-modify-other-inputs",
+      "sequence": 1,
+      "workflow_id": "urn:example:workflow:acs-modify-other-inputs"
+    }
+  },
+  "response": {
+    "decision_id": "https://externalcontrollayer.ai/ns/decision/sha256/c8503721fd2520e83e8b790cdeaf98b38031a84d7e13a3716a2ca73d7fc80948",
+    "evaluated_at": "2026-09-30T09:00:00.100000Z",
+    "expires_at": "2026-09-30T09:00:15.100000Z",
+    "extensions": [
+      {
+        "critical": false,
+        "id": "ecl.ext.acs-decision.v1",
+        "value": {
+          "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+          "decision": "modify",
+          "evaluator": "deterministic",
+          "modifications_digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "d3d907d01a0f2faad6a32fd583b7b428efa3e755cd61bfc9595c8215754fb4d2"
+          },
+          "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+        },
+        "version": 1
+      },
+      {
+        "critical": true,
+        "id": "ecl.ext.decision-basis.v1",
+        "value": {
+          "inputs": [
+            {
+              "class": "verifiable",
+              "effect": "none",
+              "input": "urn:example:input:records-policy",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "d393bf4ad89de8035c052c84e3e49c28879b80271d3cfef6360e53372a9a5643"
+                },
+                "uri": "urn:example:input-value:records-policy"
+              },
+              "required": true,
+              "source": "urn:example:source:records-policy",
+              "status": "available"
+            },
+            {
+              "class": "verifiable",
+              "derived_from": [],
+              "effect": "none",
+              "input": "urn:example:input:acs-guardian-decision",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "9bbba3552da21818bb63019ac94d09b997d3e95050a5251928866cf230caaa15"
+                },
+                "uri": "urn:example:input-value:acs-guardian-decision"
+              },
+              "required": true,
+              "source": "urn:example:source:acs-guardian-decision",
+              "status": "available"
+            }
+          ],
+          "register": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "623fcf140727bacfacf4eb3a651ee945cfd430fb62107390354108c08603c52b"
+            },
+            "uri": "urn:example:register:bindings",
+            "version": "2026-09-30"
+          }
+        },
+        "version": 1
+      }
+    ],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.100000Z",
+    "issuer": {
+      "id": "urn:example:decision-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.service.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/678ac17f69075a49f2309f07396208df0e84fa9e8e85c6bdc892bd0169b4f598",
+    "message_type": "decision_response",
+    "obligations": [],
+    "outcome": "deny",
+    "policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "epoch": 1,
+      "id": "urn:example:policy:bindings",
+      "version": "2026-09-30"
+    },
+    "protocol": "DCMP-2",
+    "reasons": [
+      {
+        "code": "ecl.reason.native-policy-disposition.v1",
+        "detail": "the policy did not permit it",
+        "retryable": false
+      }
+    ],
+    "request_id": "https://externalcontrollayer.ai/ns/message/sha256/82c5dd15bb431a28868969a5f3c5e305ab87e19e1aab68bfd06c9eb8fcd95cf9",
+    "safe_state": "ecl.state.restricted.v1",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "2ddeff2100b5ad1861116efec9d5c690dceedbcce907d58bde75ab3234ddc432"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/82c5dd15bb431a28868969a5f3c5e305ab87e19e1aab68bfd06c9eb8fcd95cf9",
+          "relation": "ecl.relation.responds-to.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:acs-modify-other-inputs",
+      "sequence": 2,
+      "workflow_id": "urn:example:workflow:acs-modify-other-inputs"
+    }
+  },
+  "schema_version": "ecl_acs_exchange_v1",
+  "session_id": "sess-acs-0001"
+}

@@ -1,0 +1,1430 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/incident-scenario/1",
+  "title": "ECL incident replay scenario v1",
+  "description": "One scenario of the ECL incident replay suite: the deployment facts a runtime control system is configured with, a timed sequence of agent proposals and external events, and the outcomes each step must have. Any control system can run a scenario through an adapter of its own (conformance/scenarios/README.md). Scenarios are derived from the Control Gap Record, version 0.2, © 2026 G-14, Inc., https://externalcontrollayer.ai, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); each scenario's source.credit gives the attribution and states the adaptation.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "title",
+    "source",
+    "gaps_exercised",
+    "abstraction",
+    "requirements",
+    "start_at",
+    "deployment",
+    "steps"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_incident_scenario_v1"
+    },
+    "scenario_id": {
+      "description": "record-<entry>-<record key>.",
+      "type": "string",
+      "pattern": "^record-[1-9][0-9]{0,2}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "$ref": "#/$defs/text"
+    },
+    "source": {
+      "description": "The record entry the scenario is derived from, and the credit its license requires.",
+      "type": "object",
+      "required": [
+        "record",
+        "publisher",
+        "license",
+        "record_version",
+        "entry",
+        "key",
+        "url",
+        "gaps_coded",
+        "credit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "record": {
+          "const": "Control Gap Record"
+        },
+        "publisher": {
+          "const": "externalcontrollayer.ai"
+        },
+        "license": {
+          "const": "CC BY 4.0"
+        },
+        "record_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+$"
+        },
+        "entry": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999
+        },
+        "key": {
+          "$ref": "#/$defs/token"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://externalcontrollayer\\.ai/record-[1-9][0-9]{0,2}$"
+        },
+        "gaps_coded": {
+          "description": "The gaps the record codes for the entry.",
+          "$ref": "#/$defs/gaps"
+        },
+        "credit": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "gaps_exercised": {
+      "description": "The coded gaps whose controls the steps exercise.",
+      "$ref": "#/$defs/gaps"
+    },
+    "abstraction": {
+      "description": "One line on what the scenario abstracts from the real incident.",
+      "$ref": "#/$defs/text"
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+      },
+      "description": "The requirements the scenario tests: exactly the union of the requirements its steps list."
+    },
+    "start_at": {
+      "description": "The instant of offset zero. Step times are whole seconds after it.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+    },
+    "deployment": {
+      "$ref": "#/$defs/deployment"
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+    },
+    "uri": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "uris": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/uri"
+      }
+    },
+    "tokens": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/token"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "G8",
+          "G9",
+          "G10",
+          "G11",
+          "G12",
+          "G13"
+        ]
+      }
+    },
+    "inputClass": {
+      "description": "The decision-input classes of the one-way rule: verifiable inputs come from sources the governed AI system cannot write; actor_supplied inputs are produced by, or writable by, the governed AI system; judgment inputs are the output of a probabilistic model or heuristic detector about meaning or risk. Only verifiable inputs can be the reason an action is admitted.",
+      "enum": [
+        "verifiable",
+        "actor_supplied",
+        "judgment"
+      ]
+    },
+    "state": {
+      "description": "The control state after a step: ordinary operation, or a safe state of TIMING-SAFE-STATE-1.",
+      "enum": [
+        "ordinary",
+        "degraded",
+        "restricted",
+        "quarantine",
+        "emergency_halt"
+      ]
+    },
+    "outcome": {
+      "description": "A DCMP-2 disposition, or no-decision when no decision could be obtained.",
+      "enum": [
+        "admit",
+        "deny",
+        "hold",
+        "challenge",
+        "no-decision"
+      ]
+    },
+    "outcomeExpectation": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "effect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "array",
+              "minItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/outcome"
+              }
+            }
+          ]
+        },
+        "effect": {
+          "description": "Whether the action's effect is observed at the point of effect after the step.",
+          "enum": [
+            "none",
+            "committed"
+          ]
+        },
+        "count": {
+          "description": "In `first`, how many of the repeated proposals this expectation covers.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      }
+    },
+    "proposalExpectation": {
+      "description": "One expectation for every proposal of the step, or one for the first `count` proposals and another for the rest.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/outcomeExpectation"
+        },
+        {
+          "type": "object",
+          "required": [
+            "first",
+            "rest"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "first": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/outcomeExpectation"
+                },
+                {
+                  "required": [
+                    "count"
+                  ]
+                }
+              ]
+            },
+            "rest": {
+              "$ref": "#/$defs/outcomeExpectation"
+            }
+          }
+        }
+      ]
+    },
+    "principal": {
+      "type": "object",
+      "required": [
+        "id",
+        "role",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uri"
+        },
+        "role": {
+          "enum": [
+            "governed_agent",
+            "person",
+            "service",
+            "external"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "acts_for": {
+          "description": "For a governed agent: the principal on whose behalf it acts, the subject of its requests.",
+          "$ref": "#/$defs/uri"
+        },
+        "approves": {
+          "description": "The action classes whose held actions this person may approve or reject.",
+          "$ref": "#/$defs/tokens"
+        },
+        "halts": {
+          "description": "Whether this person may halt through the emergency control plane.",
+          "type": "boolean"
+        },
+        "revokes": {
+          "description": "Whether this person may revoke a governed agent's authority.",
+          "type": "boolean"
+        },
+        "reviews_changes": {
+          "description": "Whether this person may review changes to the agent, its tools or its configuration.",
+          "type": "boolean"
+        },
+        "approves_control_changes": {
+          "description": "The controls whose changes this person may approve.",
+          "$ref": "#/$defs/tokens"
+        },
+        "lifts": {
+          "description": "The declared detections whose responses this person may lift.",
+          "$ref": "#/$defs/tokens"
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "id",
+        "class",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "class": {
+          "$ref": "#/$defs/inputClass"
+        },
+        "source": {
+          "$ref": "#/$defs/text"
+        },
+        "origin": {
+          "description": "For a verifiable input that states a fact about the action's target or subject, where the fact comes from (ECL1N-0165): a system of record, an independent state witness, or an authenticated external party. The policy and trust state, a budget ledger and an approval have no origin: they do not satisfy ECL1N-0165.",
+          "enum": [
+            "system-of-record",
+            "state-witness",
+            "external-party"
+          ]
+        },
+        "asserts": {
+          "description": "What the input claims when present: approval claims that an authorized person approved the action.",
+          "enum": [
+            "approval"
+          ]
+        },
+        "content": {
+          "description": "The reference content a verifiable input holds, keyed by the value of a statement check's key parameter.",
+          "type": "object"
+        }
+      }
+    },
+    "parameterConstraint": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "parameter",
+            "each_matches"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "parameter": {
+              "$ref": "#/$defs/token"
+            },
+            "each_matches": {
+              "description": "Patterns that each value of the parameter (a string or a list of strings) must match; `*` matches any run of characters.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "parameter",
+            "at_most"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "parameter": {
+              "$ref": "#/$defs/token"
+            },
+            "at_most": {
+              "description": "The largest value the parameter, a decimal string or an integer, may have.",
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+            }
+          }
+        }
+      ]
+    },
+    "actionClass": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "operations",
+        "consequence",
+        "targets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/token"
+          }
+        },
+        "consequence": {
+          "description": "The consequence dimensions of ECL1N-0004, as the action register names them; empty for a non-consequential class.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "external_state_mutation",
+              "nonpublic_data_disclosure",
+              "financial",
+              "legal",
+              "contractual",
+              "identity",
+              "infrastructure",
+              "network",
+              "physical",
+              "authority_or_reach_expansion",
+              "material_external_cost_or_exposure"
+            ]
+          }
+        },
+        "targets": {
+          "description": "The declared boundary: patterns a target must match; `*` matches any run of characters.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "parameter_constraints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameterConstraint"
+          }
+        },
+        "approval": {
+          "description": "The human-approval threshold of the register (ECL1N-0007, ECL1N-0177) and its minimum review time (ECL1N-0175).",
+          "type": "object",
+          "required": [
+            "when",
+            "minimum_review_seconds"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "when": {
+              "description": "always; on_statement_mismatch, when a statement check finds a difference; or when a parameter is at least a value.",
+              "oneOf": [
+                {
+                  "enum": [
+                    "always",
+                    "on_statement_mismatch"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "parameter",
+                    "at_least"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "parameter": {
+                      "$ref": "#/$defs/token"
+                    },
+                    "at_least": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                    }
+                  }
+                }
+              ]
+            },
+            "minimum_review_seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 86400
+            }
+          }
+        },
+        "budget": {
+          "$ref": "#/$defs/token"
+        },
+        "requires_inputs": {
+          "description": "Verifiable inputs an admit of this class rests on (ECL1N-0165).",
+          "$ref": "#/$defs/tokens"
+        },
+        "statement_check": {
+          "description": "A statement in the organization's name is compared with approved reference content before it is sent (ECL1N-0163).",
+          "type": "object",
+          "required": [
+            "reference",
+            "key_parameter",
+            "compare"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "reference": {
+              "$ref": "#/$defs/token"
+            },
+            "key_parameter": {
+              "$ref": "#/$defs/token"
+            },
+            "compare": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/token"
+              }
+            }
+          }
+        },
+        "tool": {
+          "description": "The tool whose approved version this class requires (capability freeze).",
+          "$ref": "#/$defs/token"
+        }
+      }
+    },
+    "budget": {
+      "description": "A consequence budget (ECL1N-0173): it counts the admitted actions of every session, workflow and instance.",
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "measure",
+        "limit",
+        "period_seconds",
+        "on_exceed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "measure": {
+          "oneOf": [
+            {
+              "const": "count"
+            },
+            {
+              "type": "object",
+              "required": [
+                "sum"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "sum": {
+                  "$ref": "#/$defs/token"
+                }
+              }
+            }
+          ]
+        },
+        "limit": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "period_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31622400
+        },
+        "on_exceed": {
+          "enum": [
+            "deny",
+            "hold"
+          ]
+        }
+      }
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "classes",
+        "from",
+        "until",
+        "effect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "classes": {
+          "$ref": "#/$defs/tokens"
+        },
+        "from": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "until": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "effect": {
+          "const": "deny"
+        }
+      }
+    },
+    "detection": {
+      "description": "A declared detection and its response (ECL1N-0167, ECL1N-0168).",
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "source_class",
+        "classes",
+        "response",
+        "lift_minimum_review_seconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "source_class": {
+          "$ref": "#/$defs/inputClass"
+        },
+        "classes": {
+          "$ref": "#/$defs/tokens"
+        },
+        "response": {
+          "enum": [
+            "hold",
+            "restricted",
+            "quarantine",
+            "emergency_halt"
+          ]
+        },
+        "lift_minimum_review_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        }
+      }
+    },
+    "control": {
+      "description": "An in-scope control that only a recorded control change may disable, bypass or set to automatic approval (ECL1N-0166, ECL1N-0169).",
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "kind": {
+          "enum": [
+            "approval_step",
+            "detection",
+            "budget",
+            "policy_rule",
+            "enforcement_point",
+            "verification_check"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "classes": {
+          "$ref": "#/$defs/tokens"
+        },
+        "detection": {
+          "$ref": "#/$defs/token"
+        }
+      }
+    },
+    "versions": {
+      "description": "The reviewed versions of the governed agent or of a tool (ECL1N-0170, ECL1N-0171).",
+      "type": "object",
+      "required": [
+        "subject",
+        "approved"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "pattern": "^(agent|tool:[a-z0-9][a-z0-9._-]{0,63})$"
+        },
+        "approved": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          }
+        }
+      }
+    },
+    "path": {
+      "type": "object",
+      "required": [
+        "path_id",
+        "operations",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/token"
+          }
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "required": [
+        "level",
+        "principals",
+        "action_classes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "enum": [
+            "L1",
+            "L2",
+            "L3",
+            "L4"
+          ]
+        },
+        "principals": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/principal"
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/input"
+          }
+        },
+        "action_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/actionClass"
+          }
+        },
+        "budgets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/budget"
+          }
+        },
+        "windows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/window"
+          }
+        },
+        "detections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/detection"
+          }
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/control"
+          }
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/versions"
+          }
+        },
+        "cached_decision_state": {
+          "description": "Whether the deployment holds signed cached decision state with which Degraded Mode may continue bounded actions while the decision service is unavailable (ECL1N-0102). A scenario with an outage step declares it. With false there is none, so an outage brings Restricted Mode (ECL1N-0103, ECL1N-0146), and the system under test is configured without cached decision state.",
+          "type": "boolean"
+        },
+        "claim_boundary": {
+          "description": "The paths the system can reach and the Negative Boundary Annex (ECL1N-0008, ECL1N-0010, ECL1N-0011). The register is the action classes.",
+          "type": "object",
+          "required": [
+            "reachable_paths",
+            "negative_boundary_annex"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "reachable_paths": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/path"
+              }
+            },
+            "negative_boundary_annex": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/path"
+              }
+            }
+          }
+        }
+      }
+    },
+    "base": {
+      "type": "object",
+      "required": [
+        "step",
+        "at",
+        "kind"
+      ],
+      "properties": {
+        "step": {
+          "type": "string",
+          "pattern": "^s[1-9][0-9]{0,2}$"
+        },
+        "at": {
+          "description": "Seconds after start_at.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31622400
+        },
+        "origin": {
+          "description": "record: the step replays a fact of the record entry. added: the replay adds the step to test the guarantee's failure behavior, and the note says so.",
+          "enum": [
+            "record",
+            "added"
+          ]
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        },
+        "requirements": {
+          "description": "The requirements that this step's expectations test. A step that only prepares a later step lists none. The scenario's requirements are exactly those its steps list.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          }
+        }
+      }
+    },
+    "step": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/propose"
+            },
+            {
+              "$ref": "#/$defs/decide"
+            },
+            {
+              "$ref": "#/$defs/detectionStep"
+            },
+            {
+              "$ref": "#/$defs/lift"
+            },
+            {
+              "$ref": "#/$defs/outage"
+            },
+            {
+              "$ref": "#/$defs/halt"
+            },
+            {
+              "$ref": "#/$defs/revoke"
+            },
+            {
+              "$ref": "#/$defs/change"
+            },
+            {
+              "$ref": "#/$defs/controlChange"
+            },
+            {
+              "$ref": "#/$defs/controlObserved"
+            },
+            {
+              "$ref": "#/$defs/directCall"
+            },
+            {
+              "$ref": "#/$defs/boundaryReview"
+            }
+          ]
+        }
+      ]
+    },
+    "propose": {
+      "description": "The governed agent proposes an action with exact parameters. With repeat, it proposes it that many times, `{n}` in the target and in string parameters standing for 1 to repeat.",
+      "type": "object",
+      "required": [
+        "kind",
+        "actor",
+        "operation",
+        "target",
+        "parameters",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "propose"
+        },
+        "actor": {
+          "$ref": "#/$defs/uri"
+        },
+        "instance": {
+          "$ref": "#/$defs/token"
+        },
+        "operation": {
+          "$ref": "#/$defs/token"
+        },
+        "target": {
+          "description": "The URI of the resource the action affects; in a repeated proposal `{n}` stands for its number.",
+          "$ref": "#/$defs/uri"
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "inputs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/token"
+          }
+        },
+        "agent_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "tool": {
+          "type": "object",
+          "required": [
+            "name",
+            "version"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/token"
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          }
+        },
+        "repeat": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100
+        },
+        "spacing_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "expect": {
+          "$ref": "#/$defs/proposalExpectation"
+        }
+      }
+    },
+    "decide": {
+      "description": "A person approves or rejects held actions of an earlier propose step, all of them or the one at index.",
+      "type": "object",
+      "required": [
+        "kind",
+        "person",
+        "decision",
+        "target_step",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "decide"
+        },
+        "person": {
+          "$ref": "#/$defs/uri"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "reject"
+          ]
+        },
+        "target_step": {
+          "type": "string",
+          "pattern": "^s[1-9][0-9]{0,2}$"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expect": {
+          "$ref": "#/$defs/proposalExpectation"
+        }
+      }
+    },
+    "controlExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "state": {
+          "$ref": "#/$defs/state"
+        }
+      }
+    },
+    "detectionStep": {
+      "description": "A declared detection fires.",
+      "type": "object",
+      "required": [
+        "kind",
+        "detection",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "detection"
+        },
+        "detection": {
+          "$ref": "#/$defs/token"
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "lift": {
+      "description": "A person lifts a detection's response, having been shown its evidence at presented_at.",
+      "type": "object",
+      "required": [
+        "kind",
+        "person",
+        "detection",
+        "presented_at",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "lift"
+        },
+        "person": {
+          "$ref": "#/$defs/uri"
+        },
+        "detection": {
+          "$ref": "#/$defs/token"
+        },
+        "presented_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "outage": {
+      "description": "The decision service stops answering (outage) or answers again (restore).",
+      "type": "object",
+      "required": [
+        "kind",
+        "component",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "enum": [
+            "outage",
+            "restore"
+          ]
+        },
+        "component": {
+          "const": "decision-service"
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "halt": {
+      "description": "A person issues a halt through the emergency control plane.",
+      "type": "object",
+      "required": [
+        "kind",
+        "person",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "halt"
+        },
+        "person": {
+          "$ref": "#/$defs/uri"
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "revoke": {
+      "description": "A person revokes a governed agent's authority and credential.",
+      "type": "object",
+      "required": [
+        "kind",
+        "person",
+        "principal",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "revoke"
+        },
+        "person": {
+          "$ref": "#/$defs/uri"
+        },
+        "principal": {
+          "$ref": "#/$defs/uri"
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "change": {
+      "description": "A new version of the agent or a tool is offered, with the reviews it has had.",
+      "type": "object",
+      "required": [
+        "kind",
+        "subject",
+        "version",
+        "author",
+        "reviewed_by",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "change"
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^(agent|tool:[a-z0-9][a-z0-9._-]{0,63})$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "author": {
+          "$ref": "#/$defs/uri"
+        },
+        "reviewed_by": {
+          "$ref": "#/$defs/uris"
+        },
+        "expect": {
+          "type": "object",
+          "required": [
+            "accepted"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "accepted": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "controlChange": {
+      "description": "A person requests that a control be disabled, bypassed, set to automatic approval, modified or restored.",
+      "type": "object",
+      "required": [
+        "kind",
+        "control",
+        "change",
+        "requested_by",
+        "approved_by",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "control_change"
+        },
+        "control": {
+          "$ref": "#/$defs/token"
+        },
+        "change": {
+          "enum": [
+            "disable",
+            "bypass",
+            "auto_approve",
+            "modify",
+            "restore"
+          ]
+        },
+        "requested_by": {
+          "$ref": "#/$defs/uri"
+        },
+        "approved_by": {
+          "$ref": "#/$defs/uris"
+        },
+        "expires_after_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31622400
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "controlObserved": {
+      "description": "The Verification Layer observes that a declared control is not operating.",
+      "type": "object",
+      "required": [
+        "kind",
+        "control",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "control_observed"
+        },
+        "control": {
+          "$ref": "#/$defs/token"
+        },
+        "expect": {
+          "$ref": "#/$defs/controlExpectation"
+        }
+      }
+    },
+    "directCall": {
+      "description": "The agent tries to reach the point of effect itself, with every credential it holds.",
+      "type": "object",
+      "required": [
+        "kind",
+        "actor",
+        "operation",
+        "target",
+        "parameters",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "direct_call"
+        },
+        "actor": {
+          "$ref": "#/$defs/uri"
+        },
+        "operation": {
+          "$ref": "#/$defs/token"
+        },
+        "target": {
+          "$ref": "#/$defs/uri"
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "expect": {
+          "type": "object",
+          "required": [
+            "effect"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "effect": {
+              "const": "none"
+            }
+          }
+        }
+      }
+    },
+    "boundaryReview": {
+      "description": "The reachable paths are reviewed against the register and the Negative Boundary Annex.",
+      "type": "object",
+      "required": [
+        "kind",
+        "expect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": true,
+        "at": true,
+        "origin": true,
+        "note": true,
+        "requirements": true,
+        "kind": {
+          "const": "boundary_review"
+        },
+        "expect": {
+          "type": "object",
+          "required": [
+            "unlisted_paths"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "unlisted_paths": {
+              "$ref": "#/$defs/uris"
+            }
+          }
+        }
+      }
+    }
+  }
+}

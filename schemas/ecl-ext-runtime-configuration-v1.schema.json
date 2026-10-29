@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1",
+  "title": "ECL runtime-configuration extension value v1",
+  "description": "The value of ecl.ext.runtime-configuration.v1 on a DCMP-2 decision request: the recorded version of the governed AI system's model, instructions and tool set that requested the action (ECL1N-0171).",
+  "type": "object",
+  "required": [
+    "configuration"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "configuration": {
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        {
+          "required": [
+            "version",
+            "digest"
+          ]
+        }
+      ]
+    }
+  }
+}

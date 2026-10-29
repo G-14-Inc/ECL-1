@@ -1,0 +1,387 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-envelope",
+  "trust_policy_path": "conformance/suites/envelope/trust-policy.json",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.expired.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-key-not-yet-valid",
+      "negates": [
+        "IE1-015",
+        "IE1-024",
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-key-not-yet-valid.json",
+      "requirement_ids": [
+        "IE1-015",
+        "IE1-024",
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-missing-signatures",
+      "negates": [
+        "IE1-005"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-missing-signatures.json",
+      "requirement_ids": [
+        "IE1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-mixed-order",
+      "negates": [
+        "IE1-016",
+        "IE1-040",
+        "TP1-008"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-mixed-order.json",
+      "requirement_ids": [
+        "IE1-016",
+        "IE1-040",
+        "TP1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-noncanonical-s",
+      "negates": [
+        "IE1-016",
+        "IE1-040",
+        "TP1-008"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-noncanonical-s.json",
+      "requirement_ids": [
+        "IE1-016",
+        "IE1-040",
+        "TP1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-p256-high-s",
+      "negates": [
+        "IE1-017",
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-p256-high-s.json",
+      "requirement_ids": [
+        "IE1-017",
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-policy-digest-string-for-object",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-policy-digest-string-for-object.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-policy-epoch-boolean-for-number",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-policy-epoch-boolean-for-number.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-policy-required-number-for-boolean",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-policy-required-number-for-boolean.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.revoked.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-revoked-key",
+      "negates": [
+        "IE1-015",
+        "IE1-024",
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-revoked-key.json",
+      "requirement_ids": [
+        "IE1-015",
+        "IE1-024",
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-tampered-payload",
+      "negates": [
+        "IE1-006",
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-tampered-payload.json",
+      "requirement_ids": [
+        "IE1-006",
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.threshold-not-met.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-threshold-not-met",
+      "negates": [
+        "IE1-014",
+        "IE1-024",
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-threshold-not-met.json",
+      "requirement_ids": [
+        "IE1-014",
+        "IE1-024",
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-torsion-r",
+      "negates": [
+        "IE1-016",
+        "IE1-040",
+        "TP1-008"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-torsion-r.json",
+      "requirement_ids": [
+        "IE1-016",
+        "IE1-040",
+        "TP1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-wrong-key",
+      "negates": [
+        "IE1-015",
+        "IE1-040"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-wrong-key.json",
+      "requirement_ids": [
+        "IE1-015",
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "envelope-invalid-wrong-purpose",
+      "negates": [
+        "IE1-015",
+        "IE1-039",
+        "IE1-040",
+        "TP1-004"
+      ],
+      "path": "conformance/suites/envelope/envelope-invalid-wrong-purpose.json",
+      "requirement_ids": [
+        "IE1-015",
+        "IE1-039",
+        "IE1-040",
+        "TP1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "envelope-valid-ed25519-signed",
+      "path": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+      "requirement_ids": [
+        "IE1-005",
+        "IE1-006",
+        "IE1-015",
+        "IE1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "envelope-valid-mixed-order",
+      "path": "conformance/suites/envelope/envelope-valid-mixed-order.json",
+      "requirement_ids": [
+        "IE1-016",
+        "TP1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "envelope-valid-p256-low-s",
+      "path": "conformance/suites/envelope/envelope-valid-p256-low-s.json",
+      "requirement_ids": [
+        "IE1-005",
+        "IE1-006",
+        "IE1-015",
+        "IE1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_evidence_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    }
+  ]
+}

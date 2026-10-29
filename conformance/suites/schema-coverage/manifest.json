@@ -1,0 +1,2077 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-schema-coverage",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-authority-boundary-number-for-boolean",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-authority-boundary-number-for-boolean.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "give native_authoritative_for_effects the number 1 in place of true, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/direction/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-direction-outside-enum",
+      "negates": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-direction-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set direction to a value the schema does not define, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/field_accounting/items/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-field-disposition-outside-enum",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-field-disposition-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the retained field's disposition to a value the schema does not define, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/loss_class/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-loss-class-outside-enum",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-loss-class-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the loss class to a value the schema does not define, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/field_accounting/items/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-mapped-field-without-target",
+      "negates": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-mapped-field-without-target.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the target paths of a mapped field, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/ecl_objects/items/properties/media_type/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-object-media-type-outside-enum",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-object-media-type-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the derived object's media type to a value the schema does not define, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/ecl_objects/items/properties/protocol/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-object-protocol-outside-enum",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-object-protocol-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the derived object's protocol to a value the schema does not define, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/$defs/responsibilityDisposition/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-represented-without-objects",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-represented-without-objects.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the objects of a represented responsibility, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/ecl_objects/items/properties/responsibilities/items/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-responsibility-outside-enum",
+      "negates": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-responsibility-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a responsibility the schema does not define to the derived object, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/$defs/responsibilityDisposition/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-responsibility-status-outside-enum",
+      "negates": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-responsibility-status-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set an unrepresented responsibility's status to a value the schema does not define, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/field_accounting/items/allOf/0/if#if[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-retained-field-with-target",
+      "negates": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-retained-field-with-target.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "give the field retained in the source only a target path, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/$defs/responsibilityDisposition/allOf/0/if#if[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.adapter-source-binding-valid.v1"
+      ],
+      "id": "adapter-invalid-unrepresented-with-objects",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/suites/schema-coverage/adapter-invalid-unrepresented-with-objects.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an object for a responsibility marked not_applicable, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/$defs/responsibilityDisposition/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/$defs/responsibilityDisposition/allOf/0/if#if[1]",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/$defs/responsibilityDisposition/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/direction/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/ecl_objects/items/properties/media_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/ecl_objects/items/properties/protocol/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/ecl_objects/items/properties/responsibilities/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/field_accounting/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/field_accounting/items/allOf/0/if#if[1]",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/field_accounting/items/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1#/properties/loss_class/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "adapter-valid-retained-source-field",
+      "path": "conformance/suites/schema-coverage/adapter-valid-retained-source-field.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "account a native field as retained in the source only, declare loss_accounted, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/authorization/properties/use_policy/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-admit-use-policy-outside-enum",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-013"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-admit-use-policy-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-admit-bounded-multi-use.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the authorization use policy to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.admit-requires-valid-authority.v1"
+      ],
+      "id": "dcmp-invalid-admit-without-authorization-object",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-admit-without-authorization-object.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-admit-bounded-multi-use.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the authorization object of the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/challenge/allOf/1/properties/on_timeout/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-challenge-on-timeout-outside-enum",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-018"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-challenge-on-timeout-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-018"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-challenge-hold-on-timeout.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the timeout disposition to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/allOf/0/if#if[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.non-admit-prohibits-authority.v1"
+      ],
+      "id": "dcmp-invalid-challenge-outcome-with-authorization",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-012",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-challenge-outcome-with-authorization.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-012",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-challenge-outcome-response.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "add an authorization object to the challenge outcome"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-challenge-outcome-without-challenge-id",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-018"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-challenge-outcome-without-challenge-id.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-018"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-challenge-outcome-response.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the challenge identifier of the challenge outcome"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/controlMessage/allOf/1/properties/operation/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-control-operation-outside-enum",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-control-operation-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-supersede-control.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the control operation to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/controlMessage/allOf/1/properties/authority/properties/plane/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-control-plane-outside-enum",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-022"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-control-plane-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-022"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-supersede-control.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the control plane to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-not-an-object",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-not-an-object.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/obligation/properties/satisfaction/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-obligation-satisfaction-outside-enum",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-obligation-satisfaction-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-challenge-hold-on-timeout.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the satisfaction point of the requirement to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[2]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-private-extension-token-without-version",
+      "negates": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-private-extension-token-without-version.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-extension-identifier-forms.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the version suffix of the private token extension identifier"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-private-extension-uri-in-ecl-namespace",
+      "negates": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-private-extension-uri-in-ecl-namespace.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-extension-identifier-forms.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "move the private URI extension identifier into the ECL namespace"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-registry-extension-identifier-case",
+      "negates": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-registry-extension-identifier-case.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-extension-identifier-forms.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "spell an extension identifier in the registry form with an upper-case prefix"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-request-use-policy-outside-enum",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-request-use-policy-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-request-bounded-multi-use.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the requested use policy to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/properties/outcome/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-response-outcome-outside-enum",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-response-outcome-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-challenge-outcome-response.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the outcome to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/controlMessage/allOf/1/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp-invalid-supersede-without-replacement",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/dcmp-invalid-supersede-without-replacement.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-supersede-control.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the replacement of the supersede"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/obligation/properties/satisfaction/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/authorization/properties/use_policy/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/properties/outcome/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp-valid-admit-bounded-multi-use",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-admit-bounded-multi-use.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue bounded multi-use authority with three uses"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/obligation/properties/satisfaction/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/challenge/allOf/1/properties/on_timeout/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp-valid-challenge-hold-on-timeout",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-challenge-hold-on-timeout.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-018"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-challenge.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "hold on timeout"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/allOf/0/if#if[1]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/allOf/1/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse/allOf/1/properties/outcome/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp-valid-challenge-outcome-response",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-challenge-outcome-response.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-012",
+        "DCMP2-018"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "answer with a challenge outcome that names its challenge and carries no authorization"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1##root",
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[2]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp-valid-extension-identifier-forms",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-extension-identifier-forms.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-private-extensions.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry a registered, a private URI and a private token extension identifier"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/common/1##root",
+        "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionId/anyOf#anyOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp-valid-request-bounded-multi-use",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-request-bounded-multi-use.json",
+      "requirement_ids": [
+        "DCMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "request bounded multi-use authority with three uses"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/controlMessage/allOf/1/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/controlMessage/allOf/1/properties/authority/properties/plane/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/controlMessage/allOf/1/properties/operation/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp-valid-supersede-control",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-supersede-control.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-022"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-control.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "supersede the target with a named replacement"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[2]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-authority-event-without-identifier",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-authority-event-without-identifier.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-authority-issued.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the authorization identifier"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/authorityEvent/properties/state/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.event-type-kind-consistent.v1"
+      ],
+      "id": "ebmp-invalid-authority-state-outside-enum",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-001",
+        "EBMP2-046"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-authority-state-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-001",
+        "EBMP2-046"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-authority-issued.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the authority state to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-bundle-manifest-without-closure",
+      "negates": [
+        "EBMP2-001",
+        "EBMP2-027"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-bundle-manifest-without-closure.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-027"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-bundle-manifest.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the closure declaration"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/bundleManifest/allOf/1/properties/closure/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-closure-status-outside-enum",
+      "negates": [
+        "EBMP2-001",
+        "EBMP2-027"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-closure-status-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-027"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-bundle-manifest.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the closure status to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-decision-event-without-policy",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-decision-event-without-policy.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-decision-recorded.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the policy reference of the decision"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/decisionEvent/properties/outcome/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-decision-outcome-outside-enum",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-decision-outcome-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-decision-recorded.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the decision outcome to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-event-type-outside-enum",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-event-type-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-request-received.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the event type to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[3]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-execution-event-without-attempt",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-execution-event-without-attempt.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-execution-released.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the attempt identifier"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/2/if#if[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-execution-observed-with-release-guard",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-execution-observed-with-release-guard.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-execution-released.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "turn the release into an observation of the running execution, keeping the release guard, which only the release carries"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-execution-released-without-release-guard",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-execution-released-without-release-guard.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-execution-released.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the release guard from the release"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/executionEvent/properties/state/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.event-type-kind-consistent.v1"
+      ],
+      "id": "ebmp-invalid-execution-state-outside-enum",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-001",
+        "EBMP2-046"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-execution-state-outside-enum.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-001",
+        "EBMP2-046"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-execution-released.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the execution state to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/interventionEvent/properties/operation/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-intervention-operation-outside-enum",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-intervention-operation-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-rejecting-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the intervention operation to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[4]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-intervention-without-reason",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-intervention-without-reason.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-rejecting-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the reason of the intervention"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/lifecycleEvent/properties/operation/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-lifecycle-operation-outside-enum",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-lifecycle-operation-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-lifecycle-seal.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the lifecycle operation to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[7]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-lifecycle-without-prior-digest",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-lifecycle-without-prior-digest.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-lifecycle-seal.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the prior digest of the lifecycle transition"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-monotonic-unit-outside-enum",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-monotonic-unit-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-request-received.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the monotonic clock unit to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-request-event-without-reference",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-request-event-without-reference.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-request-received.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the request reference"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[6]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-state-event-without-trigger",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-state-event-without-trigger.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-safe-state-transition.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the trigger of the transition"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/verificationEvent/properties/decision/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-verification-decision-outside-enum",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-verification-decision-outside-enum.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-indeterminate-verification.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the verification decision to a value the schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[5]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp-invalid-verification-without-boundary",
+      "negates": [
+        "EBMP2-001"
+      ],
+      "path": "conformance/suites/schema-coverage/ebmp-invalid-verification-without-boundary.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/ebmp-valid-indeterminate-verification.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the evidence boundary of the verification"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/authorityEvent/properties/state/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[2]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-authority-issued",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-authority-issued.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the issue of the authorization"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/bundleManifest/allOf/1/properties/closure/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-bundle-manifest",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-bundle-manifest.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-027"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare a complete bundle of three records"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/decisionEvent/properties/outcome/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-decision-recorded",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-decision-recorded.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a hold decision"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[3]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/2/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/executionEvent/properties/state/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-execution-released",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-execution-released.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the release of the execution, with its declared release guard"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[5]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/verificationEvent/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-indeterminate-verification",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-indeterminate-verification.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-verification-event.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "report an indeterminate verification with its finding"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[7]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/lifecycleEvent/properties/operation/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-lifecycle-seal",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-lifecycle-seal.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the sealing of a bundle"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[4]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/interventionEvent/properties/operation/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-rejecting-intervention",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-rejecting-intervention.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a human rejection"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/2/if#if[1]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-request-received",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-request-received.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the receipt of the request"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/common/properties/monotonic_observation/properties/unit/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event/oneOf#oneOf[6]",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/1/properties/event_type/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp-valid-safe-state-transition",
+      "path": "conformance/suites/schema-coverage/ebmp-valid-safe-state-transition.json",
+      "requirement_ids": [
+        "EBMP2-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a transition from degraded to restricted mode"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[3]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-buffer-exhaustion-fail-open-unauthorized",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-buffer-exhaustion-fail-open-unauthorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/safe-state-valid-buffer-exhaustion-fail-open-authorized.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/evidence_buffer/properties/ordering/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-buffer-ordering-outside-enum",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-buffer-ordering-outside-enum.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the evidence-buffer ordering to a value the schema does not define"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/properties/class/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-dependency-class-outside-enum",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-dependency-class-outside-enum.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set a dependency class to a value the schema does not define"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-dependency-fail-open-unauthorized",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-dependency-fail-open-unauthorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/safe-state-valid-dependency-fail-open-authorized.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/$defs/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-disposition-outside-enum",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-disposition-outside-enum.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the timeout disposition to a value the schema does not define"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/latency_measurement/properties/percentiles/items/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-percentile-outside-enum",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-percentile-outside-enum.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "measure a latency percentile the schema does not define"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/properties/fail_open_prohibited_conditions/items/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-prohibited-condition-outside-enum",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-prohibited-condition-outside-enum.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a fail-open prohibited condition the schema does not define"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/recovery/properties/required_frontiers/items/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-recovery-frontier-outside-enum",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-recovery-frontier-outside-enum.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a recovery frontier the schema does not define"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[2]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-stale-dependency-fail-open-unauthorized",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-stale-dependency-fail-open-unauthorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/safe-state-valid-stale-dependency-fail-open-authorized.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-invalid-timeout-fail-open-unauthorized",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/schema-coverage/safe-state-invalid-timeout-fail-open-unauthorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/schema-coverage/safe-state-valid-timeout-fail-open-authorized.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/$defs/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[3]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/properties/fail_open_prohibited_conditions/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/evidence_buffer/properties/ordering/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/latency_measurement/properties/percentiles/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/recovery/properties/required_frontiers/items/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-valid-buffer-exhaustion-fail-open-authorized",
+      "path": "conformance/suites/schema-coverage/safe-state-valid-buffer-exhaustion-fail-open-authorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare buffer_exhaustion_disposition fail_open with its fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/$defs/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/properties/fail_open_prohibited_conditions/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/evidence_buffer/properties/ordering/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/latency_measurement/properties/percentiles/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/recovery/properties/required_frontiers/items/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-valid-dependency-fail-open-authorized",
+      "path": "conformance/suites/schema-coverage/safe-state-valid-dependency-fail-open-authorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare dependency_disposition fail_open with its fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/$defs/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[2]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/properties/fail_open_prohibited_conditions/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/evidence_buffer/properties/ordering/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/latency_measurement/properties/percentiles/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/recovery/properties/required_frontiers/items/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-valid-stale-dependency-fail-open-authorized",
+      "path": "conformance/suites/schema-coverage/safe-state-valid-stale-dependency-fail-open-authorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare stale_dependency_disposition fail_open with its fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/$defs/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/allOf/0/if/anyOf#anyOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/action_classes/items/properties/fail_open_prohibited_conditions/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/evidence_buffer/properties/ordering/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/latency_measurement/properties/percentiles/items/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/recovery/properties/required_frontiers/items/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-valid-timeout-fail-open-authorized",
+      "path": "conformance/suites/schema-coverage/safe-state-valid-timeout-fail-open-authorized.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare timeout_disposition fail_open with its fail-open authorization"
+      },
+      "stage": "safe-state-profile"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+  "title": "ECL AARM binding exchange record v1",
+  "description": "AB1-009: one action's exchange between an AARM control plane and an ECL deployment, as an adapter retains it for audit: the AARM decision, the decision inputs with their classes, the DCMP-2 messages, the release if there was one, and an AARM receipt with the EBMP-2 event that binds it. The decision names are those of the pinned AARM text.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "aarm_version",
+    "role",
+    "aarm_decision",
+    "inputs",
+    "request",
+    "response"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_aarm_exchange_v1"
+    },
+    "aarm_version": {
+      "const": "1.0"
+    },
+    "role": {
+      "description": "AB1-001: whether the AARM control plane implements the ECL Decision Layer for this action class or supplies judgment inputs to a separate one.",
+      "enum": [
+        "decision-layer",
+        "judgment-source"
+      ]
+    },
+    "aarm_decision": {
+      "type": "object",
+      "required": [
+        "decision",
+        "decided_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "ALLOW",
+            "DENY",
+            "MODIFY",
+            "STEP_UP",
+            "DEFER"
+          ]
+        },
+        "decided_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "deadline": {
+          "description": "The deadline of a DEFER or of a STEP_UP approval.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "modified_parameters": {
+          "description": "The parameters of the modified action of a MODIFY.",
+          "type": "object",
+          "maxProperties": 128
+        }
+      }
+    },
+    "inputs": {
+      "description": "The inputs of the ECL decision: the entries of the decision basis that the response records in ecl.ext.decision-basis.v1, each with the AARM requirement whose output it is where it is one (AB1-006, AB1-013).",
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput",
+        "properties": {
+          "aarm_requirement": {
+            "description": "The AARM requirement whose output this input is; R4 is the AARM decision itself.",
+            "enum": [
+              "R1",
+              "R2",
+              "R3",
+              "R4",
+              "R5",
+              "R6",
+              "R7",
+              "R8",
+              "R9"
+            ]
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "request": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest"
+    },
+    "response": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse"
+    },
+    "modification_request": {
+      "description": "AB1-004: the new request for the modified action of a MODIFY.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest"
+    },
+    "modification_response": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse"
+    },
+    "release": {
+      "$ref": "#/$defs/release"
+    },
+    "receipt": {
+      "description": "The AARM receipt as retained. Its members other than receipt_id follow the pinned AARM receipt schema and are kept as the AARM control plane wrote them.",
+      "type": "object",
+      "required": [
+        "receipt_id"
+      ],
+      "properties": {
+        "receipt_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "terminal": {
+      "description": "The execution_terminal event that binds the receipt with ecl.ext.aarm-receipt.v1.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+    }
+  },
+  "$defs": {
+    "release": {
+      "description": "Present only when the enforcement point released the action: the decision request it went ahead under, the parameters digest it released and when.",
+      "type": "object",
+      "required": [
+        "request_id",
+        "parameters_digest",
+        "released_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "parameters_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "released_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    }
+  }
+}

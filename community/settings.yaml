@@ -1,0 +1,30 @@
+# Settings of the public ECL-1 repository. The maintainer fills each
+# placeholder before the release is built; the release build refuses a public
+# file that still carries one. The other files of the
+# repository refer to these values by name, except the files listed under
+# contact_address_files, which carry the contact address in place because a
+# reader, or GitHub, reads them directly; a test checks that every address they
+# carry equals the value here.
+#
+# github_repo: the GitHub organization and repository, as "organization/name".
+# editors_team: the GitHub team of the editors, as "@organization/team"; it is
+#   also written in place in github/CODEOWNERS, which GitHub reads directly
+#   from .github/CODEOWNERS, a copy made when the repository is staged.
+# working_group_contact: the working group's contact address, for sign-ups,
+#   leaving, and comments from people without a GitHub account.
+# security_contact: the private address for vulnerability reports, besides the
+#   repository's private vulnerability reporting (governance/SECURITY.md).
+# meeting_schedule: the schedule of the working sessions, which the ECL-1 site
+#   also publishes.
+# contact_address_files: the public files that carry working_group_contact or
+#   security_contact in place.
+github_repo: "G-14-Inc/ECL-1"
+editors_team: "@G-14-Inc/ecl-editors"
+working_group_contact: "ecl@g14.ai"
+security_contact: "ecl@g14.ai"
+meeting_schedule: "The community working group is forming; working sessions and agendas will be announced publicly. Contact G-14, Inc. and Robert Tilley Jr. at ecl@g14.ai to participate."
+contact_address_files:
+  - "README.md"
+  - "SECURITY.md"
+  - "community/WORKING_GROUP.md"
+  - "governance/CODE_OF_CONDUCT.md"

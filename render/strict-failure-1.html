@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Strict Failure Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-strict-failure-profile-1">ECL Strict Failure Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p><span id="SF1-001"><strong>SF1-001</strong></span><a class="requirement-link" href="#SF1-001" aria-label="Link to SF1-001">§</a> — A deployment claiming this profile MUST NOT declare a fail-open
+disposition for any in-scope action class.</p>
+<p><span id="SF1-002"><strong>SF1-002</strong></span><a class="requirement-link" href="#SF1-002" aria-label="Link to SF1-002">§</a> — Under this profile, the loss of any dependency MUST resolve to a
+disposition other than <code>fail_open</code>, and the loss of a dependency that supplies
+required proof MUST resolve to one of the dispositions that fail closed, which
+TIMING-SAFE-STATE-1 <a href="timing-safe-state-1.html#TS1-032">TS1-032</a> lists.</p>
+<p><span id="SF1-003"><strong>SF1-003</strong></span><a class="requirement-link" href="#SF1-003" aria-label="Link to SF1-003">§</a> — An unexpected failure before effect commit MUST block the effect
+and MUST be recorded with its failure class.</p>
+<p><span id="SF1-004"><strong>SF1-004</strong></span><a class="requirement-link" href="#SF1-004" aria-label="Link to SF1-004">§</a> — A safe-state profile document claims this profile by listing
+<code>STRICT-FAILURE-1</code> in its <code>claimed_profiles</code> member; its <code>profile_id</code> and name
+decide nothing. A document that claims it MUST validate against the
+safe-state-profile schema, which requires <code>supplies_required_proof</code> for every
+dependency, with no <code>fail_open</code> disposition present.</p>
+<p><span id="SF1-005"><strong>SF1-005</strong></span><a class="requirement-link" href="#SF1-005" aria-label="Link to SF1-005">§</a> — A deployment that claims this profile MUST set
+<code>supplies_required_proof</code> to <code>true</code> for exactly those dependencies whose loss
+removes required proof (TIMING-SAFE-STATE-1 <a href="timing-safe-state-1.html#TS1-031">TS1-031</a>). This obligation binds the
+deployment and lies outside document validation: a validator checks the form of
+the document under <a href="strict-failure-1.html#SF1-004">SF1-004</a>, and an assessor checks the classification against
+the deployment's dependencies and failure tests.</p>
+<p>Document validation cannot prove that a deployment classified its dependencies
+truthfully. Deployment evidence comes from the claimant's own failure tests,
+for example a test that the loss of a dependency produces a denial with no
+artifact fabricated for it, and a test that malformed or oversized input is
+refused before any other work.</p>
+<p>This profile adds nothing to the scope of a restriction. The loss of a
+dependency that supplies required proof refuses the actions of every class that
+requires it, with a disposition that fails closed (<a href="strict-failure-1.html#SF1-002">SF1-002</a>), and the core
+standard sets which classes those are and when the whole deployment stops
+(<a href="ecl-1_standard.html#ECL1N-0191">ECL1N-0191</a> to <a href="ecl-1_standard.html#ECL1N-0193">ECL1N-0193</a>).</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/STRICT-FAILURE-1.md</code>, SHA-256 <code>034e2f7931dcda6c0e25fc6cc97c5f575e72b935b7e05a7c50e00ac92a12ec39</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

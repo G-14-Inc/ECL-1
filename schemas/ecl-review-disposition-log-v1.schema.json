@@ -1,0 +1,476 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/review-disposition-log/1",
+  "title": "ECL-1 public review disposition log",
+  "description": "Every comment received during one public review of a new version of ECL-1, with its written disposition. The procedure in governance/PUBLIC_REVIEW.md defines the categories and their rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "review",
+    "comments"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_review_disposition_log_v1"
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "draft_designation",
+        "draft_version",
+        "draft_manifest_sha256",
+        "opened",
+        "closes",
+        "comment_channel",
+        "status"
+      ],
+      "properties": {
+        "review_id": {
+          "$ref": "#/$defs/review_id"
+        },
+        "draft_designation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "draft_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:-[a-z]+\\.[0-9]+)?$"
+        },
+        "draft_manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "opened": {
+          "$ref": "#/$defs/date"
+        },
+        "closes": {
+          "$ref": "#/$defs/date"
+        },
+        "comment_channel": {
+          "description": "The comment channel named in the review's announcement: the issues of the public repository, with the review's label.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "status": {
+          "enum": [
+            "open",
+            "closed",
+            "dispositions-published"
+          ]
+        },
+        "further_review_of_changes": {
+          "description": "The further review that behavioral or breaking changes required, when there was one.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_id",
+            "opened",
+            "closes"
+          ],
+          "properties": {
+            "review_id": {
+              "$ref": "#/$defs/review_id"
+            },
+            "opened": {
+              "$ref": "#/$defs/date"
+            },
+            "closes": {
+              "$ref": "#/$defs/date"
+            }
+          }
+        }
+      }
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/comment"
+      }
+    }
+  },
+  "$defs": {
+    "review_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,15}$"
+    },
+    "comment_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,15}-[0-9]{4}$"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "requirement_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+    },
+    "document": {
+      "description": "A repository-relative path of the document concerned.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$",
+      "maxLength": 256
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000
+    },
+    "comment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comment_id",
+        "received",
+        "submitter",
+        "channel",
+        "target",
+        "summary",
+        "disposition"
+      ],
+      "properties": {
+        "comment_id": {
+          "$ref": "#/$defs/comment_id"
+        },
+        "received": {
+          "$ref": "#/$defs/date"
+        },
+        "submitter": {
+          "description": "Only what the commenter chose to have recorded.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "credit"
+          ],
+          "properties": {
+            "credit": {
+              "enum": [
+                "named",
+                "organization-only",
+                "anonymous"
+              ]
+            },
+            "display_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "organization": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "credit": {
+                    "const": "named"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "display_name"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "credit": {
+                    "const": "organization-only"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "organization"
+                ],
+                "not": {
+                  "required": [
+                    "display_name"
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "credit": {
+                    "const": "anonymous"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "display_name"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "organization"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "channel": {
+          "description": "public: a GitHub issue in the public repository, or a comment that an editor filed as one; private-security: to the security contact.",
+          "enum": [
+            "public",
+            "private-security"
+          ]
+        },
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "document"
+          ],
+          "properties": {
+            "document": {
+              "$ref": "#/$defs/document"
+            },
+            "section": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "requirement_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/requirement_id"
+              }
+            }
+          }
+        },
+        "summary": {
+          "$ref": "#/$defs/text"
+        },
+        "proposed_change": {
+          "$ref": "#/$defs/text"
+        },
+        "detail_withheld_until_disclosure": {
+          "description": "True while a security comment's detail is withheld under governance/SECURITY.md.",
+          "type": "boolean"
+        },
+        "disposition": {
+          "$ref": "#/$defs/disposition"
+        },
+        "submitter_response": {
+          "enum": [
+            "accepts",
+            "does-not-accept",
+            "no-response"
+          ]
+        },
+        "appeal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filed",
+            "status"
+          ],
+          "properties": {
+            "filed": {
+              "$ref": "#/$defs/date"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "upheld",
+                "overturned",
+                "withdrawn"
+              ]
+            },
+            "record": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document",
+        "reference"
+      ],
+      "properties": {
+        "document": {
+          "$ref": "#/$defs/document"
+        },
+        "requirement_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/requirement_id"
+          }
+        },
+        "reference": {
+          "description": "The commit, review draft or CHANGELOG.md entry that carries the change.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "response",
+        "decided",
+        "decided_by"
+      ],
+      "properties": {
+        "category": {
+          "enum": [
+            "accepted",
+            "accepted-with-modification",
+            "declined",
+            "deferred",
+            "out-of-scope",
+            "duplicate",
+            "noted",
+            "withdrawn"
+          ]
+        },
+        "response": {
+          "$ref": "#/$defs/text"
+        },
+        "change_class": {
+          "enum": [
+            "editorial",
+            "corrective",
+            "additive",
+            "behavioral",
+            "breaking"
+          ]
+        },
+        "changes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/change"
+          }
+        },
+        "deferred_to": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:-[a-z]+\\.[0-9]+)?$"
+        },
+        "duplicate_of": {
+          "$ref": "#/$defs/comment_id"
+        },
+        "decided": {
+          "$ref": "#/$defs/date"
+        },
+        "decided_by": {
+          "description": "editors: the editors, by rough consensus of the working group; chair: the chair, on an appeal under governance/APPEALS.md; maintainer: G-14, Inc., overruling a recorded consensus for a legal or a security reason stated in writing.",
+          "enum": [
+            "editors",
+            "chair",
+            "maintainer"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "enum": [
+                  "accepted",
+                  "accepted-with-modification"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "change_class",
+              "changes"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "change_class"
+                  ]
+                },
+                {
+                  "required": [
+                    "changes"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "deferred"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "deferred_to"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "deferred_to"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "duplicate"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "duplicate_of"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "duplicate_of"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

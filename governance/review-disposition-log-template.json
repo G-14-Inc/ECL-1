@@ -1,0 +1,87 @@
+{
+  "schema_version": "ecl_review_disposition_log_v1",
+  "review": {
+    "review_id": "PR1",
+    "draft_designation": "Example: the designation of the frozen review draft",
+    "draft_version": "0.0-example.0",
+    "draft_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "opened": "2000-01-01",
+    "closes": "2000-03-01",
+    "comment_channel": "Example: the issues of the public repository, with the label review-1.1",
+    "status": "open"
+  },
+  "comments": [
+    {
+      "comment_id": "PR1-0001",
+      "received": "2000-01-10",
+      "submitter": {
+        "credit": "anonymous"
+      },
+      "channel": "public",
+      "target": {
+        "document": "standard/ECL-1_Standard.md",
+        "section": "5.1",
+        "requirement_ids": [
+          "ECL1N-0028"
+        ]
+      },
+      "summary": "Example: the comment as received, or a faithful summary of it.",
+      "proposed_change": "Example: the text the commenter proposed.",
+      "disposition": {
+        "category": "accepted-with-modification",
+        "response": "Example: what was changed, where, and why it differs from the proposal.",
+        "change_class": "editorial",
+        "changes": [
+          {
+            "document": "standard/ECL-1_Standard.md",
+            "requirement_ids": [
+              "ECL1N-0028"
+            ],
+            "reference": "Example: the CHANGELOG.md entry or commit that carries the change"
+          }
+        ],
+        "decided": "2000-03-15",
+        "decided_by": "editors"
+      },
+      "submitter_response": "no-response"
+    },
+    {
+      "comment_id": "PR1-0002",
+      "received": "2000-01-12",
+      "submitter": {
+        "credit": "anonymous"
+      },
+      "channel": "public",
+      "target": {
+        "document": "standard/ECL-1_Standard.md",
+        "section": "5.1"
+      },
+      "summary": "Example: a comment that repeats PR1-0001.",
+      "disposition": {
+        "category": "duplicate",
+        "response": "Example: the disposition of PR1-0001 applies.",
+        "duplicate_of": "PR1-0001",
+        "decided": "2000-03-15",
+        "decided_by": "editors"
+      }
+    },
+    {
+      "comment_id": "PR1-0003",
+      "received": "2000-01-20",
+      "submitter": {
+        "credit": "anonymous"
+      },
+      "channel": "public",
+      "target": {
+        "document": "standard/ECL-1_Standard.md"
+      },
+      "summary": "Example: a request that the standard score the risk of each action.",
+      "disposition": {
+        "category": "out-of-scope",
+        "response": "Example: ECL-1 leaves judgments about meaning and risk to other tools; such a score can be an input that makes a decision stricter.",
+        "decided": "2000-03-15",
+        "decided_by": "editors"
+      }
+    }
+  ]
+}

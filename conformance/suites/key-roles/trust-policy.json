@@ -1,0 +1,71 @@
+{
+  "epoch": 1,
+  "keys": [
+    {
+      "key_id": "urn:example:key:bundle-agent",
+      "principal": "urn:example:agent:test-1",
+      "public_key": "A6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:bundle-decision",
+      "principal": "urn:example:decision-service:test-1",
+      "public_key": "ebVWLo/mVPlAeLES6KmLp5AfhTrmlb7X4OORC60ElmQ=",
+      "purposes": [
+        "ecl.purpose.decision-response.v1",
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:bundle-ep",
+      "principal": "urn:example:ep:test",
+      "public_key": "Q83AI9ItX54QfRoGk0V9NdHRDrfSHHIRkvVvXeQGZdM=",
+      "purposes": [
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:bundle-observer",
+      "principal": "urn:example:observer:bundle",
+      "public_key": "SB7edy2hV4XJ5ZoIYgG4w/nDBxKeP8bX80qk3+1YFOU=",
+      "purposes": [
+        "ecl.purpose.observation.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:bundle-time-authority",
+      "principal": "urn:example:time-authority:bundle",
+      "public_key": "qqP+1LDxS6J0+qWDfHiuwO6fmrXKZrl7QgG4dfaolso=",
+      "purposes": [
+        "ecl.purpose.trusted-time.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:bundle-control",
+      "principal": "urn:example:control-plane:test",
+      "public_key": "S93uVQ73NMrgTu5CrmOjedMRK2unOvU1aI1yyZqChGA=",
+      "purposes": [
+        "ecl.purpose.control.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "policy_id": "urn:example:trust-policy:key-roles",
+  "revocation_policy": "ecl.revocation.offline-bundle.v1",
+  "revocations": [],
+  "schema_version": "ecl_trust_policy_v1",
+  "version": "1"
+}

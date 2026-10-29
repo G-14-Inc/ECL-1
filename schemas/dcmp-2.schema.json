@@ -1,0 +1,562 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+  "title": "ECL Decision and Control Message Protocol 2",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/decisionRequest"
+    },
+    {
+      "$ref": "#/$defs/decisionResponse"
+    },
+    {
+      "$ref": "#/$defs/challenge"
+    },
+    {
+      "$ref": "#/$defs/challengeResponse"
+    },
+    {
+      "$ref": "#/$defs/controlMessage"
+    }
+  ],
+  "$defs": {
+    "common": {
+      "type": "object",
+      "required": [
+        "protocol",
+        "schema_version",
+        "message_type",
+        "message_id",
+        "workflow",
+        "issuer",
+        "issued_at",
+        "extensions",
+        "integrity_policy"
+      ],
+      "properties": {
+        "protocol": {
+          "const": "DCMP-2"
+        },
+        "schema_version": {
+          "const": "2.0"
+        },
+        "message_type": {
+          "type": "string"
+        },
+        "message_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "workflow": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/workflowContext"
+        },
+        "issuer": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/principal"
+        },
+        "issued_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "expires_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "extensions": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/extensionSet"
+        },
+        "integrity_policy": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/integrityPolicy"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": [
+        "action_id",
+        "action_class",
+        "operation",
+        "target",
+        "parameters_digest",
+        "risk_class",
+        "required_evidence_profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "action_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "action_class": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "operation": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+        },
+        "target": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "parameters": true,
+        "parameters_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "risk_class": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "required_evidence_profile": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "budget_debit": {
+          "type": "object",
+          "required": [
+            "budget_id",
+            "amount"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "budget_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "amount": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+            },
+            "unit": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+            }
+          }
+        },
+        "irreversibility_class": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "commit_mode": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        }
+      }
+    },
+    "decisionRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "actor",
+            "action",
+            "constraints",
+            "authority_request",
+            "expires_at"
+          ],
+          "properties": {
+            "message_type": {
+              "const": "decision_request"
+            },
+            "actor": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/principal"
+            },
+            "subject": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/principal"
+            },
+            "delegation_chain": {
+              "type": "array",
+              "maxItems": 32,
+              "items": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+              }
+            },
+            "action": {
+              "$ref": "#/$defs/action"
+            },
+            "constraints": {
+              "type": "object",
+              "maxProperties": 128
+            },
+            "authority_request": {
+              "type": "object",
+              "required": [
+                "audience",
+                "requested_validity_seconds",
+                "use_policy"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "audience": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                },
+                "requested_validity_seconds": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 86400
+                },
+                "use_policy": {
+                  "type": "string",
+                  "enum": [
+                    "single_use",
+                    "bounded_multi_use"
+                  ]
+                },
+                "max_uses": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000
+                }
+              }
+            },
+            "continues": {
+              "description": "DCMP2-056: the request that this request continues, the decision response with outcome challenge that answered it, and the EBMP-2 human_intervention event that approved the action.",
+              "type": "object",
+              "required": [
+                "request_id",
+                "response_id",
+                "approval_id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "request_id": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                },
+                "response_id": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                },
+                "approval_id": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "authorization": {
+      "type": "object",
+      "required": [
+        "authorization_id",
+        "audience",
+        "scope_digest",
+        "valid_from",
+        "valid_until",
+        "use_policy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "authorization_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "audience": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "scope_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "valid_from": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "valid_until": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "use_policy": {
+          "type": "string",
+          "enum": [
+            "single_use",
+            "bounded_multi_use"
+          ]
+        },
+        "max_uses": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "token_reference": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      }
+    },
+    "decisionResponse": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "request_id",
+            "decision_id",
+            "outcome",
+            "evaluated_at",
+            "policy",
+            "reasons",
+            "obligations",
+            "safe_state"
+          ],
+          "properties": {
+            "message_type": {
+              "const": "decision_response"
+            },
+            "request_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "decision_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "admit",
+                "deny",
+                "hold",
+                "challenge"
+              ]
+            },
+            "evaluated_at": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+            },
+            "policy": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference"
+            },
+            "reasons": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/reason"
+              }
+            },
+            "obligations": {
+              "type": "array",
+              "maxItems": 128,
+              "items": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/obligation"
+              }
+            },
+            "authorization": {
+              "$ref": "#/$defs/authorization"
+            },
+            "challenge_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "safe_state": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "outcome": {
+                    "const": "admit"
+                  }
+                },
+                "required": [
+                  "outcome"
+                ]
+              },
+              "then": {
+                "required": [
+                  "authorization"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "authorization"
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "outcome": {
+                    "const": "challenge"
+                  }
+                },
+                "required": [
+                  "outcome"
+                ]
+              },
+              "then": {
+                "required": [
+                  "challenge_id"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "challenge": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "challenge_id",
+            "request_id",
+            "requirements",
+            "deadline",
+            "on_timeout"
+          ],
+          "properties": {
+            "message_type": {
+              "const": "challenge"
+            },
+            "challenge_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "request_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "requirements": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 64,
+              "items": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/obligation"
+              }
+            },
+            "deadline": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+            },
+            "on_timeout": {
+              "type": "string",
+              "enum": [
+                "deny",
+                "hold",
+                "restricted_mode",
+                "emergency_halt"
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "challengeResponse": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "challenge_id",
+            "request_id",
+            "evidence"
+          ],
+          "properties": {
+            "message_type": {
+              "const": "challenge_response"
+            },
+            "challenge_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "request_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "controlMessage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "control_id",
+            "operation",
+            "target_id",
+            "effective_at",
+            "authority",
+            "reason"
+          ],
+          "properties": {
+            "message_type": {
+              "const": "control"
+            },
+            "control_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "operation": {
+              "type": "string",
+              "enum": [
+                "cancel",
+                "revoke",
+                "supersede",
+                "quarantine",
+                "halt"
+              ]
+            },
+            "target_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "replacement_id": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            },
+            "effective_at": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+            },
+            "authority": {
+              "description": "DCMP2-022: the authority context of the control: the plane it is issued on and the grant under which the issuer acts.",
+              "type": "object",
+              "required": [
+                "plane",
+                "grant"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "plane": {
+                  "enum": [
+                    "ordinary",
+                    "emergency"
+                  ]
+                },
+                "grant": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+                }
+              }
+            },
+            "reason": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/reason"
+            },
+            "safe_state": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "operation": {
+                    "const": "supersede"
+                  }
+                },
+                "required": [
+                  "operation"
+                ]
+              },
+              "then": {
+                "required": [
+                  "replacement_id"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+  "title": "ECL Native Adapter Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "binding_id",
+    "profile_id",
+    "direction",
+    "created_at",
+    "source",
+    "ecl_objects",
+    "field_accounting",
+    "derived_fields",
+    "loss_class",
+    "responsibility_coverage",
+    "authority_boundary",
+    "provenance",
+    "binding_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_adapter_binding_v1"
+    },
+    "binding_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "profile_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "direction": {
+      "enum": [
+        "native_to_ecl",
+        "ecl_to_native"
+      ]
+    },
+    "created_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system",
+        "contract",
+        "object_id",
+        "schema_digest",
+        "object_digest",
+        "retained"
+      ],
+      "properties": {
+        "system": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "contract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "object_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "schema_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "object_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "retained": {
+          "const": true
+        },
+        "retention_reference": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      }
+    },
+    "ecl_objects": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "object_id",
+          "protocol",
+          "media_type",
+          "digest",
+          "responsibilities"
+        ],
+        "properties": {
+          "object_id": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          },
+          "protocol": {
+            "enum": [
+              "DCMP-2",
+              "EBMP-2"
+            ]
+          },
+          "media_type": {
+            "enum": [
+              "application/vnd.ecl.dcmp+json",
+              "application/vnd.ecl.ebmp+json"
+            ]
+          },
+          "digest": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+          },
+          "responsibilities": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "Decision",
+                "Authority",
+                "Enforcement",
+                "Provenance",
+                "Verification",
+                "Fleet"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "field_accounting": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_path",
+          "disposition",
+          "target_paths",
+          "note"
+        ],
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "disposition": {
+            "enum": [
+              "mapped",
+              "retained_source_only",
+              "rejected"
+            ]
+          },
+          "target_paths": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^/"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "disposition": {
+                  "const": "mapped"
+                }
+              },
+              "required": [
+                "disposition"
+              ]
+            },
+            "then": {
+              "properties": {
+                "target_paths": {
+                  "minItems": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "target_paths": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "derived_fields": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_path",
+          "derivation",
+          "source_paths"
+        ],
+        "properties": {
+          "target_path": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "derivation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "source_paths": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^/"
+            }
+          }
+        }
+      }
+    },
+    "loss_class": {
+      "enum": [
+        "lossless",
+        "loss_accounted",
+        "rejected"
+      ]
+    },
+    "responsibility_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Decision",
+        "Authority",
+        "Enforcement",
+        "Provenance",
+        "Verification",
+        "Fleet"
+      ],
+      "properties": {
+        "Decision": {
+          "$ref": "#/$defs/responsibilityDisposition"
+        },
+        "Authority": {
+          "$ref": "#/$defs/responsibilityDisposition"
+        },
+        "Enforcement": {
+          "$ref": "#/$defs/responsibilityDisposition"
+        },
+        "Provenance": {
+          "$ref": "#/$defs/responsibilityDisposition"
+        },
+        "Verification": {
+          "$ref": "#/$defs/responsibilityDisposition"
+        },
+        "Fleet": {
+          "$ref": "#/$defs/responsibilityDisposition"
+        }
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "native_authoritative_for_effects",
+        "ecl_is_portable_evidence_only",
+        "inbound_requires_native_reevaluation",
+        "conflict_disposition"
+      ],
+      "properties": {
+        "native_authoritative_for_effects": {
+          "const": true
+        },
+        "ecl_is_portable_evidence_only": {
+          "const": true
+        },
+        "inbound_requires_native_reevaluation": {
+          "const": true
+        },
+        "conflict_disposition": {
+          "const": "fail_closed_no_release"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_id",
+        "adapter_version",
+        "mapping_id",
+        "mapping_version"
+      ],
+      "properties": {
+        "adapter_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "mapping_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "mapping_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "binding_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "responsibilityDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "object_ids",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "represented",
+            "retained_source_only",
+            "not_applicable"
+          ]
+        },
+        "object_ids": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "represented"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "object_ids": {
+                "minItems": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "object_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,2250 @@
+{
+  "candidate_version": "1.0",
+  "schema_shadowed_rules": [
+    {
+      "justification": "The standalone missing/empty-authorization predicate is structurally schema-shadowed: an admit requires the object and its six required members. Temporal ordering is attributed to expiry; this does not prove transaction, audience, scope or trust-policy validity.",
+      "rule": "ecl.rule.admit-requires-valid-authority.v1",
+      "vector": "dcmp2-invalid-admit-without-authority"
+    },
+    {
+      "justification": "The DCMP-2 response conditional structurally forbids authorization for every non-admit outcome, so this semantic violation cannot be schema-valid.",
+      "rule": "ecl.rule.non-admit-prohibits-authority.v1",
+      "vector": "dcmp2-invalid-deny-with-authority"
+    }
+  ],
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-foundation",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-binding-body-digest",
+      "negates": [
+        "EBMP2-045",
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-binding-body-digest.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "EBMP2-045",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "replace the canonical adapter-binding body digest"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-binding-identity",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-binding-identity.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a binding identity that does not bind the source and derived objects, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-coverage-out-of-order",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-coverage-out-of-order.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a second derived object for the decision and list the two out of order, rebind with identity"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-coverage-without-listing-object",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-coverage-without-listing-object.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "represent a responsibility that no derived object lists, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-created-at-not-a-calendar-date",
+      "negates": [
+        "IE1-038"
+      ],
+      "path": "conformance/vectors/adapters/invalid-created-at-not-a-calendar-date.json",
+      "requirement_ids": [
+        "IE1-038"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "give created_at a date that does not exist, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-digest-trailing-newline",
+      "negates": [
+        "IE1-038"
+      ],
+      "path": "conformance/vectors/adapters/invalid-digest-trailing-newline.json",
+      "requirement_ids": [
+        "IE1-038"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "end the source schema digest with a line feed, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-loss-class",
+      "negates": [
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "path": "conformance/vectors/adapters/invalid-loss-class.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare a loss class that the per-field accounting does not support"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-media-type-for-protocol",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-media-type-for-protocol.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "give the DCMP-2 derived object the EBMP-2 media type, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-profile-id-bracketed-name",
+      "negates": [
+        "IE1-038"
+      ],
+      "path": "conformance/vectors/adapters/invalid-profile-id-bracketed-name.json",
+      "requirement_ids": [
+        "IE1-038"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "enclose a host name that is not an IP literal in brackets, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-profile-id-percent-encoding",
+      "negates": [
+        "IE1-038"
+      ],
+      "path": "conformance/vectors/adapters/invalid-profile-id-percent-encoding.json",
+      "requirement_ids": [
+        "IE1-038"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "give profile_id a percent sign that does not begin a percent-encoding, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-repeated-derived-object",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-repeated-derived-object.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the derived object a second time for another responsibility, rebind with identity"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-repeated-source-field",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-repeated-source-field.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "account the native actor field a second time, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.adapter-source-binding-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "adapter-invalid-target-outside-derived-objects",
+      "negates": [
+        "EBMP2-069"
+      ],
+      "path": "conformance/vectors/adapters/invalid-target-outside-derived-objects.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "point a derived field at a derived-object index that the binding does not list, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "adapter-valid-native-binding",
+      "path": "conformance/vectors/adapters/valid-native-binding.json",
+      "requirement_ids": [
+        "EBMP2-044",
+        "EBMP2-045",
+        "EBMP2-069",
+        "ECL1N-0059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "adapter-valid-profile-id-ip-literal",
+      "path": "conformance/vectors/adapters/valid-profile-id-ip-literal.json",
+      "requirement_ids": [
+        "IE1-038"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "give profile_id an IPv6 literal host, rebind"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/adapter-binding/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "adapter-valid-two-derived-objects",
+      "path": "conformance/vectors/adapters/valid-two-derived-objects.json",
+      "requirement_ids": [
+        "EBMP2-069"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/adapter-binding/1",
+      "source": {
+        "base_vector": "conformance/vectors/adapters/valid-native-binding.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a second derived object for the decision, in order, rebind with identity"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.admit-requires-valid-authority.v1"
+      ],
+      "id": "dcmp2-invalid-admit-authority-without-scope-digest",
+      "negates": [
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-admit-authority-without-scope-digest.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the scope digest from an admit's authorization"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.expiry-after-issue.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-admit-reversed-authority-window",
+      "negates": [
+        "DCMP2-015",
+        "DCMP2-032",
+        "DCMP2-040"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-admit-reversed-authority-window.json",
+      "requirement_ids": [
+        "DCMP2-013",
+        "DCMP2-015",
+        "DCMP2-032",
+        "DCMP2-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the authorization window empty without violating its schema"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.admit-requires-valid-authority.v1"
+      ],
+      "id": "dcmp2-invalid-admit-without-authority",
+      "negates": [
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-040",
+        "DCMP2-043"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-admit-without-authority.json",
+      "requirement_ids": [
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-040",
+        "DCMP2-043"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove authorization from an admit response"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.admit-requires-valid-authority.v1"
+      ],
+      "id": "dcmp2-invalid-admit-without-authority-or-issue-time",
+      "negates": [
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-admit-without-authority-or-issue-time.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove an admit's authorization and give its issue time a number"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[2]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-challenge-missing-binding",
+      "negates": [
+        "DCMP2-019"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-challenge-missing-binding.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-019"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-challenge.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the request binding from a challenge"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[3]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-challenge-response-without-evidence",
+      "negates": [
+        "DCMP2-020"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-challenge-response-without-evidence.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-020"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-challenge-response.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave a challenge response without evidence references"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[4]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-control-unknown-operation",
+      "negates": [
+        "DCMP2-001"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-control-unknown-operation.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-022"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-control.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "use an operation the control schema does not allow"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[4]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-control-without-authority",
+      "negates": [
+        "DCMP2-022"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-control-without-authority.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-022"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-control.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the authority context from a control message"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.non-admit-prohibits-authority.v1"
+      ],
+      "id": "dcmp2-invalid-deny-with-authority",
+      "negates": [
+        "DCMP2-012",
+        "DCMP2-014",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-deny-with-authority.json",
+      "requirement_ids": [
+        "DCMP2-012",
+        "DCMP2-014",
+        "DCMP2-039",
+        "DCMP2-043"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "change outcome to deny while retaining authorization"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-deprecated-critical-extension",
+      "negates": [
+        "DCMP2-038",
+        "XR1-006"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-deprecated-critical-extension.json",
+      "requirement_ids": [
+        "DCMP2-038",
+        "XR1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "add the registry's deprecated extension as a critical extension"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-identifiers-unique.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-duplicate-extension",
+      "negates": [
+        "DCMP2-037",
+        "XR1-009"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-duplicate-extension.json",
+      "requirement_ids": [
+        "DCMP2-037",
+        "XR1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate extension identifier and version"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.emergency-control-plane-required.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-halt-on-ordinary-plane",
+      "negates": [
+        "DCMP2-025",
+        "FR-004"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-halt-on-ordinary-plane.json",
+      "requirement_ids": [
+        "DCMP2-025",
+        "FR-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-halt-on-emergency-plane.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue a halt on the ordinary control plane"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.integrity-threshold-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-integrity-threshold",
+      "negates": [
+        "DCMP2-035",
+        "IE1-013"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-integrity-threshold.json",
+      "requirement_ids": [
+        "DCMP2-035",
+        "IE1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "set a required integrity threshold to zero"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-message-without-issuer",
+      "negates": [
+        "DCMP2-004"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-message-without-issuer.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the issuer from a decision request"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.budget-debit-non-negative.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-negative-budget-debit",
+      "negates": [
+        "DCMP2-055"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-negative-budget-debit.json",
+      "requirement_ids": [
+        "DCMP2-055"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare the budget debit as -125.00, which would credit the budget"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.parameters-digest-matches.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-request-parameters-digest",
+      "negates": [
+        "DCMP2-007"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-request-parameters-digest.json",
+      "requirement_ids": [
+        "DCMP2-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "change an in-band parameter without changing parameters_digest"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-request-without-expiry",
+      "negates": [
+        "DCMP2-006"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-request-without-expiry.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-004",
+        "DCMP2-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove expires_at from a decision request"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-response-policy-without-digest",
+      "negates": [
+        "DCMP2-016"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-response-policy-without-digest.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the policy digest from a decision response"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.expiry-after-issue.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-reversed-expiry",
+      "negates": [
+        "DCMP2-032"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-reversed-expiry.json",
+      "requirement_ids": [
+        "DCMP2-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "set expiry equal to issue time"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.message-cannot-cause-itself.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-self-causation",
+      "negates": [
+        "DCMP2-027",
+        "DW1-006"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-self-causation.json",
+      "requirement_ids": [
+        "DCMP2-027",
+        "DW1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the message as its own causal predecessor"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-namespace-allocated.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-unallocated-ecl-extension",
+      "negates": [
+        "XR1-017"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-unallocated-ecl-extension.json",
+      "requirement_ids": [
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a non-critical extension with an unallocated ecl.* identifier"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-invalid-unknown-critical-extension",
+      "negates": [
+        "DCMP2-038",
+        "XR1-006"
+      ],
+      "path": "conformance/vectors/dcmp-2/invalid-unknown-critical-extension.json",
+      "requirement_ids": [
+        "DCMP2-038",
+        "XR1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "replace the critical extension with a private one the consumer does not know"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[2]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-challenge",
+      "path": "conformance/vectors/dcmp-2/valid-challenge.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-019"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[3]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-challenge-response",
+      "path": "conformance/vectors/dcmp-2/valid-challenge-response.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-020"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[4]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-control",
+      "path": "conformance/vectors/dcmp-2/valid-control.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-022"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-decision-request",
+      "path": "conformance/vectors/dcmp-2/valid-decision-request.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-004",
+        "DCMP2-006",
+        "DCMP2-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-decision-response-admit",
+      "path": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+      "requirement_ids": [
+        "DCMP2-012",
+        "DCMP2-013",
+        "DCMP2-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-deprecated-non-critical-extension",
+      "path": "conformance/vectors/dcmp-2/valid-deprecated-non-critical-extension.json",
+      "requirement_ids": [
+        "DCMP2-038",
+        "XR1-006",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "add the registry's deprecated extension as a non-critical extension"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[4]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-halt-on-emergency-plane",
+      "path": "conformance/vectors/dcmp-2/valid-halt-on-emergency-plane.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-022",
+        "DCMP2-025"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-private-extensions",
+      "path": "conformance/vectors/dcmp-2/valid-private-extensions.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-038",
+        "XR1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-required-key-without-eligible-list",
+      "path": "conformance/vectors/dcmp-2/valid-required-key-without-eligible-list.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "IE1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "list a mandatory signer with no list of eligible keys"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/oneOf#oneOf[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "dcmp2-valid-threshold-above-eligible-count",
+      "path": "conformance/vectors/dcmp-2/valid-threshold-above-eligible-count.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "IE1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "require two signatures from a policy that lists one eligible key"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-graph-acyclic.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.bundle-causal-sequence-monotonic.v1",
+        "ecl.rule.bundle-predecessor-digest-valid.v1"
+      ],
+      "id": "ebmp2-invalid-causal-cycle",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "DW1-006",
+        "EBMP2-024"
+      ],
+      "path": "conformance/vectors/bundles/invalid-causal-cycle.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "DW1-006",
+        "EBMP2-024"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a backward causal edge that creates a cycle"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-sequence-monotonic.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-causal-sequence",
+      "negates": [
+        "DW1-007",
+        "EBMP2-025"
+      ],
+      "path": "conformance/vectors/bundles/invalid-causal-sequence.json",
+      "requirement_ids": [
+        "DW1-007",
+        "EBMP2-025"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "set a successor sequence equal to its predecessor"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-object-identifiers-unique.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.execution-state-transition-valid.v1"
+      ],
+      "id": "ebmp2-invalid-duplicate-object-id",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-002",
+        "EBMP2-032"
+      ],
+      "path": "conformance/vectors/bundles/invalid-duplicate-object-id.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-002",
+        "EBMP2-032"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate one immutable object identifier"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.event-type-kind-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-event-type-kind-mismatch",
+      "negates": [
+        "EBMP2-046"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-event-type-kind-mismatch.json",
+      "requirement_ids": [
+        "EBMP2-046"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "type an execution event as decision_recorded"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.event-type-kind-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.terminal-execution-state-consistent.v1"
+      ],
+      "id": "ebmp2-invalid-event-type-state-mismatch",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-046"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-event-type-state-mismatch.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-046"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "type a terminal execution event as execution_released"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-intervention-without-authority",
+      "negates": [
+        "EBMP2-001",
+        "EBMP2-016"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-intervention-without-authority.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the authority from a human approval"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-missing-predecessor",
+      "negates": [
+        "DW1-028",
+        "EBMP2-023"
+      ],
+      "path": "conformance/vectors/bundles/invalid-missing-predecessor.json",
+      "requirement_ids": [
+        "DW1-028",
+        "EBMP2-023"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove a required predecessor from the bundle"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-predecessor-digest-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-predecessor-digest",
+      "negates": [
+        "DW1-005",
+        "EBMP2-022"
+      ],
+      "path": "conformance/vectors/bundles/invalid-predecessor-digest.json",
+      "requirement_ids": [
+        "DW1-005",
+        "EBMP2-022"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "replace a causal predecessor digest"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.lifecycle-derived-artifact-required.v1"
+      ],
+      "id": "ebmp2-invalid-redaction-without-derivative",
+      "negates": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-redaction-without-derivative.json",
+      "requirement_ids": [
+        "DCMP2-039",
+        "DCMP2-043",
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "create a redaction lifecycle event without a derived artifact"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.lifecycle-derived-artifact-required.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-redaction-without-manifest",
+      "negates": [
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-redaction-without-manifest.json",
+      "requirement_ids": [
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "reference a redaction's derived artifact but not its redaction manifest"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.lifecycle-derived-artifact-required.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-schema-valid-redaction-without-derivative",
+      "negates": [
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-schema-valid-redaction-without-derivative.json",
+      "requirement_ids": [
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "supply policy and prior_digest while omitting the derived artifact"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.execution-state-transition-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-terminal-revival",
+      "negates": [
+        "DW1-003",
+        "EBMP2-011"
+      ],
+      "path": "conformance/vectors/bundles/invalid-terminal-revival.json",
+      "requirement_ids": [
+        "DW1-003",
+        "EBMP2-011"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "append running after a terminal state for one attempt"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-terminal-running-state",
+      "negates": [
+        "EBMP2-011"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-terminal-running-state.json",
+      "requirement_ids": [
+        "EBMP2-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "replace a terminal state with running"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.execution-state-transition-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-transition-after-terminal",
+      "negates": [
+        "EBMP2-065"
+      ],
+      "path": "conformance/vectors/bundles/invalid-transition-after-terminal.json",
+      "requirement_ids": [
+        "EBMP2-011",
+        "EBMP2-065"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a second terminal outcome after succeeded for one attempt"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.execution-state-transition-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-transition-skips-release",
+      "negates": [
+        "EBMP2-065"
+      ],
+      "path": "conformance/vectors/bundles/invalid-transition-skips-release.json",
+      "requirement_ids": [
+        "EBMP2-065"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "go from prepared to succeeded without a release"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-uncertain-outcome-without-residual",
+      "negates": [
+        "EBMP2-013"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-uncertain-outcome-without-residual.json",
+      "requirement_ids": [
+        "EBMP2-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "record an unknown outcome with no residual state"
+      },
+      "stage": "semantic"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-invalid-verification-without-findings",
+      "negates": [
+        "EBMP2-019"
+      ],
+      "path": "conformance/vectors/ebmp-2/invalid-verification-without-findings.json",
+      "requirement_ids": [
+        "EBMP2-019"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-verification-event.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove findings, registry snapshot and evidence boundary from a verification event"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-causal-bundle",
+      "path": "conformance/vectors/bundles/valid-execution-chain.json",
+      "requirement_ids": [
+        "DW1-028",
+        "EBMP2-023",
+        "EBMP2-024",
+        "EBMP2-025"
+      ],
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-cross-workflow-sequence",
+      "path": "conformance/vectors/bundles/valid-cross-workflow-sequence.json",
+      "requirement_ids": [
+        "DW1-007",
+        "EBMP2-025"
+      ],
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "bundle"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-execution-terminal",
+      "path": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-011",
+        "EBMP2-046"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-human-intervention",
+      "path": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-redaction",
+      "path": "conformance/vectors/ebmp-2/valid-redaction.json",
+      "requirement_ids": [
+        "EBMP2-040",
+        "EL1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a redaction with its derived artifact and redaction manifest"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-uncertain-outcome",
+      "path": "conformance/vectors/ebmp-2/valid-uncertain-outcome.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "ebmp2-valid-verification-event",
+      "path": "conformance/vectors/ebmp-2/valid-verification-event.json",
+      "requirement_ids": [
+        "EBMP2-001",
+        "EBMP2-019"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "strict-json-at-limit-ceilings",
+      "path": "conformance/vectors/strict-json/valid-at-limit-ceilings.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "4,097 nested arrays, the innermost at the nesting ceiling of 4,096, under the ceilings as the declared limits"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 2147483647,
+        "max_depth": 4096,
+        "max_nodes": 100000000
+      }
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "strict-json-at-limits",
+      "path": "conformance/vectors/strict-json/valid-at-limits.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "nine values nested to the nesting limit, under a value limit of nine"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 9
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-byte-order-mark",
+      "negates": [
+        "DCMP2-002",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-byte-order-mark.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a byte order mark before the value"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-no-duplicate-members.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-duplicate-member",
+      "negates": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-duplicate-member.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate object member"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-invalid-utf8",
+      "negates": [
+        "DCMP2-002",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-utf8.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a byte sequence that is not UTF-8"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-lone-surrogate",
+      "negates": [
+        "DCMP2-002",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-lone-surrogate.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a lone surrogate escape in a string"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-malformed-text",
+      "negates": [
+        "DCMP2-002",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-malformed-text.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a comma after the last member"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-non-json-constant",
+      "negates": [
+        "DCMP2-002",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-non-json-constant.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "the constant NaN as a number"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-noncharacter",
+      "negates": [
+        "IE1-002",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-noncharacter.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "the noncharacter U+FFFF in a string"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-byte-limit-before-syntax",
+      "negates": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-byte-limit-before-syntax.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a comma after the last member, in more bytes than the byte limit"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 8
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-depth-ceiling",
+      "negates": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-depth-ceiling.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "4,098 nested arrays, the innermost one level beyond the nesting ceiling of 4,096, under the ceilings as the declared limits"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 2147483647,
+        "max_depth": 4096,
+        "max_nodes": 100000000
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-depth-limit",
+      "negates": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-depth-limit.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "ten nested arrays under a nesting limit of eight"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 100
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-depth-limit-then-syntax",
+      "negates": [
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-depth-limit-then-syntax.json",
+      "requirement_ids": [
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a thousand nested arrays under a nesting limit of eight, then one closing bracket more"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 2000
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-value-limit",
+      "negates": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-value-limit.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "twelve values under a limit of eight"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 8
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-value-limit-before-later-defects",
+      "negates": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-value-limit-before-later-defects.json",
+      "requirement_ids": [
+        "IE1-028",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a number, a noncharacter and a repeated member name, then more values than the limit"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 8
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-value-limit-then-invalid-utf8",
+      "negates": [
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-value-limit-then-invalid-utf8.json",
+      "requirement_ids": [
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "more values than the limit, then a byte sequence that is not UTF-8"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 8
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-over-value-limit-then-syntax",
+      "negates": [
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-over-value-limit-then-syntax.json",
+      "requirement_ids": [
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "twelve values under a limit of eight, then a comma before the closing bracket"
+      },
+      "stage": "strict-json",
+      "strict_json_limits": {
+        "max_bytes": 4096,
+        "max_depth": 8,
+        "max_nodes": 8
+      }
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-no-duplicate-members.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-repeated-name-before-number",
+      "negates": [
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-repeated-name-and-number.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a floating-point number, then the same member name again"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-restricted-numbers.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-restricted-number",
+      "negates": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002",
+        "IE1-003"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-floating-number.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-001",
+        "IE1-002",
+        "IE1-003"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "floating-point number"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-surrogate-after-repeated-name-and-number",
+      "negates": [
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-number-and-repeated-name-then-surrogate.json",
+      "requirement_ids": [
+        "IE1-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a floating-point number, the same member name again, and a lone surrogate"
+      },
+      "stage": "strict-json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.json-strict-syntax.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-json-syntax-before-repeated-name",
+      "negates": [
+        "IE1-037"
+      ],
+      "path": "conformance/vectors/strict-json/invalid-unterminated-repeated-name.json",
+      "requirement_ids": [
+        "DCMP2-002",
+        "IE1-037"
+      ],
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_foundation_vectors.py",
+        "kind": "mutation",
+        "mutation": "a repeated member name in an object that is never closed"
+      },
+      "stage": "strict-json"
+    }
+  ]
+}

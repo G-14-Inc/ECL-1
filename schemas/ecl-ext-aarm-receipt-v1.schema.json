@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+  "title": "ECL AARM receipt extension value v1",
+  "description": "The value of ecl.ext.aarm-receipt.v1 on an EBMP-2 execution_terminal event: the AARM receipt that the event binds, by its identifier and the digest of its RFC 8785 canonical form as retained, with the AARM decision it records (AB1-007).",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "receipt_digest",
+    "decision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "receipt_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "decision": {
+      "enum": [
+        "ALLOW",
+        "DENY",
+        "MODIFY",
+        "STEP_UP",
+        "DEFER"
+      ]
+    }
+  }
+}

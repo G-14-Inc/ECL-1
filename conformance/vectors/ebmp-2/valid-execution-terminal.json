@@ -1,0 +1,109 @@
+{
+  "protocol": "EBMP-2",
+  "schema_version": "2.0",
+  "object_type": "event_record",
+  "object_id": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001",
+  "workflow": {
+    "workflow_id": "https://externalcontrollayer.ai/ns/workflow/example-001",
+    "root_trace_id": "https://externalcontrollayer.ai/ns/trace/example-001",
+    "attempt": 1,
+    "sequence": 7,
+    "causal_predecessors": [
+      {
+        "id": "https://externalcontrollayer.ai/ns/receipt/execution-running-001",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "relation": "ecl.relation.follows.v1"
+      }
+    ]
+  },
+  "producer": {
+    "id": "urn:example:enforcement:payments-gate-1",
+    "type": "ecl.principal.enforcement-point.v1",
+    "trust_domain": "urn:example:trust-domain:control"
+  },
+  "observed_at": "2026-07-27T04:30:01.500000Z",
+  "monotonic_observation": {
+    "clock_id": "urn:example:clock:payments-gate-boot-77",
+    "ticks": "9283746500",
+    "unit": "nanosecond"
+  },
+  "event_type": "execution_terminal",
+  "event": {
+    "kind": "execution",
+    "action_id": "https://externalcontrollayer.ai/ns/action/example-001",
+    "attempt_id": "https://externalcontrollayer.ai/ns/attempt/example-001-1",
+    "state": "succeeded",
+    "decision": {
+      "uri": "https://externalcontrollayer.ai/ns/message/resp-001",
+      "media_type": "application/vnd.ecl.dcmp+json",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "3333333333333333333333333333333333333333333333333333333333333333"
+      }
+    },
+    "authority": {
+      "uri": "https://externalcontrollayer.ai/ns/authority/example-001",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    },
+    "target": {
+      "uri": "urn:example:account:destination-9",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "operation": "transfer",
+    "parameters_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "1604b9b3ad47adc499b05ceef2d29df7c6cf439055a9dd59f464b1402a15ba23"
+    },
+    "result": {
+      "uri": "urn:example:transaction:ledger-entry-8831",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "5555555555555555555555555555555555555555555555555555555555555555"
+      }
+    },
+    "side_effects": [
+      {
+        "uri": "urn:example:transaction:ledger-entry-8831",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "5555555555555555555555555555555555555555555555555555555555555555"
+        }
+      }
+    ],
+    "residual_state": "No unresolved compensating action."
+  },
+  "extensions": [],
+  "integrity_policy": {
+    "required": true,
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:payments-gate-1"
+    ],
+    "required_key_ids": [
+      "urn:example:key:payments-gate-1"
+    ],
+    "threshold": 1,
+    "trust_policy": {
+      "id": "urn:example:policy:trust-control",
+      "version": "2026-07-27",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "epoch": 11
+    },
+    "verification_time_policy": "ecl.time.observed-at.v1",
+    "revocation_policy": "ecl.revocation.offline-bundle.v1"
+  }
+}

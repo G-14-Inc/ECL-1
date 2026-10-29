@@ -1,0 +1,73 @@
+{
+  "authority": {
+    "grant": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "uri": "urn:example:grant:payments-operator-cancel"
+    },
+    "plane": "ordinary"
+  },
+  "control_id": "https://externalcontrollayer.ai/ns/control/example-001",
+  "effective_at": "2026-07-27T04:30:00.000000Z",
+  "expires_at": "2026-07-27T04:30:10.000000Z",
+  "extensions": [
+    {
+      "critical": true,
+      "id": "ecl.ext.consequence-coupling.v1",
+      "value": {
+        "quorum_rule": "urn:example:quorum:two-of-three",
+        "witness_requirement": "urn:example:witness:balance-before-transfer"
+      },
+      "version": 1
+    }
+  ],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:payments-agent-1"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:payments-agent-1"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "epoch": 9,
+      "id": "urn:example:policy:trust-payments",
+      "version": "2026-07-27"
+    },
+    "verification_time_policy": "ecl.time.issued-at.v1"
+  },
+  "issued_at": "2026-07-27T04:30:00.000000Z",
+  "issuer": {
+    "id": "urn:example:agent:payments-1",
+    "trust_domain": "urn:example:trust-domain:payments",
+    "type": "ecl.principal.workload.v1"
+  },
+  "message_id": "https://externalcontrollayer.ai/ns/message/control-001",
+  "message_type": "control",
+  "operation": "cancel",
+  "protocol": "DCMP-2",
+  "reason": {
+    "code": "ecl.reason.native-policy-disposition.v1"
+  },
+  "schema_version": "2.0",
+  "target_id": "https://externalcontrollayer.ai/ns/message/req-001",
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [],
+    "idempotency_key": "customer-42-transfer-7",
+    "root_trace_id": "https://externalcontrollayer.ai/ns/trace/example-001",
+    "sequence": 1,
+    "workflow_id": "https://externalcontrollayer.ai/ns/workflow/example-001"
+  }
+}

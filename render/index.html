@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL-1 Version 1.0 document index</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1>ECL-1 Version 1.0 document index</h1>
+<p>The documents of ECL-1 Version 1.0, a public standard maintained by G-14, Inc.</p>
+<h2>Core</h2>
+<ul>
+<li><a href="ecl-1_standard.html">ECL-1 Version 1.0</a>: The guarantee. A deployment that conforms to ECL-1 under a full-system or bounded action-class mediation claim provides the following for each consequential action that the claim declares in scope. The action crosses an enforcement boundary that the governed AI system cannot bypass, under a decision that the governed AI system cannot change. A failure that leaves the action without required proof, including an integrity failure, policy ambiguity or a decision service that does not answer, ends in denial, restricted mode or halt, and never in the action going ahead. Each decision leaves tamper-evident evidence that a third party can check and, from L2, verify offline outside the primary control plane. The guarantee holds only within the boundary, level, independence class and trust assumptions that the claim states, and only as far as the claim&#x27;s assessment establishes it (Section 7.8): at L1 the absence of bypass rests on the documented enumeration method and exercised interception points (ECL1N-0039), and from L2 also on the assessor&#x27;s negative tests (FR-101, ECL1N-0151). A component or profile implementation claim does not provide the guarantee.</li>
+</ul>
+<h2>Protocols</h2>
+<ul>
+<li><a href="dcmp-2.html">DCMP-2: Decision and Control Message Protocol</a>: Version: 2.0 (wire schema_version 2.0) Status: normative companion of ECL-1 Version 1.0, a published version Schema: schemas/dcmp-2.schema.json Registry dependencies: algorithm suites, extensions, errors, semantic rules</li>
+<li><a href="distributed-workflow-1.html">ECL Distributed and Long-Running Workflow Semantics 1</a>: Version: 1.0 Status: normative companion of ECL-1 Version 1.0, a published version</li>
+<li><a href="ebmp-2.html">EBMP-2: Evidence Bundle and Manifest Protocol</a>: Version: 2.0 (wire schema_version 2.0) Status: normative companion of ECL-1 Version 1.0, a published version Schemas: schemas/ebmp-2.schema.json; signed evidence bundles schemas/ecl-evidence-bundle-v1.schema.json; native adapter bindings schemas/ecl-adapter-binding-v1.schema.json</li>
+<li><a href="evidence-lifecycle-1.html">ECL Evidence Lifecycle Protocol 1</a>: Version: 1.0 Status: normative companion of ECL-1 Version 1.0, a published version</li>
+<li><a href="extension-registry-1.html">ECL Extension and Registry Protocol 1</a>: Version: 1.0 Status: normative companion of ECL-1 Version 1.0, a published version</li>
+<li><a href="integrity-envelope-1.html">ECL Integrity Envelope 1</a>: Version: 1.0 Status: normative companion of ECL-1 Version 1.0, a published version Schemas: schemas/ecl-integrity-envelope-v1.schema.json, schemas/ecl-time-attestation-v1.schema.json</li>
+<li><a href="timing-safe-state-1.html">ECL Timing, Availability, and Safe-State Semantics 1</a>: Version: 1.0 Status: normative companion of ECL-1 Version 1.0, a published version</li>
+</ul>
+<h2>Profiles</h2>
+<ul>
+<li><a href="aarm-binding-1.html">ECL AARM Binding Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="acs-binding-1.html">ECL ACS Binding Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="authzen-binding-1.html">ECL AuthZEN Binding Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="conformance-claims-1.html">ECL Conformance Claims 1</a>: Status: informative guide for ECL-1 Version 1.0, a published version. It states no requirement of its own: every obligation it describes is allocated, with an ID, in the core standard or a normative companion it cites. Schemas:</li>
+<li><a href="dcmp2-http-1.html">ECL DCMP-2 HTTP Binding Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="deployment-profiles-1.html">ECL Deployment Profiles 1</a>: Status: informative guide for ECL-1 Version 1.0, a published version. It states no requirement of its own: every obligation it describes is allocated, with an ID, in the core standard or a normative companion it cites. Schema: https://externalcontrollayer.ai/ns/schema/deployment-profile/1</li>
+<li><a href="mcp-gateway-1.html">ECL MCP Gateway Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="oauth-authority-1.html">ECL OAuth Authority Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="offline-verification-1.html">ECL Offline Verification Profile 1</a>: Status: informative guide for ECL-1 Version 1.0, a published version. It states no requirement of its own: every obligation it describes is allocated, with an ID, in the core standard or a normative companion it cites. Profile identifier: https://externalcontrollayer.ai/ns/profile/offline-verification/1 Manifest schema: https://externalcontrollayer.ai/ns/schema/offline-verification-package/1 Media type: application/vnd.ecl.bundle+zip Container profile: ecl.zip.store.v1</li>
+<li><a href="otel-evidence-export-1.html">ECL OpenTelemetry Evidence Export Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="strict-failure-1.html">ECL Strict Failure Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="transactional-effect-1.html">ECL Transactional Effect Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+<li><a href="trust-policy-1.html">ECL Trust Policy Profile 1</a>: Requirement-IDs: compiled Version: 1.0 Status: normative profile of ECL-1 Version 1.0, a published version</li>
+</ul>
+<h2>Records</h2>
+<ul>
+<li><a href="issues.html">ECL-1 normative issues</a>: This index preserves the questions and their dispositions. Issues 001 and 002 were resolved earlier. Issues 003 through 007 are resolved in this candidate&#x27;s requirements and assessment procedures as recorded below. A disposition is not publication authorization, an outside assessment or a legal opinion. Public comments and errata remain open under the governance process.</li>
+</ul>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{
+  "artifacts": [
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5"
+      },
+      "media_type": "application/json",
+      "path": "evidence/bundle.json",
+      "role": "payload",
+      "size_bytes": 4096
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1"
+      },
+      "media_type": "application/json",
+      "path": "trust/trust-policy.json",
+      "role": "trust_policy",
+      "size_bytes": 2048
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2"
+      },
+      "media_type": "application/json",
+      "path": "trust/revocations.json",
+      "role": "revocation_snapshot",
+      "size_bytes": 512
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3"
+      },
+      "media_type": "application/json",
+      "path": "registries/catalog.json",
+      "role": "registry_snapshot",
+      "size_bytes": 8192
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4"
+      },
+      "media_type": "application/json",
+      "path": "time/attestations.json",
+      "role": "time_evidence",
+      "size_bytes": 1024
+    }
+  ],
+  "created_at": "2026-07-27T12:00:00Z",
+  "deterministic_assembly": {
+    "container_profile": "ecl.zip.store.v1",
+    "entry_order": "utf8-bytewise-path",
+    "path_encoding_policy": "utf8-nfc-posix-relative",
+    "permissions_policy": "regular-files-0644-no-directory-entries",
+    "storage_policy": "zip-stored",
+    "timestamp_policy": "zip-epoch-1980-01-01T00:00:00Z"
+  },
+  "expires_at": "2027-07-27T12:00:00Z",
+  "package_id": "urn:example:ecl:offline-package:payments-2026-07",
+  "package_version": "1.0-rc.1",
+  "registry_snapshots": [
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3"
+      },
+      "uri": "urn:example:ecl:registry-snapshot:1.0",
+      "version": "1"
+    }
+  ],
+  "time_evidence": [
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4"
+      },
+      "uri": "urn:example:ecl:time-evidence:payments",
+      "version": "1"
+    }
+  ],
+  "trust_policy": {
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1"
+    },
+    "uri": "urn:example:ecl:trust-policy:payments",
+    "version": "1"
+  },
+  "verification_time_policy": "ecl.time.issued-at.v1"
+}

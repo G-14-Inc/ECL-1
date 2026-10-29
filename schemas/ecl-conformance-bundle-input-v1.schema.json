@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/conformance-bundle-input/1",
+  "title": "ECL Conformance Bundle-Stage Input v1",
+  "description": "The artifact of a vector at the conformance runner's bundle stage (conformance/README.md): EBMP-2 records offered together as one complete causal bundle. The stage reads only the records member; any other member is ignored. It analyses the records as one causal graph and does not validate each record against the EBMP-2 schema.",
+  "type": "object",
+  "required": [
+    "records"
+  ],
+  "properties": {
+    "records": {
+      "description": "The records of the bundle, in any order. An entry that is not a JSON object is reported as ecl.error.schema-invalid.v1 at the bundle stage, and the other entries are still analysed.",
+      "type": "array"
+    }
+  }
+}

@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+  "title": "ECL ACS binding exchange record v1",
+  "description": "AC1-010: one hooked step's exchange between an OWASP ACS deployment and an ECL deployment, as an adapter retains it for audit: the negotiated failure posture, the Guardian's decision or decision failure and the channel through which the decision point obtained the decision, the decision inputs with their classes, the DCMP-2 messages, the release if there was one, and the ACS session chain entries that the recorded chain head covers. Dispositions are the wire values of the pinned ACS response envelope.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "acs_version",
+    "session_id",
+    "hook",
+    "on_decision_failure",
+    "guardian",
+    "inputs",
+    "request"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_acs_exchange_v1"
+    },
+    "acs_version": {
+      "const": "0.1.0"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "hook": {
+      "description": "The ACS method of the hooked step.",
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^(steps|protocols/MCP)/[A-Za-z][A-Za-z0-9/]*$"
+    },
+    "on_decision_failure": {
+      "description": "AC1-006: the failure posture the handshake negotiated.",
+      "enum": [
+        "proceed",
+        "deny"
+      ]
+    },
+    "audit_profile": {
+      "description": "True when the deployment claims the ACS-Audit profile.",
+      "type": "boolean"
+    },
+    "guardian": {
+      "type": "object",
+      "required": [
+        "status",
+        "observed_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "decided",
+            "failed"
+          ]
+        },
+        "failure": {
+          "description": "The kind of decision failure (AC1-006): no decision within the negotiated timeout, a transport failure, an error response without a decision, a disposition the mapping does not name, a decision for another request_id, an ACS signature that does not verify, or a decision that arrived after the safe state was applied.",
+          "enum": [
+            "timeout",
+            "transport",
+            "error",
+            "unmapped_disposition",
+            "request_mismatch",
+            "signature_invalid",
+            "late"
+          ]
+        },
+        "observed_at": {
+          "description": "When the adapter received the decision or determined the failure.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "channel": {
+          "description": "AC1-004: how the ECL decision point obtained the Guardian's decision: from the Guardian directly (direct), by verifying the Guardian's signature over it under a key that the governed AI system cannot use (signed), or through a hook point (hook). Required when the Guardian decided.",
+          "enum": [
+            "direct",
+            "signed",
+            "hook"
+          ]
+        },
+        "key_id": {
+          "description": "AC1-004: the identifier of the key under which the decision point verified the Guardian's signature over the decision. Required when the channel is signed; a checker of the record cannot verify the signature itself, so this names what an assessor checks against the deployment.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "request_digest": {
+          "description": "AC1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the request that the Guardian evaluated, from which the derived_from of the Guardian decision's input names the decision inputs: a SHA-256 value of 32 bytes in lowercase hexadecimal. Required when the channel is signed.",
+          "allOf": [
+            {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            },
+            {
+              "properties": {
+                "algorithm": {
+                  "const": "ecl.digest.sha-256.v1"
+                },
+                "value": {
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            }
+          ]
+        },
+        "result": {
+          "description": "The AcsResult of the Guardian's response envelope. Members this profile does not read are kept as the Guardian sent them.",
+          "type": "object",
+          "required": [
+            "decision",
+            "request_id"
+          ],
+          "properties": {
+            "decision": {
+              "enum": [
+                "allow",
+                "deny",
+                "modify",
+                "ask",
+                "defer"
+              ]
+            },
+            "request_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "chain_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "evaluator": {
+                  "enum": [
+                    "deterministic",
+                    "agent",
+                    "composite"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "decided"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "channel"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "channel": {
+                "const": "signed"
+              }
+            },
+            "required": [
+              "channel"
+            ]
+          },
+          "then": {
+            "required": [
+              "key_id",
+              "request_digest"
+            ]
+          }
+        }
+      ]
+    },
+    "inputs": {
+      "description": "The inputs of the ECL decision: the entries of the decision basis that the response records in ecl.ext.decision-basis.v1, with the Guardian's decision marked by guardian (AC1-004, AC1-012).",
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput",
+        "properties": {
+          "guardian": {
+            "description": "True for the input that is the Guardian's decision, of which a record whose response carries ecl.ext.acs-decision.v1 has exactly one; its derived_from names the inputs that the Guardian's request carried (AC1-004).",
+            "type": "boolean"
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "request": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest"
+    },
+    "response": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse"
+    },
+    "modification_request": {
+      "description": "AC1-005: the new request for the action a modify produces.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest"
+    },
+    "modification_response": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse"
+    },
+    "chain": {
+      "description": "The ACS session chain from its first ContextEntry to the entry of this step.",
+      "type": "array",
+      "maxItems": 1024,
+      "items": {
+        "$ref": "#/$defs/contextEntry"
+      }
+    },
+    "release": {
+      "$ref": "#/$defs/release"
+    }
+  },
+  "$defs": {
+    "contextEntry": {
+      "description": "An ACS ContextEntry in the form the pinned chain-hashing rule hashes; members this profile does not read are kept.",
+      "type": "object",
+      "required": [
+        "entry_id",
+        "step_id",
+        "step_type",
+        "entry_hash"
+      ],
+      "properties": {
+        "entry_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "step_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "step_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "request_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "previous_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "entry_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "release": {
+      "description": "Present only when the enforcement point released the action: the decision request it went ahead under, the parameters digest it released and when.",
+      "type": "object",
+      "required": [
+        "request_id",
+        "parameters_digest",
+        "released_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "parameters_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "released_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    }
+  }
+}

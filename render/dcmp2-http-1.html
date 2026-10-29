@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL DCMP-2 HTTP Binding Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-dcmp-2-http-binding-profile-1">ECL DCMP-2 HTTP Binding Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile binds a DCMP-2 exchange over HTTPS between an enforcement point
+and a decision point at the decision endpoint, an HTTPS URL that the decision
+point declares. The agent-facing API is outside scope. It preserves DCMP-2
+semantics. The decision endpoint, the total decision-exchange timeout and any
+resource limits other than those stated in <a href="dcmp2-http-1.html#DHB1-003">DHB1-003</a> are parameters that a claim
+of this profile declares, and the claim gives the value that its deployment
+uses for each of them.</p>
+<p><span id="DHB1-001"><strong>DHB1-001</strong></span><a class="requirement-link" href="#DHB1-001" aria-label="Link to DHB1-001">§</a> — A decision exchange MUST use one HTTPS POST to the declared
+decision endpoint with a single
+ECL-IE-1 envelope containing exactly one DCMP-2 decision_request, Content-Type
+application/json and a single decimal Content-Length with no Transfer-Encoding;
+a success body MUST be one ECL-IE-1 envelope containing one decision_response.</p>
+<p><span id="DHB1-002"><strong>DHB1-002</strong></span><a class="requirement-link" href="#DHB1-002" aria-label="Link to DHB1-002">§</a> — The decision point MUST authenticate the producer with a bearer
+credential resolved server-side to a principal, and MUST reject a payload issuer
+or authority-request audience different from that principal's identifier.</p>
+<p><span id="DHB1-003"><strong>DHB1-003</strong></span><a class="requirement-link" href="#DHB1-003" aria-label="Link to DHB1-003">§</a> — Each side MUST enforce an envelope byte cap before JSON parsing,
+MUST reject objects exceeding its depth or node limit before schema validation,
+and MUST reject more signatures than its signature limit before signature
+verification. These limits are 262144 bytes, depth 32, 10000 nodes and 16
+signatures unless the claim declares other finite, positive values, which then
+apply to both sides of the exchange.</p>
+<p><span id="DHB1-004"><strong>DHB1-004</strong></span><a class="requirement-link" href="#DHB1-004" aria-label="Link to DHB1-004">§</a> — Before issuance work, the decision point MUST complete envelope
+integrity, caller-supplied trust-policy purpose and principal checks at the
+payload's issue time, payload validity and request binding checks; an invalid
+well-framed request within the byte limit MUST receive an unsigned HTTP 400 error.</p>
+<p><span id="DHB1-005"><strong>DHB1-005</strong></span><a class="requirement-link" href="#DHB1-005" aria-label="Link to DHB1-005">§</a> — An authenticated decision_response MUST be returned signed with
+HTTP 200 for both admit and deny, and MUST copy the verified workflow attempt.</p>
+<p><span id="DHB1-006"><strong>DHB1-006</strong></span><a class="requirement-link" href="#DHB1-006" aria-label="Link to DHB1-006">§</a> — Status mapping MUST be 401 for unauthenticated requests, 400 for
+invalid well-framed requests, 411 for invalid Content-Length or Transfer-Encoding
+framing, 413 for an exceeded byte cap, 503 with body {&quot;error&quot;: &quot;retry&quot;} for a
+retryable condition with nothing issued, and 500 for an internal failure; the
+only success status for the decision exchange MUST be 200.</p>
+<p><span id="DHB1-007"><strong>DHB1-007</strong></span><a class="requirement-link" href="#DHB1-007" aria-label="Link to DHB1-007">§</a> — The enforcement point MUST send one request per decision attempt
+within its declared total timeout, MUST NOT follow redirects or retry within the
+attempt, and MUST treat timeout, transport failure or a usable non-200 response
+as a dependency failure under its declared safe-state rule.</p>
+<p><span id="DHB1-008"><strong>DHB1-008</strong></span><a class="requirement-link" href="#DHB1-008" aria-label="Link to DHB1-008">§</a> — An invalid HTTP 200 body due to signature, purpose, principal,
+schema or binding failure MUST be a distinct failure class from timeout and
+MUST NOT enter evidence; it MAY be retained for forensics outside the bundle.</p>
+<p>A decision point that supports <code>hold</code> and <code>challenge</code> returns them, like
+<code>admit</code> and <code>deny</code>, as signed 200 responses that carry the verified attempt.
+Schema and key checks can precede cryptographic verification; every check
+finishes before issuance.</p>
+<h2 id="evidence">Evidence</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>DCMP-2 and envelope object semantics, separately from HTTP behavior</td>
+</tr>
+<tr>
+<td>Deployment tests</td>
+<td>The transport and service behavior of a deployment that claims this profile</td>
+</tr>
+</tbody>
+</table>
+<p>The vectors check objects, not an HTTP exchange. A claim of this profile shows
+the transport behavior with tests of its own deployment: the limits of
+<a href="dcmp2-http-1.html#DHB1-003">DHB1-003</a>, the checks before issuance and the status mapping of <a href="dcmp2-http-1.html#DHB1-004">DHB1-004</a> to
+<a href="dcmp2-http-1.html#DHB1-006">DHB1-006</a>, one request per attempt within the declared total timeout with no
+redirect or retry (<a href="dcmp2-http-1.html#DHB1-007">DHB1-007</a>), and an invalid response kept out of the evidence
+as a failure distinct from a timeout (<a href="dcmp2-http-1.html#DHB1-008">DHB1-008</a>). An assessor examines those
+tests by the procedures in <code>conformance/requirement-evaluations.json</code>.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/DCMP2-HTTP-1.md</code>, SHA-256 <code>664a53a36e89a002da088dbbabfbb87c7aca6ee0df0f11fea5b550422792c939</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

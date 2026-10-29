@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+  "title": "ECL Assessment Package v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "package_id",
+    "package_version",
+    "candidate_version",
+    "system_of_interest",
+    "level",
+    "boundary_class",
+    "evaluated_at",
+    "runtime_evidence_observed_at",
+    "static_artifact",
+    "artifact_manifest",
+    "checklist",
+    "findings",
+    "residual_risks",
+    "independence",
+    "claim_decision",
+    "procurement_decision",
+    "integrity"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_assessment_package_v1"
+    },
+    "package_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "package_version": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+    },
+    "candidate_version": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+    },
+    "system_of_interest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "boundary_class": {
+      "enum": [
+        "full-system-mediation",
+        "bounded-action-class-mediation",
+        "component-or-profile-implementation"
+      ]
+    },
+    "evaluated_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "runtime_evidence_observed_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "static_artifact": {
+      "type": "boolean"
+    },
+    "artifact_manifest": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/checklistItem"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/residualRisk"
+      }
+    },
+    "independence": {
+      "$ref": "#/$defs/independence"
+    },
+    "claim_decision": {
+      "$ref": "#/$defs/claimDecision"
+    },
+    "procurement_decision": {
+      "$ref": "#/$defs/procurementDecision"
+    },
+    "integrity": {
+      "type": "object",
+      "required": [
+        "package_digest",
+        "manifest_digest",
+        "envelope"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "package_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "manifest_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "envelope": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "minimum": 2
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "independence": {
+            "properties": {
+              "class": {
+                "enum": [
+                  "B",
+                  "C"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "const": 4
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "independence": {
+            "properties": {
+              "class": {
+                "const": "C"
+              }
+            }
+          },
+          "claim_decision": {
+            "properties": {
+              "status": {
+                "not": {
+                  "const": "conditional_conformance"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "role",
+        "reference",
+        "digest",
+        "source_boundary",
+        "observed_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "role": {
+          "enum": [
+            "system_boundary",
+            "trust_boundary",
+            "action_register",
+            "negative_boundary_annex",
+            "requirement_matrix",
+            "fr_checklist_matrix",
+            "deployment_profile",
+            "policy",
+            "trust_bundle",
+            "conformance_result",
+            "runtime_evidence",
+            "revocation_drill",
+            "emergency_drill",
+            "incident_response",
+            "change_management",
+            "mapping_packet",
+            "assessor_workpaper",
+            "other"
+          ]
+        },
+        "reference": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "source_boundary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "observed_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    },
+    "checklistItem": {
+      "type": "object",
+      "required": [
+        "item_id",
+        "requirement_ids",
+        "minimum_level",
+        "result",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          }
+        },
+        "minimum_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "result": {
+          "enum": [
+            "pass",
+            "fail",
+            "not_applicable"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "applicability_false_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 8192
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "pass",
+                  "fail"
+                ]
+              }
+            },
+            "required": [
+              "result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "const": "not_applicable"
+              }
+            },
+            "required": [
+              "result"
+            ]
+          },
+          "then": {
+            "required": [
+              "applicability_false_evidence"
+            ]
+          }
+        }
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "finding_id",
+        "severity",
+        "title",
+        "requirement_ids",
+        "evidence",
+        "disposition"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "finding_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "severity": {
+          "enum": [
+            "critical",
+            "major",
+            "minor",
+            "observation"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "disposition": {
+          "enum": [
+            "open",
+            "accepted_condition",
+            "remediated",
+            "rejected"
+          ]
+        }
+      }
+    },
+    "residualRisk": {
+      "type": "object",
+      "required": [
+        "risk_id",
+        "description",
+        "affected_boundary",
+        "owner",
+        "treatment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "risk_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "affected_boundary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "owner": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "treatment": {
+          "enum": [
+            "mitigate",
+            "accept",
+            "avoid",
+            "transfer",
+            "defer"
+          ]
+        }
+      }
+    },
+    "independence": {
+      "type": "object",
+      "required": [
+        "class",
+        "assessor_id",
+        "primary_implementer",
+        "managed_operator_within_24_months",
+        "claim_approval_authority_within_24_months",
+        "compensation_contingent_on_claim",
+        "material_affiliate_or_reseller",
+        "competency_evidence",
+        "conflict_disclosure"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        "assessor_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "primary_implementer": {
+          "const": false
+        },
+        "managed_operator_within_24_months": {
+          "type": "boolean"
+        },
+        "claim_approval_authority_within_24_months": {
+          "type": "boolean"
+        },
+        "compensation_contingent_on_claim": {
+          "const": false
+        },
+        "material_affiliate_or_reseller": {
+          "type": "boolean"
+        },
+        "published_sector_exception": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "competency_evidence": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "conflict_disclosure": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      }
+    },
+    "claimDecision": {
+      "type": "object",
+      "required": [
+        "status",
+        "rationale",
+        "claim_artifact"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "full_conformance",
+            "conditional_conformance",
+            "assessment_only"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "claim_artifact": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "conditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        }
+      }
+    },
+    "procurementDecision": {
+      "type": "object",
+      "required": [
+        "decision",
+        "decision_owner",
+        "rationale",
+        "separate_from_assessment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "award",
+            "conditional_award",
+            "deny",
+            "defer",
+            "not_evaluated"
+          ]
+        },
+        "decision_owner": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "separate_from_assessment": {
+          "const": true
+        }
+      }
+    }
+  }
+}

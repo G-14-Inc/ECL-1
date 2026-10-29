@@ -1,0 +1,186 @@
+{
+  "schema_version": "ecl_action_register_v1",
+  "register_id": "urn:example:ecl:action-register:payments",
+  "register_version": "1",
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "6161616161616161616161616161616161616161616161616161616161616161"
+    }
+  },
+  "generated_at": "2026-07-27T12:00:00Z",
+  "capability_inventory": {
+    "uri": "urn:example:ecl:capability-inventory:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "6262626262626262626262626262626262626262626262626262626262626262"
+    }
+  },
+  "entries": [
+    {
+      "action_class_id": "ecl.action.payment.v1",
+      "classification": "consequential",
+      "rationale": "The action commits an external financial-state mutation.",
+      "consequence_dimensions": [
+        "external_state_mutation",
+        "financial",
+        "material_external_cost_or_exposure"
+      ],
+      "affected_resources": [
+        "urn:example:account:payer",
+        "urn:example:account:payee"
+      ],
+      "actor_subject_classes": [
+        "urn:example:principal:payments-agent",
+        "urn:example:principal:account-owner"
+      ],
+      "data_classes": [
+        "financial",
+        "customer-confidential"
+      ],
+      "enforcement_class": "hard",
+      "human_approval_threshold": [
+        {
+          "parameter": "/amount",
+          "unit": "ecl.unit.usd.v1",
+          "value": "10000.00",
+          "approvers": 2
+        },
+        {
+          "measure": "urn:example:ecl:measure:payer-daily-total",
+          "unit": "ecl.unit.usd.v1",
+          "value": "50000.00",
+          "approvers": 3
+        }
+      ],
+      "capability_paths": [
+        {
+          "path_id": "urn:example:ecl:path:payments-submit",
+          "entry_point": "payments tool submit method",
+          "effect_boundary": "payment processor commit call",
+          "interceptor": {
+            "uri": "urn:example:ecl:component:local-gate",
+            "version": "1",
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "6363636363636363636363636363636363636363636363636363636363636363"
+            }
+          },
+          "interception_result": "hard_mediated",
+          "last_tested_at": "2026-07-27T11:00:00Z",
+          "evidence": [
+            {
+              "uri": "urn:example:ecl:evidence:interception-test:payments",
+              "version": "1",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "6464646464646464646464646464646464646464646464646464646464646464"
+              }
+            }
+          ],
+          "residual_bypass_risk": "Out-of-band processor administration is excluded in the Negative Boundary Annex."
+        }
+      ],
+      "evidence_profile": "ecl.evidence.expanded.v1",
+      "consequence_coupling": {
+        "state_witness_register": {
+          "uri": "urn:example:ecl:witness-register:payments",
+          "version": "1"
+        },
+        "capability_freeze": {
+          "uri": "urn:example:ecl:capability-freeze:payments",
+          "version": "1"
+        },
+        "consequence_budget_ledger": {
+          "uri": "urn:example:ecl:budget-ledger:payments",
+          "version": "1"
+        },
+        "irreversibility_class": "ecl.irreversibility.compensatable.v1",
+        "commit_mode": "ecl.commit.two-phase.v1",
+        "heterogeneous_quorum_rule": {
+          "uri": "urn:example:ecl:quorum:payments",
+          "version": "1"
+        }
+      },
+      "decision_inputs": [
+        {
+          "input": "urn:example:input:payee-allow-list",
+          "class": "verifiable",
+          "required": true,
+          "source": "urn:example:system-of-record:vendor-master",
+          "maximum_age_seconds": 3600,
+          "deadline_milliseconds": 500
+        },
+        {
+          "input": "urn:example:input:principal-transfer-mandate",
+          "class": "verifiable",
+          "required": true,
+          "source": "urn:example:identity-provider:corporate",
+          "maximum_age_seconds": 86400,
+          "deadline_milliseconds": 500
+        },
+        {
+          "input": "urn:example:input:account-balance",
+          "class": "verifiable",
+          "required": true,
+          "source": "urn:example:system-of-record:core-ledger",
+          "maximum_age_seconds": 5,
+          "deadline_milliseconds": 300
+        },
+        {
+          "input": "urn:example:input:payee-mandate-check",
+          "class": "verifiable",
+          "required": true,
+          "source": "urn:example:service:payee-check",
+          "maximum_age_seconds": 5,
+          "deadline_milliseconds": 500,
+          "derived_from": [
+            "urn:example:input:payee-allow-list",
+            "urn:example:input:principal-transfer-mandate"
+          ]
+        },
+        {
+          "input": "urn:example:input:transfer-anomaly-score",
+          "class": "judgment",
+          "required": false,
+          "source": "urn:example:detector:transfer-anomaly",
+          "maximum_age_seconds": 60,
+          "deadline_milliseconds": 200
+        },
+        {
+          "input": "urn:example:input:agent-justification",
+          "class": "actor_supplied",
+          "required": false,
+          "source": "urn:example:principal:payments-agent",
+          "maximum_age_seconds": 30
+        }
+      ]
+    }
+  ],
+  "negative_boundary_annex": [
+    {
+      "path_id": "urn:example:ecl:path:processor-admin",
+      "exclusion_predicates": [
+        "The path is not reachable by the governed AI system.",
+        "The path requires a separately authenticated human administrative principal."
+      ],
+      "rationale": "Manual processor administration is outside the bounded action-class mediation claim.",
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:evidence:capability-negative-test:processor-admin",
+          "version": "1",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "6565656565656565656565656565656565656565656565656565656565656565"
+          }
+        }
+      ],
+      "reviewer": "urn:example:ecl:reviewer:boundary-owner",
+      "reviewed_at": "2026-07-27T11:30:00Z",
+      "expires_at": "2027-01-27T11:30:00Z"
+    }
+  ]
+}

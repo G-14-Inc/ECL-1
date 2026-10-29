@@ -1,0 +1,950 @@
+{
+  "candidate_version": "1.0",
+  "export_keys_path": "conformance/suites/otel-export/export-keys.json",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-otel-export",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-attempt-as-boolean",
+      "negates": [
+        "OE1-003"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-attempt-as-boolean.json",
+      "requirement_ids": [
+        "OE1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the request's workflow attempt 1 as the boolValue true"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-attribute-key-repeated",
+      "negates": [
+        "OE1-003"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-attribute-key-repeated.json",
+      "requirement_ids": [
+        "OE1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-deny-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "put before the deny response's outcome attribute another of the same key that reads admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-minimized.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-body-undeclared",
+      "negates": [
+        "OE1-005"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-body-undeclared.json",
+      "requirement_ids": [
+        "OE1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-terminal-event-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the whole event as an undeclared body"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-control-carries-safe-state",
+      "negates": [
+        "OE1-003"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-control-carries-safe-state.json",
+      "requirement_ids": [
+        "OE1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-halt-control-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the halt's safe state as ecl.decision.safe_state, a row that names only a decision response"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-severity-mapped.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-deny-as-info",
+      "negates": [
+        "OE1-008"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-deny-as-info.json",
+      "requirement_ids": [
+        "OE1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-deny-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export a deny with severity INFO"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-digest-misstated",
+      "negates": [
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-digest-misstated.json",
+      "requirement_ids": [
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export a keyed digest that is not the one the export key gives for the object"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-digest-without-export-key",
+      "negates": [
+        "OE1-004",
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-digest-without-export-key.json",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-exported-without-export-key.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the object's SHA-256 digest from an exporter that holds no export key"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-export-after-evidence.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-evidence-changed-after-failed-export",
+      "negates": [
+        "OE1-002"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-evidence-changed-after-failed-export.json",
+      "requirement_ids": [
+        "OE1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-failed-export-evidence-unchanged.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "after the failed export the evidence holds the response with another outcome"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-export-after-evidence.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-exported-before-recorded",
+      "negates": [
+        "OE1-001",
+        "OE1-002"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-exported-before-recorded.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "read the response 50 ms before it was issued"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-minimized.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-identifier-undeclared",
+      "negates": [
+        "OE1-005"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-identifier-undeclared.json",
+      "requirement_ids": [
+        "OE1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the request's subject identifier, which the export policy does not declare"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-key-id-as-boolean",
+      "negates": [
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-key-id-as-boolean.json",
+      "requirement_ids": [
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the export key with the boolValue true and export a keyed digest that is not the object's"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-key-named-without-digest",
+      "negates": [
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-key-named-without-digest.json",
+      "requirement_ids": [
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the export key but leave out the keyed digest of the object"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-key-named-without-parameters-digest",
+      "negates": [
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-key-named-without-parameters-digest.json",
+      "requirement_ids": [
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an export key that the suite does not hold and leave out the keyed parameters digest of the request, which has a parameters digest"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-object-digest-unkeyed",
+      "negates": [
+        "OE1-004"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-object-digest-unkeyed.json",
+      "requirement_ids": [
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the object's SHA-256 digest, which needs no key, beside the export key's identifier"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-object-not-ecl",
+      "negates": [
+        "OE1-009"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-object-not-ecl.json",
+      "requirement_ids": [
+        "OE1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export an object that is neither a DCMP-2 message nor an EBMP-2 event"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-observed-before-recorded",
+      "negates": [
+        "OE1-003"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-observed-before-recorded.json",
+      "requirement_ids": [
+        "OE1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "give the record an observed time 1 ms before the response was issued"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-observed-time-beyond-fixed64",
+      "negates": [
+        "OE1-003",
+        "OE1-007"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-observed-time-beyond-fixed64.json",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "give the record an observed time of 2^64 nanoseconds, one more than a fixed64 holds"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-outcome-as-bytes",
+      "negates": [
+        "OE1-003"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-outcome-as-bytes.json",
+      "requirement_ids": [
+        "OE1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the admit response's outcome as a bytesValue that holds the text admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-outcome-misstated",
+      "negates": [
+        "OE1-003"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-outcome-misstated.json",
+      "requirement_ids": [
+        "OE1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-deny-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the deny response's outcome as admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-parameters-digest-unkeyed",
+      "negates": [
+        "OE1-004"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-parameters-digest-unkeyed.json",
+      "requirement_ids": [
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the request's parameters digest as the request carries it, unkeyed"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-minimized.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-parameters-exported",
+      "negates": [
+        "OE1-005"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-parameters-exported.json",
+      "requirement_ids": [
+        "OE1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "export the decision request's parameters in an undeclared attribute"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-request-event-without-request-id",
+      "negates": [
+        "OE1-004"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-request-event-without-request-id.json",
+      "requirement_ids": [
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-request-event-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the identifier of the request that the request event holds"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-response-carries-parameters-digest",
+      "negates": [
+        "OE1-004",
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-response-carries-parameters-digest.json",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an export key that the suite does not hold and export, on the record of the admit response, which has no parameters digest, the request's parameters digest, which needs no key"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-severity-enum-name",
+      "negates": [
+        "OE1-007",
+        "OE1-009"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-severity-enum-name.json",
+      "requirement_ids": [
+        "OE1-007",
+        "OE1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "encode the severity as its enum name, which the OTLP JSON encoding refuses"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-severity-mapped.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-severity-text-misstated",
+      "negates": [
+        "OE1-008"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-severity-text-misstated.json",
+      "requirement_ids": [
+        "OE1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-deny-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the deny's severity INFO while its number is WARN"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-status-outside-enum",
+      "negates": [
+        "OE1-009"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-status-outside-enum.json",
+      "requirement_ids": [
+        "OE1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-failed-export-evidence-unchanged.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an export status the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-unkeyed-digest-as-bytes",
+      "negates": [
+        "OE1-004"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-unkeyed-digest-as-bytes.json",
+      "requirement_ids": [
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an export key that the suite does not hold and export the object's SHA-256 digest, which needs no key, as a bytesValue"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [],
+      "id": "otel-invalid-unkeyed-digest-as-bytes-of-its-bytes",
+      "negates": [
+        "OE1-003",
+        "OE1-004",
+        "OE1-010"
+      ],
+      "path": "conformance/suites/otel-export/otel-invalid-unkeyed-digest-as-bytes-of-its-bytes.json",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an export key that the suite does not hold and export the object's SHA-256 digest, which needs no key, as a bytesValue of its 32 bytes"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-admit-response-exported",
+      "path": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-challenge-exported",
+      "path": "conformance/suites/otel-export/otel-valid-challenge-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-declared-attribute",
+      "path": "conformance/suites/otel-export/otel-valid-declared-attribute.json",
+      "requirement_ids": [
+        "OE1-005",
+        "OE1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-deny-response-exported",
+      "path": "conformance/suites/otel-export/otel-valid-deny-response-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-failed-export-evidence-unchanged",
+      "path": "conformance/suites/otel-export/otel-valid-failed-export-evidence-unchanged.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-002",
+        "OE1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-halt-control-exported",
+      "path": "conformance/suites/otel-export/otel-valid-halt-control-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-identifiers-declared",
+      "path": "conformance/suites/otel-export/otel-valid-identifiers-declared.json",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-005",
+        "OE1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-outcome-reason-exported",
+      "path": "conformance/suites/otel-export/otel-valid-outcome-reason-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-request-event-exported",
+      "path": "conformance/suites/otel-export/otel-valid-request-event-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-request-exported",
+      "path": "conformance/suites/otel-export/otel-valid-request-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-request-exported-without-export-key",
+      "path": "conformance/suites/otel-export/otel-valid-request-exported-without-export-key.json",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-005",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/$defs/eclObject/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1#/properties/export/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "otel-valid-terminal-event-exported",
+      "path": "conformance/suites/otel-export/otel-valid-terminal-event-exported.json",
+      "requirement_ids": [
+        "OE1-001",
+        "OE1-003",
+        "OE1-004",
+        "OE1-005",
+        "OE1-007",
+        "OE1-008",
+        "OE1-009",
+        "OE1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "source": {
+        "generator": "scripts/generate_otel_export_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    }
+  ]
+}

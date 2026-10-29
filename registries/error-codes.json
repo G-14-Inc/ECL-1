@@ -1,0 +1,519 @@
+{
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "attributes": {
+        "layer": "syntax",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "The object does not satisfy its declared structural schema.",
+      "id": "ecl.error.schema-invalid.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "semantics",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "The object is structurally valid but violates a semantic rule.",
+      "id": "ecl.error.semantic-invalid.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "integrity",
+        "retry_class": "never_same_object"
+      },
+      "compatibility": "additive",
+      "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). The codes for a policy, key, threshold or trusted-time failure are its children.",
+      "id": "ecl.error.integrity-invalid.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "extension",
+        "retry_class": "after_implementation_change"
+      },
+      "compatibility": "additive",
+      "description": "A critical extension cannot be interpreted by the consumer.",
+      "id": "ecl.error.unknown-critical-extension.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "time",
+        "retry_class": "new_request"
+      },
+      "compatibility": "additive",
+      "description": "The request, authority, approval, or evidence artifact expired under the active time policy, or a signing key is outside its validity interval at the evaluation time (IE1-040).",
+      "id": "ecl.error.expired.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_authority"
+      },
+      "compatibility": "additive",
+      "description": "The authority, key, policy, or artifact is revoked for the evaluated purpose and time.",
+      "id": "ecl.error.revoked.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_attempt"
+      },
+      "compatibility": "additive",
+      "description": "A single-use or idempotency boundary was reused contrary to policy.",
+      "id": "ecl.error.replay.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "evidence",
+        "retry_class": "after_evidence_completion"
+      },
+      "compatibility": "additive",
+      "description": "Required causal predecessors, terminal states, or referenced evidence are unresolved.",
+      "id": "ecl.error.causal-closure-incomplete.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "enforcement",
+        "retry_class": "after_state_recovery"
+      },
+      "compatibility": "additive",
+      "description": "The active profile requires transition into a safe-state disposition.",
+      "id": "ecl.error.safe-state-required.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_authority"
+      },
+      "compatibility": "additive",
+      "description": "The authority, delegation, or request audience does not equal the evaluated release boundary.",
+      "id": "ecl.error.audience-mismatch.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "evidence",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "An evidence artifact exposes data outside the declared minimum disclosure or partition policy.",
+      "id": "ecl.error.data-minimization.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "integrity",
+        "parent_code": "ecl.error.integrity-invalid.v1",
+        "retry_class": "never_same_object"
+      },
+      "compatibility": "additive",
+      "description": "A recomputed digest of a referenced artifact, decision, state, or causal predecessor does not equal the digest bound to it; an envelope's own payload digest is checked under IE1-040 instead.",
+      "id": "ecl.error.digest-mismatch.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "evidence",
+        "retry_class": "after_architecture_change"
+      },
+      "compatibility": "additive",
+      "description": "An evidence producer asserts observation or control outside its declared producer boundary.",
+      "id": "ecl.error.evidence-boundary.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "semantics",
+        "retry_class": "new_identifier"
+      },
+      "compatibility": "additive",
+      "description": "One immutable identifier is presented with different bound content.",
+      "id": "ecl.error.identifier-collision.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "decision",
+        "retry_class": "after_binding"
+      },
+      "compatibility": "additive",
+      "description": "A consequential decision input references mutable content without an immutable version or digest.",
+      "id": "ecl.error.mutable-reference.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "semantics",
+        "parent_code": "ecl.error.replay.v1",
+        "retry_class": "new_attempt"
+      },
+      "compatibility": "additive",
+      "description": "A duplicate event, transition, identifier, attempt, or one-time control was detected at a replay boundary.",
+      "id": "ecl.error.replay-detected.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_authority"
+      },
+      "compatibility": "additive",
+      "description": "Requested or delegated resources, actions, or capabilities exceed the authorized scope.",
+      "id": "ecl.error.scope-mismatch.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "integrity",
+        "parent_code": "ecl.error.integrity-invalid.v1",
+        "retry_class": "after_policy_or_key_change"
+      },
+      "compatibility": "additive",
+      "description": "The signature policy fails for a reason other than the number of signatures: the payload-bound policy is unusable or does not match the verification context, a signing key is unknown or not acceptable for the suite, eligible keys, purpose or principal, or a signature does not verify (IE1-040).",
+      "id": "ecl.error.signature-policy-invalid.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "integrity",
+        "parent_code": "ecl.error.integrity-invalid.v1",
+        "retry_class": "after_additional_eligible_evidence"
+      },
+      "compatibility": "additive",
+      "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040).",
+      "id": "ecl.error.threshold-not-met.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "evidence",
+        "parent_code": "ecl.error.causal-closure-incomplete.v1",
+        "retry_class": "after_evidence_completion"
+      },
+      "compatibility": "additive",
+      "description": "A required causal predecessor, dependency, child, effect, or state frontier is absent, open, unknown, or digest-invalid.",
+      "id": "ecl.error.unresolved-predecessor.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "decision",
+        "retry_class": "after_binding"
+      },
+      "compatibility": "additive",
+      "description": "A decision response does not bind the decision request it answers, or the authority it grants differs from the authority the request asked for.",
+      "id": "ecl.error.request-binding-invalid.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "evidence",
+        "retry_class": "after_binding"
+      },
+      "compatibility": "additive",
+      "description": "An evidence event does not bind the action, decision, or authority it records, or its state disagrees with the outcome of the decision it names.",
+      "id": "ecl.error.decision-binding-invalid.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "decision",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "The operation, field, or response capability cannot be represented in the bound protocol profile and is rejected rather than approximated.",
+      "id": "ecl.error.binding-unsupported.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "dependency",
+        "retry_class": "new_attempt"
+      },
+      "compatibility": "additive",
+      "description": "A required remote dependency did not return a usable result: connection, TLS, timeout, or a non-success transport status.",
+      "id": "ecl.error.dependency-unavailable.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "dependency",
+        "retry_class": "after_implementation_change"
+      },
+      "compatibility": "additive",
+      "description": "A remote dependency returned a success status whose body is outside the strict acceptance profile of its binding.",
+      "id": "ecl.error.dependency-response-invalid.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_authority"
+      },
+      "compatibility": "additive",
+      "description": "No grant of authority covers the requested action for its actor, subject, operation, and evaluation time.",
+      "id": "ecl.error.no-authority.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_authority"
+      },
+      "compatibility": "additive",
+      "description": "The governing grant's maximum number of charged uses has been reached.",
+      "id": "ecl.error.quota-exhausted.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "internal",
+        "retry_class": "after_implementation_change"
+      },
+      "compatibility": "additive",
+      "description": "An internal invariant of the deciding or enforcing component does not hold, and the component fails closed.",
+      "id": "ecl.error.internal-invariant.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "semantics",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "The action's target does not exist at the point of effect.",
+      "id": "ecl.error.target-missing.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "time",
+        "retry_class": "new_attempt"
+      },
+      "compatibility": "additive",
+      "description": "The evaluation instant precedes the authority's issue instant under the declared time source.",
+      "id": "ecl.error.clock-rollback.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "An emergency halt is in force for a scope the action depends on.",
+      "id": "ecl.error.emergency-halt.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "authority",
+        "retry_class": "new_attempt"
+      },
+      "compatibility": "additive",
+      "description": "Control state changed after the authority was issued, so its control-state snapshot is stale.",
+      "id": "ecl.error.stale-control.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "semantics",
+        "retry_class": "new_request"
+      },
+      "compatibility": "additive",
+      "description": "The target's current revision does not match the authorized expected revision.",
+      "id": "ecl.error.revision-conflict.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "conformance",
+        "retry_class": "never"
+      },
+      "compatibility": "additive",
+      "description": "The conformance harness canonicalized a known-answer input to bytes whose SHA-256 differs from its declared expected canonical digest. This is a harness oracle mismatch, not a bound digest in an artifact.",
+      "id": "ecl.error.canonicalization-mismatch.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "time",
+        "retry_class": "after_evidence_completion"
+      },
+      "compatibility": "additive",
+      "description": "The verification profile requires trusted time, and the envelope carries no trusted-time countersignature or has a signature that no trusted-time countersignature covers.",
+      "id": "ecl.error.trusted-time-required.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "time",
+        "parent_code": "ecl.error.integrity-invalid.v1",
+        "retry_class": "never_same_object"
+      },
+      "compatibility": "additive",
+      "description": "A trusted-time countersignature does not verify, does not bind the covered payload and the envelope signatures it names, names a signature that the envelope does not carry, is issued by the covered object's signer, attests a time earlier than the object's own time, or is signed by a key that the caller's current trust policy revokes from its attested time or earlier.",
+      "id": "ecl.error.trusted-time-invalid.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "enforcement",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "The request targets a tool, a tool definition or a server identity that changed after the mapping was reviewed, and the change has not been reviewed (ECL1N-0170, MG1-008).",
+      "id": "ecl.error.control-change-unreviewed.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "syntax",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "The input exceeds a finite resource limit that its processor declares (IE1-028, IE1-029): its encoded bytes, its nesting depth or number of values, the number of envelopes, signatures, observations, records or causal predecessors it carries, or, for an offline package, its archive bytes, member count, expanded bytes, compression ratio or path length (IE1-022). The processor refuses it before further processing.",
+      "id": "ecl.error.resource-limit-exceeded.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "enforcement",
+        "retry_class": "after_evidence_completion"
+      },
+      "compatibility": "additive",
+      "description": "An obligation of an admit that had to be met before the release, or a state witness that the admit deferred to Enforcement, was not proven at Enforcement: its type is not one that the enforcement point declares, or its proof is absent, not authenticated, bound to another request, stale, already used or fails its check, so the action is not released (DCMP2-017, MG1-013).",
+      "id": "ecl.error.obligation-unproven.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "evidence",
+        "retry_class": "after_state_recovery"
+      },
+      "compatibility": "additive",
+      "description": "The enforcement point cannot durably record evidence that must precede the release, because writing it, flushing it to storage or the storage itself failed or is exhausted, so it releases nothing (TS1-022, MG1-017).",
+      "id": "ecl.error.evidence-unavailable.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "time",
+        "retry_class": "new_attempt"
+      },
+      "compatibility": "additive",
+      "description": "A clock or a recorded time runs backward against the instant that checks it: the enforcement point's wall clock read earlier at its final observation before the release than at its first check of the authorization, or disagreed with its monotonic clock by more than the declared release guard, so the release was refused and the attempt ends cancelled (MG1-014); or an evidence bundle holds an object whose own time, or a trusted-time countersignature whose attested time, is later than the verifier's evaluation time, so the object is not historically valid (EBMP2-057).",
+      "id": "ecl.error.clock-regressed.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "layer": "syntax",
+        "retry_class": "after_change"
+      },
+      "compatibility": "additive",
+      "description": "A configured resource limit is not an exact positive integer within the ceiling that INTEGRITY-ENVELOPE-1 gives it (null, a fraction, NaN, an infinity, a string, zero, a negative number or a value above the ceiling), so the processor refuses its configuration before it reads any input (IE1-028, IE1-037).",
+      "id": "ecl.error.configuration-invalid.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-registry",
+      "status": "active"
+    }
+  ],
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/error-codes",
+  "registry_version": 1,
+  "schema_version": "ecl_registry_v2",
+  "status": "active"
+}

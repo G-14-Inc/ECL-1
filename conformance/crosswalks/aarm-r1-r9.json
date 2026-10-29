@@ -1,0 +1,457 @@
+{
+  "schema_version": "ecl_mapping_packet_v1",
+  "packet_id": "urn:example:ecl:crosswalk:aarm-r1-r9",
+  "packet_version": "5",
+  "framework": "AARM (Autonomous Action Runtime Management)",
+  "framework_edition": "v1; conformance requirements last updated 2026-03-26",
+  "framework_source": {
+    "uri": "https://raw.githubusercontent.com/aarm-dev/docs/5bd02fdb5d5f6483a16a42539e38cfe8743c3a97/conformance/requirements.mdx",
+    "media_type": "text/plain",
+    "version": "5bd02fdb5d5f6483a16a42539e38cfe8743c3a97",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "d5b88e2343114a282d04a4b421bf0d13b27eba82f82b9acee0cb62723bb6b5c2"
+    }
+  },
+  "system_boundary": {
+    "uri": "urn:example:ecl:artifact:standard/ECL-1_Standard.md",
+    "media_type": "text/plain",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+    }
+  },
+  "updated_at": "2026-10-16T00:00:00Z",
+  "validation_state": "internally_reviewed",
+  "obligations": [
+    {
+      "framework_clause": "R1",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "c632cf25b2ed84b074436a3bb2a6e0ec1dd3fc34ab65d7bf782bc07fa7795a9c"
+      },
+      "support_class": "direct_runtime_support",
+      "ecl_surfaces": [
+        "ECL1N-0034",
+        "ECL1N-0035",
+        "ECL1N-0036",
+        "ECL1N-0037",
+        "ECL1N-0141",
+        "DCMP2-040",
+        "TS1-018",
+        "SF1-001",
+        "SF1-002"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/TIMING-SAFE-STATE-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "4ab9b769aac73c151a455f0e9b21f8cfadbf1785ff355d71a4fd643dc9fa8623"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:profiles/STRICT-FAILURE-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "034e2f7931dcda6c0e25fc6cc97c5f575e72b935b7e05a7c50e00ac92a12ec39"
+          }
+        }
+      ],
+      "residual_obligations": "AARM deferral ordering, cascade bounds and follow-up receipts require deployment-specific work. ECL hold and timeout-to-safe-state are different mechanisms; TS1-009 does not supply a session deferral scheduler.",
+      "assumptions": [
+        "The runtime boundaries and action classes are declared; no undisclosed bypass is available.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R2",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "480bb8e0aa145c705d8db24be5b48fb482e8ddd7620155169072b71d31181495"
+      },
+      "support_class": "supporting_evidence_only",
+      "ecl_surfaces": [
+        "DCMP2-026",
+        "DCMP2-028",
+        "DCMP2-030",
+        "EBMP2-022",
+        "EBMP2-023",
+        "EBMP2-024",
+        "ECL1N-0178",
+        "ECL1N-0181"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/EBMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "0119ed46f4ab60fb73646abe6e41cb532fc2cfdf3d45533ff025cfb8aa4fcf3b"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:standard/ECL-1_Standard.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+          }
+        }
+      ],
+      "residual_obligations": "ECL supplies workflow and digest-bound causal linkage, not a session-context store, accumulated data classification, original-intent store or rolling context hash log; those stay with other tools by design. Their outputs connect as decision inputs that the register classifies (ECL1N-0178) and that the decision record identifies by reference and digest (ECL1N-0181); a classification made by a model is a judgment input.",
+      "assumptions": [
+        "Causal linkage is supporting evidence; it is not accumulated context provided to a policy engine.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R3 (policy evaluation)",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9309abf8b408226b6494a3f8e313de5ae707e131e7374b5d0e1263f92222a2d2"
+      },
+      "support_class": "direct_runtime_support",
+      "ecl_surfaces": [
+        "ECL1N-0034",
+        "DCMP2-006",
+        "DCMP2-012",
+        "DCMP2-013",
+        "DCMP2-016",
+        "DCMP2-018",
+        "AZB1-001"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:profiles/AUTHZEN-BINDING-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "5949c7e58236b0faed86a534ef451c193a967499114cc30ba58582dc0fd8e801"
+          }
+        }
+      ],
+      "residual_obligations": "The deployment must implement the external action classifications, predicate conflict resolution and parameter policies. AuthZEN supplies a policy-engine interface, not those policies.",
+      "assumptions": [
+        "Native enforcement still applies even when an external policy engine permits.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R3 (intent alignment and deferral)",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9309abf8b408226b6494a3f8e313de5ae707e131e7374b5d0e1263f92222a2d2"
+      },
+      "support_class": "out_of_scope",
+      "ecl_surfaces": [
+        "DCMP2-018",
+        "TS1-009",
+        "ECL1N-0179",
+        "ECL1N-0182",
+        "DCMP2-053"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/TIMING-SAFE-STATE-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "4ab9b769aac73c151a455f0e9b21f8cfadbf1785ff355d71a4fd643dc9fa8623"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:standard/ECL-1_Standard.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+          }
+        }
+      ],
+      "residual_obligations": "ECL does not evaluate accumulated intent; intent alignment stays with other tools by design. An intent-alignment or confidence result connects as a judgment input that can hold, deny or challenge an action but never admit it (ECL1N-0179, DCMP2-053), and missing context maps to an unavailable required input, which prevents an admit (ECL1N-0182). Equal-priority conflict deferral remains deployment policy.",
+      "assumptions": [
+        "Hold and challenge carry a disposition; they do not implement contextual intent analysis.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R4",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "ce6e563356a24f46f6d1e63310860d7c7aba41813256f61145da914dc08ea120"
+      },
+      "support_class": "supporting_evidence_only",
+      "ecl_surfaces": [
+        "DCMP2-012",
+        "DCMP2-013",
+        "DCMP2-014",
+        "DCMP2-017",
+        "DCMP2-018",
+        "TS1-009"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+          }
+        }
+      ],
+      "residual_obligations": "Admit/deny map directly; challenge and hold are approximate STEP_UP/DEFER analogues with different continuation and timeout semantics. ECL has no MODIFY parameter-transformation outcome, approval router or cascading-deferral scheduler; an AARM deployment's MODIFY and deferral connect to ECL decisions through the binding profile AARM-BINDING-1 in profiles/.",
+      "assumptions": [
+        "Outcome vocabulary similarity is not wire, behavior or conformance equivalence.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R5",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "3a1f9f4fe99f1bed9fb29fb3426bcc68d821ed1853186a16fc6f47c49cfd5653"
+      },
+      "support_class": "direct_runtime_support",
+      "ecl_surfaces": [
+        "IE1-001",
+        "IE1-006",
+        "IE1-009",
+        "IE1-010",
+        "EBMP2-002",
+        "EBMP2-003",
+        "EBMP2-022",
+        "TP1-001",
+        "TP1-002",
+        "TP1-003",
+        "TP1-004",
+        "TP1-005",
+        "TP1-006",
+        "TP1-007",
+        "TP1-008"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/INTEGRITY-ENVELOPE-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "e62354456ea1bb398f318e2453debef08a0625058d6580eb8dd75c4008680afe"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/EBMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "0119ed46f4ab60fb73646abe6e41cb532fc2cfdf3d45533ff025cfb8aa4fcf3b"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:profiles/TRUST-POLICY-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "59b49033fec310594576f9c3d2ed1325ea10f15d10c0c8e3febfd3f2ae3bd388"
+          }
+        }
+      ],
+      "residual_obligations": "Deployments must supply all AARM receipt context, approvals and deferral fields, among them an accumulated-context store and the AARM five-disposition receipts, which ECL-1 does not specify. Signature validity alone does not prove execution truth or assessment independence.",
+      "assumptions": [
+        "Signed canonical evidence and caller-selected trust material support offline checking; corroboration is labeled at its actual evidence level.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R6",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f06c0f2649298375fbebbbc663883d597ffbac2e96ae6e3844efcbee2edce5a1"
+      },
+      "support_class": "direct_runtime_support",
+      "ecl_surfaces": [
+        "FR-104",
+        "FR-105",
+        "FR-106",
+        "FR-203",
+        "DCMP2-006",
+        "DCMP2-009",
+        "EBMP2-003"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:standard/ECL-1_Standard.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/EBMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "0119ed46f4ab60fb73646abe6e41cb532fc2cfdf3d45533ff025cfb8aa4fcf3b"
+          }
+        }
+      ],
+      "residual_obligations": "Human, service, agent, session and role claims need a deployment identity source, freshness and revocation checks. FR-106 addresses opaque secret handles, not identity validation; attestation and rotation are normative obligations that each deployment meets.",
+      "assumptions": [
+        "Actor/subject separation and attenuated authority scope support binding; scope is not a role-directory or identity-provider implementation.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R7",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "954f544d2c07c05fe1eb69121af87540eaf371626761592d8b372ff3dc9e261f"
+      },
+      "support_class": "out_of_scope",
+      "ecl_surfaces": [
+        "ECL1N-0167",
+        "ECL1N-0168",
+        "ECL1N-0179"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:standard/ECL-1_Standard.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+          }
+        }
+      ],
+      "residual_obligations": "Embedding-based and cumulative semantic drift detection, calibration and alerts are not ECL surfaces; they stay with other tools by design. A drift detector connects as a judgment input that can only make a decision stricter (ECL1N-0179), or as a declared detection whose response holds or stops the affected actions (ECL1N-0167, ECL1N-0168).",
+      "assumptions": [
+        "This is a recommended AARM obligation; absence does not become ECL drift-detection support.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R8",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "72d04b053f4083cfeda5055379e89fd1eb8c7aba00191e0ea1332a477efa821e"
+      },
+      "support_class": "out_of_scope",
+      "ecl_surfaces": [
+        "EL1-001"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:protocols/EVIDENCE-LIFECYCLE-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "6f1b0be7b15c0cb737adfa3baf0f7c3e1bf818b67fca7c694069960482c24e74"
+          }
+        }
+      ],
+      "residual_obligations": "Evidence retention and export are not real-time OCSF/CEF/custom SIEM telemetry streaming, filtering or batching. Telemetry and SIEM tools stay outside ECL by design and consume exported ECL evidence through the profile OTEL-EVIDENCE-EXPORT-1 in profiles/.",
+      "assumptions": [
+        "No SIEM export implementation or streaming latency is claimed.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "R9",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "ab7255a4abb01d6b1f2cc9ef8e1e61a7f05010491be3602fae76bcf28db105a8"
+      },
+      "support_class": "supporting_evidence_only",
+      "ecl_surfaces": [
+        "FR-104",
+        "FR-105",
+        "FR-203"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:artifact:standard/ECL-1_Standard.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+          }
+        }
+      ],
+      "residual_obligations": "Bounded authority and delegation attenuation do not issue just-in-time credentials. Credential provisioning, scoping and usage logging remain deployment work.",
+      "assumptions": [
+        "The profile requires attested, rotated workload identity and a 24-hour static-secret cap; those requirements do not establish a running credential service.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed"
+    }
+  ],
+  "global_assumptions": [
+    "Authored snapshot: 2026-09-30. No external framework assessment, benchmark, working-group process or owner validation was engaged.",
+    "Internally reviewed means operator review of this mapping, not independent assessment or a certification decision.",
+    "Direct runtime support identifies a cited control surface for part of an obligation; supporting evidence identifies linkage only; neither class asserts whole-clause equivalence.",
+    "Resource URNs under urn:example:ecl:artifact: resolve to the suffix as a repository-relative path, with the recorded SHA-256 binding its bytes. The system boundary is the text of ECL-1 Version 1.0, not a production deployment.",
+    "Captured Markdown source matches https://raw.githubusercontent.com/aarm-dev/docs/5bd02fdb5d5f6483a16a42539e38cfe8743c3a97/conformance/requirements.mdx (SHA-256 d5b88e2343114a282d04a4b421bf0d13b27eba82f82b9acee0cb62723bb6b5c2). The same commit was first captured from hermanerr/docs, which has since moved to aarm-dev/docs. The authored Last updated field, not this Git commit date, defines the edition label.",
+    "Each obligation digest covers UTF-8 LF bytes from its ### Rn: heading through the byte before the next heading of level 1, 2 or 3. R3 is split into two mapping rows sharing the source-section digest.",
+    "Packet version 3 (2026-10-04) removed the release label from the packet identifier and the resource URNs, which are now under urn:example:ecl:artifact:; no mapping row changed.",
+    "Packet version 4 (2026-10-09) replaced the framework source https://aarm.dev/conformance/requirements, which returned HTTP 404 on 2026-10-08, with the pinned raw source and its digest; no mapping row changed.",
+    "Packet version 5 (2026-10-16) stated the system boundary and the residual obligations of R5 and R6 for ECL-1 Version 1.0, without reference to a test deployment; no mapped clause, support class or cited surface changed."
+  ],
+  "non_endorsement": {
+    "claims_framework_certification": false,
+    "claims_framework_owner_endorsement": false,
+    "claims_automatic_legal_compliance": false,
+    "statement": "This crosswalk is a technical mapping. It claims no AARM conformance or program status, no CSA endorsement, and confers none; AARM conformance has its own prerequisites this project has not met."
+  }
+}

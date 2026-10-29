@@ -1,0 +1,72 @@
+{
+  "schema_version": "ecl_registry_v2",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/algorithm-suites",
+  "registry_version": 1,
+  "status": "active",
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "id": "ecl.digest.sha-256.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "SHA-256 digest suite and universal ECL v1 digest floor.",
+      "attributes": {
+        "kind": "digest",
+        "requirement_level": "required",
+        "specification": "https://doi.org/10.6028/NIST.FIPS.180-4",
+        "output_bits": 256
+      }
+    },
+    {
+      "id": "ecl.sig.ed25519.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "RFC 8032 Ed25519 signature suite for the general interoperability profile.",
+      "attributes": {
+        "kind": "signature",
+        "requirement_level": "required_general_profile",
+        "specification": "https://www.rfc-editor.org/rfc/rfc8032",
+        "key_type": "Ed25519",
+        "signature_encoding": "64-octet RFC 8032 Ed25519 signature",
+        "fips_approved": false
+      }
+    },
+    {
+      "id": "ecl.sig.ecdsa-p256-sha256.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "FIPS 186-5 ECDSA P-256 with SHA-256, minimal DER, and low-S verification.",
+      "attributes": {
+        "kind": "signature",
+        "requirement_level": "required_fips_interoperability_profile",
+        "specification": "https://doi.org/10.6028/NIST.FIPS.186-5",
+        "key_type": "P-256",
+        "signature_encoding": "ASN.1 DER ECDSA-Sig-Value",
+        "low_s_required": true,
+        "minimal_der_required": true
+      }
+    },
+    {
+      "id": "ecl.sig.ml-dsa-65.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "FIPS 204 ML-DSA-65 suite for explicitly enabled post-quantum transition profiles.",
+      "attributes": {
+        "kind": "signature",
+        "requirement_level": "optional_transition_profile",
+        "specification": "https://doi.org/10.6028/NIST.FIPS.204",
+        "key_type": "ML-DSA-65",
+        "signature_encoding": "FIPS 204 ML-DSA-65",
+        "classical_replacement_allowed": false
+      }
+    }
+  ]
+}
