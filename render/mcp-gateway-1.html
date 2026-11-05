@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL MCP Gateway Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-mcp-gateway-profile-1">ECL MCP Gateway Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile places an ECL enforcement point between a governed AI system and the
+Model Context Protocol (MCP) servers it uses. The gateway receives every request
+that the governed AI system sends to an in-scope server. For each side-effecting
+request it builds a DCMP-2 decision request from a declared mapping, forwards
+the request only on a verified <code>admit</code> for exactly that request, returns a
+defined MCP error otherwise, and records the result in signed EBMP-2 evidence.
+The decision request binds the request's complete <code>params</code> by digest, and the
+gateway forwards the request exactly as it received it (<a href="mcp-gateway-1.html#MG1-004">MG1-004</a>, <a href="mcp-gateway-1.html#MG1-005">MG1-005</a>). Its
+release boundary is the write of the forwarded request to the server's
+transport: before that write it proves every obligation that the admit leaves to
+Enforcement (<a href="mcp-gateway-1.html#MG1-013">MG1-013</a>), and it checks the authorization&#x27;s validity, and the
+freshness of every proof, at a final observation of its clock taken after every
+step that can block (<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>). One gateway instance owns an evidence directory
+at a time, and recovery settles each journal once (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>).
+The governed AI system holds no credential for the servers or for the systems
+their tools reach, so that, with the placement and path rules of <a href="mcp-gateway-1.html#MG1-001">MG1-001</a>, the
+gateway is the only path to an effect. A change to a server's tools is a
+control change that waits for review.</p>
+<p>The profile adds requirements to a claim that declares it. It removes none of
+the core requirements or of the requirements of DCMP-2, EBMP-2, DCMP2-HTTP-1 and
+TRUST-POLICY-1.</p>
+<p>Requirement identifiers are allocated in the order requirements were added and
+never reused, so a later identifier appears among earlier ones where its subject
+belongs: <a href="mcp-gateway-1.html#MG1-013">MG1-013</a> to <a href="mcp-gateway-1.html#MG1-015">MG1-015</a> follow <a href="mcp-gateway-1.html#MG1-007">MG1-007</a>, and <a href="mcp-gateway-1.html#MG1-016">MG1-016</a> and <a href="mcp-gateway-1.html#MG1-017">MG1-017</a> follow
+<a href="mcp-gateway-1.html#MG1-012">MG1-012</a>.</p>
+<h2 id="pinned-sources">Pinned sources</h2>
+<p>The machine-readable record of these pins is <code>conformance/binding-sources.json</code>.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">Revision</th>
+<th scope="col">File</th>
+<th scope="col">SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP specification revision 2026-07-28, the revision that https://modelcontextprotocol.io/specification/latest names</td>
+<td><code>modelcontextprotocol/modelcontextprotocol</code> tag <code>2026-07-28</code>, commit <code>5f5440bb26a62e2cf3440b92da5a667efa03b267</code></td>
+<td><code>schema/2026-07-28/schema.json</code></td>
+<td><code>ef70b61f99b6d2e5e3b46863822eab08dff6a45bedc7a08914e0e5b133f40203</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>same commit</td>
+<td><code>docs/specification/2026-07-28/server/tools.mdx</code></td>
+<td><code>ed550806a58eb7744b858fb9f26001aa5e55dac9e2babe88317cc81d9d4c490d</code></td>
+</tr>
+<tr>
+<td>Base protocol, error codes and <code>_meta</code></td>
+<td>same commit</td>
+<td><code>docs/specification/2026-07-28/basic/index.mdx</code></td>
+<td><code>ce6b16e0b22544bb7efc201b09906b5f3efb6d55a83881766b36b8a71cfbeb95</code></td>
+</tr>
+<tr>
+<td>Multi round-trip requests</td>
+<td>same commit</td>
+<td><code>docs/specification/2026-07-28/basic/patterns/mrtr.mdx</code></td>
+<td><code>a8671eb2a0d292c0dcbae19666ff4fc3d97f294ce8107e9f38259cc5a02a066b</code></td>
+</tr>
+<tr>
+<td>Streamable HTTP transport</td>
+<td>same commit</td>
+<td><code>docs/specification/2026-07-28/basic/transports/streamable-http.mdx</code></td>
+<td><code>22574bf11e004068493787203ce92be1162107cad717bcb805a15780d4fa69c9</code></td>
+</tr>
+<tr>
+<td>Tasks extension (<code>io.modelcontextprotocol/tasks</code>)</td>
+<td>same commit</td>
+<td><code>docs/extensions/tasks/overview.mdx</code></td>
+<td><code>7f33873a3d20d58ccfcd3162db21b073e21c5ab34d5242887703217ce7eeb62c</code></td>
+</tr>
+<tr>
+<td>RFC 8785, JSON Canonicalization Scheme, for the digests of MCP content</td>
+<td>https://www.rfc-editor.org/rfc/rfc8785.txt</td>
+<td><code>rfc8785.txt</code></td>
+<td><code>63d52294eb0e3f0014174288186d388b4ddbf2c67d1ce8af1d9726eb0c3ab240</code></td>
+</tr>
+</tbody>
+</table>
+<p>In the pinned revision MCP has no protocol-level session and no <code>initialize</code>
+handshake; every request carries its protocol version in <code>_meta</code>. The only
+notification that the pinned schema defines for a client to send is
+<code>notifications/cancelled</code> (<code>ClientNotification</code>). A
+<code>tools/call</code> can return an <code>InputRequiredResult</code>, after which the client retries
+the call with <code>inputResponses</code> and <code>requestState</code>. Long-running work uses the
+tasks extension, in which <code>tasks/update</code> supplies input to a running task.</p>
+<h2 id="scope-and-mapping">Scope and mapping</h2>
+<p><span id="MG1-001"><strong>MG1-001</strong></span><a class="requirement-link" href="#MG1-001" aria-label="Link to MG1-001">§</a> — A claim of this profile MUST identify the MCP revision its gateway
+implements by the revision and digests that this profile pins, every in-scope
+MCP server, and the transports between the governed AI system and the gateway
+and between the gateway and each server; every request from the governed AI
+system to an in-scope server MUST pass through the gateway, and any other path
+from the governed AI system to the server or to a system its tools reach MUST be
+closed or disclosed in the Negative Boundary Annex (<a href="ecl-1_standard.html#ECL1N-0008">ECL1N-0008</a>, <a href="ecl-1_standard.html#ECL1N-0038">ECL1N-0038</a>). The
+gateway MUST NOT run in a process, container or account that the governed AI
+system can start, stop or configure, or in which it can execute code.</p>
+<p><span id="MG1-002"><strong>MG1-002</strong></span><a class="requirement-link" href="#MG1-002" aria-label="Link to MG1-002">§</a> — The gateway MUST treat as side-effecting, and send to the Decision
+Layer before forwarding, every <code>tools/call</code> request (including a retry that
+carries <code>inputResponses</code> or <code>requestState</code>), every <code>tasks/update</code> request for a
+task that a governed tool call created, and every other request that the
+Consequential Action Register maps to a consequential action class, such as a
+<code>resources/read</code> that discloses non-public data. It MUST refuse, with code
+-31007, every request whose method the claim neither maps to an action class
+nor lists as forwarded without a decision, and every <code>tools/call</code> for a tool
+that has no mapping. The claim MAY list <code>server/discover</code>, the list requests of
+the pinned revision (<code>tools/list</code>, <code>resources/list</code>, <code>resources/templates/list</code>
+and <code>prompts/list</code>) and <code>subscriptions/listen</code> as forwarded without a decision,
+unless the register classifies them as consequential, and MUST NOT list any
+other request. The claim MAY list for forwarding without a decision only
+notifications that the pinned revision defines for a client, and MUST NOT list
+one that the register maps to a consequential action class; the gateway MUST
+NOT forward any other notification from the governed AI system. As JSON-RPC 2.0
+requires, it returns no response to a notification.</p>
+<p><span id="MG1-003"><strong>MG1-003</strong></span><a class="requirement-link" href="#MG1-003" aria-label="Link to MG1-003">§</a> — Each in-scope tool MUST have a mapping declared with the
+Consequential Action Register that names the server (identifier, name and
+version), the tool name, the <code>ecl.digest.sha-256.v1</code> digest of the RFC 8785
+canonical form of the tool definition as reviewed, the action class, the
+operation, the rule that derives the target from the call's arguments, and the
+evidence profile; the gateway MUST take the action class, operation and target of
+the decision request from that mapping, and never from the governed AI system's
+request or from the tool's own annotations.</p>
+<p><span id="MG1-004"><strong>MG1-004</strong></span><a class="requirement-link" href="#MG1-004" aria-label="Link to MG1-004">§</a> — The decision request MUST carry the call's <code>arguments</code> object,
+read from its RFC 8785 canonical form, as <code>action.parameters</code>, with
+<code>action.parameters_digest</code> its digest under <a href="dcmp-2.html#DCMP2-007">DCMP2-007</a>, and MUST carry the
+registered extension <code>ecl.ext.mcp-binding.v1</code>, marked critical, naming the
+server, the tool, the tool-definition digest and the mapping, and the digests of
+any <code>inputResponses</code> and <code>requestState</code> that the call carries; the gateway MUST
+refuse, and not forward, a call whose arguments, read from their RFC 8785
+canonical form, are outside the restricted canonical JSON profile (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>). A
+decision point that evaluates such a request MUST check that the mapping and the
+tool-definition digest it names are the reviewed ones that its register holds
+for that server and tool, and MUST NOT admit the request otherwise. The decision
+request MUST also carry, in <code>ecl.ext.mcp-binding.v1</code>, <code>params_digest</code>: the
+<code>ecl.digest.sha-256.v1</code> digest of the RFC 8785 canonical form of the call's
+complete <code>params</code> object, <code>_meta</code> included. The gateway MUST refuse with -31007,
+and not forward, a request that has a member other than <code>jsonrpc</code>, <code>id</code>,
+<code>method</code> and <code>params</code>, or whose <code>id</code> or <code>params</code> holds a number that RFC 8785
+does not represent exactly: a number of magnitude greater than 2^53 - 1, beyond
+the range [-(2^53)+1, (2^53)-1] that RFC 7493 section 2.2 gives for exact
+integers, or any other number whose RFC 8785 form does not have the value
+written.</p>
+<h2 id="forwarding-and-refusal">Forwarding and refusal</h2>
+<p><span id="MG1-005"><strong>MG1-005</strong></span><a class="requirement-link" href="#MG1-005" aria-label="Link to MG1-005">§</a> — The gateway MUST forward a side-effecting request only after it has
+verified a DCMP-2 <code>admit</code> for exactly that request under DCMP2-HTTP-1 and the
+claim's trust policy, only within its use policy, only after it has discharged
+every pre-release obligation of the admit (<a href="mcp-gateway-1.html#MG1-013">MG1-013</a>), and only through the
+release order of <a href="mcp-gateway-1.html#MG1-014">MG1-014</a>, at a final observation of its clock that is no
+earlier than the authorization's <code>valid_from</code> and that, with the release guard
+added, is earlier than its <code>valid_until</code>; it MUST forward exactly the call that
+the admitted request binds: the forwarded request's <code>method</code> and <code>params</code> MUST
+be the call's, <code>params</code> MUST have the digest <code>params_digest</code>, and the gateway
+MUST NOT add, remove or change any member of the call. The gateway counts the
+uses of an authorization in the instance that holds them, so a deployment MUST
+route every use of an authorization through one gateway instance, or share the
+use store among its instances by a mechanism that this profile does not
+specify, so that the count of <a href="ecl-1_standard.html#ECL1N-0186">ECL1N-0186</a> item 3 covers every instance.</p>
+<p><span id="MG1-006"><strong>MG1-006</strong></span><a class="requirement-link" href="#MG1-006" aria-label="Link to MG1-006">§</a> — For every request that it does not forward, the gateway MUST return
+a JSON-RPC error response with the code that the error table of this profile
+gives for the cause and a <code>data.ecl</code> member naming the cause and its registered
+reason, and MUST NOT return a <code>result</code>; the codes lie outside the range that
+JSON-RPC 2.0 reserves (-32768 to -32000), as the pinned MCP text asks of
+application-defined errors. When more than one cause holds, the gateway MUST
+return the code of the first that holds in this order: -31007, -31008, -31004,
+-31005, then the code of the decision's outcome (-31001, -31002 or -31003), then
+-31010, -31011 and -31006. A pre-release obligation that the gateway has not
+discharged when it refuses is unproven, so the refusal of an admit that carries
+one is -31010, whether or not its authorization is also unusable. A record
+cannot show that the gateway&#x27;s journal failed (-31011, <a href="mcp-gateway-1.html#MG1-017">MG1-017</a>), so a checker
+that reads a record whose refusal is -31011 checks only that no earlier cause
+holds.</p>
+<p><span id="MG1-007"><strong>MG1-007</strong></span><a class="requirement-link" href="#MG1-007" aria-label="Link to MG1-007">§</a> — When the decision service cannot be reached, does not answer
+within the declared total timeout, or answers with anything other than a
+verified decision response for the request, the gateway MUST NOT forward the
+request, MUST return the error for an unavailable or invalid decision, and MUST
+NOT retry within the decision attempt (<a href="dcmp2-http-1.html#DHB1-007">DHB1-007</a>, <a href="dcmp2-http-1.html#DHB1-008">DHB1-008</a>). A decision response
+that does not carry exactly one <code>ecl.ext.decision-basis.v1</code>, or whose decision
+basis fails <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> with the record&#x27;s <code>decision_request</code> as the request it
+answers, with the response clock-skew allowance of the reference verification
+profile, zero (<a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>), is not a verified decision response, and a record
+that holds such a response as an answered decision MUST be reported with
+<code>ecl.rule.decision-basis-one-way.v1</code>. Each DCMP-2 message that the record holds,
+other than the <code>response</code> of a <code>decision</code> whose <code>status</code> is <code>invalid</code>, MUST
+satisfy the semantic rules of DCMP-2, and a record that holds one that fails a
+rule MUST be reported with that rule.</p>
+<h2 id="release-boundary-and-pre-release-obligations">Release boundary and pre-release obligations</h2>
+<p><span id="MG1-013"><strong>MG1-013</strong></span><a class="requirement-link" href="#MG1-013" aria-label="Link to MG1-013">§</a> — Before it releases a request, the gateway MUST discharge each
+obligation of the admit whose <code>satisfaction</code> is <code>before_release</code> and each
+<code>witness_result</code> of <code>ecl.ext.consequence-coupling.v1</code> whose <code>outcome</code> is
+<code>required_before_release</code> (<a href="dcmp-2.html#DCMP2-017">DCMP2-017</a>). For each, it MUST obtain a proof that is
+authenticated under the claim's trust policy as issued by a principal that the
+claim accepts for that obligation, never the governed AI system, and, for an
+approval record, signed only by keys that the trust policy marks with
+<code>ecl.purpose.approval.v1</code>; that names this
+decision request by its <code>message_id</code>, with the request's digest or the digest of
+its action; that is fresh under the rule that the claim declares for the
+obligation's type, both when the gateway checks it and at the final observation
+of <a href="mcp-gateway-1.html#MG1-014">MG1-014</a>; and that the gateway has not used for another release. It MUST check
+the proof with the verifier that the claim declares for the obligation's type.
+The claim MUST declare the obligation types its gateway discharges, with the
+verifier, the accepted issuers and the freshness rule of each. The gateway MUST
+refuse with -31010, and forward nothing, when the admit carries a pre-release
+obligation of a type that the claim does not declare, or when a proof is absent,
+not authenticated, bound to another request, stale or already used, or fails its
+check. It MUST NOT treat the recognition of an obligation's type, or the signed
+<code>admit</code> itself, as a proof. A deferred witness that an
+<code>ecl.obligation.verify-witness.v1</code> obligation of the admit names is discharged
+with that obligation's proof, and any other deferred witness as an obligation of
+that type whose value is the witness's URI. The gateway MUST record the
+discharge in the <code>execution_released</code> event, in
+<code>ecl.ext.obligation-discharge.v1</code>, with an entry for each obligation and each
+deferred witness as EBMP-2 <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a> gives them, and in the record&#x27;s
+<code>obligation_discharge</code>. Each entry MUST give <code>fresh_until</code>, the instant after
+which the proof no longer shows the obligation met, whenever the proof's type
+declares a freshness bound, and MUST NOT give one later than the proof declares:
+for an approval record, no later than the <code>expires_at</code> of the
+<code>human_intervention</code> event; for a witness result, the proof's <code>observed_at</code> plus
+the maximum age that the claim declares for the witness; a proof of a type that
+declares no bound has no <code>fresh_until</code>. The gateway MUST carry each proof that
+is an ECL object, a signed envelope of a registered type, in the evidence bundle
+of the exchange, a witness's <code>verification</code> event among its <code>observations</code> and
+any other proof among its <code>envelopes</code>, with the entry's <code>reference</code> naming that
+object and its <code>digest</code> the object&#x27;s digest (<a href="ebmp-2.html#EBMP2-070">EBMP2-070</a>); a proof that is not an
+ECL object is recorded by its kind, reference and digest only.</p>
+<p><span id="MG1-014"><strong>MG1-014</strong></span><a class="requirement-link" href="#MG1-014" aria-label="Link to MG1-014">§</a> — The gateway's release boundary is the write of the forwarded
+request to the server's transport. Its effect boundary is the server's execution
+of the call, which comes after the release boundary and which the gateway does
+not observe, so a check at the release boundary does not show that the
+authorization was valid when the server acted (<a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a>, <a href="ecl-1_standard.html#ECL1N-0188">ECL1N-0188</a>). An admit
+whose obligation list names one obligation <code>id</code> more than once fails the
+gateway's reading of the decision: the gateway MUST refuse it with -31005 before
+step 1 and consume no use. On a verified <code>admit</code> the gateway MUST take these
+steps in this order, and MUST NOT write the request unless every step passes:
+(1) under a lock that orders it with every other use of the same authorization,
+after it holds the lock, read a monotonic clock and then its wall clock and,
+only when the wall reading is no earlier than the authorization's <code>valid_from</code>,
+the reading plus the release guard is earlier than its <code>valid_until</code>, and the
+use policy allows another use, consume one use; (2) record <code>authority_consumed</code>;
+(3) record <code>release_prepared</code>, which names the attempt; (4) discharge the
+pre-release obligations (<a href="mcp-gateway-1.html#MG1-013">MG1-013</a>); (5) under the lock, read the monotonic clock
+first and the wall clock after it, so that a pause between the two readings
+shortens what remains of the window and never extends it; the wall reading is
+the final observation, and the gateway MUST release only when it passes the test
+of step 1 and, with the release guard added, is earlier than every <code>fresh_until</code>
+of the discharge, and MUST refuse with -31006 and the outcome reason
+<code>ecl.error.clock-regressed.v1</code> when the final observation is earlier than the
+wall reading of step 1, or when the wall time elapsed since step 1 differs from
+the monotonic time elapsed since step 1 by more than the release guard; (6)
+record <code>execution_released</code>, whose <code>observed_at</code> is the final observation and
+whose <code>release_guard_ms</code> is the release guard, and then write the request. The
+release guard is the bound that the claim declares on the delay from the final
+observation to the write. Immediately before the write, after the connection to
+the server is open, the gateway MUST check that the time elapsed since the final
+observation, measured by the monotonic clock, is within the release guard and
+that the final observation plus that time is earlier than <code>valid_until</code> and
+than every <code>fresh_until</code>, and MUST NOT write the request otherwise. When it
+refuses after
+step 1, the gateway MUST record an <code>execution_terminal</code> event in state
+<code>cancelled</code>, with no side effect, a <code>residual_state</code> stating that the request
+was not written, and the registered reason of the refusal in
+<code>ecl.ext.outcome-reason.v1</code>, since a non-release state would contradict the
+consumed authority (<a href="ebmp-2.html#EBMP2-053">EBMP2-053</a>); it returns -31010 when a proof is stale at step
+5, whether or not the authorization is also unusable, and -31006 when the
+authorization would not be valid at the write, when the write would not begin
+within the release guard, or when the clock regressed. A failure
+of the evidence sink at any of these steps ends the attempt as <a href="mcp-gateway-1.html#MG1-017">MG1-017</a> gives,
+and nothing is written to the server before <code>execution_released</code> is durable.</p>
+<p><span id="MG1-015"><strong>MG1-015</strong></span><a class="requirement-link" href="#MG1-015" aria-label="Link to MG1-015">§</a> — The <code>forwarded_at</code> of a record MUST be the final observation of
+<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>, the time that the <code>execution_released</code> event records: the last reading
+of the gateway's clock before the release, after which the release, the write of
+the request, begins within the declared release guard. The gateway MUST NOT
+record an earlier sample, such as the time of the check of step 1, as the time
+of the forward or of the release, and MUST record the guard it applied as
+<code>release_guard_ms</code> of the <code>execution_released</code> event and as
+<code>release_guard_milliseconds</code> of the record. Immediately after the write to the
+transport returns, the gateway MUST measure by the monotonic clock the time
+elapsed since the final observation and, when the final observation plus that
+time is at or after <code>valid_until</code>, MUST set <code>released_after_valid_until</code> to
+<code>true</code> in the <code>ecl.ext.mcp-binding.v1</code> of the terminal event and mark the
+extension critical (<a href="ebmp-2.html#EBMP2-071">EBMP2-071</a>); it MUST NOT set that member from the time at
+which the server answered, and a checker MUST report a record whose terminal
+carries it set to <code>true</code>. When the server's answer arrives, whatever it is, the
+gateway MUST observe its clock and record that observation as
+<code>forward_completed_at</code> in the record's <code>forwarded</code> member and in the extension
+of the terminal event. A <code>forward_completed_at</code> at or after <code>valid_until</code> is a
+completion after the window: a verifier reports it beside its verdict, and it is
+not by itself a finding (<a href="ebmp-2.html#EBMP2-072">EBMP2-072</a>).</p>
+<h2 id="change-control-and-credentials">Change control and credentials</h2>
+<p><span id="MG1-008"><strong>MG1-008</strong></span><a class="requirement-link" href="#MG1-008" aria-label="Link to MG1-008">§</a> — A tool added to or removed from an in-scope server's tool list, a
+change to any member of a tool definition, and a change of the server's name or
+version in <code>io.modelcontextprotocol/serverInfo</code> MUST be treated as a control
+change that requires review under <a href="ecl-1_standard.html#ECL1N-0170">ECL1N-0170</a>: the gateway MUST compare the
+current definition, obtained from <code>tools/list</code>, with the mapped digest before it
+forwards a call, and MUST refuse calls to a changed or added tool, and to every
+tool of a server whose identity or version changed, until the change is reviewed
+and the mapping updated.</p>
+<p><span id="MG1-009"><strong>MG1-009</strong></span><a class="requirement-link" href="#MG1-009" aria-label="Link to MG1-009">§</a> — The governed AI system MUST NOT hold a credential, token, key or
+connection that reaches an in-scope server or a system that one of its tools
+reaches; the gateway, or a credential broker behind it, MUST hold that material,
+MUST use it only for forwarded requests, and MUST NOT pass a credential that the
+governed AI system presents to the gateway on to a server.</p>
+<h2 id="evidence-and-records">Evidence and records</h2>
+<p><span id="MG1-010"><strong>MG1-010</strong></span><a class="requirement-link" href="#MG1-010" aria-label="Link to MG1-010">§</a> — The gateway MUST record EBMP-2 evidence for each side-effecting
+request as an enforcement point: for a forwarded request, <code>authority_consumed</code>,
+<code>release_prepared</code>, <code>execution_released</code>, which carries the discharge of <a href="mcp-gateway-1.html#MG1-013">MG1-013</a>
+when the admit carries a pre-release obligation, and an <code>execution_terminal</code>
+event that carries <code>ecl.ext.mcp-binding.v1</code> with the <code>ecl.digest.sha-256.v1</code>
+digest of the RFC 8785 canonical form of the response the server returned and
+the forward&#x27;s completion (<a href="mcp-gateway-1.html#MG1-015">MG1-015</a>); for a refused request, an
+<code>execution_terminal</code> event in the non-release state that <a href="ebmp-2.html#EBMP2-051">EBMP2-051</a> gives, or in
+state <code>cancelled</code> when the gateway consumed the authorization before it refused
+(<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>). The response the gateway returns to the governed AI system for a forwarded request
+MUST be the response whose digest the evidence records, with one exception: the
+gateway MUST NOT return a server error that uses a code of the error table, and
+returns such an error with its <code>error.code</code> replaced by -32603 and every other
+member unchanged.</p>
+<p><span id="MG1-011"><strong>MG1-011</strong></span><a class="requirement-link" href="#MG1-011" aria-label="Link to MG1-011">§</a> — The gateway MUST authenticate the decision service and each
+in-scope server with TLS under trust anchors that its operator configures, with
+plain HTTP only on the loopback interface and only when explicitly enabled for
+testing; it MUST NOT follow redirects from either, and MUST apply the
+DCMP2-HTTP-1 limits to decision exchanges and declared limits to MCP messages
+before parsing them.</p>
+<p><span id="MG1-012"><strong>MG1-012</strong></span><a class="requirement-link" href="#MG1-012" aria-label="Link to MG1-012">§</a> — A gateway that retains exchange records MUST write each one as
+<code>ecl_mcp_gateway_exchange_v1</code>, valid against
+<code>https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1</code>, and
+every value of <code>ecl.ext.mcp-binding.v1</code> it emits MUST validate against
+<code>https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1</code>. A record
+member that holds MCP content (<code>call</code>, <code>tool_definition</code>, the <code>request</code> of
+<code>forwarded</code>, <code>server_response</code> and <code>returned</code>) MUST hold it as the JSON object
+itself when the content, read from its RFC 8785 canonical form, lies within the
+restricted canonical JSON profile (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>), and otherwise as an object whose
+only member, <code>rfc8785</code>, is the canonical base64, with padding, of the content's
+RFC 8785 canonical bytes. A checker MUST treat a record as failing its schema
+when such a member does not decode to the RFC 8785 canonical form of a JSON
+object that lies outside the restricted profile, or when the content it decodes
+does not satisfy the definition that the record schema gives the same content
+held as itself (<code>jsonRpcRequest</code> for the call and the forwarded request,
+<code>jsonRpcResponse</code> for the server's response and the response returned, and
+<code>toolDefinition</code> for the tool definition), and otherwise MUST apply this
+profile's rules to the content it decodes.</p>
+<p><span id="MG1-016"><strong>MG1-016</strong></span><a class="requirement-link" href="#MG1-016" aria-label="Link to MG1-016">§</a> — A gateway that retains exchange records MUST record each EBMP-2
+event of a side-effecting request in a journal, together with the exchange
+record and the signed decision messages once the decision is known, and MUST
+make each entry durable, by flushing the journal file and, when it creates the
+file, its directory to storage, before it takes the step that the entry
+evidences. The gateway MUST hold an exclusive lock on its evidence directory,
+taken before it reads, settles or writes any journal there and held for as long
+as it can write there, so that one instance at a time owns the directory; a
+gateway, a recovery command or a library caller that finds the lock held MUST
+stop before it reads or writes anything else in the directory. It MUST create
+the evidence directory and the directories of its journals, records and bundles
+accessible to its own account only, and MUST flush each new directory into its
+parent. One journal holds exactly one exchange: only the entry that opens the
+exchange creates its journal, and every later entry is appended to the journal
+that exists; when no journal exists for an entry before <code>execution_released</code> has
+been journaled, the gateway MUST refuse the request with -31011 and restore the
+use, and after <code>execution_released</code> it MUST report the condition and still
+record the terminal event from what it holds in memory; an opening entry for a
+journal that already exists MUST be refused with -31011 before any use is
+consumed. The gateway MUST keep an exchange's journal until the exchange's
+record and evidence bundle are durable, and MUST NOT delete a journal when it
+recovers. When it starts, under the lock, it MUST settle each journal that
+remains by what the journal holds, never by what it lacks, and MUST NOT retry
+the request. It MUST first truncate an incomplete final line, as the gateway
+also does before it appends to a journal. An exchange whose journal holds
+<code>execution_released</code> and no <code>execution_terminal</code> event has an unknown outcome,
+recorded by a terminal event in state <code>unknown</code> with no side effect known and a
+<code>residual_state</code> that states the uncertainty; an exchange whose journal holds no
+<code>execution_released</code> was not sent, and is recorded as <code>cancelled</code> after an
+<code>admit</code> and in the non-release state that the decision gives otherwise; and an
+exchange whose journal holds its terminal event keeps it. A journal that does
+not open with the entry that opens an exchange, that holds entries of more than
+one exchange, or that cannot be parsed beyond an incomplete final line is
+damaged: recovery MUST keep it in place, list it in its report with the reason,
+settle nothing from it and restore no use. For each journal that it settles,
+recovery MUST append to the journal, and make durable, an entry that records its
+decision, the outcome and the identifiers of the records it will write, before
+it writes any record or bundle, and an entry that records completion after it
+has written them; a journal with a recorded decision and no completion MUST be
+completed from the decision, and a journal with a recorded completion MUST be
+skipped. Record identifiers MUST derive from the journal, from the exchange's
+identity and the entry's kind, so that a repeated recovery writes the same
+files; a record that already exists under its identifier MUST be left as it is
+and never signed again, and recovery MUST NOT produce a second signed terminal
+event for one exchange. A terminal event that recovery records MUST carry
+<code>recovered_at</code> in its <code>ecl.ext.mcp-binding.v1</code>, and its record MUST carry
+<code>recovery</code>, with the time of the recovery and what the journal showed. The claim
+MUST declare which of these failures its journal survives: the exit of the
+gateway's process, a crash of its host, a failure of its storage, and the loss
+of an evidence service that it writes to.</p>
+<p><span id="MG1-017"><strong>MG1-017</strong></span><a class="requirement-link" href="#MG1-017" aria-label="Link to MG1-017">§</a> — When the gateway cannot make durable an entry that <a href="mcp-gateway-1.html#MG1-016">MG1-016</a>
+requires before the release, because a write or a flush fails, its storage is
+exhausted or its evidence sink fails in any other way, it MUST NOT release the
+request and MUST NOT take the step that the entry would evidence, and it MUST
+return -31011 unless an earlier cause of <a href="mcp-gateway-1.html#MG1-006">MG1-006</a> holds. The gateway MUST catch
+every error that the evidence sink raises, so that none ends the exchange with a
+use consumed and no terminal recorded. When the failure comes after the use was
+consumed, the gateway MUST restore the use and record the attempt as <code>cancelled</code>
+when the journal can take the entry; when it cannot, the journal shows
+<code>release_prepared</code> without <code>execution_released</code>, which recovery settles as not
+released. Once <code>execution_released</code> is durable, a failure of the sink MUST NOT
+stop the write: the gateway reports the failure, and the records that it could
+not write are produced by the next recovery from the journal. Only a release
+that was durably journaled and whose terminal event is missing is recorded as
+<code>unknown</code> on recovery.</p>
+<h2 id="error-table">Error table</h2>
+<p>The gateway returns these codes in the JSON-RPC <code>error</code> member, with
+<code>data.ecl.code</code> set to the name in the second column and <code>data.ecl.reason</code> set
+to a registered reason or error identifier. For a refusal that a decision
+carries, <code>data.ecl.request_id</code> names the DCMP-2 request, and <code>data.ecl.reason</code>
+is left out when the response carries no reason. The row of -31009 is not a
+refusal: it reports a forwarded request whose response never arrived. When several
+causes hold, <a href="mcp-gateway-1.html#MG1-006">MG1-006</a> gives the order: a request that has no mapping is refused
+as not mapped before anything else is checked, and a decision is asked for only
+when the tool and the server's identity still match the reviewed mapping. A
+server's own error never carries one of these codes to the governed AI system
+(<a href="mcp-gateway-1.html#MG1-010">MG1-010</a>), so a code of this table always means what the table says.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Code</th>
+<th scope="col"><code>data.ecl.code</code></th>
+<th scope="col">Cause</th>
+<th scope="col"><code>data.ecl.reason</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-31001</td>
+<td><code>denied</code></td>
+<td>The decision is <code>deny</code></td>
+<td>The response's first reason code, when it has one</td>
+</tr>
+<tr>
+<td>-31002</td>
+<td><code>held</code></td>
+<td>The decision is <code>hold</code></td>
+<td>The response's first reason code, when it has one</td>
+</tr>
+<tr>
+<td>-31003</td>
+<td><code>challenged</code></td>
+<td>The decision is <code>challenge</code></td>
+<td>The response's first reason code, when it has one</td>
+</tr>
+<tr>
+<td>-31004</td>
+<td><code>decision-unavailable</code></td>
+<td>The decision service is unreachable, silent past the timeout or answers with a status other than 200, or the signed decision request exceeds the envelope cap of DCMP2-HTTP-1 (<a href="dcmp2-http-1.html#DHB1-003">DHB1-003</a>)</td>
+<td><code>ecl.error.dependency-unavailable.v1</code></td>
+</tr>
+<tr>
+<td>-31005</td>
+<td><code>decision-invalid</code></td>
+<td>The response fails signature, purpose, principal, schema, semantic or binding checks, such as a decision basis that breaks <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>, or names one obligation <code>id</code> more than once (<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>)</td>
+<td><code>ecl.error.dependency-response-invalid.v1</code>, <code>ecl.error.integrity-invalid.v1</code> or <code>ecl.error.request-binding-invalid.v1</code>; <code>ecl.error.dependency-response-invalid.v1</code> for a repeated obligation</td>
+</tr>
+<tr>
+<td>-31006</td>
+<td><code>authorization-unusable</code></td>
+<td>The admit is verified, but its authorization is not yet valid, has expired, would expire within the release guard of the gateway&#x27;s observation or before the write of the request, or the write could not begin within the release guard after the final observation, or is used up, or the gateway&#x27;s wall clock read earlier at its final observation than at its first check, or disagreed with its monotonic clock by more than the release guard (<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>)</td>
+<td><code>ecl.error.expired.v1</code>, <code>ecl.error.replay.v1</code> or, for a regressed clock, <code>ecl.error.clock-regressed.v1</code></td>
+</tr>
+<tr>
+<td>-31007</td>
+<td><code>not-mapped</code></td>
+<td>No mapping for the tool or method, arguments that are not a JSON object, null included, or that lie outside the restricted canonical profile in their RFC 8785 form, arguments from which the mapping derives no target, a member of the request that no decision binds, or a number in its <code>id</code> or <code>params</code> that RFC 8785 does not represent exactly (<a href="mcp-gateway-1.html#MG1-004">MG1-004</a>)</td>
+<td><code>ecl.error.binding-unsupported.v1</code></td>
+</tr>
+<tr>
+<td>-31008</td>
+<td><code>unreviewed-change</code></td>
+<td>The tool list, a tool definition or the server identity differs from the reviewed mapping</td>
+<td><code>ecl.error.control-change-unreviewed.v1</code></td>
+</tr>
+<tr>
+<td>-31009</td>
+<td><code>forward-failed</code></td>
+<td>The request was forwarded and no response arrived within the forwarding timeout, so its effect is unknown</td>
+<td><code>ecl.error.dependency-unavailable.v1</code></td>
+</tr>
+<tr>
+<td>-31010</td>
+<td><code>obligation-unproven</code></td>
+<td>The admit carries an obligation whose <code>satisfaction</code> is <code>before_release</code>, or defers a state witness, that the gateway did not discharge: its type is not one that the claim declares, or its proof is absent, not authenticated, bound to another request, stale when checked or no longer fresh at the final observation, already used, or fails its check (<a href="mcp-gateway-1.html#MG1-013">MG1-013</a>, <a href="mcp-gateway-1.html#MG1-014">MG1-014</a>)</td>
+<td><code>ecl.error.obligation-unproven.v1</code></td>
+</tr>
+<tr>
+<td>-31011</td>
+<td><code>evidence-unavailable</code></td>
+<td>The gateway cannot make durable an event that must precede the release: a write or a flush of its journal fails, its storage is exhausted or its evidence sink fails, or the exchange&#x27;s journal is missing or already exists when the gateway opens it (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>, <a href="mcp-gateway-1.html#MG1-017">MG1-017</a>)</td>
+<td><code>ecl.error.evidence-unavailable.v1</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="evidence-states-informative">Evidence states (informative)</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Server response</th>
+<th scope="col"><code>execution_terminal</code> state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A result with <code>resultType</code> <code>complete</code> and <code>isError</code> false</td>
+<td><code>succeeded</code>, as the server reports it (<a href="ebmp-2.html#EBMP2-015">EBMP2-015</a>)</td>
+</tr>
+<tr>
+<td>A result with <code>isError</code> true, or a JSON-RPC error</td>
+<td><code>failed</code></td>
+</tr>
+<tr>
+<td>An <code>InputRequiredResult</code>, or a task handle</td>
+<td><code>unknown</code>, with <code>residual_state</code> naming the input request or task; the retry or the task's later result is a new request</td>
+</tr>
+<tr>
+<td>No response within the forwarding timeout, or a broken stream</td>
+<td><code>unknown</code>, with <code>residual_state</code> stating that the effect is uncertain</td>
+</tr>
+<tr>
+<td>No write: the gateway consumed the authorization and then refused, for an unproven obligation or one whose proof was no longer fresh at the final observation, a failed final check, a regressed clock, a journal that failed or an evidence sink that failed (<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>, <a href="mcp-gateway-1.html#MG1-017">MG1-017</a>)</td>
+<td><code>cancelled</code>, with no side effect, <code>residual_state</code> stating that the request was not written and the refusal's reason in <code>ecl.ext.outcome-reason.v1</code></td>
+</tr>
+<tr>
+<td>Recovery: the journal holds <code>execution_released</code> and no terminal event (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>)</td>
+<td><code>unknown</code>, recovered, with <code>residual_state</code> stating that the outcome is not known</td>
+</tr>
+<tr>
+<td>Recovery: the journal holds no <code>execution_released</code> (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>)</td>
+<td><code>cancelled</code> after an admit, otherwise the non-release state of the decision, recovered</td>
+</tr>
+<tr>
+<td>Recovery: the journal is damaged, since it does not open with the exchange&#x27;s first entry, holds more than one exchange or does not parse beyond a torn final line (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>)</td>
+<td>None: the journal is kept and listed with its reason; nothing is settled and no use is restored</td>
+</tr>
+</tbody>
+</table>
+<p>The digest in <code>ecl.ext.mcp-binding.v1</code> covers the whole JSON-RPC response
+object, so an error response is bound as a result is. A number in the server's
+response that RFC 8785 does not represent exactly is bound, and recorded, as the
+nearest double. The evidence level of a terminal event is issuer-asserted unless
+a separately keyed observer corroborates it (<a href="ebmp-2.html#EBMP2-061">EBMP2-061</a>).</p>
+<p>The digests of MCP content (tool definitions, input responses, request state and
+responses) are of its RFC 8785 canonical form, which keeps floating-point
+numbers. The decision request's <code>action.parameters_digest</code> is of the restricted
+canonical form (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>), which has none, so a call whose arguments, read from
+their RFC 8785 form, hold a number with a fractional part, or an integer beyond
+2^53 in magnitude, is refused with -31007 rather than rounded. A number written
+with a fraction or an exponent whose value is an integer, such as <code>2.0</code> or
+<code>1E+0</code>, is that integer in RFC 8785 form, so a call that holds one is decided
+with the integer, which its record holds (<a href="mcp-gateway-1.html#MG1-004">MG1-004</a>, <a href="mcp-gateway-1.html#MG1-012">MG1-012</a>). Elsewhere in
+<code>params</code>, and in <code>id</code>, the gateway refuses a number that RFC 8785 does not
+represent exactly (<a href="mcp-gateway-1.html#MG1-004">MG1-004</a>): it reads such a number as the nearest double, so
+the forward would carry another value than the call did, and <code>params_digest</code>,
+which is of the RFC 8785 form, would bind the rounded value. The gateway sees
+such a number only in the text it receives; an exchange record holds MCP content
+in RFC 8785 form, in which only a magnitude greater than 2^53 - 1 stays visible.</p>
+<p>An exchange record is strict JSON (<a href="integrity-envelope-1.html#IE1-002">IE1-002</a>), which also has no floating-point
+numbers. <a href="mcp-gateway-1.html#MG1-012">MG1-012</a> therefore holds MCP content outside the restricted profile in
+encoded form, so that a call refused for a fractional number in its arguments, a
+tool definition whose input schema holds a fractional bound, and a server's
+response that holds a floating-point number can all be recorded. The encoded
+bytes are the content's RFC 8785 canonical form, the same bytes that its digests
+cover. Content held in encoded form satisfies the same definition of the record
+schema as content held as itself, so that the encoding carries no call, request,
+response or tool definition that the schema would refuse, such as a call with a
+null <code>id</code>.</p>
+<p>When a server answers a forwarded request with a JSON-RPC error whose code is
+one of the error table's, such as -31001 for an error of its own, the evidence
+binds the server's error as it arrived, and the governed AI system receives the
+same error with the code -32603 (<a href="mcp-gateway-1.html#MG1-010">MG1-010</a>). Otherwise the governed AI system
+could read the server's error as a refusal by the gateway, although the request
+was forwarded and may have had an effect.</p>
+<h2 id="release-timing-and-durability-informative">Release timing and durability (informative)</h2>
+<p>The final observation of <a href="mcp-gateway-1.html#MG1-014">MG1-014</a> is the last time the gateway reads its wall
+clock before it writes the request; the <code>forwarded_at</code> of the record and the
+<code>observed_at</code> of <code>execution_released</code> are that observation, and the event's
+<code>release_guard_ms</code> is the guard that applied (<a href="mcp-gateway-1.html#MG1-015">MG1-015</a>). The observation is the
+recorded release time, and the release begins within the guard after it: between
+the two the gateway signs the release event, makes it durable and opens the
+connection to the server, with a TLS handshake when the server uses TLS. The
+gateway does not release when the final observation plus the guard reaches
+<code>valid_until</code> or the end of a proof's freshness, and immediately before the
+write it measures, with a monotonic clock, the time elapsed since the final
+observation, and does not write when that time exceeds the guard or when the
+authorization or a proof would have ended. The
+monotonic clock is read before the wall clock at step 1 and at step 5, so a
+pause between the two readings of step 5 only shortens what remains; a wall
+clock that reads earlier at step 5 than at step 1, or that disagrees with the
+monotonic clock by more than the guard, is refused as regressed, with the reason
+<code>ecl.error.clock-regressed.v1</code>. A pause of the process after the last
+measurement before the write, or a clock that is wrong in a way the two readings
+do not show, is not detected before the write. Immediately after the write
+returns, the gateway measures the elapsed time again and sets
+<code>released_after_valid_until</code> when the write may have come late;
+<code>forward_completed_at</code> is when the server&#x27;s answer arrived (<a href="mcp-gateway-1.html#MG1-015">MG1-015</a>). A late
+answer to a timely release is reported by a verifier as a completion after the
+window and is not a finding (<a href="ebmp-2.html#EBMP2-072">EBMP2-072</a>): the answer&#x27;s time says when the server
+replied, not when the request was written.</p>
+<p>A pre-send observation bounds the delay to the write only by the declared guard,
+and it does not establish when the server, or a system that the tool reaches,
+acted on the request: the server may queue it, and the effect may occur later in
+another system. Authority checked at the point of effect, by the server or by
+the system behind it, is outside this profile; a deployment that needs it binds
+the authorization to that point by other means.</p>
+<p>A journal that meets <a href="mcp-gateway-1.html#MG1-016">MG1-016</a> can be one file per exchange in the evidence
+directory, to which the gateway appends each entry and which it flushes to
+storage before it takes the step that the entry evidences. The lock of <a href="mcp-gateway-1.html#MG1-016">MG1-016</a>
+is held by whatever writes the directory, for as long as it can write there: a
+gateway that serves requests, a recovery run or a library caller. A second
+holder is refused before it reads or writes anything else, so two writers in
+one process conflict as two processes do. Only the entry that opens an exchange
+creates its journal, and an opening entry for a journal that exists is refused.
+A failure or exhaustion of the storage before the release makes the gateway
+refuse with -31011, so no request is sent without its evidence; the gateway
+catches every error of its sink, and a failure after the use was consumed
+restores the use and ends the attempt as <code>cancelled</code> (<a href="mcp-gateway-1.html#MG1-017">MG1-017</a>). After the
+release, such a failure leaves the journal as it stood: the gateway returns the
+server's response, since the request may have had its effect, and recovery
+produces the records. A deployment that places its evidence directory on
+networked storage, or writes to an evidence service, inherits the guarantees of
+that storage or service and declares them (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>).</p>
+<p>Recovery runs under the lock and settles each journal once. It truncates a torn
+final line, classifies the journal, appends an entry that records its decision,
+with the outcome and the identifiers of the records it will write, flushes it,
+writes the records and the bundle, and appends an entry that records its
+completion. A journal with a recorded decision and no completion is completed
+from the decision; one with a recorded completion is skipped. Record
+identifiers derive from the exchange's identity and the entry's kind, so a
+recovery run twice, or stopped and run again, writes the same files, and a
+record that exists is left as it is. A journal that does not open with the entry
+that opens an exchange, holds entries of more than one exchange, or fails to
+parse beyond a torn final line is listed as damaged with its reason and kept;
+nothing is settled from it and no use is restored. The write to the server and
+the local journal cannot be made one atomic step. A request whose release the
+journal holds and whose outcome it does not hold is recorded, after recovery, as
+<code>unknown</code>, and stays unknown until the server's records or another observation
+settle it; the gateway never retries it, since a retry could repeat an effect. A
+gateway that holds the use counts of authorizations in memory restores, on
+recovery, those that unsettled journals show, and a response binds one decision
+request (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a>, <a href="dcmp-2.html#DCMP2-045">DCMP2-045</a>), so it cannot serve a later call after a restart.
+Two instances that each hold a use count for one authorization do not see each
+other&#x27;s uses, which is why <a href="mcp-gateway-1.html#MG1-005">MG1-005</a> routes every use of an authorization through
+one instance or a shared use store.</p>
+<h2 id="exchange-record-informative">Exchange record (informative)</h2>
+<p>An <code>ecl_mcp_gateway_exchange_v1</code> record holds one request that the gateway sent
+to the Decision Layer or refused; a request that the claim lists as forwarded
+without a decision needs no record, nor does a request refused for a number, in
+any of its members, that RFC 8785 does not represent exactly, which a record
+could not hold as it arrived, and a record that shows a forward is checked as a
+request that needed an <code>admit</code>. Its members are the in-scope <code>server</code> with the
+identity it reports; the <code>call</code> as received, and when (<code>received_at</code>); the
+tool's <code>mapping</code> and its current <code>tool_definition</code> when it has them; the
+<code>decision_request</code> and the <code>decision</code>, whose <code>status</code> is <code>answered</code>,
+<code>unavailable</code> or <code>invalid</code>; the uses of the authorization before this request
+(<code>prior_uses</code>); the gateway's release guard (<code>release_guard_milliseconds</code>); the
+<code>release_prepared</code> event (<code>prepared</code>), the discharge of the pre-release
+obligations (<code>obligation_discharge</code>) and the <code>execution_released</code> event
+(<code>released</code>), which carries <code>release_guard_ms</code>, when the gateway reached those
+steps; a <code>forwarded</code> member, with
+<code>forwarded_at</code> and <code>forward_completed_at</code>, only when the gateway released the
+request; the <code>server_response</code>; the response <code>returned</code> to the governed AI
+system, and when (<code>returned_at</code>); the <code>terminal</code> event; and, in a record that
+recovery wrote, <code>recovery</code>, which such a record holds in place of <code>returned</code>.
+The members that hold MCP content may be in the encoded form of <a href="mcp-gateway-1.html#MG1-012">MG1-012</a>. The
+rules registered for this profile, whose names begin <code>ecl.rule.mcp-</code>, check a
+record after its schema.</p>
+<h2 id="security-considerations">Security considerations</h2>
+<p>The gateway's guarantee rests on two facts that an assessor checks: no other path
+reaches the servers or the systems behind them (<a href="mcp-gateway-1.html#MG1-001">MG1-001</a>, <a href="mcp-gateway-1.html#MG1-009">MG1-009</a>), and the
+gateway's decision path cannot be altered by the governed AI system, because
+the gateway runs outside everything that system can execute code in or control
+(<a href="mcp-gateway-1.html#MG1-001">MG1-001</a>). Tool
+descriptions and annotations are text that a server controls and that a
+language model reads; a changed description can carry instructions, which is
+why a change waits for review (<a href="mcp-gateway-1.html#MG1-008">MG1-008</a>) and why annotations never choose the
+action class. The call's complete <code>params</code> are bound by digest, so an admitted
+request cannot be forwarded with other arguments, with other <code>_meta</code> members or
+with a member that changes how the server runs it, such as a task, and the
+authorization's use policy prevents a second forward. A member outside <code>params</code>
+and a number that RFC 8785 would round reach no decision at all: the gateway
+refuses the request first (<a href="mcp-gateway-1.html#MG1-004">MG1-004</a>). The error data names a cause and a registered reason only, so a
+refusal does not return policy details to the governed AI system. An obligation
+that the decision leaves to Enforcement, such as a state witness or a human
+approval, is proven before the release by a proof that names the request and
+that the governed AI system cannot issue (<a href="mcp-gateway-1.html#MG1-013">MG1-013</a>): recognizing the obligation
+does not prove it. The release order checks the authorization after every step
+that can block, so a slow evidence store or a wait for a lock cannot carry an
+expired authorization to the server (<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>), and every event is durable
+before the step that it evidences (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>). One instance owns an evidence
+directory at a time, so a second instance cannot settle a running instance's
+exchanges as not written, and recovery settles each journal once, so a repeated
+or interrupted recovery leaves one signed terminal event (<a href="mcp-gateway-1.html#MG1-016">MG1-016</a>). The clock is
+read twice at step 5, monotonic first, so a wall clock stepped back between the
+first check and the release does not extend the window (<a href="mcp-gateway-1.html#MG1-014">MG1-014</a>), and a proof&#x27;s
+freshness is tested at the release, not only when the proof is obtained
+(<a href="mcp-gateway-1.html#MG1-013">MG1-013</a>).</p>
+<h2 id="conformance">Conformance</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>The <code>mcp-gateway</code> suite holds a passing record for each row of the error table, each with the error that row gives, and passing records of a refused request whose method the claim neither maps nor lists, of a call refused for the first of two causes, of a call whose arguments hold a number with a fractional part or lack the argument the target comes from, of a call whose <code>arguments</code> is null, refused although its mapping gives a fixed target, of a server error returned with -32603, of content held in the encoded form, and of a call whose <code>id</code> holds a Unicode noncharacter, which puts the call and both responses in the encoded form, and refusals of a call with a member that no decision binds and of a call whose <code>_meta</code> holds a number that RFC 8785 rounds. It refuses a forward while the decision service is unavailable, without an <code>admit</code>, after the authorization expired, a second time under a single-use authorization, with arguments, a method, a tool or an <code>id</code> other than the call's and the admit's, among them the <code>id</code> <code>&quot;1&quot;</code> for a call whose <code>id</code> is 1 and the <code>id</code> <code>true</code>, which the record schema refuses, or with a member that the call did not carry; a forward on an answered <code>admit</code> whose decision basis breaks <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>, or that carries no decision basis; a decision request for a call with a member outside <code>params</code> or a number of magnitude greater than 2^53 - 1, and one that declares a negative budget debit; a forward of an unlisted method, or to a tool that has no mapping or whose definition changed after review; a decision request whose class or parameters do not come from the mapping and the call, whose <code>params_digest</code> does not cover a <code>_meta</code> member of the call, or that lacks the binding extension; a refusal returned as a result, with another code, with the code of a later cause or with an <code>id</code> other than the call's, among them the <code>id</code> <code>&quot;1&quot;</code> for a call whose <code>id</code> is 1; a forwarded response that the evidence does not bind, among them one returned with <code>0</code> where the server's response holds <code>false</code>, that the governed AI system did not receive, that reaches it with a code of the error table, or whose state the evidence misreads; a result returned for a forward that the server never answered; and encoded content that is not canonical base64, not the RFC 8785 form of its content, content within the restricted profile, or content that the record schema would refuse when held as itself: a call with a null <code>id</code>, forwarded without one or refused with an error that has none, and a call forwarded with the <code>jsonrpc</code> 1.0. For the release path (<a href="mcp-gateway-1.html#MG1-013">MG1-013</a> to <a href="mcp-gateway-1.html#MG1-017">MG1-017</a>) the suite holds passing records of a forward whose two obligations and deferred witness are discharged, of the release order, of a refusal at the first check of an obligation that no declared verifier checks, of cancelled attempts after an unproven obligation, a failed final check and a journal that failed, with and without a recorded prepared release, and of recovered records of an unknown outcome and of a request that was not released; it refuses a forward on an admit with obligations whose release records no discharge, or a discharge without the deferred witness or the approval; a refusal of an undischarged obligation with -31006 or -31011; a release within the release guard of the window&#x27;s end; a <code>forwarded_at</code> earlier than the release that the evidence records; a send that completed after <code>valid_until</code>, marked or not; a cancelled refusal recorded as <code>expired_before_release</code>, and a refusal at the first check recorded as cancelled; a recovered record of an unknown outcome that claims success, or whose classification is not one that the schema lists; and a record without the response returned. The suite also holds a refusal, with -31005 and no use consumed, of an admit that names one obligation twice; cancelled attempts whose proof was no longer fresh at the final observation (-31010), whose clock regressed (-31006 with <code>ecl.error.clock-regressed.v1</code>) and whose write could not begin within the release guard after the final observation (-31006); a release whose event carries <code>release_guard_ms</code>; and a forward written inside its window whose answer arrived after <code>valid_until</code>, recorded with <code>forward_completed_at</code> after the window and without <code>released_after_valid_until</code>; it refuses a release event without <code>release_guard_ms</code> and a discharge entry whose <code>fresh_until</code> is not later than the final observation plus the guard</td>
+</tr>
+<tr>
+<td>Deployment tests</td>
+<td>A gateway's tests of its release path, with faults injected at each step of the release order and of the journal: a run on the real clock, crashes at each step followed by recovery, failures and exhaustion of its storage, two instances on one evidence directory, two writers of one evidence directory in one process and threads on one authorization, damaged journals of each class, a recovery stopped after its decision, run twice and run concurrently, a torn last line, a stale approval and an over-age witness at the release, a clock stepped back between the first check and the final observation and between the two readings of step 5, the evidence sink failing at each step, a full and a read-only directory, and a late answer inside the window; <code>docs/bindings.md</code> lists what each of these tests must observe</td>
+</tr>
+<tr>
+<td>Assessor procedure</td>
+<td>Path enumeration and the absence of credentials in the governed AI system, transport configuration and change review; the declared release guard, obligation types and their verifiers, the failures that the journal survives, and the statement that every use of an authorization passes through one instance or a shared use store (<a href="mcp-gateway-1.html#MG1-005">MG1-005</a>, <a href="mcp-gateway-1.html#MG1-013">MG1-013</a>, <a href="mcp-gateway-1.html#MG1-014">MG1-014</a>, <a href="mcp-gateway-1.html#MG1-016">MG1-016</a>; the assessment area <code>mcp-release-order-and-journal-declarations</code> of <code>conformance/requirement-evaluations.json</code>)</td>
+</tr>
+</tbody>
+</table>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/MCP-GATEWAY-1.md</code>, SHA-256 <code>6acac63618156c4a9455bc865f3027035f1fe1ff5e08dda2f52e7c556c56462d</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

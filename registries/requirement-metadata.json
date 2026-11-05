@@ -1,0 +1,733 @@
+{
+  "candidate_version": "1.0",
+  "defaults": {
+    "conformance_roles": [
+      "system-of-interest",
+      "assessor"
+    ],
+    "evidence_obligations": [
+      "requirement-specific conformance evaluation result"
+    ],
+    "introduced_in": "1.0-rc.3",
+    "status": "active",
+    "test_refs": [],
+    "testability": "hybrid"
+  },
+  "overrides": {
+    "DCMP2-002": {
+      "conformance_roles": [
+        "dcmp-consumer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "strict parser negative-vector results"
+      ],
+      "testability": "automated"
+    },
+    "DCMP2-012": {
+      "conformance_roles": [
+        "decision-service",
+        "enforcement-point",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "non-admit authority rejection result"
+      ],
+      "testability": "automated"
+    },
+    "DCMP2-032": {
+      "conformance_roles": [
+        "dcmp-producer",
+        "dcmp-consumer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "reversed-expiry negative-vector result"
+      ],
+      "testability": "automated"
+    },
+    "DCMP2-038": {
+      "conformance_roles": [
+        "dcmp-consumer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "unknown-critical-extension rejection result"
+      ],
+      "testability": "automated"
+    },
+    "DCMP2-043": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-044": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-045": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-046": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-047": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-048": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-049": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-050": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-051": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-052": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "DCMP2-053": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "DCMP2-054": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "DCMP2-055": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "DCMP2-056": {
+      "introduced_in": "1.0"
+    },
+    "DCMP2-057": {
+      "introduced_in": "1.0"
+    },
+    "EBMP2-011": {
+      "conformance_roles": [
+        "evidence-producer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "terminal-state revival rejection result"
+      ],
+      "testability": "automated"
+    },
+    "EBMP2-022": {
+      "conformance_roles": [
+        "evidence-producer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "causal predecessor digest mismatch result"
+      ],
+      "testability": "automated"
+    },
+    "EBMP2-023": {
+      "conformance_roles": [
+        "bundle-producer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "missing predecessor closure result"
+      ],
+      "testability": "automated"
+    },
+    "EBMP2-046": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-047": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-048": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-049": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-050": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-051": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-052": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-053": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-054": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-055": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-056": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-057": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-058": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-059": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-060": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-061": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-062": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-063": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-064": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "EBMP2-065": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "EBMP2-066": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "EBMP2-067": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "EBMP2-068": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "EBMP2-069": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "EBMP2-070": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-071": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-072": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-073": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-074": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-075": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-076": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "EBMP2-077": {
+      "introduced_in": "1.0"
+    },
+    "EBMP2-078": {
+      "introduced_in": "1.0"
+    },
+    "ECL1N-0141": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0142": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0143": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0144": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0145": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0146": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0147": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0148": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0149": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0150": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0151": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0152": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0153": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0154": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0155": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0156": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0157": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0158": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0159": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0160": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0161": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0162": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0163": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0164": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0165": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0166": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0167": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0168": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0169": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0170": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0171": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0172": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0173": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0174": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0175": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0176": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0177": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "ECL1N-0178": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0179": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0180": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0181": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0182": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0183": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0184": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "ECL1N-0185": {
+      "conformance_roles": [
+        "assessor",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0186": {
+      "conformance_roles": [
+        "assessor",
+        "enforcement-point",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0187": {
+      "conformance_roles": [
+        "assessor",
+        "enforcement-point",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0188": {
+      "conformance_roles": [
+        "assessor",
+        "enforcement-point",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0189": {
+      "conformance_roles": [
+        "assessor",
+        "enforcement-point",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0190": {
+      "conformance_roles": [
+        "assessor",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0191": {
+      "conformance_roles": [
+        "assessor",
+        "enforcement-point",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0192": {
+      "conformance_roles": [
+        "assessor",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0193": {
+      "conformance_roles": [
+        "assessor",
+        "enforcement-point",
+        "system-of-interest"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0194": {
+      "conformance_roles": [
+        "assessor",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.6"
+    },
+    "ECL1N-0195": {
+      "conformance_roles": [
+        "system-of-interest",
+        "assessor"
+      ],
+      "introduced_in": "1.0",
+      "testability": "human_assessed"
+    },
+    "ECL1N-0196": {
+      "conformance_roles": [
+        "system-of-interest",
+        "assessor"
+      ],
+      "introduced_in": "1.0",
+      "testability": "human_assessed"
+    },
+    "ECL1N-0197": {
+      "conformance_roles": [
+        "system-of-interest",
+        "assessor"
+      ],
+      "introduced_in": "1.0",
+      "testability": "human_assessed"
+    },
+    "ECL1N-0198": {
+      "conformance_roles": [
+        "system-of-interest",
+        "assessor"
+      ],
+      "introduced_in": "1.0",
+      "testability": "human_assessed"
+    },
+    "ECL1N-0199": {
+      "conformance_roles": [
+        "system-of-interest",
+        "assessor",
+        "verifier"
+      ],
+      "introduced_in": "1.0",
+      "testability": "human_assessed"
+    },
+    "IE1-002": {
+      "conformance_roles": [
+        "integrity-producer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "canonicalization and restricted-number vector results"
+      ],
+      "testability": "automated"
+    },
+    "IE1-010": {
+      "conformance_roles": [
+        "integrity-producer",
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "payload-type substitution rejection result"
+      ],
+      "testability": "automated"
+    },
+    "IE1-015": {
+      "conformance_roles": [
+        "verifier"
+      ],
+      "evidence_obligations": [
+        "policy-bound signature threshold verification result"
+      ],
+      "testability": "automated"
+    },
+    "IE1-032": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "IE1-033": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "IE1-034": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "IE1-035": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "IE1-036": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "IE1-037": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "IE1-038": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "IE1-039": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "IE1-040": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "MG1-013": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "MG1-014": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "MG1-015": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "MG1-016": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "MG1-017": {
+      "introduced_in": "1.0-rc.6"
+    },
+    "SF1-005": {
+      "introduced_in": "1.0-rc.5",
+      "testability": "human_assessed"
+    },
+    "TP1-009": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "TP1-010": {
+      "introduced_in": "1.0-rc.5"
+    },
+    "TS1-031": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "TS1-032": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "TS1-033": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "TS1-034": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "TS1-035": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "TS1-036": {
+      "introduced_in": "1.0-rc.4"
+    },
+    "XR1-023": {
+      "introduced_in": "1.0-rc.4"
+    }
+  },
+  "prefix_profiles": {
+    "AB1": {
+      "conformance_roles": [
+        "decision-service",
+        "enforcement-point",
+        "evidence-producer",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.5",
+      "testability": "hybrid"
+    },
+    "AC1": {
+      "conformance_roles": [
+        "decision-service",
+        "enforcement-point",
+        "evidence-producer",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.5",
+      "testability": "hybrid"
+    },
+    "AZB1": {
+      "conformance_roles": [
+        "dcmp-producer",
+        "dcmp-consumer"
+      ],
+      "introduced_in": "1.0-rc.4",
+      "testability": "hybrid"
+    },
+    "DCMP2": {
+      "conformance_roles": [
+        "dcmp-producer",
+        "dcmp-consumer",
+        "verifier"
+      ],
+      "testability": "hybrid"
+    },
+    "DHB1": {
+      "conformance_roles": [
+        "dcmp-producer",
+        "dcmp-consumer",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.4",
+      "testability": "hybrid"
+    },
+    "DW1": {
+      "conformance_roles": [
+        "workflow-controller",
+        "evidence-producer",
+        "verifier"
+      ],
+      "testability": "hybrid"
+    },
+    "EBMP2": {
+      "conformance_roles": [
+        "evidence-producer",
+        "bundle-producer",
+        "verifier"
+      ],
+      "testability": "hybrid"
+    },
+    "EL1": {
+      "conformance_roles": [
+        "evidence-custodian",
+        "evidence-producer",
+        "verifier"
+      ],
+      "testability": "hybrid"
+    },
+    "IE1": {
+      "conformance_roles": [
+        "integrity-producer",
+        "verifier"
+      ],
+      "testability": "automated"
+    },
+    "MG1": {
+      "conformance_roles": [
+        "enforcement-point",
+        "dcmp-producer",
+        "evidence-producer",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.5",
+      "testability": "hybrid"
+    },
+    "OA1": {
+      "conformance_roles": [
+        "decision-service",
+        "enforcement-point",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.5",
+      "testability": "hybrid"
+    },
+    "OE1": {
+      "conformance_roles": [
+        "evidence-producer",
+        "verifier"
+      ],
+      "introduced_in": "1.0-rc.5",
+      "testability": "hybrid"
+    },
+    "SF1": {
+      "conformance_roles": [
+        "system-of-interest",
+        "verifier",
+        "assessor"
+      ],
+      "introduced_in": "1.0-rc.4",
+      "testability": "hybrid"
+    },
+    "TE1": {
+      "conformance_roles": [
+        "system-of-interest",
+        "verifier",
+        "assessor"
+      ],
+      "introduced_in": "1.0-rc.4",
+      "testability": "hybrid"
+    },
+    "TP1": {
+      "conformance_roles": [
+        "verifier",
+        "evidence-producer"
+      ],
+      "introduced_in": "1.0-rc.4",
+      "testability": "hybrid"
+    },
+    "TS1": {
+      "conformance_roles": [
+        "enforcement-point",
+        "fleet-controller",
+        "verifier"
+      ],
+      "testability": "hybrid"
+    },
+    "XR1": {
+      "conformance_roles": [
+        "registry-operator",
+        "protocol-consumer",
+        "verifier"
+      ],
+      "testability": "hybrid"
+    }
+  },
+  "schema_version": "ecl_requirement_metadata_v1"
+}

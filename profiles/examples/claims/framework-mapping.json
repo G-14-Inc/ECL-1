@@ -1,0 +1,88 @@
+{
+  "schema_version": "ecl_mapping_packet_v1",
+  "packet_id": "urn:example:ecl:mapping:framework:payments",
+  "packet_version": "1",
+  "framework": "Example Regulated AI Control Framework",
+  "framework_edition": "2026 immutable edition",
+  "framework_source": {
+    "uri": "urn:example:framework:2026",
+    "version": "2026",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "7171717171717171717171717171717171717171717171717171717171717171"
+    }
+  },
+  "system_boundary": {
+    "uri": "urn:example:ecl:soi:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "7272727272727272727272727272727272727272727272727272727272727272"
+    }
+  },
+  "updated_at": "2026-07-27T12:00:00Z",
+  "validation_state": "internally_reviewed",
+  "obligations": [
+    {
+      "framework_clause": "Runtime action authorization 4.2",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "7373737373737373737373737373737373737373737373737373737373737373"
+      },
+      "support_class": "direct_runtime_support",
+      "ecl_surfaces": [
+        "FR-101",
+        "FR-104",
+        "DCMP2-040"
+      ],
+      "evidence": [
+        {
+          "uri": "urn:example:ecl:evidence:runtime-authorization",
+          "version": "1",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "7474747474747474747474747474747474747474747474747474747474747474"
+          }
+        }
+      ],
+      "residual_obligations": "Organizational assignment of approval authority remains outside ECL runtime conformance.",
+      "assumptions": [
+        "The mapped action classes equal the assessed ECL System of Interest boundary."
+      ],
+      "validation_state": "internally_reviewed"
+    },
+    {
+      "framework_clause": "Training-data governance 7.1",
+      "obligation_text_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "7575757575757575757575757575757575757575757575757575757575757575"
+      },
+      "support_class": "out_of_scope",
+      "ecl_surfaces": [],
+      "evidence": [],
+      "residual_obligations": "The complete training-data governance obligation remains external to ECL runtime conformance.",
+      "assumptions": [
+        "No ECL claim is represented as a training-data governance assessment."
+      ],
+      "validation_state": "internally_reviewed"
+    }
+  ],
+  "global_assumptions": [
+    "The framework edition and obligation text digests remain unchanged.",
+    "The public claim includes this packet's residual obligations."
+  ],
+  "non_endorsement": {
+    "claims_framework_certification": false,
+    "claims_framework_owner_endorsement": false,
+    "claims_automatic_legal_compliance": false,
+    "statement": "This mapping describes bounded ECL runtime support and is not certification, legal advice, or framework-owner endorsement."
+  },
+  "integrity_envelope": {
+    "uri": "urn:example:ecl:envelope:mapping:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "7676767676767676767676767676767676767676767676767676767676767676"
+    }
+  }
+}

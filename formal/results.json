@@ -1,0 +1,836 @@
+{
+  "checks": [
+    {
+      "depth": 14,
+      "distinct_states": 1724911,
+      "expected": "pass",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/correct-binding.cfg": "86a51731353c48ef03306f2ec161c824fa1ed62aa324cfd3c9f622a2a8eb11bb"
+      },
+      "lemmas": {},
+      "name": "correct-binding",
+      "observed": "pass",
+      "passed": true,
+      "seconds": 69.4,
+      "states_generated": 7528740,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": null
+    },
+    {
+      "depth": 24,
+      "distinct_states": 7613132,
+      "expected": "pass",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/correct-control.cfg": "286ecd25ad3aff026b39b3d2821031c1aeda514fae8da5b061487f6b6859e035"
+      },
+      "lemmas": {},
+      "name": "correct-control",
+      "observed": "pass",
+      "passed": true,
+      "seconds": 160.6,
+      "states_generated": 29655925,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": null
+    },
+    {
+      "depth": 17,
+      "distinct_states": 131839,
+      "expected": "pass",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/correct-liveness.cfg": "2bd6b846cad16b8346dc8774e5d1827aeaa264238a6bec6df5a41e57a3a92979"
+      },
+      "lemmas": {},
+      "name": "correct-liveness",
+      "observed": "pass",
+      "passed": true,
+      "seconds": 22.5,
+      "states_generated": 456742,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": null
+    },
+    {
+      "depth": 5,
+      "distinct_states": 235,
+      "expected": "NoEffectDuringOutage",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-outage-proceeds.cfg": "79e082c05a911ab9ffaec378543ae832a7b24b4135f552763da97a5fc3d0743b"
+      },
+      "lemmas": {},
+      "name": "broken-outage-proceeds",
+      "observed": "NoEffectDuringOutage",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 407,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 6,
+      "distinct_states": 10302,
+      "expected": "SafeStateHasNoEffect",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-late-decision-used.cfg": "5d12419846fb6803bf239a3f109c668f3a48d735e8d0c7f059bbf9731a2af2cd"
+      },
+      "lemmas": {},
+      "name": "broken-late-decision-used",
+      "observed": "SafeStateHasNoEffect",
+      "passed": true,
+      "seconds": 1.1,
+      "states_generated": 26836,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 6
+    },
+    {
+      "depth": 4,
+      "distinct_states": 216,
+      "expected": "EffectHasMatchingAdmit",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-digest-binding.cfg": "f33f0a82d6119dab1868b72b5cee958e91c63bda5ad873b6a2901eb7d0dc9045"
+      },
+      "lemmas": {},
+      "name": "broken-no-digest-binding",
+      "observed": "EffectHasMatchingAdmit",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 478,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 4,
+      "distinct_states": 216,
+      "expected": "EffectHasMatchingAdmit",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-target-binding.cfg": "580dedc55cc5e72a344a8ac43ffc90fbedba01cc2773dacc767f5123bfcd76d8"
+      },
+      "lemmas": {},
+      "name": "broken-no-target-binding",
+      "observed": "EffectHasMatchingAdmit",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 478,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 4,
+      "distinct_states": 216,
+      "expected": "EffectWithinAuthority",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-audience-binding.cfg": "030818829dc719a1487c922426a5c5ecb1a4373ab7c8eea2bfcc36ca91f7a06f"
+      },
+      "lemmas": {},
+      "name": "broken-no-audience-binding",
+      "observed": "EffectWithinAuthority",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 478,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 6,
+      "distinct_states": 8855,
+      "expected": "EffectWithinAuthority",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-window.cfg": "7219ee4628300285e53f366d10c0ba086842327294083184b0714f833254419b"
+      },
+      "lemmas": {},
+      "name": "broken-no-window",
+      "observed": "EffectWithinAuthority",
+      "passed": true,
+      "seconds": 1.0,
+      "states_generated": 22926,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 6
+    },
+    {
+      "depth": 5,
+      "distinct_states": 1449,
+      "expected": "SingleUse",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-single-use.cfg": "802d1582cb997638f0124357e8bc58c9d9e4223984060169ab57f89a00c01616"
+      },
+      "lemmas": {},
+      "name": "broken-no-single-use",
+      "observed": "SingleUse",
+      "passed": true,
+      "seconds": 0.8,
+      "states_generated": 3863,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 6,
+      "distinct_states": 439,
+      "expected": "NoEffectWithKnownRevocation",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-ignore-revocation.cfg": "c415c01b82bc0719ed72bc2f39bd0e8a138e7d0b0e9c994f5af5c34e87f63792"
+      },
+      "lemmas": {},
+      "name": "broken-ignore-revocation",
+      "observed": "NoEffectWithKnownRevocation",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 871,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 6
+    },
+    {
+      "depth": 8,
+      "distinct_states": 5375,
+      "expected": "NoEffectDuringOutage",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-ignore-staleness.cfg": "ba8b25152f7d0fc065fa43fe8a2518d5419dc95f7df15a9f359c03aee1f1ad79"
+      },
+      "lemmas": {},
+      "name": "broken-ignore-staleness",
+      "observed": "NoEffectDuringOutage",
+      "passed": true,
+      "seconds": 0.9,
+      "states_generated": 12011,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 8
+    },
+    {
+      "depth": 7,
+      "distinct_states": 2243,
+      "expected": "RevocationBound",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-propagation-deadline.cfg": "87f7fef289db221e09710d908aa4ad648da9580853596a33c78bd2a34daba2c1"
+      },
+      "lemmas": {},
+      "name": "broken-no-propagation-deadline",
+      "observed": "RevocationBound",
+      "passed": true,
+      "seconds": 0.8,
+      "states_generated": 4610,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 7
+    },
+    {
+      "depth": 6,
+      "distinct_states": 497,
+      "expected": "NoEffectAtHaltedEP",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-ignore-halt.cfg": "222565463c1db725428854c8d7ec63ee261ed369322d7f6e0674d90e20a9a29a"
+      },
+      "lemmas": {},
+      "name": "broken-ignore-halt",
+      "observed": "NoEffectAtHaltedEP",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 989,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 6
+    },
+    {
+      "depth": 8,
+      "distinct_states": 5455,
+      "expected": "NoEffectBeyondHaltBound",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-halt-unbounded.cfg": "8e3d18abc36d7fdecaf4161c94974e6688ae3d4750f20f869a3e018ef9613da4"
+      },
+      "lemmas": {},
+      "name": "broken-halt-unbounded",
+      "observed": "NoEffectBeyondHaltBound",
+      "passed": true,
+      "seconds": 0.9,
+      "states_generated": 13013,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 8
+    },
+    {
+      "depth": 4,
+      "distinct_states": 215,
+      "expected": "EffectHasEvidence",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-evidence-not-atomic.cfg": "5c21177e649937f41968a4d683b7c7e397546b9960f75debf84ca5d3e5383e5d"
+      },
+      "lemmas": {},
+      "name": "broken-evidence-not-atomic",
+      "observed": "EffectHasEvidence",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 476,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 3,
+      "distinct_states": 25,
+      "expected": "EffectHasMatchingAdmit",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-bypass.cfg": "74d8fb58c5ed1118564fc9f2b31f56be9f351d97885da1e9e98e93f91e01442a"
+      },
+      "lemmas": {},
+      "name": "broken-bypass",
+      "observed": "EffectHasMatchingAdmit",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 38,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 3
+    },
+    {
+      "depth": 4,
+      "distinct_states": 254,
+      "expected": "EffectHasMatchingAdmit",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-actor-writes-authority.cfg": "da35c6f164002ccd9a9af7a52f2b58e0fbaa5e9cecad6d9ad5f451f44559cb65"
+      },
+      "lemmas": {},
+      "name": "broken-actor-writes-authority",
+      "observed": "EffectHasMatchingAdmit",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 568,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 3,
+      "distinct_states": 39,
+      "expected": "AdmitOnlyAllowed",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-actor-writes-decision.cfg": "dcf121c11a1695ef886719c5f38acf09aa4a623f826c3b2407185cc33d7bf6d5"
+      },
+      "lemmas": {},
+      "name": "broken-actor-writes-decision",
+      "observed": "AdmitOnlyAllowed",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 59,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 3
+    },
+    {
+      "depth": 5,
+      "distinct_states": 1449,
+      "expected": "LogAppendOnly",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-actor-erases-evidence.cfg": "4fa424b84ef4d60f68b8286493416dfc070d081bcbb4862b5586706114bbad71"
+      },
+      "lemmas": {},
+      "name": "broken-actor-erases-evidence",
+      "observed": "LogAppendOnly",
+      "passed": true,
+      "seconds": 0.8,
+      "states_generated": 3847,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 3,
+      "distinct_states": 36,
+      "expected": "OneWayRule",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-judgment-admits.cfg": "33c13fbcf842d6c79fb04eb9904ed10960a1aba3dec3de52aa08f5487b49ec7c"
+      },
+      "lemmas": {},
+      "name": "broken-judgment-admits",
+      "observed": "OneWayRule",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 54,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 3
+    },
+    {
+      "depth": 3,
+      "distinct_states": 37,
+      "expected": "OneWayRule",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-self-report-admits.cfg": "55381fb3623f35819a8e4a81bb31de92b94200d97c0111ee6060193aa7441f26"
+      },
+      "lemmas": {},
+      "name": "broken-self-report-admits",
+      "observed": "OneWayRule",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 54,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 3
+    },
+    {
+      "depth": null,
+      "distinct_states": 62599,
+      "expected": "HoldResolves",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-hold-never-times-out.cfg": "42103bd6271b220c90b09a3bd16f8c993eaef45b01dc2fbc04917523df2b53c8"
+      },
+      "lemmas": {},
+      "name": "broken-hold-never-times-out",
+      "observed": "HoldResolves",
+      "passed": true,
+      "seconds": 3.7,
+      "states_generated": 175151,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 12
+    },
+    {
+      "depth": null,
+      "distinct_states": 64374,
+      "expected": "RequestResolves",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-no-decision-timeout.cfg": "323d532e8719d379bdcad7d12b70abf738e15e83489219f71aa8b1dc35000165"
+      },
+      "lemmas": {},
+      "name": "broken-no-decision-timeout",
+      "observed": "RequestResolves",
+      "passed": true,
+      "seconds": 3.7,
+      "states_generated": 172087,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 12
+    },
+    {
+      "depth": null,
+      "distinct_states": 64506,
+      "expected": "HaltTakesEffect",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/broken-halt-ack-lost.cfg": "95decb627a270be0df7163fdb750f73c6c4efe8e508a0128ca52bb569e221aef"
+      },
+      "lemmas": {},
+      "name": "broken-halt-ack-lost",
+      "observed": "HaltTakesEffect",
+      "passed": true,
+      "seconds": 3.6,
+      "states_generated": 212548,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 13
+    },
+    {
+      "depth": 4,
+      "distinct_states": 215,
+      "expected": "WitnessNoEffect",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-effect.cfg": "ce26723d83476a85aa82df3b3e6328f54285bef99bae21ce536630340a950bfe"
+      },
+      "lemmas": {},
+      "name": "witness-effect",
+      "observed": "WitnessNoEffect",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 476,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 4,
+      "distinct_states": 219,
+      "expected": "WitnessNoAdmitAfterHold",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-admit-after-hold.cfg": "9da6e7f09287b8b5ff2ccef4a44b4d3cdfc5bfbb6043eb105d72c40f29d8da15"
+      },
+      "lemmas": {},
+      "name": "witness-admit-after-hold",
+      "observed": "WitnessNoAdmitAfterHold",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 510,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": 5,
+      "distinct_states": 510,
+      "expected": "WitnessNoCollisionDeny",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-collision-deny.cfg": "1f925cd5d8b2ce1049947dfa3898d5e173c6eb6f47cf21fe0dacfc252d22f6ac"
+      },
+      "lemmas": {},
+      "name": "witness-collision-deny",
+      "observed": "WitnessNoCollisionDeny",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 1329,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 5,
+      "distinct_states": 126,
+      "expected": "WitnessNoEffectDuringOutage",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-effect-during-outage.cfg": "fcfed1ef4f1c82a0a9cf5c7a8d4cf6e700ff8eba90f6416ab54ee8d461f842a0"
+      },
+      "lemmas": {},
+      "name": "witness-effect-during-outage",
+      "observed": "WitnessNoEffectDuringOutage",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 229,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 5,
+      "distinct_states": 114,
+      "expected": "WitnessNoEffectInRevocationWindow",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-effect-in-revocation-window.cfg": "dd8bc7286cd72cf5f55c51c741210cc77d7c32f95c395ea43b57373283aad37a"
+      },
+      "lemmas": {},
+      "name": "witness-effect-in-revocation-window",
+      "observed": "WitnessNoEffectInRevocationWindow",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 211,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 5,
+      "distinct_states": 129,
+      "expected": "WitnessNoEffectInHaltWindow",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-effect-in-halt-window.cfg": "effb92fae3aea3013b232a22973d56a3a46b46cac7e418858e64299da0bede30"
+      },
+      "lemmas": {},
+      "name": "witness-effect-in-halt-window",
+      "observed": "WitnessNoEffectInHaltWindow",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 238,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 5
+    },
+    {
+      "depth": 4,
+      "distinct_states": 61,
+      "expected": "WitnessNoTimeout",
+      "inputs": {
+        "tla/ECLCore.tla": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025",
+        "tla/MC.tla": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be",
+        "tla/configs/witness-timeout.cfg": "b24c1622d9ccd0db81bcfbce89328a9f6bae320e08a37b1560ce47dbbf5da196"
+      },
+      "lemmas": {},
+      "name": "witness-timeout",
+      "observed": "WitnessNoTimeout",
+      "passed": true,
+      "seconds": 0.7,
+      "states_generated": 95,
+      "steps": {},
+      "tool": "tlc",
+      "trace_states": 4
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "all verified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "authorization_scope_and_audience": "verified",
+        "executable": "verified",
+        "one_effect_per_request": "verified",
+        "request_origin": "verified",
+        "request_response_binding": "verified",
+        "response_authenticity": "verified",
+        "single_use": "verified"
+      },
+      "name": "protocol-correct",
+      "observed": "all verified",
+      "passed": true,
+      "seconds": 8.9,
+      "states_generated": null,
+      "steps": {
+        "authorization_scope_and_audience": 12,
+        "executable": 14,
+        "one_effect_per_request": 60,
+        "request_origin": 7,
+        "request_response_binding": 7,
+        "response_authenticity": 7,
+        "single_use": 72
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "response_authenticity falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "response_authenticity": "falsified - found trace"
+      },
+      "name": "protocol-skip-response-signature",
+      "observed": "response_authenticity falsified",
+      "passed": true,
+      "seconds": 1.5,
+      "states_generated": null,
+      "steps": {
+        "response_authenticity": 8
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "response_authenticity falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "response_authenticity": "falsified - found trace"
+      },
+      "name": "protocol-shared-role-key",
+      "observed": "response_authenticity falsified",
+      "passed": true,
+      "seconds": 6.0,
+      "states_generated": null,
+      "steps": {
+        "response_authenticity": 10
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "request_response_binding falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "request_response_binding": "falsified - found trace"
+      },
+      "name": "protocol-response-not-bound",
+      "observed": "request_response_binding falsified",
+      "passed": true,
+      "seconds": 2.3,
+      "states_generated": null,
+      "steps": {
+        "request_response_binding": 13
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "authorization_scope_and_audience falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "authorization_scope_and_audience": "falsified - found trace"
+      },
+      "name": "protocol-no-scope-check",
+      "observed": "authorization_scope_and_audience falsified",
+      "passed": true,
+      "seconds": 2.7,
+      "states_generated": null,
+      "steps": {
+        "authorization_scope_and_audience": 13
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "authorization_scope_and_audience falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "authorization_scope_and_audience": "falsified - found trace"
+      },
+      "name": "protocol-no-audience-check",
+      "observed": "authorization_scope_and_audience falsified",
+      "passed": true,
+      "seconds": 2.8,
+      "states_generated": null,
+      "steps": {
+        "authorization_scope_and_audience": 13
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "single_use falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "single_use": "falsified - found trace"
+      },
+      "name": "protocol-no-single-use",
+      "observed": "single_use falsified",
+      "passed": true,
+      "seconds": 5.2,
+      "states_generated": null,
+      "steps": {
+        "single_use": 16
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "one_effect_per_request falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "one_effect_per_request": "falsified - found trace"
+      },
+      "name": "protocol-dp-no-message-identity",
+      "observed": "one_effect_per_request falsified",
+      "passed": true,
+      "seconds": 20.5,
+      "states_generated": null,
+      "steps": {
+        "one_effect_per_request": 20
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    },
+    {
+      "depth": null,
+      "distinct_states": null,
+      "expected": "request_origin falsified",
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+      },
+      "lemmas": {
+        "request_origin": "falsified - found trace"
+      },
+      "name": "protocol-dp-skips-request-signature",
+      "observed": "request_origin falsified",
+      "passed": true,
+      "seconds": 1.5,
+      "states_generated": null,
+      "steps": {
+        "request_origin": 5
+      },
+      "tool": "tamarin",
+      "trace_states": null
+    }
+  ],
+  "java": "17.0.20.1",
+  "schema_version": "ecl_formal_results_v1",
+  "settings": {
+    "java_heap": "-Xmx1500m",
+    "timeout_seconds": 900,
+    "tlc_workers": 1
+  },
+  "tools": {
+    "maude": {
+      "archive_sha256": "72ed1ca87e3b3d0dfc6ee1436baf154bf04c45ff97d521bec040c5e8dfc8f92c",
+      "sha256": "9dd4044e693944aae97ad72086bc70275fa34bf635f9b377a5b2100bf3ed8655",
+      "version": "3.5.1"
+    },
+    "tamarin": {
+      "archive_sha256": "201be06f469e47cff554df6ca93db8366fc2c69d70c61fcbd1370a1074b469c6",
+      "sha256": "9d3fcbaa65aeea244cff5b8074338d129427161cc8b02e5aee72d30ee072acc9",
+      "version": "1.12.0"
+    },
+    "tla2tools": {
+      "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88",
+      "version": "1.7.4"
+    }
+  }
+}

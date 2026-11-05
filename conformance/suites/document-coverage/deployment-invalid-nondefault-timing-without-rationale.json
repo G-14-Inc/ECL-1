@@ -1,0 +1,116 @@
+{
+  "claim_level": 3,
+  "delivery_surfaces": [
+    "local_gate",
+    "offline_verifier"
+  ],
+  "dependencies": [
+    {
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 3600,
+      "dependency_id": "urn:example:ecl:dependency:offline-policy-cache",
+      "failure_disposition": "restricted",
+      "integrity_required": true
+    }
+  ],
+  "evidence_custody": {
+    "export_integrity": true,
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:offline",
+      "version": "1"
+    },
+    "local_append_only_buffer": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:offline",
+      "version": "1"
+    },
+    "transfer_custody": {
+      "uri": "urn:example:ecl:custody:reconnect-export",
+      "version": "1"
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "bounded_actions": [
+        "pre-authorized reversible actions"
+      ],
+      "entry_conditions": [
+        "synchronization channel unavailable"
+      ],
+      "expires_to": "restricted",
+      "signed_cached_state_required": true
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "control-state integrity fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ],
+    "restricted": {
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ],
+      "entry_conditions": [
+        "policy or trust cache exceeds staleness budget"
+      ]
+    }
+  },
+  "model": "offline-edge",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "2121212121212121212121212121212121212121212121212121212121212121"
+  },
+  "profile_id": "urn:example:ecl:profile:offline-edge-local-gate",
+  "profile_version": "1",
+  "release_path": {
+    "decision_timeout_milliseconds": 15,
+    "enforcement_location": "same_host_sidecar",
+    "network_loss_disposition": "bounded_degraded_then_restricted",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true
+  },
+  "residual_risks": [
+    "Revocation cannot propagate while physically disconnected; bounded cache expiry limits exposure."
+  ],
+  "schema_version": "ecl_deployment_profile_v1",
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:offline-edge",
+    "version": "1"
+  },
+  "timing_case": {
+    "connected_revocation_seconds": 300,
+    "control_assumptions": [
+      "The trusted time source remains available during disconnection."
+    ],
+    "evidence_export_seconds": 14400,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:offline-edge-l3",
+      "version": "1"
+    },
+    "offline_staleness_seconds": 3600,
+    "residual_risk": "Physical transfer can still delay evidence export beyond the stricter bound.",
+    "trusted_time_or_secure_monotonic": true,
+    "uses_default_baseline": false
+  },
+  "topology_controls": {
+    "offline": {
+      "policy_cache_staleness_seconds": 3600,
+      "reconnect_reconciliation": {
+        "uri": "urn:example:ecl:reconciliation:offline-edge",
+        "version": "1"
+      },
+      "stale_transition": "restricted",
+      "trust_cache_staleness_seconds": 3600
+    }
+  }
+}

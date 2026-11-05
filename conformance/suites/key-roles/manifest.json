@@ -1,0 +1,333 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-key-roles",
+  "trust_policy_path": "conformance/suites/key-roles/trust-policy.json",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-challenge-by-requester-key",
+      "negates": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "path": "conformance/suites/key-roles/key-roles-invalid-challenge-by-requester-key.json",
+      "requirement_ids": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/key-roles-valid-challenge-by-decision-key.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "sign the challenge with a key that does not hold the purpose of its role"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-challenge-response-by-decision-key",
+      "negates": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "path": "conformance/suites/key-roles/key-roles-invalid-challenge-response-by-decision-key.json",
+      "requirement_ids": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/key-roles-valid-challenge-response-by-requester-key.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "sign the challenge-response with a key that does not hold the purpose of its role"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-control-by-decision-key",
+      "negates": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "path": "conformance/suites/key-roles/key-roles-invalid-control-by-decision-key.json",
+      "requirement_ids": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/key-roles-valid-control-by-control-key.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "sign the control with a key that does not hold the purpose of its role"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-observation-and-trusted-time",
+      "negates": [
+        "TP1-009"
+      ],
+      "path": "conformance/suites/key-roles/trust-policy-invalid-observation-and-trusted-time.json",
+      "requirement_ids": [
+        "TP1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/trust-policy.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "give urn:example:key:bundle-observer the purposes ecl.purpose.observation.v1 and ecl.purpose.trusted-time.v1"
+      },
+      "stage": "trust-policy"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-request-and-response",
+      "negates": [
+        "TP1-009"
+      ],
+      "path": "conformance/suites/key-roles/trust-policy-invalid-request-and-response.json",
+      "requirement_ids": [
+        "TP1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/trust-policy.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "give urn:example:key:bundle-decision the purposes ecl.purpose.decision-request.v1 and ecl.purpose.decision-response.v1"
+      },
+      "stage": "trust-policy"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-request-and-trusted-time",
+      "negates": [
+        "TP1-009"
+      ],
+      "path": "conformance/suites/key-roles/trust-policy-invalid-request-and-trusted-time.json",
+      "requirement_ids": [
+        "TP1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/trust-policy.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "give urn:example:key:bundle-agent the purposes ecl.purpose.decision-request.v1 and ecl.purpose.trusted-time.v1"
+      },
+      "stage": "trust-policy"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-request-by-decision-key",
+      "negates": [
+        "TP1-010"
+      ],
+      "path": "conformance/suites/key-roles/key-roles-invalid-request-by-decision-key.json",
+      "requirement_ids": [
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/key-roles-valid-request-by-requester-key.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "sign the decision request with the decision point's key, which does not hold the decision-request purpose"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-response-and-control",
+      "negates": [
+        "TP1-009"
+      ],
+      "path": "conformance/suites/key-roles/trust-policy-invalid-response-and-control.json",
+      "requirement_ids": [
+        "TP1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/trust-policy.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "give urn:example:key:bundle-decision the purposes ecl.purpose.decision-response.v1 and ecl.purpose.control.v1"
+      },
+      "stage": "trust-policy"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-response-and-observation",
+      "negates": [
+        "TP1-009"
+      ],
+      "path": "conformance/suites/key-roles/trust-policy-invalid-response-and-observation.json",
+      "requirement_ids": [
+        "TP1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/trust-policy.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "give urn:example:key:bundle-decision the purposes ecl.purpose.decision-response.v1 and ecl.purpose.observation.v1"
+      },
+      "stage": "trust-policy"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "key-roles-invalid-response-by-requester-key",
+      "negates": [
+        "TP1-010"
+      ],
+      "path": "conformance/suites/key-roles/key-roles-invalid-response-by-requester-key.json",
+      "requirement_ids": [
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/key-roles/key-roles-valid-response-by-decision-key.json",
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "mutation",
+        "mutation": "sign the decision response with the requester's key, which holds only the decision-request purpose"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "key-roles-valid-challenge-by-decision-key",
+      "path": "conformance/suites/key-roles/key-roles-valid-challenge-by-decision-key.json",
+      "requirement_ids": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "key-roles-valid-challenge-response-by-requester-key",
+      "path": "conformance/suites/key-roles/key-roles-valid-challenge-response-by-requester-key.json",
+      "requirement_ids": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "key-roles-valid-control-by-control-key",
+      "path": "conformance/suites/key-roles/key-roles-valid-control-by-control-key.json",
+      "requirement_ids": [
+        "IE1-039",
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "key-roles-valid-one-role-per-key",
+      "path": "conformance/suites/key-roles/trust-policy.json",
+      "requirement_ids": [
+        "TP1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+      "source": {
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "trust-policy"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "key-roles-valid-request-by-requester-key",
+      "path": "conformance/suites/key-roles/key-roles-valid-request-by-requester-key.json",
+      "requirement_ids": [
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "key-roles-valid-response-by-decision-key",
+      "path": "conformance/suites/key-roles/key-roles-valid-response-by-decision-key.json",
+      "requirement_ids": [
+        "TP1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_key_role_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    }
+  ]
+}

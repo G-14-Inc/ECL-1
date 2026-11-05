@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DCMP-2: Decision and Control Message Protocol</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="dcmp-2-decision-and-control-message-protocol">DCMP-2: Decision and Control Message Protocol</h1>
+<p>Version: 2.0 (wire <code>schema_version</code> <code>2.0</code>)
+Status: normative companion of ECL-1 Version 1.0, a published version
+Schema: <code>schemas/dcmp-2.schema.json</code>
+Registry dependencies: algorithm suites, extensions, errors, semantic rules</p>
+<h2 id="1-purpose">1. Purpose</h2>
+<p>DCMP-2 transports the facts needed to evaluate and control an ECL action. It
+does not execute the action and does not itself prove that an external effect
+occurred. It connects Decision, Authority, and Enforcement while preserving the
+causal inputs that Provenance and Verification need.</p>
+<p>The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT,
+RECOMMENDED, NOT RECOMMENDED, MAY, and OPTIONAL are to be interpreted as
+described in BCP 14 when, and only when, they appear in all capitals.</p>
+<h2 id="2-conformance-surface">2. Conformance surface</h2>
+<p><span id="DCMP2-001"><strong>DCMP2-001</strong></span><a class="requirement-link" href="#DCMP2-001" aria-label="Link to DCMP2-001">§</a> — A DCMP-2 producer MUST emit an object that satisfies the
+published JSON Schema and all applicable semantic rules.</p>
+<p><span id="DCMP2-002"><strong>DCMP2-002</strong></span><a class="requirement-link" href="#DCMP2-002" aria-label="Link to DCMP2-002">§</a> — A DCMP-2 consumer MUST perform strict JSON parsing before
+schema validation. Duplicate members, floating-point values, negative zero,
+integers outside the interoperable exact range, invalid Unicode scalar values,
+noncharacters and non-JSON constants MUST be rejected, in the order and with the
+findings of INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-037">IE1-037</a>.</p>
+<p><span id="DCMP2-003"><strong>DCMP2-003</strong></span><a class="requirement-link" href="#DCMP2-003" aria-label="Link to DCMP2-003">§</a> — Schema validation alone MUST NOT be represented as complete
+DCMP-2 validation.</p>
+<p><span id="DCMP2-004"><strong>DCMP2-004</strong></span><a class="requirement-link" href="#DCMP2-004" aria-label="Link to DCMP2-004">§</a> — Every message MUST carry <code>protocol</code>, <code>schema_version</code>,
+<code>message_type</code>, <code>message_id</code>, <code>workflow</code>, <code>issuer</code>, <code>issued_at</code>, <code>extensions</code>,
+and <code>integrity_policy</code>.</p>
+<p><span id="DCMP2-005"><strong>DCMP2-005</strong></span><a class="requirement-link" href="#DCMP2-005" aria-label="Link to DCMP2-005">§</a> — The pair of a logical <code>message_id</code> and the digest of the
+canonical message payload identifies an immutable message version. Reuse of a
+logical identifier with different content MUST be treated as a collision or
+superseding version, never as the same immutable object.</p>
+<h2 id="3-message-types">3. Message types</h2>
+<p>DCMP-2 defines:</p>
+<ul>
+<li><code>decision_request</code></li>
+<li><code>decision_response</code></li>
+<li><code>challenge</code></li>
+<li><code>challenge_response</code></li>
+<li><code>control</code></li>
+</ul>
+<p>An extension cannot create a message type whose semantics alter a core state
+transition unless that extension is registered as critical and explicitly
+permitted by the active profile.</p>
+<h3 id="31-decision-request">3.1 Decision request</h3>
+<p><span id="DCMP2-006"><strong>DCMP2-006</strong></span><a class="requirement-link" href="#DCMP2-006" aria-label="Link to DCMP2-006">§</a> — A decision request MUST identify the actor, any distinct
+subject, the action, target, operation, parameter digest, constraints, risk
+class, required evidence profile, requested authority audience, requested
+validity, authority use policy, and its expiry time in <code>expires_at</code>.</p>
+<p><span id="DCMP2-007"><strong>DCMP2-007</strong></span><a class="requirement-link" href="#DCMP2-007" aria-label="Link to DCMP2-007">§</a> — If parameters are carried in-band in <code>action.parameters</code>,
+<code>action.parameters_digest</code> MUST be the <code>ecl.digest.sha-256.v1</code> digest of the
+restricted canonical JSON (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>) of that value. A consumer MUST reject a
+mismatch with <code>ecl.rule.parameters-digest-matches.v1</code>.</p>
+<p><span id="DCMP2-008"><strong>DCMP2-008</strong></span><a class="requirement-link" href="#DCMP2-008" aria-label="Link to DCMP2-008">§</a> — A mutable resource reference used in a consequential decision
+MUST include a digest, version, immutable snapshot reference, or a profile-
+defined witness that makes the evaluated state reconstructable.</p>
+<p><span id="DCMP2-009"><strong>DCMP2-009</strong></span><a class="requirement-link" href="#DCMP2-009" aria-label="Link to DCMP2-009">§</a> — Actor and subject MUST remain distinct through delegation. A
+consumer MUST NOT infer that a workload is the legal, organizational, or human
+subject merely because it submitted the request.</p>
+<p><span id="DCMP2-010"><strong>DCMP2-010</strong></span><a class="requirement-link" href="#DCMP2-010" aria-label="Link to DCMP2-010">§</a> — Each delegation hop MUST be independently referencable,
+integrity-verifiable, audience-bound, expiry-bounded, and scope-attenuating.
+An elevation is a new authority root, not an attenuation hop.</p>
+<p><span id="DCMP2-011"><strong>DCMP2-011</strong></span><a class="requirement-link" href="#DCMP2-011" aria-label="Link to DCMP2-011">§</a> — An idempotency key MAY identify an intended effect boundary,
+but MUST NOT replace the unique message, action, attempt, decision, authority,
+or receipt identifiers.</p>
+<p><span id="DCMP2-054"><strong>DCMP2-054</strong></span><a class="requirement-link" href="#DCMP2-054" aria-label="Link to DCMP2-054">§</a> — <code>action.risk_class</code>, <code>constraints</code>, <code>action.budget_debit</code>, and
+the <code>witness_reference</code> and <code>capability_manifest</code> of
+<code>ecl.ext.consequence-coupling.v1</code> in a request are statements of the governed
+AI system: each is an <code>actor_supplied</code> decision input (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>) unless the
+Decision Layer authenticates its origin as ECL-1 Section 4.3 requires. Each MAY
+make the outcome stricter, and the Decision Layer MUST debit each consequence
+budget by at least the amount its policy computes from the action's parameters,
+whatever <code>budget_debit</code> declares.</p>
+<p><span id="DCMP2-055"><strong>DCMP2-055</strong></span><a class="requirement-link" href="#DCMP2-055" aria-label="Link to DCMP2-055">§</a> — A request's <code>action.budget_debit.amount</code> MUST be written
+without a sign, so that no declared debit is negative. A consumer MUST reject a
+request whose <code>amount</code> begins with <code>-</code> with
+<code>ecl.rule.budget-debit-non-negative.v1</code>.</p>
+<p>The registered extension <code>ecl.ext.runtime-configuration.v1</code> identifies the
+recorded version of the governed AI system that requested the action, as
+<a href="ecl-1_standard.html#ECL1N-0171">ECL1N-0171</a> requires at <code>L2</code> and above: its <code>configuration</code> member is a reference
+that carries a version and a digest. It does not change admission semantics.</p>
+<h3 id="32-decision-response">3.2 Decision response</h3>
+<p>The response outcomes are:</p>
+<ul>
+<li><code>admit</code>: the Decision responsibility permits the exact request under stated
+policy and obligations;</li>
+<li><code>deny</code>: the request is rejected as a terminal decision for that version;</li>
+<li><code>hold</code>: no release is permitted until a separately defined condition
+changes;</li>
+<li><code>challenge</code>: evaluation cannot finish until specified evidence or input is
+supplied.</li>
+</ul>
+<p><span id="DCMP2-012"><strong>DCMP2-012</strong></span><a class="requirement-link" href="#DCMP2-012" aria-label="Link to DCMP2-012">§</a> — A response whose outcome is not <code>admit</code> MUST NOT carry an
+<code>authorization</code> object.</p>
+<p><span id="DCMP2-013"><strong>DCMP2-013</strong></span><a class="requirement-link" href="#DCMP2-013" aria-label="Link to DCMP2-013">§</a> — An <code>admit</code> response MUST carry an authorization object whose
+audience, scope digest, validity interval, and use policy bind the exact release
+authority. A consumer MUST reject an <code>admit</code> response whose <code>authorization</code> is
+absent or not an object, or lacks any of <code>authorization_id</code>, <code>audience</code>,
+<code>scope_digest</code>, <code>valid_from</code>, <code>valid_until</code> and <code>use_policy</code>, with
+<code>ecl.rule.admit-requires-valid-authority.v1</code>; how these members bind the request
+is checked under <a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, and the order of the interval under
+<a href="dcmp-2.html#DCMP2-032">DCMP2-032</a>.</p>
+<p><span id="DCMP2-014"><strong>DCMP2-014</strong></span><a class="requirement-link" href="#DCMP2-014" aria-label="Link to DCMP2-014">§</a> — A deny, hold, challenge, expired, revoked, cancelled, or
+superseded message MUST NOT be interpreted as release authority.</p>
+<p><span id="DCMP2-015"><strong>DCMP2-015</strong></span><a class="requirement-link" href="#DCMP2-015" aria-label="Link to DCMP2-015">§</a> — An authorization validity interval MUST be non-empty, MUST be
+contained within any governing decision and delegation validity interval, and
+MUST NOT exceed the active profile maximum.</p>
+<p><span id="DCMP2-016"><strong>DCMP2-016</strong></span><a class="requirement-link" href="#DCMP2-016" aria-label="Link to DCMP2-016">§</a> — Every response MUST bind the policy identifier, version,
+digest, and applicable policy epoch. A label without a digest is insufficient
+for a claim requiring replay.</p>
+<p><span id="DCMP2-017"><strong>DCMP2-017</strong></span><a class="requirement-link" href="#DCMP2-017" aria-label="Link to DCMP2-017">§</a> — Obligations with <code>before_release</code> satisfaction MUST be proven
+at Enforcement before the action is released. An unproven pre-release
+obligation converts the effective disposition to the declared safe state.</p>
+<p><span id="DCMP2-018"><strong>DCMP2-018</strong></span><a class="requirement-link" href="#DCMP2-018" aria-label="Link to DCMP2-018">§</a> — <code>hold</code> and <code>challenge</code> MUST carry or causally reference the
+condition for progress, a deadline where time-bounded, and the timeout
+disposition.</p>
+<p>The registered extension <code>ecl.ext.consequence-coupling.v1</code> carries the
+consequence-coupling controls that a request invokes (<a href="ecl-1_standard.html#FR-102">FR-102</a>) and their results
+in a response (<a href="ecl-1_standard.html#FR-103">FR-103</a>). Its value schema is
+<code>https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1</code>. A
+response reports a consequence-budget result as <code>budget_result</code>, a state-witness
+result as <code>witness_result</code>, a heterogeneous-quorum result as <code>quorum_result</code>,
+and a condition that blocks release as <code>blocker_reason</code>. A witness result of
+<code>required_before_release</code> defers the witness check to Enforcement, which proves
+it before release under <a href="dcmp-2.html#DCMP2-017">DCMP2-017</a>.</p>
+<p><span id="DCMP2-052"><strong>DCMP2-052</strong></span><a class="requirement-link" href="#DCMP2-052" aria-label="Link to DCMP2-052">§</a> — An <code>admit</code> response MUST NOT carry, in
+<code>ecl.ext.consequence-coupling.v1</code>, a <code>budget_result</code> whose outcome is not
+<code>authorized</code>, a <code>witness_result</code> whose outcome is neither <code>satisfied</code> nor
+<code>required_before_release</code>, a <code>required_before_release</code> witness result without an
+obligation whose satisfaction is <code>before_release</code>, a <code>quorum_result</code> whose
+outcome is not <code>met</code>, or a <code>blocker_reason</code>. A consumer MUST reject such a
+response with <code>ecl.rule.coupling-results-permit-admit.v1</code>, after validating the
+extension&#x27;s value against its value schema (<a href="extension-registry-1.html#XR1-023">XR1-023</a>).</p>
+<p>The registered extension <code>ecl.ext.decision-basis.v1</code> records the basis of a
+decision, as <a href="ecl-1_standard.html#ECL1N-0181">ECL1N-0181</a> requires of the evidence of each decision. Its value
+schema is
+<code>https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1</code>. Its
+<code>register</code> member names the version of the Consequential Action Register under
+which the decision was made, by reference and digest. Each entry of <code>inputs</code>
+names a decision input that the register declares for the action class
+(<code>input</code>), its declared class (<code>class</code>: <code>verifiable</code>, <code>actor_supplied</code>, or
+<code>judgment</code>), whether the action class requires it (<code>required</code>), whether it was
+<code>available</code>, <code>unavailable</code>, <code>late</code>, or <code>malformed</code> (<code>status</code>), its value by
+reference and digest when available (<code>reference</code>), and its effect on the
+outcome (<code>effect</code>): <code>supports</code> when it is part of the basis on which the
+verifiable-only outcome (ECL-1 Section 4.3) permits the action, whatever the
+final outcome, <code>restricts</code> when it made the outcome stricter, and <code>none</code> when
+it had no effect. Each entry also names the input's <code>source</code>, as the register
+declares it, and can name, in <code>derived_from</code>, the other inputs of the record
+from which the input was computed. The value can also give <code>verifiable_only_outcome</code>, the decision's
+verifiable-only outcome (ECL-1 Section 4.3), and <code>received_at</code>, the time at
+which the Decision Layer received the request, from which every deadline is
+counted (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>); an entry can give <code>obtained_at</code>, the time at which the
+Decision Layer obtained the input, and <code>value_at</code>, the time that the input's
+value describes, whose age is taken at the response's <code>evaluated_at</code>, the time
+of the decision (<a href="ecl-1_standard.html#ECL1N-0182">ECL1N-0182</a>). A register that declares no input for the action
+class gives a record with no <code>inputs</code> entry. A DCMP-2 message validated on its
+own is valid without the extension; an evidence verifier requires it on every
+decision response, as <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> states.</p>
+<p><span id="DCMP2-053"><strong>DCMP2-053</strong></span><a class="requirement-link" href="#DCMP2-053" aria-label="Link to DCMP2-053">§</a> — A response that carries <code>ecl.ext.decision-basis.v1</code> MUST NOT
+list one <code>input</code> more than once, MUST NOT record an <code>actor_supplied</code> or
+<code>judgment</code> input, or an input whose <code>status</code> is not <code>available</code>, with the
+<code>effect</code> <code>supports</code>, and MUST NOT record as <code>verifiable</code> an input whose
+<code>derived_from</code> names an input that is not <code>verifiable</code>; each name in
+<code>derived_from</code> MUST be the <code>input</code> of another entry of the record, and the
+inputs that <code>derived_from</code> names, followed through other entries, MUST NOT
+include the entry itself. An <code>admit</code> response that carries it MUST record at
+least one <code>verifiable</code> input with the <code>effect</code> <code>supports</code>, and MUST NOT record
+an input whose <code>required</code> is <code>true</code> and whose <code>status</code> is not <code>available</code>. When
+the extension gives <code>verifiable_only_outcome</code>, the response's <code>outcome</code> MUST NOT
+come before it in the strictness order <code>admit</code>, <code>challenge</code>, <code>hold</code>, <code>deny</code> of
+ECL-1 Section 4.3; an entry MUST NOT have the <code>effect</code> <code>supports</code> unless it is
+<code>admit</code>; and when it is <code>admit</code>, at least one <code>verifiable</code> entry MUST have the
+<code>effect</code> <code>supports</code>, and an entry whose <code>class</code> is <code>verifiable</code> and whose
+<code>required</code> is <code>true</code> MUST have the <code>status</code> <code>available</code>. In these conditions an
+input also counts as not <code>available</code> when its <code>derived_from</code> names, directly or
+through other entries, an input whose <code>status</code> is not <code>available</code> (ECL-1 Section
+4.3). An entry whose <code>obtained_at</code> is later than the response's <code>evaluated_at</code>
+MUST NOT be <code>available</code>, and an extension whose entries give <code>obtained_at</code> MUST
+give <code>received_at</code>, no later than <code>evaluated_at</code>. When the extension gives
+<code>received_at</code>, every entry whose <code>status</code> is <code>available</code> MUST give <code>obtained_at</code>
+and <code>value_at</code>. An entry's <code>value_at</code> MUST NOT be later than its <code>obtained_at</code>
+or than the response's <code>evaluated_at</code>. Input names are compared, within the
+record and with a register, after the case normalization of RFC 3986 section
+6.2.2.1 and RFC 8141 section 3.1: the URI scheme, the namespace identifier of a
+URN and the host of an <code>http</code> or <code>https</code> URI are lowercased, and the two
+hexadecimal digits of each percent-encoding are uppercased; no other
+normalization is applied. A consumer MUST reject a response that fails these
+conditions with <code>ecl.rule.decision-basis-one-way.v1</code>, after validating the
+extension&#x27;s value against its value schema (<a href="extension-registry-1.html#XR1-023">XR1-023</a>). An evidence verifier MUST
+reject a decision response that does not carry the extension with
+<code>ecl.rule.decision-basis-required.v1</code>, and MUST reject,
+with <code>ecl.rule.decision-basis-one-way.v1</code>, a response whose extension records as
+<code>verifiable</code> an input whose <code>source</code> is the <code>actor</code> of the response's request,
+compared as input names are, because an input that the governed AI system
+produces is <code>actor_supplied</code> (ECL-1 Section 4.3, <a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>), or gives a
+<code>received_at</code> earlier than the request's <code>issued_at</code> by more than the response
+clock-skew allowance of <a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>. A verifier MUST refuse, as a usage error, a
+register that fails its schema or <code>ecl.rule.register-declarations-consistent.v1</code>
+(<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>), among them a register that declares an action class, or an input
+of one class, more than once. A verifier given a version of the register MUST
+reject, with <code>ecl.rule.decision-basis-matches-register.v1</code>, a response whose
+extension names another register version; whose <code>inputs</code> are not exactly the
+inputs that the register declares for the request's action class, each once,
+with its declared class, required flag, <code>derived_from</code> (an absent <code>derived_from</code>
+naming no input) and <code>source</code>, the source compared as input names are; or that
+records as <code>available</code> an input whose <code>obtained_at</code> is more than its declared
+<code>deadline_milliseconds</code> after <code>received_at</code>, or whose <code>value_at</code> is more than
+its declared <code>maximum_age_seconds</code> before the response's <code>evaluated_at</code>.</p>
+<p>The actor check compares one identifier, the request's <code>actor.id</code>: an input
+that the governed AI system supplies under another name, such as the identity
+of one of its tools or of its workload, is not detected by name.</p>
+<h3 id="33-challenge-exchange">3.3 Challenge exchange</h3>
+<p><span id="DCMP2-019"><strong>DCMP2-019</strong></span><a class="requirement-link" href="#DCMP2-019" aria-label="Link to DCMP2-019">§</a> — A challenge MUST identify the original request, a unique
+challenge, required evidence or actions, a deadline, and <code>on_timeout</code>.</p>
+<p><span id="DCMP2-020"><strong>DCMP2-020</strong></span><a class="requirement-link" href="#DCMP2-020" aria-label="Link to DCMP2-020">§</a> — A challenge response MUST reference both challenge and request
+and MUST carry immutable evidence references. It is not a decision response.
+Evidence that a challenge response references is an <code>actor_supplied</code> decision
+input (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>) unless the Decision Layer authenticates it from its source,
+as ECL-1 Section 4.3 requires.</p>
+<p><span id="DCMP2-021"><strong>DCMP2-021</strong></span><a class="requirement-link" href="#DCMP2-021" aria-label="Link to DCMP2-021">§</a> — Challenge satisfaction MUST cause a new evaluation and a new
+decision response. It MUST NOT mutate or retroactively convert an earlier
+response.</p>
+<p><span id="DCMP2-056"><strong>DCMP2-056</strong></span><a class="requirement-link" href="#DCMP2-056" aria-label="Link to DCMP2-056">§</a> — A request that continues a request answered with a decision
+response whose outcome is <code>challenge</code> MUST be a new decision request (<a href="dcmp-2.html#DCMP2-021">DCMP2-021</a>,
+<a href="dcmp-2.html#DCMP2-026">DCMP2-026</a>): a new <code>message_id</code>; the continued request's <code>workflow.workflow_id</code>
+and <code>workflow.root_trace_id</code>; a <code>workflow.attempt</code> greater than the continued
+request's; and an <code>action</code>, <code>actor</code>, <code>subject</code> and <code>authority_request</code> equal to
+the continued request's. It MUST carry <code>continues</code> with <code>request_id</code>, the
+continued request's <code>message_id</code>; <code>response_id</code>, the <code>message_id</code> of the
+challenge response; and <code>approval_id</code>, the <code>object_id</code> of the EBMP-2
+<code>human_intervention</code> event whose <code>operation</code> is <code>approve</code> and whose <code>target_id</code>
+is the continued request's <code>message_id</code>. It MUST list that response and that
+event among its <code>workflow.causal_predecessors</code>, each by identifier and digest.
+The continued request keeps its one response, the challenge, and its attempt
+ends in the <code>challenged</code> state; the continuation's response is the one that can
+authorize a release. <code>protocols/examples/dcmp-2-continuation.json</code> shows a
+continuation with the objects it names.</p>
+<p><span id="DCMP2-057"><strong>DCMP2-057</strong></span><a class="requirement-link" href="#DCMP2-057" aria-label="Link to DCMP2-057">§</a> — The Decision Layer MUST evaluate a continuation afresh under the
+policy in force at its evaluation and MUST NOT copy the outcome, authorization or
+obligations of the continued response. The approval is a decision input of that
+evaluation and nothing more: it stands only for the action, actor, subject and
+requested authority of the continued request, as presented to the approver
+(ECL-1 <a href="ecl-1_standard.html#ECL1N-0174">ECL1N-0174</a>), and a continuation that changes any of them is not covered by
+it. The Decision Layer MUST NOT admit a continuation on an approval that was
+issued after the challenge's deadline, whose <code>expires_at</code> is at or before the
+continuation's evaluation, whose approver or approval key is revoked at that
+evaluation, or that a control message has revoked; nor on an approval that
+another continuation has already used; nor when the policy in force no longer
+accepts that approver for the action. It MUST then answer the continuation with
+a new response, a new <code>challenge</code> or a <code>deny</code>, and never by changing an earlier
+response.</p>
+<h3 id="34-control-message">3.4 Control message</h3>
+<p>Control operations are <code>cancel</code>, <code>revoke</code>, <code>supersede</code>, <code>quarantine</code>, and
+<code>halt</code>.</p>
+<p><span id="DCMP2-022"><strong>DCMP2-022</strong></span><a class="requirement-link" href="#DCMP2-022" aria-label="Link to DCMP2-022">§</a> — A control message MUST identify the controlled object
+(<code>target_id</code>), effective time, issuer, authority context, reason, and any
+required safe state. The authority context is the <code>authority</code> member: the
+control plane the message is issued on (<code>ordinary</code> or <code>emergency</code>) and a
+digest-bound reference to the grant under which the issuer acts.</p>
+<p><span id="DCMP2-023"><strong>DCMP2-023</strong></span><a class="requirement-link" href="#DCMP2-023" aria-label="Link to DCMP2-023">§</a> — <code>supersede</code> MUST identify the replacement object. The
+replacement does not erase the superseded object or its effects.</p>
+<p><span id="DCMP2-024"><strong>DCMP2-024</strong></span><a class="requirement-link" href="#DCMP2-024" aria-label="Link to DCMP2-024">§</a> — A cancellation or revocation received after release MUST be
+recorded and applied according to the action's interruptibility and
+compensation profile. It MUST NOT be reported as proof that an already
+completed effect did not occur.</p>
+<p><span id="DCMP2-025"><strong>DCMP2-025</strong></span><a class="requirement-link" href="#DCMP2-025" aria-label="Link to DCMP2-025">§</a> — A <code>halt</code> or <code>quarantine</code> control message MUST be issued on the
+separately authenticated emergency control plane that <a href="ecl-1_standard.html#FR-004">FR-004</a> requires at every
+level, and MUST declare <code>authority.plane</code> as <code>emergency</code>. A consumer MUST reject
+a <code>halt</code> or <code>quarantine</code> declared on the ordinary plane with
+<code>ecl.rule.emergency-control-plane-required.v1</code>.</p>
+<h2 id="4-workflow-and-causality">4. Workflow and causality</h2>
+<p><span id="DCMP2-026"><strong>DCMP2-026</strong></span><a class="requirement-link" href="#DCMP2-026" aria-label="Link to DCMP2-026">§</a> — Retries MUST create a new message identifier and attempt
+number. The prior attempt remains immutable.</p>
+<p><span id="DCMP2-027"><strong>DCMP2-027</strong></span><a class="requirement-link" href="#DCMP2-027" aria-label="Link to DCMP2-027">§</a> — A message MUST NOT list itself as a causal predecessor.</p>
+<p><span id="DCMP2-028"><strong>DCMP2-028</strong></span><a class="requirement-link" href="#DCMP2-028" aria-label="Link to DCMP2-028">§</a> — A causal reference MUST bind both the predecessor's logical
+identifier and canonical digest.</p>
+<p><span id="DCMP2-029"><strong>DCMP2-029</strong></span><a class="requirement-link" href="#DCMP2-029" aria-label="Link to DCMP2-029">§</a> — Within one workflow sequence domain, a predecessor sequence
+MUST be lower than its successor sequence. The sequence domain of a message is
+the workflow that its <code>workflow.workflow_id</code> names (<a href="ebmp-2.html#EBMP2-025">EBMP2-025</a>). Sequence values
+do not establish global ordering across domains.</p>
+<p><span id="DCMP2-030"><strong>DCMP2-030</strong></span><a class="requirement-link" href="#DCMP2-030" aria-label="Link to DCMP2-030">§</a> — Forks, joins, delegated sub-workflows, and human interventions
+MUST be represented through explicit workflow and causal references rather
+than inferred from timestamps.</p>
+<h2 id="5-time-and-expiry">5. Time and expiry</h2>
+<p><span id="DCMP2-031"><strong>DCMP2-031</strong></span><a class="requirement-link" href="#DCMP2-031" aria-label="Link to DCMP2-031">§</a> — <code>issued_at</code>, <code>expires_at</code>, <code>evaluated_at</code>, validity intervals,
+and deadlines MUST be UTC RFC 3339 values in the restricted ECL timestamp
+profile.</p>
+<p><span id="DCMP2-032"><strong>DCMP2-032</strong></span><a class="requirement-link" href="#DCMP2-032" aria-label="Link to DCMP2-032">§</a> — An expiry MUST be later than issue. An authorization end MUST
+be later than its start. A nonpositive message or authorization interval MUST
+report <code>ecl.rule.expiry-after-issue.v1</code>. The authorization interval ordering
+fact alone MUST NOT also emit <code>ecl.rule.admit-requires-valid-authority.v1</code>;
+distinct authority defects remain applicable, and primary selection follows
+<a href="dcmp-2.html#DCMP2-043">DCMP2-043</a>.</p>
+<p><span id="DCMP2-033"><strong>DCMP2-033</strong></span><a class="requirement-link" href="#DCMP2-033" aria-label="Link to DCMP2-033">§</a> — Wall-clock timestamps alone MUST NOT override a causal
+relationship or trusted sequence observation.</p>
+<p><span id="DCMP2-034"><strong>DCMP2-034</strong></span><a class="requirement-link" href="#DCMP2-034" aria-label="Link to DCMP2-034">§</a> — A verifier MUST apply the declared verification-time and clock-
+skew policy. A local parser default is not a trust policy.</p>
+<h2 id="6-integrity-and-extension-behavior">6. Integrity and extension behavior</h2>
+<p><span id="DCMP2-035"><strong>DCMP2-035</strong></span><a class="requirement-link" href="#DCMP2-035" aria-label="Link to DCMP2-035">§</a> — A message used to release an in-scope action MUST satisfy its
+payload-bound integrity policy.</p>
+<p><span id="DCMP2-036"><strong>DCMP2-036</strong></span><a class="requirement-link" href="#DCMP2-036" aria-label="Link to DCMP2-036">§</a> — A consumer MUST reject signature-suite substitution, key
+substitution, an unmet signature threshold, a missing required signer,
+unacceptable trust material, or stale revocation material.</p>
+<p><span id="DCMP2-037"><strong>DCMP2-037</strong></span><a class="requirement-link" href="#DCMP2-037" aria-label="Link to DCMP2-037">§</a> — Extension identifiers and versions MUST be unique within a
+message.</p>
+<p><span id="DCMP2-038"><strong>DCMP2-038</strong></span><a class="requirement-link" href="#DCMP2-038" aria-label="Link to DCMP2-038">§</a> — An unknown critical extension, in the sense of <a href="extension-registry-1.html#XR1-006">XR1-006</a>, MUST
+cause rejection before admission or release. An unknown non-critical extension
+MUST be preserved and reported and MUST NOT change core semantics.</p>
+<h2 id="7-failure-and-safe-behavior">7. Failure and safe behavior</h2>
+<p><span id="DCMP2-039"><strong>DCMP2-039</strong></span><a class="requirement-link" href="#DCMP2-039" aria-label="Link to DCMP2-039">§</a> — Failure output MUST identify one stable primary error code and
+MAY carry registered subcodes and bounded detail.</p>
+<p><span id="DCMP2-040"><strong>DCMP2-040</strong></span><a class="requirement-link" href="#DCMP2-040" aria-label="Link to DCMP2-040">§</a> — A parse, schema, semantic, integrity, trust, expiry, replay,
+revocation, or unknown-critical-extension failure MUST NOT produce an effective
+admit.</p>
+<p><span id="DCMP2-041"><strong>DCMP2-041</strong></span><a class="requirement-link" href="#DCMP2-041" aria-label="Link to DCMP2-041">§</a> — A timeout or unavailable remote dependency MUST apply the
+profile's declared action-class safe-state rule. Fail-open MUST NOT arise from
+an exception handler, library default, or missing configuration.</p>
+<p><span id="DCMP2-042"><strong>DCMP2-042</strong></span><a class="requirement-link" href="#DCMP2-042" aria-label="Link to DCMP2-042">§</a> — A consumer MAY support DCMP-1 during a declared transition
+window, but MUST NOT silently coerce a DCMP-1 object into DCMP-2 or claim
+DCMP-2 conformance for an unmapped field.</p>
+<p><span id="DCMP2-043"><strong>DCMP2-043</strong></span><a class="requirement-link" href="#DCMP2-043" aria-label="Link to DCMP2-043">§</a> — A conformant validator MUST report exactly one primary error per
+invalid artifact: a strict-input failure first, with the finding of the first
+check of INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-037">IE1-037</a> that fails, then schema invalidity, then
+the violated semantic rules in ascending order of the <code>precedence</code> value that
+the semantic-rule registry gives them; every other violated rule MUST be
+reported as a secondary finding, and the primary selection MUST be
+deterministic for identical input. A strict-input failure has no secondary
+findings. After a schema failure, or a value-schema failure of a registered
+extension (<a href="extension-registry-1.html#XR1-023">XR1-023</a>), a validator MUST evaluate each semantic rule whose input
+members are present with the types that the schema requires, and MUST report
+its violations as secondary findings. A binding profile's rules apply only to a
+record that satisfies the record's schema, so a schema-invalid binding record
+has no secondary findings. A signed evidence bundle orders its findings by
+EBMP-2 <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a>.</p>
+<h2 id="8-response-binding">8. Response binding</h2>
+<p>A response is valid for release only as the answer to one exact request. These
+rules state what binds the two. A verifier, an enforcement point and an
+evidence consumer apply them in the order listed and report the first failure
+with the error code named for it, or with <code>ecl.error.request-binding-invalid.v1</code>
+where none is named. A member a rule reads that is missing or of the wrong type
+fails that rule.</p>
+<p><span id="DCMP2-044"><strong>DCMP2-044</strong></span><a class="requirement-link" href="#DCMP2-044" aria-label="Link to DCMP2-044">§</a> — In an <code>admit</code>, <code>authorization.scope_digest</code> MUST be the
+<code>ecl.digest.sha-256.v1</code> digest of the restricted canonical JSON of an object
+with exactly two members: <code>request_id</code>, set to the request's <code>message_id</code>, and
+<code>action</code>, set to the request's complete <code>action</code> object. A consumer MUST reject
+any other value with <code>ecl.error.scope-mismatch.v1</code>.</p>
+<p><span id="DCMP2-045"><strong>DCMP2-045</strong></span><a class="requirement-link" href="#DCMP2-045" aria-label="Link to DCMP2-045">§</a> — A response's <code>request_id</code> MUST equal its request's <code>message_id</code>,
+and its <code>workflow_id</code>, <code>root_trace_id</code> and <code>attempt</code> MUST equal the request's.</p>
+<p><span id="DCMP2-046"><strong>DCMP2-046</strong></span><a class="requirement-link" href="#DCMP2-046" aria-label="Link to DCMP2-046">§</a> — A response MUST carry exactly one causal predecessor with the
+relation <code>ecl.relation.responds-to.v1</code>; that predecessor's <code>id</code> MUST be the
+request's <code>message_id</code> and its digest MUST be the <code>ecl.digest.sha-256.v1</code> digest
+of the request's restricted canonical JSON. A consumer MUST report a failure of
+this rule with <code>ecl.error.digest-mismatch.v1</code>. Predecessors with other
+relations are permitted.</p>
+<p><span id="DCMP2-047"><strong>DCMP2-047</strong></span><a class="requirement-link" href="#DCMP2-047" aria-label="Link to DCMP2-047">§</a> — A response's <code>issued_at</code> MUST NOT be earlier than its request's
+<code>issued_at</code> by more than the response clock-skew allowance that the
+verification profile declares. The reference verification profile
+(<code>ecl.verification-profile.reference.v1</code>) declares an allowance of zero.</p>
+<p><span id="DCMP2-048"><strong>DCMP2-048</strong></span><a class="requirement-link" href="#DCMP2-048" aria-label="Link to DCMP2-048">§</a> — In an <code>admit</code>, <code>authorization.audience</code> MUST equal the request's
+<code>authority_request.audience</code>, reported as <code>ecl.error.audience-mismatch.v1</code> when it
+does not, and <code>authorization.use_policy</code> MUST equal the request's
+<code>authority_request.use_policy</code>.</p>
+<p><span id="DCMP2-049"><strong>DCMP2-049</strong></span><a class="requirement-link" href="#DCMP2-049" aria-label="Link to DCMP2-049">§</a> — In an <code>admit</code>, the authorization window MUST be non-empty and no
+longer than the request's <code>requested_validity_seconds</code>; <code>valid_from</code> MUST NOT be
+earlier than the response's <code>issued_at</code>; <code>valid_until</code> MUST NOT be later than the
+response's <code>expires_at</code> when the response has one, and MUST NOT be later than the
+response's <code>issued_at</code> plus <code>requested_validity_seconds</code>.</p>
+<p><span id="DCMP2-050"><strong>DCMP2-050</strong></span><a class="requirement-link" href="#DCMP2-050" aria-label="Link to DCMP2-050">§</a> — In an <code>admit</code>, a <code>single_use</code> authorization MUST omit <code>max_uses</code>
+or set it to 1, and when the request carries <code>authority_request.max_uses</code> the
+authorization MUST carry a <code>max_uses</code> that is not greater.</p>
+<p><span id="DCMP2-051"><strong>DCMP2-051</strong></span><a class="requirement-link" href="#DCMP2-051" aria-label="Link to DCMP2-051">§</a> — A consumer MUST NOT release an action on a response that fails
+any of <a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, and an evidence verifier MUST report such a
+response as not binding its request.</p>
+<h2 id="9-security-notes">9. Security notes</h2>
+<p>Parameter digests do not make unsafe parameters safe. Signatures do not prove
+the signer was authorized. A fresh nonce does not prove an effect has not
+already occurred. A decision response does not prove Enforcement observed or
+honored it. Those properties require the Authority, Enforcement, Provenance,
+Verification, and Fleet evidence defined by ECL-1 and EBMP-2.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>protocols/DCMP-2.md</code>, SHA-256 <code>952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

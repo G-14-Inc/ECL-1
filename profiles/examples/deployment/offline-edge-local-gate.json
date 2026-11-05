@@ -1,0 +1,112 @@
+{
+  "schema_version": "ecl_deployment_profile_v1",
+  "profile_id": "urn:example:ecl:profile:offline-edge-local-gate",
+  "profile_version": "1",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "2121212121212121212121212121212121212121212121212121212121212121"
+  },
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:offline-edge",
+    "version": "1"
+  },
+  "claim_level": 3,
+  "model": "offline-edge",
+  "delivery_surfaces": [
+    "local_gate",
+    "offline_verifier"
+  ],
+  "release_path": {
+    "enforcement_location": "same_host_sidecar",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true,
+    "decision_timeout_milliseconds": 15,
+    "network_loss_disposition": "bounded_degraded_then_restricted"
+  },
+  "dependencies": [
+    {
+      "dependency_id": "urn:example:ecl:dependency:offline-policy-cache",
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 3600,
+      "integrity_required": true,
+      "failure_disposition": "restricted"
+    }
+  ],
+  "timing_case": {
+    "uses_default_baseline": true,
+    "connected_revocation_seconds": 300,
+    "offline_staleness_seconds": 3600,
+    "evidence_export_seconds": 14400,
+    "trusted_time_or_secure_monotonic": true,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:offline-edge-l3",
+      "version": "1"
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "entry_conditions": [
+        "synchronization channel unavailable"
+      ],
+      "signed_cached_state_required": true,
+      "bounded_actions": [
+        "pre-authorized reversible actions"
+      ],
+      "expires_to": "restricted"
+    },
+    "restricted": {
+      "entry_conditions": [
+        "policy or trust cache exceeds staleness budget"
+      ],
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ]
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "control-state integrity fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ]
+  },
+  "evidence_custody": {
+    "local_append_only_buffer": true,
+    "export_integrity": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:offline",
+      "version": "1"
+    },
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:offline",
+      "version": "1"
+    },
+    "transfer_custody": {
+      "uri": "urn:example:ecl:custody:reconnect-export",
+      "version": "1"
+    }
+  },
+  "topology_controls": {
+    "offline": {
+      "policy_cache_staleness_seconds": 3600,
+      "trust_cache_staleness_seconds": 3600,
+      "stale_transition": "restricted",
+      "reconnect_reconciliation": {
+        "uri": "urn:example:ecl:reconciliation:offline-edge",
+        "version": "1"
+      }
+    }
+  },
+  "residual_risks": [
+    "Revocation cannot propagate while physically disconnected; bounded cache expiry limits exposure."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+  "title": "ECL ACS decision extension value v1",
+  "description": "The value of ecl.ext.acs-decision.v1 on a DCMP-2 decision response: the OWASP ACS Guardian decision the ECL decision depends on, the ACS request_id of the step, the session chain head the Guardian published for it, and, for a modify, the digest of the RFC 8785 form of its modifications object (AC1-005, AC1-008).",
+  "type": "object",
+  "required": [
+    "decision",
+    "request_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "enum": [
+        "allow",
+        "deny",
+        "modify",
+        "ask",
+        "defer"
+      ]
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "evaluator": {
+      "enum": [
+        "deterministic",
+        "agent",
+        "composite"
+      ]
+    },
+    "chain_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "request_hash": {
+      "description": "The step's ContextEntry request_hash, required when the deployment claims ACS-Audit.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "modifications_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    }
+  }
+}

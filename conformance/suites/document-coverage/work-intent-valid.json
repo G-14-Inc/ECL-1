@@ -1,0 +1,44 @@
+{
+  "agent": {
+    "id": "urn:example:agent:migration-planner",
+    "trust_domain": "urn:example:trust-domain:engineering",
+    "type": "ecl.principal.workload.v1"
+  },
+  "declared_outputs": [
+    "db/migrations/0007_add_index.sql"
+  ],
+  "dependency_epochs": {
+    "policy": "42",
+    "source": "a1b2c3",
+    "trust": "11"
+  },
+  "exact_targets": [
+    {
+      "identifier": "db/migrations/0007_add_index.sql",
+      "kind": "migration"
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1"
+      },
+      "identifier": "accounts",
+      "kind": "schema"
+    }
+  ],
+  "expires_at": "2026-07-27T13:00:00Z",
+  "intent_id": "urn:example:ecl:intent:schema-migration-7",
+  "issued_at": "2026-07-27T12:00:00Z",
+  "protocol": "ECL-WI-1",
+  "schema_version": "1.0-rc.1",
+  "semantic_topics": [
+    "account lookup performance"
+  ],
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [],
+    "root_trace_id": "urn:example:trace:schema-migration",
+    "sequence": 1,
+    "workflow_id": "urn:example:workflow:schema-migration"
+  }
+}

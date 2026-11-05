@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL OpenTelemetry Evidence Export Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-opentelemetry-evidence-export-profile-1">ECL OpenTelemetry Evidence Export Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile copies ECL decisions and evidence into OpenTelemetry log records so
+that observability tools and security information and event management (SIEM)
+systems can ingest them. The export is a copy. The signed evidence bundle remains
+the record that a claim relies on, and a third party still verifies the bundle,
+not the copy. The exporter sits after the evidence path: it reads objects once
+they are recorded, and its failure changes no decision and blocks no evidence.
+Each record carries the identifiers of the request, response and action it
+belongs to and, when the deployment holds an export key, a digest of the object
+keyed with that key, so that a consumer can match the record to the bundle
+without the telemetry letting its readers test guesses about what the object
+holds.</p>
+<p>The profile adds requirements to a claim that declares it. It removes none of
+the core requirements or of the requirements of DCMP-2 and EBMP-2.</p>
+<p>This profile has no release boundary in the sense of <a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a>: the exporter
+copies evidence after it is recorded and releases no action (<a href="otel-evidence-export-1.html#OE1-002">OE1-002</a>).</p>
+<h2 id="pinned-sources">Pinned sources</h2>
+<p>The machine-readable record of these pins is <code>conformance/binding-sources.json</code>.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">Revision</th>
+<th scope="col">File</th>
+<th scope="col">SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenTelemetry Specification 1.61.0, logs data model (stable)</td>
+<td><code>open-telemetry/opentelemetry-specification</code> tag <code>v1.61.0</code>, commit <code>32c0b2c1d9e11f68da0e6e7b63044e57878590de</code></td>
+<td><code>specification/logs/data-model.md</code></td>
+<td><code>3ee2c391a5d3262130582df89a3dc5a5640d837d010734ea79458fe3ece31173</code></td>
+</tr>
+<tr>
+<td>OpenTelemetry Specification 1.61.0, file exporter (development)</td>
+<td>same commit</td>
+<td><code>specification/protocol/file-exporter.md</code></td>
+<td><code>0e345162b279a4d849c95b27b9afb3a6c958aeed27fac9e04576948aed1cb257</code></td>
+</tr>
+<tr>
+<td>OTLP 1.11.1, JSON Protobuf encoding</td>
+<td><code>open-telemetry/opentelemetry-proto</code> tag <code>v1.11.1</code>, commit <code>b3f75588eb23c5fca62264edd05d382de49beb1a</code></td>
+<td><code>docs/specification.md</code></td>
+<td><code>18525fa29803740421409d87a07d56cbaa47c204405811618463c823cb770486</code></td>
+</tr>
+<tr>
+<td>OTLP 1.11.1, log record message</td>
+<td>same commit</td>
+<td><code>opentelemetry/proto/logs/v1/logs.proto</code></td>
+<td><code>0c9d0c45eea723d38ef28ee13135ff61c037387f41cacc476ccac3485d6c138a</code></td>
+</tr>
+<tr>
+<td>Semantic Conventions 1.44.0, naming</td>
+<td><code>open-telemetry/semantic-conventions</code> tag <code>v1.44.0</code>, commit <code>e10a930844c6951757a43b849d364f7d056ac32b</code></td>
+<td><code>docs/general/naming.md</code></td>
+<td><code>3a33354b1f56d6b55d44703c81793b5944200b8488b40c1d9b25beb46c48be34</code></td>
+</tr>
+<tr>
+<td>Semantic Conventions 1.44.0, events</td>
+<td>same commit</td>
+<td><code>docs/general/events.md</code></td>
+<td><code>6fdd91ce96792d6600fdcb79ec0002d9dafa9a79f7c608fe75e551c7f535789b</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>ecl.</code> attribute namespace is not a namespace of the pinned semantic
+conventions. The naming guidance there recommends a prefix that the defining
+organization controls; the profile keeps <code>ecl.</code>, the prefix of ECL-1's names.
+A change of prefix would go through the change process of ECL-1.</p>
+<h2 id="copy-not-record">Copy, not record</h2>
+<p><span id="OE1-001"><strong>OE1-001</strong></span><a class="requirement-link" href="#OE1-001" aria-label="Link to OE1-001">§</a> — Exported telemetry MUST be a copy of ECL evidence: the signed
+evidence bundle remains the record for every claim, and a log record, span event
+or other exported item MUST NOT be offered as the evidence that <a href="ecl-1_standard.html#ECL1N-0047">ECL1N-0047</a>,
+<a href="ecl-1_standard.html#FR-107">FR-107</a> or <a href="ecl-1_standard.html#FR-108">FR-108</a> requires.</p>
+<p><span id="OE1-002"><strong>OE1-002</strong></span><a class="requirement-link" href="#OE1-002" aria-label="Link to OE1-002">§</a> — Apart from the response of a detection declared under
+<a href="ecl-1_standard.html#ECL1N-0167">ECL1N-0167</a>, an export failure, such as an unreachable collector, a full buffer,
+a serialization error or a crash of the exporter, MUST NOT change a decision,
+delay or block the release of an admitted action, or change, delay or block the
+recording of evidence: the exporter MUST read an object only after it is
+recorded and MUST NOT be a dependency of the decision or enforcement path. A
+deployment that reacts to the loss of its monitoring path MUST do so through
+such a declared detection, whose response is recorded as its own control
+action.</p>
+<h2 id="log-records">Log records</h2>
+<p><span id="OE1-003"><strong>OE1-003</strong></span><a class="requirement-link" href="#OE1-003" aria-label="Link to OE1-003">§</a> — Each exported DCMP-2 message or EBMP-2 event MUST become one
+OpenTelemetry log record whose <code>EventName</code> is <code>ecl.dcmp.</code> followed by the
+message type or <code>ecl.ebmp.</code> followed by the event type, whose <code>Timestamp</code> is the
+object's <code>issued_at</code> or <code>observed_at</code>, whose <code>ObservedTimestamp</code> is the time at
+which the exporter read the object and is not earlier than <code>Timestamp</code>, and
+whose attributes, in which no key appears more than once, are those of the
+attribute table below for that object, each equal to the value in the object it
+copies and held in the OTLP <code>AnyValue</code> kind that the table gives for it.</p>
+<p><span id="OE1-004"><strong>OE1-004</strong></span><a class="requirement-link" href="#OE1-004" aria-label="Link to OE1-004">§</a> — Each log record MUST carry the identifiers of its workflow,
+request, response and action where the object has them, and MUST NOT carry a
+digest that can be computed without the export key of <a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>, such as the
+SHA-256 digest of the object it copies or the parameters digest that the object
+carries, other than the policy digest of the attribute table, which identifies
+the policy that decided as the policy's identifier and version do; a consumer
+that holds the export key MUST treat a record whose keyed digest differs from
+the one it computes over the bundle's object as not describing that object.</p>
+<p><span id="OE1-005"><strong>OE1-005</strong></span><a class="requirement-link" href="#OE1-005" aria-label="Link to OE1-005">§</a> — A log record MUST NOT carry action parameters, tool arguments or
+results, constraints, credentials, tokens, signatures, key material, the free
+text of reasons, the identifiers of people and records (<code>ecl.actor.id</code>,
+<code>ecl.subject.id</code> and <code>ecl.action.target</code>), or other non-public data, in its
+attributes or its <code>Body</code>, unless the export policy declares the attribute and
+the data class it carries (<a href="ebmp-2.html#EBMP2-034">EBMP2-034</a>, <a href="ebmp-2.html#EBMP2-035">EBMP2-035</a>); an exporter MUST NOT emit a
+log record attribute that is neither in the attribute table nor declared, an
+attribute that the table exports only when declared without that declaration,
+or a <code>Body</code> that the export policy does not declare.</p>
+<p><span id="OE1-006"><strong>OE1-006</strong></span><a class="requirement-link" href="#OE1-006" aria-label="Link to OE1-006">§</a> — When the decision and enforcement path is traced, an exporter MAY
+also add the record's attributes to a span event named as its <code>EventName</code> on the
+span of the governed operation, and MAY set the record's <code>TraceId</code> and <code>SpanId</code>
+to that span; a span event MUST NOT replace the log record.</p>
+<p><span id="OE1-007"><strong>OE1-007</strong></span><a class="requirement-link" href="#OE1-007" aria-label="Link to OE1-007">§</a> — An exporter that writes to a file or to standard output MUST write
+one OTLP <code>LogsData</code> object per line in JSON Lines form, encoded under the pinned
+OTLP JSON Protobuf encoding: trace and span identifiers in hexadecimal, enum
+values as integers, and 64-bit integers, including timestamps, as decimal
+strings.</p>
+<p><span id="OE1-008"><strong>OE1-008</strong></span><a class="requirement-link" href="#OE1-008" aria-label="Link to OE1-008">§</a> — The <code>SeverityNumber</code> of a record MUST follow the severity table
+below, and its <code>SeverityText</code> MUST be the short name that the table gives for
+that number (<code>INFO</code>, <code>WARN</code> or <code>ERROR</code>); a consumer MUST NOT infer
+authorization, release or the absence of an effect from a record's severity or
+from the presence or absence of a record.</p>
+<p><span id="OE1-009"><strong>OE1-009</strong></span><a class="requirement-link" href="#OE1-009" aria-label="Link to OE1-009">§</a> — An exporter that retains export records MUST write each one as
+<code>ecl_otel_export_record_v1</code>, valid against
+<code>https://externalcontrollayer.ai/ns/schema/binding/otel-export/1</code>.</p>
+<h2 id="keyed-digests">Keyed digests</h2>
+<p><span id="OE1-010"><strong>OE1-010</strong></span><a class="requirement-link" href="#OE1-010" aria-label="Link to OE1-010">§</a> — An exporter MUST NOT emit <code>ecl.object.digest</code>,
+<code>ecl.action.parameters_digest</code> or <code>ecl.export.key_id</code> unless the deployment
+holds an export key: a secret of at least 32 bytes from a cryptographically
+secure random source, generated for that deployment's telemetry export alone,
+held only by the exporter and by the consumers that match records to the bundle,
+never readable by the governed AI system, and never a key that signs or verifies
+ECL evidence. With an export key, every record MUST carry the key's identifier,
+a string, as the <code>stringValue</code> of <code>ecl.export.key_id</code>, which MUST NOT be derived
+from the key; in <code>ecl.object.digest</code>, the HMAC-SHA-256 (RFC 2104) under the key
+of the restricted canonical JSON of the object (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>); and, where the object
+has a parameters digest, in <code>ecl.action.parameters_digest</code>, the HMAC-SHA-256
+under the key of the restricted canonical JSON of that digest; each HMAC as the
+<code>stringValue</code> of its 64 lowercase hexadecimal digits. A consumer that does not
+hold the key that a record names MUST still treat as not describing the object a
+record whose keyed digests are not in that form, or that lacks a keyed digest
+that the object has.</p>
+<p>An unkeyed digest of an object, or the parameters digest that a request or an
+execution event carries, lets a reader of the telemetry who can list the
+possible values, such as an amount or a short list of accounts, compute the
+digest of each candidate and confirm which one was used. A digest keyed with a
+secret that the telemetry's readers do not hold still lets a consumer that holds
+the key match a record to the bundle, and it gives everyone else nothing to
+compare a guess with. The digests inside the signed evidence bundle are not
+keyed and do not change. Replacing the export key changes its identifier, so a
+consumer knows which key a record needs. An exporter without an export key
+exports no digest, and a consumer then matches records to the bundle by their
+identifiers.</p>
+<h2 id="attribute-table">Attribute table</h2>
+<p>Every attribute value is a string held as an OTLP <code>stringValue</code>, except
+<code>ecl.workflow.attempt</code> and <code>ecl.workflow.sequence</code>, which are integers held as
+an <code>intValue</code> (<a href="otel-evidence-export-1.html#OE1-003">OE1-003</a>, <a href="otel-evidence-export-1.html#OE1-007">OE1-007</a>); an attribute held in another <code>AnyValue</code> kind,
+such as a <code>bytesValue</code> that holds the same text, does not hold the value that
+the table gives. String values copy the object's value. Each attribute key
+appears once in a record (<a href="otel-evidence-export-1.html#OE1-003">OE1-003</a>), as the pinned <code>logs.proto</code> requires of a log
+record's attributes. A keyed digest is a <code>stringValue</code> of 64 lowercase
+hexadecimal digits (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>), a form that a consumer without the export key can
+check, though it cannot compare the digest with the object. Attributes whose
+source member is absent are left out, and a row applies only to the objects it
+names, also when another object holds the same member. Execution events are the
+EBMP-2 events of kind <code>execution</code> (<code>release_prepared</code>, <code>execution_released</code>,
+<code>execution_observed</code> and <code>execution_terminal</code>), decision events those of kind
+<code>decision</code> (<code>decision_recorded</code>), authority events those of kind <code>authority</code>
+(<code>authority_issued</code> and <code>authority_consumed</code>), request events those of kind
+<code>request</code> (<code>request_received</code>), and terminal events those of type
+<code>execution_terminal</code>. The rows marked &quot;when declared&quot; carry the identifiers of
+people and records: an exporter emits each of them only when the export policy
+declares it with the data class it carries (<a href="otel-evidence-export-1.html#OE1-005">OE1-005</a>), and then for every object
+that the row names and that holds the source member.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Attribute</th>
+<th scope="col">Objects</th>
+<th scope="col">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ecl.export.profile</code></td>
+<td>all</td>
+<td>The constant <code>OTEL-EVIDENCE-EXPORT-1/1.0</code></td>
+</tr>
+<tr>
+<td><code>ecl.protocol</code></td>
+<td>all</td>
+<td><code>protocol</code></td>
+</tr>
+<tr>
+<td><code>ecl.object.id</code></td>
+<td>all</td>
+<td><code>message_id</code> or <code>object_id</code></td>
+</tr>
+<tr>
+<td><code>ecl.object.type</code></td>
+<td>all</td>
+<td><code>message_type</code> or <code>event_type</code></td>
+</tr>
+<tr>
+<td><code>ecl.object.digest</code></td>
+<td>all, with an export key</td>
+<td>HMAC-SHA-256 under the export key of the restricted canonical JSON of the object, hexadecimal (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>)</td>
+</tr>
+<tr>
+<td><code>ecl.export.key_id</code></td>
+<td>all, with an export key</td>
+<td>The identifier of the export key (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>)</td>
+</tr>
+<tr>
+<td><code>ecl.workflow.id</code></td>
+<td>all</td>
+<td><code>workflow.workflow_id</code></td>
+</tr>
+<tr>
+<td><code>ecl.workflow.root_trace_id</code></td>
+<td>all</td>
+<td><code>workflow.root_trace_id</code></td>
+</tr>
+<tr>
+<td><code>ecl.workflow.attempt</code></td>
+<td>all</td>
+<td><code>workflow.attempt</code> (integer)</td>
+</tr>
+<tr>
+<td><code>ecl.workflow.sequence</code></td>
+<td>all</td>
+<td><code>workflow.sequence</code> (integer)</td>
+</tr>
+<tr>
+<td><code>ecl.issuer.id</code></td>
+<td>DCMP-2</td>
+<td><code>issuer.id</code></td>
+</tr>
+<tr>
+<td><code>ecl.producer.id</code></td>
+<td>EBMP-2</td>
+<td><code>producer.id</code></td>
+</tr>
+<tr>
+<td><code>ecl.evidence.bundle</code></td>
+<td>all, when known</td>
+<td>The identifier of the bundle that holds the object</td>
+</tr>
+<tr>
+<td><code>ecl.action.id</code></td>
+<td>decision request; execution events</td>
+<td><code>action.action_id</code> or <code>event.action_id</code></td>
+</tr>
+<tr>
+<td><code>ecl.action.class</code></td>
+<td>decision request</td>
+<td><code>action.action_class</code></td>
+</tr>
+<tr>
+<td><code>ecl.action.operation</code></td>
+<td>decision request; execution events</td>
+<td><code>action.operation</code> or <code>event.operation</code></td>
+</tr>
+<tr>
+<td><code>ecl.action.target</code></td>
+<td>decision request; execution events; when declared</td>
+<td><code>action.target.uri</code> or <code>event.target.uri</code></td>
+</tr>
+<tr>
+<td><code>ecl.action.parameters_digest</code></td>
+<td>decision request; execution events; with an export key</td>
+<td>HMAC-SHA-256 under the export key of the restricted canonical JSON of <code>action.parameters_digest</code> or <code>event.parameters_digest</code>, hexadecimal (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>)</td>
+</tr>
+<tr>
+<td><code>ecl.actor.id</code></td>
+<td>decision request; when declared</td>
+<td><code>actor.id</code></td>
+</tr>
+<tr>
+<td><code>ecl.subject.id</code></td>
+<td>decision request; when declared</td>
+<td><code>subject.id</code></td>
+</tr>
+<tr>
+<td><code>ecl.request.id</code></td>
+<td>decision response; challenge; challenge response; request events</td>
+<td><code>request_id</code> or <code>event.request.uri</code></td>
+</tr>
+<tr>
+<td><code>ecl.decision.id</code></td>
+<td>decision response</td>
+<td><code>decision_id</code></td>
+</tr>
+<tr>
+<td><code>ecl.decision.outcome</code></td>
+<td>decision response</td>
+<td><code>outcome</code></td>
+</tr>
+<tr>
+<td><code>ecl.decision.reason_code</code></td>
+<td>decision response</td>
+<td>the <code>code</code> of the first reason</td>
+</tr>
+<tr>
+<td><code>ecl.decision.safe_state</code></td>
+<td>decision response</td>
+<td><code>safe_state</code></td>
+</tr>
+<tr>
+<td><code>ecl.policy.id</code></td>
+<td>decision response</td>
+<td><code>policy.id</code></td>
+</tr>
+<tr>
+<td><code>ecl.policy.version</code></td>
+<td>decision response</td>
+<td><code>policy.version</code></td>
+</tr>
+<tr>
+<td><code>ecl.policy.digest</code></td>
+<td>decision response</td>
+<td>the value of <code>policy.digest</code></td>
+</tr>
+<tr>
+<td><code>ecl.authorization.id</code></td>
+<td>admit response; authority events</td>
+<td><code>authorization.authorization_id</code> or <code>authorization_id</code></td>
+</tr>
+<tr>
+<td><code>ecl.event.kind</code></td>
+<td>EBMP-2</td>
+<td><code>event.kind</code></td>
+</tr>
+<tr>
+<td><code>ecl.event.state</code></td>
+<td>EBMP-2</td>
+<td><code>event.state</code></td>
+</tr>
+<tr>
+<td><code>ecl.event.decision_id</code></td>
+<td>decision events; execution events</td>
+<td><code>event.decision.uri</code></td>
+</tr>
+<tr>
+<td><code>ecl.event.reason_code</code></td>
+<td>terminal events</td>
+<td>the <code>code</code> of <code>ecl.ext.outcome-reason.v1</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="severity-table">Severity table</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Object</th>
+<th scope="col"><code>SeverityNumber</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decision response with outcome <code>admit</code></td>
+<td>9 (INFO)</td>
+</tr>
+<tr>
+<td>Decision response with outcome <code>deny</code>, <code>hold</code> or <code>challenge</code></td>
+<td>13 (WARN)</td>
+</tr>
+<tr>
+<td><code>execution_terminal</code> in <code>succeeded</code></td>
+<td>9 (INFO)</td>
+</tr>
+<tr>
+<td><code>execution_terminal</code> in <code>denied</code>, <code>held</code>, <code>challenged</code>, <code>expired_before_release</code>, <code>rolled_back</code> or <code>compensated</code></td>
+<td>13 (WARN)</td>
+</tr>
+<tr>
+<td><code>execution_terminal</code> in <code>failed</code>, <code>partially_succeeded</code>, <code>timed_out</code>, <code>cancelled</code> or <code>unknown</code></td>
+<td>17 (ERROR)</td>
+</tr>
+<tr>
+<td>Control message <code>halt</code> or <code>quarantine</code></td>
+<td>17 (ERROR)</td>
+</tr>
+<tr>
+<td>Any other message or event</td>
+<td>9 (INFO)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mapping-to-ocsf-informative">Mapping to OCSF (informative)</h2>
+<p>A consumer that normalizes to the Open Cybersecurity Schema Framework (OCSF,
+schema 1.9.0, tag <code>1.9.0</code>, commit <code>856d462bd20dc46cc1ffed2dfffe3b91ef0fbeba</code>)
+can map a decision response record to the API Activity class (<code>class_uid</code>
+6003): <code>time</code> from <code>Timestamp</code>, <code>action_id</code> 1 (Allowed) for <code>admit</code> and 2
+(Denied) for <code>deny</code>, <code>action_id</code> 99 (Other) with the outcome in <code>action</code> for
+<code>hold</code> and <code>challenge</code>, <code>disposition_id</code> 1 (Allowed), 2 (Blocked) or 14
+(Delayed), and the <code>ecl.</code> attributes in <code>unmapped</code>. An <code>execution_terminal</code>
+record maps to the same class with its state in <code>status_detail</code>. OCSF records
+made this way are copies of copies: for a consumer that holds the export key,
+the keyed digest in <code>ecl.object.digest</code> is what connects them to the signed
+bundle, and otherwise only their identifiers do.</p>
+<h2 id="export-record-informative">Export record (informative)</h2>
+<p>An <code>ecl_otel_export_record_v1</code> record holds one export: the <code>object</code> the
+exporter read; the OTLP <code>log_record</code> it made; the <code>bundle_id</code> of the bundle that
+holds the object, which a log record that carries <code>ecl.evidence.bundle</code> copies;
+the <code>declared_attributes</code> of the export policy, each with the data class it
+carries, where the name <code>body</code> declares a log record body; the <code>export</code> outcome
+(<code>exported</code> or <code>failed</code>) and when it was attempted; and <code>evidence_after</code>, the
+same object as the evidence held it after the attempt. The rules registered
+for this profile, whose names begin <code>ecl.rule.otel-</code>, check a record after its
+schema; a checker compares a keyed digest only under an export key that its
+caller supplies, and recognizes a digest that needs no key without one.</p>
+<h2 id="security-considerations">Security considerations</h2>
+<p>Telemetry pipelines are wider and less protected than the evidence store, and
+their contents reach people and systems outside the claim's trust boundary. The
+profile therefore exports identifiers, outcomes and, with an export key, keyed
+digests, and leaves parameters, results, reason text and every digest that needs
+no key in the bundle, apart from the policy digest, which identifies the policy
+as its identifier and version do. A digest of low-entropy content lets a reader
+confirm guessed values; this profile exports such digests only under an export
+key (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>), and exports the identifiers of people and records only when the
+export policy declares them. A record can be forged, dropped or delayed anywhere
+along the pipeline, so its only authority is the keyed digest that a consumer
+that holds the export key compares with the signed bundle. A reader who obtains
+the export key can test guesses as an unkeyed digest would let them, which is
+why the key stays with the exporter and those consumers. The <code>object_id</code> of an
+EBMP-2 event is derived from the event&#x27;s content (<a href="ebmp-2.html#EBMP2-047">EBMP2-047</a>) and is exported as
+its identifier; confirming a guess through it needs every member of the event,
+including the digests of the objects it references, which no record carries.
+Making release wait for an export would let anyone who can disrupt the pipeline
+stop or slow governed actions, and a deny that depended on export would turn
+monitoring into a control path that the claim does not declare; both are
+excluded by <a href="otel-evidence-export-1.html#OE1-002">OE1-002</a>.</p>
+<h2 id="conformance">Conformance</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>The <code>otel-export</code> suite refuses a record that misstates the outcome or the keyed digest of the object it copies, or exports its attempt 1 as the boolean <code>true</code> or its outcome as a <code>bytesValue</code>, a record that repeats an attribute key, a record that carries a digest that needs no key, also under a key the suite does not hold as a <code>bytesValue</code> of its text or of its bytes, or that names the export key without the keyed digest of the object or of a request's parameters, or by an identifier that is not a string, a record of a response that carries a parameters digest, a record of a control message that carries a decision's safe state, a record of a request event without the identifier of its request, a record that carries the action's parameters in an undeclared attribute or an undeclared body, a record that carries the identifier of a person or record that the export policy does not declare, a deny exported with the severity of an admit, a severity text other than the table's name, an observed time earlier than the object's time or beyond the range of a <code>fixed64</code>, an export read before the object's time, an export failure after which the evidence differs, and a severity encoded as an enum name; it accepts a record that carries the declared identifiers, and the records of a challenge, a <code>halt</code> control message and a request event</td>
+</tr>
+<tr>
+<td>Assessor procedure</td>
+<td>Pipeline placement after the evidence path, the export policy's declared data classes, and the generation and custody of the export key</td>
+</tr>
+</tbody>
+</table>
+<p>The digests of the suite's vectors are keyed with a published test export key
+that the suite's manifest names, never an operational key.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/OTEL-EVIDENCE-EXPORT-1.md</code>, SHA-256 <code>97a631d95d939e9ba9f4c919a5581011facfdc056865fdcc68ad0915d24304b2</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

@@ -1,0 +1,382 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "title": "ECL MCP gateway exchange record v1",
+  "description": "MG1-012: one request from a governed AI system through an MCP gateway, as the gateway retains it for audit: the call, the server's identity and current tool definition, the declared mapping, the DCMP-2 exchange, the gateway's release guard, the release_prepared event, the discharge of the pre-release obligations, the execution_released event and the forwarded request if there was one, the server's response, the response returned to the governed AI system, the execution_terminal event, and, for an exchange that the gateway recovered after it stopped, the recovery. A member that holds MCP content outside the restricted canonical profile holds it in the encoded form of MG1-012.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "mcp_revision",
+    "server",
+    "call",
+    "received_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_mcp_gateway_exchange_v1"
+    },
+    "mcp_revision": {
+      "const": "2026-07-28"
+    },
+    "server": {
+      "description": "The in-scope server and the identity it reports in io.modelcontextprotocol/serverInfo.",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "call": {
+      "$ref": "#/$defs/requestContent"
+    },
+    "received_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "mapping": {
+      "description": "MG1-003: the tool's mapping as declared with the Consequential Action Register; absent when the tool has none. The target is the value of target_argument or the fixed target_uri.",
+      "type": "object",
+      "required": [
+        "mapping_id",
+        "server_id",
+        "server_name",
+        "server_version",
+        "tool",
+        "tool_definition_digest",
+        "action_class",
+        "operation",
+        "risk_class",
+        "evidence_profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mapping_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "server_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "server_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "server_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "tool": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "tool_definition_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "action_class": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "operation": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+        },
+        "risk_class": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "evidence_profile": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "target_argument": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "target_uri": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        }
+      }
+    },
+    "tool_definition": {
+      "$ref": "#/$defs/toolDefinitionContent"
+    },
+    "decision_request": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest"
+    },
+    "decision": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "description": "answered: a verified decision response; unavailable: no response within the total timeout or a transport failure; invalid: a response that failed verification.",
+          "enum": [
+            "answered",
+            "unavailable",
+            "invalid"
+          ]
+        },
+        "response": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionResponse"
+        },
+        "error": {
+          "description": "The registered error of an invalid response.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        }
+      }
+    },
+    "prior_uses": {
+      "description": "The uses of the authorization before this request.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "release_guard_milliseconds": {
+      "description": "MG1-014: the gateway's declared bound, in milliseconds, on the delay from its final observation of the clock to the write of the forwarded request to the server transport; the gateway releases only when that observation plus the guard is before the authorization's valid_until.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 60000
+    },
+    "prepared": {
+      "description": "MG1-014: the release_prepared event that the gateway recorded after it consumed the authorization and before it discharged the pre-release obligations.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+    },
+    "obligation_discharge": {
+      "description": "MG1-013: the discharge of every pre-release obligation of the admit, as the value of ecl.ext.obligation-discharge.v1; present only when the admit carries such an obligation and the gateway discharged them all.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1"
+    },
+    "released": {
+      "description": "MG1-014: the execution_released event, observed at the gateway's final observation before the send and carrying the discharge of the pre-release obligations.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+    },
+    "forwarded": {
+      "type": "object",
+      "required": [
+        "request",
+        "forwarded_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/requestContent"
+        },
+        "forwarded_at": {
+          "description": "MG1-015: the gateway's final observation of its clock before the send, the time that the execution_released event records; never an earlier sample.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "forward_completed_at": {
+          "description": "MG1-015: the gateway's observation of its clock after the send returned, absent when the send did not return.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    },
+    "server_response": {
+      "$ref": "#/$defs/responseContent"
+    },
+    "returned": {
+      "$ref": "#/$defs/responseContent"
+    },
+    "returned_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "terminal": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+    },
+    "recovery": {
+      "description": "MG1-016: present only in a record that the gateway wrote when it recovered an exchange that it had not finished: when it recovered it, and what its journal showed. Such a record has no returned member unless the journal holds the response returned.",
+      "type": "object",
+      "required": [
+        "recovered_at",
+        "classification"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "recovered_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "classification": {
+          "description": "not-released: the journal holds no execution_released event, so the request was not written to the server transport; outcome-unknown: it holds execution_released and no execution_terminal event, so the request may have reached the server; outcome-recorded: it holds the execution_terminal event.",
+          "enum": [
+            "not-released",
+            "outcome-unknown",
+            "outcome-recorded"
+          ]
+        }
+      }
+    }
+  },
+  "if": {
+    "not": {
+      "required": [
+        "recovery"
+      ]
+    }
+  },
+  "then": {
+    "required": [
+      "returned",
+      "returned_at"
+    ]
+  },
+  "$defs": {
+    "encodedContent": {
+      "description": "MG1-012: MCP content outside the restricted canonical profile, as the canonical base64, with padding, of its RFC 8785 canonical bytes. A checker decodes it and treats a value that is not the RFC 8785 canonical form of a JSON object outside the restricted profile, or whose content does not satisfy the definition that applies to the same content held as itself (jsonRpcRequest, jsonRpcResponse or toolDefinition), as failing this schema.",
+      "type": "object",
+      "required": [
+        "rfc8785"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rfc8785": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 1398104,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        }
+      }
+    },
+    "jsonRpcRequest": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "params": {
+          "type": "object"
+        }
+      }
+    },
+    "jsonRpcResponse": {
+      "description": "A JSON-RPC 2.0 response: exactly one of result and error.",
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id"
+      ],
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "result": {
+          "type": "object"
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "type": "integer"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "result"
+          ]
+        },
+        {
+          "required": [
+            "error"
+          ]
+        }
+      ]
+    },
+    "requestContent": {
+      "description": "A JSON-RPC request as received or forwarded: the request itself, or, when it lies outside the restricted canonical profile, its encoded form (MG1-012).",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/jsonRpcRequest"
+        },
+        {
+          "$ref": "#/$defs/encodedContent"
+        }
+      ]
+    },
+    "responseContent": {
+      "description": "A JSON-RPC response from the server or to the governed AI system: the response itself, or, when it lies outside the restricted canonical profile, its encoded form (MG1-012).",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/jsonRpcResponse"
+        },
+        {
+          "$ref": "#/$defs/encodedContent"
+        }
+      ]
+    },
+    "toolDefinition": {
+      "description": "The tool's definition as the server's tools/list returned it when the call arrived.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "toolDefinitionContent": {
+      "description": "A tool definition: the definition itself, or, when it lies outside the restricted canonical profile, its encoded form (MG1-012).",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/toolDefinition"
+        },
+        {
+          "$ref": "#/$defs/encodedContent"
+        }
+      ]
+    }
+  }
+}

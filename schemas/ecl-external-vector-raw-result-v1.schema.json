@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/1",
+  "title": "ECL External Implementation Raw Vector Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "suite_id",
+    "vector_id",
+    "implementation_revision",
+    "artifact_sha256",
+    "expected",
+    "observed_primary_ids",
+    "expectation_met"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_external_vector_raw_result_v1"
+    },
+    "suite_id": {
+      "const": "ecl-1-v1.0-rc.3-foundation"
+    },
+    "vector_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "implementation_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "expected": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "observed_primary_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "expectation_met": {
+      "type": "boolean"
+    }
+  }
+}

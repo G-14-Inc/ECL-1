@@ -1,0 +1,266 @@
+{
+  "schema_version": "ecl_registry_v2",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/operational-values",
+  "registry_version": 1,
+  "status": "active",
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "id": "ecl.authority-use.single-use.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Authority permits one recorded release and rejects subsequent reuse.",
+      "attributes": {"domain": "authority_use_policy", "wire_value": "single_use"}
+    },
+    {
+      "id": "ecl.authority-use.bounded-multi-use.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Authority permits no more than its declared positive maximum use count.",
+      "attributes": {"domain": "authority_use_policy", "wire_value": "bounded_multi_use"}
+    },
+    {
+      "id": "ecl.control.cancel.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Requests cancellation while preserving the distinction between request, observation, and terminal effect.",
+      "attributes": {"domain": "control_operation", "wire_value": "cancel"}
+    },
+    {
+      "id": "ecl.control.revoke.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Revokes the target for the stated scope and effective time.",
+      "attributes": {"domain": "control_operation", "wire_value": "revoke"}
+    },
+    {
+      "id": "ecl.control.supersede.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Names a preferred successor without erasing the predecessor.",
+      "attributes": {"domain": "control_operation", "wire_value": "supersede"}
+    },
+    {
+      "id": "ecl.control.quarantine.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Places the target into an isolated state pending authorized resolution.",
+      "attributes": {"domain": "control_operation", "wire_value": "quarantine"}
+    },
+    {
+      "id": "ecl.control.halt.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Invokes emergency cessation under the declared control boundary.",
+      "attributes": {"domain": "control_operation", "wire_value": "halt"}
+    },
+    {
+      "id": "ecl.intervention.approve.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records transaction-bound human approval under explicit authority and expiry.",
+      "attributes": {"domain": "intervention_operation", "wire_value": "approve"}
+    },
+    {
+      "id": "ecl.intervention.reject.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records human rejection for the bound transaction.",
+      "attributes": {"domain": "intervention_operation", "wire_value": "reject"}
+    },
+    {
+      "id": "ecl.intervention.override.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records an exceptional authorized override without rewriting the prior decision.",
+      "attributes": {"domain": "intervention_operation", "wire_value": "override"}
+    },
+    {
+      "id": "ecl.lifecycle.seal.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Establishes the immutable identity and integrity boundary of an evidence artifact.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "seal", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.verify.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records a bounded verification result for an evidence artifact.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "verify", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.verification-fail.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records a verification failure while preserving the failed artifact and finding.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "verification_fail", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.retain.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records retention under an identified policy and interval.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "retain", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.export.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Creates a custody-bound export without mutating the source artifact.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "export", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.redact.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Creates a new derivative bound to the sealed source and a redaction manifest.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "redact", "destructive": false, "derived_artifact_required": true}
+    },
+    {
+      "id": "ecl.lifecycle.supersede.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Names a preferred successor while preserving predecessor history.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "supersede", "destructive": false, "derived_artifact_required": true}
+    },
+    {
+      "id": "ecl.lifecycle.revoke.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Marks an artifact unacceptable for a specified purpose and effective time.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "revoke", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.legal-hold.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Suspends destruction for the declared scope until separately authorized release.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "legal_hold", "destructive": false, "precedence": 100}
+    },
+    {
+      "id": "ecl.lifecycle.release-hold.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Releases a hold under separate authority without itself destroying evidence.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "release_hold", "destructive": false}
+    },
+    {
+      "id": "ecl.lifecycle.destroy.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Records bounded authorized destruction while retaining the minimum required destruction proof.",
+      "attributes": {"domain": "lifecycle_operation", "wire_value": "destroy", "destructive": true}
+    },
+    {
+      "id": "ecl.zip.store.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Canonical deterministic ZIP container with stored regular-file entries and exact path, order, timestamp, mode, flag, and metadata rules.",
+      "attributes": {
+        "domain": "deterministic_container_profile",
+        "wire_value": "ecl.zip.store.v1",
+        "compression": false,
+        "outer_transport_compression_permitted": true
+      }
+    },
+    {
+      "id": "ecl.state.fail-open.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Permits a declared action class during a bounded dependency failure only where explicitly authorized.",
+      "attributes": {"domain": "safe_state", "wire_value": "fail_open", "permits_new_effects": true}
+    },
+    {
+      "id": "ecl.state.fail-closed.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Denies release when required policy, authority, integrity, or evidence cannot be proven.",
+      "attributes": {"domain": "safe_state", "wire_value": "fail_closed", "permits_new_effects": false}
+    },
+    {
+      "id": "ecl.state.restricted.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Permits only explicitly bounded diagnosis, recovery, or safe-shutdown operations.",
+      "attributes": {"domain": "safe_state", "wire_value": "restricted", "permits_new_effects": "profile-bounded"}
+    },
+    {
+      "id": "ecl.state.degraded.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Permits a time- and epoch-bounded subset of operations under declared degraded-mode rules.",
+      "attributes": {"domain": "safe_state", "wire_value": "degraded", "permits_new_effects": "profile-bounded"}
+    },
+    {
+      "id": "ecl.state.quarantine.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Isolates the affected target or workflow pending authorized reconciliation.",
+      "attributes": {"domain": "safe_state", "wire_value": "quarantine", "permits_new_effects": false}
+    },
+    {
+      "id": "ecl.state.emergency-halt.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Stops ordinary action release through an independent emergency control path.",
+      "attributes": {"domain": "safe_state", "wire_value": "emergency_halt", "permits_new_effects": false}
+    }
+  ]
+}

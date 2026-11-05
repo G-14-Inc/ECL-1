@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL OAuth Authority Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-oauth-authority-profile-1">ECL OAuth Authority Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile expresses ECL's transaction-bound authority as an OAuth 2.0 access
+token, so that a resource server that already accepts OAuth tokens can enforce
+an ECL <code>admit</code> without learning DCMP-2. One token expresses one <code>admit</code>. Its
+<code>authorization_details</code> entry (RFC 9396) binds the action class, the operation,
+the target, the parameter digest and the use limits of that admit; its <code>act</code>
+claim (RFC 8693) keeps the actor and the subject of a delegated action apart; its
+lifetime lies inside the authorization's window; and it is sender-constrained
+with DPoP (RFC 9449) or mutual TLS (RFC 8705) to a key that the governed AI system
+does not hold, so a token copied from anywhere cannot be replayed elsewhere.</p>
+<p>The profile adds requirements to a claim that declares it. It removes none of
+the core requirements, of DCMP-2 or of AUTHZEN-BINDING-1 where that profile is
+also claimed.</p>
+<p>Under this profile an action has two boundaries that <a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a> asks a claim to
+name: the authority issuer's issuance of the token, which releases authority and
+happens only for a verified <code>admit</code> (<a href="oauth-authority-1.html#OA1-008">OA1-008</a>), and the resource server&#x27;s
+acceptance of the presented token, which releases the action after the checks
+of the presentation table (<a href="oauth-authority-1.html#OA1-005">OA1-005</a>, <a href="oauth-authority-1.html#OA1-011">OA1-011</a>); the effect follows at the
+resource server.</p>
+<h2 id="pinned-sources">Pinned sources</h2>
+<p>RFCs are immutable; the digests identify the plain-text editions at the RFC
+Editor. The machine-readable record of these pins is
+<code>conformance/binding-sources.json</code>.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">URL</th>
+<th scope="col">SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFC 7515, JSON Web Signature</td>
+<td>https://www.rfc-editor.org/rfc/rfc7515.txt</td>
+<td><code>ecbf84674118e62526511c1237e1deaa86aada86d25b247623a2a7e04ae62e40</code></td>
+</tr>
+<tr>
+<td>RFC 7518, JSON Web Algorithms</td>
+<td>https://www.rfc-editor.org/rfc/rfc7518.txt</td>
+<td><code>9a9ae524b09ea700ad3f189bac115df95ba69af84b26ffdbe3cdfb8d2152b1fc</code></td>
+</tr>
+<tr>
+<td>RFC 7519, JSON Web Token</td>
+<td>https://www.rfc-editor.org/rfc/rfc7519.txt</td>
+<td><code>fecd930e9ccf2276b95c0017c6c4ff5d09352e4bc3c7629946447894e0f97248</code></td>
+</tr>
+<tr>
+<td>RFC 7638, JSON Web Key Thumbprint</td>
+<td>https://www.rfc-editor.org/rfc/rfc7638.txt</td>
+<td><code>98b29ab9652070e6a5fec748d43e221bbedc66b6b22e05903fb5366c04ef3110</code></td>
+</tr>
+<tr>
+<td>RFC 7800, Proof-of-Possession Key Semantics for JWTs</td>
+<td>https://www.rfc-editor.org/rfc/rfc7800.txt</td>
+<td><code>051514a781038027c2ac07c26ebe8533556012b2353cdaec8f3baeac53a7c919</code></td>
+</tr>
+<tr>
+<td>RFC 8037, CFRG Elliptic Curve Diffie-Hellman and Signatures in JOSE</td>
+<td>https://www.rfc-editor.org/rfc/rfc8037.txt</td>
+<td><code>f14347f9d8eead78ef6e7a1ea3d795d35d664033095a76a80fcd567904aaedaa</code></td>
+</tr>
+<tr>
+<td>RFC 8693, OAuth 2.0 Token Exchange</td>
+<td>https://www.rfc-editor.org/rfc/rfc8693.txt</td>
+<td><code>358d658014738bf4dc56c8aae2094ce716ede23b6d5a80488a7dc8e8d72da609</code></td>
+</tr>
+<tr>
+<td>RFC 8705, OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens</td>
+<td>https://www.rfc-editor.org/rfc/rfc8705.txt</td>
+<td><code>6e45a1ee94c6a6a177a4cb077fe67d74bd70c1218c9362f2db2f153239612414</code></td>
+</tr>
+<tr>
+<td>RFC 8707, Resource Indicators for OAuth 2.0</td>
+<td>https://www.rfc-editor.org/rfc/rfc8707.txt</td>
+<td><code>3b89844a938b9219571931b664ed4a7b380555a4dda1df4e9445a2f72188e76b</code></td>
+</tr>
+<tr>
+<td>RFC 8725, JSON Web Token Best Current Practices</td>
+<td>https://www.rfc-editor.org/rfc/rfc8725.txt</td>
+<td><code>737b7013a2495dcfd5481cf4c57c87e2455d537c4cec1140c9096a71fcef0812</code></td>
+</tr>
+<tr>
+<td>RFC 9068, JWT Profile for OAuth 2.0 Access Tokens</td>
+<td>https://www.rfc-editor.org/rfc/rfc9068.txt</td>
+<td><code>68d3ff3910c0f2340fd7b93b430e00053da845b6eebe095ebef0c8bfda5e14c5</code></td>
+</tr>
+<tr>
+<td>RFC 9396, OAuth 2.0 Rich Authorization Requests</td>
+<td>https://www.rfc-editor.org/rfc/rfc9396.txt</td>
+<td><code>d6a8f032d8a585daae1c33a8c7b6e539d199f886ec8cc1c7898436f7f2eed29c</code></td>
+</tr>
+<tr>
+<td>RFC 9449, OAuth 2.0 Demonstrating Proof of Possession (DPoP)</td>
+<td>https://www.rfc-editor.org/rfc/rfc9449.txt</td>
+<td><code>3842c58e1f6043389416023b9bb8d765048266024982fbbd90640e05943f4e13</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="version-10-capability-boundary">Version 1.0 capability boundary</h2>
+<p>The profile deliberately carries no obligations. An OAuth resource server can
+perform the presentation checks without a DCMP-2 processor, but that does not
+supply an interoperability contract for fresh state proofs, critical token
+conditions or proof retrieval at release. Those modes are not defined here.
+The issuer refuses all such admits before token issuance, even when an earlier
+proof was valid. This restriction does not exempt a deployment from core
+release-boundary, control-state, policy or revocation requirements. Offline
+record checking does not establish that a deployed revocation service works.</p>
+<h2 id="token-content">Token content</h2>
+<p><span id="OA1-001"><strong>OA1-001</strong></span><a class="requirement-link" href="#OA1-001" aria-label="Link to OA1-001">§</a> — An OAuth access token that expresses ECL authority MUST express
+exactly one <code>admit</code>, and MUST carry, as a JWT access token (RFC 9068) or in its
+introspection response, exactly one <code>authorization_details</code> entry of the type
+<code>https://externalcontrollayer.ai/ns/authorization-details/action/1</code> whose
+members equal the admit's authorization and request as the entry table below
+gives.</p>
+<p><span id="OA1-002"><strong>OA1-002</strong></span><a class="requirement-link" href="#OA1-002" aria-label="Link to OA1-002">§</a> — The token's <code>aud</code> MUST be exactly the authorization's <code>audience</code>, as
+a single value; a client MUST request the token with a resource indicator (RFC
+8707) equal to that audience, and a resource server MUST reject a token whose
+<code>aud</code> does not name it, with <code>ecl.error.audience-mismatch.v1</code>.</p>
+<p><span id="OA1-003"><strong>OA1-003</strong></span><a class="requirement-link" href="#OA1-003" aria-label="Link to OA1-003">§</a> — The token's validity MUST lie inside the authorization's window:
+its <code>nbf</code>, or its <code>iat</code> when it has no <code>nbf</code>, MUST NOT be earlier than
+<code>valid_from</code>, its <code>exp</code> MUST NOT be later than <code>valid_until</code>, and its lifetime
+from <code>iat</code> to <code>exp</code> MUST be greater than zero and MUST NOT exceed the declared
+maximum token lifetime, 300 seconds unless the claim declares a shorter one;
+each of <code>iat</code>, <code>nbf</code> and <code>exp</code> MUST be a NumericDate without a fraction, an
+integer number of seconds. A resource server MUST reject, with
+<code>ecl.error.expired.v1</code>, a token presented before its <code>nbf</code> (or its <code>iat</code> when it
+has no <code>nbf</code>) less the declared clock-skew allowance, or at or after its <code>exp</code>
+plus that allowance, and, when the token carries one ECL entry, a token
+presented outside that entry's window (from <code>valid_from</code> until before
+<code>valid_until</code>), to which no allowance applies. The clock-skew allowance is zero
+unless the claim declares one, and at most 60 seconds.</p>
+<p>The allowance tolerates a resource server whose clock differs a little from the
+authority issuer's, and the entry's window keeps every accepted presentation
+inside the ECL authorization even when the allowance reaches past the token's
+own validity. RFC 7519 allows a NumericDate with a fraction; this profile does
+not, so that every verifier compares times exactly, and a token or proof whose
+time has a fraction cannot be read under <a href="oauth-authority-1.html#OA1-007">OA1-007</a>.</p>
+<h2 id="sender-constraint-and-presentation">Sender constraint and presentation</h2>
+<p><span id="OA1-004"><strong>OA1-004</strong></span><a class="requirement-link" href="#OA1-004" aria-label="Link to OA1-004">§</a> — The token MUST be sender-constrained, with <code>cnf.jkt</code> (RFC 9449) or
+the <code>cnf</code> member <code>x5t#S256</code> (RFC 8705), to a key held by the component that
+presents it and not readable by the governed AI system, and a resource server
+MUST reject a token presented without valid proof of possession. For DPoP the
+presentation MUST carry exactly one proof, a JWS whose header has <code>typ</code>
+<code>dpop+jwt</code>, an algorithm from the declared asymmetric set of <a href="oauth-authority-1.html#OA1-007">OA1-007</a> and a <code>jwk</code>
+that holds a public key only; whose signature verifies under that <code>jwk</code>; whose
+<code>jwk</code> has the RFC 7638 thumbprint <code>cnf.jkt</code>; whose <code>htm</code> equals the request
+method and whose <code>htu</code> equals the request URI with its scheme in lowercase,
+without its query and fragment and without other normalization (RFC 9449,
+Section 4.3); whose <code>iat</code>, an integer number of seconds, lies no more than the
+declared proof window before or after the time of presentation, the window being
+60 seconds unless the claim declares another of at most 300 seconds; whose <code>ath</code>
+is the base64url SHA-256 of the access token; and whose <code>jti</code>, a string of 1 to
+256 characters, the resource server has not accepted within that window, a
+repeated <code>jti</code> being refused with <code>ecl.error.replay.v1</code>. For mutual TLS the
+client certificate's SHA-256 thumbprint MUST equal <code>x5t#S256</code>.</p>
+<p><span id="OA1-005"><strong>OA1-005</strong></span><a class="requirement-link" href="#OA1-005" aria-label="Link to OA1-005">§</a> — A resource server or enforcement point MUST accept the token only
+for a request whose target, operation and parameter digest equal the
+<code>identifier</code>, the <code>actions</code> member and the <code>parameters_digest</code> of the token's
+ECL entry, refusing any other with <code>ecl.error.scope-mismatch.v1</code>, and only within
+the entry's use policy, refusing a further use with <code>ecl.error.replay.v1</code>. Every
+instance of a resource server that accepts the token MUST count its uses, and
+remember the DPoP <code>jti</code> values it accepted, in one store that all of them
+share, so that a use or a proof that one instance accepted counts at every
+other. An <code>authorization_details</code> entry of another type MUST NOT widen the
+authority that the ECL entry expresses.</p>
+<h2 id="delegation">Delegation</h2>
+<p><span id="OA1-006"><strong>OA1-006</strong></span><a class="requirement-link" href="#OA1-006" aria-label="Link to OA1-006">§</a> — When the decision request names a subject distinct from its actor,
+the token MUST carry the subject in <code>sub</code> and the actor in the RFC 8693 <code>act</code>
+claim (<code>act.sub</code>), with any earlier actors of the delegation as nested <code>act</code>
+claims; a token for such an action that lacks <code>act</code>, or whose <code>act.sub</code> differs
+from the request's actor, MUST be rejected, and a token exchange MUST NOT widen
+the subject token&#x27;s authority and MUST preserve the members that <a href="ecl-1_standard.html#ECL1N-0067">ECL1N-0067</a>
+lists (<a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a>).</p>
+<h2 id="signatures-issuance-and-records">Signatures, issuance and records</h2>
+<p><span id="OA1-007"><strong>OA1-007</strong></span><a class="requirement-link" href="#OA1-007" aria-label="Link to OA1-007">§</a> — The token MUST be a JWS (RFC 7515) signed with an algorithm from
+the declared asymmetric set, with the header <code>typ</code> <code>at+jwt</code> (RFC 9068) and a
+<code>kid</code> that names the signing key; the declared asymmetric set is the set of
+asymmetric JWS algorithms that the claim declares, and ES256 and EdDSA with the
+curve Ed25519 (RFC 8037) when it declares none. A verifier MUST take the
+issuer's keys from its own configuration; MUST reject the algorithm <code>none</code>, a
+symmetric algorithm, a header without a <code>kid</code> or with a <code>kid</code> it does not know,
+a <code>crit</code> header it does not understand (RFC 7515, Section 4.1.11), and a token
+whose header carries <code>jwk</code>, <code>jku</code>, <code>x5u</code> or <code>x5c</code> (RFC 8725, Sections 2.1, 3.1
+and 3.10, treats <code>none</code>, algorithm substitution, <code>kid</code>, <code>jku</code> and <code>x5u</code>); and
+MUST reject a token whose <code>iss</code> is not a configured issuer or whose signature
+does not verify under that issuer's configured keys. A verifier MUST refuse as
+malformed a token or a DPoP proof with a segment that is not unpadded base64url
+(RFC 7515, Section 2) whose unused bits are zero, MUST read the JSON of the
+header and payload segments of each under the strict JSON profile of ECL objects
+(<a href="integrity-envelope-1.html#IE1-002">IE1-002</a>), and MUST refuse as malformed a segment outside that profile or one
+that is not a JSON object, such as a segment that repeats a member name or holds
+a number with a fraction or an exponent, an integer beyond the exact
+interoperable range, <code>NaN</code>, an unpaired surrogate or a byte order mark.</p>
+<p>RFC 7515 and RFC 7519 require a segment to be a valid JSON object and let a
+verifier either refuse a repeated member name or keep the last one; this profile
+refuses it, and reads the rest of a segment as ECL objects are read, so that two
+verifiers cannot read one token or proof differently. Base64url text whose
+unused bits are not zero decodes to the same bytes as its canonical form, so a
+verifier that accepted it would accept two token strings for one signature, of
+which the <code>ath</code> of RFC 9449 and the digest of <a href="oauth-authority-1.html#OA1-008">OA1-008</a> name only one. The
+vectors use the default algorithm set. The profile narrows RFC
+9068 in two places. The token's <code>typ</code> is the string <code>at+jwt</code>, compared exactly:
+a resource server refuses the <code>application/at+jwt</code> that RFC 9068, Section 4 also
+lets it accept, and a <code>typ</code> that differs only in letter case, such as the
+<code>at+JWT</code> of the example in RFC 9068, Section 3, although media type names are
+case-insensitive (RFC 7515, Section 4.1.9). The default set also leaves out
+RS256, which RFC 9068, Section 2.1 asks implementations to support; a claim may
+declare RS256, which the vectors do not exercise.</p>
+<p><span id="OA1-008"><strong>OA1-008</strong></span><a class="requirement-link" href="#OA1-008" aria-label="Link to OA1-008">§</a> — An authority issuer MUST issue a token only for a verified <code>admit</code>,
+never for <code>deny</code>, <code>hold</code> or <code>challenge</code> (<a href="dcmp-2.html#DCMP2-014">DCMP2-014</a>); when the admit&#x27;s
+<code>authorization.token_reference</code> names the token, its digest MUST be the SHA-256
+of the token's compact serialization; and when the ECL authorization is revoked,
+the token MUST become unusable within the declared revocation propagation bound,
+through introspection or a lifetime no longer than that bound. Version 1.0 of
+this profile supports only an admit whose <code>obligations</code> list is empty. An issuer
+MUST NOT issue a token for any admit carrying an obligation, including one
+claimed to have been discharged, and the presentation verifier MUST reject
+such an issuance with <code>ecl.rule.oauth-token-expresses-admit.v1</code>. A token, custom
+claim or successful issuance MUST NOT be treated as discharging an obligation
+at a later release boundary. Actions requiring obligations use a declared
+DCMP-2 enforcement path with release-time proofs; they are outside this
+profile's Version 1.0 capability. Grant revocation and policy changes MUST
+invalidate or narrow authority within their declared propagation bounds; token
+lifetime alone is sufficient only when it is within every applicable bound.</p>
+<p><span id="OA1-009"><strong>OA1-009</strong></span><a class="requirement-link" href="#OA1-009" aria-label="Link to OA1-009">§</a> — Where AUTHZEN-BINDING-1 is also claimed, an AuthZEN permit MUST NOT
+be a reason to issue a token (<a href="authzen-binding-1.html#AZB1-001">AZB1-001</a>): the token is issued only from the ECL
+admit, and an AuthZEN evaluation that a resource server runs when the token is
+presented MAY only narrow the presented request.</p>
+<p><span id="OA1-010"><strong>OA1-010</strong></span><a class="requirement-link" href="#OA1-010" aria-label="Link to OA1-010">§</a> — A resource server or enforcement point that retains presentation
+records for audit MUST write each one as <code>ecl_oauth_presentation_v1</code>, valid
+against <code>https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1</code>.</p>
+<h2 id="presentation-checks-and-refusals">Presentation checks and refusals</h2>
+<p><span id="OA1-011"><strong>OA1-011</strong></span><a class="requirement-link" href="#OA1-011" aria-label="Link to OA1-011">§</a> — A resource server MUST refuse a presentation that fails a check of
+the presentation table below with the code that the table gives for that check,
+and a presentation that fails more than one check with the code of the first of
+them in the table's order. A presentation record's <code>result</code> MUST be the
+resource server's decision: <code>accepted</code> true only for a presentation that passes
+every check, and otherwise <code>accepted</code> false with that code in <code>error</code>.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Order</th>
+<th scope="col">Check</th>
+<th scope="col">Requirement</th>
+<th scope="col">Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>The token is a compact JWS whose segments the verifier reads under <a href="oauth-authority-1.html#OA1-007">OA1-007</a>, and it passes the header, algorithm, key, signature and issuer checks of <a href="oauth-authority-1.html#OA1-007">OA1-007</a></td>
+<td><a href="oauth-authority-1.html#OA1-007">OA1-007</a></td>
+<td><code>ecl.error.integrity-invalid.v1</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>The token's <code>aud</code> names the resource server</td>
+<td><a href="oauth-authority-1.html#OA1-002">OA1-002</a></td>
+<td><code>ecl.error.audience-mismatch.v1</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>The time of presentation lies within the token's validity, with the clock-skew allowance, and within its ECL entry's window</td>
+<td><a href="oauth-authority-1.html#OA1-003">OA1-003</a></td>
+<td><code>ecl.error.expired.v1</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>The proof of possession passes every check of <a href="oauth-authority-1.html#OA1-004">OA1-004</a> other than the check that its <code>jti</code> was not accepted before: a DPoP proof that carries a <code>jti</code> string of 1 to 256 characters and binds the request and the token, or the bound client certificate</td>
+<td><a href="oauth-authority-1.html#OA1-004">OA1-004</a></td>
+<td><code>ecl.error.integrity-invalid.v1</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>The DPoP proof's <code>jti</code> was not accepted before within the proof window</td>
+<td><a href="oauth-authority-1.html#OA1-004">OA1-004</a></td>
+<td><code>ecl.error.replay.v1</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>The presented target, operation and parameter digest equal those of the token's one ECL entry</td>
+<td><a href="oauth-authority-1.html#OA1-005">OA1-005</a></td>
+<td><code>ecl.error.scope-mismatch.v1</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>The use lies within the entry's use policy</td>
+<td><a href="oauth-authority-1.html#OA1-005">OA1-005</a></td>
+<td><code>ecl.error.replay.v1</code></td>
+</tr>
+</tbody>
+</table>
+<p>The checks of the issuer&#x27;s side (<a href="oauth-authority-1.html#OA1-001">OA1-001</a>, <a href="oauth-authority-1.html#OA1-006">OA1-006</a> and <a href="oauth-authority-1.html#OA1-008">OA1-008</a>) need the ECL
+request and response, which a resource server need not hold, so they are not
+in the table; the profile's vectors check them on the record as the issuer's
+obligations.</p>
+<h2 id="entry-table">Entry table</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">ECL entry member</th>
+<th scope="col">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td><code>https://externalcontrollayer.ai/ns/authorization-details/action/1</code></td>
+</tr>
+<tr>
+<td><code>locations</code></td>
+<td><code>[authorization.audience]</code></td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td><code>[request.action.operation]</code></td>
+</tr>
+<tr>
+<td><code>identifier</code></td>
+<td><code>request.action.target.uri</code></td>
+</tr>
+<tr>
+<td><code>authorization_id</code></td>
+<td><code>authorization.authorization_id</code></td>
+</tr>
+<tr>
+<td><code>request_id</code></td>
+<td><code>request.message_id</code>, which the response carries as <code>request_id</code></td>
+</tr>
+<tr>
+<td><code>action_id</code></td>
+<td><code>request.action.action_id</code></td>
+</tr>
+<tr>
+<td><code>action_class</code></td>
+<td><code>request.action.action_class</code></td>
+</tr>
+<tr>
+<td><code>scope_digest</code></td>
+<td><code>authorization.scope_digest</code> (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a>)</td>
+</tr>
+<tr>
+<td><code>parameters_digest</code></td>
+<td><code>request.action.parameters_digest</code></td>
+</tr>
+<tr>
+<td><code>use_policy</code></td>
+<td><code>authorization.use_policy</code></td>
+</tr>
+<tr>
+<td><code>max_uses</code></td>
+<td><code>authorization.max_uses</code>, when present</td>
+</tr>
+<tr>
+<td><code>valid_from</code>, <code>valid_until</code></td>
+<td>The authorization's window</td>
+</tr>
+<tr>
+<td><code>decision</code></td>
+<td>When the token is issued after the response: <code>uri</code> the response's <code>message_id</code> and <code>digest</code> its digest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="claim-table-informative">Claim table (informative)</h2>
+<p>A JWT access token carries every claim that RFC 9068, Section 2.2 requires,
+among them <code>iss</code>, <code>client_id</code> and <code>jti</code>, each a string (<a href="oauth-authority-1.html#OA1-001">OA1-001</a>). The table
+gives the value of each claim for an ECL admit.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">JWT claim</th>
+<th scope="col">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iss</code></td>
+<td>The authority issuer, the principal that holds the token-signing key</td>
+</tr>
+<tr>
+<td><code>sub</code></td>
+<td><code>request.subject.id</code>, or <code>request.actor.id</code> when the request names no subject</td>
+</tr>
+<tr>
+<td><code>act</code></td>
+<td><code>{&quot;sub&quot;: request.actor.id}</code> when the subject differs from the actor</td>
+</tr>
+<tr>
+<td><code>aud</code></td>
+<td><code>authorization.audience</code></td>
+</tr>
+<tr>
+<td><code>iat</code>, <code>nbf</code></td>
+<td>Integer seconds, not earlier than <code>authorization.valid_from</code></td>
+</tr>
+<tr>
+<td><code>exp</code></td>
+<td>Integer seconds, not later than <code>authorization.valid_until</code></td>
+</tr>
+<tr>
+<td><code>jti</code></td>
+<td>Unique per token</td>
+</tr>
+<tr>
+<td><code>client_id</code></td>
+<td>The enforcement point or gateway that presents the token</td>
+</tr>
+<tr>
+<td><code>cnf</code></td>
+<td><code>{&quot;jkt&quot;: ...}</code> or <code>{&quot;x5t#S256&quot;: ...}</code></td>
+</tr>
+<tr>
+<td><code>authorization_details</code></td>
+<td><code>[ECL entry]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>scope_digest</code> already binds the request identifier and the complete action,
+so a resource server that receives the request and action can check the binding
+again; one that receives only the target and parameters checks the members of
+the entry.</p>
+<h2 id="presentation-record-informative">Presentation record (informative)</h2>
+<p>An <code>ecl_oauth_presentation_v1</code> record holds one presentation: the <code>issuer</code> and
+the <code>issuer_keys</code> that the verifier configures; the <code>resource_server</code> that
+received the presentation; the declared maximum token lifetime, DPoP proof
+window and clock-skew allowance (<code>max_token_lifetime_seconds</code>,
+<code>dpop_proof_window_seconds</code> and <code>clock_skew_seconds</code>, each its default when
+absent); the DCMP-2 <code>request</code> and <code>response</code> the token expresses; the <code>token</code>;
+the <code>presentation</code> with the HTTP method and URI, the target, operation and
+parameter digest presented, the time, the number of uses with this one, the DPoP
+proof or the client certificate thumbprint, and the DPoP <code>jti</code> values that the
+resource server accepted within the proof window before this presentation
+(<code>seen_dpop_jti</code>); and the <code>result</code>, which names the code of <a href="oauth-authority-1.html#OA1-011">OA1-011</a> for a
+refusal. The rules registered for this profile, whose names begin
+<code>ecl.rule.oauth-</code>, check a record after its schema: the issuer's side always,
+the checks of the presentation table when the record accepts the presentation,
+and the code of the first check that fails when it refuses it.</p>
+<h2 id="security-considerations">Security considerations</h2>
+<p>A bearer token in an agent's context is a credential that the agent can leak or
+misuse, which is the gap that <a href="ecl-1_standard.html#ECL1N-0033">ECL1N-0033</a> and the direct-access control gap (G2)
+describe. Binding the token to a proof-of-possession key that the governed AI
+system cannot read makes a copied token useless, and binding it to one admit and
+one parameter digest makes a stolen proof and token usable only for the action
+already admitted, once, before <code>exp</code>. The verifier's own key configuration
+closes the attacks that take a key or an algorithm from the token's own header,
+such as the <code>none</code> and algorithm-substitution attacks of RFC 8725, Section 2.1,
+and the <code>kid</code>, <code>jku</code> and <code>x5u</code> misuse of its Section 3.10, and reading every
+segment under the strict JSON profile leaves no room for two verifiers to read
+one token differently. Replay protection holds only as far as the use counts and
+the remembered <code>jti</code> values reach, which is why every instance of a resource
+server shares them (<a href="oauth-authority-1.html#OA1-005">OA1-005</a>). Token exchange across trust domains is where
+authority is most often widened by interpretation; <a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a> requires a denial
+when the intersection with the parent authority cannot be shown.</p>
+<h2 id="conformance">Conformance</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>The <code>oauth-authority</code> suite refuses a token issued for a non-admit response, with a lifetime beyond the window or of zero, missing the <code>act</code> claim of a delegated action or the <code>jti</code> claim, expressing other parameters, whose entry holds the <code>max_uses</code> <code>true</code> where the admit grants one use or a <code>decision</code> of null, or not sender-constrained, among them a token bound to an <code>x5t#S256</code> of null and presented with no client certificate; a resource server that accepts a token signed with <code>none</code>, with a key its own header carries or with Ed448, a token whose header gives <code>alg</code> as a list or names no <code>kid</code>, a token whose signature segment is not canonical base64url, a token whose claims hold a NumericDate with a fraction or an integer beyond the exact range, a token for another audience, an expired token, a token presented within the clock-skew allowance but after its entry's window, a proof from another key, a proof that carries the bound key but whose signature does not verify, a proof that carries no <code>jti</code> or an empty one, a replayed proof, another target, or a second use; and a refusal with another code than the first failing check gives, among them a refusal as a replay of a proof whose <code>jti</code> has more than 256 characters. It accepts a presentation within the declared clock-skew allowance and a refusal with the code of the first failing check</td>
+</tr>
+<tr>
+<td>Assessor procedure</td>
+<td>Key custody for the proof-of-possession key, revocation propagation, resource-indicator use and token exchange policy</td>
+</tr>
+</tbody>
+</table>
+<p>No live authorization server is used: the tokens of the <code>oauth-authority</code>
+suite are signed with test keys that each presentation record names as the
+issuer's keys.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/OAUTH-AUTHORITY-1.md</code>, SHA-256 <code>dfa51b9755e4e9d92107964a92d18b16904b313cf63ce7ffc791cbb9e4a5bbc9</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

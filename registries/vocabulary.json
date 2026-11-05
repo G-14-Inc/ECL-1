@@ -1,0 +1,306 @@
+{
+  "schema_version": "ecl_registry_v2",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/vocabulary",
+  "registry_version": 1,
+  "status": "active",
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "id": "ecl.principal.workload.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A non-human workload principal with a declared trust domain.",
+      "attributes": {"category": "principal_type"}
+    },
+    {
+      "id": "ecl.principal.service.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A service principal operating within a declared trust domain.",
+      "attributes": {"category": "principal_type"}
+    },
+    {
+      "id": "ecl.principal.tenant.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A tenant or customer security principal.",
+      "attributes": {"category": "principal_type"}
+    },
+    {
+      "id": "ecl.principal.enforcement-point.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A principal implementing an action release boundary.",
+      "attributes": {"category": "principal_type"}
+    },
+    {
+      "id": "ecl.relation.responds-to.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "The subject is a response to the referenced predecessor.",
+      "attributes": {"category": "causal_relation"}
+    },
+    {
+      "id": "ecl.relation.follows.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "The subject causally follows the referenced predecessor.",
+      "attributes": {"category": "causal_relation"}
+    },
+    {
+      "id": "ecl.relation.modification-of.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.5",
+      "compatibility": "additive",
+      "description": "The subject is a new decision request for the action that a modification of the referenced request produces; it is evaluated and admitted on its own (AB1-004, AC1-005).",
+      "attributes": {"category": "causal_relation"}
+    },
+    {
+      "id": "ecl.action.ai-proposed-operation.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A vendor-neutral action class for an AI-proposed operation whose domain-specific meaning remains in the operation, target, constraints, and registered profile.",
+      "attributes": {"category": "action_class", "generic": true}
+    },
+    {
+      "id": "ecl.action.financial-transfer.v1",
+      "status": "active",
+      "owner_class": "example-allocation",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Example action class used only by the conformance foundation financial-transfer vector.",
+      "attributes": {"category": "action_class", "example_only": true}
+    },
+    {
+      "id": "ecl.risk.high.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A high-risk classification whose exact controls are profile-defined.",
+      "attributes": {"category": "risk_class"}
+    },
+    {
+      "id": "ecl.evidence.standard.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "The baseline evidence profile for complete action reconstruction.",
+      "attributes": {"category": "evidence_profile"}
+    },
+    {
+      "id": "ecl.irreversibility.compensatable.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "The original effect is not directly reversible but has a separately governed compensating action.",
+      "attributes": {"category": "irreversibility_class"}
+    },
+    {
+      "id": "ecl.commit.two-phase.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "The action uses distinct prepare and release boundaries.",
+      "attributes": {"category": "commit_mode"}
+    },
+    {
+      "id": "ecl.obligation.verify-witness.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Requires verification of a bound state witness at the declared satisfaction boundary.",
+      "attributes": {"category": "obligation_type"}
+    },
+    {
+      "id": "ecl.obligation.approval-record.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.6",
+      "compatibility": "additive",
+      "description": "Requires, before release, a human approval of exactly the decided request, recorded as an EBMP-2 human_intervention event that approves and carries ecl.ext.approval-record.v1 (EBMP2-016, EBMP2-017, EBMP2-063). The obligation's value names the approver and may name a minimum review time.",
+      "attributes": {"category": "obligation_type"}
+    },
+    {
+      "id": "ecl.reason.native-policy-disposition.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "A source policy engine supplied the detailed disposition preserved in the reason detail and adapter binding.",
+      "attributes": {"category": "reason_code", "adapter_safe": true}
+    },
+    {
+      "id": "ecl.reason.authzen-denied.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "An AuthZEN policy decision point returned decision false for the mapped evaluation request.",
+      "attributes": {"category": "reason_code", "adapter_safe": true}
+    },
+    {
+      "id": "ecl.revocation.offline-bundle.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Evaluates revocation from the versioned snapshot carried in an offline verification package.",
+      "attributes": {"category": "revocation_policy"}
+    },
+    {
+      "id": "ecl.time.issued-at.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Evaluates time-dependent validity at the authenticated issue time.",
+      "attributes": {"category": "verification_time_policy"}
+    },
+    {
+      "id": "ecl.time.observed-at.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Evaluates time-dependent validity at the authenticated observation time.",
+      "attributes": {"category": "verification_time_policy"}
+    },
+    {
+      "id": "ecl.unit.usd.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Example United States dollar budget unit encoded as a decimal string.",
+      "attributes": {"category": "budget_unit", "example_only": true}
+    },
+    {
+      "id": "ecl.purpose.decision-request.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "A key trusted to sign DCMP-2 decision requests for the principal it is bound to.",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.purpose.decision-response.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "A key trusted to sign DCMP-2 decision responses for the principal it is bound to.",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.purpose.control.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.5",
+      "compatibility": "additive",
+      "description": "A key trusted to sign DCMP-2 control messages for the control-plane principal it is bound to (TP1-009, IE1-039).",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.purpose.evidence-event.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "A key trusted to sign EBMP-2 evidence events for the principal it is bound to.",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.purpose.observation.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "A key trusted to sign EBMP-2 observation events, which attest the observed state of a resource, for the principal it is bound to.",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.purpose.approval.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.6",
+      "compatibility": "additive",
+      "description": "A key trusted to sign the approval records of the approval service it is bound to, EBMP-2 human intervention events that approve a request, which a verifier admits as the proof of an approval obligation only when every key that signed them holds this purpose (EBMP2-070, MG1-013); it qualifies a key that also holds the evidence-event purpose and by itself lets a key sign no payload.",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.principal.human.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "A natural person acting as a principal, for example an approver in a human intervention event (EBMP2-016).",
+      "attributes": {"category": "principal_type"}
+    },
+    {
+      "id": "ecl.principal.organization.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "An approved organizational principal acting through its own authority, for example a delegated approval unit (EBMP2-016).",
+      "attributes": {"category": "principal_type"}
+    },
+    {
+      "id": "ecl.verification-profile.reference.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "behavioral",
+      "description": "The reference evidence verification profile: a response clock-skew allowance of zero seconds (DCMP2-047) and a state-outcome table whose dependency failures resolve to a fail-closed deny (EBMP2-051).",
+      "attributes": {"category": "verification_profile"}
+    },
+    {
+      "id": "ecl.purpose.trusted-time.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "A key trusted to sign time attestations (INTEGRITY-ENVELOPE-1 section 9) for the time authority it is bound to.",
+      "attributes": {"category": "key_purpose"}
+    },
+    {
+      "id": "ecl.claim.trusted-time.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "behavioral",
+      "description": "A countersignature claim: the time authority attests that the covered payload digest and the envelope signatures it names existed no later than the attested time (IE1-032 to IE1-034).",
+      "attributes": {"category": "countersignature_claim"}
+    },
+    {
+      "id": "ecl.verification-profile.reference-trusted-time.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "behavioral",
+      "description": "The reference evidence verification profile, which also requires a valid trusted-time countersignature on every envelope (IE1-035).",
+      "attributes": {"category": "verification_profile"}
+    }
+  ]
+}

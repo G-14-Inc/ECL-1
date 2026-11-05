@@ -1,0 +1,276 @@
+theory DCMP2_Binding
+begin
+
+/*
+ * Binding and authentication properties of DCMP-2 decision requests and
+ * responses inside the ECL integrity envelope (INTEGRITY-ENVELOPE-1).
+ *
+ * Parties. An enforcement point (EP) signs a decision request for an action,
+ * names itself as the requested audience and sends it to a decision point
+ * (DP). The DP verifies the request signature under a key the trust policy
+ * registers for the request role, refuses a message identifier it has seen
+ * (DCMP2-005), and answers an admit with a signed decision response that
+ * names the request by identifier and digest (DCMP2-045, DCMP2-046) and
+ * carries an authorization bound to the audience (DCMP2-048), the scope
+ * digest of the request identifier and action (DCMP2-044), the single-use
+ * policy (DCMP2-050) and a validity window (DCMP2-049). The EP verifies the
+ * response under a key registered for the response role (TP1-004, TP1-005),
+ * checks the binding, and executes only within the authorization.
+ *
+ * The governed AI system (the actor below). The network is the Dolev-Yao
+ * adversary, so the actor proposes any action, reads, replays, reorders and
+ * redirects every message, and presents any authorization it has seen together
+ * with any action at any EP (rule EP_Present). Every key can be revealed (rule
+ * Reveal); the actor's own request-signing key (agent-signed requests, which
+ * ECL1N-0156 permits) is a key the adversary has revealed.
+ *
+ * Abstractions. Signatures are perfect (builtin signing), digests are
+ * perfect hashes, and the DSSE pre-authentication encoding is a free
+ * constructor pae(payload type, payload), so the payload type is part of
+ * every signing input (IE1-009, IE1-010). The decision point's policy is
+ * abstracted to admit: deny, hold and challenge carry no authorization
+ * (DCMP2-012) and cannot be executed; their semantics are checked in the
+ * TLA+ model. The EP's clock is an assumption (restriction
+ * EnforcementClock); the model shows that the window the EP checks is the
+ * one the DP signed. The trust policy is trusted: it holds at most one key
+ * per principal and role, and an attacker cannot add one (TP1-001).
+ *
+ * Each check is an action fact constrained by a named restriction, so that a
+ * deliberate flaw removes exactly one check. Select a flaw with -D=<flag>:
+ *   skip_response_signature    the EP accepts a response without its signature
+ *   shared_role_key            one key serves the request and response roles
+ *   response_not_bound         the EP does not check request_id and digest
+ *   no_scope_check             the EP does not check the scope digest
+ *   no_audience_check          the EP does not check the audience
+ *   no_single_use              the EP does not keep consumed authorizations
+ *   dp_no_message_identity     the DP does not refuse a reused identifier
+ *   dp_skips_request_signature the DP does not verify the request signature
+ */
+
+builtins: signing, hashing
+
+functions: pae/2
+
+/* ------------------------------------------------------------------ */
+/* Checks                                                              */
+
+#ifdef dp_skips_request_signature
+#else
+/* The DP verifies the request signature under the issuer's request key. */
+restriction RequestSignatureVerified:
+  "All x #i. RequestSignature(x) @ #i ==> x = true"
+#endif
+
+#ifdef dp_no_message_identity
+#else
+/* DCMP2-005: a decision point refuses a message identifier it has seen. */
+restriction UniqueRequestIdentifier:
+  "All d rid #i #j. DP_Seen(d, rid) @ #i & DP_Seen(d, rid) @ #j ==> #i = #j"
+#endif
+
+#ifdef skip_response_signature
+#else
+/* The EP verifies the response under the named decision point's response
+   key (TP1-004, TP1-005). */
+restriction ResponseSignatureVerified:
+  "All x #i. ResponseSignature(x) @ #i ==> x = true"
+#endif
+
+#ifdef response_not_bound
+#else
+/* DCMP2-045, DCMP2-046: the response names the request by identifier and by
+   the digest of the request. */
+restriction ResponseAnswersTheRequest:
+  "All r1 r2 d1 d2 #i. ResponseAnswers(r1, r2, d1, d2) @ #i ==> r1 = r2 & d1 = d2"
+#endif
+
+#ifdef no_audience_check
+#else
+/* DCMP2-048: the authorization's audience is the executing EP. */
+restriction AudienceIsTheEnforcementPoint:
+  "All a e #i. AudienceCheck(a, e) @ #i ==> a = e"
+#endif
+
+#ifdef no_scope_check
+#else
+/* DCMP2-044: the scope digest covers the request identifier and the action
+   that is executed. */
+restriction ScopeCoversTheAction:
+  "All s1 s2 #i. ScopeCheck(s1, s2) @ #i ==> s1 = s2"
+#endif
+
+#ifdef no_single_use
+#else
+/* DCMP2-050, EBMP2-008: an EP keeps the authorizations it consumed and
+   refuses a second use. */
+restriction SingleUse:
+  "All e a #i #j. Consume(e, a) @ #i & Consume(e, a) @ #j ==> #i = #j"
+#endif
+
+/* The use policy is single use. */
+restriction UsePolicy:
+  "All u #i. UseCheck(u) @ #i ==> u = 'single_use'"
+
+/* The EP's clock: an authorization is used only before its window has passed
+   (DCMP2-049, EBMP2-050). */
+restriction EnforcementClock:
+  "All a w #i #j. InWindow(a, w) @ #i & Expired(a, w) @ #j ==> #i < #j"
+
+/* The trust policy holds at most one key per principal and role. */
+restriction OneRegistration:
+  "All x r k1 k2 #i #j. Registered(x, r, k1) @ #i & Registered(x, r, k2) @ #j ==> #i = #j"
+
+/* ------------------------------------------------------------------ */
+/* Keys                                                                */
+
+/* ECL1N-0157: a key is generated for one role and signs only for it. */
+rule Register:
+  [ Fr(~sk) ]
+--[ Registered($X, $R, pk(~sk)) ]->
+  [ !Ltk($X, $R, ~sk), !Pk($X, $R, pk(~sk)), Out(pk(~sk)) ]
+
+#ifdef shared_role_key
+/* Flaw: one key is registered for both the request and the response role,
+   such as a key the governed runtime holds to sign its own requests. */
+rule Register_shared:
+  [ Fr(~sk) ]
+--[ Registered($X, 'request', pk(~sk)), Registered($X, 'response', pk(~sk)) ]->
+  [ !Ltk($X, 'request', ~sk), !Ltk($X, 'response', ~sk),
+    !Pk($X, 'request', pk(~sk)), !Pk($X, 'response', pk(~sk)), Out(pk(~sk)) ]
+#endif
+
+rule Reveal:
+  [ !Ltk($X, $R, sk) ]
+--[ Reveal($X, $R) ]->
+  [ Out(sk) ]
+
+/* ------------------------------------------------------------------ */
+/* Enforcement point: request                                          */
+
+rule EP_Request:
+  let req = <'decision_request', ~rid, $E, $E, <t, p>, 'single_use'>
+  in
+  [ Fr(~rid), !Ltk($E, 'request', skE), In(<t, p>) ]
+--[ EP_Sent($E, ~rid, h(req), t, p) ]->
+  [ EP_Wait($E, ~rid, req, t, p), Out(<req, sign(pae('dcmp', req), skE)>) ]
+
+/* ------------------------------------------------------------------ */
+/* Decision point                                                      */
+
+rule DP_Decide:
+  let req = <'decision_request', rid, issuer, aud, <t, p>, use>
+      auth = <'authorization', ~aid, aud, h(<rid, t, p>), use, ~win>
+      resp = <'decision_response', ~mid, rid, h(req), 'admit', auth, $D>
+  in
+  [ In(<req, rsig>), !Pk(issuer, 'request', pkI), !Ltk($D, 'response', skD),
+    Fr(~aid), Fr(~win), Fr(~mid) ]
+--[ RequestSignature(verify(rsig, pae('dcmp', req), pkI)),
+    DP_Seen($D, rid),
+    DP_Issue($D, issuer, aud, rid, h(req), ~aid, t, p, ~win) ]->
+  [ !Window(~aid, ~win), Out(<resp, sign(pae('dcmp', resp), skD)>) ]
+
+rule Clock_expires:
+  [ !Window(a, w) ]
+--[ Expired(a, w) ]->
+  [ ]
+
+/* ------------------------------------------------------------------ */
+/* Enforcement point: response and execution                           */
+
+/* The EP verifies the response under the decision point's response key and
+   checks that it answers exactly its request. */
+rule EP_Receive:
+  let req = <'decision_request', rid, E, E, <t, p>, 'single_use'>
+      auth = <'authorization', aid, aud, scope, use, win>
+      resp = <'decision_response', mid, rid2, dreq, 'admit', auth, D>
+  in
+  [ EP_Wait(E, rid, req, t, p), In(<resp, ssig>), !Pk(D, 'response', pkD) ]
+--[ ResponseSignature(verify(ssig, pae('dcmp', resp), pkD)),
+    ResponseAnswers(rid2, rid, dreq, h(req)),
+    EP_Accept(E, D, rid, h(req), aid) ]->
+  [ EP_Accepted(E, D, rid, t, p, aid, aud, scope, use, win) ]
+
+rule EP_Execute:
+  [ EP_Accepted(E, D, rid, t, p, aid, aud, scope, use, win) ]
+--[ AudienceCheck(aud, E),
+    ScopeCheck(scope, h(<rid, t, p>)),
+    UseCheck(use),
+    InWindow(aid, win),
+    Consume(E, aid),
+    Execute(E, t, p, aid, rid, win, D) ]->
+  [ ]
+
+/* The governed AI system presents a signed response together with an action
+   of its choice at an enforcement point of its choice. */
+rule EP_Present:
+  let auth = <'authorization', aid, aud, scope, use, win>
+      resp = <'decision_response', mid, rid, dreq, 'admit', auth, D>
+  in
+  [ In(<t, p, resp, ssig>), !Pk(D, 'response', pkD) ]
+--[ ResponseSignature(verify(ssig, pae('dcmp', resp), pkD)),
+    AudienceCheck(aud, $E),
+    ScopeCheck(scope, h(<rid, t, p>)),
+    UseCheck(use),
+    InWindow(aid, win),
+    Consume($E, aid),
+    Execute($E, t, p, aid, rid, win, D) ]->
+  [ ]
+
+/* ------------------------------------------------------------------ */
+/* Lemmas                                                              */
+
+/* The honest flow is possible without any key compromise. */
+lemma executable:
+  exists-trace
+  "Ex E D t p a rid w #i #j.
+     EP_Sent(E, rid, h(<'decision_request', rid, E, E, <t, p>, 'single_use'>), t, p) @ #j
+   & Execute(E, t, p, a, rid, w, D) @ #i
+   & not (Ex X R #r. Reveal(X, R) @ #r)"
+
+/* Request signing: a decision point issues authority only for a request that
+   its named issuer signed, unless that issuer's request key was revealed. */
+lemma request_origin:
+  "All D I aud rid hreq a t p w #i.
+     DP_Issue(D, I, aud, rid, hreq, a, t, p, w) @ #i
+     ==> (Ex #k. EP_Sent(I, rid, hreq, t, p) @ #k & #k < #i)
+       | (Ex #r. Reveal(I, 'request') @ #r & #r < #i)"
+
+/* Response authenticity: a response an EP accepts was issued by the decision
+   point it names, unless that decision point's response key was revealed. */
+lemma response_authenticity:
+  "All E D rid hreq a #i.
+     EP_Accept(E, D, rid, hreq, a) @ #i
+     ==> (Ex I aud rid2 hreq2 t p w #j. DP_Issue(D, I, aud, rid2, hreq2, a, t, p, w) @ #j & #j < #i)
+       | (Ex #r. Reveal(D, 'response') @ #r & #r < #i)"
+
+/* Request-response binding: the response answers exactly the request the EP
+   sent, by identifier and digest, with the EP as audience. */
+lemma request_response_binding:
+  "All E D rid hreq a #i.
+     EP_Accept(E, D, rid, hreq, a) @ #i
+     ==> (Ex t p w #j. DP_Issue(D, E, E, rid, hreq, a, t, p, w) @ #j & #j < #i)
+       | (Ex #r. Reveal(D, 'response') @ #r & #r < #i)"
+
+/* No use of an authorization for another target, parameters, request or
+   audience, or with another window: every execution was admitted for exactly
+   that enforcement point, request identifier, target and parameters, inside
+   the window the decision point signed. */
+lemma authorization_scope_and_audience:
+  "All E t p a rid w D #i.
+     Execute(E, t, p, a, rid, w, D) @ #i
+     ==> (Ex I hreq #j. DP_Issue(D, I, E, rid, hreq, a, t, p, w) @ #j & #j < #i)
+       | (Ex #r. Reveal(D, 'response') @ #r & #r < #i)"
+
+/* No replay inside the validity window: an authorization is executed once. */
+lemma single_use:
+  "All E1 E2 t1 t2 p1 p2 a rid1 rid2 w1 w2 D #i #j.
+     Execute(E1, t1, p1, a, rid1, w1, D) @ #i & Execute(E2, t2, p2, a, rid2, w2, D) @ #j
+     ==> #i = #j | (Ex #r. Reveal(D, 'response') @ #r)"
+
+/* No replay of a request: one request identifier yields at most one effect. */
+lemma one_effect_per_request:
+  "All E1 E2 t1 t2 p1 p2 a1 a2 rid w1 w2 D #i #j.
+     Execute(E1, t1, p1, a1, rid, w1, D) @ #i & Execute(E2, t2, p2, a2, rid, w2, D) @ #j
+     ==> #i = #j | (Ex #r. Reveal(D, 'response') @ #r)"
+
+end

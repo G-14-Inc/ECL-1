@@ -1,0 +1,1101 @@
+{
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "attributes": {
+        "definition_sha256": "ba52e249ee694405a0f45059900a7aa288cc83a2c95b7b1446db07f15d12a5e0",
+        "source_line": 575,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "ECL-1"
+      },
+      "compatibility": "behavioral",
+      "description": "This standard for the External Control Layer.",
+      "id": "ecl.term.ecl-1.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "6980e7870e26c379a0107e3765a013c0bca7e2502da564511a73cb33320bd969",
+        "source_line": 577,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "External Control Layer (ECL)"
+      },
+      "compatibility": "behavioral",
+      "description": "An instantiated runtime control infrastructure that implements the architecture defined by ECL-1 for governing consequential actions.",
+      "id": "ecl.term.external-control-layer-ecl.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "c414ef30b9a66650995d343dfdbfa2b8183f20c7cb8522bcbd0925ae172586d4",
+        "source_line": 581,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Semi-Autonomous System"
+      },
+      "compatibility": "behavioral",
+      "description": "A system that can originate, queue, sequence, materially shape, or materially advance consequential actions without per-action human authorization even when a human remains responsible for broader objectives or can intervene.",
+      "id": "ecl.term.semi-autonomous-system.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "9bb20adfcfd33cd34fd10a83805776e18c6e85ac6a8c8762a41740ade4720993",
+        "source_line": 586,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Governed AI System"
+      },
+      "compatibility": "behavioral",
+      "description": "The AI system whose consequential actions a claim governs: its models, the runtime that executes their outputs, and every tool, plugin, memory store, credential, and process that the runtime can invoke, write, or reconfigure, other than the components of the External Control Layer. The terms \"governed runtime\", \"governed AI runtime\", and \"governed actor\" mean the governed AI system.",
+      "id": "ecl.term.governed-ai-system.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "f0a2edde89f2ad3329064a56aa5ee8b39df7162eb2701e365b186e4ce97790d5",
+        "source_line": 593,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "ECL Architecture"
+      },
+      "compatibility": "behavioral",
+      "description": "The vendor-neutral six-responsibility architecture specified by ECL-1, comprising Decision, Authority, Enforcement, Provenance, Verification, and Fleet responsibilities.",
+      "id": "ecl.term.ecl-architecture.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "91eaa6e57b6fdabf4de0af5f123aedf5659df926170592efacdae32666f843e5",
+        "source_line": 597,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Decision Layer"
+      },
+      "compatibility": "behavioral",
+      "description": "The control responsibility that evaluates proposed consequential actions against active policy and emits admit, deny, hold, or challenge outcomes.",
+      "id": "ecl.term.decision-layer.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "8bd9ee9a6fa0e44596c9b0ad525072af5088f72cfd9b9848bacb03298ed6456f",
+        "source_line": 601,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Authority Layer"
+      },
+      "compatibility": "behavioral",
+      "description": "The control responsibility that manages principal identity context, typed authority, delegation constraints, and credential lifecycle required for action approval.",
+      "id": "ecl.term.authority-layer.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "8446530b054dd61fd162832589d3770c249ddca754ee8a96f40a96eddb21de0d",
+        "source_line": 605,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Enforcement Layer"
+      },
+      "compatibility": "behavioral",
+      "description": "The control responsibility at the execution boundary where action requests are intercepted and control outcomes are applied.",
+      "id": "ecl.term.enforcement-layer.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "3a2caa500407b98f1c0e1280fb282990d499e5d148bc411a8fbb4efa9ae0d09d",
+        "source_line": 608,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Provenance Layer"
+      },
+      "compatibility": "behavioral",
+      "description": "The control responsibility that records immutable or tamper-evident action evidence and lineage metadata.",
+      "id": "ecl.term.provenance-layer.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "b8942eb26bbedbb6c1e172058d0c8894e980d00a514f921e44f8be5a54e2c90d",
+        "source_line": 611,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Verification Layer"
+      },
+      "compatibility": "behavioral",
+      "description": "The supervisory control plane that checks whether ECL controls are operating correctly and have not drifted from approved posture.",
+      "id": "ecl.term.verification-layer.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "cd3baeb3ef45b6173c57ed70ef816d7e88179a12d2f401a6977c8aae85859420",
+        "source_line": 614,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Fleet Layer"
+      },
+      "compatibility": "behavioral",
+      "description": "The supervisory control plane that governs policy, revocation, and coordinated response across one or more instances of the governed AI system.",
+      "id": "ecl.term.fleet-layer.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "4b384f4e5e63ceac987e094ef458bf3480a08c344cdf19300dece90fa4926c79",
+        "source_line": 618,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Consequence-Coupling Controls"
+      },
+      "compatibility": "behavioral",
+      "description": "Cross-layer controls that constrain the coupling between model cognition and real-world effect, including independent state witness, capability freeze, consequence budgets, irreversibility-aware commit modes, and heterogeneous checker quorum.",
+      "id": "ecl.term.consequence-coupling-controls.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "6ee730a79f7853a6a434c3745c305d8ffa4d85dfa06e59b07e1e302fd7c24de0",
+        "source_line": 623,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "State Witness"
+      },
+      "compatibility": "behavioral",
+      "description": "An externally sourced or independently verified fact about preconditions, postconditions, or relevant world state used to determine whether a consequential action may proceed or whether its declared outcome actually occurred.",
+      "id": "ecl.term.state-witness.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "5f8386170cd9cb0818cb81a39b5220af32d8ddc0f6e760615f5298a35f489900",
+        "source_line": 628,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "State Witness Register"
+      },
+      "compatibility": "behavioral",
+      "description": "The profile or package artifact that names the precondition and postcondition witnesses required for a bounded action class, their sources, freshness limits, disagreement handling, and trust assumptions.",
+      "id": "ecl.term.state-witness-register.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "30602969acfd50c187fc171ba8a0da1c2766b17044c4164a20287bfedd751cb8",
+        "source_line": 634,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Consequential Action"
+      },
+      "compatibility": "behavioral",
+      "description": "An action that meets one or more of the inclusion tests in Section 2.4. Mutation of external state is sufficient but not necessary; sensitive-data disclosure, authority expansion, cost/obligation creation, and external-service invocation can also make an action consequential.",
+      "id": "ecl.term.consequential-action.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "ff4003019e874e0916d0f0915de3dbd046052f75f1d17ae1fb42c852e1a2d933",
+        "source_line": 640,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Materially Advance"
+      },
+      "compatibility": "behavioral",
+      "description": "To prepare, sequence, authorize, queue, parameterize, or trigger a step in a way that meaningfully increases the likelihood or readiness of a consequential external effect, even if the system does not perform the final effecting operation itself.",
+      "id": "ecl.term.materially-advance.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "144c66d39363530421b5da843a13e10d3da734d039e8be5dd5beb8ab5b1ba712",
+        "source_line": 645,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Consequential Action Register"
+      },
+      "compatibility": "behavioral",
+      "description": "The published inventory of action classes, classification decisions, resource/data impact, enforcement class, and rationale used to determine claim scope.",
+      "id": "ecl.term.consequential-action-register.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "46e21809e91a9723d55da45614b1deed893c796d87a088543224801982b55077",
+        "source_line": 649,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Enforcement Boundary"
+      },
+      "compatibility": "behavioral",
+      "description": "The architectural boundary that in-scope consequential actions cross before execution (ECL1N-0028).",
+      "id": "ecl.term.enforcement-boundary.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "b5480078eac2ff6e6d818adf13b27c834a88cfe64d2fe8de1319d6e4c2d31ebd",
+        "source_line": 652,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Reference Monitor Property Set"
+      },
+      "compatibility": "behavioral",
+      "description": "Always invoked, tamper-resistant, and bounded enough for analysis and test.",
+      "id": "ecl.term.reference-monitor-property-set.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "467f4b38d8a646c498ab849a02668fa907b57acf803d94ab3483331dbd7238e0",
+        "source_line": 655,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Complete Mediation"
+      },
+      "compatibility": "behavioral",
+      "description": "The property that no in-scope consequential action bypasses the enforcement boundary.",
+      "id": "ecl.term.complete-mediation.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "35280c3e50c8864660b77576a6d6402b9ee8adfe62e6b6cb3417f635ed2f40a6",
+        "source_line": 658,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Fail-Closed"
+      },
+      "compatibility": "behavioral",
+      "description": "The property that missing proof, integrity failure, policy ambiguity, or enforcement uncertainty results in deny, restricted mode, or halt rather than allow.",
+      "id": "ecl.term.fail-closed.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "1ef33ea19044ca9db60da0a9fd9c1bab781aa92ee8d9cacf5a2070cce0c800ab",
+        "source_line": 662,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Restricted Mode"
+      },
+      "compatibility": "behavioral",
+      "description": "The enforced operating state in which new consequential actions are denied except for an explicit safe-state or containment allowlist. It applies to a scope of action classes: every in-scope action class, unless a requirement of this standard sets a narrower scope, as ECL1N-0191 does for a loss of required proof. Actions of classes outside the scope continue only under their own controls.",
+      "id": "ecl.term.restricted-mode.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "5eacca1e846577399106fed28510ea26ebb96e458bc9905d65c348501bbc9347",
+        "source_line": 669,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Degraded Mode"
+      },
+      "compatibility": "behavioral",
+      "description": "The operating state in which ordinary control dependencies are impaired but bounded local control state remains valid for a limited window (ECL1N-0029).",
+      "id": "ecl.term.degraded-mode.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "502e888e651ae34dab65c3b05b3b72ceb8d2e7ae283d75036c8615f0397a1b8f",
+        "source_line": 673,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Emergency Control Plane"
+      },
+      "compatibility": "behavioral",
+      "description": "The narrowly scoped control path used for halt, override, or quarantine actions when ordinary runtime mediation cannot safely continue. It is separately authenticated, separately audited, and not a general-purpose bypass path.",
+      "id": "ecl.term.emergency-control-plane.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "9f12162917f866dff420eda6955a234fb5ce6a6c6e83dd8f47653164c5eadd00",
+        "source_line": 678,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Ordinary Runtime Mediation"
+      },
+      "compatibility": "behavioral",
+      "description": "The normal Decision, Authority, Enforcement, and Provenance path used for consequential actions during non-emergency operation. It excludes the emergency control plane and any exceptional containment-only authority.",
+      "id": "ecl.term.ordinary-runtime-mediation.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "c321b417a8e60d2fd22a3cfc46c3e89a4cc2436bccd5e6a64bfb83b7f0405098",
+        "source_line": 683,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Safety Property"
+      },
+      "compatibility": "behavioral",
+      "description": "A policy property where violation appears as a finite bad prefix of execution.",
+      "id": "ecl.term.safety-property.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "3aa3b92ac71d67e756da4b5d52b85a1bcd7f7109db991664c03532d4d1e81eac",
+        "source_line": 686,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Liveness Property"
+      },
+      "compatibility": "behavioral",
+      "description": "A property asserting eventual progress; not generally enforceable by the same runtime mechanisms used for safety-property controls.",
+      "id": "ecl.term.liveness-property.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "7adfd2ec33fa5bc90916a33d314ec7566aaa9d9fbd0d7c5568330fac70c65c10",
+        "source_line": 691,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Policy Decision Point (PDP)"
+      },
+      "compatibility": "behavioral",
+      "description": "Decision sub-component that computes policy outcomes.",
+      "id": "ecl.term.policy-decision-point-pdp.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "0da60f2bbf18bc6acc428b2e5a5ea3f9a369110ebce6fbc35efe15eff96167e2",
+        "source_line": 694,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Policy Enforcement Point (PEP)"
+      },
+      "compatibility": "behavioral",
+      "description": "Enforcement sub-component that applies policy outcomes at the boundary.",
+      "id": "ecl.term.policy-enforcement-point-pep.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "95d1c072f49cd61f03ab002e4732799dd333db9feb33a4acd3e9998021307989",
+        "source_line": 697,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Policy Administration Function"
+      },
+      "compatibility": "behavioral",
+      "description": "Governance function that versions, approves, and distributes policy.",
+      "id": "ecl.term.policy-administration-function.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "955812f3f0b16797400edea5094ec30c31c2ef434fe5e602af9fc84dd347c5fc",
+        "source_line": 700,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Decision Contract"
+      },
+      "compatibility": "behavioral",
+      "description": "A versioned machine-readable schema for decision-request/decision-response exchange.",
+      "id": "ecl.term.decision-contract.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "60ac05a76938d8ac3c20045cb77be9d2e6ebe1c552c6fb1ce6f365770f4494ad",
+        "source_line": 703,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Decision Input"
+      },
+      "compatibility": "behavioral",
+      "description": "A fact, record, instruction, signal, or score that the Decision Layer evaluates to reach the outcome for a proposed consequential action. The proposed action's operation, target, and the parameter values that define its effect are not decision inputs: they are the subject of the decision, which binds them by digest (DCMP2-007, DCMP2-044). Any statement in a request about authority, approval, intent, risk, or the state of the world is a decision input.",
+      "id": "ecl.term.decision-input.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "1595f8b3f13541a660cb077ab24a7a3b4897b87a1bed56121ffb3d7ddcaa6a0c",
+        "source_line": 711,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Decision Input Class"
+      },
+      "compatibility": "behavioral",
+      "description": "The class of a decision input that the Consequential Action Register declares (ECL1N-0178): `verifiable`, `actor_supplied`, or `judgment`. `verifiable` is the most trusted class and `actor_supplied` the least, with `judgment` between them. The output of a probabilistic model or heuristic detector about meaning or risk is a `judgment` input, whatever it was computed from. Any other input computed from other decision inputs takes the least trusted class among them; the request's operation, target, and parameters do not lower it. An input computed from an input that is unavailable, late, or malformed counts as not available itself (DCMP2-053), and no input is computed from itself, directly or through other inputs.",
+      "id": "ecl.term.decision-input-class.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "f56a0ab83deb603dddf48a1a39e18430223d259d763b92fe9206edd7602ad04f",
+        "source_line": 722,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Verifiable Input"
+      },
+      "compatibility": "behavioral",
+      "description": "A decision input of the class `verifiable`: a value whose authenticity and permitted state transitions are controlled by an authority that the governed AI system cannot modify or bypass. The Decision Layer obtains it from that authority, or authenticates its origin under a key the governed AI system does not hold. An admitted action can cause a transition that the authority independently validates, such as a debit of a budget or a change to a payment-provider balance; that causal influence alone does not make the value actor-supplied. A source signature, storage, retrieval or transformation does not give independent authority to a field whose asserted value the actor controls. The authority's validation rules, freshness and completeness determine what the value establishes; authenticity alone does not establish truth or completeness. Examples are a system of record, an instruction or mandate that a principal authenticates to the control plane with a credential the governed AI system does not hold, a consequence budget ledger, a signed state witness, and the policy and trust state. The evidence of the decision identifies its value by reference and digest (ECL1N-0181).",
+      "id": "ecl.term.verifiable-input.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "084caf934a064b4ea8bbd42e666c75f391ccebf2778e8d8d5211e0779f96d66a",
+        "source_line": 739,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Actor-Supplied Input"
+      },
+      "compatibility": "behavioral",
+      "description": "A decision input of the class `actor_supplied`: one whose asserted value the governed AI system produces or can overwrite without an independent authority validating the assertion or the state transition, or whose authenticity or transition checks it can modify or bypass. Examples include its own statements about an action's purpose, authority, approval or the state of the world, including a statement returned from storage or signed by a service that attests only to receiving it.",
+      "id": "ecl.term.actor-supplied-input.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "fea8908506f8d1e4bbae5fd3bb97dae89d0496493a4961baea76d67dc9542ce1",
+        "source_line": 747,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Judgment Input"
+      },
+      "compatibility": "behavioral",
+      "description": "A decision input of the class `judgment`: the output of a probabilistic model or heuristic detector about meaning or risk, such as an intent-alignment, semantic-drift, anomaly, or risk score, whoever operates the model or detector.",
+      "id": "ecl.term.judgment-input.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "0ca5421ba7df7b10301b31f5ac5bf1c5b02f3d6ec5363c5b5876e70d9bd3958d",
+        "source_line": 752,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Verifiable-Only Outcome"
+      },
+      "compatibility": "behavioral",
+      "description": "The outcome that the bound policy version (DCMP2-016) yields for a request, with the authorization, obligations, consequence-budget debits, and human-approval requirements that go with it, when the policy is evaluated over the request's operation, target, and parameters and its available `verifiable` inputs alone, with every `actor_supplied` and `judgment` input treated as absent. A required `actor_supplied` or `judgment` input does not change the verifiable-only outcome; whether it was available affects only the decision's outcome (ECL1N-0182).",
+      "id": "ecl.term.verifiable-only-outcome.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "aaa8df0124776a9c8213e273e328a02748e322d9c0bebad085a6db9dab66f152",
+        "source_line": 761,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Strictness Order"
+      },
+      "compatibility": "behavioral",
+      "description": "The order of decision outcomes from least to most strict: `admit`, `challenge`, `hold`, `deny`. A `challenge` is less strict than a `hold` because the requester's principal can end it by supplying the evidence it names (DCMP2-019 to DCMP2-021), while a `hold` permits no release until a separately defined condition changes that the requester cannot bring about by answering (DCMP2-018). One outcome is at least as strict as another when it comes later in this order, or when both are `deny`. One `hold` is at least as strict as another `hold`, and one `challenge` as another `challenge`, when its condition for progress is met only when the other's is, its deadline is no later, and its timeout disposition is at least as strict, one that releases nothing that the other's does not release (DCMP2-018); two `hold` or two `challenge` outcomes are equally strict only when their conditions for progress, deadlines, and timeout dispositions are the same. One `admit` is at least as strict as another only when its authorization is contained in the other's on every dimension of ECL1N-0031, in its validity interval, and in its use policy and maximum uses; it carries every obligation of the other; it debits each consequence budget by at least as much and no later; and every human-approval threshold that applies to the other applies to it with, for the same parameter or measure and the same unit, a value no higher and at least as many approvers, and a threshold that applies only to it makes it no less strict (ECL1N-0177). A threshold in another unit is not comparable, and the `admit` is then not at least as strict. An outcome that is not at least as strict as another is less strict than it.",
+      "id": "ecl.term.strictness-order.v1",
+      "introduced_in": "1.0-rc.5",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "925a09a11f10920d67b2b3dd51c7c55f48ecd18f115ece7c2257b4120ba2abae",
+        "source_line": 784,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Typed Authority"
+      },
+      "compatibility": "behavioral",
+      "description": "Transaction-bound authority scoped by principal context, resource target, operation set, and time window.",
+      "id": "ecl.term.typed-authority.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "ee804ad8e975f0efa815a156eacb1d9d9b376795934db9b35600489d205524cd",
+        "source_line": 787,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Delegation Chain"
+      },
+      "compatibility": "behavioral",
+      "description": "An auditable sequence of authority transfer events between principals, including attenuation constraints.",
+      "id": "ecl.term.delegation-chain.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "f4a43011f6b8f97dba4c741785197aa65aee829063088547e7f169f75bba689b",
+        "source_line": 790,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Delegation Attenuation"
+      },
+      "compatibility": "behavioral",
+      "description": "Narrowing or preserving authority across a delegation hop by external Authority-layer logic. Actor assertions about their own attenuation are not sufficient proof.",
+      "id": "ecl.term.delegation-attenuation.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "0a3553579051108dda8ffe16050d4d71a87d15d73c61a0c0cdeb740f728c0568",
+        "source_line": 794,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Confused Deputy Condition"
+      },
+      "compatibility": "behavioral",
+      "description": "A failure mode where an intermediary executes actions using authority broader than caller intent.",
+      "id": "ecl.term.confused-deputy-condition.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "5bb9ac3de9eb22ebfeeafdad8049f1a0dc86f76dd9789e5aa8b62be66d3b0a7a",
+        "source_line": 797,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Capability Manifest"
+      },
+      "compatibility": "behavioral",
+      "description": "The declared actionable surface of a run of the governed AI system, including model version or class, tool graph, reachable plugins or APIs, memory class, prompt class, credential class, and execution substrate relevant to consequential action.",
+      "id": "ecl.term.capability-manifest.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "750184bab1e806e643b2dc1d4252f0aad8a0fda9b1a84f36c42ccd37046a8c21",
+        "source_line": 802,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Capability Freeze"
+      },
+      "compatibility": "behavioral",
+      "description": "The control condition in which the actionable capability surface of an authorized run is fixed for the duration of that run; material changes invalidate prior authority and require re-attestation or re-approval.",
+      "id": "ecl.term.capability-freeze.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "9bdf6f3669762a81f458975c3019528525f898589db1a2730be09f6918bdb3e3",
+        "source_line": 808,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Soft Enforcement"
+      },
+      "compatibility": "behavioral",
+      "description": "Enforcement in operating-system, middleware, gateway, or service layers that the governed AI system cannot modify, disable, or bypass, but that shares the host platform's trust root.",
+      "id": "ecl.term.soft-enforcement.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "dfb8c0828c8ea78e58145e486a5181c61866d49c67a896584fffcc9a9c7ad821",
+        "source_line": 812,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Hard Enforcement"
+      },
+      "compatibility": "behavioral",
+      "description": "Enforcement implemented through an independent trust boundary such as a TEE, hardened hypervisor path, hardware security boundary, out-of-band gateway, or equivalent mechanism whose compromise is materially harder than compromise of the governed AI system.",
+      "id": "ecl.term.hard-enforcement.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "9f64ec3a9b2cf38cc3e6757dcefa9ff80a71b4d5bc4ba0bc3b9e190d33832984",
+        "source_line": 817,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Release Boundary"
+      },
+      "compatibility": "behavioral",
+      "description": "The point at which an enforcement point lets an admitted consequential action proceed toward its effect, after which refusing the action no longer stops it: for example the forwarding of a call to a remote server, the admission instant of a transaction, or a resource server's acceptance of a presented token (ECL1N-0185).",
+      "id": "ecl.term.release-boundary.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "bf37f8a99902234589e456e61bfadcb4c52fe6c487e7b6feb6ff0885d6e781fc",
+        "source_line": 823,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Effect Boundary"
+      },
+      "compatibility": "behavioral",
+      "description": "The point at which a released action's external effect takes place, such as the commit of a transaction, a remote server's execution of a forwarded call, or a physical actuation. It can follow the release boundary, as a remote server's execution follows a gateway's forwarding of the call, or be bound to it, as a transaction binds its commit to its admission instant.",
+      "id": "ecl.term.effect-boundary.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "60c08adc69e57bb578ea7325d1f5194b3effb39f6cdcdd6223fdd9551c67f844",
+        "source_line": 829,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Assessor-Approved Equivalent Control"
+      },
+      "compatibility": "behavioral",
+      "description": "An alternative implementation that does not match the reference technical mechanism but that preserves the same security and governance property under documented assumptions, residual differences, and assessor-controlled equivalence rationale.",
+      "id": "ecl.term.assessor-approved-equivalent-control.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "0009e71c7670dffa5d6eb9c5b8c86827d751048df466a2173edfca66f36e711e",
+        "source_line": 834,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Agent Principal"
+      },
+      "compatibility": "behavioral",
+      "description": "A non-human principal treated as untrusted by default and subject to the same authorization and audit rigor as human principals.",
+      "id": "ecl.term.agent-principal.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "52ba8908a37adc6b81af7459151318fa65115d00f37ce44362be36af678cbbd5",
+        "source_line": 837,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Workload Identity"
+      },
+      "compatibility": "behavioral",
+      "description": "Cryptographically attested identity for service or agent workloads.",
+      "id": "ecl.term.workload-identity.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "79f046e6155a301b456d506a1a7c65469088ae4255a42dd13611a4fd28340a99",
+        "source_line": 840,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Evidence Bundle"
+      },
+      "compatibility": "behavioral",
+      "description": "A signed record of one mediated action including principal context, policy context, decision, execution outcome, integrity metadata, and timing metadata.",
+      "id": "ecl.term.evidence-bundle.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "2acfda17c1847f1118e33830be9fedeb7b5f188629ba2d1c7030240019347aa4",
+        "source_line": 844,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Consequential Action Trace"
+      },
+      "compatibility": "behavioral",
+      "description": "The ordered, reconstructable record of one approved action chain from decision and authorization through all resulting external effects, including root trace identifier, per-action identifiers, and parent-child linkage.",
+      "id": "ecl.term.consequential-action-trace.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "4c824d64657f4ef96dce01ab32e10f8bd77f23d3e9776cd82357555ed395b3aa",
+        "source_line": 849,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Provenance Graph"
+      },
+      "compatibility": "behavioral",
+      "description": "A structured relation model for agent, activity, entity, delegation, and derivation links relevant to action reconstruction.",
+      "id": "ecl.term.provenance-graph.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "fa841c9f910b661d23c7f6a7af483a6f8bf99b79473e0e65ca63c56aca83ecb0",
+        "source_line": 852,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Transparency Log"
+      },
+      "compatibility": "behavioral",
+      "description": "An append-oriented verification surface used to detect post-hoc tampering.",
+      "id": "ecl.term.transparency-log.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "37cb35d45da43767ab5a5e3720599d19101df522de6d1c635296636c2b0c3401",
+        "source_line": 855,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Evidence Granularity Tier"
+      },
+      "compatibility": "behavioral",
+      "description": "The evidence density that applies to a class of actions or events (ECL1N-0048, ECL1N-0145).",
+      "id": "ecl.term.evidence-granularity-tier.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "7a05302cd4e1a9b2ec68d7780eed08c8775c8ca70f32c10824a936b0d2a623ef",
+        "source_line": 858,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Consequence Budget"
+      },
+      "compatibility": "behavioral",
+      "description": "An externally enforced quantitative limit on the amount of consequential change a run of the governed AI system may cause; reaching it brings slowdown, restricted mode, quarantine, or halt.",
+      "id": "ecl.term.consequence-budget.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "f10b1b1302a264dba4f11361c1b1ea21785ab93cf2e750a711c1919145bf28cf",
+        "source_line": 862,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Consequence Budget Ledger"
+      },
+      "compatibility": "behavioral",
+      "description": "The retained record of budget classes, units, debits, remaining allowance, exhaustion behavior, and reset authority for a bounded consequential action class.",
+      "id": "ecl.term.consequence-budget-ledger.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "fb52dd632d6308f4eb2eab791efb93c2e505e1f756a692ce1ac877f2a5e1d77a",
+        "source_line": 866,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Irreversibility Class"
+      },
+      "compatibility": "behavioral",
+      "description": "The declared reversibility category for a consequential action class, such as reversible, partially reversible, or irreversible, used to determine required commit discipline and fallback rigor.",
+      "id": "ecl.term.irreversibility-class.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "d895cb6ff7c792347ade26075bbdc458449f6fdecf6f86abfd23f6da55d3d299",
+        "source_line": 870,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Commit Mode"
+      },
+      "compatibility": "behavioral",
+      "description": "The declared release pattern for a consequential action class, such as fast path, escrow with dwell time, or prepare/lock/commit, chosen in light of irreversibility and sector risk.",
+      "id": "ecl.term.commit-mode.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "186a859a9427f473d61a0c98f951791828988f096db6ae4259fc26d5d4943663",
+        "source_line": 876,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Conformance Profile"
+      },
+      "compatibility": "behavioral",
+      "description": "A level or profile defining required controls and evidence expectations.",
+      "id": "ecl.term.conformance-profile.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "83b947daa36340718494fa082ffc054b29a7838cd5dee1dba763699737e335b8",
+        "source_line": 879,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Full-System Mediation Claim"
+      },
+      "compatibility": "behavioral",
+      "description": "A claim that all reachable consequential action paths for the SoI are in scope and mediated.",
+      "id": "ecl.term.full-system-mediation-claim.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "0737413137d0c559e888d3c8b2c6e5932422014354bb727796ad16c6ba51b01e",
+        "source_line": 882,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Bounded Action-Class Mediation Claim"
+      },
+      "compatibility": "behavioral",
+      "description": "A claim that only named consequential action classes are in scope and mediated.",
+      "id": "ecl.term.bounded-action-class-mediation-claim.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "48555efe8d6829b716854702f52c718d365b2844e9ace54d4fcd47753591e803",
+        "source_line": 885,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Component or Profile Implementation Claim"
+      },
+      "compatibility": "behavioral",
+      "description": "A claim about one control component or one interoperability profile without asserting end-to-end runtime mediation of a whole SoI.",
+      "id": "ecl.term.component-or-profile-implementation-claim.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "2bd3accc2411a52a09b45764b6b58d61a2759fe26e29b54a63ba106b9a55b058",
+        "source_line": 889,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Negative Boundary Annex"
+      },
+      "compatibility": "behavioral",
+      "description": "The disclosure artifact listing excluded effect channels, excluded tools/resources, shared surfaces, and other out-of-scope paths that a reader might otherwise over-read as covered.",
+      "id": "ecl.term.negative-boundary-annex.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "f46d4b3c2eedf8c09342bbd6c5074b49467b959ea2031552ede43d060bb0694f",
+        "source_line": 893,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Control Independence Class A"
+      },
+      "compatibility": "behavioral",
+      "description": "Same-operator separated controls with distinct roles, keys, or privilege domains and auditable change boundaries, subject to FR-001's prohibition on a single power controlling both planes. The same organization can administer both planes; a single administrative credential, role or host root that can alter both planes does not satisfy it.",
+      "id": "ecl.term.control-independence-class-a.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "6d170fe805474fb8961bf7e34591cd1fc8e21da726745fe33fbdc7f50b5ebf2f",
+        "source_line": 899,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Control Independence Class B"
+      },
+      "compatibility": "behavioral",
+      "description": "Control approval and evidence verification both occur in a separately administered trust domain that the governed AI system and its ordinary operators cannot unilaterally modify.",
+      "id": "ecl.term.control-independence-class-b.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "0a8f3294f7bf63428278563e1371becac6d417c761870f148ffb99de70f7f10b",
+        "source_line": 903,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Control Independence Class C"
+      },
+      "compatibility": "behavioral",
+      "description": "Every Class B condition holds, and control approval and evidence verification are both held in an externally independent trust domain or authority outside the normal operator boundary of the SoI.",
+      "id": "ecl.term.control-independence-class-c.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "bc729432df6cbbc5bb8da3129789097b3fc26d4b1fb8547df9366fb20b72a8a2",
+        "source_line": 907,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Federated Deployment"
+      },
+      "compatibility": "behavioral",
+      "description": "Multi-domain deployment with explicit trust and policy coordination interfaces.",
+      "id": "ecl.term.federated-deployment.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "9d43daed854d4ffa6309294ac237ba6916563a142846e75eca41fb01766855f8",
+        "source_line": 910,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Sovereign Deployment"
+      },
+      "compatibility": "behavioral",
+      "description": "Deployment where the operator keeps direct control of policy, keys, and evidence location.",
+      "id": "ecl.term.sovereign-deployment.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "eae2c3309cc309e08081f1c2e9ea6a4c5c233b6f7fc3506ed0e962947698335a",
+        "source_line": 913,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Offline-Capable Deployment"
+      },
+      "compatibility": "behavioral",
+      "description": "Deployment that preserves enforcement behavior under network disconnection through bounded local control state.",
+      "id": "ecl.term.offline-capable-deployment.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "96f8b6389602b91bfeab2470f8df909087e853b584b9571a3b4d42c1d795d1ac",
+        "source_line": 916,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Dependency Model"
+      },
+      "compatibility": "behavioral",
+      "description": "A claim's declaration of the dependencies whose loss can remove the required proof of each in-scope action class, directly or through other dependencies, and of the enclosing scope to restrict when the scope of such a loss cannot be established (ECL1N-0192).",
+      "id": "ecl.term.dependency-model.v1",
+      "introduced_in": "1.0-rc.6",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "53b72c9dbf97bd7b700c65103e531c0b5d34627d1f186131bcf2d7f12cc73d81",
+        "source_line": 921,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Trusted Time Or Secure Sequencing"
+      },
+      "compatibility": "behavioral",
+      "description": "A trusted time source or an equivalent monotonic sequencing mechanism sufficient to order decisions, revocations, evidence creation, and verifier observations without permitting silent timestamp forgery at the claimed assurance level.",
+      "id": "ecl.term.trusted-time-or-secure-sequencing.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "94e364da9575c405fce921c315c6a478abd3f3d1153adb94ee68e5a63d55d7b6",
+        "source_line": 926,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Heterogeneous Checker Quorum"
+      },
+      "compatibility": "behavioral",
+      "description": "A profile-tightened approval or verification pattern in which a high-consequence action proceeds only when materially different checkers, witnesses, or policy engines agree, reducing monoculture failure risk.",
+      "id": "ecl.term.heterogeneous-checker-quorum.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "39f04290aad2ce086f25df77292b0da5ba6d0cf051953a524204eec8f5b87787",
+        "source_line": 933,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Decision and Control Message Protocol 2 (DCMP-2)"
+      },
+      "compatibility": "behavioral",
+      "description": "The interoperable decision and control protocol for ECL-1. It defines request, response, challenge, cancellation, revocation, supersession, workflow, authority, timing, extension, integrity-policy, and safe-state semantics through the normative companion set referenced in Section 3.",
+      "id": "ecl.term.decision-and-control-message-protocol-2-dcmp-2.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "e4a6be493574862d342f73ad8f2a192a45699c1a6de4e259813c12c131ad24f8",
+        "source_line": 939,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Evidence Bundle and Manifest Protocol 2 (EBMP-2)"
+      },
+      "compatibility": "behavioral",
+      "description": "The interoperable event, receipt, lifecycle, and bundle-manifest protocol for ECL-1. It defines causal closure, attempts, terminal and uncertain outcomes, human intervention, verification, fleet state, redaction, retention, export, supersession, revocation, legal hold, and destruction semantics through the normative companion set referenced in Section 3.",
+      "id": "ecl.term.evidence-bundle-and-manifest-protocol-2-ebmp-2.v1",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "1a8053b5ee616f9744ab180761ab127b2dfb819f250b22a265dac5c54ff3dbee",
+        "source_line": 946,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "AIBOM Minimum Profile (AIBOM-MIN-1)"
+      },
+      "compatibility": "behavioral",
+      "description": "The minimum content of an AI bill of materials used as part of an ECL-1 conformance claim (ECL1N-0030).",
+      "id": "ecl.term.aibom-minimum-profile-aibom-min-1.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "definition_sha256": "4c4745518d07d810d135f09e9fc8f0c90110a738c23fc93d3a1e831d614b3f06",
+        "source_line": 949,
+        "source_path": "standard/ECL-1_Standard.md",
+        "term": "Delegation Attenuation Rule"
+      },
+      "compatibility": "behavioral",
+      "description": "The rule that each delegation hop preserves or narrows the parent authority (ECL1N-0031).",
+      "id": "ecl.term.delegation-attenuation-rule.v1",
+      "introduced_in": "1.0-rc.4",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    }
+  ],
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/terms",
+  "registry_version": 1,
+  "schema_version": "ecl_registry_v2",
+  "status": "active"
+}

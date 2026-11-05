@@ -1,0 +1,437 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/action-register/1",
+  "title": "ECL Consequential Action Register v1",
+  "description": "A Consequential Action Register (ECL1N-0007, ECL1N-0164, ECL1N-0178). Beyond this schema, the registered rule ecl.rule.register-declarations-consistent.v1 requires that the register declares each action class once and each decision input of a class once, that each name in a declaration's derived_from is another input declared for the same class, that no input declared verifiable is computed from one that is not, and that no input is computed from itself, directly or through other inputs; input names are compared as DCMP2-053 compares them. A verifier refuses a register that breaks this rule as a usage error (DCMP2-053).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "register_id",
+    "register_version",
+    "system_of_interest",
+    "generated_at",
+    "capability_inventory",
+    "entries",
+    "negative_boundary_annex"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_action_register_v1"
+    },
+    "register_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "register_version": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+    },
+    "system_of_interest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    },
+    "generated_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "capability_inventory": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/actionEntry"
+      }
+    },
+    "negative_boundary_annex": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/negativeBoundaryEntry"
+      }
+    }
+  },
+  "$defs": {
+    "actionEntry": {
+      "type": "object",
+      "required": [
+        "action_class_id",
+        "classification",
+        "rationale",
+        "consequence_dimensions",
+        "affected_resources",
+        "actor_subject_classes",
+        "data_classes",
+        "enforcement_class",
+        "capability_paths",
+        "evidence_profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "action_class_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "classification": {
+          "enum": [
+            "consequential",
+            "non_consequential",
+            "consequential_pending_review"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "consequence_dimensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "external_state_mutation",
+              "nonpublic_data_disclosure",
+              "financial",
+              "legal",
+              "contractual",
+              "identity",
+              "infrastructure",
+              "network",
+              "physical",
+              "authority_or_reach_expansion",
+              "material_external_cost_or_exposure"
+            ]
+          }
+        },
+        "affected_resources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "actor_subject_classes": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "data_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "enforcement_class": {
+          "enum": [
+            "soft",
+            "hard"
+          ]
+        },
+        "human_approval_threshold": {
+          "description": "The human-approval thresholds of the action class (ECL1N-0177): an action at or above any of them needs the approvals that each such threshold requires. An entry without a threshold leaves the member out.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/approvalThreshold"
+          }
+        },
+        "capability_paths": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "#/$defs/capabilityPath"
+          }
+        },
+        "evidence_profile": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "consequence_coupling": {
+          "$ref": "#/$defs/consequenceCoupling"
+        },
+        "decision_inputs": {
+          "description": "The decision inputs of the action class (ECL1N-0164, ECL1N-0178): each once, with its class, whether the class requires it, its source, the maximum age of its value, when it has one its deadline, and the other declared inputs from which it is computed. The Decision Layer consults no other input for the class, and the decision basis of each decision lists exactly these (ECL1N-0181, DCMP2-053).",
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/decisionInputDeclaration"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "enum": [
+                  "consequential",
+                  "consequential_pending_review"
+                ]
+              }
+            },
+            "required": [
+              "classification"
+            ]
+          },
+          "then": {
+            "properties": {
+              "consequence_dimensions": {
+                "minItems": 1
+              },
+              "affected_resources": {
+                "minItems": 1
+              },
+              "capability_paths": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "decision_inputs"
+            ]
+          }
+        }
+      ]
+    },
+    "approvalThreshold": {
+      "description": "One human-approval threshold (ECL1N-0177): an action at or above value, in the named measure, needs the approval of approvers distinct authorized persons, and one person's approval counts toward each threshold that it applies to. The threshold names what it compares in one of two ways: parameter, an RFC 6901 JSON Pointer to a value in the request's action.parameters, or measure, a URI naming a measure that the deployment defines and reviews with the register (EA-20).",
+      "type": "object",
+      "required": [
+        "unit",
+        "value",
+        "approvers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "parameter": {
+          "description": "An RFC 6901 JSON Pointer to the value in the request's action.parameters that the threshold compares. An action is at or above the threshold when that value is a non-negative integer, or a string in the decimal form of value, at or above value, the two compared as exact decimals; when the pointer names no value, or a value of another form, a negative number among them, the action counts as at or above the threshold.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^(/([^/~]|~[01])*)+$"
+        },
+        "measure": {
+          "description": "A measure that the deployment defines, such as a consequence dimension or a value computed from several parameters, named by URI; its definition is reviewed with the register (EA-20).",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "unit": {
+          "description": "The unit in which the measure and value are expressed.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "value": {
+          "description": "The value at or above which an action needs approval, as a decimal string.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "approvers": {
+          "description": "The number of distinct authorized persons whose approval an action at or above value needs.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "parameter"
+          ]
+        },
+        {
+          "required": [
+            "measure"
+          ]
+        }
+      ]
+    },
+    "decisionInputDeclaration": {
+      "description": "One decision input as the register declares it for an action class (ECL1N-0178, ECL1N-0182).",
+      "type": "object",
+      "required": [
+        "input",
+        "class",
+        "required",
+        "source",
+        "maximum_age_seconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "description": "The URI by which the decision basis names the input.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "class": {
+          "description": "verifiable, actor_supplied or judgment, by the input's source and the channel through which it reaches the Decision Layer (Section 4.3 of the core standard, ECL1N-0178).",
+          "enum": [
+            "verifiable",
+            "actor_supplied",
+            "judgment"
+          ]
+        },
+        "required": {
+          "description": "Whether the action class requires the input: a required input that is unavailable, late or malformed leaves no admit (ECL1N-0182).",
+          "type": "boolean"
+        },
+        "source": {
+          "description": "The system, service or principal that supplies the input.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "maximum_age_seconds": {
+          "description": "The oldest the input's value may be at the time of the decision; an older value is late (ECL1N-0182).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31622400
+        },
+        "deadline_milliseconds": {
+          "description": "The time after the Decision Layer receives a request by which it must have the input; an input obtained later is late (ECL1N-0182). An input declared without a deadline is late only when its value is older than its maximum age.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600000
+        },
+        "derived_from": {
+          "description": "The other inputs declared for the same action class from which the Decision Layer computes this input, each named by its input; absent or empty when it computes the input from none. An input computed from one that is not verifiable is not declared verifiable, and no input is computed from itself, directly or through other inputs (ECL1N-0178). The decision basis names the same inputs in the entry's derived_from (DCMP2-053).",
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        }
+      }
+    },
+    "capabilityPath": {
+      "type": "object",
+      "required": [
+        "path_id",
+        "entry_point",
+        "effect_boundary",
+        "interceptor",
+        "interception_result",
+        "last_tested_at",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "entry_point": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "effect_boundary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "interceptor": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "interception_result": {
+          "enum": [
+            "hard_mediated",
+            "soft_mediated",
+            "not_mediated",
+            "indeterminate"
+          ]
+        },
+        "last_tested_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          }
+        },
+        "residual_bypass_risk": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        }
+      }
+    },
+    "consequenceCoupling": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state_witness_register": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "capability_freeze": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "consequence_budget_ledger": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "irreversibility_class": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "commit_mode": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "heterogeneous_quorum_rule": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      },
+      "minProperties": 1
+    },
+    "negativeBoundaryEntry": {
+      "type": "object",
+      "required": [
+        "path_id",
+        "exclusion_predicates",
+        "rationale",
+        "evidence",
+        "reviewer",
+        "reviewed_at",
+        "expires_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "exclusion_predicates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          }
+        },
+        "reviewer": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "reviewed_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "expires_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    }
+  }
+}

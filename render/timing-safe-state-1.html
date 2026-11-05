@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Timing, Availability, and Safe-State Semantics 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-timing-availability-and-safe-state-semantics-1">ECL Timing, Availability, and Safe-State Semantics 1</h1>
+<p>Version: 1.0
+Status: normative companion of ECL-1 Version 1.0, a published version</p>
+<p>Requirement identifiers are allocated in the order requirements were added and
+never reused, so a later identifier appears among earlier ones where its subject
+belongs: <a href="timing-safe-state-1.html#TS1-034">TS1-034</a> to <a href="timing-safe-state-1.html#TS1-036">TS1-036</a> follow <a href="timing-safe-state-1.html#TS1-009">TS1-009</a>, and <a href="timing-safe-state-1.html#TS1-031">TS1-031</a> to <a href="timing-safe-state-1.html#TS1-033">TS1-033</a> follow <a href="timing-safe-state-1.html#TS1-018">TS1-018</a>.</p>
+<h2 id="1-time-classes">1. Time classes</h2>
+<p>ECL distinguishes:</p>
+<ul>
+<li>issuer wall time;</li>
+<li>observer wall time;</li>
+<li>trusted external time;</li>
+<li>monotonic duration;</li>
+<li>causal order;</li>
+<li>policy and revocation epoch.</li>
+</ul>
+<p><span id="TS1-001"><strong>TS1-001</strong></span><a class="requirement-link" href="#TS1-001" aria-label="Link to TS1-001">§</a> — A producer MUST identify the time class it records.</p>
+<p><span id="TS1-002"><strong>TS1-002</strong></span><a class="requirement-link" href="#TS1-002" aria-label="Link to TS1-002">§</a> — Wall time MUST use the restricted UTC RFC 3339 profile.</p>
+<p><span id="TS1-003"><strong>TS1-003</strong></span><a class="requirement-link" href="#TS1-003" aria-label="Link to TS1-003">§</a> — Monotonic evidence MUST identify the clock instance, ticks, and
+unit. It is comparable only within the declared clock domain.</p>
+<p><span id="TS1-004"><strong>TS1-004</strong></span><a class="requirement-link" href="#TS1-004" aria-label="Link to TS1-004">§</a> — A verifier MUST apply an explicit clock-skew and trusted-time
+policy.</p>
+<p><span id="TS1-005"><strong>TS1-005</strong></span><a class="requirement-link" href="#TS1-005" aria-label="Link to TS1-005">§</a> — Causal order and authenticated sequence evidence MUST take
+precedence over conflicting unauthenticated wall-clock order.</p>
+<h2 id="2-latency-declaration">2. Latency declaration</h2>
+<p><span id="TS1-006"><strong>TS1-006</strong></span><a class="requirement-link" href="#TS1-006" aria-label="Link to TS1-006">§</a> — An enforcement deployment profile MUST state the local-gate
+latency measurement points, percentile method, sampling interval, warm-up
+handling, hardware or runtime class, and action classes measured.</p>
+<p><span id="TS1-007"><strong>TS1-007</strong></span><a class="requirement-link" href="#TS1-007" aria-label="Link to TS1-007">§</a> — A product latency claim MUST identify the tested configuration
+and evidence. The standard does not define one universal performance number.</p>
+<p><span id="TS1-008"><strong>TS1-008</strong></span><a class="requirement-link" href="#TS1-008" aria-label="Link to TS1-008">§</a> — Remote synchronization, evidence export, and hosted policy
+management MUST NOT be included in the hot-path latency claim unless they are
+actually required before release.</p>
+<p><span id="TS1-009"><strong>TS1-009</strong></span><a class="requirement-link" href="#TS1-009" aria-label="Link to TS1-009">§</a> — A gate that exceeds its declared deadline MUST apply the timeout
+safe-state rule and record the breach.</p>
+<p><span id="TS1-034"><strong>TS1-034</strong></span><a class="requirement-link" href="#TS1-034" aria-label="Link to TS1-034">§</a> — Every declared timing bound MUST name its observation points
+(the events between which the interval is measured), its objective type
+(a maximum, or a stated percentile with its window), the clock that measures it,
+and the load and fault conditions under which it holds.</p>
+<p><span id="TS1-035"><strong>TS1-035</strong></span><a class="requirement-link" href="#TS1-035" aria-label="Link to TS1-035">§</a> — A revocation-propagation deadline and an emergency-halt acknowledgment
+bound are distinct obligations and MUST be declared separately; satisfying one
+MUST NOT be presented as satisfying the other.</p>
+<p><span id="TS1-036"><strong>TS1-036</strong></span><a class="requirement-link" href="#TS1-036" aria-label="Link to TS1-036">§</a> — A control acknowledgment bound (B) is the maximum interval, at the
+declared observation points, between a control operation's request and its
+durable acknowledgment, after which no effect depending on the changed scope
+or authority may commit; a deployment declaring B MUST state its termination
+or escalation mechanism for conflicting work.</p>
+<h2 id="3-dependency-failure">3. Dependency failure</h2>
+<p><span id="TS1-010"><strong>TS1-010</strong></span><a class="requirement-link" href="#TS1-010" aria-label="Link to TS1-010">§</a> — Each dependency MUST declare whether it is hot-path, cached,
+asynchronous, or advisory.</p>
+<p><span id="TS1-011"><strong>TS1-011</strong></span><a class="requirement-link" href="#TS1-011" aria-label="Link to TS1-011">§</a> — A local gate MUST be capable of applying the profile's decision
+and safe-state rules without an undeclared network dependency.</p>
+<p><span id="TS1-012"><strong>TS1-012</strong></span><a class="requirement-link" href="#TS1-012" aria-label="Link to TS1-012">§</a> — Policy, trust-root, registry, revocation, and evidence-export
+staleness budgets MUST be separately declared.</p>
+<p><span id="TS1-013"><strong>TS1-013</strong></span><a class="requirement-link" href="#TS1-013" aria-label="Link to TS1-013">§</a> — Exceeding a staleness budget MUST cause the specified restricted,
+degraded, deny, quarantine, or halt state.</p>
+<p><span id="TS1-014"><strong>TS1-014</strong></span><a class="requirement-link" href="#TS1-014" aria-label="Link to TS1-014">§</a> — Recovery after partition MUST reconcile policy epochs,
+revocations, consumed authorities, buffered evidence, unresolved effects, and
+clock discontinuities before normal mode resumes.</p>
+<h2 id="4-fail-behavior">4. Fail behavior</h2>
+<p><span id="TS1-015"><strong>TS1-015</strong></span><a class="requirement-link" href="#TS1-015" aria-label="Link to TS1-015">§</a> — Fail-open, fail-closed, restricted, degraded, quarantine, and
+emergency halt MUST be treated as distinct dispositions.</p>
+<p><span id="TS1-016"><strong>TS1-016</strong></span><a class="requirement-link" href="#TS1-016" aria-label="Link to TS1-016">§</a> — Fail-open MUST be an explicit action-class policy decision with
+owner, rationale, expiry, evidence obligations, and prohibited conditions.</p>
+<p><span id="TS1-017"><strong>TS1-017</strong></span><a class="requirement-link" href="#TS1-017" aria-label="Link to TS1-017">§</a> — Fail-open MUST NOT be used for an action when the invoked
+profile, law, contract, or irreversible-risk classification requires
+fail-closed.</p>
+<p><span id="TS1-018"><strong>TS1-018</strong></span><a class="requirement-link" href="#TS1-018" aria-label="Link to TS1-018">§</a> — Missing or invalid policy, identity, authority, integrity,
+critical extension, or pre-release evidence MUST fail closed.</p>
+<p><span id="TS1-031"><strong>TS1-031</strong></span><a class="requirement-link" href="#TS1-031" aria-label="Link to TS1-031">§</a> — A consumer MUST treat required proof as the set of inputs that
+<a href="timing-safe-state-1.html#TS1-018">TS1-018</a> names: policy, identity, authority, integrity, critical-extension handling,
+and pre-release evidence. A consumer MUST classify a dependency as advisory for
+an action exactly when its loss leaves required proof present, valid, and
+unexpired, and leaves locally validatable authority sufficient for that action.</p>
+<p><span id="TS1-032"><strong>TS1-032</strong></span><a class="requirement-link" href="#TS1-032" aria-label="Link to TS1-032">§</a> — A failure whose consequence is that any required proof is absent,
+invalid, expired, or unavailable MUST be classified as missing required proof
+and MUST fail closed under <a href="timing-safe-state-1.html#TS1-018">TS1-018</a>, whatever its proximate cause. Reclassifying
+such a failure as a dependency outage, timeout, or other generic failure class
+in order to reach a fail-open disposition MUST NOT occur. The dispositions that
+fail closed are <code>fail_closed</code>, <code>quarantine</code> and <code>emergency_halt</code>: in a
+safe-state profile document, a dependency whose <code>supplies_required_proof</code> is
+<code>true</code> MUST declare one of them as its <code>loss_disposition</code>, and a consumer MUST
+reject any other disposition for it, <code>restricted</code> and <code>degraded</code> included, with
+<code>ecl.rule.required-proof-dependency-fails-closed.v1</code>.</p>
+<p><span id="TS1-033"><strong>TS1-033</strong></span><a class="requirement-link" href="#TS1-033" aria-label="Link to TS1-033">§</a> — A fail-open policy under <a href="timing-safe-state-1.html#TS1-016">TS1-016</a> MUST name the advisory dependencies
+it covers, and MUST NOT cover any dependency whose loss removes required proof.</p>
+<p>The core standard sets which action classes a loss of required proof restricts
+and when the restriction ends (<a href="ecl-1_standard.html#ECL1N-0191">ECL1N-0191</a> to <a href="ecl-1_standard.html#ECL1N-0193">ECL1N-0193</a>). Under the claim&#x27;s
+dependency model, the loss of a dependency that only one action class requires
+restricts that class, and the loss of one that several classes require, directly
+or through other dependencies, restricts each of them. A loss whose scope cannot
+be established restricts the enclosing scope that the model declares, or the
+whole deployment where it declares none, and a critical integrity failure or an
+emergency control activation applies to the whole deployment. Within that scope
+each action is refused with a disposition that fails closed under <a href="timing-safe-state-1.html#TS1-032">TS1-032</a>, and
+the dependency keeps its classification as one that supplies required proof
+(<a href="timing-safe-state-1.html#TS1-031">TS1-031</a>).</p>
+<p><span id="TS1-019"><strong>TS1-019</strong></span><a class="requirement-link" href="#TS1-019" aria-label="Link to TS1-019">§</a> — Degraded mode MUST state what remains permitted, for how long,
+under which cached epochs, and how it expires into restricted mode or halt.</p>
+<p><span id="TS1-020"><strong>TS1-020</strong></span><a class="requirement-link" href="#TS1-020" aria-label="Link to TS1-020">§</a> — Restricted mode MUST state the bounded operations that remain
+available for diagnosis, recovery, or safe shutdown.</p>
+<h2 id="5-buffering-and-backpressure">5. Buffering and backpressure</h2>
+<p><span id="TS1-021"><strong>TS1-021</strong></span><a class="requirement-link" href="#TS1-021" aria-label="Link to TS1-021">§</a> — Local evidence buffering MUST declare capacity, durability,
+encryption, ordering, overflow, and export behavior.</p>
+<p><span id="TS1-022"><strong>TS1-022</strong></span><a class="requirement-link" href="#TS1-022" aria-label="Link to TS1-022">§</a> — Evidence buffer exhaustion MUST NOT silently drop verifier-
+critical events.</p>
+<p><span id="TS1-023"><strong>TS1-023</strong></span><a class="requirement-link" href="#TS1-023" aria-label="Link to TS1-023">§</a> — A deployment MUST declare whether exhaustion denies new actions,
+enters restricted mode, sheds only non-critical telemetry, or uses another
+profile-approved response.</p>
+<p><span id="TS1-024"><strong>TS1-024</strong></span><a class="requirement-link" href="#TS1-024" aria-label="Link to TS1-024">§</a> — Recovery MUST prove which buffered events were exported, rejected,
+duplicated, reordered, or remain unresolved.</p>
+<h2 id="6-emergency-and-precedence">6. Emergency and precedence</h2>
+<p><span id="TS1-025"><strong>TS1-025</strong></span><a class="requirement-link" href="#TS1-025" aria-label="Link to TS1-025">§</a> — Emergency halt and quarantine MUST take precedence over ordinary
+admission and cached allow decisions.</p>
+<p><span id="TS1-026"><strong>TS1-026</strong></span><a class="requirement-link" href="#TS1-026" aria-label="Link to TS1-026">§</a> — Revocation, exhausted budget, legal hold, and critical
+verification failure precedence MUST be deterministic and profile-declared.</p>
+<p><span id="TS1-027"><strong>TS1-027</strong></span><a class="requirement-link" href="#TS1-027" aria-label="Link to TS1-027">§</a> — A lower-precedence decision MUST NOT revive an object placed in a
+higher-precedence safe state.</p>
+<p><span id="TS1-028"><strong>TS1-028</strong></span><a class="requirement-link" href="#TS1-028" aria-label="Link to TS1-028">§</a> — Emergency-channel availability and independence MUST be tested at
+the profile-defined interval and after material architecture change.</p>
+<h2 id="7-evidence">7. Evidence</h2>
+<p><span id="TS1-029"><strong>TS1-029</strong></span><a class="requirement-link" href="#TS1-029" aria-label="Link to TS1-029">§</a> — Timing claims MUST retain raw observations, calculation method,
+exclusions, breaches, and environment identity.</p>
+<p><span id="TS1-030"><strong>TS1-030</strong></span><a class="requirement-link" href="#TS1-030" aria-label="Link to TS1-030">§</a> — Availability evidence MUST distinguish measured behavior,
+designed behavior, and untested assumption.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>protocols/TIMING-SAFE-STATE-1.md</code>, SHA-256 <code>4ab9b769aac73c151a455f0e9b21f8cfadbf1785ff355d71a4fd643dc9fa8623</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

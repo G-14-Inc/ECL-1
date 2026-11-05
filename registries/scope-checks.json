@@ -1,0 +1,731 @@
+{
+  "schema_version": "ecl_scope_checks_v1",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/scope-checks",
+  "version": "1.0",
+  "requirements": [
+    "EBMP2-076",
+    "EBMP2-061"
+  ],
+  "object_sets": [
+    {
+      "id": "bundle-objects",
+      "description": "Every object that the bundle holds: each DCMP-2 message and EBMP-2 event in envelopes and each record in observations.",
+      "requirements": [
+        "EBMP2-057",
+        "EBMP2-059"
+      ]
+    },
+    {
+      "id": "trust-dependencies",
+      "description": "Each signing key of each object of the bundle, carried proofs and approval records among them, and each signing key of each time attestation that a trusted-time countersignature of those objects carries.",
+      "requirements": [
+        "TP1-006"
+      ]
+    },
+    {
+      "id": "object-signatures",
+      "description": "Each signature entry of each object in envelopes and observations, with the trusted-time countersignatures that cover it and the signature entries of their attestations. An object without a countersignature is in the set, so that the item is not established while any object has a signature that no countersignature covers.",
+      "requirements": [
+        "IE1-033",
+        "IE1-034",
+        "IE1-035",
+        "EBMP2-076"
+      ]
+    },
+    {
+      "id": "decision-responses",
+      "description": "Each decision response that the bundle holds.",
+      "requirements": [
+        "DCMP2-053"
+      ]
+    },
+    {
+      "id": "request-response-pairs",
+      "description": "Each decision request of the bundle with the response and the events that EBMP2-058 pairs with it, and each continuation with the objects that it names (EBMP2-078).",
+      "requirements": [
+        "EBMP2-058",
+        "EBMP2-078"
+      ]
+    },
+    {
+      "id": "released-attempts",
+      "description": "Each execution_released event with the request, the response and the terminal events of its attempt.",
+      "requirements": [
+        "EBMP2-050",
+        "EBMP2-070",
+        "EBMP2-072"
+      ]
+    },
+    {
+      "id": "discharge-entries",
+      "description": "Each entry of ecl.ext.obligation-discharge.v1 on an execution_released event, with the proof that it names.",
+      "requirements": [
+        "EBMP2-070"
+      ]
+    },
+    {
+      "id": "succeeded-side-effects",
+      "description": "Each side effect of a succeeded terminal event.",
+      "requirements": [
+        "EBMP2-061"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "envelope-integrity",
+      "description": "Each envelope satisfies its schema and the verifier's limits, its payload is canonical and matches its digest and media type, and its payload-bound policy is usable (INTEGRITY-ENVELOPE-1 IE1-040 steps 1 to 5; EBMP2-068 stage 2).",
+      "requirements": [
+        "IE1-040",
+        "EBMP2-062",
+        "EBMP2-068"
+      ],
+      "codes": [
+        "ecl.error.schema-invalid.v1",
+        "ecl.error.resource-limit-exceeded.v1",
+        "ecl.error.integrity-invalid.v1",
+        "ecl.error.signature-policy-invalid.v1"
+      ]
+    },
+    {
+      "id": "time-not-after-evaluation",
+      "description": "No object's own time and no attested time is later than the evaluation time.",
+      "requirements": [
+        "EBMP2-057"
+      ],
+      "codes": [
+        "ecl.error.clock-regressed.v1"
+      ]
+    },
+    {
+      "id": "historical-signers",
+      "description": "Each trust dependency, every key that signed an object or an attestation whether or not its signature counts, is valid at the dependency's time under the trust-policy version that its object or attestation names, for the object's purpose and principal, and its signature verifies; and the signatures that count meet the policy.",
+      "requirements": [
+        "EBMP2-057",
+        "IE1-040",
+        "TP1-001",
+        "TP1-004",
+        "TP1-005",
+        "TP1-006"
+      ],
+      "codes": [
+        "ecl.error.signature-policy-invalid.v1",
+        "ecl.error.revoked.v1",
+        "ecl.error.expired.v1",
+        "ecl.error.integrity-invalid.v1",
+        "ecl.error.threshold-not-met.v1"
+      ]
+    },
+    {
+      "id": "current-compromise-knowledge",
+      "description": "The caller's current policy holds no revocation of a key with any trust dependency's key identifier or public key effective at or before the dependency's own time.",
+      "requirements": [
+        "TP1-006",
+        "ECL1N-0159"
+      ],
+      "codes": [
+        "ecl.error.revoked.v1",
+        "ecl.error.trusted-time-invalid.v1"
+      ]
+    },
+    {
+      "id": "trusted-time-countersignatures",
+      "description": "Each trusted-time countersignature is valid and binds the payload and the signatures that it covers.",
+      "requirements": [
+        "IE1-032",
+        "IE1-033",
+        "IE1-034"
+      ],
+      "codes": [
+        "ecl.error.trusted-time-invalid.v1"
+      ]
+    },
+    {
+      "id": "trusted-time-coverage",
+      "description": "Every signature of every object is covered by a valid trusted-time countersignature.",
+      "requirements": [
+        "IE1-035"
+      ],
+      "codes": [
+        "ecl.error.trusted-time-required.v1"
+      ]
+    },
+    {
+      "id": "current-status",
+      "description": "Each trust dependency's key is held by the caller's current policy with the public key that the historical check used, unrevoked and within its validity interval at the evaluation time.",
+      "requirements": [
+        "TP1-006",
+        "EBMP2-060"
+      ],
+      "codes": [
+        "ecl.error.revoked.v1",
+        "ecl.error.expired.v1",
+        "ecl.error.signature-policy-invalid.v1"
+      ]
+    },
+    {
+      "id": "object-schema",
+      "description": "Each signed object satisfies its schema.",
+      "requirements": [
+        "DCMP2-043",
+        "EBMP2-068"
+      ],
+      "codes": [
+        "ecl.error.schema-invalid.v1"
+      ]
+    },
+    {
+      "id": "object-semantics",
+      "description": "Each signed object satisfies its semantic rules.",
+      "requirements": [
+        "DCMP2-043",
+        "EBMP2-068"
+      ],
+      "codes": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "observation-kind",
+      "description": "Each observation is an EBMP-2 verification event.",
+      "requirements": [
+        "EBMP2-057"
+      ],
+      "codes": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "identifiers-unique",
+      "description": "No two objects of the bundle, in envelopes and observations together, have one identifier.",
+      "requirements": [
+        "EBMP2-002",
+        "EBMP2-032",
+        "EBMP2-059"
+      ],
+      "codes": [
+        "ecl.rule.bundle-object-identifiers-unique.v1"
+      ]
+    },
+    {
+      "id": "decision-basis-present",
+      "description": "Each decision response records its decision basis.",
+      "requirements": [
+        "DCMP2-053"
+      ],
+      "codes": [
+        "ecl.rule.decision-basis-required.v1"
+      ]
+    },
+    {
+      "id": "decision-basis-one-way",
+      "description": "No input recorded as verifiable has the request's actor as its source.",
+      "requirements": [
+        "DCMP2-053"
+      ],
+      "codes": [
+        "ecl.rule.decision-basis-one-way.v1"
+      ]
+    },
+    {
+      "id": "decision-basis-register",
+      "description": "Each decision basis agrees with the Consequential Action Register that the caller supplied.",
+      "requirements": [
+        "DCMP2-053"
+      ],
+      "codes": [
+        "ecl.rule.decision-basis-matches-register.v1"
+      ]
+    },
+    {
+      "id": "pairing",
+      "description": "Objects pair by identity: one request per identity and attempt, one response per request, a unique response for each authority event and a request for each event.",
+      "requirements": [
+        "EBMP2-058",
+        "EBMP2-066"
+      ],
+      "codes": [
+        "ecl.error.schema-invalid.v1",
+        "ecl.error.decision-binding-invalid.v1"
+      ]
+    },
+    {
+      "id": "continuation-history",
+      "description": "Each continuation names the request, challenge response and approval that DCMP2-056 requires and relates to the continued request as it requires; lists the response and the approval among its causal predecessors by identifier and digest; and no challenge is continued twice; and, when the continuation's response is an admit, rests on an approval whose signing keys hold ecl.purpose.approval.v1, none of them bound to the request's actor, and whose expires_at, when present, is later than the evaluated_at of that response.",
+      "requirements": [
+        "EBMP2-078",
+        "DCMP2-056"
+      ],
+      "codes": [
+        "ecl.error.decision-binding-invalid.v1"
+      ]
+    },
+    {
+      "id": "response-binding",
+      "description": "Each response binds its request.",
+      "requirements": [
+        "DCMP2-044",
+        "DCMP2-045",
+        "DCMP2-046",
+        "DCMP2-047",
+        "DCMP2-048",
+        "DCMP2-049",
+        "DCMP2-050",
+        "DCMP2-051"
+      ],
+      "codes": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.digest-mismatch.v1",
+        "ecl.error.audience-mismatch.v1",
+        "ecl.error.scope-mismatch.v1"
+      ]
+    },
+    {
+      "id": "event-binding",
+      "description": "Each event binds its request, response and authority, with the digests and use counts that they name.",
+      "requirements": [
+        "EBMP2-047",
+        "EBMP2-048",
+        "EBMP2-049",
+        "EBMP2-050",
+        "EBMP2-051",
+        "EBMP2-052",
+        "EBMP2-053",
+        "EBMP2-054",
+        "EBMP2-073",
+        "EBMP2-075"
+      ],
+      "codes": [
+        "ecl.error.decision-binding-invalid.v1",
+        "ecl.error.digest-mismatch.v1",
+        "ecl.error.expired.v1"
+      ]
+    },
+    {
+      "id": "release-window",
+      "description": "Each recorded release lies within the authorization's window with the release guard, and no terminal records a release that may have come after valid_until.",
+      "requirements": [
+        "EBMP2-050",
+        "EBMP2-072"
+      ],
+      "codes": [
+        "ecl.error.expired.v1"
+      ]
+    },
+    {
+      "id": "predecessors-resolved",
+      "description": "Every causal predecessor of every object is an object of the bundle.",
+      "requirements": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "codes": [
+        "ecl.error.causal-closure-incomplete.v1"
+      ]
+    },
+    {
+      "id": "predecessor-digests",
+      "description": "Every causal predecessor reference carries the predecessor's recomputed canonical digest.",
+      "requirements": [
+        "EBMP2-022",
+        "EBMP2-059"
+      ],
+      "codes": [
+        "ecl.rule.bundle-predecessor-digest-valid.v1"
+      ]
+    },
+    {
+      "id": "graph-acyclic",
+      "description": "The causal graph over every object is acyclic.",
+      "requirements": [
+        "EBMP2-024"
+      ],
+      "codes": [
+        "ecl.rule.bundle-causal-graph-acyclic.v1"
+      ]
+    },
+    {
+      "id": "causal-context",
+      "description": "Every predecessor has its successor's root trace and is in its workflow, with an attempt no greater, or in its parent workflow.",
+      "requirements": [
+        "EBMP2-077"
+      ],
+      "codes": [
+        "ecl.rule.bundle-causal-context-consistent.v1"
+      ]
+    },
+    {
+      "id": "sequence-monotonic",
+      "description": "Within one workflow, every predecessor has a lower sequence than its successor.",
+      "requirements": [
+        "EBMP2-025"
+      ],
+      "codes": [
+        "ecl.rule.bundle-causal-sequence-monotonic.v1"
+      ]
+    },
+    {
+      "id": "state-transitions",
+      "description": "The states of each execution attempt move only forward.",
+      "requirements": [
+        "EBMP2-065"
+      ],
+      "codes": [
+        "ecl.rule.execution-state-transition-valid.v1"
+      ]
+    },
+    {
+      "id": "terminal-per-request",
+      "description": "Every request has a terminal event.",
+      "requirements": [
+        "EBMP2-060"
+      ],
+      "codes": [
+        "ecl.error.causal-closure-incomplete.v1"
+      ]
+    },
+    {
+      "id": "attempt-authority-consumed",
+      "description": "Each succeeded attempt, and each released attempt under a single-use authorization, has its authority_consumed event; the check runs whatever the closure of the rest of the bundle and is silent only for an attempt whose own objects name a predecessor that the bundle does not hold.",
+      "requirements": [
+        "EBMP2-055",
+        "EBMP2-074"
+      ],
+      "codes": [
+        "ecl.error.decision-binding-invalid.v1"
+      ]
+    },
+    {
+      "id": "obligation-discharge",
+      "description": "Each release records a discharge of every obligation that its decision left to Enforcement before the release, checked no later than the release was observed (conditions 1 to 4).",
+      "requirements": [
+        "EBMP2-070"
+      ],
+      "codes": [
+        "ecl.rule.prerelease-obligations-discharged.v1"
+      ]
+    },
+    {
+      "id": "obligation-proofs",
+      "description": "Each discharge's proof is an object of the bundle, signed by the issuer the obligation names, of an admitted type, bound to the exchange and fresh at the release (conditions 5 to 8).",
+      "requirements": [
+        "EBMP2-070"
+      ],
+      "codes": [
+        "ecl.rule.prerelease-obligations-discharged.v1"
+      ]
+    },
+    {
+      "id": "outcome-reasons",
+      "description": "Each terminal event carries the outcome reason that EBMP2-056 requires, and no other.",
+      "requirements": [
+        "EBMP2-056"
+      ],
+      "codes": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "corroborating-observation",
+      "description": "For each side effect, an observation names the terminal event by identifier and digest, has its workflow, trace and attempt, the side effect's subject and digest, decision pass, a time no earlier, another principal and disjoint keys.",
+      "requirements": [
+        "EBMP2-061"
+      ],
+      "codes": []
+    }
+  ],
+  "trust_knowledge": [
+    {
+      "id": "named-policy-version",
+      "description": "The version of the caller's trust policy that an object or an attestation names, among the versions the caller supplies (TP1-001)."
+    },
+    {
+      "id": "current-policy",
+      "description": "The caller's current trust policy at the evaluation time."
+    },
+    {
+      "id": "current-policy-revocations",
+      "description": "The revocations of the caller's current trust policy, applied at each trust dependency's own time (TP1-006)."
+    },
+    {
+      "id": "register",
+      "description": "The Consequential Action Register that the caller supplies (DCMP2-053)."
+    },
+    {
+      "id": "none",
+      "description": "No trust input: the check reads the bundle's objects only."
+    }
+  ],
+  "waivers": [
+    {
+      "id": "accept-current-trust-failure",
+      "description": "The caller's explicit acceptance of current trust failures for one run: the verdict is verified instead of current-trust-failed and the report states the acceptance. It changes the verdict only: an item whose failure it accepts, current-trust, stays not established, no item is established over less than its whole object set, and an invalid or incomplete verdict never changes.",
+      "requirements": [
+        "EBMP2-060",
+        "EBMP2-076"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "item": "envelope-signatures",
+      "established": "checked",
+      "object_set": "trust-dependencies",
+      "required_checks": [
+        "envelope-integrity",
+        "time-not-after-evaluation",
+        "historical-signers",
+        "current-compromise-knowledge",
+        "trusted-time-countersignatures"
+      ],
+      "trust_knowledge": [
+        "named-policy-version",
+        "current-policy-revocations"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "current-trust",
+      "established": "checked",
+      "object_set": "trust-dependencies",
+      "required_checks": [
+        "current-status"
+      ],
+      "trust_knowledge": [
+        "current-policy"
+      ],
+      "permitted_waivers": [
+        "accept-current-trust-failure"
+      ],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "trusted-time",
+      "established": "checked",
+      "object_set": "object-signatures",
+      "required_checks": [
+        "historical-signers",
+        "current-compromise-knowledge",
+        "trusted-time-countersignatures",
+        "trusted-time-coverage"
+      ],
+      "trust_knowledge": [
+        "named-policy-version",
+        "current-policy-revocations"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "object-rules",
+      "established": "checked",
+      "object_set": "bundle-objects",
+      "required_checks": [
+        "object-schema",
+        "object-semantics",
+        "observation-kind",
+        "identifiers-unique",
+        "decision-basis-one-way"
+      ],
+      "trust_knowledge": [
+        "none"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "decision-basis-recorded",
+      "established": "checked",
+      "object_set": "decision-responses",
+      "required_checks": [
+        "decision-basis-present"
+      ],
+      "trust_knowledge": [
+        "none"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "decision-basis-register",
+      "established": "checked",
+      "object_set": "decision-responses",
+      "required_checks": [
+        "decision-basis-register"
+      ],
+      "trust_knowledge": [
+        "register"
+      ],
+      "permitted_waivers": [],
+      "condition": "When the caller supplied a register.",
+      "reasons": []
+    },
+    {
+      "item": "bindings",
+      "established": "checked",
+      "object_set": "request-response-pairs",
+      "required_checks": [
+        "pairing",
+        "continuation-history",
+        "response-binding",
+        "event-binding",
+        "outcome-reasons"
+      ],
+      "trust_knowledge": [
+        "none"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "release-within-authority",
+      "established": "checked",
+      "object_set": "released-attempts",
+      "required_checks": [
+        "release-window"
+      ],
+      "trust_knowledge": [
+        "none"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": [
+        "no-release-recorded"
+      ]
+    },
+    {
+      "item": "causal-completeness",
+      "established": "checked",
+      "object_set": "bundle-objects",
+      "required_checks": [
+        "identifiers-unique",
+        "predecessors-resolved",
+        "predecessor-digests",
+        "graph-acyclic",
+        "causal-context",
+        "sequence-monotonic",
+        "state-transitions",
+        "terminal-per-request",
+        "attempt-authority-consumed"
+      ],
+      "trust_knowledge": [
+        "none"
+      ],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "prerelease-obligations-discharge-recorded",
+      "established": "checked",
+      "object_set": "released-attempts",
+      "required_checks": [
+        "obligation-discharge"
+      ],
+      "trust_knowledge": [
+        "none"
+      ],
+      "permitted_waivers": [],
+      "condition": "When the verifier applied EBMP2-070 to an execution_released event whose response carries an obligation to be met before release.",
+      "reasons": []
+    },
+    {
+      "item": "prerelease-obligations-proofs-verified",
+      "established": "checked",
+      "object_set": "discharge-entries",
+      "required_checks": [
+        "obligation-proofs"
+      ],
+      "trust_knowledge": [
+        "named-policy-version",
+        "current-policy-revocations"
+      ],
+      "permitted_waivers": [],
+      "condition": "As prerelease-obligations-discharge-recorded.",
+      "reasons": [
+        "proof-not-ecl-object",
+        "issuer-not-named"
+      ]
+    },
+    {
+      "item": "prerelease-obligations-met",
+      "established": "never",
+      "object_set": null,
+      "required_checks": [],
+      "trust_knowledge": [],
+      "permitted_waivers": [],
+      "condition": "As prerelease-obligations-discharge-recorded.",
+      "reasons": []
+    },
+    {
+      "item": "post-release-obligations-met",
+      "established": "never",
+      "object_set": null,
+      "required_checks": [],
+      "trust_knowledge": [],
+      "permitted_waivers": [],
+      "condition": "When the response that an execution_released event records carries an obligation to be met during or after execution.",
+      "reasons": []
+    },
+    {
+      "item": "recorded-times-true",
+      "established": "never",
+      "object_set": null,
+      "required_checks": [],
+      "trust_knowledge": [],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "effects-occurred",
+      "established": "never",
+      "object_set": null,
+      "required_checks": [],
+      "trust_knowledge": [],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "deployment-assessed",
+      "established": "never",
+      "object_set": null,
+      "required_checks": [],
+      "trust_knowledge": [],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    },
+    {
+      "item": "statements-true",
+      "established": "never",
+      "object_set": null,
+      "required_checks": [],
+      "trust_knowledge": [],
+      "permitted_waivers": [],
+      "condition": null,
+      "reasons": []
+    }
+  ],
+  "evidence_levels": [
+    {
+      "level": "corroborated",
+      "object_set": "succeeded-side-effects",
+      "required_checks": [
+        "corroborating-observation"
+      ],
+      "requires_items": [
+        "envelope-signatures",
+        "causal-completeness"
+      ]
+    }
+  ]
+}

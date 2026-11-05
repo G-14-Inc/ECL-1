@@ -1,0 +1,2223 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-mcp-gateway",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1#/properties/method/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-binding-invalid-method-outside-enum",
+      "negates": [
+        "MG1-012",
+        "XR1-023"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-binding-invalid-method-outside-enum.json",
+      "requirement_ids": [
+        "MG1-012",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-binding-valid-request.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an MCP method the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1#/properties/method/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-binding-valid-request",
+      "path": "conformance/suites/mcp-gateway/mcp-binding-valid-request.json",
+      "requirement_ids": [
+        "MG1-004",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-admit-on-judgment-forwarded",
+      "negates": [
+        "DCMP2-053",
+        "MG1-007"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-admit-on-judgment-forwarded.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "MG1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward on an admit whose decision basis rests on a judgment input alone, recorded as an answered decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-cancelled-refusal-as-expired-before-release",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-cancelled-refusal-as-expired-before-release.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a refusal after the use was consumed as expired before release"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.budget-debit-non-negative.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-decision-request-negative-debit",
+      "negates": [
+        "DCMP2-055",
+        "MG1-007"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-decision-request-negative-debit.json",
+      "requirement_ids": [
+        "DCMP2-055",
+        "MG1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare a budget debit of -7 in the decision request, with the admit bound to that request"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-duplicated-obligation-forwarded",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-duplicated-obligation-forwarded.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-duplicated-obligation-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "hold the admit that names the approval obligation twice as answered, and forward on it with a discharge of the approval"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-early-refusal-as-cancelled",
+      "negates": [
+        "MG1-010",
+        "MG1-014"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-early-refusal-as-cancelled.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-obligation-unsupported-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a refusal at the first check, before any use was consumed, as a cancelled attempt"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-encoded-call-jsonrpc-1-0",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-call-jsonrpc-1-0.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "decide on and forward a call held in encoded form whose jsonrpc is 1.0"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-encoded-call-not-base64",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-call-not-base64.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "hold the call as encoded content whose text is not base64"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-encoded-call-null-id-forwarded",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-call-null-id-forwarded.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "decide on a call with the id null, held in encoded form for a fractional _meta member, and forward it without an id"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-encoded-call-null-id-refused",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-call-null-id-refused.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "deny a call with the id null, held in encoded form, and return its refusal without an id and with a fractional member in its error data"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-encoded-content-not-canonical",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-content-not-canonical.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-float-arguments-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "encode the call's JSON with a space that its RFC 8785 form does not have"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-encoded-content-within-profile",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-content-within-profile.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "encode a call that lies within the restricted profile instead of holding it as itself"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-admit-without-basis",
+      "negates": [
+        "MG1-007"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-admit-without-basis.json",
+      "requirement_ids": [
+        "MG1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward on an answered admit that carries no decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-after-expiry",
+      "negates": [
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-after-expiry.json",
+      "requirement_ids": [
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward at the end of the authorization's window"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-obligations-discharged.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-approval-undischarged",
+      "negates": [
+        "MG1-013"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-approval-undischarged.json",
+      "requirement_ids": [
+        "MG1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "discharge the witness and not the approval obligation"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-at-earlier-sample",
+      "negates": [
+        "MG1-015"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-at-earlier-sample.json",
+      "requirement_ids": [
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the time of the first check as the time of the forward"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-changed-arguments",
+      "negates": [
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-changed-arguments.json",
+      "requirement_ids": [
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward the call with another repository than the admit binds"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-id-boolean-for-number",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-id-boolean-for-number.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "decide and forward a call with the id 1, whose _meta holds 0.5, so that the record holds it in encoded form, and forward it with the id true, which the record schema refuses in either form"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-id-string-for-number",
+      "negates": [
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-id-string-for-number.json",
+      "requirement_ids": [
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "decide a call with the id 1 and forward it with the id \"1\""
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-obligations-discharged.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-obligations-undischarged",
+      "negates": [
+        "MG1-013"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-obligations-undischarged.json",
+      "requirement_ids": [
+        "MG1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward on an admit with a witness and an approval obligation, with a release event that records no discharge"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-twice",
+      "negates": [
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-twice.json",
+      "requirement_ids": [
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward a second time under a single-use authorization"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-unbound-member",
+      "negates": [
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-unbound-member.json",
+      "requirement_ids": [
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward the call with a tasks-extension task member and a _meta member that the call did not carry and the admit does not bind"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-tool-mapped-and-reviewed.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "mcp-invalid-forwarded-unmapped-tool",
+      "negates": [
+        "MG1-002",
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-unmapped-tool.json",
+      "requirement_ids": [
+        "MG1-002",
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-unmapped-tool-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward a call to a tool that has no mapping, with no decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-tool-mapped-and-reviewed.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-unreviewed-change",
+      "negates": [
+        "MG1-008"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-unreviewed-change.json",
+      "requirement_ids": [
+        "MG1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward to a tool whose description changed after review"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "mcp-invalid-forwarded-when-unavailable",
+      "negates": [
+        "MG1-005",
+        "MG1-007"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-when-unavailable.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-unavailable-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward the call and return the server's result while the decision service is unavailable"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-within-release-guard",
+      "negates": [
+        "MG1-005",
+        "MG1-014"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-within-release-guard.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "release 200 milliseconds before the window's end under a release guard of 250"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "mcp-invalid-forwarded-without-admit",
+      "negates": [
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-without-admit.json",
+      "requirement_ids": [
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward the call that the decision denied"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-obligations-discharged.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-witness-undischarged",
+      "negates": [
+        "MG1-013"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-witness-undischarged.json",
+      "requirement_ids": [
+        "MG1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "discharge the witness obligation but not the witness result that the admit defers"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-input-required-succeeded",
+      "negates": [
+        "MG1-010"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-input-required-succeeded.json",
+      "requirement_ids": [
+        "MG1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-input-required-unknown.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a request for input as a succeeded action"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-record-without-returned",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-record-without-returned.json",
+      "requirement_ids": [
+        "MG1-012",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the response returned to the governed AI system from a record that is not a recovery"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-unknown-as-succeeded",
+      "negates": [
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-unknown-as-succeeded.json",
+      "requirement_ids": [
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-outcome-unknown.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a released request whose outcome the journal does not hold as succeeded"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/recovery/properties/classification/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovery-classification-outside-enum",
+      "negates": [
+        "MG1-012",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovery-classification-outside-enum.json",
+      "requirement_ids": [
+        "MG1-012",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a recovery classification that the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-as-result",
+      "negates": [
+        "MG1-006"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-as-result.json",
+      "requirement_ids": [
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return a successful result for the call that was denied and not forwarded"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-id-boolean-for-number",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-id-boolean-for-number.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "answer a denied call with the id 1 with the refusal's id true and a fractional member in its error data, so that the record holds it in encoded form, which the record schema refuses in either form"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-id-string-for-number",
+      "negates": [
+        "MG1-006"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-id-string-for-number.json",
+      "requirement_ids": [
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "answer a denied call with the id 1 with a refusal whose id is \"1\""
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-not-first-cause",
+      "negates": [
+        "MG1-006"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-not-first-cause.json",
+      "requirement_ids": [
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-first-cause-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse a changed tool with the code of the unavailable decision service, the later of the two causes"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-obligation-as-evidence-unavailable",
+      "negates": [
+        "MG1-006",
+        "MG1-017"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-obligation-as-evidence-unavailable.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-obligation-unsupported-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse an admit whose approval obligation was not discharged with -31011"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-obligation-as-expired",
+      "negates": [
+        "MG1-006",
+        "MG1-013"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-obligation-as-expired.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-obligation-unsupported-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse an admit whose approval obligation was not discharged with -31006"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-without-ecl-data",
+      "negates": [
+        "MG1-006"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-without-ecl-data.json",
+      "requirement_ids": [
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-invalid-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return the table's code with an error whose data carries no ecl member"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-refusal-wrong-code",
+      "negates": [
+        "MG1-006"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-refusal-wrong-code.json",
+      "requirement_ids": [
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-unavailable-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return the JSON-RPC internal error code for an unavailable decision service"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-release-guard-differs",
+      "negates": [
+        "MG1-014",
+        "MG1-015"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-release-guard-differs.json",
+      "requirement_ids": [
+        "MG1-014",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "declare a release guard of 100 milliseconds in the release event while the record names 250"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-release-marked-late",
+      "negates": [
+        "MG1-005",
+        "MG1-015"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-release-marked-late.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "record, as the gateway's own observation, that the write returned at or after the window's end (released_after_valid_until), the answer arriving later still"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-release-without-guard",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-release-without-guard.json",
+      "requirement_ids": [
+        "MG1-012",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave the release guard out of the release event, which the event schema requires on execution_released"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-request-class-not-mapped",
+      "negates": [
+        "MG1-003"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-request-class-not-mapped.json",
+      "requirement_ids": [
+        "MG1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "ask for a decision on an action class the mapping does not declare"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-forward-requires-admit.v1"
+      ],
+      "id": "mcp-invalid-request-meta-unbound",
+      "negates": [
+        "MG1-004",
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-request-meta-unbound.json",
+      "requirement_ids": [
+        "MG1-004",
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "receive and forward a call with a vendor _meta member that the decision request's params digest does not cover"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-forward-requires-admit.v1"
+      ],
+      "id": "mcp-invalid-request-parameters-not-arguments",
+      "negates": [
+        "MG1-004",
+        "MG1-005"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-request-parameters-not-arguments.json",
+      "requirement_ids": [
+        "MG1-004",
+        "MG1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "ask for a decision on fewer parameters than the call's arguments, and forward the call's arguments, which the admit does not bind"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-request-without-binding",
+      "negates": [
+        "MG1-004"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-request-without-binding.json",
+      "requirement_ids": [
+        "MG1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "ask for a decision without the critical mcp-binding extension"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-response-neither-result-nor-error",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-response-neither-result-nor-error.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return a JSON-RPC response with neither a result nor an error"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-result-not-bound",
+      "negates": [
+        "MG1-010"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-result-not-bound.json",
+      "requirement_ids": [
+        "MG1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "bind another response's digest in the terminal evidence"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-result-substituted",
+      "negates": [
+        "MG1-010"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-result-substituted.json",
+      "requirement_ids": [
+        "MG1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return to the governed AI system a response other than the one the evidence binds"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-returned-number-for-boolean",
+      "negates": [
+        "MG1-010"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-returned-number-for-boolean.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-float-content-forwarded.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return the server's result, held in encoded form, with its isError false written as 0"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-server-error-table-code-returned",
+      "negates": [
+        "MG1-010"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-server-error-table-code-returned.json",
+      "requirement_ids": [
+        "MG1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-server-error-recoded.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return the server's own error with -31001, a code of the error table, unchanged"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-status-outside-enum",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-status-outside-enum.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-unavailable-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a decision status the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/toolDefinitionContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/toolDefinitionContent/oneOf#oneOf[1]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-tool-definition-without-name",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-tool-definition-without-name.json",
+      "requirement_ids": [
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "hold a tool definition without its name"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-unanswered-forward-as-result",
+      "negates": [
+        "MG1-010"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-unanswered-forward-as-result.json",
+      "requirement_ids": [
+        "MG1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forward-failed-unknown.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "return a successful result for a forwarded call whose server never answered"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-unbound-member-decided-and-forwarded",
+      "negates": [
+        "MG1-004"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-unbound-member-decided-and-forwarded.json",
+      "requirement_ids": [
+        "MG1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "decide and forward a call, and its forward, that carry the same top-level member outside params, which neither the arguments nor params_digest binds"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-tool-mapped-and-reviewed.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "mcp-invalid-unmapped-method-forwarded",
+      "negates": [
+        "MG1-002"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-unmapped-method-forwarded.json",
+      "requirement_ids": [
+        "MG1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-unmapped-method-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward a resources/read that the claim neither maps nor lists, with no decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-verifiable-input-from-actor",
+      "negates": [
+        "DCMP2-053",
+        "MG1-007"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-verifiable-input-from-actor.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "MG1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "forward on an admit whose decision basis rests on a verifiable input whose source is the requesting agent, recorded as an answered decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-wide-number-decided-and-forwarded",
+      "negates": [
+        "MG1-004"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-wide-number-decided-and-forwarded.json",
+      "requirement_ids": [
+        "MG1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "decide and forward a call whose _meta holds 2^53 + 1, with params_digest taken over the rounded value that RFC 8785 writes"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-authorization-expired-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-authorization-expired-refused.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-challenged-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-changed-tool-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-changed-tool-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-008",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-clock-regressed-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-clock-regressed-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-decision-invalid-holds-refused-response",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-decision-invalid-holds-refused-response.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-007",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-invalid-refused.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse with -31005 a response whose ecl.ext.outcome-reason.v1 value fails its value schema, and keep that response in the record as evidence"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-decision-invalid-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-decision-invalid-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-007",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-decision-unavailable-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-decision-unavailable-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-007",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-denied-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-duplicated-obligation-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-duplicated-obligation-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-007",
+        "MG1-012",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-evidence-unavailable-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-evidence-unavailable-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-evidence-unavailable-pending-obligation-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-evidence-unavailable-pending-obligation-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-013",
+        "MG1-014",
+        "MG1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-evidence-unavailable-unprepared-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-evidence-unavailable-unprepared-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-014",
+        "MG1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-final-check-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-first-cause-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-first-cause-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-008",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-float-arguments-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-float-arguments-refused.json",
+      "requirement_ids": [
+        "MG1-004",
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/toolDefinitionContent/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-float-content-forwarded",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-float-content-forwarded.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-forward-failed-unknown",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-forward-failed-unknown.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/toolDefinitionContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-forwarded-obligations-discharged",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012",
+        "MG1-013",
+        "MG1-014",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/toolDefinitionContent/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-forwarded-on-admit",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+      "requirement_ids": [
+        "MG1-003",
+        "MG1-004",
+        "MG1-005",
+        "MG1-008",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-forwarded-release-order",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012",
+        "MG1-014",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-held-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-input-required-unknown",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-input-required-unknown.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-late-answer-inside-window",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-late-answer-inside-window.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012",
+        "MG1-014",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-noncharacter-id-forwarded",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-noncharacter-id-forwarded.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-null-arguments-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-null-arguments-refused.json",
+      "requirement_ids": [
+        "MG1-004",
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-obligation-unproven-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-obligation-unproven-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-013",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-obligation-unsupported-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-obligation-unsupported-refused.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/recovery/properties/classification/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-not-released",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+      "requirement_ids": [
+        "MG1-012",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/recovery/properties/classification/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-outcome-unknown",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-outcome-unknown.json",
+      "requirement_ids": [
+        "MG1-012",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-release-guard-exceeded-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-release-guard-exceeded-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-014",
+        "MG1-015"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-server-error-recoded",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-server-error-recoded.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-stale-proof-cancelled",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-stale-proof-cancelled.json",
+      "requirement_ids": [
+        "MG1-006",
+        "MG1-012",
+        "MG1-013",
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-unbound-member-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-unbound-member-refused.json",
+      "requirement_ids": [
+        "MG1-004",
+        "MG1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "receive a call with a top-level member that no decision binds, and refuse it with -31007 before any decision"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-underivable-target-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-underivable-target-refused.json",
+      "requirement_ids": [
+        "MG1-003",
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-unmapped-method-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-unmapped-method-refused.json",
+      "requirement_ids": [
+        "MG1-002",
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/jsonRpcResponse/oneOf#oneOf[1]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-unmapped-tool-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-unmapped-tool-refused.json",
+      "requirement_ids": [
+        "MG1-002",
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-wide-number-refused",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-wide-number-refused.json",
+      "requirement_ids": [
+        "MG1-004",
+        "MG1-006",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "kind": "mutation",
+        "mutation": "receive a call whose _meta holds 2^53, which RFC 8785 represents exactly but whose magnitude is greater than 2^53 - 1, and refuse it with -31007; the record holds the call as it arrived, in encoded form"
+      },
+      "stage": "binding"
+    }
+  ]
+}

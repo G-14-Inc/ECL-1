@@ -1,0 +1,53 @@
+name: ECL-1 Working Group sign-up
+description: Sign up for the ECL-1 Working Group. It is open to anyone, and joining is free.
+title: "Sign-up: "
+labels: ["working-group"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The ECL-1 Working Group is open to anyone, and joining is free. There is no membership agreement: what you contribute is under the terms of `governance/CONTRIBUTING.md`. The working group works in public, so this issue is public. `community/WORKING_GROUP.md` says how the working group works.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: The name under which you take part.
+    validations:
+      required: true
+  - type: input
+    id: organization
+    attributes:
+      label: Organization
+      description: The organization you take part for, if any. Leave it empty if you take part for yourself.
+    validations:
+      required: false
+  - type: dropdown
+    id: participation
+    attributes:
+      label: How you want to take part
+      description: Choose all that apply.
+      multiple: true
+      options:
+        - Attend the working sessions
+        - Review drafts and comment in public reviews
+        - Propose changes and contribute pull requests
+        - Build an implementation and test interoperability
+        - Follow the work
+    validations:
+      required: true
+  - type: textarea
+    id: interests
+    attributes:
+      label: Interests
+      description: Anything else about how you want to take part, and any implementation of ECL-1 that you build or sell (the charter asks participants to disclose a material interest).
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Terms
+      options:
+        - label: I understand that every commit I contribute carries a Developer Certificate of Origin sign-off (`Signed-off-by:`), by which I certify `governance/DCO.txt`, and that my contributions are under the terms of `governance/CONTRIBUTING.md`.
+          required: true
+        - label: I understand that this issue, my GitHub account and what I contribute are public.
+          required: true

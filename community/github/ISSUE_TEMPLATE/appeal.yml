@@ -1,0 +1,50 @@
+name: Appeal a decision
+description: Take an appeal to a public issue after the chair has answered it.
+title: "Appeal: "
+labels: ["appeal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        An appeal goes first to the chair, and then, if the chair's answer does not settle it, to a public issue opened with this form (`governance/APPEALS.md`). An appeal of a decision about embargoed security detail stays private.
+  - type: input
+    id: decision
+    attributes:
+      label: Decision appealed
+      description: The issue or pull request where the decision and its reason are recorded.
+    validations:
+      required: true
+  - type: input
+    id: answer
+    attributes:
+      label: The chair's answer
+      description: The date of the chair's written answer, and where it is.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Why the decision is wrong
+      description: The error you allege, with the evidence for it.
+    validations:
+      required: true
+  - type: textarea
+    id: remedy
+    attributes:
+      label: Remedy requested
+    validations:
+      required: true
+  - type: textarea
+    id: interests
+    attributes:
+      label: Your standing and interests
+      description: How the decision affects you, and any conflict of interest.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Proposed text
+      options:
+        - label: Text I propose here is offered under the contribution terms of `governance/CONTRIBUTING.md`.
+          required: false

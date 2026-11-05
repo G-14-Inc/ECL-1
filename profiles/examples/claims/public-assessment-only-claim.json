@@ -1,0 +1,181 @@
+{
+  "schema_version": "ecl_conformance_claim_v1",
+  "claim_id": "urn:example:ecl:claim:payments",
+  "standard_id": "ECL-1",
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "9191919191919191919191919191919191919191919191919191919191919191"
+    }
+  },
+  "level": 2,
+  "status": "assessment_only",
+  "boundary_class": "bounded-action-class-mediation",
+  "independence": {
+    "class": "B",
+    "assessor": {
+      "uri": "urn:example:ecl:assessor:independent-lab",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9292929292929292929292929292929292929292929292929292929292929292"
+      }
+    }
+  },
+  "version_set": {
+    "core": {
+      "uri": "https://externalcontrollayer.ai/ns/standard/ecl-1",
+      "version": "1.0",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9393939393939393939393939393939393939393939393939393939393939393"
+      }
+    },
+    "companions": [
+      {
+        "uri": "https://externalcontrollayer.ai/ns/protocol/dcmp",
+        "version": "2.0",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "9494949494949494949494949494949494949494949494949494949494949494"
+        }
+      },
+      {
+        "uri": "https://externalcontrollayer.ai/ns/protocol/ebmp",
+        "version": "2.0",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "9595959595959595959595959595959595959595959595959595959595959595"
+        }
+      }
+    ],
+    "profiles": [
+      {
+        "uri": "urn:example:ecl:profile:centralized-hosted-local-gate",
+        "version": "1",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "9696969696969696969696969696969696969696969696969696969696969696"
+        }
+      }
+    ],
+    "registries": [
+      {
+        "uri": "https://externalcontrollayer.ai/ns/registry/catalog",
+        "version": "1.0",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "9797979797979797979797979797979797979797979797979797979797979797"
+        }
+      }
+    ]
+  },
+  "claim_boundary": {
+    "action_register": {
+      "uri": "urn:example:ecl:action-register:payments",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9898989898989898989898989898989898989898989898989898989898989898"
+      }
+    },
+    "negative_boundary_annex": {
+      "uri": "urn:example:ecl:negative-boundary:payments",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9999999999999999999999999999999999999999999999999999999999999999"
+      }
+    },
+    "runtime_capability_inventory": {
+      "uri": "urn:example:ecl:capability-inventory:payments",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1"
+      }
+    },
+    "system_boundary_diagram": {
+      "uri": "urn:example:ecl:diagram:system-boundary",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2"
+      }
+    },
+    "trust_boundary_diagram": {
+      "uri": "urn:example:ecl:diagram:trust-boundary",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3"
+      }
+    }
+  },
+  "responsibilities": [
+    "decision",
+    "authority",
+    "enforcement",
+    "provenance",
+    "verification",
+    "fleet"
+  ],
+  "deployment_profile": {
+    "uri": "urn:example:ecl:profile:centralized-hosted-local-gate",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4"
+    }
+  },
+  "assessment_package": {
+    "uri": "urn:example:ecl:assessment:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5"
+    }
+  },
+  "refreshed_at": "2026-07-27T12:00:00Z",
+  "valid_until": "2027-01-27T12:00:00Z",
+  "limitations": [
+    "Illustrative assessment-only artifact; not a conformance, certification, GA, or production-readiness claim.",
+    "The ML-DSA-65 provider and known-answer-test requirement remains open in the example assessment."
+  ],
+  "mapping_claims": [
+    {
+      "framework": "Example Regulated AI Control Framework",
+      "framework_edition": "2026 immutable edition",
+      "mapping_packet": {
+        "uri": "urn:example:ecl:mapping:framework:payments",
+        "version": "1",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6a6"
+        }
+      },
+      "obligation_slice": "Runtime action authorization 4.2",
+      "support_class": "direct_runtime_support",
+      "residual_gap": "Organizational assignment of approval authority remains external.",
+      "validation_state": "internally_reviewed"
+    }
+  ],
+  "prohibited_overclaim_attestation": {
+    "liveness_guarantee": false,
+    "business_outcome_guarantee": false,
+    "universal_model_correctness": false,
+    "automatic_legal_compliance": false,
+    "framework_certification_by_mapping": false,
+    "external_owner_endorsement": false
+  },
+  "integrity_envelope": {
+    "uri": "urn:example:ecl:envelope:claim:payments",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
+    }
+  }
+}

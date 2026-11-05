@@ -1,0 +1,64 @@
+name: Propose a change
+description: Raise a problem in ECL-1 or propose a change to it.
+title: "Proposal: "
+labels: ["proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The editors take each proposal up or answer it with a reason, and decide by rough consensus of the working group (`governance/CHARTER.md`, section 8). Report a vulnerability privately, as `governance/SECURITY.md` says, never here.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is wrong or missing, and who it affects.
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change
+      description: The change, as exact text where you can, and the alternatives you considered.
+    validations:
+      required: true
+  - type: input
+    id: affected
+    attributes:
+      label: Documents and requirement IDs affected
+    validations:
+      required: false
+  - type: dropdown
+    id: class
+    attributes:
+      label: Change class
+      description: The classes of `governance/CHANGE_CONTROL.md`.
+      options:
+        - Editorial
+        - Corrective
+        - Additive
+        - Behavioral
+        - Breaking
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility, migration and tests
+      description: What existing implementations and claims it affects, how they migrate, and the positive and negative vectors it needs.
+    validations:
+      required: false
+  - type: textarea
+    id: disclosure
+    attributes:
+      label: Third-party material and patents
+      description: Any third-party material the change would bring in, with its license, and any patent or application you know may be implicated.
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Proposed text
+      options:
+        - label: Text I propose here is offered under the contribution terms of `governance/CONTRIBUTING.md`.
+          required: false

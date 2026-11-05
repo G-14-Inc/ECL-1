@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1",
+  "title": "ECL consequence-coupling extension value v1",
+  "description": "The value of ecl.ext.consequence-coupling.v1. A request declares the coupling controls an action invokes (FR-102); a response reports their results (FR-103, DCMP2-052); evidence retains both (FR-107). Irreversibility class, commit mode and budget debit intent are DCMP-2 action members and are not repeated here.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": false,
+  "properties": {
+    "witness_requirement": {
+      "description": "The state-witness requirement the action invokes.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "witness_reference": {
+      "description": "The state witness supplied with the request.",
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        {
+          "required": [
+            "digest"
+          ]
+        }
+      ]
+    },
+    "capability_manifest": {
+      "description": "The frozen capability manifest for the run.",
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        {
+          "required": [
+            "digest"
+          ]
+        }
+      ]
+    },
+    "budget_class": {
+      "description": "The consequence budget the action is debited against.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "quorum_rule": {
+      "description": "The heterogeneous checker quorum rule the action invokes.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "budget_result": {
+      "description": "The consequence-budget result of a decision (ECL1N-0173).",
+      "type": "object",
+      "required": [
+        "budget_id",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "budget_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "outcome": {
+          "enum": [
+            "authorized",
+            "exhausted",
+            "denied"
+          ]
+        },
+        "remaining": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "unit": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        }
+      }
+    },
+    "witness_result": {
+      "description": "The state-witness result of a decision: an input the governed AI system cannot write (ECL1N-0165). required_before_release defers the check to enforcement under a before_release obligation (DCMP2-017, DCMP2-052).",
+      "type": "object",
+      "required": [
+        "outcome",
+        "reference"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "enum": [
+            "satisfied",
+            "required_before_release",
+            "unsatisfied",
+            "stale",
+            "contradictory",
+            "unavailable"
+          ]
+        },
+        "reference": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "source": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "observed_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "satisfied"
+              }
+            },
+            "required": [
+              "outcome"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reference": {
+                "required": [
+                  "digest"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "quorum_result": {
+      "description": "The heterogeneous checker quorum result of a decision.",
+      "type": "object",
+      "required": [
+        "rule",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "outcome": {
+          "enum": [
+            "met",
+            "not_met"
+          ]
+        },
+        "checkers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        }
+      }
+    },
+    "commit_obligation": {
+      "description": "The commit discipline the response imposes on release.",
+      "type": "object",
+      "required": [
+        "commit_mode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "commit_mode": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "deadline": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    },
+    "blocker_reason": {
+      "description": "A registered reason that blocks release.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+    }
+  }
+}

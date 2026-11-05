@@ -1,0 +1,33 @@
+{
+  "destruction": {
+    "minimum_lifecycle_proof_retained": true,
+    "observation_boundary_required": true,
+    "proof_required": true
+  },
+  "digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1e1"
+  },
+  "effective_at": "2026-07-27T00:00:00Z",
+  "export": {
+    "custody_manifest_required": true,
+    "offline_material_required": true,
+    "receipt_event_required": true
+  },
+  "hold_precedence": "legal_hold_over_scheduled_destruction",
+  "policy_id": "urn:example:ecl:lifecycle-policy:payments-evidence",
+  "redaction": {
+    "derivative_identity_required": true,
+    "manifest_required": true,
+    "sealed_source_binding_required": true
+  },
+  "retention_rules": [
+    {
+      "duration": "P1Y",
+      "evidence_class": "standard action evidence",
+      "shortening_authority_class": "records owner with legal approval",
+      "start_event": "terminal outcome recorded"
+    }
+  ],
+  "version": "1"
+}

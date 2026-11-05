@@ -1,0 +1,5406 @@
+{
+  "schema_version": "ecl_guarantee_trace_v1",
+  "candidate_version": "1.0",
+  "generator": "tools/guarantee_trace.py",
+  "source": "registries/requirements-compiled.json",
+  "elements": [
+    {
+      "id": "mediation",
+      "name": "Mediation without bypass",
+      "statement": "Every in-scope consequential action crosses the Enforcement Boundary before its effect, no undisclosed path goes around it, and the governed AI system can neither rewrite, disable nor bypass enforcement.",
+      "anchors": [
+        "ECL1N-0028",
+        "ECL1N-0033",
+        "ECL1N-0141"
+      ],
+      "requirement_count": 57
+    },
+    {
+      "id": "independent-decision",
+      "name": "A decision the governed AI system cannot change",
+      "statement": "Policy outside the governed AI system decides, over inputs it cannot write; inputs it can write, and judgments about meaning or risk, only make an outcome stricter; the control plane is independent of the governed AI system.",
+      "anchors": [
+        "FR-001",
+        "ECL1N-0040",
+        "ECL1N-0179",
+        "ECL1N-0180"
+      ],
+      "requirement_count": 117
+    },
+    {
+      "id": "fail-closed",
+      "name": "Failure ends closed",
+      "statement": "Missing proof, integrity failure, policy ambiguity and the loss of a required dependency end in denial, restricted mode or halt.",
+      "anchors": [
+        "FR-003",
+        "ECL1N-0043",
+        "ECL1N-0146"
+      ],
+      "requirement_count": 116
+    },
+    {
+      "id": "bounded-authority",
+      "name": "Bounded, revocable authority",
+      "statement": "Authority is typed, transaction-bound, time-bounded and revocable, and each delegation hop preserves or narrows it.",
+      "anchors": [
+        "ECL1N-0031",
+        "ECL1N-0035",
+        "ECL1N-0042"
+      ],
+      "requirement_count": 89
+    },
+    {
+      "id": "verifiable-evidence",
+      "name": "Evidence a third party can check",
+      "statement": "Each decision and action leaves tamper-evident evidence, including the inputs the decision rested on; from L2 it is independently verifiable outside the primary control plane.",
+      "anchors": [
+        "ECL1N-0037",
+        "ECL1N-0047",
+        "ECL1N-0181",
+        "FR-108"
+      ],
+      "requirement_count": 341
+    },
+    {
+      "id": "declared-scope",
+      "name": "Declared scope and claim boundary",
+      "statement": "A claim states which actions and paths are in scope, which are excluded, its level, independence class and assessment, so that no reader takes it to cover more.",
+      "anchors": [
+        "ECL1N-0009",
+        "ECL1N-0010",
+        "ECL1N-0078"
+      ],
+      "requirement_count": 113
+    },
+    {
+      "id": "sustaining-operations",
+      "name": "Operations that keep it true",
+      "statement": "Revocation within a declared timing case, an emergency control plane, detections that act on decisions, verification of the controls and reviewed changes keep the other elements true over time.",
+      "anchors": [
+        "FR-004",
+        "ECL1N-0053",
+        "ECL1N-0097",
+        "ECL1N-0167"
+      ],
+      "requirement_count": 61
+    }
+  ],
+  "counts": {
+    "requirements": 628,
+    "traced": 624,
+    "untraced": 4
+  },
+  "untraced": [
+    {
+      "requirement_id": "EBMP2-034",
+      "decision": "keep",
+      "reason": "It limits evidence collection to the declared purpose and data classes. It bounds the evidence obligations for privacy rather than serving an element of the guarantee."
+    },
+    {
+      "requirement_id": "ECL1N-0088",
+      "decision": "keep",
+      "reason": "It governs how the editor changes the standard: a 12-month deprecation window that gives implementers and claimants stable ground. It binds no deployment, so it serves no element of a deployment's guarantee.",
+      "proposal": "Move the commitment to the governance documents in a later revision."
+    },
+    {
+      "requirement_id": "ECL1N-0091",
+      "decision": "keep",
+      "reason": "It advises when to choose the centralized deployment model; it is selection guidance, not a control.",
+      "proposal": "Make it informative, together with the deployment-profile schema and the reference deployment model, which encode it as conditions on a centralized deployment."
+    },
+    {
+      "requirement_id": "ECL1N-0093",
+      "decision": "keep",
+      "reason": "It advises when to choose the sovereign deployment model for residency, regulatory or mission reasons; it is selection guidance, not a control.",
+      "proposal": "Make it informative, together with the deployment-profile schema and the reference deployment model, which encode it as conditions on a sovereign deployment."
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "AB1-001",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "3fd3470c8e3e382ba320a3b2d746eb6964b58fe60e5a9d26d1cb86e85a17b534",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "AB1-002",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "a74c10a7f9985d5aa8bbc5c4e2598817043d660d6011c26f7b67c748e912c7d5",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-003",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "f86de5fff033828db2447ef962c1e897c70e0f0771e828de413ffad4c7410506",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AB1-004",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "9068e536fde850dc117dc78359d0d972062f9b9cbeaa2844bb86b7dc4b48a8ef",
+      "elements": [
+        "independent-decision",
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-005",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "4e76902006cd115adc60467e02ce056aba29a5474ff0004e81a522a89e5a5ed3",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AB1-006",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "08f023084ad778d28fa655525e5462d867a56b39d235c09c3493d5826076285f",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-007",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "7cd4e193f24a6b6fcc34c5be1cb6bc7bf34024bef63750c4bd61e6461a03572b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-008",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "e1a1a7df01d6b7c6fd6aea6e2b62d7147dd4fc9b5824adcc98a30af54afb1eac",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-009",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "d54c3a551058766a59803e3e4e1075c32f7bddbd7381a723ae13964c9e9b5d7e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-010",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "46c9a8ad81c3a8b0672659099780ae163216551e6831d685aedee11665433217",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "AB1-011",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "a441b44876e967c7572c54d4b4b6ec8ed6a686c34bbe2ddd65bae53178a9b92f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AB1-012",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "177d3f122dd33a8f3426a86d2baf84d613e6cb746745630a0166193705dc72cd",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "AB1-013",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "text_sha256": "53c1d7943afc3e8f153ee9c30b4b8f7d5ee682e879617c564d2ed0bf97dad0c9",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AC1-001",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "b74e24adcaaf0d4fdac344684e5c78e8c7a4d6f0cfe7e0ff4c318eea607ecc02",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "AC1-002",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "8aff15151cfd1916441abb4afb507fe462b8119b1d02b2a236c7c3a15468fbd6",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "AC1-003",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "bf2b33815844291cb470cb0a1bc7af08e4799ec0d97c9e412812b05ee8930196",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "AC1-004",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "eb3db1525b0013b3ef9bbbc58e890fb3e3ac91486292090f4dc106841ad5a776",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AC1-005",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "c62dd5d559f210bedda71bbef302c147e26114cf1ab7e934ab00970d89152ca5",
+      "elements": [
+        "independent-decision",
+        "fail-closed",
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AC1-006",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "0dc117ce3414fe2ca14a94c9ad0d9681232036bea6a983d44797adc274c09cc3",
+      "elements": [
+        "mediation",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AC1-007",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "bf03b1b72bfa106cbce4164d984057c14d2805e342a557b1ec3c2bb1c7210534",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AC1-008",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "94d7eef4d97bce511c2895a2d5a9523a7561342ff5cf41c319cfe7e36265215c",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AC1-009",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "7e40283bc10b21093d990439d9b4ae2d5ab2354b697349224b59320ea8fcf3b5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AC1-010",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "e0eb5037f3fa19cd3ace10f5ad916a28b421c37dc7112cf7fc4e9b0dc7dc0201",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AC1-011",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "ed7b4ee50b3e18fdeeb53c30c36d06a88fce7c94407e3283afff71d42c04af7d",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "AC1-012",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "text_sha256": "9c6f3a2cd08bb467e2be80744c5d31d2e44dd8469245f2d2af63103e5026804c",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-001",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "a1c52a537b9c39a812ba262f04b96339c1e4d157845b9a6994bf119867dd4c32",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-002",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "cb0b26270fd8f5ea6f190d5ccb0982f18370578b1f01158526bdf1a876e3082a",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-003",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "f5165cdac71123662e86f5830e211c487224c204ecd4f70482eb3d651123bedc",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-004",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "38aa8af6cc5b6aa9468b87cc98f71ccd8326b9706070ae77f03f469565f36810",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-005",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "b5c450a7362703161600c61fc3eaca4218639d6efecde92e4441c7e5f4e41bc7",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-006",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "30f74004fca1e9644cdeff1293bfa422e12daed47623e3b19fa8b2de2d4cb29d",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-007",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "0eebd800f59b2d63e8425f5ff58b79e25f71d6f267b1a0f93b7852b143ad444d",
+      "elements": [
+        "bounded-authority",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "AZB1-008",
+      "source_path": "profiles/AUTHZEN-BINDING-1.md",
+      "text_sha256": "4b1f19aac5fec81dfef10bf0bb47e60a26c4f8067f587f44382ee800feb8fbce",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-001",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "064ea386eb2d9b8cab36e4030cb178a656b2d209384cca99d72b7e91a638918f",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-002",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "68ccd7774033b19e862892d4cd91239a3ce8c122dda8f3e85dd33a47d64de49c",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-003",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "e9d782c81fa848ce9edecc617bbaa02f9f4e74b77b9193ecf87a5b95329fe7b5",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-004",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "a63445bcc15d4fef38145d1566f02e4b8338ffd71ac59396e909783e020aa308",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-005",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "66ea460f194298cd4aea0808d6b9da8e6f5dee439b362d89196e14b32c08549f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-006",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "fc1c37a7ab6dc1eabce084afc3c3ebee2af41b8306a3246196ed88f7f0f85c03",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-007",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "bf8f9a6d93c0f7322dfa603cd9c190e3590b08bc6ddecce0161f5fc89e9da762",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-008",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "89dcc1a441e9d8ea41a597b1ce7a88fa9fd603662ac7529b4b4fc7fbdce54923",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-009",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "9e771d5ca7f5126021c818947aba3afe08af8858229f87722f27e8c3d85d104b",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-010",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "34f9e430ec2ee67e492bb40682c385239441b092e0ef8e192db88a5b05124528",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-011",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "670c8d1f47b98c82a633b84d0f78bcc7c9d2dafa3ebac21d37689cf07a9fd299",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-012",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "1ec197622168dd3dec31fc0cd2efd98f0999e8a4296a0448e238891f5477dcb2",
+      "elements": [
+        "fail-closed",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-013",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "9153326943d6a3622c80c4899f070bd67e7a4bdfbf54fc4f9ccab41c5a212ed7",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-014",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "eeb30c8e3c67be01a59fb7668c908db797f16406938147f5b680b7ac9b47bd70",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-015",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "5627a39049c149cb82c9db62e343e3fcca4c6f3519bee95b316f0123fcda1064",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-016",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "1659017df743a5b32bad8439b16a4cc10012cc3f713f9207f0a0393b9615c671",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-017",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "2cccd476151526244647ac840a1c5046f391d657c4c102af501164efab897a34",
+      "elements": [
+        "mediation",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-018",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "aae9dbd4ee940400ccd271b388c68d90b3131fccf3a5424b7ecc68fed18cba03",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-019",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "5dc8387e0d49d396ebbddd22ba38310ee1c4700cdab2f6460e4ba12ccd2e86b0",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-020",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "d9445deec260a43a3a0480db1b9a9c49d59bcf99e7b7efef38be2e9539397ba9",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-021",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "0f57827e0a89286fc264a3e231ab15d4b1cac0d504a03e8fc965199820016a3f",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-022",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "cba923e7336eec883c82ede43cc0f1032c9c422812f9b140b8468525aca9fc5e",
+      "elements": [
+        "bounded-authority",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-023",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "3c014aaf27dafa97a46ba324906252e262d6674dfff19203ab8edb61efbb951e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-024",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "4036b977d88f2e438bd445e067e1408b8d3b9bcede01bf5ff1d3008c1d8951ad",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-025",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "433edeb9306d820173c234fb885343e28e881e9eee0570f770a44f1d414f366f",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-026",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "9d8ef7e67d64dc83060cb2e1eb3fbac0a00ce7ba30a08c5a26f0a3481d886e26",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-027",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "7ed88495718c08485991da99dfdd3ec4028a42d944aac2f8a27c36641b4869d2",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-028",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "6ce6ea2ce39de4fc193559e077a33fb8761e6b97cf4b98e43f52f940bb877010",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-029",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "399d8bab1341c3d8d4d78486fabbd576dbeffb8a249de9d5fdeae6a2590cfe1b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-030",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "2346facb9adc28df41b05f4ae6cedffb3b2bca90692c64cfe62e3411417d1dc2",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-031",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "ab90eabc6c80be71b0fd755fd0185ab74fe19c48a5dd0d81372cb124804cbfb0",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-032",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "b9ca84a2243df43f160add177517b69f3829faa317691778b96962a95f8826d8",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-033",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "f445a4908a9573a57165cff05e00b390889e88c975c6e6073bed69dc44d75e40",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-034",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "bc59013ca43978d923396c86cdfc584dd90c535db846bbf06825491f4624727c",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-035",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "9044bd173679864d7b815fc1203da1ee2b7a4185d5eee9ddabdf4982e5989a0a",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-036",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "f7c6fc2ddda02cf6d2349f7ae1e895ff6ab95671138d0ccd4431125481f60d55",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-037",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "b2b71aafcf3e1cb2e5bea1c3fe5177db042de46b70ed5831f099efc7aabb0b7e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-038",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "278c669f4b0661c90807c476fe837b8c769547d0b27c88d248763217efd006ed",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-039",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "bce67c0b60caac11418e303708afe2c6bff9c692364054e3ccd562fbeb7cf4e2",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-040",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "f79e52f97bc66074a27b1044b5001d45a65cdf7219a5db58f2527545bf5d686f",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-041",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "45b9c9a40e318c4f166c11a67890274fa5545cd5e122f08b1258fef6f97e7862",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-042",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "a47db3ca3c59c7e6d0959823797c45ba7af6e217b22384d85fcdbaad9d7924ff",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-043",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "43fee9ea61263b5bec3694a904fb30ec74c89e3ee27f52cf76ce644070f1509b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-044",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "8b00963f204b22d65084ba371d47376d081da8487de49cf3d52ecc4d2ed6a5f9",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-045",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "0d1fb8938f97ae4fa7ca1c8b973a27de1be7d5d21e7eb927df96de5236636b85",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-046",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "ecdb9ecce6c79ac99d783d75bb2c8bbdde60edccc18125b427b663075765f02e",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-047",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "d7c2071516f4e8bfd29820388c4dc9f751135b41a0c61fafdb527dfd1ec19c15",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-048",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "fb96bd3c119a35a971871e068207601db87358e3dda956b0251412fc32e201b9",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-049",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "d12e8e026775bdff60898c04a39cdd8c9f2a3b5c91fe43a348327c3c57874e5b",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-050",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "bc48113da698ca4ed3cef5dc3165c43dc7bc74d89fb58b41738acb5a429a39cc",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-051",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "dd7e976a7b4c24383ee0a6b6c73f82a7cac52a5f0197e1fc8d60379cebf60552",
+      "elements": [
+        "mediation",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-052",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "bdacc8f57d272497fa7f3eecfbddd771d2626eeed998ba2cd39fd9a013c87d0c",
+      "elements": [
+        "independent-decision",
+        "fail-closed",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-053",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "a6f41ddc9656363267246fb37172483073c33e99682f4cded0358af4cf776cc0",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-054",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "d4148eab3e29b3390c7d4e37df95a8db3b63b9496727f64bc966176f883d88c0",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-055",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "c1e459ccf9e532e7dca064b31187f384314f203419b1431fb004bef684b8a5d3",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-056",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "2ea5d227cf3d38df7f2a9a1218c3416a4a59955680c866c17c2f714a2a786541",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DCMP2-057",
+      "source_path": "protocols/DCMP-2.md",
+      "text_sha256": "83b1559433ea38293a6bc1d9c18e822401eaacac3831ba554e071044e6c96ebd",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-001",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "dd77afb84866a4da0638dd4c86157f397ef65feee63a0846a2fec1653d36511c",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-002",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "3c8829807aa250e1c0c9dcfa4a57b5bf7846f176b72b7db1e8e1ec5f116fd4ee",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-003",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "e39c8c0032c536ed2fc92f0b6d10e87635bc5d8ef3f48b86bb77fc7dc8876565",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-004",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "268a3be508ba3accf13c708220d3e26f4c9ac71410073cf5b85cf9e46e57c3ec",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-005",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "bd15db4962b99377e926b5a6350e3ca410110e6ad46d620ce42bed50a7da2157",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-006",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "0c2a1a5df0247ecfc66d1f5c79b6c4ae4e65ad773dbf657b86c9b5d05e00f4c8",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-007",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "19ab626a1adfa27abc352069f27be7f0db02dc2d491399cd90732c951ff3a1d6",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DHB1-008",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "text_sha256": "15c345c57c0f15a7e543a9de2bc6fc084266e5c69a8c8d3af4e3ac6136cc12a1",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-001",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "24d3d899c7520b1b185d6c2fbf82278524a6b1047a367fab633ac1368694dfa7",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-002",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "a49767819fd104ab58e1236ce856768be64dd1de01e46cd9df0b4b0a4fc36d60",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-003",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "6eacdd166f0b2f94cbebd817648aad8c838b89a1f9a8120b107ce1bfe8f0a692",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-004",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "2ef9d770d04a6ea2abf9fd8e8ab6ab25e3441bfed06fd772023b2c5029610c50",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-005",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "518f988d56d7e0aacb8eab37e82ccfe505d735f8511789a12303764df6b8704e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-006",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "a516825cbddc84c88d923a5d4eefdd3cb6e9450cf3bbe22f74a9e40ce561b65b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-007",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "b0e2fc539da28580a0ff058f4431e063fb507e570236c6485aa3a3fdf711e464",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-008",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "73ef9180d7e84f4a52b2da1a294d49c47c1c4270c06ccef7d7b9f21092e8f513",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-009",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "83328bf4cad608c1e35179e9a7829e8d3c02ca43c0fa0e069de87303485539da",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-010",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "eed32e994a9b268075bcb71044be3606faf7787184a71ac6770cb19a655b813e",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-011",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "ca312fb8d3d4a02c00336295e764de243551d169ad16f664f91584ce22f9263f",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DW1-012",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "465a6d9ba111a2e47afa26a8e1c52b01005276456d4b758fcf1740c8fffc8c23",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-013",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "5798af5afa096254909e59518b1363cd733302a818a402a5579ebc441927601b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-014",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "f35645555ff9b6b245f6b40e7965e3c5e58c23a6a9e1bdb0d887e97f9458ff25",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-015",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "19b3cd1d50c0670f93610cef597132effb28a50cff6b77223bc110a3263b90e4",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DW1-016",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "271092d8598c5588891f2e8f3a8d9084177a751271fbf16bb1bc42f85ffcc1ec",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "DW1-017",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "30019d4e7c5642982de9bedbab1e2a6a53c21e5f3944af9268c791f3adc7b008",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "DW1-018",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "6701485ad2eb70ee48133eaa6fa6b0fc8a3ab0294f4a5d01979dab50499e4957",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DW1-019",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "055bb80446e81a0bdbf52b5fee518e6abd1c8b9a00ee71aefd83022b1c5ad5ee",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "DW1-020",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "018407053b5b1677343d1965e5daec24303fa37de3387eabdaa277ceae0fd2d1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-021",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "ae0a438712ef901c827167021c524f557884e739851bc3a4c5d4649e949da6a6",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-022",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "e554388ea2a877916b179c9fb73c55abfa6f35d2bc1246496f5f517e5776bc50",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-023",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "7689c5e6cecedaa26882cb3980022829f4c9b74a133c25bcda14fbf2661d73a7",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DW1-024",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "4f0a4c1e71c17fe8e9dca13c11a37a1a6bf98e2414eb3005f4e4174deb443ac8",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-025",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "00eea105e6e64255ac610a81033c55b1f62620f1aeabc088658878794cca6881",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-026",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "97c17ba2fd76ddf4bf49f5f16a4686d1dc75445c944e497cfe477cd425c39357",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "DW1-027",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "264f418b5b7393a146b04e431dc8de8520da11ba7a6278740c885a2cacf94f98",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "DW1-028",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "0d925469113f58011ac5326a4e70eecb01bf3dd4fdd0bd2303bd4b69d02f8a3b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-029",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "9975adffc06dd50d0f86f39415c10fcd3d0b5ba0b38c9f6d494bde7d72060027",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "DW1-030",
+      "source_path": "protocols/DISTRIBUTED-WORKFLOW-1.md",
+      "text_sha256": "f61789eae4f912cfadbe316bd9ea11b422fe23e0ed616107a054ee4d00c2cede",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-001",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "1d72fefc8cd9033c15d6adc72a34fd0e82f279a9d4eda235d856c400f037b354",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-002",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "76a9997a9b925575db89d94e8097246e155124d58023c6dfcb498b3c451e5b2d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-003",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "14ef1a282050f9115cf87c5195450ec4bc46ffb883a5b496193911b88050fac7",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-004",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "1c46119ea81a17e79fb124736e7de220de3f9727fb8cc7bcfa9d7c7ad86b7609",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-005",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "d78cfd7a2896730d6c687b1dd5d616aa6fb1bee040df679d3fe2e8a3d0389e8f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-006",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "1a56953818196d13b8aa8e207024d380b8addb958f85ea236e1c0d07bedaa6de",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-007",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "c99a6643863460a6175249c1079a7720738856c560b7a1dd973c6845dfaf1df3",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-008",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "7a3b86cb75de526cb6243e1e642b9d9f34000282f32007b714748d79fcfd9cba",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-009",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "c505e1c55761ab49098f2f66509f6c153d764030a5dea9a853955c998db9a080",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-010",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "a21a0809eb5a9cfb7e69c6199610c9a4ef2349c4c71a3719f8b2bceb19086358",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-011",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "a8198757d236bd310e25b72851f27f6dd80cf87377d2e137b6d52f849acbb9cd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-012",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "467937bfeaed25a4cce4e9f5690ae3b2e91c65b6af79fa9ac0c3c4ac01832750",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-013",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "c20bd4f9b53a5fa5dde45bffee3d21e62a58d0ccdbefe439fd033f6372bf629d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-014",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "7c1a7c43945c417f378941ef0eadababde87e1fd5a7059fd9f86b08959f8712c",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-015",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "f49f02e01241c4e5eee9a9983ba1eb4f4ee1554f43cc63f8f91e23f83ba841dd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-016",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "59e7dbfa49232dc94041beaaf464b475825031d3c0f3ff633d21915fc725f83a",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-017",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "ef1a65af8a6a0e3077f364944b626e22e062958ded9f968be1ecfbfacab97546",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-018",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "eaa75eee69e77d527ca15b361c5492e3d41215bc555deee620ffb7d9ca27fd78",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-019",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "5b665bf26fcbe2477071bd9aff713dedcc34c9f1cb783edc0160d4cda4c2faec",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-020",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "fc7d259de4b099bfcb31ac87e7a6c18c60dfc4d79512771cac7b59f6fcfc2698",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-021",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "67680bd6c62153ed28ec5f68cb5a7b7e87a09a8ea17ce6b5d8998dff60beab87",
+      "elements": [
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-022",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "c65f94d1c073e5168229d8c6dfb095c7a9219963d9877592222ce47290539e6a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-023",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "ea9e45ba718dfa3b3db9cfdf7fb1860144cbfc90c50cc17482cef9ac8db570e1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-024",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "1d1e8b429dde52f86b9913d6c8d6e8fc936d52e977720ae0264febc0d6920638",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-025",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "96ac353e3f9eed728808ad07ff7da947e14eb971184b78ea2f0693e528f3d44a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-026",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "8845a84b21dcefb0467fdf1c8c98b568087878c4456cafe70955254b059c5365",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-027",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "ae84b90ae78810d009cb68d35ccbe27a44926735cebfb826bad11515a645ffb4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-028",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "47beb562e2b45a47b86646633323d2fc988335338980cc2059a219f834d78cf8",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-029",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "2f2d5c8f60c4ce5de93cb6597f4bfa082136562ee8f91903d3795894acfd5054",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-030",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "df7a6e42294f36a38e43776c06e8c1e69ad64c65b147ae041fc93211b7ace635",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-031",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "ac97e65d393cf06200ba02d0787aa296b272d9eef0287e6977fcf5c9e5f7209e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-032",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "4c5136fc0d0c7ea40e1f055435dfd1c622951d7383f36b5652a249d62f945032",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-033",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "7860898390686a6d2c4a6451089a1bde84b4d25589ba82e800ee5f40c8662e4e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-034",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "2f844bc5445e6d6173cdab7c10c2cd626f38e63973f74ead13ff3711fec42339",
+      "elements": []
+    },
+    {
+      "requirement_id": "EBMP2-035",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "bb9e9baacc4f2e22bda443b931ce800d0e8b83a1c7a8cdf6a7b7abff381f7407",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-036",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "32bbf15f8097a35006f7165c3fa06635b0eb7787589697232abbf7b175e3656c",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-037",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "90fbaf7d5334874276141d1380fc2336a2f1e4ac683975dc55dd23bae1cea124",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-038",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "bc4c866276611de58850036ad87e3938e5b516a7cd06e9819d463e1dbf12d04f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-039",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "18f172e1b6eb61089a915a9b8c4b4d686b40adf4ed2e15a21d3d8a97249014ae",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-040",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "699fdcaaf46d608af705287909c84c89056652cd34a4b9131c9bf330fc59e38c",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-041",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "f73048603507affc39fe473dc8853c6b4b498a1009dc41dda471ebd6fbe5005d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-042",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "b094e14ba59aad118e3a3fd2953e4546ee665f65ea7300fbf16b19c7af04426e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-043",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "7e85c8516c979921587e06c10bbd0dd56435094197cd097d56641ca0a1cd4677",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-044",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "26ddefeea4a0ea07d8a3bf13a7573c6c776744ca656658dde96457e339c6e56b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-045",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "6199597c895172871193f10806c13d9660cd0a7f4eb42eefde6807b956cce341",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-046",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "8c7e24fc9e5b403db75b918f2a3f81fff01eff137e31aef7f8aca07960c6696f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-047",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "41f2ed34829f83dfc4e4606e9d5babc66b151b9dc044609fe7da79f255db3ee2",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-048",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "140c87678b4a685bb3271676ba273116dca7f5e5de9cc4f6e6ef7b4de2012001",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-049",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "a6605b84fda52402c846bf824232bec013cd8d7bb7e2a5b00e74f7b91c3c481c",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-050",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "3b4f5d381a0707109bc608ae5968abc5aaafe2f61b39f2128e0c5ee04818cd7b",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-051",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "27f3aa40a554bd3663ee90232471d5266f4ef89cb7ea124d4d10f5d0d2eff1a5",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-052",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "fadaecd692eb8c580e18dc2054d109740641c5c1ddeaef7786c55b3691653a95",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-053",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "5b3deae47506607cbe661514efa794c480fcc71c8e5d7fdbebaddd63598d1943",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-054",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "3375a0542847f886e3cf072f58e10540c84702e65793ada678c124b1b09f752d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-055",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "33cae44f13f5d165fd9476f134fa5506f42482b74122310749db30d68583743f",
+      "elements": [
+        "mediation",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-056",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "db0b3a47d133d3ea23f2ecd83a8e4f30887fa7e63b105565b2060023efa91abd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-057",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "274615f5d978e247aea8ea85b89c9a7189bcc1973b711abf2ca5e1c4dce4dfab",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-058",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "3bc7ee34c805ab9f87cade13025da26779591a6078d0bdf6f6aff22640b1893e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-059",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "2ef4fbbdd192063f0d0b7ad1ff52a50db89a90fa53159ec5ac20a76f07489d51",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-060",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "95417d7745b972fc57fbad156262fcaa29517cedec7deb37f839250035ac9ae2",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-061",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "e7c39c963102b6afada61f1e34e58de27e55fc22101c08a3ca4d1aae061ecd0f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-062",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "8205cd7780acc5611ffe83f490293793e5f525204a4c113f1fddc7bcbd571294",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-063",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "c05eef802d66794b7ccc9f7ee7d8c3129f87ea64d58ce1d1f41108f8930bf153",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-064",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "c0d54746568ff4650258fbbf8428671402e878a50e1bcfdeee7e528d3a39a4ad",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-065",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "f79bb40f6abfd6f166fa12454ad701f2ecf78dbe83704ebef58519ffccccf146",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-066",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "94e9bd7ce83fa42e6cce0686d46ebd09c220f76577611d1e9db5027c09934c1b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-067",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "b28ba89fff9fd3ead0fb13159865f5e9f3c6e8d9c046aa72e54f809ef7cfc9bf",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-068",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "b4d65ae4619b7be79d3681d19b791f2288dfd8d294aa9aa0d6f7c4d9d1ee79bd",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-069",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "cee75b4462a59d851efbccaef80cb3a480198607e191735dc671e93a972c67cf",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-070",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "901d1f3a734d6dbd0e6f407757323105bece9741bae6321b8f5674846fd550ae",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-071",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "f1f8a22acc988adefe50a6697d074d04345e231f47a41d489362cf2da0b6593f",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-072",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "19020ae07772ca7eaa4c50d05d80ebbee2b321b77bb9b873813abb379826fc77",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-073",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "a56890eee4788138ec30f7968d8dcf8f2cf61b2d0dcb004f5fbfb3c39bb3dd2a",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-074",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "5ac3db42f87abf527f004a4216528597e1fb41568b988d6e12345ae08959f13c",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-075",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "91a7a074b4bb58cfd093fc26e9605b0d58ffe713c108458dbe3cae826966f7eb",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-076",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "7ba238f21a51b5db477781e29f3f9199b9ea7837a7a380385289a5a757047053",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-077",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "23d8a768a713564c6a0707b833f236d16dda42799280b2b73257131ec57c1e37",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EBMP2-078",
+      "source_path": "protocols/EBMP-2.md",
+      "text_sha256": "d81c70482af6525d89246cfd8da41602b9d07161f3a4adf863a757e4bdb1b35e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0001",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6520e9afa33976bbe21cc92b476a9c0ac97c636ca2ec57651102cd55f323fa32",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0002",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c27ee8a453b2eea83c1a68a759e6e43c008b69330eb5affb3ca720504ff6e032",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0003",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4f97a010e448b8b84600de6522fba7c94ba8155006f0bbe7a8875e32cb67ded8",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0004",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "11d9929221be850d3c93f0b56d627a5b0973fe44f17e80f37fa10a184120d80e",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0005",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "34317587b7e0c6d6bcfbbce7db085593d121072661d9e373b1396d6ae5c7814b",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0006",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "13fcf1746898e6c582dc481e4fd2e6b8dee2afa762718b51af6a296fd39e2089",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0007",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "189ac4d98cbe950e751f1baa85e4bd7ce258e4d2a6e08c09d5808151065f43aa",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0008",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "11a98965a6254653c0c8f92d618ac2885d9ed30b30e60b62e355a1be129305ec",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0009",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "7d56d9e7f5bb3cdabc66ac5653efa71edc016fda4f006cb835b07400a4e5f19a",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0010",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ade99335a1b00155936b63c141ef714161dd55ed56b73bb504be89428537629a",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0011",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3e96f8a43c39b52b5f519c08cd41ba1918576539b35d5140a8e12b8db4e9de6c",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0012",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "238271e6880d4494aae520c47c06c771d9c2018d2bda39bca85cbddf3f4af2d6",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0013",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0bcdee2b7bc5c50a0ac824bb4cfc9ea54a7b50eec20fc46ce67eca9b58d69534",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0014",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "959b180d23c21e1579f9d99dea060691df73d419bdc86ecb1776197f62038a80",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0015",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f3d85f513bcac70734c35c4ae4b98088947df8d138ff9ef8a5931231f968af99",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0016",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f123890c27bbb238ff61fbd19f4b182d2146142bbc8db4178972e203bce1357a",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0017",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "893221cd5178965fce9a39a27d3fac0a0e5e07fc52d6739cb015a2d49b3a3c2d",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0018",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "7ec7b2004893b236031bea837670c33f12c33316bdbe90c9968bc66c4acde2a8",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0019",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e5625ee197265ebc2168f441bb38ec2c74aa6c4616375261ae925b38f77231c8",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0020",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6941669adbc9ff3b203d5811ea9dc6b1d74b04ee409e420d7fb5f4bb35f9c03c",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0021",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "5eced2dff8de96fb2a64ac47aa5193c8e5870b8ddeb2aab19b83ac3cba1ef906",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0022",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b499295a7bc4ee88eb4c3d30bc377bcbf19e8a37b10994fefcb4631f0076ded5",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0023",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "da1569386e9162f0ddae9b2bc85e5ef97e369520418d203e99b52b386c6fb109",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0024",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "45e05759f3700e7facae308c68fd3b0aef43b203a3d7c71ee13c8124fdecb954",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0025",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c2017fc16425cf73dc935fb146f75e2ee74ad4a60474813273bdb00d5f9cf100",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0026",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "bd249a7cf1a9accb605b141494172b34277b1dd11a10757c663a80dbda188d7c",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0027",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b2603179e06ab0b7b1d18b95d5f9c286af779a55e49851cac0ff6b05113636a6",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0028",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "18df6c5364a4462d526fbdfd2a08e82b467444b4fad8277ed17f7fce1b18b919",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0029",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "729f7a25cda21a6af1c15248f51c0f786e506c11fa3f093eb8e288432223cde5",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0030",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "1656e4c895ef8269d3aa04415a11b6b6945ced3772536192ee25bd55d6b0cef3",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0031",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "cb166e00fed9a25558b506053b523e87622c1b784f216c9ab6a1b0a42b6a5d9f",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0032",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9bd219572e466d351baedac736325e925c49319944b347d2c569e118e7d4b0fd",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0033",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6994ba58f16129fe43f9f997e7742dcc3f16a1d107216a6569871efd5d21d7c3",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0034",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e28bf2811b07dd6d831a558863c211aebb3b5937df55271fff29ee01b6c7492b",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0035",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a64d94721063159672be43fe2ae67c169544445f1746991be2d453fc3e0ea035",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0036",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "28ef8ae46f3a8483c7cd8ee3849ae570432d376378334967708747e04db96136",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0037",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "eeb942a7a4d0fd3830a5748d6306ec3d12b7bb9c5c3bbb083f1bb01b4154beb4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0038",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "082e174232cea9acef7820192023856ceb813129080addee9eee0685a89ae4f7",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0039",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "dee0b36acb0d3a6f8b50d64e7799e09a70b56a1291acda2a9bfddfbcb0f7d3ee",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0040",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "113865bc776da6ea69784d51f3e35507c5a7d45f7312c1948f2a8abb4fb11093",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0041",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "33f3f37604fd1d1be0f224e6190461f5c35ab01a799e2a96037b1dfbfb9b17b5",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0042",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ad7f9835861d6a48bc3eace04abb31ce9de8a1d0eed32388169600c71d3e68e6",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0043",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e16c0db0719dd4f8ae69d5b34e44de7c6ac8a471dfc5326e997f6cf6f44cf863",
+      "elements": [
+        "mediation",
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0044",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a6327e13989e714cb8b57f350dc244ffa367bb22ad8fc72a8327b74cbaa006c3",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0045",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "fc690ca23647ae201975b0120f9b12daead7a4dbf052dfd906976ef8ac5d9fdf",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0046",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "1ed3f4ceb5fcecf0bebd44ca3c473efe2a2786b66b5045c1c69b6c7c62179514",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0047",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9d7cd18dc0098e5df296e0c7c37f64417920f66b8fead79d47235aee403f8fa2",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0048",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e26807ae3f89696520856caa1b096b928c145db1acb204005ca7aaddedd0d0fa",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0049",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "fe4c0d5b396a19e52fa4c39a9d971865c00625fe98c338a0b4947d5a700ce795",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0050",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "237ad116ad32b623e7def02c12fd9368bef7c18c8e730684014a0a71bf667bad",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0051",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f9c700fc344474170f82dde6c60e66446508804ee40c3991849acf07f83460b1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0052",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4f5daa8802d6da2973ef7fc41fbf2de82d2a1713f54ca9413be172a480c0d723",
+      "elements": [
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0053",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "aabd037a633444d9efac16f23dae2000e6ee4a88edcacb79872d5f8a687b578f",
+      "elements": [
+        "bounded-authority",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0054",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9888ad53229daa9169908acd34da89671f93f52c2ac4a7833f0164a74169b7f4",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0055",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e0ffcea613cd86bf771adedb38540ae1891d08671ac550d4fe8c5eff710d1f57",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0056",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f6bc64c8d8325909dc29989e9fc691adb4889004807af1f77541172f7d3bf60d",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0057",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a13a455a2d93aedf59c0d3265f511494dfbbc884f60c469b96ae574fa9461278",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0058",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "7782678ee9b32ffac7994e7603eae81e151533b50e203860c2d3d1782d0eab9e",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0059",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "81eb53bc3ceb4a12785e91c98ac0f53ea589dadfaaf5809401a2c4d5f4b2112c",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0060",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c50f230841432a0f956b99f87eb802f7ec541e4bf5e28c2bda84466504fb9973",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0061",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "03ce4f25fa61c378446cdfbd2733a125db6226a57fe7c834d90bcf4427bf629c",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0062",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "7c7bc538f1f311deb0d1b01780b698d0a83652a435a94687b5143a8750bf4f81",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0063",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "439645f9b83ee8ed1cf3c0b91ccb0dd11f18952aac167eaac4c874f7233797bd",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0064",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b8948248c158d55f50edf259c29451408af8f9b558ba129e9e64ec3319a0894b",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0065",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4916b6482aa365749cc646c84d2ef546387aa60323374cb5b08f8ce875103491",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0066",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "df2c152e28f4d595ee7a8918edbe83dcc895999931358697d686af7161eef312",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0067",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b488b0321960e69462c034e896fdd2a6358bda999db8e47cffd12c1d5555fbc1",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0068",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c96838e993f103a19eb5e22ba1c49d97075a6fe4ed3696bd9e4ce039f6e62cd0",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0069",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "20a42515254294b61e92c22c8fa9a10e9520f7aa0f31d0124fb011f01e2c8781",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0070",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "8459f918972450792076e97b4444444e09fb1fe019943452448a4d88040df3b1",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0071",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "890e00ede6a6cf55ccc49fdd9492a4a29736d4f0a26f3c449616c5b85b308dad",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0072",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "cbb87ee6350e5b6270c5b3a8fa3afe26459f7290855a16f1640d13957c7dbabc",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0073",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3a230e4d2a2c8e39f9371b58a621227350cac8c07c301dd5881a3c59975be41a",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0074",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "1832129d27a61201444c21b499bfeeed1172b9b4491e1d04dd2c4e87b45c2a2e",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0075",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b3ac38858a2304a2865299f0aa93e7080c6eeb8b2144d7c17b5bca4ec85caa3f",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0076",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "7b459e07bf4e262f8925341edde474f396d9fbee56cf368331da94385fd387eb",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0077",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4d9d7212ae124357915f6c1dfa2e2582a9c8c9e96b119d4660bb38cac2dce255",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0078",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "2ef94ad41920dd72883f42dda9a52926c36ee9bbdb4fca978df2136b1f19c767",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0079",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "70cf025839353aaf472c15502348445faa552649f26e7cfba69b18bf0ffe5517",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0080",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3d4944b22804c7514e942d5455d11315becdf4c305514627d09a95a0b74f0085",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0081",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "99ca5527537ecdc04abe998010f86d2a46430c2ab4bbc191fd5e9a5ea2d84fad",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0082",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4cf3bcd7025bd601f5c63dd277a884c41736bbc1196cab9f4622735dbdbd5a9b",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0083",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c943b9efd3db2bbe7ab10f0560bfd765bd7e394a17cb2fc5826536047e7d310a",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0084",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "58a466e5b552909b6c4a6cdbf232bf22188486d177d216eadd728d67e969bec5",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0085",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "31c5af8b365ba9be8586406bf39853ba931b03ca5237c109ef17b24ec84436de",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0086",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "72371fe69a5a077d3f8827cee7dbc8d4a900fbb4e870b74e159f6feb1792d45b",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0087",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a235cc1064777848fd95f5a3c7c762d6eab55dbb44b7072cd95fc7f93fc24a50",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0088",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ec05b70f1272a9767ff21c918746945e9a0462e6763bbe8280370fa6284ed1eb",
+      "elements": []
+    },
+    {
+      "requirement_id": "ECL1N-0089",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "8e0d7f997af8c0ae8217f7c5d613ea7be8415e8ffad7814262bc3de4e8813d4c",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0090",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a963040d089d9bd7b8b534e21516654cc7de4c7ceb944e6d38c801d3f72d571d",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0091",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "70a1db640417515ba976968baeb1f0f28f122eba65d470b5cdfb57deb892f0eb",
+      "elements": []
+    },
+    {
+      "requirement_id": "ECL1N-0092",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "8fb7fef9c5e8019ae6721ea72379779d853609c9343345fb852656bde4f9fa79",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0093",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "30c1b68a6d2d9818456302ae83fd912b02ae37d6464408457faac1da73147ba3",
+      "elements": []
+    },
+    {
+      "requirement_id": "ECL1N-0094",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "07fcde0b6c8314e423f7e80224c2f042eb8bf33585f3f1db719b14738f4020e1",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0095",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "2daab73b3fd3aab01b2bd3f402b5b99dc39cfb0a09ec337c383ba2bae18c5044",
+      "elements": [
+        "fail-closed",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0096",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6c0e9a49061b26db747c992391faed1446b647ba8c8c51b63b8e531d19fb973a",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0097",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4af541dfcf220a42841daddfd52ada35117a2856e0bfe327bf5877f3a2307288",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0098",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f838317f3919bb5b197415ae47557199461c04b1e9d6965541e0ef9f92b7d234",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0099",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "424d5bc631659a954ee233415e2d5c66c7506de0bde26aacaff03ddd25969184",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0100",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3ef20a0f9422b294af7630d951e466afdec1f8d9ffb527b6202807b0db0a275d",
+      "elements": [
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0101",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c3066c5c609086ddd40b5e7cd082ae5f1e2477442cfeeb13e5bb28f6cb1e1a8e",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0102",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6c1fd35845ae6d4ac92219a5c72da6ec9559da5ef0b8a4fdedcc542f13a8c678",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0103",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "da0e67439fe5af93afcc4581f9bca5174d2368f09ba74e55597cb206d4e45c50",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0104",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c73e1544f90dbd7c9635cf4872dde9a6873ef4e59684ea647cbdca1ace5bbbb7",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0105",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a7c678bcd3ecf0e00238b92a71cdbc271a7f5bbcaf86b3bed07d4314f6ab41e3",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0106",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4166e7fc98796a03488572a4d8a0084863bea2e673485c302e52dc7bc71fec3c",
+      "elements": [
+        "mediation",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0107",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ea56ed3daf2b93dc63857bc63fd9e673f7fe411b92a0c38391879adf7022ace5",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0108",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0cf3b655c786e503e5cd5e5e479489627598d6d75d0c4ead5d7a58cd17042f5f",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0109",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ee6d75a51433cabc00f98fe82ea9ca6ed2620ebbc31e014959f6dcc82eb2c386",
+      "elements": [
+        "mediation",
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0110",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c9401c5ff38ef0b5fd70a390b6230f637b1b10e74d7c9ee20d7c97a49d671d69",
+      "elements": [
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0111",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ce408532ea0e40dd7d858dcfc8ffcadf6ac554145772f2ea5891db02ba951d8d",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0112",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "006995e08e94be411a28c13864ee09fde26c3f9ca7e6e41d718772ae74ebff7c",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0113",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0c2458407ae27aa40fe019c50caca90d14e7f90e994d4b8c37c60e6a1054f33f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0114",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b0b357d15b790359e4593feaa9f25f4e6ac9d33e14b647ddefa8f0784bb389f1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0115",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "dfcfff4b6ab215ce89560e806f06406310f969ad1ebb33b8f800e9c28e826d1d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0116",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e727fe62e646b0a05270ee904d40ce27c0e12473879b81a8696822f8db88bc8c",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0117",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "d79d22275fc5a8ff4c757219634983b65f04200028a842dbd678f4a70c7f7388",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0118",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e2f8b7994f96157a8408b44e913ad8e14aa27bb1b594ae6ecd0468aa1ac841b8",
+      "elements": [
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0119",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4ff5b0521d6927eff888ff79a1bbf0c6848ee850925b4d501b608d39bac7fe8b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0120",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "7ea43eefb615324e4e9dac449e79d768063248015cb346ce41575c3d05f2f864",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0121",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ea39b27bbeb56db4ba0838bee800831c569f13eccacde2bce1d43b54d0086c62",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0122",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9237b2fd969f60e33c6783fd1a3f6e8f2e110f04b2327bc808c1d41ac2171297",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0123",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "cd754c8f08c492e4d549d11940830874e0cf8086933673171845f814bd2c22b3",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0124",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9f72ebbb6ad7758bf01055840832076f12e80416cc80900ca646377ef009973c",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0125",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c7400b8b5ff983b4721ee0dbfbda9179432ae2c2a6c6cd6629057b01a76bb64a",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0126",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4c189ba0f0bbdc4638a2ee3d8fb02510cce12fadfd98a88e5ce9acf824434db2",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0127",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "768ef86b0165ae2d13d1ec95529d4ea32963f4843b1fab56d3acd77104635690",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0128",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b7404dc62a2b6e9fa9db2075172c22b6b0383f85acd8253ec9604537a4a7ec57",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0129",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f9e8e75a389c91c0a54c950e55607d30e4074d0f72c8dd1e832cc7506c966c2f",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0130",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "304ca79e90d00274e237f53074c28ae7656ef04512164a8d6d922645301fd569",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0131",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "266b599282e7606550331f3a125b346e38db0d4d465f2ac043dd498da2db871d",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0132",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c5c4a562e2ff53689e0487bae18fbe3a559b5c96eac432c810008b5a246a6944",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0133",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "41d48f4ec43c2e50b10b65a64cf0e3c255d8d0ea17384db9661e6a1319ce9356",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0134",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ee40f4365b1b6bf3167d1ad39563c2080ec5e4456d558f4a3443e56ab3cc45ff",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0135",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "15ceb24ca1cda1a4f54f318b7f9f9568e8cfb5509a30d5f5c5d9e5df7ba2e386",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0136",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e1f7796c582bbf3c0abdbac81bb3d0dd4d1714bbeb7ea49356f42ba41c7c6ccd",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0137",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3ace0bda4d7acc9e3f7eb326d3f4094ae83823b47169bf2c5a923e044fb7c6d3",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0138",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "63530a4b9c84bbc37d8745d07334a98404757fe9a6b57832d23fc0723a15421e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0139",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "1eb73047580146b7b7429f8e7d58425b23ec182eb4b1846ff945ceef902bf723",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0140",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3af67cd9680156e52a30ab08d21970b4f8ba62246b27cea3b631c5116d797297",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0141",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "dccf01664b3b3289caedabf7e53abb3a7b997b5321d53ba8b87235d9392273ba",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0142",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0239e46700f085475de5ba3db85cd978c73ba16ccfb895bc5c57c6f3d4d23803",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0143",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4fad134f92c6cd4fb7c637aa56801974b35f1dc831b71407d5b79df2f70ef166",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0144",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0c7282dfde461921cf2c6572d007494661e090868edd129ad8ece5e4218e57b9",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0145",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f20b9f1b6f5d1eb4a4d6154ffa7908c0479f0068f5cfa303736833ab56368e88",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0146",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "31d3c5dad399acae0a7a05593d50b865a1ec433bae9130237e336c5281914c48",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0147",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b68408c7b4baa399bfb406eb767b9edcb7bbcba10026f715143e074d51960e36",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0148",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e97c9f9b6975202ab0d4f9db57189f7736f764ada1f695052420013ed1961f99",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0149",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0bfaf540384fed9a321bdb96d93a4c144445c3dc9e1ec6103b1f998c1d337546",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0150",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "050d0224df662db62a737bceee958081fa1ff22eedc1ab0b726d4dc98941dab6",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0151",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9576b9522f1fc263c422dd80723d5f6c3adc9022a686f80895dedd2788f329e0",
+      "elements": [
+        "mediation",
+        "fail-closed",
+        "declared-scope",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0152",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "92158e44a4d7ad7091807b2acee9532c407e72c674cc3f3578c8c0d5ea538356",
+      "elements": [
+        "declared-scope",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0153",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4b3d2098df679dbab1a229d05c6b585657d4051630538dfd2603bffed857f2ee",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0154",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "d8950ea47c2de78c7752e704476a632467eda9487705f9f497ae0a076264098f",
+      "elements": [
+        "mediation",
+        "fail-closed",
+        "verifiable-evidence",
+        "declared-scope",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0155",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "d12d644b48b726e40ded9954b480fea1ab6eb0df3d832dad721e5f94a77bc544",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0156",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6829556ad1a885d76e9deed43bf2175092d5fe952cd0925eaa13c6e62fcc6d84",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0157",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "8928dc0c4eb1f3e629ccceba1df0ac487fa6cc7f29d80dc780a6b9afc7d16385",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0158",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b86c571efd940b3fc3f1479301505accd5d291858d8f792f6520488a840be6d4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0159",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9a9c4236ed17ea1e51ba39054d5c51d571ec761942dc3fd1f63cd02d6a871fab",
+      "elements": [
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0160",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "296a1b93c72231fc8b5e7383026d5725db04940b16e70515e13e1f83757895ac",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0161",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "14be5d5fc075b9b916a669d42e64846191cce9b86b2cdab0046819a46a4e3f69",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0162",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "2bfc9ca397c0c31d726094b3f00fdbae9829c0aa15602bfd421768619e7fc440",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0163",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "944843c0abb2a7557c9bd0e82a91b245ecc5f1c6cedb2d8d3bc4abf0e641a3fe",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0164",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b7ee321fea611de22ad1cdca7948042c1a564873d3cf629c4e4a00ec45a0f2a4",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0165",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ca0270ed65c7adc1b01d312ad79a2c857c4f688b361986221134ba663653f16e",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0166",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "f9c5ea7e55e898cfbc0b21ec89ae183850ff1df5f0df876beb25267de4b89540",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0167",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "9e22bacfa9a0cd1396c8aadd634fc6f5d83af5437972b3294188b750aa07b849",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0168",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "78c9f5b74956131bd5ac27d5bbfeb826873be6c2f147239aa6244bd599bfd1a3",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0169",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c39e316e2f657b10e3aaa3ffb75bf38ee6f35503d492cd39123d7d5c2eda652f",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0170",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "1ec7297736c7a859b30d4fe94b5bb70353f4cdfe58cf9441a638b2deaaad01b7",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0171",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "019a6cd67c05200e2a54dac66b9eec99ddd75256e4b7733ec2aaa560e3a596a5",
+      "elements": [
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0172",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "72ca65803a1591b540ce039842de781c62827009b7dd667e637bea939780d9b8",
+      "elements": [
+        "bounded-authority",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0173",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "424ce6e4cde1f6a96f66c1a7b6417ca60c6f81a4707db7844102395052176aa5",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0174",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c7f67def3e1eca9e3ff71cfcb52a49211f87c6e2bb86a7321edc542531e2f15e",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0175",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "083b42ac8b307707e83801e50c4faf7de05b89fe520613a2aa5179f35a08905f",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0176",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "03908719e2f9599bffa9e2fba79a68d33e71ac2b17b486971f240845e310466b",
+      "elements": [
+        "independent-decision",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0177",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "38e11d49d3a73f874a9d754d7c2bdf4279bbac351be9ee449bf2603d5e6fc29b",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0178",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "81b304dbb1a4782d39fcd0e31120e440b7932fbaed165d6a31c88bf652bdef0d",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0179",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e0001f01da8da8e84acdd7749797a31cc22bc135ac15886d4c6617303fca88b1",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0180",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e1fa852cf869ecaf7906b54e6ce35c47f30a133297ea66e4c8b0953bf85d9553",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0181",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6bb9ec956c4ae579fc03c96a089cc4fd823130089f3121e85ba7e31717df30e9",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0182",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "c4d1807266282f5e2be6522d598ff2db44222daab51e16fe82f2a6aec7dd20e4",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0183",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "21a404812c1d737b146ba98631f8a231a992d92264c4859bc1667be7ec820beb",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0184",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "57a653a55e4502b7df14266be7a8b2c8f707feab0577c53d0c076849c5deb3b6",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0185",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "83c3c0a9f10fbdda765ff8920536d1bb62a50b5998c74f4aa93eb92b2850018b",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0186",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0ee4657ec61fa52207f54ea164aab6086f7af2057bf9aa71ae51ae0e970abb8f",
+      "elements": [
+        "mediation",
+        "fail-closed",
+        "bounded-authority",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0187",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "486464f7d20d8233350605a01a47e4d7759329f7cfab56857d081aae7dcbfec8",
+      "elements": [
+        "mediation",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0188",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6da267da76ccdcf373d42b2c1fd0c091f81bbd0d82e1299dd06f1b721ace7190",
+      "elements": [
+        "fail-closed",
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0189",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b82a10b83f5d0f9f6738712bc915b78ab5a11c5f83b4606939f7f6d171ceeb84",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0190",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "3457af23ca32f847537499fea086bed185a4a2e443c4fb29d2e541c4747ab02a",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0191",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "aafe22572dbdbb75b7c769473d6735066b40ea14716fcf21a90e752d7be691ba",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0192",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "516ce4e2068860fe6249db7487d6623a2170ea9a4fb5e9901789cf4155ffaef4",
+      "elements": [
+        "fail-closed",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0193",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "03d2fab97368b9e8d3141ae03c70ce42dd269179ea38d7567e1e0ed018fdaea2",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0194",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "aa7234601573f56a4280c783587c7f9bbeec52d3320fc0acca7ef036ca1c8ac4",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0195",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "21274bdd0ed64414801d23ae17a94fb4c6097f1d80395ec42e7e290bf09e0219",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0196",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "29784a89a4756e1b592aafda862eec11b0053bfe6024edc88f166a6c325262bd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0197",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "de393260e4f3203e876f579da2c0c1405bf81a525f5b7aafa7b92e191e269f05",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0198",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "115bb056dd64c405fa12525a9773593ce605dace12cf782128e2cbc794896ff1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "ECL1N-0199",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "5991c6f372633be044f929d22f4744939404058f0d0d4ee6984ba217b3806776",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-001",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "b8673b31dadb431e47866854ba516599138a6c6b5b590cb0e170da0be96c9d2a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-002",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "56844f7c52f321024918211a1581d874e94b5c0e80abea9ab808ddc6cfee414f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-003",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "f2fbbea6a0251f1fb523c006cb70518816794f7364554bdf5c7f4992afd52ce9",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-004",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "7cf19e3d12a100a0f6c948610f836e2e6ca9023da8aef17e698e144dea0492cc",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-005",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "c70d547c89fa06b2ce896922268f1d02470fff598fb44d0164fb1f7054025ad8",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-006",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "7908486c7b1e93b27b18e2a280c903823ae71f920c2d4f40f4357cea2c4bda1b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-007",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "e441fdc54274f7bb7503313d1e0126e9ccf4e4d762e8b4c16e0f051903d455f5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-008",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "55ef5def3c3c34eecf5402f412280da49bf0dc246705e0bda35087541c72eb91",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-009",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "130f8ad0cf7d6671ad8cc1f87e3e697b11f31ce71594978dcc9d7b53f52d0801",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-010",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "fa24951e3e93fbb651d2c2930fc9613c0071cd7a37c042a6fd98b96b1997e489",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-011",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "4ac8307f6ae4c2a1a6a8abc3d2a9701d4164e07f6fbba7f84d0309f2af28ad52",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-012",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "fdb508251c1c2041da77d08cb96558056a71c85d6e5b1035128cbb3409757437",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-013",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "d0c87336af44f5a759d6f10dc4450da982c8e3aea0833e6e4b29d970bfa6dbde",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-014",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "3a39374261096ee4d247a49428b109a53616c2ac19baf042a0df37f98cd4e49d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-015",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "1842e4d9c10f4d15cc891928c9dd1b314c229ddb0972092c962956308e860694",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-016",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "c3284963ff8cefe03f6bb324a2eabe8e435680f37c58e2a2267e65e69e44ce42",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-017",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "18d2c5c8f358885b9376b36af6c1c4310a8318bd10dfbcc903c7bea0483c6d33",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-018",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "246c834e357db029d6791143d5f8c69268e194c2b225a12e49ae579fe2614d14",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-019",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "d150ad0ed496222422b1be5e5637dc8c895e83af5abd882545e8e3988dc892c0",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-020",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "a2829531263ff862c41a3f70f4d29d55579b848c778dc65c099f30be5c8d3da5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-021",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "cefa39044ce0e2bb0e359a98b0486821beb5240082f2268d36a19693cff194ca",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-022",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "0582341b1bbe6ece44715e20c3d14fe430c2aeb60a255f9ab7beaa94a1a271d7",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-023",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "7e04b409ae333804ada14a9203f33a939920a5b5c814cdadbc41948eaceed2c0",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-024",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "358f5d4ffdc05d2295bd4af547b0f9dd6534e7ba051143d0e650f6a92643a896",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-025",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "b8c8c3ffe90ae6f67b86b2b27bae5dfecfca399ba3d7843095a865399930b585",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-026",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "9ecde8877fcc6e1fda7bdfc6f4edcb01bbe673ffad6d24e50fe0179177ffce53",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "EL1-027",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "text_sha256": "25250c877de4eb6126a7d861a7f875ad19efec48f83c365011a6b1f5ea5129c6",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-001",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "fc3a74327feec638dae782cf673be4800d3f3c0f3f074d9db5e41680fee804f2",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "FR-002",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "8eb1acef5613e324ba105376afd404fec036f9788bfacdc5f30353c73633b8ca",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "FR-003",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0cacf0b46e5c4714a180362594ca7b529396850937282a9126bedc776ed4d3e4",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "FR-004",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "cb7c57030060a45ef574cab38d0d13bdcbb3c524c2e9b563c948d58a45b3aabc",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-005",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "70beb47fe062a2c3d25d5b5e8927f384e6fb7e7a57ae07216596c02482b062e7",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "FR-006",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "5f74bdd3494f1bdc9fadaa9faa1bdfc8b108b57c7b2bf5b13a4630337b01827e",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "FR-007",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "152eaab82f0b818c53a21009acec11a6fb005f7300fac22165fc00c4b69dd359",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "FR-008",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b3714ecd7251c9db2358d26330eca95bb5b8ac25fa6a3dd0e7a5c0a669f8c705",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "FR-101",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "af4d2dd85c4da7dc88db635f667049de6f3b4bbf961dd5f1aec8a44b252f0f04",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "FR-102",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0ffdd2566d06deeea9607b26f1ef6aeb1eb15ea7c8213d9b1bbc3d7dff8bb68e",
+      "elements": [
+        "independent-decision",
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-103",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "2584bb4ad153ec5994a4c04b7006411db7e79e70d89be717e4d3d1fcb510aef6",
+      "elements": [
+        "independent-decision",
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-104",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "459776d6b368e235e3629ea4da57c62e0e097ed585112fabd68fbc4206485e2f",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "FR-105",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "039c79b5a8b7bba12f91bdcf9674d706fac66b709bede40c34477c5116a2da99",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "FR-106",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b5b4338610643f2a666716e90419ceb40c4e59427483e0c0391a5b8840bb1afe",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "FR-107",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "71cea1109b820a768e64b80e7eebd5d2c77c9f06d02481ab7e9765c6c5744e1a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-108",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ffe8e9fa9ab9e126e572ab826012b0f649de03017518304acf54fffc017fb858",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-109",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "4107817c6f43bb6a9cf1c2f223d83397f050b883670dfa5f5953cb53c1fd4d78",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "FR-110",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "a29841d6783effa7821588cdb8426c7c3c34e52ab643f8ad8a95086b9a057be7",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-111",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "523b133b49fc5d2d3de8f88983f07f20af62ba42128766405e393523f146704b",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-112",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "e317032c9839a5ab351beabdd56a3f315fe86c3e37d14d2e3256e34cd569c3f6",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-113",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "2711803336ac129881e898c95f645d0dba19aac3ca06d6228c5073b40453f33c",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-201",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "61d294579e18eae1f4f8a53001d89c8fd89cd1a8b68655d54b46e6914e0eae68",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "FR-202",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "07dd54637b1c5703d500916daec60ced8a8bdd779a6be2744131f442a65c42fb",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "FR-203",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "522a67d7c68b4039bca860192b7f89c0fddd9f35e55a2aa49b8e68afc3a7bb33",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-204",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "009493a5363335253690424c0826b062701f49d24f2ba6bec730a5ddb869c35b",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-205",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "ffbfebb06b1eb8543182624c2c9734d811b2e2d53596a857e0880ee455ede32d",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-301",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "b5b2f83bf2d85e6d1773c1d247ab975db7e4ae11738b1a6f8b7c5161a03180fd",
+      "elements": [
+        "mediation",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "FR-302",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "6ddc06f33c134fe2e7589ed048f52eeedee8f9afbb23f0dbf77df3e6046ce0d9",
+      "elements": [
+        "mediation",
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "FR-303",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "de3534eda277f3edb4a640266e310b5e65f56fa5b9ce943c062735d10a24e14a",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "FR-304",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "669e985b67a8a4bc874d6a411f825e9040d621bf5354d9f9db71e42c8d03c9fc",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "FR-305",
+      "source_path": "standard/ECL-1_Standard.md",
+      "text_sha256": "0773f2ad9a9352bd42d22fb795ecb0cd4d07349b2e7ca9fe29471154d6790582",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "IE1-001",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "15c0dc94ad48e406617c3d082e96cf125d9782cf1e5e03c39a67a6de71a626e4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-002",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "027ba79d9c114c89d3ddc7550e5299c2edfc3069e30cc76f99dd3b0561dba943",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-003",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "be7c2617e0b8e5315b9505b3978b21c1e9e3c72d499a86e6b3882117647d8205",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-004",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "82e1a092ec61f0d86c8cdb8bce7db0caaa47285126bb8f348e9756474aa76a86",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-005",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "d07e1a3e37c6b95c7c4fcd9da337af090f3232e4078c9ea1b5c38e0a0d138fa5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-006",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "98fc673d503f121fad172f2780e117fac6c1779ea590026528f436666f434b39",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-007",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "68b9b210c4f04e0ed613cb30d18555bdda0c387a23f1cad15694bff63a77ec8f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-008",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "d7640304d46594dc419f4b9462a5981cedeb682246a06162851ae0b42cc48522",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-009",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "402b012d625ac3308fbb7dcd7b3f6e276403f9f8f40a55e684820c01e8d47e59",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-010",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "6ff956f0972d8922bfef0b99d0363b67e45918f20b56cb9bacc9a245b16de94b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-011",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "61276ec19f1050dd489ae5d732913c695d4ea7e761693b20aecd2bea7d1250a8",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-012",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "186117485ef97fee7d395652b845d99ba2c5c861b5ad2d4ce6c1b5bb7dea3f01",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-013",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "50ef542d90691d8f0068794caa44171776c1c064ffcffa5034817f54a80a7ed8",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-014",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "4c5701264895ccac2deaeaf21aeb3ce9fab8ebe6506b30ea6a6f89f08cf89a88",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-015",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "99b6ec2439710d31072325f4961ad4e176d3c081c6e310afd377fe806f672dae",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-016",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "18be1ac4f0cd7565fea561d3e29a9c97deae298758b2ef4eadc5e1a40c4fe233",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-017",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "0f44d4932d42cb0895a5ef3ab22c5f47cd5dc4e82682d27ace9d0feb173850d1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-018",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "c96846aada35afe45554ce52c628516adefc8c0eb9f3c616f5a7994ecb31ab92",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-019",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "5d9a222d9d281e5af76a4671aa24293a7fbe86131c3b9ffd405e768e76f783e0",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-020",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "57dbc58c6694a69527d60d5ef1af89cf13eb2c9a61dda30d7fa1e00e088a10a4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-021",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "1792f2bbcdbada245300f8a5ab80003c0258737dcea6e17b951ef34f45060dc4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-022",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "4167f22430e5a4b9aa36b856d7d4faca7c06a10d29368b02048c5de1ca5fee52",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-023",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "0f58fc98e8108f789cda9865a3af8c7f3fc4a17b78d69a7923eb085acc972486",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-024",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "5f833da29dea753633db2842fe2995f06bfffe0aefc172a98c6d9f84c5da0edc",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-025",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "e697914e939f0d8126cfa5e0bdd84094944d8cf87242d7badd8ce213387e89b4",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-026",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "556f2e459c06d564da859b869c2029c78f0c895734e0ff724c5d50bbb73b6954",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-027",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "5bd7c9c10946f39cb76903f0bdc16b27ffc27a24688fd36a84a4c678264a9af3",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-028",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "3f33667e3f312aa95104b51f7b4c88b520df2c4e633941b905ef7e95879bdc56",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-029",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "f8c8882e85f260850d43845cef8c78b09224a7b3d38917e5a454b0d1415436ad",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-030",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "bf45d55c177e39d974ce052fe832be819ca56ff5d2c69451fa47f1c4908a41de",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-031",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "820937b86c4a1ede4746a0a12bc15ee39ad173985bdc1b19175fd71ae0d01bee",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-032",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "6264565148d8ad15530d2a9c2e8fa5c61437b8d6cb676efdf8523da3237aa7f1",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-033",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "95b5e8eb735ab91d28dd5d9f6e42b82b03284364694600ec74f59091cb85d8cd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-034",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "330e35a620fc7793292500f03dcc9b0b71d1bfd8b801f2255d75796b616526db",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-035",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "c1260b98ff63b182a7f618f2b2c98ae32c038b28c5c13a518ec70b0a07077b9e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-036",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "18c0bf738d7b54f1d318c2f818e9d5a49f540863e9f454fd94d42618d0a7c893",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-037",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "fbc8d1198c84473c71a6ed49d894057441177d3cb719e477cd8baaa9b6092703",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-038",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "8fe6e2888db9778ecdde240f9a8c7c36dc81e19732bc462e81a8ca229d41452c",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-039",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "ca2969dece6ebeaac3b38c8fa610b39a82db7df75fd59b559139a8b7ee554b90",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "IE1-040",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "text_sha256": "21c5d69c88945119c4c743dc27e611a15b87b1682ccea9f2fb13deb5685939c9",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "MG1-001",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "d55227fbf98e59e7ad7ff579ba63a2e365dbae4a5d6e768d1c0b83afb281002a",
+      "elements": [
+        "mediation",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "MG1-002",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "47507eb33133fd78af84c16bfe124b598fe2778a869faf5a456baaca0c56c05c",
+      "elements": [
+        "mediation",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "MG1-003",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "8916dbfbd61784bce9d233ac87364cb4896c83c19be44243829e1c194f27d37b",
+      "elements": [
+        "independent-decision",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "MG1-004",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "a20885d24de65c73f548c4fb55a9a694e34669c2c0b15bedf954e67315044386",
+      "elements": [
+        "independent-decision",
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "MG1-005",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "b1ef49270046527b80f69bd8d7dcb5239e5d73856416789bfa50df050eb55252",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "MG1-006",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "2643ed33f4f8a22d69aa29c06e033d01a96dcdf3801c40bf154892a51a6664c9",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "MG1-007",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "7e17ac9d290e0f4a5f09f2298e8ccb08a9af55cc210e1506aacf27697e679ba8",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "MG1-008",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "f66500cf30341e20fea56193662bbd73405efbeb4f99c1970be646fb3bfcaf22",
+      "elements": [
+        "independent-decision",
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "MG1-009",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "bbb232999895fdf7fd1f08884c10cd33f4f408cd8d5c3d0bb2419f9b19d5d178",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "MG1-010",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "99a74b06721432ef0f05aea08bc588d505fb790217a81776fa4a6f137c243727",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "MG1-011",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "d4dd9d4792c24dee74c0c9a8a067f5fea1ea285a265ae55b70bf3c32037e5114",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "MG1-012",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "c2a77dd6bb8ae744a183824656c930a3e0c206d4707cefc6f29f5b162115f56d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "MG1-013",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "b2b3c4b99ff1bc07623d065c5d6650b0f1f08544fb56f71d29256a458a23297d",
+      "elements": [
+        "independent-decision",
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "MG1-014",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "99b8c8eab70705a7fe4ba3c0414130fccbdea3132e4da81e5221a06622599577",
+      "elements": [
+        "fail-closed",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "MG1-015",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "0ddc8d4199c0cd29ee98f0bbcb96c8ca5bb1dafd91bcd9e6e9530992a4ed6ca2",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "MG1-016",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "b1215ab34289cb8b8b3c6da0ffcb2d3c7de6a3e2a49b2ab3911bc0e31077f989",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "MG1-017",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "text_sha256": "63dee6cd820de0e65cf0e05fabeeb70ab352544052027974c640e8f4b759c28b",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OA1-001",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "c368e11abdecd48bbc9a23c76484dac6d6b90f7f9947773c4cd4f40e5aa07bbe",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-002",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "e2cecaaf55d67fcd6bf7de1196b307177df16c7d7626b33e2936d3372d1a9027",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-003",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "b36b4838051830da3ca9bb0512518ec86e5335d2a386d4648c4884d8540c7598",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-004",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "3bea8c0892d63ff5425d0604cbef511c06807e141f03d38cfc1f9f7e55182858",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-005",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "55bbfa97d8900af55c431e2f176d744bbce1301415f86125f8e7d3e66936d64d",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-006",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "7f80c29520bfc9fe257631aea685546689db9b8fb620f2d904600fc506a7a2b3",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-007",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "5715b32c136a2367a224258b81f466bbfe6496916ddcdc02dc44d63f76d7bc50",
+      "elements": [
+        "fail-closed",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-008",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "140b97310cbcca1d08fd1784c9658d4cb394200c9586012d6e903ab429c28af2",
+      "elements": [
+        "fail-closed",
+        "bounded-authority",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "OA1-009",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "dae8f4c542e453b4ed0a1b357f35137ce1c822f8b21f2bba9cb686cffc973e75",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "OA1-010",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "2b6fc72e331d0747fa408dbca5f6b4420801a2803c11cfcf9fcc81950db5b22a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OA1-011",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "text_sha256": "5831b875deb7207f66673c4314e03611b98a39c40b9df3c00cde6c36738b5b37",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-001",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "c8d0335c31f4b730b234143885b264ac66670b7bf36a9db63d22f04899b4141f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-002",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "ab063a93478a407dbbd1338eb4c64de17016eaa84f40d712a04187880cdf1c5a",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "OE1-003",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "800fd37f2ea41f6319d368ef5ad21d3bb9b995c828a84515e53569d0cebc4dcb",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-004",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "ebd6cedca61eee9a14bffedf9d7b8769350b7dfaa0bd22582fc26f9166cd06c3",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-005",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "9e0918a54d81c23bcb9013bc1860edad2e4b4b5ad78fd016c5d94f51dbc833d6",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-006",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "ce954e5deb060a905fe2ca5640ab28d27e8fcaa6d1d12e47f8b3cc5a943cd423",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-007",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "94401b2db08f3c508ef3f6cb7a0f0b2cd7a456bff9269c0703075b3ced57ca48",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-008",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "9d594fbc1273b8d5504e82eb718a547dde311543507091917f9c85ad4fbb55f5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-009",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "2b4d673fbb71569724034303e1da428909a1cfcbc248e2c35b047167c11f0df5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "OE1-010",
+      "source_path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "text_sha256": "5c4373c7768ad166f676609aa356696f97dec478e1565e1286865d6499a92ba7",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "SF1-001",
+      "source_path": "profiles/STRICT-FAILURE-1.md",
+      "text_sha256": "4ba1f542350ed966afea9329d711dd838cad4f3d150c58751142993501a1efe4",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "SF1-002",
+      "source_path": "profiles/STRICT-FAILURE-1.md",
+      "text_sha256": "d6acf3a2c258cc2604b6b8f85d0fb85e772d7ceefc16b71657a593636107310b",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "SF1-003",
+      "source_path": "profiles/STRICT-FAILURE-1.md",
+      "text_sha256": "8d8af435f67715da47bd620a5019d6a1c6924ee658d50207e1d41bb2804b1d54",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "SF1-004",
+      "source_path": "profiles/STRICT-FAILURE-1.md",
+      "text_sha256": "fc26b9d1702bda085801dfb4bcc7af9e0339ed6776e76e2e459c605ce87247f4",
+      "elements": [
+        "fail-closed",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "SF1-005",
+      "source_path": "profiles/STRICT-FAILURE-1.md",
+      "text_sha256": "8478c413a162e1f7aab912df072e2f0fdf3085c4b9ab4f2972eac07edc6729ca",
+      "elements": [
+        "fail-closed",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "TE1-001",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "cc3f44a1209236a4f481e3353a9c4b0411141cb32427e62e53294b8aafaaba95",
+      "elements": [
+        "mediation"
+      ]
+    },
+    {
+      "requirement_id": "TE1-002",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "38ec67983d35f2bffa3116e21e025f5a8466bfdc5c41db0e3777c66790e76721",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "TE1-003",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "fba4196ec0f8c1b7d4d1bc0485d9e38e63028e4eacdd3d6648b1a1dd7fdbc261",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "TE1-004",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "57501a4a6e2c0f187cda8dc663a74cf718fd6646c8d9cd20dc8d26291b2330f0",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TE1-005",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "cd0cab61d5be89a97dcc68a530bcd45b5a30cf2931d3872623fb1aac319c49e5",
+      "elements": [
+        "bounded-authority",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TE1-006",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "55fcf82e298d090fef99784e1def107d3382b5e10cc19f68373f483fafccdb11",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TE1-007",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "a13272c794841d94bf30e59ce450fdc5b3f3b2d53f3e98ffcb4251b00ffdb366",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TE1-008",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "0793194e8144af67ddcad1dfec59acfd653e79d3ad9b18b5718b9cc29fe7176d",
+      "elements": [
+        "mediation",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "TE1-009",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "695453dd0d7bc5a87dc6889d0d13991d2982e88f4fdfedb79f7c43fa9997b92f",
+      "elements": [
+        "bounded-authority",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TE1-010",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "bbdb289733052ef9e7abfb0a5496829456e962fd0defc05291dbcb01ade5cf5d",
+      "elements": [
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "TE1-011",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "8d72f5865306aea294e32927ebecb3e703539c31e1db368649b16a8c1deafb41",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TE1-012",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "0fb2df9f786ff14b285b59b6ac1bc7defb0a4babe78daa86d7bf624f1e952164",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TE1-013",
+      "source_path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "text_sha256": "5182428fd6289981613c8f90004407e94b472aa272e16ade665d723b0d16ee1c",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "TP1-001",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "5e85d93bae170462d7501ee9b6dff78e270f252de1976b53ea89d4808a345c52",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-002",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "0792734f8d8462cf8d3297814c184072b851268c6154f859e9a9f68ac055b430",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-003",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "e5ed1151067ae995c9fd66b809b4a1e6b1864e49ffc5e587fe3463ea23ed64ac",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-004",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "375dfc097bdfd3e41fc99fab803e5214fe814c47fcd1e539d35300a246fbc774",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-005",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "64378b5de75cf17a490b6830997371f3deb4f3904d6c0aa6e1743eeae43ffb2d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-006",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "97b2db17e8f0d4ef4ac3fb3525cc1784ab2aca5afe08a202861771337e5d7ffd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-007",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "87c9f0dceca275352877122810a4b2754898dc161d954dea3fa1ed370688869a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-008",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "458459fbb6620dd6b7c58f6d0a5cbfccc420318779d23214880cb3c9def0d17b",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-009",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "90232ffa6f9997340cc86cdc5cf7db15eba7ab07b7f5dedbba61957bdcf1b23f",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TP1-010",
+      "source_path": "profiles/TRUST-POLICY-1.md",
+      "text_sha256": "0241a58136384c86ad8d3db5e7df32d4a526013d35f106d78e321aee765d1ed7",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-001",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "bf9a64654889ce378038571c5544353e5b4ab7619a00e5ab741e925618b360cb",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-002",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "06384d69b35b42df9e00aab0af641993aae13c1426768d67c156083ab72bdc2a",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-003",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "9e0ff8470fe21c01b2426c14741d4a3c1d390ee400afe11ba05d7d5f11358999",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-004",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "0b2d02dc71a398e35963f94db8ebd5840e0c30f6a775d4bec681224e49faeee7",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-005",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "7932fab4150d9e57eea0423e6705bf225f819fb3ce9b65e92766d040da077cf6",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-006",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "9d662af02e24ebfe3deaf725c3ba98e4cade10085aa3e265049e3840e24b463d",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "TS1-007",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "e9908b3cfeccaaae1e72f75b5c5104bc7ff551e5049fefb136d6a85b793c4e3f",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "TS1-008",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "987867783f145f2814be74aa0955901adae0e9d69d5cb7c1cd222f6b9c607baa",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "TS1-009",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "f9c9ac19ce3427f1473b927ec8f2e60cfecb64de268caf2a576d66439b34466b",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-010",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "d24af674f0b4deb061e467f6cfac66cf683d5ccd568c685c52a0fb7fad4bedd5",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-011",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "fb92aac2d35988b0a2ce279a5f7630593916c85253a026faa564734246d58edd",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-012",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "f23fab90d7d5eabf4df486b13fdae436060ba9c531b82054dea7fb0e0b1d7402",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-013",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "d1337c392959daa5e6e669eebd04a6a572a6c7cfba91f6b1400e8c987fa0e16e",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-014",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "772fda90fc5def76f2c7d69cd22df4fb9bb6527bfac84e5ceaa98eef1406a53b",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-015",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "5958609dc3ae45ada3a69dd055283f260aa691ca2b28cff22bc6e3b3d5c09ae8",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-016",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "e398132dab0b7585f42ee9b7406cadbc30e2084f89c5c0b1f9ce36f9468c7058",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-017",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "734d75d1ae7fc16f5e28bb3f351f4d8a48e04a28521ed95a95f5e77c65cb8827",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-018",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "a979c0c88a326533e1f55fc18395c48ddfc196b56608c94a6ae2aeabe173ee47",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-019",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "2580d8a20a5085ae1707bf35fe11dfd7be0693cddb674b5e836fc7a646cf4caa",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-020",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "1da01813df889eda437b8dd037d89bbcf8816a4fb5b6812dd2e233ffed2713e0",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-021",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "a8af7eed90ad15e164523a4d585856cdcc099b95fe007f700c13d604a70ead0f",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-022",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "61bed3a04b8be0a7955b83677fd3ac39635c9b68c0219a9eb1e24fbc42701f59",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-023",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "07b02d4af8620b1bd7f8333885eadc235cd7d5c9975374cbb12ea28f0e88c1e4",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-024",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "7b3599ee2e853a356e3e5c81b71ce4ec96962576ecb2d44c3b087768065a0db9",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-025",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "e53fd82cded9bf22e1f5848d14101fa8a058233ead207a57c07d579b8da8e22f",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-026",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "cc715ab129fa0c47a8b2d2305e4ffc080a2c15482a3f7d863606096e3ba77126",
+      "elements": [
+        "fail-closed",
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-027",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "0092e56c1192e1528ab620f8f82e3b99338b85c7a9ad4b85d6a4f5d8a622d82a",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-028",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "89c874b1520bd4785f4fd4a48a30d95c7576834919c8b0210e4e9199746d4b77",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-029",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "6fd2af40b20abd74e3ea3c814582353d034ebca84574ffc646b305dfd184e60d",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "TS1-030",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "cc78527de736f10e2ef1e2167eb59d445be7bf1c0cdb716853ef71ab1c6a7cc0",
+      "elements": [
+        "verifiable-evidence",
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "TS1-031",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "f0f68dfb173be2feb39b9ca574d319092d4b8bf47dcff56ce0c952def97081b6",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-032",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "454989a76544277cc8ebeb2804ecda04d4f3829d2b3fbabd563a17cec899a71a",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-033",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "ecc82c6f772142eccfc4ddda89120d87a02012c8fecd244dacc0dbd19629c209",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "TS1-034",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "7a6dc877c3e576dcdb6ec11683ab08822602c32e747e30916881b21171cc49d8",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-035",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "5973f6b39b6f5f603f6737f001aca26161dec3bb1dd63c4c71bdb456548c4903",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "TS1-036",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "text_sha256": "ad9a739d6fd1f9e7d4f77853330cb72930dfe1df79580d55e49ac33ef8aa7fd7",
+      "elements": [
+        "sustaining-operations"
+      ]
+    },
+    {
+      "requirement_id": "XR1-001",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "d45d49ae84a21f2391c4ccf85e17951c77cf893ea596c7e3c9e8a0f3369bea01",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-002",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "4a57cb0efcebf04f305d91d6f2dbef145b27008b9dfe8ff41b71ab76871a97b4",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-003",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "178ac706d4b619bdd1a9d1f5bdb27af94fb59c675e981de0e193fbcfd4892217",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-004",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "3539f01a3a51c1222dcc01d30ae6248790096897dff5f3f6a81426c004be94ae",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-005",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "d32d7d883b2641e753921334fdcc3f037474d9aa4f8717921fe09b0d53d1cd82",
+      "elements": [
+        "independent-decision",
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-006",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "defff3af49c948de42a7461a782a5e972b8bbaf18acff2009b350d3f00ed2edb",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "XR1-007",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "a05faf0aedacd61639d13f07b410fdfb567be74cdda3650199aae3e128c93316",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-008",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "3c4594b37082f2abc289bfd7d86f76e1f2cce5d2b20b035dee68c61dd51d7d6c",
+      "elements": [
+        "independent-decision"
+      ]
+    },
+    {
+      "requirement_id": "XR1-009",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "b0c91a42ca3ea76ffd8fa3f98ea7d6d8a69ffe46a15663462abb7b111be2cb43",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "XR1-010",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "db26230d57fd3f967d58e262405769ed9f9425a307299a3f61c7fc6b80c694b7",
+      "elements": [
+        "fail-closed"
+      ]
+    },
+    {
+      "requirement_id": "XR1-011",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "fc1b262f2ec546a67b538b75be15a92569911acccdda9a6193e6d35663f96b1c",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-012",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "c1087a3df2909109f5f4dd07f60b8a1a8379e072f88d66d60a9f5bbb6a144ae9",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-013",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "93389e82514812e498e0cbe12ffd4a63ae918110e721702f7fd65248743449d6",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-014",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "5b8e3f53859956f3ae486cbfce47b4869aacb262f2d0088af170669499972a87",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-015",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "02bbac048d000c486e2c4b25e7e82d24642cafcab42f17574d3960691521b511",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-016",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "12bb6ef00ab792c4504ed0f414f79513e44f5ac1f228161a8691f512854ae060",
+      "elements": [
+        "independent-decision",
+        "bounded-authority"
+      ]
+    },
+    {
+      "requirement_id": "XR1-017",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "8ba283cf1c7d9663d9b1917b3afeeee87cbd68a071392a7c01130fe56f4b51c5",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-018",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "5cd5a777f7112ee961b3930dd5baaf31f3b16d109de2ad37c6fea0155ec053cf",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "XR1-019",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "def7c44aaba54a8ed8a57060663d5ce366ceecdd9db43b284b0bcce0da2cb636",
+      "elements": [
+        "declared-scope"
+      ]
+    },
+    {
+      "requirement_id": "XR1-020",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "15f9d3686c1354858c03e07db8543b7dfa93e686c72a9ac2311d795728c1fc4e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-021",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "5aec72ba6aab0d35b8f6104d5451bdda070a9afc01b1433c61aed4bfae559f0e",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-022",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "03d59402a16646643ec4812ac256339862af9c427848271cb6a839255a5e2bdd",
+      "elements": [
+        "verifiable-evidence"
+      ]
+    },
+    {
+      "requirement_id": "XR1-023",
+      "source_path": "protocols/EXTENSION-REGISTRY-1.md",
+      "text_sha256": "8fe0c61ca7e71f0c87b93eaa01034b163be3cb08bc62bc4ba5f0b33c174566af",
+      "elements": [
+        "fail-closed",
+        "verifiable-evidence"
+      ]
+    }
+  ]
+}

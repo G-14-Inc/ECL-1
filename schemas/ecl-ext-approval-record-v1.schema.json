@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1",
+  "title": "ECL approval-record extension value v1",
+  "description": "The value of ecl.ext.approval-record.v1 on an EBMP-2 human intervention event that approves or rejects: what the approver was shown, when, and the minimum review time that applied (ECL1N-0174, ECL1N-0175, EBMP2-063).",
+  "type": "object",
+  "required": [
+    "presented",
+    "presented_at",
+    "minimum_review_seconds"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "presented": {
+      "description": "A digest-bound reference to the presentation the approver saw.",
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        {
+          "required": [
+            "digest"
+          ]
+        }
+      ]
+    },
+    "presented_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "minimum_review_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 86400
+    }
+  }
+}

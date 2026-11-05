@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+  "title": "ECL External Framework Mapping Packet v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "packet_id",
+    "packet_version",
+    "framework",
+    "framework_edition",
+    "framework_source",
+    "system_boundary",
+    "updated_at",
+    "validation_state",
+    "obligations",
+    "global_assumptions",
+    "non_endorsement"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_mapping_packet_v1"
+    },
+    "packet_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "packet_version": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+    },
+    "framework": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "framework_edition": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "framework_source": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    },
+    "system_boundary": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    },
+    "updated_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "validation_state": {
+      "enum": [
+        "draft",
+        "internally_reviewed",
+        "independently_reviewed",
+        "owner_validated"
+      ]
+    },
+    "obligations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/obligation"
+      }
+    },
+    "global_assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 8192
+      }
+    },
+    "non_endorsement": {
+      "type": "object",
+      "required": [
+        "claims_framework_certification",
+        "claims_framework_owner_endorsement",
+        "claims_automatic_legal_compliance",
+        "statement"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claims_framework_certification": {
+          "const": false
+        },
+        "claims_framework_owner_endorsement": {
+          "const": false
+        },
+        "claims_automatic_legal_compliance": {
+          "const": false
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      }
+    },
+    "integrity_envelope": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+    }
+  },
+  "$defs": {
+    "obligation": {
+      "type": "object",
+      "required": [
+        "framework_clause",
+        "obligation_text_digest",
+        "support_class",
+        "ecl_surfaces",
+        "evidence",
+        "residual_obligations",
+        "assumptions",
+        "validation_state"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "framework_clause": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "obligation_text_digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        "support_class": {
+          "enum": [
+            "direct_runtime_support",
+            "supporting_evidence_only",
+            "out_of_scope"
+          ]
+        },
+        "ecl_surfaces": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._/-]+)$"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          }
+        },
+        "residual_obligations": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "assumptions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "validation_state": {
+          "enum": [
+            "draft",
+            "internally_reviewed",
+            "independently_reviewed",
+            "owner_validated"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "support_class": {
+                "const": "direct_runtime_support"
+              }
+            },
+            "required": [
+              "support_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ecl_surfaces": {
+                "minItems": 1
+              },
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

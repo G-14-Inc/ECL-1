@@ -1,0 +1,84 @@
+{
+  "capability_inventory": {
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "6666666666666666666666666666666666666666666666666666666666666666"
+    },
+    "uri": "urn:example:capability-inventory:bundle"
+  },
+  "entries": [
+    {
+      "action_class_id": "ecl.action.ai-proposed-operation.v1",
+      "actor_subject_classes": [
+        "urn:example:principal:test-agent",
+        "urn:example:principal:test-tenant"
+      ],
+      "affected_resources": [
+        "urn:example:record:bundle-r1"
+      ],
+      "capability_paths": [
+        {
+          "effect_boundary": "record store write",
+          "entry_point": "records tool update method",
+          "evidence": [
+            {
+              "uri": "urn:example:evidence:bundle-interception"
+            }
+          ],
+          "interception_result": "hard_mediated",
+          "interceptor": {
+            "uri": "urn:example:component:bundle-gate"
+          },
+          "last_tested_at": "2026-09-01T00:00:00Z",
+          "path_id": "urn:example:path:bundle-records-update"
+        }
+      ],
+      "classification": "consequential",
+      "consequence_dimensions": [
+        "external_state_mutation"
+      ],
+      "data_classes": [],
+      "decision_inputs": [
+        {
+          "class": "verifiable",
+          "deadline_milliseconds": 250,
+          "input": "urn:example:input:bundle:grant",
+          "maximum_age_seconds": 60,
+          "required": true,
+          "source": "urn:example:policy-plane:bundle"
+        },
+        {
+          "class": "verifiable",
+          "deadline_milliseconds": 250,
+          "input": "urn:example:input:bundle:control-state",
+          "maximum_age_seconds": 5,
+          "required": true,
+          "source": "urn:example:emergency-plane:bundle"
+        },
+        {
+          "class": "judgment",
+          "deadline_milliseconds": 100,
+          "input": "urn:example:input:bundle:anomaly-score",
+          "maximum_age_seconds": 60,
+          "required": false,
+          "source": "urn:example:detector:bundle-anomaly"
+        }
+      ],
+      "enforcement_class": "hard",
+      "evidence_profile": "ecl.evidence.standard.v1",
+      "rationale": "The test action updates a record outside the agent's context."
+    }
+  ],
+  "generated_at": "2026-09-01T00:00:00Z",
+  "negative_boundary_annex": [],
+  "register_id": "urn:example:register:bundle",
+  "register_version": "1",
+  "schema_version": "ecl_action_register_v1",
+  "system_of_interest": {
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "6666666666666666666666666666666666666666666666666666666666666666"
+    },
+    "uri": "urn:example:soi:bundle"
+  }
+}

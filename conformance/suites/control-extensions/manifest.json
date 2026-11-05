@@ -1,0 +1,1635 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-control-extensions",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.approval-review-time-respected.v1",
+      "expected_secondary_ids": [],
+      "id": "approval-invalid-decided-too-soon",
+      "negates": [
+        "EBMP2-063"
+      ],
+      "path": "conformance/suites/control-extensions/approval-invalid-decided-too-soon.json",
+      "requirement_ids": [
+        "EBMP2-063"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/approval-valid-review-time-respected.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "move the presentation to 5 s before the approval"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "approval-invalid-presentation-without-digest",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/approval-invalid-presentation-without-digest.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/approval-valid-review-time-respected.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the digest of what was presented"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "approval-valid-review-time-respected",
+      "path": "conformance/suites/control-extensions/approval-valid-review-time-respected.json",
+      "requirement_ids": [
+        "EBMP2-063"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a presentation 45 s before the approval with a 30 s minimum"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/control-change/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/control-change/1#/properties/change/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "control-change-invalid-change-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/control-change-invalid-change-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/control-change-valid-reviewed-policy-change.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the kind of change to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.control-change-approved-and-bounded.v1",
+      "expected_secondary_ids": [],
+      "id": "control-change-invalid-disable-without-expiry",
+      "negates": [
+        "EBMP2-064"
+      ],
+      "path": "conformance/suites/control-extensions/control-change-invalid-disable-without-expiry.json",
+      "requirement_ids": [
+        "EBMP2-064"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/control-change-valid-time-limited-disable.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the expiry"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.control-change-approved-and-bounded.v1",
+      "expected_secondary_ids": [],
+      "id": "control-change-invalid-self-approved-disable",
+      "negates": [
+        "EBMP2-064"
+      ],
+      "path": "conformance/suites/control-extensions/control-change-invalid-self-approved-disable.json",
+      "requirement_ids": [
+        "EBMP2-064"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/control-change-valid-time-limited-disable.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the requester the approver"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.control-change-approved-and-bounded.v1",
+      "expected_secondary_ids": [],
+      "id": "control-change-invalid-self-reviewed-policy-change",
+      "negates": [
+        "EBMP2-064"
+      ],
+      "path": "conformance/suites/control-extensions/control-change-invalid-self-reviewed-policy-change.json",
+      "requirement_ids": [
+        "EBMP2-064"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/control-change-valid-reviewed-policy-change.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the author the reviewer"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/control-change/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/control-change/1#/properties/change/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "control-change-valid-reviewed-policy-change",
+      "path": "conformance/suites/control-extensions/control-change-valid-reviewed-policy-change.json",
+      "requirement_ids": [
+        "EBMP2-064"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a policy change reviewed by a person other than its author"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/control-change/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/control-change/1#/properties/change/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "control-change-valid-time-limited-disable",
+      "path": "conformance/suites/control-extensions/control-change-valid-time-limited-disable.json",
+      "requirement_ids": [
+        "EBMP2-064"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-human-intervention.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a two-hour disable approved by another person"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.coupling-results-permit-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-admit-blocker-reason",
+      "negates": [
+        "DCMP2-052"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-admit-blocker-reason.json",
+      "requirement_ids": [
+        "DCMP2-052"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a blocker reason"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.coupling-results-permit-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-admit-budget-exhausted",
+      "negates": [
+        "DCMP2-052"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-admit-budget-exhausted.json",
+      "requirement_ids": [
+        "DCMP2-052"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the budget result to exhausted"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.coupling-results-permit-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-admit-deferred-witness-without-obligation",
+      "negates": [
+        "DCMP2-052"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-admit-deferred-witness-without-obligation.json",
+      "requirement_ids": [
+        "DCMP2-052"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "defer the witness check to enforcement and drop the before_release obligation"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.coupling-results-permit-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-admit-quorum-not-met",
+      "negates": [
+        "DCMP2-052"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-admit-quorum-not-met.json",
+      "requirement_ids": [
+        "DCMP2-052"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the quorum result to not_met"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.coupling-results-permit-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-admit-witness-unsatisfied",
+      "negates": [
+        "DCMP2-052"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-admit-witness-unsatisfied.json",
+      "requirement_ids": [
+        "DCMP2-052"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the witness result to unsatisfied"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/budget_result/properties/outcome/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-budget-outcome-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-budget-outcome-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-deny-exhausted-budget.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the budget outcome to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/quorum_result/properties/outcome/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-quorum-outcome-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-quorum-outcome-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-deny-exhausted-budget.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the quorum outcome to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/witness_result/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-satisfied-witness-without-digest",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-satisfied-witness-without-digest.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-deny-exhausted-budget.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the digest of the witness that the result reports as satisfied"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/witness_result/properties/outcome/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "coupling-invalid-witness-outcome-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/coupling-invalid-witness-outcome-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-deny-exhausted-budget.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the witness outcome to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/budget_result/properties/outcome/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/quorum_result/properties/outcome/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/witness_result/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/witness_result/properties/outcome/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "coupling-valid-admit-permitting-results",
+      "path": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+      "requirement_ids": [
+        "DCMP2-052",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry authorized budget, satisfied witness and met quorum results"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/budget_result/properties/outcome/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/quorum_result/properties/outcome/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/witness_result/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1#/properties/witness_result/properties/outcome/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "coupling-valid-deny-exhausted-budget",
+      "path": "conformance/suites/control-extensions/coupling-valid-deny-exhausted-budget.json",
+      "requirement_ids": [
+        "DCMP2-052"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "deny with an exhausted budget result"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-admit-required-input-derived-from-late-input",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-admit-required-input-derived-from-late-input.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-derived-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "compute the required payee check also from a late account balance and admit anyway"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-admit-required-input-unavailable",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-admit-required-input-unavailable.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the required mandate unavailable and admit anyway"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-admit-supported-by-actor-supplied-input",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-admit-supported-by-actor-supplied-input.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the agent's own justification as supporting the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-admit-supported-by-judgment",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-admit-supported-by-judgment.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the anomaly score as supporting the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-admit-without-verifiable-support",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-admit-without-verifiable-support.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record that neither verifiable input supports the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-available-input-obtained-after-decision",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-available-input-obtained-after-decision.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the mandate as available although it was obtained after the decision"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-available-input-untimed",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-available-input-untimed.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "give when the request was received but no time for the available anomaly score"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-available-input-without-digest",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-available-input-without-digest.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the digest of an input that was available"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-challenge-after-verifiable-only-deny",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-challenge-after-verifiable-only-deny.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0179"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "challenge an action whose recorded verifiable-only outcome is deny"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-class-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-class-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set an input's class to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-derivation-cycle",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-derivation-cycle.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-derived-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a limit check and a counterparty check, each computed from the other"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-derived-from-unlisted-input",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-derived-from-unlisted-input.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-derived-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "compute the payee check from a vendor rating that the record does not list"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-duplicate-input",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-duplicate-input.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the anomaly score a second time, as a verifiable input that supports the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-effect-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-effect-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set an input's effect to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-hold-supported-by-judgment",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-hold-supported-by-judgment.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the anomaly score as supporting the hold instead of restricting it"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-https-host-case-variant-duplicate",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-https-host-case-variant-duplicate.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "list an https input again with its host in mixed case, which names the same input"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-late-input-supports",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-late-input-supports.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the payee allow-list as late while it still supports the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-malformed-input-supports",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-malformed-input-supports.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the payee allow-list as malformed while it supports the hold"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-obtained-without-received-at",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-obtained-without-received-at.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "give when each input was obtained without when the request was received"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-percent-case-variant-duplicate",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-percent-case-variant-duplicate.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "list an input again with the hexadecimal digits of its percent-encoding in upper case, which names the same input"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-received-after-decision",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-received-after-decision.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record that the request was received after the decision"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-register-without-digest",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-register-without-digest.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the register without its digest"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-source-missing",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-source-missing.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the source of the payee allow-list"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-status-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-status-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set an input's status to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-supports-derived-from-late-input",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-supports-derived-from-late-input.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-derived-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a balance check computed from a late account balance, which supports the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-supports-under-verifiable-only-deny",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-supports-under-verifiable-only-deny.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0181"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "deny with a recorded verifiable-only outcome of deny while two inputs support the action"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-urn-case-variant-duplicate",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-urn-case-variant-duplicate.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the anomaly score again under URN:, which names the same URN, as a verifiable input that supports the admit"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-value-after-decision",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-value-after-decision.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a value of the payee allow-list that describes a time an hour after the decision"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-value-after-obtained",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-value-after-obtained.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a value of the payee allow-list that describes a time after it was obtained"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-verifiable-derived-from-judgment",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-verifiable-derived-from-judgment.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-derived-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "class the risk tier computed from the anomaly score as verifiable"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-verifiable-only-admit-required-input-unavailable",
+      "negates": [
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-verifiable-only-admit-required-input-unavailable.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a verifiable-only outcome of admit while the required mandate is unavailable and no input supports the action"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/properties/verifiable_only_outcome/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-verifiable-only-outcome-outside-enum",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-verifiable-only-outcome-outside-enum.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the verifiable-only outcome to a value the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-invalid-without-register",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/decision-basis-invalid-without-register.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the register under which the decision was made"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-admit-on-verifiable-inputs",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record an admit that two verifiable inputs support, with a judgment and an actor-supplied input that had no effect"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-admit-optional-judgment-late",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-admit-optional-judgment-late.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit while the optional anomaly score arrives late and has no effect"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-deny-no-declared-input",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-deny-no-declared-input.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "deny an action of a class for which the register declares no decision input"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-deny-required-input-unavailable",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-deny-required-input-unavailable.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "deny the action because a required verifiable input is unavailable"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-deny-required-judgment-unavailable",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-deny-required-judgment-unavailable.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0182"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "deny because the anomaly score, a judgment input that the register declares required, was unavailable, with a recorded verifiable-only outcome of admit that the two verifiable inputs support"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-derived-inputs",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-derived-inputs.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a verifiable check computed from the two verifiable inputs, which supports the admit, and a judgment computed from the anomaly score, which has no effect"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-hold-restricted-by-judgment",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-hold-restricted-by-judgment.json",
+      "requirement_ids": [
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "hold the action because the anomaly score restricts it, although the verifiable inputs support it"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/properties/verifiable_only_outcome/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "decision-basis-valid-times-and-verifiable-only-outcome",
+      "path": "conformance/suites/control-extensions/decision-basis-valid-times-and-verifiable-only-outcome.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "ECL1N-0181"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the verifiable-only outcome, when the request was received, and when each input was obtained and what time its value describes"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "extension-invalid-coupling-unknown-member",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/extension-invalid-coupling-unknown-member.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/coupling-valid-admit-permitting-results.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a member the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "obligation-discharge-invalid-fresh-until-not-an-instant",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/obligation-discharge-invalid-fresh-until-not-an-instant.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/obligation-discharge-valid-release.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record a fresh_until that is not an RFC 3339 UTC instant"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "obligation-discharge-invalid-proof-without-digest",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/obligation-discharge-invalid-proof-without-digest.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/obligation-discharge-valid-release.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the digest of the proof"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "obligation-discharge-invalid-unmet-obligation",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/obligation-discharge-invalid-unmet-obligation.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/obligation-discharge-valid-release.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the obligation as unsatisfied, which a release cannot record"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "obligation-discharge-valid-fresh-until",
+      "path": "conformance/suites/control-extensions/obligation-discharge-valid-fresh-until.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/obligation-discharge-valid-release.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the instant after which the proof no longer shows the obligation met"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "obligation-discharge-valid-release",
+      "path": "conformance/suites/control-extensions/obligation-discharge-valid-release.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "turn the terminal event into the release and record in it a discharge of the balance witness, with the proof by reference and digest"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "outcome-reason-invalid-free-text",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/outcome-reason-invalid-free-text.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/outcome-reason-valid-expired-before-release.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "add free text to the outcome reason"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "outcome-reason-valid-expired-before-release",
+      "path": "conformance/suites/control-extensions/outcome-reason-valid-expired-before-release.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/ebmp-2/valid-execution-terminal.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "end the execution as expired before release, with the registered reason and no authority"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "runtime-configuration-invalid-without-digest",
+      "negates": [
+        "XR1-023"
+      ],
+      "path": "conformance/suites/control-extensions/runtime-configuration-invalid-without-digest.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/control-extensions/runtime-configuration-valid-request.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the configuration digest"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "runtime-configuration-valid-request",
+      "path": "conformance/suites/control-extensions/runtime-configuration-valid-request.json",
+      "requirement_ids": [
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
+        "generator": "scripts/generate_control_extension_vectors.py",
+        "kind": "mutation",
+        "mutation": "identify the requesting version of the governed AI system"
+      },
+      "stage": "protocol"
+    }
+  ]
+}

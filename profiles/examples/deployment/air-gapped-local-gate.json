@@ -1,0 +1,126 @@
+{
+  "schema_version": "ecl_deployment_profile_v1",
+  "profile_id": "urn:example:ecl:profile:air-gapped-local-gate",
+  "profile_version": "1",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "3131313131313131313131313131313131313131313131313131313131313131"
+  },
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:air-gapped",
+    "version": "1"
+  },
+  "claim_level": 4,
+  "model": "air-gapped-segmented",
+  "delivery_surfaces": [
+    "local_gate",
+    "offline_verifier",
+    "air_gap_transfer_station"
+  ],
+  "release_path": {
+    "enforcement_location": "local_network_appliance",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true,
+    "decision_timeout_milliseconds": 10,
+    "network_loss_disposition": "immediate_emergency_halt"
+  },
+  "dependencies": [
+    {
+      "dependency_id": "urn:example:ecl:dependency:air-gap-policy-root",
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 900,
+      "integrity_required": true,
+      "failure_disposition": "emergency_halt"
+    }
+  ],
+  "timing_case": {
+    "uses_default_baseline": true,
+    "connected_revocation_seconds": 60,
+    "offline_staleness_seconds": 900,
+    "evidence_export_seconds": 3600,
+    "trusted_time_or_secure_monotonic": true,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:air-gap-l4",
+      "version": "1"
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "entry_conditions": [
+        "approved transfer interval missed"
+      ],
+      "signed_cached_state_required": true,
+      "bounded_actions": [
+        "containment actions within frozen capability manifest"
+      ],
+      "expires_to": "emergency_halt"
+    },
+    "restricted": {
+      "entry_conditions": [
+        "one required control channel is unavailable"
+      ],
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ]
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "integrity, quorum, or independent enforcement path fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ]
+  },
+  "evidence_custody": {
+    "local_append_only_buffer": true,
+    "export_integrity": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:air-gap",
+      "version": "1"
+    },
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:air-gap",
+      "version": "1"
+    },
+    "transfer_custody": {
+      "uri": "urn:example:ecl:custody:dual-control-transfer",
+      "version": "1"
+    }
+  },
+  "topology_controls": {
+    "air_gapped": {
+      "update_media_integrity": {
+        "uri": "urn:example:ecl:control:update-media-integrity",
+        "version": "1"
+      },
+      "export_integrity": {
+        "uri": "urn:example:ecl:control:export-integrity",
+        "version": "1"
+      },
+      "emergency_policy_dual_control": {
+        "uri": "urn:example:ecl:control:emergency-dual-control",
+        "version": "1"
+      },
+      "disconnected_revocation_workflow": {
+        "uri": "urn:example:ecl:workflow:disconnected-revocation",
+        "version": "1"
+      },
+      "disconnected_incident_workflow": {
+        "uri": "urn:example:ecl:workflow:disconnected-incident",
+        "version": "1"
+      }
+    }
+  },
+  "residual_risks": [
+    "Physical transfer latency bounds revocation and export timing; emergency halt limits continued action."
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+  "title": "ECL decision-basis extension value v1",
+  "description": "The value of ecl.ext.decision-basis.v1: the version of the Consequential Action Register under which the decision was made, and each decision input that the Decision Layer consulted and that the register declares for the action class, once, with its class, whether the class requires it, its status, its value by reference and digest when available, and its effect on the outcome (ECL1N-0178, ECL1N-0181, DCMP2-053). Only a verifiable input that was available, and that was not computed from an input that was not available, can support an outcome (ECL1N-0179, ECL1N-0180, ECL1N-0182). The value can also give the verifiable-only outcome and the times that let a verifier check each status (DCMP2-053). Binding records that list decision inputs use the decisionInput definition (AB1-013, AC1-012).",
+  "type": "object",
+  "required": [
+    "register",
+    "inputs"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "register": {
+      "description": "The version of the Consequential Action Register under which the decision was made: its register_id as uri, optionally its register_version as version, and the ecl.digest.sha-256.v1 digest of the register document's restricted canonical JSON (ECL1N-0181).",
+      "$ref": "#/$defs/registerReference"
+    },
+    "inputs": {
+      "description": "Each decision input that the register declares for the action class, once; empty when it declares none (ECL1N-0181, DCMP2-053).",
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/decisionInput",
+        "unevaluatedProperties": false
+      }
+    },
+    "verifiable_only_outcome": {
+      "description": "The outcome that the bound policy version yields over the request's operation, target and parameters and its available verifiable inputs alone (ECL-1 Section 4.3). The response's outcome does not come before it in the strictness order admit, challenge, hold, deny; an input supports only a verifiable-only admit, which rests on at least one verifiable input that supports it, and no required verifiable input was not available; a required actor_supplied or judgment input does not change it (ECL1N-0179, ECL1N-0181, ECL1N-0182, DCMP2-053).",
+      "enum": [
+        "admit",
+        "challenge",
+        "hold",
+        "deny"
+      ]
+    },
+    "received_at": {
+      "description": "The time at which the Decision Layer received the request, from which every declared deadline is counted (ECL1N-0178, ECL1N-0182). Required when an entry gives obtained_at; no later than the response's evaluated_at and not earlier than the request's issued_at by more than the response clock-skew allowance of DCMP2-047; and when given, every available entry gives obtained_at and value_at (DCMP2-053).",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    }
+  },
+  "$defs": {
+    "registerReference": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference",
+      "required": [
+        "uri",
+        "digest"
+      ]
+    },
+    "decisionInput": {
+      "description": "One decision input of a decision: an entry of the decision basis. A record that embeds it closes it with unevaluatedProperties and may add members of its own.",
+      "type": "object",
+      "required": [
+        "input",
+        "class",
+        "required",
+        "status",
+        "effect",
+        "source"
+      ],
+      "properties": {
+        "input": {
+          "description": "The decision input as the Consequential Action Register declares it for the action class.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "class": {
+          "description": "The declared class of the input (ECL1N-0178): verifiable, actor_supplied (an assertion controlled by the governed AI system without independent validation) or judgment (output of a probabilistic model or heuristic detector about meaning or risk).",
+          "enum": [
+            "verifiable",
+            "actor_supplied",
+            "judgment"
+          ]
+        },
+        "required": {
+          "description": "Whether the register declares the input required for the action class (ECL1N-0182).",
+          "type": "boolean"
+        },
+        "status": {
+          "description": "Whether the input was available to the decision, unavailable, later than its declared deadline or older than its declared maximum age, or malformed (ECL1N-0182).",
+          "enum": [
+            "available",
+            "unavailable",
+            "late",
+            "malformed"
+          ]
+        },
+        "effect": {
+          "description": "supports: part of the basis on which the verifiable-only outcome permits the action, whatever the final outcome; restricts: made the outcome stricter; none: no effect on the outcome (ECL1N-0179 to ECL1N-0181).",
+          "enum": [
+            "supports",
+            "restricts",
+            "none"
+          ]
+        },
+        "reference": {
+          "description": "The input's value as the decision used it.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "source": {
+          "description": "The system or service that supplied the input, as the register declares it (ECL1N-0178). Required, so that a verifier that holds the request compares it with the request's actor, and a verifier that holds the register with the declared source, each as input names are compared (DCMP2-053).",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "derived_from": {
+          "description": "The other inputs of the same record from which this input was computed, each named by its input; empty when it was computed from none. An input computed from an input that is not verifiable is not verifiable, one computed from an input that was not available is not available either, and no input is computed from itself, directly or through other inputs (Section 4.3 of the core standard, DCMP2-053).",
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+          }
+        },
+        "obtained_at": {
+          "description": "The time at which the Decision Layer obtained the input. An input obtained after the response's evaluated_at was unavailable, and one obtained more than its declared deadline after received_at was late (ECL1N-0182, DCMP2-053).",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "value_at": {
+          "description": "The time that the input's value describes, no later than obtained_at and than the response's evaluated_at. A value older than its declared maximum age at the response's evaluated_at, the time of the decision, was late (ECL1N-0182, DCMP2-053).",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "available"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "reference"
+            ],
+            "properties": {
+              "reference": {
+                "required": [
+                  "digest"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

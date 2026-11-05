@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+  "title": "ECL Evidence Bundle v1",
+  "description": "An offline-verifiable collection of signed ECL decisions, evidence events, and optional observations.",
+  "type": "object",
+  "required": ["schema_version", "envelopes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_evidence_bundle_v1"
+    },
+    "envelopes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1"
+      }
+    },
+    "observations": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1"
+      }
+    }
+  }
+}

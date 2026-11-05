@@ -1,0 +1,65 @@
+{
+  "action_classes": [
+    {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "buffer_exhaustion_disposition": "fail_closed",
+      "dependency_disposition": "fail_closed",
+      "fail_open_prohibited_conditions": [
+        "missing_authority"
+      ],
+      "restricted_operations": [],
+      "stale_dependency_disposition": "fail_open",
+      "timeout_disposition": "fail_closed"
+    }
+  ],
+  "claimed_profiles": [],
+  "dependencies": [
+    {
+      "class": "hot_path",
+      "id": "urn:example:dependency:authority",
+      "loss_disposition": "fail_closed",
+      "staleness_budget_seconds": 0,
+      "supplies_required_proof": true
+    },
+    {
+      "class": "advisory",
+      "id": "urn:example:dependency:diagnostic-telemetry",
+      "loss_disposition": "fail_open",
+      "staleness_budget_seconds": 60,
+      "supplies_required_proof": false
+    }
+  ],
+  "digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "evidence_buffer": {
+    "capacity_bytes": 1048576,
+    "durable": true,
+    "encrypted": true,
+    "ordering": "causal",
+    "overflow": "fail_closed"
+  },
+  "latency_measurement": {
+    "end_boundary": "effect_commit",
+    "environment_class": "disposable pilot",
+    "percentiles": [
+      "max"
+    ],
+    "sampling_interval": "all requests",
+    "start_boundary": "request_received",
+    "warmup_handling": "none excluded"
+  },
+  "profile_id": "urn:example:profile:STRICT-FAILURE-1",
+  "recovery": {
+    "required_frontiers": [
+      "policy_epochs",
+      "revocations",
+      "consumed_authorities",
+      "buffered_evidence",
+      "unresolved_effects",
+      "clock_discontinuities"
+    ]
+  },
+  "version": "1"
+}

@@ -1,0 +1,77 @@
+{
+  "bundle_profile": "ecl.evidence.standard.v1",
+  "extensions": [],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:payments-gate-1"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:payments-gate-1"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "epoch": 11,
+      "id": "urn:example:policy:trust-control",
+      "version": "2026-07-27"
+    },
+    "verification_time_policy": "ecl.time.observed-at.v1"
+  },
+  "object_id": "https://externalcontrollayer.ai/ns/bundle/example-001",
+  "object_type": "bundle_manifest",
+  "observed_at": "2026-07-27T04:30:02.000000Z",
+  "producer": {
+    "id": "urn:example:custodian:evidence-store-1",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.service.v1"
+  },
+  "protocol": "EBMP-2",
+  "records": [
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "uri": "https://externalcontrollayer.ai/ns/receipt/request-001"
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "uri": "https://externalcontrollayer.ai/ns/receipt/decision-001"
+    },
+    {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+    }
+  ],
+  "schema_version": "2.0",
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [
+      {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "id": "https://externalcontrollayer.ai/ns/receipt/execution-running-001",
+        "relation": "ecl.relation.follows.v1"
+      }
+    ],
+    "root_trace_id": "https://externalcontrollayer.ai/ns/trace/example-001",
+    "sequence": 7,
+    "workflow_id": "https://externalcontrollayer.ai/ns/workflow/example-001"
+  }
+}

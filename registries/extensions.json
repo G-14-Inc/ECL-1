@@ -1,0 +1,238 @@
+{
+  "schema_version": "ecl_registry_v2",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/extensions",
+  "registry_version": 1,
+  "status": "active",
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "id": "ecl.ext.trusted-time-evidence.v1",
+      "status": "deprecated",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Binds external trusted-time evidence to a protocol object.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": false,
+        "applies_to": [
+          "DCMP-2",
+          "EBMP-2",
+          "ECL-IE-1"
+        ],
+        "deprecated_in": "1.0-rc.4",
+        "replacement": "the ECL-IE-1 countersignatures member with claim ecl.claim.trusted-time.v1 (IE1-032)",
+        "affected_fields": [
+          "the time evidence of the carrying object"
+        ],
+        "interpretation": "Deprecated; it never had a value format. Trusted time is carried by ECL-IE-1 countersignatures (INTEGRITY-ENVELOPE-1 section 9)."
+      }
+    },
+    {
+      "id": "ecl.ext.consequence-coupling.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive-critical",
+      "description": "Carries the consequence-coupling controls an action invokes and their results: state witnesses, consequence budgets, heterogeneous quorums, commit obligations and blockers.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": true,
+        "applies_to": [
+          "DCMP-2",
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "DCMP-2 decision_request admission inputs",
+          "DCMP-2 decision_response outcome (DCMP2-052)",
+          "EBMP-2 evidence of the decision"
+        ],
+        "interpretation": "A request declares the coupling controls an action invokes (FR-102); a response reports each control's result, and an admit carries only permitting results (FR-103, DCMP2-052); evidence retains both (FR-107).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1"
+      }
+    },
+    {
+      "id": "ecl.ext.outcome-reason.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "Carries the registered primary reason for a terminal execution outcome.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": false,
+        "applies_to": [
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "EBMP-2 execution_terminal reason"
+        ],
+        "interpretation": "The registered primary reason of a terminal execution outcome, as the TRANSACTIONAL-EFFECT-1 outcome evidence table requires; no free text. An enforcement point that cancels a release because its wall clock regressed between its first check and its final observation records ecl.error.clock-regressed.v1 (MG1-014).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1"
+      }
+    },
+    {
+      "id": "ecl.ext.approval-record.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive-critical",
+      "description": "Records what a human approver was shown, when, and the minimum review time that applied.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": true,
+        "applies_to": [
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "EBMP-2 human_intervention approve and reject events"
+        ],
+        "interpretation": "An approval or rejection decided sooner than minimum_review_seconds after presented_at does not release the action (ECL1N-0175, EBMP2-063).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1"
+      }
+    },
+    {
+      "id": "ecl.ext.control-change.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive-critical",
+      "description": "Records a change to an in-scope control, its requester, its approvers and its period.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": true,
+        "applies_to": [
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "EBMP-2 human_intervention events that change a control"
+        ],
+        "interpretation": "Every approver differs from the requester, and a change that disables, bypasses or sets a control to automatic approval expires (ECL1N-0166, ECL1N-0170, EBMP2-064).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/control-change/1"
+      }
+    },
+    {
+      "id": "ecl.ext.runtime-configuration.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "Identifies the recorded version of the governed AI system that requested an action.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": false,
+        "applies_to": [
+          "DCMP-2"
+        ],
+        "affected_fields": [
+          "DCMP-2 decision_request actor context"
+        ],
+        "interpretation": "The version and digest of the governed AI system's model, instructions and tool set that requested the action (ECL1N-0171); it does not change admission semantics.",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1"
+      }
+    },
+    {
+      "id": "ecl.ext.decision-basis.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.5",
+      "compatibility": "additive-critical",
+      "description": "Records the basis of a decision: the register version it was made under, and each input with its declared class (verifiable, actor_supplied or judgment), whether the action class requires it, whether it was available, its reference and digest, and its effect on the outcome.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": true,
+        "applies_to": [
+          "DCMP-2"
+        ],
+        "affected_fields": [
+          "DCMP-2 decision_response outcome (DCMP2-053)",
+          "EBMP-2 evidence of the decision"
+        ],
+        "interpretation": "Assertions that the governed AI system controls without independent validation (actor_supplied) and outputs of probabilistic models or heuristic detectors about meaning or risk (judgment) can only make an outcome stricter; an admit rests on at least one available verifiable input and on no required input that was unavailable, late or malformed; each input appears once; an evidence verifier requires the record on every decision response (ECL1N-0178 to ECL1N-0182, DCMP2-053).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1"
+      }
+    },
+    {
+      "id": "ecl.ext.aarm-receipt.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.5",
+      "compatibility": "additive",
+      "description": "Binds an AARM receipt to the execution_terminal event of the action it records.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": false,
+        "applies_to": [
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "EBMP-2 execution_terminal evidence of an action that an AARM control plane governs"
+        ],
+        "interpretation": "The receipt's identifier, the digest of its RFC 8785 canonical form and the AARM decision it records. The receipt supports claims about the AARM evaluation; it never establishes that an action was authorized or released (AB1-007, AB1-008).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1"
+      }
+    },
+    {
+      "id": "ecl.ext.acs-decision.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.5",
+      "compatibility": "additive",
+      "description": "Records the OWASP ACS Guardian decision that an ECL decision depends on, with the session chain head published for its step.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": false,
+        "applies_to": [
+          "DCMP-2"
+        ],
+        "affected_fields": [
+          "DCMP-2 decision_response inputs from an ACS Guardian"
+        ],
+        "interpretation": "The Guardian's disposition, evaluator, ACS request_id, chain_hash and, under ACS-Audit, request_hash. A Guardian allow creates no ECL authority; the decision of an agent or composite evaluator, or of one that is not stated, is a judgment input, and a decision that a hook point carried is never verifiable (AC1-003, AC1-004, AC1-008).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1"
+      }
+    },
+    {
+      "id": "ecl.ext.mcp-binding.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.5",
+      "compatibility": "additive-critical",
+      "description": "Names the MCP server, tool, reviewed tool definition and mapping that a decision request comes from, with the digest of the call's complete params, and the digest of the server response that evidence binds.",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": true,
+        "applies_to": [
+          "DCMP-2",
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "DCMP-2 decision_request action of an MCP request",
+          "EBMP-2 execution_terminal result of a forwarded MCP request"
+        ],
+        "interpretation": "A decision request carries it as critical, so a decision point that does not understand it cannot admit the request, and its params digest binds the call that the gateway forwards exactly (MG1-004, MG1-005); an execution_terminal event carries the RFC 8785 digest of the response the gateway returned (MG1-010).",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1"
+      }
+    },
+    {
+      "id": "ecl.ext.obligation-discharge.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.6",
+      "compatibility": "additive-critical",
+      "description": "Records, on an execution_released event, the discharge of each obligation that had to be met before the release: the obligation, the proof that Enforcement checked by reference and digest, the proof's issuer, when it was obtained, when it was checked and, when the proof's type declares a freshness bound, the instant after which it no longer shows the obligation met (fresh_until).",
+      "attributes": {
+        "version": 1,
+        "critical_by_default": true,
+        "applies_to": [
+          "EBMP-2"
+        ],
+        "affected_fields": [
+          "EBMP-2 execution_released evidence of a release whose decision response carries a before_release obligation or a required_before_release witness result"
+        ],
+        "interpretation": "Each obligation of the decision response whose satisfaction is before_release, and a witness result whose outcome is required_before_release, has one entry recorded as satisfied, with its proof by reference and the digest of the proof's RFC 8785 canonical form, checked no later than the release was observed and fresh at the release (DCMP2-017, EBMP2-070). The required obligations come from the signed response that the evidence holds. A proof that is an ECL object travels in the bundle, and a verifier checks its signatures, issuer, type, binding and freshness under the trust policy; the record is the enforcement point's statement, and no verifier checks what a proof shows.",
+        "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1"
+      }
+    }
+  ]
+}

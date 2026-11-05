@@ -1,0 +1,584 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-binding-basis",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-admit-after-verifiable-only-deny",
+      "negates": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-admit-after-verifiable-only-deny.json",
+      "requirement_ids": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record in the response's decision basis that policy over the verifiable inputs alone denies the action, while the response admits it"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-admit-required-input-unavailable",
+      "negates": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-admit-required-input-unavailable.json",
+      "requirement_ids": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit and release while the required verifiable payee record is unavailable, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-inputs-match-basis.v1"
+      ],
+      "id": "aarm-basis-invalid-basis-missing",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-basis-missing.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave the decision basis out of the response"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-identifiers-unique.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-inputs-match-basis.v1",
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "id": "aarm-basis-invalid-basis-twice",
+      "negates": [
+        "AB1-013",
+        "XR1-009"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-basis-twice.json",
+      "requirement_ids": [
+        "AB1-013",
+        "XR1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the decision basis in two extension entries of the response"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-input-listed-twice",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-input-listed-twice.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the payments policy twice in the record"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-input-missing-from-basis",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-input-missing-from-basis.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave the R7 semantic-distance output out of the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-input-missing-from-record",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-input-missing-from-record.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the agent's own justification in the response's decision basis, an input that the record does not list"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-input-obtained-after-decision",
+      "negates": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-input-obtained-after-decision.json",
+      "requirement_ids": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the payments policy as available although it was obtained after the response's evaluated_at, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-judgment-verifiable-in-basis",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-judgment-verifiable-in-basis.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record the R3 intent-alignment output in the response's decision basis as a verifiable input that supports the admit, while the record classes it judgment"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-modification-admitted-on-judgment",
+      "negates": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-modification-admitted-on-judgment.json",
+      "requirement_ids": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the R7 semantic-distance output as a judgment input of the record, and admit the modified action on it alone in the decision basis of the modification's response, which records it as judgment"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-modification-without-basis",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-modification-without-basis.json",
+      "requirement_ids": [
+        "AB1-004",
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit the modified action with a response that carries no decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-other-digest",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-other-digest.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record another digest for the payments policy in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-other-effect",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-other-effect.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record in the response's decision basis that the R2 context output restricted the outcome, while the record says it had no effect"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-invalid-verifiable-derived-from-judgment",
+      "negates": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/aarm-basis-invalid-verifiable-derived-from-judgment.json",
+      "requirement_ids": [
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "rest the admit on a verifiable input computed from the R3 intent-alignment output, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-valid-allow-released",
+      "path": "conformance/suites/binding-basis/aarm-basis-valid-allow-released.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-basis-valid-deny-input-unavailable",
+      "path": "conformance/suites/binding-basis/aarm-basis-valid-deny-input-unavailable.json",
+      "requirement_ids": [
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-admit-required-input-unavailable",
+      "negates": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-admit-required-input-unavailable.json",
+      "requirement_ids": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit and release while the required verifiable records history is unavailable, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.acs-inputs-match-basis.v1"
+      ],
+      "id": "acs-basis-invalid-basis-missing",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-basis-missing.json",
+      "requirement_ids": [
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave the decision basis out of the response"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-judgment-verifiable-in-basis",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-judgment-verifiable-in-basis.json",
+      "requirement_ids": [
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the Guardian an agent evaluator whose allow the record classes judgment, and record that allow in the response's decision basis as a verifiable input that supports the admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-modification-without-basis",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-modification-without-basis.json",
+      "requirement_ids": [
+        "AC1-005",
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/acs-binding/acs-valid-modify-new-request.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit the modified action with a response that carries no decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-other-digest",
+      "negates": [
+        "AC1-012"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-other-digest.json",
+      "requirement_ids": [
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record another digest for the Guardian's decision in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-received-after-decision",
+      "negates": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-received-after-decision.json",
+      "requirement_ids": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record in the response's decision basis that the request was received after the response's evaluated_at"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-received-before-issued",
+      "negates": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-received-before-issued.json",
+      "requirement_ids": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "record in the response's decision basis that the request was received a day before the request was issued"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-invalid-verifiable-input-from-actor",
+      "negates": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/binding-basis/acs-basis-invalid-verifiable-input-from-actor.json",
+      "requirement_ids": [
+        "AC1-012",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "mutation",
+        "mutation": "rest the admit on a verifiable input whose source is the requesting agent, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-valid-allow-released",
+      "path": "conformance/suites/binding-basis/acs-basis-valid-allow-released.json",
+      "requirement_ids": [
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "acs-basis-valid-failure-guardian-unavailable",
+      "path": "conformance/suites/binding-basis/acs-basis-valid-failure-guardian-unavailable.json",
+      "requirement_ids": [
+        "AC1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_binding_basis_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    }
+  ]
+}

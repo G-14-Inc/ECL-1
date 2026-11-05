@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+  "title": "ECL MCP binding extension value v1",
+  "description": "The value of ecl.ext.mcp-binding.v1: on a DCMP-2 decision request, the MCP server, tool, reviewed tool-definition digest and mapping that the request comes from, the digest of the call's complete params object, which the gateway forwards exactly (MG1-005), and the digests of any input responses and request state the call carries (MG1-004); on an EBMP-2 execution_terminal event, the same with the digest of the server's response (MG1-010) and, when the gateway records them, when the server's answer to the forwarded call arrived and whether the gateway observed, immediately after its write of the call returned, that the authorization's valid_until had passed (EBMP2-071, EBMP2-072), and, on a terminal event that recovery recorded, when the gateway recovered the exchange (MG1-016). Digests of MCP content are of its RFC 8785 canonical form.",
+  "type": "object",
+  "required": [
+    "mcp_revision",
+    "method",
+    "server_id",
+    "server_name",
+    "server_version",
+    "tool",
+    "tool_definition_digest",
+    "mapping_id",
+    "params_digest"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "mcp_revision": {
+      "const": "2026-07-28"
+    },
+    "method": {
+      "enum": [
+        "tools/call",
+        "tasks/update"
+      ]
+    },
+    "server_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "server_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "server_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "tool": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "tool_definition_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "mapping_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "params_digest": {
+      "description": "MG1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the call's complete params object, _meta included.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "input_responses_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "request_state_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "response_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "forward_completed_at": {
+      "description": "EBMP2-071: on an execution_terminal event, the gateway's observation, by its own clock, of the moment the server's answer to the forwarded call arrived. A verifier does not compare it with the authorization's window: an answer that arrives after valid_until is reported as the informational member completion_after_window of the report, not as a finding (EBMP2-072).",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "released_after_valid_until": {
+      "description": "EBMP2-071: on an execution_terminal event, true when the gateway observed, immediately after its write of the forwarded call returned, that the authorization's valid_until had passed, so the write may have been late. A verifier reports true with ecl.error.expired.v1 (EBMP2-072).",
+      "type": "boolean"
+    },
+    "recovered_at": {
+      "description": "MG1-016: on an execution_terminal event that the gateway recorded when it recovered an exchange that it had not finished, the time of the recovery. The terminal then states what the gateway's journal shows, unknown when the request had been released and no outcome was recorded, and is not an observation of the request's effect.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    }
+  }
+}

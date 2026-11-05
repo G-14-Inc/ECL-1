@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Trust Policy Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-trust-policy-profile-1">ECL Trust Policy Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile describes the caller-controlled trust-policy input to envelope
+verification (INTEGRITY-ENVELOPE-1 section 11) and to the offline bundle
+verifier. Standalone envelope verification binds each payload to the purpose of
+its role (<a href="trust-policy-1.html#TP1-010">TP1-010</a>); the bundle verifier additionally binds every object role and
+principal within each media type.</p>
+<p><span id="TP1-001"><strong>TP1-001</strong></span><a class="requirement-link" href="#TP1-001" aria-label="Link to TP1-001">§</a> — The verifier MUST use only its caller's current trust policy and
+explicitly supplied earlier versions of that same policy; a bundle MUST NOT
+carry, select, or substitute trust roots, and an embedded policy reference that
+matches none of those supplied versions MUST be reported as a policy mismatch,
+with <code>ecl.error.signature-policy-invalid.v1</code>.</p>
+<p><span id="TP1-002"><strong>TP1-002</strong></span><a class="requirement-link" href="#TP1-002" aria-label="Link to TP1-002">§</a> — A trust-policy document MUST validate against
+<code>https://externalcontrollayer.ai/ns/schema/trust-policy/1</code> with no unknown members.
+A loader MUST refuse a document that fails the strict JSON checks of
+INTEGRITY-ENVELOPE-1 (<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>), in their order, or fails the schema with
+<code>ecl.error.schema-invalid.v1</code>, except that a declared limit gives the error of
+<a href="trust-policy-1.html#TP1-007">TP1-007</a>.</p>
+<p><span id="TP1-003"><strong>TP1-003</strong></span><a class="requirement-link" href="#TP1-003" aria-label="Link to TP1-003">§</a> — A trust-policy document MUST have unique key identifiers and public
+keys, active supported signature suites, canonically decoded keys of the correct
+length, a valid P-256 curve point or a canonical Ed25519 curve point of non-small
+order, a validity end later than its start when present, registered key purposes,
+and at most one revocation per known key. A loader MUST refuse a document that
+fails any of these conditions with <code>ecl.error.semantic-invalid.v1</code>.</p>
+<p><span id="TP1-004"><strong>TP1-004</strong></span><a class="requirement-link" href="#TP1-004" aria-label="Link to TP1-004">§</a> — Bundle verification MUST accept a key only for an object's declared
+role within its payload media type, and MUST reject a decision-request key used
+for a decision response even though both use the DCMP-2 media type.</p>
+<p><span id="TP1-005"><strong>TP1-005</strong></span><a class="requirement-link" href="#TP1-005" aria-label="Link to TP1-005">§</a> — Bundle verification MUST reject a signing key whose bound principal
+differs from the object's issuer or producer identifier.</p>
+<p><span id="TP1-006"><strong>TP1-006</strong></span><a class="requirement-link" href="#TP1-006" aria-label="Link to TP1-006">§</a> — Bundle verification MUST evaluate each trust dependency of a
+bundle: each signing key of each envelope and observation, and each signing key
+of each time attestation that a trusted-time countersignature carries
+(INTEGRITY-ENVELOPE-1 section 9). Every key that signed anything in the bundle
+is a trust dependency, whether or not its signature counts toward the policy:
+its historical status is the result of INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-040">IE1-040</a> step 6 for
+that signature at the dependency's time together with the revocation check
+below, and a signature that does not verify makes its dependency historically
+invalid with <code>ecl.error.integrity-invalid.v1</code>. <a href="integrity-envelope-1.html#IE1-015">IE1-015</a> still decides from the
+signatures that count whether the envelope or the attestation is valid, so the
+verdict does not change; a scope item that rests on a dependency (EBMP-2
+<a href="ebmp-2.html#EBMP2-076">EBMP2-076</a>) is established only when that dependency is historically valid. A
+dependency is historically valid only when
+both hold: it is valid at the dependency's time under the policy version that
+its object names (<a href="trust-policy-1.html#TP1-001">TP1-001</a>), a revocation in that version effective at or before
+that time making it invalid; and the caller's current policy holds no
+revocation, effective at or before the dependency's time, of a key that has the
+dependency's key identifier or its public key. The dependency's time is the time
+at which INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-034">IE1-034</a> evaluates its signature, for a signer of an
+object, and the attested time, for a signer of a time attestation. A revocation
+states that the key is not trusted from its effective time, whatever reason it
+gives, so a revocation in the current policy reaches evidence that an earlier
+version still accepts; a claimant that does not know when a compromise began
+revokes from the earliest suspected time (ECL-1 <a href="ecl-1_standard.html#ECL1N-0159">ECL1N-0159</a>). Only a revocation
+carries later knowledge of a compromise: a key's later retirement, a validity
+interval that the current policy ends or shortens, or the key's absence from the
+current policy does not make a dependency historically invalid. Bundle
+verification MUST also report each dependency's current status at the caller's
+evaluation time under the current policy, which MUST use the caller's current
+policy whatever version the object's embedded reference names and MUST find the
+key in it with the public key that the historical check used; the matching of
+<a href="trust-policy-1.html#TP1-001">TP1-001</a> applies to historical validity only. The report MUST name, for each
+dependency, the policy version of its historical check, the current policy
+version whose revocations it applied, and the effective time of any such
+revocation. Each dependency's report member <code>at</code> MUST be the time at which its
+signer was evaluated, or <code>null</code> when it was not evaluated, including when the
+envelope's status was decided before any signer was evaluated.</p>
+<p><span id="TP1-007"><strong>TP1-007</strong></span><a class="requirement-link" href="#TP1-007" aria-label="Link to TP1-007">§</a> — A verifier interface MUST enforce declared byte limits before
+parsing. The verifier published with ECL-1, for the command line
+(<code>packages/ecl-ts</code>) and for the browser (<code>web/verifier</code>), declares a limit of
+256 KiB for each trust-policy input and of 1 MiB for its evidence-bundle input.
+A verifier MUST refuse an input that exceeds a declared limit, including a limit
+of its strict JSON parser (INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-037">IE1-037</a>), with
+<code>ecl.error.resource-limit-exceeded.v1</code>.</p>
+<p>The byte limits apply to the interfaces that read bytes, such as a command-line
+interface. An interface that accepts parsed objects applies the envelope,
+observation, node and depth limits that it declares (EBMP-2 <a href="ebmp-2.html#EBMP2-062">EBMP2-062</a>). An
+embedded reference identifies a supplied policy version; it never supplies that
+policy's keys. The current policy and the history versions are caller inputs.</p>
+<p>The seven registered purposes are <code>ecl.purpose.decision-request.v1</code>,
+<code>ecl.purpose.decision-response.v1</code>, <code>ecl.purpose.control.v1</code>,
+<code>ecl.purpose.evidence-event.v1</code>, <code>ecl.purpose.observation.v1</code>,
+<code>ecl.purpose.trusted-time.v1</code>, which signs time attestations
+(INTEGRITY-ENVELOPE-1 section 9), and <code>ecl.purpose.approval.v1</code>, which marks an
+approval service's key: a verifier admits an approval record as the proof of an
+approval obligation only when every key that signed it holds that purpose
+(EBMP-2 <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a>). The approval purpose qualifies a key that also holds the
+evidence-event purpose and lets a key sign no payload by itself, so a verifier
+refuses a trust policy in which a key holds it alone. INTEGRITY-ENVELOPE-1
+<a href="integrity-envelope-1.html#IE1-039">IE1-039</a> gives the purpose that the key of each kind of payload holds. Adding revocations changes the
+policy digest.</p>
+<p><span id="TP1-008"><strong>TP1-008</strong></span><a class="requirement-link" href="#TP1-008" aria-label="Link to TP1-008">§</a> — Ed25519 verification MUST require canonical scalar <code>S &lt; L</code> and
+check the cofactorless equation <code>[S]B = R + [k]A</code>, where <code>k</code> is the
+little-endian SHA-512 challenge reduced modulo <code>L</code>. It MUST NOT substitute
+a cofactor-multiplied verification equation. Canonical decoding and non-small
+order of the policy&#x27;s public key remain mandatory under <a href="trust-policy-1.html#TP1-003">TP1-003</a>.</p>
+<p><a href="https://www.rfc-editor.org/rfc/rfc8032#section-5.1.7">RFC 8032 §5.1.7</a>
+requires the cofactored equation <code>[8][S]B = [8]R + [8][k]A</code> and permits the
+cofactorless <code>[S]B = R + [k]A</code> instead, with <code>k</code> the unreduced digest. With
+<code>k</code> reduced modulo <code>L</code>, the check above is that cofactorless equation for a
+public key of prime order. For a key with a small-order component, which
+<a href="trust-policy-1.html#TP1-003">TP1-003</a> admits, it can differ from it, and every signature it accepts still
+satisfies the cofactored equation.
+The edge corpus includes fourteen refused small-order encodings, accepted and
+refused mixed-order signatures, and a refused torsion-R signature. The Go edge
+checks exercise the same bytes with <code>crypto/ed25519</code>; they do not establish a
+complete Go trust-policy or envelope capability.</p>
+<p>Five of the purposes each belong to one component role: the decision-request
+purpose to the requester of a decision, which may be the enforcement point or
+the governed AI system itself, the decision-response purpose to the decision
+point, the control purpose to the control plane that issues DCMP-2 control
+messages, the observation purpose to an observer and the trusted-time purpose
+to a time authority. The requester also answers the challenges of the decision
+point, so a challenge response is signed under the decision-request purpose and
+a challenge under the decision-response purpose. The evidence-event purpose is
+not a role of its own: the component that records an evidence event signs it. A
+key that held two roles would let the holder of one role sign for the other,
+such as a requester forging decision responses.</p>
+<p><span id="TP1-009"><strong>TP1-009</strong></span><a class="requirement-link" href="#TP1-009" aria-label="Link to TP1-009">§</a> — A trust-policy key MUST NOT carry more than one of the
+decision-request, decision-response, control, observation and trusted-time
+purposes; the evidence-event purpose MAY accompany one of them. A verifier MUST refuse a
+trust-policy document with a key that carries two of these purposes as
+<code>ecl.error.semantic-invalid.v1</code> (<a href="ecl-1_standard.html#ECL1N-0157">ECL1N-0157</a>).</p>
+<p><span id="TP1-010"><strong>TP1-010</strong></span><a class="requirement-link" href="#TP1-010" aria-label="Link to TP1-010">§</a> — Envelope verification under a trust policy, standalone or within a
+bundle, MUST count a signature over a DCMP-2 message only when its key carries
+the purpose that INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-039">IE1-039</a> gives its message type: the
+decision-request purpose for a decision request or a challenge response, the
+decision-response purpose for a decision response or a challenge, and the
+control purpose for a control message; a signature by any other key MUST NOT
+count toward that object's threshold or required keys.</p>
+<h2 id="evidence">Evidence</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>Reproducible object acceptance and exact error attribution</td>
+</tr>
+<tr>
+<td>Verifier tests</td>
+<td>A verifier's behavior where no vector applies; this is not a deployment assessment</td>
+</tr>
+</tbody>
+</table>
+<p><a href="trust-policy-1.html#TP1-002">TP1-002</a> and <a href="trust-policy-1.html#TP1-003">TP1-003</a> have vectors in the <code>trust-policy</code> suite, including the
+small-order key refusal. <a href="trust-policy-1.html#TP1-009">TP1-009</a> and <a href="trust-policy-1.html#TP1-010">TP1-010</a> have vectors in the <code>key-roles</code>
+suite: policies whose one key carries two roles, and envelopes of each DCMP-2
+message type that a key with and without the role signed. The <code>evidence-bundle</code>
+suite refuses a bundle that carries its own trust policy (<a href="trust-policy-1.html#TP1-001">TP1-001</a>) and a
+decision response signed with a key bound to another principal (<a href="trust-policy-1.html#TP1-005">TP1-005</a>), and
+tells a key revoked before the evidence was signed, which makes the bundle
+invalid, from one revoked after it, which is a current-trust failure (<a href="trust-policy-1.html#TP1-006">TP1-006</a>).
+The <code>envelope</code> suite refuses a signature by a key without the object's purpose
+(<a href="trust-policy-1.html#TP1-004">TP1-004</a>) and checks the Ed25519 rules of <a href="trust-policy-1.html#TP1-008">TP1-008</a>. <a href="trust-policy-1.html#TP1-007">TP1-007</a>, the limits on the
+bytes that a verifier loads, has no vector: an assessor checks that the
+verifier refuses a trust policy or a bundle over its limit before it parses the
+input. These checks establish a verifier's behavior, not the identity or
+independence of an assessor or the trustworthiness of production keys.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/TRUST-POLICY-1.md</code>, SHA-256 <code>59b49033fec310594576f9c3d2ed1325ea10f15d10c0c8e3febfd3f2ae3bd388</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

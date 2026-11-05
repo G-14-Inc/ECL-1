@@ -1,0 +1,71 @@
+{
+  "call": {
+    "rfc8785": "eyJpZCI6IDcsImpzb25ycGMiOiIyLjAiLCJtZXRob2QiOiJ0b29scy9jYWxsIiwicGFyYW1zIjp7Il9tZXRhIjp7ImlvLm1vZGVsY29udGV4dHByb3RvY29sL2NsaWVudENhcGFiaWxpdGllcyI6e30sImlvLm1vZGVsY29udGV4dHByb3RvY29sL3Byb3RvY29sVmVyc2lvbiI6IjIwMjYtMDctMjgifSwiYXJndW1lbnRzIjp7ImJvZHkiOiJUaGUgc2VjcmV0IGFwcGVhcmVkIGluIGEgc3VwcG9ydCB0aWNrZXQuIiwicHJpb3JpdHkiOjIuNSwicmVwb3NpdG9yeSI6InVybjpleGFtcGxlOnJlcG86cGF5bWVudHMtc2VydmljZSIsInRpdGxlIjoiUm90YXRlIHRoZSB3ZWJob29rIHNlY3JldCJ9LCJuYW1lIjoiY3JlYXRlX2lzc3VlIn19"
+  },
+  "mapping": {
+    "action_class": "ecl.action.ai-proposed-operation.v1",
+    "evidence_profile": "ecl.evidence.standard.v1",
+    "mapping_id": "urn:example:mapping:issues-create",
+    "operation": "issues.create",
+    "risk_class": "ecl.risk.high.v1",
+    "server_id": "urn:example:mcp-server:issues",
+    "server_name": "issue-tracker",
+    "server_version": "2.3.0",
+    "target_argument": "repository",
+    "tool": "create_issue",
+    "tool_definition_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+    }
+  },
+  "mcp_revision": "2026-07-28",
+  "received_at": "2026-09-30T09:00:00.000000Z",
+  "returned": {
+    "error": {
+      "code": -31007,
+      "data": {
+        "ecl": {
+          "code": "not-mapped",
+          "reason": "ecl.error.binding-unsupported.v1"
+        }
+      },
+      "message": "The request has no reviewed mapping."
+    },
+    "id": 7,
+    "jsonrpc": "2.0"
+  },
+  "returned_at": "2026-09-30T09:00:00.450000Z",
+  "schema_version": "ecl_mcp_gateway_exchange_v1",
+  "server": {
+    "id": "urn:example:mcp-server:issues",
+    "name": "issue-tracker",
+    "version": "2.3.0"
+  },
+  "tool_definition": {
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false
+    },
+    "description": "Create an issue in a repository.",
+    "inputSchema": {
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "title"
+      ],
+      "type": "object"
+    },
+    "name": "create_issue",
+    "title": "Create issue"
+  }
+}

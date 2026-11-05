@@ -1,0 +1,904 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-aarm-binding",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-judgment-inputs.v1"
+      ],
+      "id": "aarm-invalid-admit-without-verifiable-basis",
+      "negates": [
+        "AB1-006",
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-admit-without-verifiable-basis.json",
+      "requirement_ids": [
+        "AB1-006",
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit on no verifiable input, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-decision-outside-enum",
+      "negates": [
+        "AB1-009"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-decision-outside-enum.json",
+      "requirement_ids": [
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an AARM decision that the pinned text does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-deferral-no-release.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-defer-fail-open",
+      "negates": [
+        "AB1-005"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-defer-fail-open.json",
+      "requirement_ids": [
+        "AB1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-defer-held.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "hold with the fail-open safe state"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-deferral-no-release.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-defer-outlasts-deadline",
+      "negates": [
+        "AB1-005"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-defer-outlasts-deadline.json",
+      "requirement_ids": [
+        "AB1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-defer-held.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "let the hold expire 10 s after the AARM deadline"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-outcome-no-weaker.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-deny-admitted",
+      "negates": [
+        "AB1-003"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-deny-admitted.json",
+      "requirement_ids": [
+        "AB1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the AARM decision DENY while the ECL response still admits and the action is released; leave out the receipt"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-input-class-outside-enum",
+      "negates": [
+        "AB1-009"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-input-class-outside-enum.json",
+      "requirement_ids": [
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a decision-input class that the core standard does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-judgment-inputs.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-intent-alignment-verifiable",
+      "negates": [
+        "AB1-006"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-intent-alignment-verifiable.json",
+      "requirement_ids": [
+        "AB1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "class the R3 intent-alignment output as verifiable, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-judgment-inputs.v1"
+      ],
+      "id": "aarm-invalid-judgment-basis-of-admit",
+      "negates": [
+        "AB1-006",
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-judgment-basis-of-admit.json",
+      "requirement_ids": [
+        "AB1-006",
+        "AB1-013",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "make the R7 semantic-distance output part of the basis of the admit, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-judgment-inputs.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-judgment-source-decision-unlabelled",
+      "negates": [
+        "AB1-006"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-judgment-source-decision-unlabelled.json",
+      "requirement_ids": [
+        "AB1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-judgment-source-admit.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "in the judgment-source role, list the AARM decision without its requirement, as a verifiable input that supports the admit, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-judgment-inputs.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-judgment-source-output-verifiable",
+      "negates": [
+        "AB1-006"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-judgment-source-output-verifiable.json",
+      "requirement_ids": [
+        "AB1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-judgment-source-admit.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "class the AARM decision as verifiable in the judgment-source role, in the record and in the response's decision basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-inputs-match-basis.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modification-drops-required-input",
+      "negates": [
+        "AB1-013"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modification-drops-required-input.json",
+      "requirement_ids": [
+        "AB1-004",
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the payments policy and the payee's record as required verifiable inputs, and record in the modification's response the payments policy as an optional input that was unavailable, admitting on the payee's record"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modification-response-without-request",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modification-response-without-request.json",
+      "requirement_ids": [
+        "AB1-003",
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "remove the new request and the release, and keep the response to the new request, an admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-judgment-inputs.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-inputs-match-basis.v1"
+      ],
+      "id": "aarm-invalid-modification-rests-on-intent-alignment",
+      "negates": [
+        "AB1-006",
+        "AB1-013"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modification-rests-on-intent-alignment.json",
+      "requirement_ids": [
+        "AB1-004",
+        "AB1-006",
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "list the R3 intent-alignment output as judgment in the record, and rest the admit of the modification's response on it alone as a verifiable input"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-judgment-inputs.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-inputs-match-basis.v1"
+      ],
+      "id": "aarm-invalid-modification-rests-on-judgment-source-decision",
+      "negates": [
+        "AB1-006",
+        "AB1-013"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modification-rests-on-judgment-source-decision.json",
+      "requirement_ids": [
+        "AB1-004",
+        "AB1-006",
+        "AB1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "in the judgment-source role, list the AARM decision as judgment in the record, and rest the admit of the modification's response on it alone as a verifiable input"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modify-boolean-carried-as-number",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modify-boolean-carried-as-number.json",
+      "requirement_ids": [
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "set dry_run to true in the modified parameters and carry 1 for it in the new request, which the decision point admits and under which the action is released"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modify-other-actor",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modify-other-actor.json",
+      "requirement_ids": [
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name another agent as the actor of the new request, which the decision point admits"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modify-other-operation",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modify-other-operation.json",
+      "requirement_ids": [
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the operation payments.refund in the new request, which the decision point admits"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modify-other-parameters",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modify-other-parameters.json",
+      "requirement_ids": [
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit a new request whose parameters are not the AARM's modified parameters"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.aarm-release-requires-admit.v1"
+      ],
+      "id": "aarm-invalid-modify-released-under-original",
+      "negates": [
+        "AB1-002",
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modify-released-under-original.json",
+      "requirement_ids": [
+        "AB1-002",
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release the action under the original request and parameters"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-modify-unlinked",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-modify-unlinked.json",
+      "requirement_ids": [
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the modification-of causal predecessor from the new request"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-modification-new-request.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-new-request-without-modify",
+      "negates": [
+        "AB1-004"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-new-request-without-modify.json",
+      "requirement_ids": [
+        "AB1-003",
+        "AB1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record an AARM DENY, which the ECL response denies, and keep the new request for the modified action, which its own response admits and under which the action is released"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-receipt-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-receipt-altered",
+      "negates": [
+        "AB1-007",
+        "AB1-008"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-receipt-altered.json",
+      "requirement_ids": [
+        "AB1-007",
+        "AB1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "change the retained receipt after the terminal event bound it"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-receipt-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-receipt-decision-disagrees",
+      "negates": [
+        "AB1-007",
+        "AB1-008"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-receipt-decision-disagrees.json",
+      "requirement_ids": [
+        "AB1-007",
+        "AB1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "bind a receipt that records DENY for an action the AARM control plane allowed"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-receipt-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-receipt-other-parameters",
+      "negates": [
+        "AB1-007"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-receipt-other-parameters.json",
+      "requirement_ids": [
+        "AB1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "bind a receipt whose parameters are not the request's"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-release-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-released-after-window",
+      "negates": [
+        "AB1-002"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-released-after-window.json",
+      "requirement_ids": [
+        "AB1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release at the end of the authorization's window"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-release-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-released-other-parameters",
+      "negates": [
+        "AB1-002"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-released-other-parameters.json",
+      "requirement_ids": [
+        "AB1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release parameters other than the admitted ones"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.aarm-release-requires-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-released-without-admit",
+      "negates": [
+        "AB1-002"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-released-without-admit.json",
+      "requirement_ids": [
+        "AB1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-deny-recorded.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "release the action that the ECL response denied"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/inputs/items/properties/aarm_requirement/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-requirement-outside-enum",
+      "negates": [
+        "AB1-009"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-requirement-outside-enum.json",
+      "requirement_ids": [
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name an AARM requirement that the pinned text does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-invalid-role-outside-enum",
+      "negates": [
+        "AB1-009"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-invalid-role-outside-enum.json",
+      "requirement_ids": [
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "name a role the record schema does not define"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1#/properties/decision/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "aarm-receipt-invalid-decision-outside-enum",
+      "negates": [
+        "AB1-009",
+        "XR1-023"
+      ],
+      "path": "conformance/suites/aarm-binding/aarm-receipt-invalid-decision-outside-enum.json",
+      "requirement_ids": [
+        "AB1-009",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-receipt-valid-terminal-event.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "record an AARM decision the value schema does not define"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1##root",
+        "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1#/properties/decision/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-receipt-valid-terminal-event",
+      "path": "conformance/suites/aarm-binding/aarm-receipt-valid-terminal-event.json",
+      "requirement_ids": [
+        "AB1-007",
+        "XR1-023"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/inputs/items/properties/aarm_requirement/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-allow-released",
+      "path": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+      "requirement_ids": [
+        "AB1-002",
+        "AB1-003",
+        "AB1-006",
+        "AB1-007",
+        "AB1-008",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/inputs/items/properties/aarm_requirement/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-defer-held",
+      "path": "conformance/suites/aarm-binding/aarm-valid-defer-held.json",
+      "requirement_ids": [
+        "AB1-003",
+        "AB1-005",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/inputs/items/properties/aarm_requirement/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-deny-recorded",
+      "path": "conformance/suites/aarm-binding/aarm-valid-deny-recorded.json",
+      "requirement_ids": [
+        "AB1-002",
+        "AB1-003",
+        "AB1-007",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/inputs/items/properties/aarm_requirement/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-judgment-source-admit",
+      "path": "conformance/suites/aarm-binding/aarm-valid-judgment-source-admit.json",
+      "requirement_ids": [
+        "AB1-002",
+        "AB1-006",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-modify-new-request",
+      "path": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+      "requirement_ids": [
+        "AB1-002",
+        "AB1-003",
+        "AB1-004",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-modify-not-applied-denied",
+      "path": "conformance/suites/aarm-binding/aarm-valid-modify-not-applied-denied.json",
+      "requirement_ids": [
+        "AB1-002",
+        "AB1-003",
+        "AB1-004",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/aarm-binding/aarm-valid-modify-new-request.json",
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "mutation",
+        "mutation": "change the debited account, from which the deployment derives the target, in the modified parameters, so that the MODIFY ends in deny of the original with no new request and no release"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/aarm_decision/properties/decision/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/inputs/items/properties/aarm_requirement/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/role/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "aarm-valid-step-up-challenged",
+      "path": "conformance/suites/aarm-binding/aarm-valid-step-up-challenged.json",
+      "requirement_ids": [
+        "AB1-003",
+        "AB1-005",
+        "AB1-006",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_aarm_binding_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    }
+  ]
+}

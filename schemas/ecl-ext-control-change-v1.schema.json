@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/control-change/1",
+  "title": "ECL control-change extension value v1",
+  "description": "The value of ecl.ext.control-change.v1: a change to an in-scope control, its requester, its approvers and its period (ECL1N-0166, ECL1N-0170, EBMP2-064).",
+  "type": "object",
+  "required": [
+    "control",
+    "change",
+    "change_digest",
+    "requested_by",
+    "approved_by",
+    "effective_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "control": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "change": {
+      "enum": [
+        "disable",
+        "bypass",
+        "auto_approve",
+        "modify",
+        "restore"
+      ]
+    },
+    "change_digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "requested_by": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "approved_by": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+      }
+    },
+    "effective_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "expires_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    }
+  }
+}

@@ -1,0 +1,910 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-oauth-authority",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-accepted-outside-entry-window",
+      "negates": [
+        "OA1-003"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-accepted-outside-entry-window.json",
+      "requirement_ids": [
+        "OA1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-accepted-within-clock-skew.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept the token within the clock-skew allowance after exp but after the end of its entry's window"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-signature-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-alg-none-accepted",
+      "negates": [
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-alg-none-accepted.json",
+      "requirement_ids": [
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept the same claims under alg none with no signature"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-delegation-without-act",
+      "negates": [
+        "OA1-006"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-delegation-without-act.json",
+      "requirement_ids": [
+        "OA1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "drop the act claim of the agent acting for the tenant"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-signature-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-ed448-token-accepted",
+      "negates": [
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-ed448-token-accepted.json",
+      "requirement_ids": [
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a token signed with Ed448 under the name EdDSA, outside the default set's Ed25519"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-entry-decision-null",
+      "negates": [
+        "OA1-001"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-entry-decision-null.json",
+      "requirement_ids": [
+        "OA1-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue an entry whose decision is null and accept its presentation"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-entry-max-uses-boolean",
+      "negates": [
+        "OA1-001"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-entry-max-uses-boolean.json",
+      "requirement_ids": [
+        "OA1-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue an entry whose max_uses is true where the admit grants one use, and accept its presentation"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-entry-other-parameters",
+      "negates": [
+        "OA1-001"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-entry-other-parameters.json",
+      "requirement_ids": [
+        "OA1-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue an entry whose parameter digest is not the admitted one, and present those parameters"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-expired-token-accepted",
+      "negates": [
+        "OA1-003"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-expired-token-accepted.json",
+      "requirement_ids": [
+        "OA1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept the token 9 s after it expired"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-forged-proof-accepted",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-forged-proof-accepted.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a DPoP proof that carries the bound key but is signed with another key"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "id": "oauth-invalid-fractional-iat-accepted",
+      "negates": [
+        "OA1-003",
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-fractional-iat-accepted.json",
+      "requirement_ids": [
+        "OA1-003",
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a token whose iat is a NumericDate with a fraction"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-signature-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-header-key-accepted",
+      "negates": [
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-header-key-accepted.json",
+      "requirement_ids": [
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept the claims signed by a key that the token's own header carries"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-lifetime-beyond-window",
+      "negates": [
+        "OA1-003"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-lifetime-beyond-window.json",
+      "requirement_ids": [
+        "OA1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue the token for 30 s, beyond the authorization's window"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-lifetime-zero",
+      "negates": [
+        "OA1-003"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-lifetime-zero.json",
+      "requirement_ids": [
+        "OA1-003"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-accepted-within-clock-skew.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue a token whose exp is its iat, and accept it within the clock-skew allowance"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-signature-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-list-alg-accepted",
+      "negates": [
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-list-alg-accepted.json",
+      "requirement_ids": [
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a token whose header gives alg as a list"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "id": "oauth-invalid-noncanonical-signature-accepted",
+      "negates": [
+        "OA1-001",
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-noncanonical-signature-accepted.json",
+      "requirement_ids": [
+        "OA1-001",
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue and accept a token whose signature segment sets an unused bit of its last base64url character, so that another token string carries the same signature; no verifier reads it as an admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "id": "oauth-invalid-not-sender-constrained",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-not-sender-constrained.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue the token without a cnf key and accept it"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "id": "oauth-invalid-null-thumbprint-accepted",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-null-thumbprint-accepted.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-mtls-eddsa-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "bind the token to an x5t#S256 of null and accept it presented with no client certificate"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-obligation-after-execution",
+      "negates": [
+        "OA1-008"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-obligation-after-execution.json",
+      "requirement_ids": [
+        "OA1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue a token despite an unsupported after_execution obligation"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-obligation-before-release",
+      "negates": [
+        "OA1-008"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-obligation-before-release.json",
+      "requirement_ids": [
+        "OA1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue a token despite an unsupported before_release obligation"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-obligation-during-execution",
+      "negates": [
+        "OA1-008"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-obligation-during-execution.json",
+      "requirement_ids": [
+        "OA1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue a token despite an unsupported during_execution obligation"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-other-audience-accepted",
+      "negates": [
+        "OA1-002"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-other-audience-accepted.json",
+      "requirement_ids": [
+        "OA1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-other-audience-refused.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept the token at a resource server it does not name"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-other-target-accepted",
+      "negates": [
+        "OA1-005"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-other-target-accepted.json",
+      "requirement_ids": [
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept the token for another account than the entry names"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "id": "oauth-invalid-oversized-integer-accepted",
+      "negates": [
+        "OA1-001",
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-oversized-integer-accepted.json",
+      "requirement_ids": [
+        "OA1-001",
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue and accept a token whose claims hold an integer of 4,301 digits, which no verifier reads as an admit"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-proof-jti-empty-accepted",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-proof-jti-empty-accepted.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a DPoP proof whose jti is the empty string"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-refusal-named.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-proof-jti-too-long-refused-as-replay",
+      "negates": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-proof-jti-too-long-refused-as-replay.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse with the replay code a DPoP proof whose jti has 257 characters, which fails check 4 of the presentation table"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-proof-other-key-accepted",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-proof-other-key-accepted.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a DPoP proof signed with a key that is not the token's cnf key"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-proof-without-jti-accepted",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-proof-without-jti-accepted.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a DPoP proof that carries no jti"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-refusal-named.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-refusal-other-error",
+      "negates": [
+        "OA1-011"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-refusal-other-error.json",
+      "requirement_ids": [
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse a token presented 9 s after it expired with the replay code instead of the expiry code"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1#/properties/result/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-refusal-without-error",
+      "negates": [
+        "OA1-010"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-refusal-without-error.json",
+      "requirement_ids": [
+        "OA1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-replayed-proof-refused.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "refuse without naming the registered error"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-replayed-proof-accepted",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-replayed-proof-accepted.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-replayed-proof-refused.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a DPoP proof whose jti was seen before"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-second-use-accepted",
+      "negates": [
+        "OA1-005"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-second-use-accepted.json",
+      "requirement_ids": [
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a second use of a single-use authorization"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-token-for-deny",
+      "negates": [
+        "OA1-008"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-token-for-deny.json",
+      "requirement_ids": [
+        "OA1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "present a token for a request whose response denied"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-expresses-admit.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-token-without-jti",
+      "negates": [
+        "OA1-001"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-token-without-jti.json",
+      "requirement_ids": [
+        "OA1-001"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "issue and accept a token without the jti that RFC 9068 requires"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-signature-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "oauth-invalid-token-without-kid-accepted",
+      "negates": [
+        "OA1-007"
+      ],
+      "path": "conformance/suites/oauth-authority/oauth-invalid-token-without-kid-accepted.json",
+      "requirement_ids": [
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "base_vector": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "mutation",
+        "mutation": "accept a token whose header names no kid, signed with the configured key"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "oauth-valid-accepted-within-clock-skew",
+      "path": "conformance/suites/oauth-authority/oauth-valid-accepted-within-clock-skew.json",
+      "requirement_ids": [
+        "OA1-003",
+        "OA1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "oauth-valid-dpop-es256-accepted",
+      "path": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+      "requirement_ids": [
+        "OA1-001",
+        "OA1-002",
+        "OA1-003",
+        "OA1-004",
+        "OA1-005",
+        "OA1-006",
+        "OA1-007",
+        "OA1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1#/properties/result/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "oauth-valid-first-cause-refused",
+      "path": "conformance/suites/oauth-authority/oauth-valid-first-cause-refused.json",
+      "requirement_ids": [
+        "OA1-002",
+        "OA1-003",
+        "OA1-010",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "oauth-valid-mtls-eddsa-accepted",
+      "path": "conformance/suites/oauth-authority/oauth-valid-mtls-eddsa-accepted.json",
+      "requirement_ids": [
+        "OA1-001",
+        "OA1-002",
+        "OA1-003",
+        "OA1-004",
+        "OA1-005",
+        "OA1-006",
+        "OA1-007",
+        "OA1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1#/properties/result/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "oauth-valid-other-audience-refused",
+      "path": "conformance/suites/oauth-authority/oauth-valid-other-audience-refused.json",
+      "requirement_ids": [
+        "OA1-002",
+        "OA1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root",
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1#/properties/result/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "oauth-valid-replayed-proof-refused",
+      "path": "conformance/suites/oauth-authority/oauth-valid-replayed-proof-refused.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_oauth_authority_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "binding"
+    }
+  ]
+}

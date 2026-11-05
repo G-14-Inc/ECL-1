@@ -1,0 +1,59 @@
+{
+  "schema_version": "ecl_registry_v2",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/media-types",
+  "registry_version": 1,
+  "status": "active",
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "id": "ecl.media.dcmp-json.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Canonical JSON representation of a DCMP-2 message.",
+      "attributes": {"media_type": "application/vnd.ecl.dcmp+json", "protocol": "DCMP-2", "canonicalization": "RFC 8785 with ECL restricted-number profile"}
+    },
+    {
+      "id": "ecl.media.ebmp-json.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Canonical JSON representation of an EBMP-2 event or manifest.",
+      "attributes": {"media_type": "application/vnd.ecl.ebmp+json", "protocol": "EBMP-2", "canonicalization": "RFC 8785 with ECL restricted-number profile"}
+    },
+    {
+      "id": "ecl.media.integrity-envelope-json.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Canonical JSON representation of an ECL integrity envelope.",
+      "attributes": {"media_type": "application/vnd.ecl.integrity-envelope+json", "protocol": "ECL-IE-1", "canonicalization": "RFC 8785 with ECL restricted-number profile"}
+    },
+    {
+      "id": "ecl.media.time-attestation-json.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.4",
+      "compatibility": "additive",
+      "description": "Canonical JSON representation of a time attestation carried in a trusted-time countersignature.",
+      "attributes": {"media_type": "application/vnd.ecl.time-attestation+json", "protocol": "ECL-IE-1", "canonicalization": "RFC 8785 with ECL restricted-number profile"}
+    },
+    {
+      "id": "ecl.media.bundle-zip.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "additive",
+      "description": "Deterministically assembled offline ECL evidence package.",
+      "attributes": {
+        "media_type": "application/vnd.ecl.bundle+zip",
+        "protocol": "EBMP-2",
+        "deterministic_profile": "profiles/OFFLINE-VERIFICATION-1.md",
+        "container_profile": "ecl.zip.store.v1"
+      }
+    }
+  ]
+}

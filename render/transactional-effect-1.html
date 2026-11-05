@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL Transactional Effect Profile 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-transactional-effect-profile-1">ECL Transactional Effect Profile 1</h1>
+<p>Requirement-IDs: compiled
+Version: 1.0
+Status: normative profile of ECL-1 Version 1.0, a published version</p>
+<p>This profile governs a declared action class over a store with the properties
+below. It is self-contained: the values a deployment chooses, such as the
+acknowledgment bound B and the maximum authorization validity, are parameters
+that a claim declares. The parenthesized CE labels name counterexamples of the
+informative catalog at the end of this profile: each is an adverse condition
+under which a test of the obligation is run, and a claim names its own test
+catalog under <a href="transactional-effect-1.html#TE1-013">TE1-013</a>. The store and clock assumptions stated in the
+obligations are part of the declared scope.</p>
+<p>The release boundary of an action under this profile (<a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a>) is the
+admission instant of <a href="transactional-effect-1.html#TE1-002">TE1-002</a>, and its effect boundary is the commit of the same
+transaction, which <a href="transactional-effect-1.html#TE1-002">TE1-002</a> and <a href="transactional-effect-1.html#TE1-004">TE1-004</a> bind to the admission and to the evidence
+of the effect.</p>
+<p><span id="TE1-001"><strong>TE1-001</strong></span><a class="requirement-link" href="#TE1-001" aria-label="Link to TE1-001">§</a> — The effect store MUST refuse changes to protected resources from every credential available to the SoI's services or agents except through the admission function. Credentials outside the declared trust boundary (store superuser, schema owner, host administrator) MUST be enumerated in the claim's negative boundary. (CE-13)</p>
+<p><span id="TE1-002"><strong>TE1-002</strong></span><a class="requirement-link" href="#TE1-002" aria-label="Link to TE1-002">§</a> — Before evaluating authority, time, control state and preconditions, admission MUST establish mutual exclusion against every control change and competing effect that could invalidate those evaluations, using a declared total lock order whose control-change conflicts are <strong>fairly queued</strong> (a waiting control change MUST NOT be overtaken indefinitely by later-arriving compatible work); MUST evaluate all of them at one admission instant from the declared time source while that exclusion holds; and MUST commit the effect atomically with the admission. An equivalent isolation mechanism MAY substitute under <a href="ecl-1_standard.html#ECL1N-0061">ECL1N-0061</a> with evidence. (CE-01, CE-05, CE-32)</p>
+<p><span id="TE1-003"><strong>TE1-003</strong></span><a class="requirement-link" href="#TE1-003" aria-label="Link to TE1-003">§</a> — An action key MUST produce at most one committed effect, and a charged use of authority MUST produce at most one committed effect, across retries, reissues, concurrent duplicates, crashes and recovery. (CE-02..04, CE-08)</p>
+<p><span id="TE1-004"><strong>TE1-004</strong></span><a class="requirement-link" href="#TE1-004" aria-label="Link to TE1-004">§</a> — Evidence of a committed effect MUST be committed atomically with the effect, and the store MUST refuse a terminal record that contradicts the presence or absence of the effect. Evidence of a non-effect outcome MUST be durable before the outcome is reported. An artifact MUST NOT be fabricated for a dependency that produced none. (CE-09, CE-30, CE-11)</p>
+<p><span id="TE1-005"><strong>TE1-005</strong></span><a class="requirement-link" href="#TE1-005" aria-label="Link to TE1-005">§</a> — A control change MUST be acknowledged only after it is durable; every effect MUST be serialized entirely before or after each control change affecting its scope; after acknowledgment no effect depending on the halted scope or revoked authority may commit. The acknowledgment bound B MUST be declared and enforced — a single acknowledgment attempt MUST succeed within B under sustained admission load and against sessions that override cooperative timeouts, if necessary by terminating the conflicting effect and issuance sessions. Contention between two emergency-plane operations is outside B, and each such operation MUST NOT hold its transaction open. (CE-05, CE-12, CE-31, CE-32)</p>
+<p><span id="TE1-006"><strong>TE1-006</strong></span><a class="requirement-link" href="#TE1-006" aria-label="Link to TE1-006">§</a> — A retry with the same action key and request digest MUST return the committed outcome without re-applying the effect, and MUST NOT report a committed success as denied. A same-key request with a different digest MUST be rejected as a distinct intent. (CE-04, CE-08)</p>
+<p><span id="TE1-007"><strong>TE1-007</strong></span><a class="requirement-link" href="#TE1-007" aria-label="Link to TE1-007">§</a> — Non-release outcomes MUST NOT emit <code>authority_consumed</code> or <code>execution_released</code>, MUST NOT carry side effects, and MUST be recorded with their own EBMP-2 non-release state (<code>denied</code>, <code>held</code>, <code>challenged</code>, <code>expired_before_release</code>), never coerced into another state. (CE-21, CE-22)</p>
+<p><span id="TE1-008"><strong>TE1-008</strong></span><a class="requirement-link" href="#TE1-008" aria-label="Link to TE1-008">§</a> — The applied parameters, target and expected precondition MUST be exactly those bound by the admitted authorization; that authorization MUST be verifiably bound to the action key and request digest; and admission MUST refuse an authorization whose bound values differ from those the enforcement point requested. (CE-14, CE-28)</p>
+<p><span id="TE1-009"><strong>TE1-009</strong></span><a class="requirement-link" href="#TE1-009" aria-label="Link to TE1-009">§</a> — Every decision about time MUST use one declared time source of a declared time class; the deployment MUST declare the source's discipline and the verifier-facing skew policy; admission MUST reject an instant earlier than the authorization's issue time; and the claim MUST declare a maximum authorization validity, which producer, consumer and verifier MUST each enforce by rejecting a longer validity. (CE-16, CE-27)</p>
+<p><span id="TE1-010"><strong>TE1-010</strong></span><a class="requirement-link" href="#TE1-010" aria-label="Link to TE1-010">§</a> — Authority quota MUST be accounted in charged uses: a charge is consumed at most once per action key, never re-consumed by reissue or retry, MUST NOT exceed the grant's maximum, and a charged action later denied at admission still consumes its charge. The profile MUST state this consumption rule. (CE-24)</p>
+<p><span id="TE1-011"><strong>TE1-011</strong></span><a class="requirement-link" href="#TE1-011" aria-label="Link to TE1-011">§</a> — Each terminal outcome class MUST yield the evidence set that the TRANSACTIONAL-EFFECT-1 outcome evidence table gives for it, carrying its primary reason as a registered identifier; requests rejected before an action is claimed are outside evidence scope and the claim MUST say so. (CE-21, CE-25)</p>
+<p><span id="TE1-012"><strong>TE1-012</strong></span><a class="requirement-link" href="#TE1-012" aria-label="Link to TE1-012">§</a> — The emergency control plane (halt, resume, revoke) MUST be authenticated separately from policy administration, restricted to containment actions, and separately audited; its use MUST be visible in the control event stream. (CE-13, CE-31)</p>
+<p><span id="TE1-013"><strong>TE1-013</strong></span><a class="requirement-link" href="#TE1-013" aria-label="Link to TE1-013">§</a> — A claim of this profile MUST name its counterexample-test catalog,
+store, action class and declared bound B under which it was demonstrated, and
+MUST label effect evidence issuer-asserted unless corroborated.</p>
+<h2 id="outcome-evidence-table">Outcome evidence table</h2>
+<p>The envelopes of each outcome class's evidence bundle, in causal order, and its
+terminal reason. A terminal reason is a registered identifier carried in the
+extension <code>ecl.ext.outcome-reason.v1</code>; &quot;bound&quot; means the terminal event names the
+response as its <code>decision</code> reference by identifier and digest. Corroborating
+observations attach through the bundle's <code>observations</code> member and are not
+produced by the enforcement point.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Outcome class</th>
+<th scope="col">Envelopes, in causal order</th>
+<th scope="col">Terminal reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rejected before an action is claimed</td>
+<td>None: outside evidence scope (<a href="transactional-effect-1.html#TE1-011">TE1-011</a>)</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Succeeded</td>
+<td>request; response (<code>admit</code>); <code>authority_consumed</code>; <code>execution_released</code>; <code>execution_terminal</code> (<code>succeeded</code>)</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Denied by the decision point</td>
+<td>request; response (<code>deny</code>), bound; <code>execution_terminal</code> (<code>denied</code>)</td>
+<td>The response's primary reason</td>
+</tr>
+<tr>
+<td>Denied at admission</td>
+<td>request; response (<code>admit</code>), bound; <code>execution_terminal</code> (<code>denied</code>); no <code>authority_consumed</code> or <code>execution_released</code></td>
+<td>The admission refusal's registered reason</td>
+</tr>
+<tr>
+<td>Expired before release</td>
+<td>request; response (<code>admit</code>), bound; <code>execution_terminal</code> (<code>expired_before_release</code>); no <code>authority_consumed</code> or <code>execution_released</code></td>
+<td><code>ecl.error.expired.v1</code></td>
+</tr>
+<tr>
+<td>Held or challenged</td>
+<td>request; response (<code>hold</code> or <code>challenge</code>), bound; <code>execution_terminal</code> (<code>held</code> or <code>challenged</code>)</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>Obligations unsupported</td>
+<td>request; response (<code>admit</code> with obligations), bound; <code>execution_terminal</code> (<code>denied</code>); no <code>authority_consumed</code> or <code>execution_released</code></td>
+<td><code>ecl.error.safe-state-required.v1</code></td>
+</tr>
+<tr>
+<td>Decision point unavailable</td>
+<td>request; <code>execution_terminal</code> (<code>denied</code>); no decision-point object, and none fabricated</td>
+<td><code>ecl.error.dependency-unavailable.v1</code></td>
+</tr>
+<tr>
+<td>Decision point response invalid</td>
+<td>request; <code>execution_terminal</code> (<code>denied</code>); the invalid artifact kept outside the bundle</td>
+<td><code>ecl.error.integrity-invalid.v1</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="evidence-and-counterexamples-informative">Evidence and counterexamples (informative)</h2>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Kind</th>
+<th scope="col">What the citation establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vectors</td>
+<td>Message semantics and offline artifact checks</td>
+</tr>
+<tr>
+<td>Counterexample tests</td>
+<td>Each obligation under the adverse conditions its CE labels name, against the declared store, action class, clock and load</td>
+</tr>
+</tbody>
+</table>
+<p>The CE labels name the adverse conditions in the last table below. A claim
+names its own counterexample-test catalog under <a href="transactional-effect-1.html#TE1-013">TE1-013</a>; these labels are one
+set of conditions that such a catalog can cover. Passing an offline signature
+check does not prove its transaction, clock or privilege properties. The
+profile itself makes no observer-independence or assessment-class claim.
+Privileged store operators and the signer's possible backdating remain
+disclosed claim boundaries.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Profile requirement</th>
+<th scope="col">Counterexamples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-001">TE1-001</a></td>
+<td>CE-13</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-002">TE1-002</a></td>
+<td>CE-01, CE-05, CE-32</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-003">TE1-003</a></td>
+<td>CE-02..04, CE-08</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-004">TE1-004</a></td>
+<td>CE-09, CE-30, CE-11</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-005">TE1-005</a></td>
+<td>CE-05, CE-12, CE-31, CE-32</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-006">TE1-006</a></td>
+<td>CE-04, CE-08</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-007">TE1-007</a></td>
+<td>CE-21, CE-22</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-008">TE1-008</a></td>
+<td>CE-14, CE-28</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-009">TE1-009</a></td>
+<td>CE-16, CE-27</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-010">TE1-010</a></td>
+<td>CE-24</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-011">TE1-011</a></td>
+<td>CE-21, CE-25</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-012">TE1-012</a></td>
+<td>CE-13, CE-31</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-013">TE1-013</a></td>
+<td>The claim's declared catalog, store, action class, B and corroboration provenance</td>
+</tr>
+</tbody>
+</table>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Counterexample</th>
+<th scope="col">Adverse condition</th>
+<th scope="col">Required result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CE-01</td>
+<td>The lock on the protected record is held past the authorization's <code>valid_until</code> while admission waits</td>
+<td>Denied as expired before release; no effect; the charged use is consumed</td>
+</tr>
+<tr>
+<td>CE-02</td>
+<td>Two generations of authorization for one action race</td>
+<td>One effect; both callers see the same terminal outcome</td>
+</tr>
+<tr>
+<td>CE-03</td>
+<td>Many concurrent identical requests share one action key</td>
+<td>One effect and identical responses</td>
+</tr>
+<tr>
+<td>CE-04</td>
+<td>One action key is used by two principals or tenants, or with a changed body</td>
+<td>Independent actions for different principals or tenants; a changed body is refused as a distinct intent</td>
+</tr>
+<tr>
+<td>CE-05</td>
+<td>A halt arrives while an effect transaction waits on the record</td>
+<td>The effect commits before the halt or is denied; nothing commits after the acknowledgment</td>
+</tr>
+<tr>
+<td>CE-08</td>
+<td>The connection is lost after the commit is sent</td>
+<td>A retry returns the stored committed outcome; one effect</td>
+</tr>
+<tr>
+<td>CE-09</td>
+<td>The signer fails inside the effect transaction</td>
+<td>The transaction rolls back with no effect; a retry succeeds once</td>
+</tr>
+<tr>
+<td>CE-11</td>
+<td>The decision point does not answer</td>
+<td>Denied for an unavailable dependency; no decision-point object is fabricated, and the bundle verifies</td>
+</tr>
+<tr>
+<td>CE-12</td>
+<td>A halt arrives against effect transactions in flight</td>
+<td>Acknowledged within the declared bound B</td>
+</tr>
+<tr>
+<td>CE-13</td>
+<td>Each credential available to the services and agents attempts direct changes to protected resources, privilege changes and changes to evidence</td>
+<td>Refused, apart from operations the claim declares and bounds</td>
+</tr>
+<tr>
+<td>CE-14</td>
+<td>A changed parameter under the same action key, or another action's authorization</td>
+<td>Refused</td>
+</tr>
+<tr>
+<td>CE-16</td>
+<td>An authorization whose issue time is later than the admission instant</td>
+<td>Refused as a clock rollback</td>
+</tr>
+<tr>
+<td>CE-21</td>
+<td>Actions admitted and then denied, and actions whose authorization expired</td>
+<td>Each bundle verifies with its recorded non-release state, the authority issued and unused, never <code>incomplete</code></td>
+</tr>
+<tr>
+<td>CE-22</td>
+<td>A <code>hold</code> or <code>challenge</code>, or an <code>admit</code> with obligations the enforcement point does not support</td>
+<td>No effect; the terminal state is <code>held</code>, <code>challenged</code> or <code>denied</code>; every bundle verifies</td>
+</tr>
+<tr>
+<td>CE-24</td>
+<td>The authorization's maximum number of uses is reached</td>
+<td>Further actions are refused; retries of charged actions still complete; a charged action denied later has consumed its charge</td>
+</tr>
+<tr>
+<td>CE-25</td>
+<td>Oversized and malformed input</td>
+<td>Refused before any work on the store; no secret in any log or bundle</td>
+</tr>
+<tr>
+<td>CE-27</td>
+<td>The enforcement point's host clock is skewed by minutes</td>
+<td>No protocol timestamp or verdict changes</td>
+</tr>
+<tr>
+<td>CE-28</td>
+<td>A stored authorization whose bound values differ from the enforcement point's request</td>
+<td>Refused</td>
+</tr>
+<tr>
+<td>CE-30</td>
+<td>A committed effect with a terminal record of denial, or a success record with no effect</td>
+<td>Both refused, and the transaction rolls back</td>
+</tr>
+<tr>
+<td>CE-31</td>
+<td>A session disables its timeouts, admits an action and stalls, and then a halt arrives</td>
+<td>Acknowledged within B by ending the session; the stalled transaction never commits; later admissions are denied</td>
+</tr>
+<tr>
+<td>CE-32</td>
+<td>A halt arrives during a sustained stream of admissions</td>
+<td>One acknowledgment within B; every effect commits before the halt</td>
+</tr>
+</tbody>
+</table>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>profiles/TRANSACTIONAL-EFFECT-1.md</code>, SHA-256 <code>c4b7db9ab00a1d8b0d12037d8f68512e120da6dd1ceef2d5e16876df9c0ae071</code></dd>
+<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

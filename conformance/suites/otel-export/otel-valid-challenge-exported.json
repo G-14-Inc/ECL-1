@@ -1,0 +1,210 @@
+{
+  "bundle_id": "urn:example:bundle:otel-export-1",
+  "evidence_after": {
+    "challenge_id": "urn:example:challenge:otel-transfer",
+    "deadline": "2026-09-30T09:00:30.000000Z",
+    "expires_at": "2026-09-30T09:00:30.000000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.000000Z",
+    "issuer": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "urn:example:message:otel-transfer-challenge",
+    "message_type": "challenge",
+    "on_timeout": "deny",
+    "protocol": "DCMP-2",
+    "request_id": "https://externalcontrollayer.ai/ns/message/sha256/c53ebc81b6bf449d30dab73ed2e672bde993d631de5909a20af3c30af9928335",
+    "requirements": [
+      {
+        "id": "urn:example:obligation:otel-transfer-witness",
+        "satisfaction": "before_release",
+        "type": "ecl.obligation.verify-witness.v1",
+        "value": "urn:example:witness:balance"
+      }
+    ],
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:otel-transfer",
+      "sequence": 1,
+      "workflow_id": "urn:example:workflow:otel-transfer"
+    }
+  },
+  "export": {
+    "attempted_at": "2026-09-30T09:00:01.000000Z",
+    "status": "exported"
+  },
+  "log_record": {
+    "attributes": [
+      {
+        "key": "ecl.evidence.bundle",
+        "value": {
+          "stringValue": "urn:example:bundle:otel-export-1"
+        }
+      },
+      {
+        "key": "ecl.export.key_id",
+        "value": {
+          "stringValue": "urn:example:export-key:otel-vectors-1"
+        }
+      },
+      {
+        "key": "ecl.export.profile",
+        "value": {
+          "stringValue": "OTEL-EVIDENCE-EXPORT-1/1.0"
+        }
+      },
+      {
+        "key": "ecl.issuer.id",
+        "value": {
+          "stringValue": "urn:example:agent:bindings"
+        }
+      },
+      {
+        "key": "ecl.object.digest",
+        "value": {
+          "stringValue": "791bd8d2d07a64f4c8ffc57eeba1a6e4092318bf36098d21bf010459b39f4588"
+        }
+      },
+      {
+        "key": "ecl.object.id",
+        "value": {
+          "stringValue": "urn:example:message:otel-transfer-challenge"
+        }
+      },
+      {
+        "key": "ecl.object.type",
+        "value": {
+          "stringValue": "challenge"
+        }
+      },
+      {
+        "key": "ecl.protocol",
+        "value": {
+          "stringValue": "DCMP-2"
+        }
+      },
+      {
+        "key": "ecl.request.id",
+        "value": {
+          "stringValue": "https://externalcontrollayer.ai/ns/message/sha256/c53ebc81b6bf449d30dab73ed2e672bde993d631de5909a20af3c30af9928335"
+        }
+      },
+      {
+        "key": "ecl.workflow.attempt",
+        "value": {
+          "intValue": "1"
+        }
+      },
+      {
+        "key": "ecl.workflow.id",
+        "value": {
+          "stringValue": "urn:example:workflow:otel-transfer"
+        }
+      },
+      {
+        "key": "ecl.workflow.root_trace_id",
+        "value": {
+          "stringValue": "urn:example:trace:otel-transfer"
+        }
+      },
+      {
+        "key": "ecl.workflow.sequence",
+        "value": {
+          "intValue": "1"
+        }
+      }
+    ],
+    "eventName": "ecl.dcmp.challenge",
+    "observedTimeUnixNano": "1790758801000000000",
+    "severityNumber": 9,
+    "severityText": "INFO",
+    "timeUnixNano": "1790758800000000000"
+  },
+  "object": {
+    "challenge_id": "urn:example:challenge:otel-transfer",
+    "deadline": "2026-09-30T09:00:30.000000Z",
+    "expires_at": "2026-09-30T09:00:30.000000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.000000Z",
+    "issuer": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "urn:example:message:otel-transfer-challenge",
+    "message_type": "challenge",
+    "on_timeout": "deny",
+    "protocol": "DCMP-2",
+    "request_id": "https://externalcontrollayer.ai/ns/message/sha256/c53ebc81b6bf449d30dab73ed2e672bde993d631de5909a20af3c30af9928335",
+    "requirements": [
+      {
+        "id": "urn:example:obligation:otel-transfer-witness",
+        "satisfaction": "before_release",
+        "type": "ecl.obligation.verify-witness.v1",
+        "value": "urn:example:witness:balance"
+      }
+    ],
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:otel-transfer",
+      "sequence": 1,
+      "workflow_id": "urn:example:workflow:otel-transfer"
+    }
+  },
+  "profile": "OTEL-EVIDENCE-EXPORT-1/1.0",
+  "schema_version": "ecl_otel_export_record_v1"
+}

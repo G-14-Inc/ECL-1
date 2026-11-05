@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/requirement-evaluation-catalog/2",
+  "title": "ECL Requirement Evaluation Catalog v2",
+  "description": "For each compiled requirement: its evaluation class, the vectors and tests that evaluate it, the tests that only trace it, and what an assessor does with which evidence.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate_version",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_requirement_evaluation_catalog_v2"
+    },
+    "candidate_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "required": [
+          "requirement_id",
+          "requirement_text_sha256",
+          "evaluation_class",
+          "method",
+          "evaluation_refs",
+          "traceability_refs",
+          "evidence_obligations",
+          "conformance_roles",
+          "implementation_groups",
+          "procedure",
+          "pass_criteria",
+          "fail_criteria"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          },
+          "requirement_text_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "evaluation_class": {
+            "enum": [
+              "vector-tested",
+              "reference-tested",
+              "assessor-procedure",
+              "self-declaration"
+            ]
+          },
+          "method": {
+            "enum": [
+              "automated",
+              "human_assessed",
+              "hybrid"
+            ]
+          },
+          "evaluation_refs": {
+            "description": "The vectors that negate the requirement, each as conformance.vector:<id>. A reference-tested requirement lists none: the tests of the maintainer's own implementation are not part of the public package.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^conformance\\.vector:[a-z0-9][a-z0-9-]*$"
+            }
+          },
+          "traceability_refs": {
+            "description": "The vectors that cite the requirement without negating it, each as conformance.vector:<id>; they trace the requirement and are not evaluations.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^conformance\\.vector:[a-z0-9][a-z0-9-]*$"
+            }
+          },
+          "evidence_obligations": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "conformance_roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "implementation_groups": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]*$"
+            }
+          },
+          "procedure": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "pass_criteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "fail_criteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "evaluation_class": {
+                  "const": "vector-tested"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evaluation_refs": {
+                  "minItems": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "evaluation_refs": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

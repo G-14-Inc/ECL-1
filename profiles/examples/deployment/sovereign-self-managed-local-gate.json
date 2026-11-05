@@ -1,0 +1,112 @@
+{
+  "schema_version": "ecl_deployment_profile_v1",
+  "profile_id": "urn:example:ecl:profile:sovereign-self-managed-local-gate",
+  "profile_version": "1",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "5151515151515151515151515151515151515151515151515151515151515151"
+  },
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:sovereign",
+    "version": "1"
+  },
+  "claim_level": 3,
+  "model": "sovereign-self-managed",
+  "delivery_surfaces": [
+    "local_gate",
+    "self_managed_control_plane",
+    "offline_verifier"
+  ],
+  "release_path": {
+    "enforcement_location": "same_host_sidecar",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true,
+    "decision_timeout_milliseconds": 20,
+    "network_loss_disposition": "bounded_degraded_then_restricted"
+  },
+  "dependencies": [
+    {
+      "dependency_id": "urn:example:ecl:dependency:sovereign-policy-store",
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 3600,
+      "integrity_required": true,
+      "failure_disposition": "restricted"
+    }
+  ],
+  "timing_case": {
+    "uses_default_baseline": true,
+    "connected_revocation_seconds": 300,
+    "offline_staleness_seconds": 3600,
+    "evidence_export_seconds": 14400,
+    "trusted_time_or_secure_monotonic": true,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:sovereign-l3",
+      "version": "1"
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "entry_conditions": [
+        "self-managed control-plane synchronization fails"
+      ],
+      "signed_cached_state_required": true,
+      "bounded_actions": [
+        "locally authorized reversible actions"
+      ],
+      "expires_to": "restricted"
+    },
+    "restricted": {
+      "entry_conditions": [
+        "local control state exceeds its staleness budget"
+      ],
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ]
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "local trust root or policy integrity fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ]
+  },
+  "evidence_custody": {
+    "local_append_only_buffer": true,
+    "export_integrity": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:sovereign",
+      "version": "1"
+    },
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:sovereign",
+      "version": "1"
+    }
+  },
+  "topology_controls": {
+    "sovereign": {
+      "local_policy_control": true,
+      "local_key_control": true,
+      "local_evidence_control": true,
+      "residency_boundary": "urn:example:ecl:residency:customer-jurisdiction"
+    }
+  },
+  "sector_profile_references": [
+    {
+      "uri": "urn:example:ecl:sector-profile:regulated-sovereign",
+      "version": "1"
+    }
+  ],
+  "residual_risks": [
+    "The customer owns operational availability and key-custody controls inside the sovereign boundary."
+  ]
+}

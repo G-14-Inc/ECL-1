@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/cross-implementation-report/2",
+  "title": "ECL Cross-Implementation Report v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_version",
+    "profile_version",
+    "decision",
+    "implementation",
+    "suite",
+    "network_used",
+    "time_policies",
+    "vector_results",
+    "evidence",
+    "limitations",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_cross_implementation_report_v2"
+    },
+    "candidate_version": {
+      "const": "1.0"
+    },
+    "profile_version": {
+      "const": "2"
+    },
+    "decision": {
+      "enum": [
+        "pass",
+        "fail",
+        "not_run"
+      ],
+      "description": "fail when any vector the implementation evaluated is not-met; pass otherwise, including when vectors of optional capabilities it does not declare are unsupported; not_run only in an unexecuted template, which has no results."
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "source_repository",
+        "source_revision",
+        "source_tree_sha256",
+        "language",
+        "runtime",
+        "maintainer",
+        "relationship_disclosure",
+        "imports_ecl_reference",
+        "capabilities"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_tree_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maintainer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relationship_disclosure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "imports_ecl_reference": {
+          "const": false
+        },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "strict-json",
+              "canonical-digest",
+              "semantic-rules",
+              "safe-state-profile-rules",
+              "schema-validation",
+              "trust-policy-load",
+              "envelope-signature-verification",
+              "evidence-bundle-verification",
+              "control-extension-rules",
+              "binding-profile-rules",
+              "decision-basis-rule",
+              "document-validation",
+              "extension-version-rule",
+              "document-extension-rules",
+              "key-role-separation",
+              "binding-basis-agreement-rule",
+              "otel-export-keyed-digests",
+              "offline-package-verification"
+            ]
+          }
+        }
+      }
+    },
+    "suite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "manifest_sha256",
+        "vector_count",
+        "corpus_version"
+      ],
+      "properties": {
+        "id": {
+          "const": "ecl-1-v1.0-shared",
+          "description": "The identifier of the shared corpus."
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The SHA-256, in lowercase hexadecimal, of the exact bytes of conformance/shared-corpus.json, the frozen corpus the run used. The member keeps the name it had in report version 1, where it bound the RC-3 suite manifest."
+        },
+        "vector_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of vectors the corpus names, which is also the number of result rows."
+        },
+        "corpus_version": {
+          "const": 1,
+          "description": "The corpus's own version member."
+        }
+      }
+    },
+    "network_used": {
+      "type": "boolean"
+    },
+    "time_policies": {
+      "description": "The verification-time policies the implementation applied, stage by stage (INTEGRITY-ENVELOPE-1, IE1-023), as conformance/README.md fixes them for the corpus. A report states envelope when the implementation declares envelope-signature-verification, evidence-bundle when it declares evidence-bundle-verification, and package when it declares offline-package-verification.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "envelope": {
+          "description": "Each envelope is verified at its payload's own time under the payload's signed verification-time policy: issued_at under ecl.time.issued-at.v1 for a DCMP-2 payload, observed_at under ecl.time.observed-at.v1 for an EBMP-2 payload.",
+          "const": [
+            "ecl.time.issued-at.v1",
+            "ecl.time.observed-at.v1"
+          ]
+        },
+        "evidence-bundle": {
+          "description": "Each bundle is verified under the reference verification profile, or under the reference trusted-time profile when the vector sets require_trusted_time: historical validity at each object's own time, or at its trusted time, and current status at the vector's evaluated_at (EBMP2-057, IE1-034, TP1-006).",
+          "const": [
+            "ecl.verification-profile.reference-trusted-time.v1",
+            "ecl.verification-profile.reference.v1"
+          ]
+        },
+        "package": {
+          "description": "The evidence bundle that each offline package carries is verified as the evidence-bundle stage verifies a bundle, under the caller's trust policy and the vector's evaluated_at, never under material the package carries (IE1-022).",
+          "const": [
+            "ecl.verification-profile.reference-trusted-time.v1",
+            "ecl.verification-profile.reference.v1"
+          ]
+        }
+      }
+    },
+    "vector_results": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "suite",
+          "artifact_sha256",
+          "expected",
+          "status",
+          "observed_secondary_ids",
+          "raw_result_sha256"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "The SHA-256 of the exact bytes of the vector's artifact."
+          },
+          "expected": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "raw_result_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "The SHA-256 of the exact bytes of the evidence file that holds this row's raw result (https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/2)."
+          },
+          "suite": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "met",
+              "not-met",
+              "unsupported"
+            ]
+          },
+          "observed_primary_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "observed_secondary_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "unsupported_capability": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "unsupported"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "unsupported_capability"
+              ],
+              "not": {
+                "required": [
+                  "observed_primary_id"
+                ]
+              },
+              "properties": {
+                "observed_secondary_ids": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "else": {
+              "required": [
+                "observed_primary_id"
+              ],
+              "not": {
+                "required": [
+                  "unsupported_capability"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "observed_primary_id"
+              ],
+              "properties": {
+                "observed_primary_id": {
+                  "type": "null"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "observed_secondary_ids": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._/-]+$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "claim_boundary": {
+      "const": "cross-implementation-replay-only-not-independent-assessment"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "not_run"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "vector_results": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "vector_results": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "description": "A report of one implementation's replay of the shared corpus of ECL-1 Version 1.0, in the form of the conformance report template (conformance/report-template-v2.json). The decision is fail when an evaluated vector is not-met and pass otherwise; vectors of optional capabilities that the implementation does not declare are unsupported and do not change it."
+}

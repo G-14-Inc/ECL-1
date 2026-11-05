@@ -1,0 +1,95 @@
+{
+  "epoch": 1,
+  "keys": [
+    {
+      "key_id": "urn:example:key:vector-ed",
+      "principal": "urn:example:agent:vector",
+      "public_key": "A6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1",
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-p256",
+      "principal": "urn:example:agent:vector",
+      "public_key": "BGsX0fLhLEJH+Lzm5WOkQPJ3A32BLeszoPShOUXYmMKWT+NC4v4af5uO5+tKfA+eFivOM1drMV7Oy7ZAaDe/UfU=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1",
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ecdsa-p256-sha256.v1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-event",
+      "principal": "urn:example:agent:vector",
+      "public_key": "ebVWLo/mVPlAeLES6KmLp5AfhTrmlb7X4OORC60ElmQ=",
+      "purposes": [
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-mixed",
+      "principal": "urn:example:agent:vector",
+      "public_key": "mFGerfNbmVIztRtc0j6cxaKLY5taSvDskDy5YNgbeBk=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-base",
+      "principal": "urn:example:agent:vector",
+      "public_key": "WGZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-revoked",
+      "principal": "urn:example:agent:vector",
+      "public_key": "ULKen6Y4iPgSsbvJqMaExXgA2F8+UEsuE0aFJaUNlR4=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-future",
+      "principal": "urn:example:agent:vector",
+      "public_key": "VCgh6VKd0a0kO/3/XGQKZRlLSBaYemUN6GHXzp5BemM=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-12-01T00:00:00Z"
+    }
+  ],
+  "policy_id": "urn:example:trust-policy:vectors",
+  "revocation_policy": "ecl.revocation.offline-bundle.v1",
+  "revocations": [
+    {
+      "effective_at": "2027-02-01T00:00:00Z",
+      "key_id": "urn:example:key:vector-ed",
+      "reason": "test-only revocation after the key use window"
+    },
+    {
+      "effective_at": "2026-06-01T00:00:00Z",
+      "key_id": "urn:example:key:vector-revoked",
+      "reason": "test-only revocation before the request"
+    }
+  ],
+  "schema_version": "ecl_trust_policy_v1",
+  "version": "1"
+}

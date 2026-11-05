@@ -1,0 +1,297 @@
+{
+  "schema_version": "ecl_registry_v2",
+  "registry_id": "https://externalcontrollayer.ai/ns/registry/protocol-values",
+  "registry_version": 1,
+  "status": "active",
+  "change_control": "governance/REGISTRY_POLICY.md",
+  "entries": [
+    {
+      "id": "ecl.decision.admit.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The evaluated action may be released only under the issued transaction-bound authority and obligations.",
+      "attributes": {"domain": "decision_outcome", "wire_value": "admit", "issues_authority": true}
+    },
+    {
+      "id": "ecl.decision.deny.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The evaluated action is not authorized for release.",
+      "attributes": {"domain": "decision_outcome", "wire_value": "deny", "issues_authority": false}
+    },
+    {
+      "id": "ecl.decision.hold.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The action remains unreleased pending an explicit subsequent decision or expiry.",
+      "attributes": {"domain": "decision_outcome", "wire_value": "hold", "issues_authority": false}
+    },
+    {
+      "id": "ecl.decision.challenge.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Additional bounded evidence or response is required before a new decision can be made.",
+      "attributes": {"domain": "decision_outcome", "wire_value": "challenge", "issues_authority": false}
+    },
+    {
+      "id": "ecl.authority.issued.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Authority has been created but is not represented as consumed.",
+      "attributes": {"domain": "authority_state", "wire_value": "issued", "terminal": false}
+    },
+    {
+      "id": "ecl.authority.active.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Authority is valid for evaluation under its declared scope and time policy.",
+      "attributes": {"domain": "authority_state", "wire_value": "active", "terminal": false}
+    },
+    {
+      "id": "ecl.authority.consumed.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "A use governed by the authority has been recorded and counts against its use policy.",
+      "attributes": {"domain": "authority_state", "wire_value": "consumed", "terminal": true}
+    },
+    {
+      "id": "ecl.authority.revoked.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Authority is no longer acceptable for the specified purpose and effective time.",
+      "attributes": {"domain": "authority_state", "wire_value": "revoked", "terminal": true}
+    },
+    {
+      "id": "ecl.authority.expired.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Authority is outside its validity interval.",
+      "attributes": {"domain": "authority_state", "wire_value": "expired", "terminal": true}
+    },
+    {
+      "id": "ecl.authority.superseded.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "A successor authority is preferred while the predecessor remains historical evidence.",
+      "attributes": {"domain": "authority_state", "wire_value": "superseded", "terminal": true}
+    },
+    {
+      "id": "ecl.execution.not-started.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The attempt has not entered preparation or external release.",
+      "attributes": {"domain": "execution_state", "wire_value": "not_started", "terminal": false, "effect_released": false}
+    },
+    {
+      "id": "ecl.execution.prepared.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The attempt is prepared but has not crossed the release boundary.",
+      "attributes": {"domain": "execution_state", "wire_value": "prepared", "terminal": false, "effect_released": false}
+    },
+    {
+      "id": "ecl.execution.released.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The attempt crossed the declared external-effect release boundary.",
+      "attributes": {"domain": "execution_state", "wire_value": "released", "terminal": false, "effect_released": true}
+    },
+    {
+      "id": "ecl.execution.running.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Execution is observed as in progress after release.",
+      "attributes": {"domain": "execution_state", "wire_value": "running", "terminal": false, "effect_released": true}
+    },
+    {
+      "id": "ecl.execution.succeeded.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The declared observation boundary supports successful completion.",
+      "attributes": {"domain": "execution_state", "wire_value": "succeeded", "terminal": true, "effect_released": true}
+    },
+    {
+      "id": "ecl.execution.failed.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The declared observation boundary supports execution failure after release.",
+      "attributes": {"domain": "execution_state", "wire_value": "failed", "terminal": true, "effect_released": true}
+    },
+    {
+      "id": "ecl.execution.partially-succeeded.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Some declared effects succeeded while others failed, remain pending, or are unknown.",
+      "attributes": {"domain": "execution_state", "wire_value": "partially_succeeded", "terminal": true, "effect_released": true, "residual_evidence_required": true}
+    },
+    {
+      "id": "ecl.execution.cancelled.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Cancellation was requested or completed; known effects and uncertainty remain explicit.",
+      "attributes": {"domain": "execution_state", "wire_value": "cancelled", "terminal": true, "effect_released": true, "residual_evidence_required": true}
+    },
+    {
+      "id": "ecl.execution.timed-out.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The observation deadline elapsed without proving a different terminal outcome.",
+      "attributes": {"domain": "execution_state", "wire_value": "timed_out", "terminal": true, "effect_released": true, "residual_evidence_required": true}
+    },
+    {
+      "id": "ecl.execution.rolled-back.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "A separately authorized rollback effect completed; the original outcome remains immutable.",
+      "attributes": {"domain": "execution_state", "wire_value": "rolled_back", "terminal": true, "effect_released": true}
+    },
+    {
+      "id": "ecl.execution.compensated.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "A separately authorized compensating effect completed; the original outcome remains immutable.",
+      "attributes": {"domain": "execution_state", "wire_value": "compensated", "terminal": true, "effect_released": true}
+    },
+    {
+      "id": "ecl.execution.unknown.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The available observation boundary cannot determine the final external effect.",
+      "attributes": {"domain": "execution_state", "wire_value": "unknown", "terminal": true, "effect_released": true, "residual_evidence_required": true}
+    },
+    {
+      "id": "ecl.execution.denied.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The attempt was denied before execution release.",
+      "attributes": {"domain": "execution_state", "wire_value": "denied", "terminal": true, "effect_released": false}
+    },
+    {
+      "id": "ecl.execution.held.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The attempt remained on hold without execution release.",
+      "attributes": {"domain": "execution_state", "wire_value": "held", "terminal": true, "effect_released": false}
+    },
+    {
+      "id": "ecl.execution.challenged.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The attempt required challenge evidence and did not cross the execution release boundary.",
+      "attributes": {"domain": "execution_state", "wire_value": "challenged", "terminal": true, "effect_released": false}
+    },
+    {
+      "id": "ecl.execution.expired-before-release.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The governing request or authority expired before execution release.",
+      "attributes": {"domain": "execution_state", "wire_value": "expired_before_release", "terminal": true, "effect_released": false}
+    },
+    {
+      "id": "ecl.verification.pass.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "All checks required by the declared verification boundary passed.",
+      "attributes": {"domain": "verification_decision", "wire_value": "pass"}
+    },
+    {
+      "id": "ecl.verification.fail.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "At least one required check failed or contradictory evidence invalidated the claim.",
+      "attributes": {"domain": "verification_decision", "wire_value": "fail"}
+    },
+    {
+      "id": "ecl.verification.indeterminate.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "The evidence boundary is insufficient to determine pass or fail.",
+      "attributes": {"domain": "verification_decision", "wire_value": "indeterminate"}
+    },
+    {
+      "id": "ecl.closure.complete.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "All required causal predecessors and terminal dispositions are resolved.",
+      "attributes": {"domain": "closure_status", "wire_value": "complete"}
+    },
+    {
+      "id": "ecl.closure.incomplete.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "At least one required predecessor, action, or lifecycle dependency remains open.",
+      "attributes": {"domain": "closure_status", "wire_value": "incomplete"}
+    },
+    {
+      "id": "ecl.closure.indeterminate.v1",
+      "status": "active",
+      "owner_class": "ecl-registry",
+      "introduced_in": "1.0-rc.3",
+      "compatibility": "behavioral",
+      "description": "Available evidence cannot determine whether causal closure is complete.",
+      "attributes": {"domain": "closure_status", "wire_value": "indeterminate"}
+    }
+  ]
+}
