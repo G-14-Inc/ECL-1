@@ -15,6 +15,13 @@ is and what changed from the last release candidate, and
 [CHANGELOG.md](CHANGELOG.md) lists the requirements that each version
 introduced, changed and retired.
 
+## Read and cite
+
+- **[Read the complete reference edition (PDF, 592 pages)](https://zenodo.org/records/24017736/files/ECL-1-v1.0-Complete-Reference-Edition.pdf)**
+- **[Cite ECL-1 Version 1.0 — DOI: 10.5281/zenodo.24017736](https://doi.org/10.5281/zenodo.24017736)**
+
+Zenodo preserves the complete reference edition alongside the five original release assets. The PDF brings together the released documentation, formal sources and recorded results, with a requirement index and source hashes.
+
 ## Start here
 
 [Choose your first task](docs/start-here.md): verify supplied evidence, run one
