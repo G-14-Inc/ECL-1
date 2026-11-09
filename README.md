@@ -1,67 +1,63 @@
-# ECL-1: External Control Layer Standard
+# ECL-1 — External Control Layer Standard
 
-**ECL-1 Version 1.0 — correction release v1.0.1.** This package contains
-corrections to the Version 1.0 release published on 5 November 2026. The
-original source and reference PDF remain preserved. The accompanying
-Complete Reference Edition remains Version 1 and identifies this corrected
-source by its release tag and archive digest.
+**An open standard for governing AI actions before they take effect.**
 
-ECL-1 is a standard for controlling the consequential actions of AI systems:
-the actions that change something outside the system, such as a record, a
-payment, a message, an account or a piece of equipment. It requires a control
-layer outside the AI system whose actions it governs. Each in-scope action is
-decided and authorized before it takes effect, and enforced at the point where
-it takes effect. Each decision leaves signed evidence that a third party can
-check and, from level `L2`, verify offline: which component asserted what, with
-which key, about which request and decision.
+ECL-1 specifies how consequential AI actions are authorized, enforced and
+recorded. It is for people who build, operate, procure or assess systems that can
+change records, move money, send messages or operate equipment.
 
-This repository holds **ECL-1 Version 1.0**, authored and produced by
-Robert F. Tilley Jr. and G-14, Inc., and maintained by G-14, Inc. [RELEASE-NOTES-1.0.md](RELEASE-NOTES-1.0.md) says what Version 1.0
-is and what changed from the last release candidate, and
-[CHANGELOG.md](CHANGELOG.md) lists the requirements that each version
-introduced, changed and retired.
+**Authored and produced by Robert F. Tilley Jr. and G-14, Inc.**
 
-## Start here
+[**Explore ECL-1 → externalcontrollayer.ai**](https://externalcontrollayer.ai/) ·
+[**Read the reference book**](https://doi.org/10.5281/zenodo.24092833) ·
+[**Get the current release**](https://github.com/G-14-Inc/ECL-1/releases/latest)
 
-[Choose your first task](docs/start-here.md): verify supplied evidence, run one
-[bounded teaching workflow](examples/bounded_workflow/README.md), implement a
-boundary, assess a claim or contribute a correction. The
-[release brief](docs/release-brief.md) lists the public materials and their
-limits. `CITATION.cff` identifies the correction-release version for citation.
+![An AI system proposes an action; an external control layer checks authority and enforces a decision before release, leaving signed evidence.](docs/assets/ecl-control-path.svg)
 
-## Release files and verification
+An AI system may be able to reach a tool or use a credential. ECL-1 requires a
+separate decision about whether the exact action may proceed. For the actions
+covered by a mediation claim, an enforcement boundary outside the governed AI's
+control applies that decision. Missing required authorization or proof leads
+to denial, restriction or halt. Signed records connect the decision to the
+request and to what the enforcing component reports.
 
-The [v1.0.1 correction release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0.1)
-contains `ecl-1-1.0.1.zip`, `ecl-1-1.0.1-manifest.json`,
-`ecl-verify.cdx.json`, `ecl-ts.cdx.json` and `SHA256SUMS`, together with the
-Version 1 reference PDF, font notices and correction record. The archive contains
-the public specification, supporting documents, formal models, conformance
-corpus, verifiers and teaching workflow. The two CycloneDX SBOMs describe the
-Python and TypeScript verifiers' exact public dependency locks.
+The standard brings these obligations together with emergency controls,
+integration profiles, evidence formats and assessment rules. Each implementation
+must establish conformance within its declared actions, boundaries and trust
+assumptions. [Read the guarantee and its scope](#the-guarantee).
 
-`SHA256SUMS` covers every supplied release asset other than itself. Download
-them into one directory, then check:
+## Start with what you need
 
-```sh
-sha256sum --check --strict SHA256SUMS
-```
+| Your task | Start here |
+|---|---|
+| Understand the standard | [Website](https://externalcontrollayer.ai/) · [Core specification](standard/ECL-1_Standard.md) |
+| Read or cite the complete reference | [Version 1 reference edition — 603 pages](https://doi.org/10.5281/zenodo.24092833) |
+| Try one controlled action | [Run the simulated workflow](examples/bounded_workflow/README.md) |
+| Check supplied evidence | [Browser verifier](https://externalcontrollayer.ai/verifier) · [Verification quickstart](docs/quickstart.md) |
+| Build an integration | [Integration contract](docs/integration-contract.md) · [Implementation guidance](https://externalcontrollayer.ai/implementation) |
+| Assess a claim | [Conformance](https://externalcontrollayer.ai/conformance) · [Section 11 checklist](standard/ECL-1_Standard.md#11-conformance-checklist) |
+| Examine the design | [Formal models and recorded checks](formal/README.md) · [Reviewer guide](docs/reviewer-guide.md) |
 
-On Windows, `Get-FileHash -Algorithm SHA256 <filename>` computes a file's
-digest for comparison with `SHA256SUMS`. The manifest also lists every archive
-member's size and SHA-256. G-14, Inc. supplies no separate maintainer
-signature for this correction release. Hashes establish file integrity;
-any hosting-service attestation has its own identity and verification scope.
-The [original v1.0 release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0)
-and its five assets remain available under their original names and digests.
+## What is available
 
-The [release notes](RELEASE-NOTES-1.0.md#review-status) disclose the review
-status and the maintainer's
-[correction-release exception](governance/RELEASE_POLICY.md#correction-release-exception-v101).
-The [formal specification and model-checking description](#formal-specification-and-model-checking)
-explains all 32 TLC configurations and the nine separate Tamarin checks,
-including their assumptions, expected counterexamples, reproduction commands
-and limits. These results apply to the modeled design; implementation and
-deployment conformance require their own evidence.
+**ECL-1 Version 1.0 · Current source release v1.0.1 · Complete Reference Edition, Version 1**
+
+- **628 requirement entries** across the core standard and normative companions.
+- **1,011 conformance test vectors**, with expected results and capability scopes.
+- **Protocols and integration profiles** for authorization, evidence, MCP, OAuth,
+  AuthZEN, AARM, OWASP ACS and OpenTelemetry.
+- **Verification tools** in TypeScript, Python, Go and the browser, with their
+  supported capabilities documented.
+- **TLA+ and Tamarin models**, recorded checks, deliberately broken variants,
+  reachability witnesses and stated assumptions.
+- **A 603-page reference book**, bringing the specification, guides, model listings
+  and indexes together in one citable edition.
+
+The standard and public tools are free under their published licenses. The text
+is licensed under [CC BY 4.0](LICENSE-CC-BY-4.0); code and machine-readable
+artifacts are under [Apache-2.0](LICENSE). See [LICENSING.md](LICENSING.md) and
+the [essential-claims patent pledge](PATENTS.md) for the terms that apply.
+Implementing ECL-1 does not require purchasing a G-14 product or service.
 
 ## The guarantee
 
@@ -722,3 +718,37 @@ editors and the chair of the working group, runs public review, and publishes
 releases and errata. G-14 is developing a commercial implementation of ECL-1. Nothing in the
 standard depends on it, and an implementation's conformance claim, G-14's
 included, is self-declared under the same rules as any other.
+
+## Release identity and verification
+
+The [v1.0.1 release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0.1)
+contains `ecl-1-1.0.1.zip`, `ecl-1-1.0.1-manifest.json`,
+`ecl-verify.cdx.json`, `ecl-ts.cdx.json` and `SHA256SUMS`, together with the
+Version 1 reference PDF, font notices and correction record. The archive contains
+the public specification, supporting documents, formal models, conformance
+corpus, verifiers and teaching workflow. The two CycloneDX SBOMs describe the
+Python and TypeScript verifiers' exact public dependency locks.
+
+`SHA256SUMS` covers every supplied release asset other than itself. Download
+them into one directory, then check:
+
+```sh
+sha256sum --check --strict SHA256SUMS
+```
+
+On Windows, `Get-FileHash -Algorithm SHA256 <filename>` computes a file's
+digest for comparison with `SHA256SUMS`. The manifest also lists every archive
+member's size and SHA-256. G-14, Inc. supplies no separate maintainer
+signature for this release. Hashes establish file integrity;
+any hosting-service attestation has its own identity and verification scope.
+The [original v1.0 release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0)
+and its five assets remain available under their original names and digests.
+
+The [release notes](RELEASE-NOTES-1.0.md#review-status) disclose the review
+status and the maintainer's
+[correction-release exception](governance/RELEASE_POLICY.md#correction-release-exception-v101).
+The [formal specification and model-checking description](#formal-specification-and-model-checking)
+explains all 32 TLC configurations and the nine separate Tamarin checks,
+including their assumptions, expected counterexamples, reproduction commands
+and limits. These results apply to the modeled design; implementation and
+deployment conformance require their own evidence.
