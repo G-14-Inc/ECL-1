@@ -439,6 +439,10 @@
   ],
   "source_paths_changed_before_packaging": [
     {
+      "path": "CHANGELOG.md",
+      "original_sha256": "5825151286c759e68126e13dfda4b4389711b515a4b8cc00aa24020d2e803ad6"
+    },
+    {
       "path": "CITATION.cff",
       "original_sha256": "e4e303d595a41d58ce0e6be3a4428c0d8fd3935bcf470abcaa832a98c0fb8079"
     },
@@ -1279,6 +1283,10 @@
       "original_sha256": "15493cf5c87b2652aa9b3899fa6774abb107014b2ab718e5a5835ebba6e29b8a"
     },
     {
+      "path": "release/CORRECTIONS-1.0.1.json",
+      "original_sha256": null
+    },
+    {
       "path": "release/VERSION_SET.json",
       "original_sha256": "d50e1ed00043477329d6837bd4a985aa72826ee22e7c4cde72e65e526a7cbe53"
     },
@@ -1407,6 +1415,10 @@
       "original_sha256": null
     },
     {
+      "path": "scripts/generate_correction_changelog.py",
+      "original_sha256": null
+    },
+    {
       "path": "scripts/generate_error_contract_vectors.py",
       "original_sha256": null
     },
@@ -1493,8 +1505,8 @@
   ],
   "change_class": "corrective and editorial",
   "original_behavior": "The exact changed requirement texts are recorded below. The original release also contained the verifier, model, evidence-binding, test-reference and explanatory defects described in RELEASE-NOTES-1.0.md.",
-  "corrected_behavior": "The corrected source resolves the recorded defects and retains all 628 requirement identifiers. Exact executable and documentary changes are recoverable by comparing the original and corrected archives; the accompanying source patch provides that comparison.",
-  "compatibility_effect": "Core and companion protocol version strings are retained. Corrected validation rejects cases excluded by the controlling requirements. Cross-implementation report profile 3 introduces explicitly versioned report and raw-result schemas; older report profiles retain their narrower scope.",
+  "corrected_behavior": "The corrected source resolves the recorded defects and retains all 628 requirement identifiers. Exact executable and documentary changes are recoverable by comparing the original and corrected archives, whose digests the release manifest records.",
+  "compatibility_effect": "Core and companion protocol version strings are retained. Corrected validation rejects cases excluded by the controlling requirements. Cross-implementation report profile 3 introduces explicitly versioned report and raw-result schemas; older report profiles retain their narrower scope. For an offline package above the 1 GiB archive limit, the three command-line verifiers return an invalid report on standard output with exit status 1 and ecl.error.resource-limit-exceeded.v1 instead of a usage error with exit status 2; invalid caller inputs keep exit status 2.",
   "tests": [
     {
       "record": "formal/results.json",
@@ -1510,6 +1522,6 @@
     }
   ],
   "migration": "Use the v1.0.1 source archive and corrected verifiers. Recheck results that depended on the affected behavior; produce cross-implementation reports with profile 3 when reporting its expanded checks. Cite the correction release and retain its manifest and archive digest. Protocol wire versions remain unchanged.",
-  "prior_claims_reassessment": "Claims that relied on the corrected assessment text or defective verification behavior require review and, where their supporting evidence changes, reassessment under ECL1N-0152. The correction record does not invalidate or certify every prior implementation claim.",
+  "prior_claims_reassessment": "Claims that relied on the corrected assessment text or defective verification behavior require review and, where their supporting evidence changes, reassessment under ECL1N-0152. The correction record does not invalidate or certify every prior implementation claim. The implementers registry in this correction package is empty as of November 9, 2026, so no registry listing is affected.",
   "process_exception": "governance/RELEASE_POLICY.md#correction-release-exception-v101"
 }

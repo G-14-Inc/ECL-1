@@ -26,7 +26,7 @@ tools and reassess results that depended on the defects identified in the
 correction record. Cross-implementation report profile 3 has its own versioned
 schemas; older report formats retain their documented, narrower scope.
 A claim identifies ECL-1 Version 1.0, its companion version set and the
-applied correction release `v1.0.1`.
+applied correction release `v1.0.1` and erratum `ERR-1.0-001`.
 
 The charter correction identifies CONFORMANCE-CLAIMS-1,
 DEPLOYMENT-PROFILES-1 and OFFLINE-VERIFICATION-1 as informative guides,
@@ -72,6 +72,26 @@ and proof or freshness failures to `ecl.error.obligation-unproven.v1`, matching
 the verifiers and preserving rejection of both kinds of invalid evidence.
 The crosswalk packets bind the corrected source files by digest; their
 pinned external framework sources remain unchanged.
+
+The formal models and their recorded results are corrected. In the TLA+ model,
+the `Evaluate` expression replaces overlapping `CASE` guards with nested `IF`
+branches. Decisions and authenticated hold resolutions require `now < deadline`,
+and `Tick` cannot pass an unresolved deadline. The added `DeadlineBound` and
+`NoLateDecision` properties bring the correct configurations' total to 20,
+from 18; the broken timeout and late-decision variants remain testable.
+`formal/results.json` records 32 TLC and nine Tamarin expected outcomes from
+runs of the corrected models on November 7, 2026, with Tamarin message-derivation
+checks enabled. The repaired state spaces differ from the original record.
+The formal guide describes the finite bounds, fairness, key assumptions and
+limits of correspondence to executable implementations.
+
+The compiled requirement entries MG1-010, MG1-014 and MG1-017 now include the
+existing `mcp-invalid-final-check-cancelled-without-terminal` and
+`mcp-invalid-release-guard-exceeded-cancelled-without-terminal` vectors among
+their test references. This repairs traceability without changing those vectors.
+
+The reference package `ecl-verify` retains version `1.0.0` in the version set.
+The `v1.0.1` source archive and manifest digests identify its corrected contents.
 
 Cross-implementation report profile 3 binds the observed verdict, scope, effect
 levels, unresolved predecessors and canonical digest wherever a vector declares
@@ -469,7 +489,8 @@ Its `files` list gives every member's path, byte count and SHA-256 digest;
 its `container` object records the deterministic ZIP construction settings.
 Its `versions` object retains the core and companion version set, and its
 `corrects` object identifies the preserved original release. This manifest
-records file identity; publication authorization is recorded separately.
+records file identity. The release policy separately requires the maintainer's
+recorded publication authorization for the exact artifacts.
 
 ## Official distribution channels
 

@@ -21,7 +21,7 @@ release archive as its historical input.
 ## Correction release 1.0.1
 
 This release corrects the Version 1.0 source and the accompanying Version 1
-reference edition. It retains all 628 requirement identifiers; 53 requirement
+reference edition (erratum `ERR-1.0-001`). It retains all 628 requirement identifiers; 53 requirement
 texts differ from the original publication. The exact before/after texts are
 in [CORRECTIONS-1.0.1.json](release/CORRECTIONS-1.0.1.json). The
 [release notes](RELEASE-NOTES-1.0.md#correction-release-v101) describe the

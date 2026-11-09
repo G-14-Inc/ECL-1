@@ -34,7 +34,7 @@ def render(root: Path, original_archive: Path) -> str:
     section = f'''## Correction release 1.0.1
 
 This release corrects the Version 1.0 source and the accompanying Version 1
-reference edition. It retains all {len(new)} requirement identifiers; {len(changed)} requirement
+reference edition (erratum `ERR-1.0-001`). It retains all {len(new)} requirement identifiers; {len(changed)} requirement
 texts differ from the original publication. The exact before/after texts are
 in [CORRECTIONS-1.0.1.json](release/CORRECTIONS-1.0.1.json). The
 [release notes](RELEASE-NOTES-1.0.md#correction-release-v101) describe the
