@@ -5,6 +5,117 @@ ECL-1, the External Control Layer Standard. It is maintained by G-14, Inc.,
 and its development continues in the open in the ECL-1 Working Group
 ([README](README.md#taking-part)).
 
+## Correction release v1.0.1
+
+Authors and producers: Robert F. Tilley Jr.; G-14, Inc.
+
+This correction package updates the source and the Version 1 Complete
+Reference Edition. Its distinct tag, manifest and archive digest identify
+the corrected bytes. The November 5 source release and November 6 reference
+PDF remain preserved. The [release policy](governance/RELEASE_POLICY.md#correction-release-exception-v101)
+records the one-time process exception authorized on November 9.
+The [correction record](release/CORRECTIONS-1.0.1.json) gives exact before/after
+requirement text and changed paths. The release manifest binds the final
+files; the original and corrected source archives permit a complete comparison.
+
+This is a correction package for the existing Version 1.0 standard and its
+listed companion versions. All 628 requirement identifiers and the core and
+companion protocol version strings are retained. Corrected verifiers reject
+inputs that the affected requirements already exclude; use the corrected
+tools and reassess results that depended on the defects identified in the
+correction record. Cross-implementation report profile 3 has its own versioned
+schemas; older report formats retain their documented, narrower scope.
+A claim identifies ECL-1 Version 1.0, its companion version set and the
+applied correction release `v1.0.1` and erratum `ERR-1.0-001`.
+
+The charter correction identifies CONFORMANCE-CLAIMS-1,
+DEPLOYMENT-PROFILES-1 and OFFLINE-VERIFICATION-1 as informative guides,
+matching their own stated status. It creates no new normative allocation.
+Correction release v1.0.1 carries no separate G-14 maintainer signature.
+Its archive and manifest are identified by their published SHA-256 digests.
+
+### Corrected behavior and documentation
+
+For an offline package above the 1 GiB archive limit, the three command-line
+verifiers now return an `invalid` report on standard output with exit status 1
+and `ecl.error.resource-limit-exceeded.v1`, as IE1-022 requires. Previously,
+they returned a usage error on standard error with exit status 2. Invalid
+caller inputs still receive exit status 2; in particular, an invalid `--now`
+remains a usage error even when the package exceeds the archive limit.
+
+The corpus now contains 1,011 vectors: the 953 original vectors, 42 added MCP
+recovery and terminal-evidence cases, and sixteen integrity-policy cases. The new integrity cases
+separate payload semantic errors from standalone envelope verification errors
+and check that an optional unaccepted signature does not defeat an otherwise
+satisfied standalone signature policy. Bundle verification now checks the
+payload's accepted suites and eligible keys for every signature, including
+additional signatures that do not count toward the threshold. Previously, the
+three bundle verifiers omitted those two checks for uncounted signatures.
+The integrity cases also check that signature error precedence does not depend
+on signature-list order. Per-signer trust diagnostics now identify a signer
+excluded by the payload policy; previously, they could report that signer as
+valid even when the bundle verdict correctly rejected it. Four unit cases
+check those diagnostics and their controls in each implementation. Five further
+unit fixtures compare complete ordered finding lists for event-binding gates
+and discharge-proof checks. EBMP2-055 now states explicitly that the consumption
+and release evidence for a succeeded attempt must bind the relevant messages.
+The three MCP record checkers now reject a non-forwarded attempt that records
+consumption through a prepared or released event but omits its terminal evidence.
+The MCP vectors check record semantics; shared-store
+and crash-recovery behavior also requires tests of the actual gateway deployment
+described in MCP-GATEWAY-1.
+
+The integrity and evidence protocols now distinguish their per-object error
+checks, independently evaluated bindings and bundle-wide error precedence.
+EBMP-2 assigns structural discharge defects to the registered discharge rule
+and proof or freshness failures to `ecl.error.obligation-unproven.v1`, matching
+the verifiers and preserving rejection of both kinds of invalid evidence.
+The crosswalk packets bind the corrected source files by digest; their
+pinned external framework sources remain unchanged.
+
+The formal models and their recorded results are corrected. In the TLA+ model,
+the `Evaluate` expression replaces overlapping `CASE` guards with nested `IF`
+branches. Decisions and authenticated hold resolutions require `now < deadline`,
+and `Tick` cannot pass an unresolved deadline. The added `DeadlineBound` and
+`NoLateDecision` properties bring the correct configurations' total to 20,
+from 18; the broken timeout and late-decision variants remain testable.
+`formal/results.json` records 32 TLC and nine Tamarin expected outcomes from
+runs of the corrected models on November 7, 2026, with Tamarin message-derivation
+checks enabled. The repaired state spaces differ from the original record.
+The formal guide describes the finite bounds, fairness, key assumptions and
+limits of correspondence to executable implementations.
+
+The compiled requirement entries MG1-010, MG1-014 and MG1-017 now include the
+existing `mcp-invalid-final-check-cancelled-without-terminal` and
+`mcp-invalid-release-guard-exceeded-cancelled-without-terminal` vectors among
+their test references. This repairs traceability without changing those vectors.
+
+The reference package `ecl-verify` retains version `1.0.0` in the version set.
+The `v1.0.1` source archive and manifest digests identify its corrected contents.
+
+Cross-implementation report profile 3 binds the observed verdict, scope, effect
+levels, unresolved predecessors and canonical digest wherever a vector declares
+that expectation. It checks those values against the local corpus and binds
+them to the raw result. The report producers now mark verdict mismatches as
+failed rows as well as failed runs. Historical report profiles require explicit
+legacy inspection and retain their narrower result boundaries.
+
+The decision-basis definitions now identify the verifiable-only comparison
+baseline and the meaning of each input's effect. Two passing examples have
+corrected effect labels, with an explicit verifiable-only denial where required
+input is absent. The strictness definitions specify sufficient as well as
+necessary comparison conditions, and the timing explanation applies the
+mandatory EBMP release guard to every release timing argument.
+
+The claim and assessment text distinguishes publisher artifacts from claimant
+deliverables, maps the threat-response summaries to their controlling
+requirements, and separates a conditional procurement award from conditional
+conformance. Operator safety requiring cessation triggers a deployment-wide
+halt, lifted only after the applicable recovery, recorded resolution, and
+authorization conditions. The contribution terms address future normative
+text reproduced in generated artifacts while preserving earlier grants and
+third-party terms.
+
 ## What Version 1.0 holds
 
 - The core standard, ECL-1 Version 1.0, with its seven companion protocols and
@@ -23,13 +134,13 @@ and its development continues in the open in the ECL-1 Working Group
 
 ## What changed from the last release candidate
 
-Version 1.0 follows Release Candidate 6 (RC-6). The requirement changes are
-listed in [CHANGELOG.md](CHANGELOG.md), from the requirement ledger. The
-requirements whose text changed are DCMP2-053, EBMP2-055, EBMP2-057, EBMP2-059,
-EBMP2-060, EBMP2-061, EBMP2-062, EBMP2-068, EBMP2-074, EBMP2-076, ECL1N-0159, IE1-033, IE1-034,
-IE1-035, TP1-006 and TP1-007; DCMP2-056, DCMP2-057, EBMP2-077 and EBMP2-078 are
-new; none was retired. The changes to the verification rules and the
-continuation contract below are normative changes from RC-6.
+The original Version 1.0 release followed Release Candidate 6 (RC-6). Its
+requirement ledger and [CHANGELOG.md](CHANGELOG.md) list nine introduced
+requirements, 27 changed requirements and none retired. Use those complete
+lists for migration from RC-6. These counts describe the original release;
+corrections prepared after publication are tracked separately. The changes to
+the verification rules and the continuation contract below are normative
+changes from RC-6.
 
 - Every object of a signed evidence bundle is a node of its causal graph, a
   normative change from RC-6 (EBMP2-059, EBMP2-061, EBMP2-076 and the new
@@ -78,8 +189,10 @@ continuation contract below are normative changes from RC-6.
   with its key identifier or its public key; every key that signed anything in
   the bundle is a dependency, counted or not, and a signature that does not
   verify makes its dependency historically invalid, which keeps the items that
-  rest on it out of the report's established scope without changing the
-  verdict; only a revocation carries later
+  rest on it out of the report's established scope. That additional scope
+  accounting leaves the verdict unchanged only if envelope verification still
+  satisfies the required-key and signature-threshold rules; failure of either
+  rule invalidates the envelope. Only a revocation carries later
   knowledge of a compromise, so a later retirement, expiry or removal does not
   make it historically invalid. Current
   status is evaluated and reported for every dependency, a time authority's key
@@ -147,9 +260,10 @@ continuation contract below are normative changes from RC-6.
   required; the envelope suite gains the vector
   `envelope-invalid-policy-digest-string-for-object` for the case.
 - The accommodation for evidence made before the decision basis was required
-  is withdrawn, a normative change from RC-6: no such evidence passes the 2.0
-  schema, so a 2.0 decision response without `ecl.ext.decision-basis.v1` is
-  rejected with `ecl.rule.decision-basis-required.v1` by every verifier.
+  is withdrawn, a normative change from RC-6: such evidence fails validation
+  under Version 1.0. A 2.0 decision response without `ecl.ext.decision-basis.v1`
+  is rejected by the semantic rule `ecl.rule.decision-basis-required.v1`;
+  the JSON Schema alone does not require that extension.
   DCMP2-053 loses the clause that excused a verifier whose caller declared
   older evidence, and the ledger records it as changed in 1.0. Callers remove
   the option: `--no-require-decision-basis` and `--require-decision-basis` are
@@ -159,7 +273,8 @@ continuation contract below are normative changes from RC-6.
   the conformance manifests no longer carry `require_decision_basis`; the
   vector `bundle-valid-predates-decision-basis` is withdrawn
   (`bundle-invalid-missing-decision-basis` covers the case). The vector total
-  is 953 in Version 1.0, including the three OAuth obligation-boundary cases.
+  was 953 in the original Version 1.0 release, including the three OAuth
+  obligation-boundary cases.
 - The public Python package `ecl-verify` and the Go module `go/crosscheck` verify
   evidence without a service or account. They are implementations maintained by
   the same operator as the TypeScript verifier; agreement among them is a
@@ -177,12 +292,14 @@ continuation contract below are normative changes from RC-6.
   result with the bounded strict-JSON parser. It refuses repeated member names
   and inputs over 64 MiB before schema validation and before reading an
   over-limit file in full. The accepted report format is unchanged.
-- The reference MCP gateway orders concurrent contenders for one authorization
-  until the winning request is written or refused. This prevents replay-refusal
-  evidence work from using the winner's 250 ms release guard, while opening the
-  lane at the write so an upstream reply does not hold later contenders. The
-  guard, protocol obligations and wire values are unchanged.
-- The emergency-control conformance checks distinguish a signed fail-closed
+- Platform-package implementation change: the reference MCP gateway processes
+  contenders for one authorization in order until the winning request is
+  written or refused. Replay-refusal evidence work therefore does not consume
+  the winner's 250 ms release guard, and later contenders need not wait for the
+  upstream reply. The guard, protocol obligations and wire values are unchanged.
+  This runtime gateway is not included in the public release archive.
+- Platform-package implementation change: the emergency-control conformance
+  checks distinguish a signed fail-closed
   `dependency-unavailable` result from the halt behavior they are measuring.
   They validate and count a bounded number of those results, but still require
   ten committed effects and three fresh post-ack `emergency-halt` denials;
@@ -192,13 +309,16 @@ continuation contract below are normative changes from RC-6.
   leaves the exercise incomplete. For transport diagnosis, the pilot HTTP
   client logs only the failed exchange phase, exception class and elapsed
   milliseconds, and its server logs only the failed connection phase and
-  exception class.
-- The pilot HTTPS client and server wait for an active deadline-abort callback
-  to finish before releasing its socket. This prevents a cancelled watchdog
+  exception class. These checks and pilot services are not included in the
+  public release archive.
+- Platform-package implementation change: the pilot HTTPS client and server
+  wait for an active deadline-abort callback
+  to finish before releasing the connection's socket. This prevents a cancelled watchdog
   from acting on a descriptor that another connection has reused. Configured
   deadlines, byte limits and denial/evidence requirements are unchanged.
-- The pilot HTTPS client and server and the harness transport enforce their
-  deadlines on the monotonic clock. A timed wait that returns early (on
+- Platform-package implementation change: the pilot HTTPS client and server
+  and the harness transport enforce their deadlines on the monotonic clock.
+  These runtime components are not included in the public release archive. A timed wait that returns early (on
   interpreters built without `sem_clockwait`, a forward step of the realtime
   clock expires it) no longer aborts a live exchange or connection before its
   deadline. Configured deadlines, byte limits and denial/evidence requirements
@@ -225,10 +345,12 @@ continuation contract below are normative changes from RC-6.
 ### Wire values that changed
 
 An implementation or an exporter that followed RC-6 changes the values below.
-Every other wire value is unchanged from RC-6: apart from the semantic rule and
-the four fields that the registry changes below list, no error code, extension,
-field, media type, algorithm suite, operational value, protocol value, semantic
-rule, term or vocabulary entry was added, changed or retired.
+Apart from the semantic rule and four fields listed in the registry changes
+below, no identifier or wire attribute in the error-code, extension, field,
+media-type, algorithm-suite, operational-value, protocol-value, semantic-rule,
+term or vocabulary registries was added, changed or retired. Registry status
+and description changes are listed separately. The schema and profile changes
+below also apply.
 
 - The time attestation
   ([schemas/ecl-time-attestation-v1.schema.json](schemas/ecl-time-attestation-v1.schema.json)):
@@ -310,7 +432,8 @@ are `1.0-rc.1`.
 
 ## Signing, and how the release is identified
 
-Version 1.0 is not signed. The maintainer, G-14, Inc., authorized its
+The original Version 1.0 was published without a maintainer signature.
+The maintainer, G-14, Inc., authorized its
 publication and release on 16 October 2026 and did not authorize signing. Under
 [governance/RELEASE_POLICY.md](governance/RELEASE_POLICY.md) a release is signed
 only once the maintainer has approved a signing identity and production key
@@ -330,7 +453,7 @@ policy requires.
 
 ## The release manifest
 
-The release manifest, `ecl-1-1.0-manifest.json`, is published with the archive
+The original release manifest, `ecl-1-1.0-manifest.json`, is published with its archive
 and carries:
 
 - `schema_version`: `ecl_standard_release_manifest_v1`, the builder's manifest
@@ -350,17 +473,33 @@ and carries:
 - `authorization`: `publication_authorized: true`, `release_authorized: true`,
   `signing_authorized: false`, `authorized_on: 2026-10-16`.
 
-The manifest carries nothing else: no source commit, no excluded directory or
-count, no allowlist, no included count, no package name, no notice text, no
+That original manifest carries nothing else: no source commit, no excluded directory or
+count, no allowlist, no included count, no package name outside `versions`, no
+notice text, no
 list of generated members, no status flag or label, and no copy of the
 maintainer's authorization record.
 
+### Correction release manifest
+
+`ecl-1-1.0.1-manifest.json` uses schema identifier
+`ecl_correction_release_manifest_v1`. It identifies release `ECL-1-1.0.1`,
+version `1.0.1`, the public source commit, the Version 1 reference edition,
+the authors and producers, and the exact `ecl-1-1.0.1.zip` archive digest.
+Its `files` list gives every member's path, byte count and SHA-256 digest;
+its `container` object records the deterministic ZIP construction settings.
+Its `versions` object retains the core and companion version set, and its
+`corrects` object identifies the preserved original release. This manifest
+records file identity. The release policy separately requires the maintainer's
+recorded publication authorization for the exact artifacts.
+
 ## Official distribution channels
 
-The Version 1.0 archive, manifest, checksums and verifier SBOMs attached to the
-Version 1.0 GitHub release and linked from the
-[ECL-1 release page](https://externalcontrollayer.ai/ecl-1) are the release
-artifacts. A Python or TypeScript package-registry distribution is official
+The original Version 1.0 GitHub release retains its archive, manifest,
+checksums and verifier SBOMs. The v1.0.1 GitHub release supplies the corrected
+archive and manifest, checksums, verifier SBOMs, Version 1 reference PDF,
+font notices and correction record. These are the release artifacts. The
+[ECL-1 release page](https://externalcontrollayer.ai/ecl-1) identifies the
+official distribution channels. A Python or TypeScript package-registry distribution is official
 only when both of those pages link to it and identify its exact version. A
 namesake package on a registry is not an ECL-1 release artifact by name alone;
 compare its published digest and contents with the release record before
@@ -375,10 +514,13 @@ holds, action changes, replay, expiry and lost proof. Its limits are explicit.
 The public check command and CI need no private platform. Python report output is UTF-8/LF across text-stream
 settings, and Git preserves the committed fixture bytes on Windows checkout. Contributions that
 need an unpublished generator use the documented editor-assisted regeneration
-path. `CITATION.cff` supplies versioned citation metadata without an invented
-DOI or publication date; it credits Robert F. Tilley Jr. as author and G-14,
-Inc. as maintainer. Repository, people, contacts and final publication
-remain subject to the maintainer's actual release procedure.
+path. `CITATION.cff` lists Robert F. Tilley Jr. and G-14, Inc. as authors.
+The file in the original release archive records `date-released: 2026-11-02`
+and has no DOI. The final GitHub release was published on 5 November 2026 at
+19:43:54 UTC; the reason for the earlier citation date is not established.
+The corrected `CITATION.cff` identifies correction release v1.0.1 with
+`version: 1.0.1` and `date-released: 2026-11-09`. The original citation file
+remains preserved in the original release archive.
 
 The public CI definition runs both the support-floor and qualification profiles
 on Ubuntu, and runs the qualification profile on qualified Windows and macOS
@@ -387,40 +529,43 @@ verifiers on each row.
 
 ## Review status
 
-Release preparation included reviews using AI systems, with their results
-triaged as editorial and engineering input. This release does not claim an
-independent human security review, independent assessment, certification or
-validation on that basis. G-14 maintains final Version 1.0 with this review
-status disclosed. The applicable release checks and artifact-bound
-authorization are described by [governance/RELEASE_POLICY.md](governance/RELEASE_POLICY.md),
-including its Version 1.0 exception below.
+G-14, Inc. maintains ECL-1 Version 1.0. The recorded release checks and
+artifact-bound authorization are described by
+[governance/RELEASE_POLICY.md](governance/RELEASE_POLICY.md), including the
+Version 1.0 exception and the v1.0.1 correction-release exception below.
 Comments are open at any time ([governance/PUBLIC_REVIEW.md](governance/PUBLIC_REVIEW.md));
 report security problems privately ([SECURITY.md](SECURITY.md)).
 
 ### Version 1.0 release exception
 
-On 5 November 2026, the maintainer waived the two-person release rebuild and
-checklist signatures, and externally exercised email and GitHub private
-security-intake tests, as prepublication conditions for Version 1.0. These
-activities have not been completed and are not claimed as passed. The
+On 5 November 2026, the maintainer waived these prepublication conditions for
+Version 1.0: the two-person release rebuild and checklist signatures, and the
+externally exercised email and GitHub private security-intake tests. These
+activities were not completed before publication. The
 [release policy](governance/RELEASE_POLICY.md#version-10-release-exception)
 records the exception. The technical results and the limits of the release's
 assurance claims remain unchanged.
 
+### Correction-release exception: v1.0.1
+
+On 9 November 2026, Robert F. Tilley Jr., for G-14, Inc., waived the separate
+second-person review of corrective changes, the two-person release rebuild
+and both checklist signatures, the corrective-erratum and charter-change
+discussion periods, and the externally exercised email and GitHub private
+security-intake tests for this correction release. The
+[release policy](governance/RELEASE_POLICY.md#correction-release-exception-v101)
+records their scope and precedence. The waived activities are not recorded as
+completed; the technical requirements and recorded test results remain intact.
+
 ## Assessor independence
 
-No implementation of ECL-1 has been assessed against Version 1.0, independently
-or otherwise, and the implementers registry
-([community/implementers.yaml](community/implementers.yaml)) is empty at
-publication. The maintainer appoints no assessors and attests no conformance;
-an assessment is independent only as
-[governance/ASSESSOR_INDEPENDENCE.md](governance/ASSESSOR_INDEPENDENCE.md)
-defines it, and a listing in the registry is self-declared
-([governance/CONFORMANCE_CLAIMS.md](governance/CONFORMANCE_CLAIMS.md)). The
-maintainer did not authorize certification, independent assessment or a
-production-readiness claim for Version 1.0, and no implementation, the
-maintainer's own included, is certified, independently assessed or
-production-proven under it.
+At publication on 5 November 2026, the implementers registry
+([community/implementers.yaml](community/implementers.yaml)) was empty and
+recorded no assessment against Version 1.0. The registry distinguishes an
+implementer's self-declared claim from an assessment supplied by that
+implementer ([governance/CONFORMANCE_CLAIMS.md](governance/CONFORMANCE_CLAIMS.md)).
+The competence, evidence and independence requirements for assessors are set
+out in [governance/ASSESSOR_INDEPENDENCE.md](governance/ASSESSOR_INDEPENDENCE.md).
 
 ## Limitations, and what Version 1.0 does not claim
 
@@ -461,11 +606,10 @@ all seven are resolved in the requirements and assessment procedures. The
 require meaningful human approval, narrow the OAuth profile to obligation-free
 admits, define a legal-conflict procedure and preserve the single-power
 independence prohibition at every class. Five retention requirements,
-ECL1N-0195 through ECL1N-0199, are added. The published patent pledge records the legal-review status;
-these technical dispositions supply no legal opinion or independent assessment. No erratum has been published for
-Version 1.0: its errata index, in [governance/ERRATA.md](governance/ERRATA.md),
-is empty at publication, and an accepted erratum is published there under the
-procedure that document describes.
+ECL1N-0195 through ECL1N-0199, are added. The published patent pledge records the legal-review status.
+The Version 1.0 errata index was empty at its original publication.
+[governance/ERRATA.md](governance/ERRATA.md) now records `ERR-1.0-001`,
+the corrections collected in release v1.0.1, and links their correction record.
 
 ## Informative metadata
 

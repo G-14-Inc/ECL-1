@@ -11,11 +11,14 @@ request.
 
 Every command runs from the root of the ECL-1 package unless a step says
 otherwise. You need Python 3.10 or later for the Python verifier, Node.js 22
-with npm for the TypeScript verifier and Go 1.26.10 or later for the Go verifier; any one
+or later with npm for the TypeScript verifier and Go 1.26.10 or later for the Go verifier; any one
 of the three is enough to follow the guide in that language. Installing the
 Python and TypeScript dependencies reads them from your package index and npm
 registry, or from your local caches; the Go module has no dependency outside
-the standard library.
+the standard library. These minimum versions are compatibility floors. Use
+maintained runtimes with current security patches for deployment. Qualification
+keeps fixed versions for reproduction; the public CI also checks a
+newer-runtime combination.
 
 ## 1. The sample evidence
 
@@ -230,7 +233,3 @@ JSON reports are emitted as UTF-8 with LF line endings. For a byte comparison,
 capture each process’s stdout as bytes rather than passing it through a shell
 text conversion. A shell may re-encode redirected output independently of the
 verifier. The package’s checks use the same trust inputs for every verifier.
-
-These are compatibility floors. Use maintained runtimes with current security
-patches for deployment. Qualification keeps fixed versions for reproduction;
-the public CI also checks a newer-runtime combination.

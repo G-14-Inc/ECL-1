@@ -94,6 +94,27 @@ def test_every_offline_package_vector_gets_its_verdict(
         ), vector["id"]
 
 
+def test_archive_byte_limit_is_a_verdict_and_caller_errors_remain_usage_errors(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    package = tmp_path / "over-limit.zip"
+    with package.open("wb") as stream:
+        stream.write(b"PK")
+        stream.truncate(1024**3 + 1)
+    status = verify(package, PACKAGES / "trust-policy.json", "--json")
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert (status, captured.err, report["verdict"], report["primary"]) == (
+        1, "", "invalid", "ecl.error.resource-limit-exceeded.v1"
+    )
+    assert not report["scope"]["established"]
+    assert report["evaluation_time"] == NOW
+    status = cli.main([str(package), "--trust-policy", str(PACKAGES / "trust-policy.json"),
+                       "--now", "not-a-time", "--json"])
+    captured = capsys.readouterr()
+    assert status == 2 and captured.out == "" and "invalid --now" in captured.err
+
+
 def test_a_malformed_trust_policy_is_a_usage_error(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

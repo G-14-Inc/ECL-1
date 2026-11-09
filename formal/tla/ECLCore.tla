@@ -32,8 +32,8 @@
 (* Variant selects the correct design ("correct") or one deliberate flaw;   *)
 (* each flaw removes one rule, and TLC must find the property it breaks.    *)
 (*                                                                         *)
-(* Time is a discrete tick (Lamport, "Real Time is Really Simple"); a       *)
-(* deadline is a condition on Tick. Hash chains, signatures and digests are *)
+(* Time is a discrete tick (Lamport, "Real Time is Really Simple");         *)
+(* deadline bounds constrain Tick. Hash chains, signatures and digests are *)
 (* abstracted: an authority object can be created only by the decision      *)
 (* service, an action's digest is the action itself (an injective digest),  *)
 (* and the evidence log is a sequence that only the control layer appends   *)
@@ -112,12 +112,12 @@ VerifiableOnly(r) == IF Verifiable(r) = "permit" THEN "admit" ELSE "deny"
 (* judgment inputs only make the outcome stricter; the two flaws let one   *)
 (* of them admit.                                                          *)
 Evaluate(r, s, j) ==
-    CASE Flawed("judgment_admits") /\ j = "low" -> "admit"
-      [] Flawed("self_report_admits") /\ s = "ok" -> "admit"
-      [] Verifiable(r) = "forbid" -> "deny"
-      [] j = "high" -> "hold"
-      [] s = "bad" -> "challenge"
-      [] OTHER -> "admit"
+    IF Flawed("judgment_admits") /\ j = "low" THEN "admit"
+    ELSE IF Flawed("self_report_admits") /\ s = "ok" THEN "admit"
+    ELSE IF Verifiable(r) = "forbid" THEN "deny"
+    ELSE IF j = "high" THEN "hold"
+    ELSE IF s = "bad" THEN "challenge"
+    ELSE "admit"
 
 AuthorityOf(d) ==
     [req |-> d.req, aud |-> d.req.aud, from |-> d.at, until |-> d.at + Validity,
@@ -254,6 +254,7 @@ EraseEvidence ==
 Decide(p, s, j) ==
     /\ dsUp
     /\ p \in pending
+    /\ (Flawed("late_decision_used") \/ now < p.deadline)
     /\ LET r == p.req
            collision == \E d \in decisions : d.req.id = r.id /\ d.req # r   \* DCMP2-005
            o == IF collision THEN "deny" ELSE Evaluate(r, s, j)
@@ -275,6 +276,7 @@ Decide(p, s, j) ==
 Resolve(h) ==
     /\ dsUp
     /\ h \in held
+    /\ now < h.deadline
     /\ LET r == h.req
            o == VerifiableOnly(r)
            d == [req |-> r, outcome |-> o, at |-> now, epoch |-> trustEpoch]
@@ -442,9 +444,16 @@ HaltAck(ep) ==
 
 (* Time advances only when the deadlines the control layer owes are met:   *)
 (* connected propagation within PropagationBound (ECL1N-0097) and halt     *)
-(* acknowledgment within HaltBound (TS1-036).                              *)
+(* acknowledgment within HaltBound (TS1-036), and resolution of pending     *)
+(* requests and holds at their deadlines. Tick may reach a deadline, but    *)
+(* cannot pass it until its request is resolved. Weak fairness supplies     *)
+(* eventual timeout transitions. These are model assumptions.               *)
 Tick ==
     /\ now < MaxTime
+    /\ \/ Flawed("no_decision_timeout") \/ Flawed("late_decision_used")
+       \/ \A p \in pending : now < p.deadline
+    /\ \/ Flawed("hold_never_times_out")
+       \/ \A h \in held : now < h.deadline
     /\ \/ Flawed("no_propagation_deadline")
        \/ \A ep \in EPs : ~dsUp \/ now + 1 - view[ep].synced <= PropagationBound
     /\ \/ Flawed("halt_unbounded")
@@ -574,10 +583,25 @@ SafeStateHasNoEffect ==
         ~\E e \in effects : \/ (e.auth = NoAuthority /\ e.scope = ScopeOf(r) /\ e.ep = r.aud)
                            \/ (e.auth # NoAuthority /\ e.auth.req = r)
 
+(* S9. The global clock cannot pass an unresolved decision or hold        *)
+(* deadline. This is an encoded scheduling assumption, not a measured      *)
+(* implementation latency bound.                                           *)
+DeadlineBound == \A q \in pending \cup held : now <= q.deadline
+
+(* The model uses an exclusive decision/hold boundary: at the deadline,    *)
+(* only timeout may resolve the request. TS1-009 says "exceeds"; this       *)
+(* stricter model choice does not establish equality behavior in an        *)
+(* implementation. Deliberately late decisions are exempt from the guard,  *)
+(* so the broken variant still exposes an effect after the safe state.     *)
+NoLateDecision ==
+    [][\A d \in decisions' \ decisions :
+        \A q \in pending \cup held : d.req = q.req => now < q.deadline]_vars
+
 Safety ==
     /\ TypeOK /\ EffectHasMatchingAdmit /\ EffectWithinAuthority /\ SingleUse
     /\ NoEffectBeyondHaltBound /\ RevocationBound /\ EffectHasEvidence
     /\ OneWayRule /\ AdmitOnlyAllowed /\ NoEffectDuringOutage /\ SafeStateHasNoEffect
+    /\ DeadlineBound
 
 -----------------------------------------------------------------------------
 (* Liveness under fairness.                                                *)

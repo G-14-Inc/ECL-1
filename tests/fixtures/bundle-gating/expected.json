@@ -1,0 +1,75 @@
+{
+  "trust_policy": "conformance/suites/evidence-bundle/trust-policy.json",
+  "evaluated_at": "2026-10-01T00:00:00Z",
+  "cases": [
+    {
+      "id": "core-binding-gates-release-window",
+      "path": "tests/fixtures/bundle-gating/core-binding-gates-release-window.json",
+      "base": "bundle-invalid-release-guard-reaches-valid-until",
+      "base_sha256": "b3e3632e115459881694c9e02fcf3a98cb8f65ec9ef845213f61abb83a85ed4d",
+      "rationale": "The release has both a wrong decision digest and an expired guard window. The core binding failure suppresses the window check; no expired finding should be emitted. The unbound release is also not counted as release evidence for the succeeded attempt (EBMP2-055), which gives the stage-8 finding.",
+      "expected_verdict": "invalid",
+      "expected_findings": [
+        "ecl.error.digest-mismatch.v1: execution:3 does not bind",
+        "ecl.error.digest-mismatch.v1: event decision digest does not match",
+        "ecl.error.decision-binding-invalid.v1: a succeeded attempt lacks consumed authority or release evidence"
+      ]
+    },
+    {
+      "id": "cross-event-code-order",
+      "path": "tests/fixtures/bundle-gating/cross-event-code-order.json",
+      "base": "bundle-invalid-order-within-event-binding",
+      "base_sha256": "8c8909914b428a30eae9481b7551ddb364234fe8067058f9b506f49c68d91a3b",
+      "rationale": "An invalid single-use consumption coexists with another event authority-digest fault and a release window fault. Decision-binding-invalid ranks before digest-mismatch and expired across events.",
+      "expected_verdict": "invalid",
+      "expected_findings": [
+        "ecl.error.decision-binding-invalid.v1: envelope 2: the use count is outside the authorization's use policy",
+        "ecl.error.digest-mismatch.v1: event authority digest does not match the grant",
+        "ecl.error.expired.v1: the release, with its declared release guard, lies outside the authorization's validity window"
+      ]
+    },
+    {
+      "id": "proof-digest-gates-proof-checks",
+      "path": "tests/fixtures/bundle-gating/proof-digest-gates-proof-checks.json",
+      "base": "bundle-invalid-discharge-carried-proof-other-digest",
+      "base_sha256": "c09785c3d9104fc7a09dcddb60be3b8e7cb7bfe640eb66a45c2f1701b82de9ac",
+      "rationale": "Wrong digests name the actor-signed request as a proof while entry fresh_until is stale. Entry freshness still fails, but the signer/type proof/reference checks must be suppressed.",
+      "expected_verdict": "invalid",
+      "expected_findings": [
+        "ecl.rule.prerelease-obligations-discharged.v1: object 3: /extensions/0/value/obligations/0/proof/digest: names an object of the bundle by another digest",
+        "ecl.rule.prerelease-obligations-discharged.v1: object 3: /extensions/0/value/obligations/1/proof/digest: names an object of the bundle by another digest",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/0/fresh_until: is not later than the release plus its declared release guard",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/1/fresh_until: is not later than the release plus its declared release guard"
+      ]
+    },
+    {
+      "id": "proof-digest-matching-control",
+      "path": "tests/fixtures/bundle-gating/proof-digest-matching-control.json",
+      "base": "bundle-invalid-discharge-carried-proof-other-digest",
+      "base_sha256": "c09785c3d9104fc7a09dcddb60be3b8e7cb7bfe640eb66a45c2f1701b82de9ac",
+      "rationale": "The same actor-signed request is named with its correct digest. Its signer and decision-message type failures must now be reported, alongside stale entry freshness.",
+      "expected_verdict": "invalid",
+      "expected_findings": [
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/0/fresh_until: is not later than the release plus its declared release guard",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/0/proof/reference: names a proof that the requesting actor signed",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/0/proof/reference: names a decision message as a proof",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/1/fresh_until: is not later than the release plus its declared release guard",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/1/proof/reference: names a proof that the requesting actor signed",
+        "ecl.error.obligation-unproven.v1: object 3: /extensions/0/value/obligations/1/proof/reference: names a decision message as a proof"
+      ]
+    },
+    {
+      "id": "stage8-binding-before-unproven",
+      "path": "tests/fixtures/bundle-gating/stage8-binding-before-unproven.json",
+      "base": "bundle-invalid-discharge-uncarried-proof-stale",
+      "base_sha256": "522f328bde0f574e5918fe95bf6c4f1dfb0c47f937bc3922560e71cc9b679281",
+      "rationale": "Removing the consumption and rebinding the release predecessor leaves a single-use release with stale uncarried proof. Stage-8 decision-binding-invalid ranks before obligation-unproven.",
+      "expected_verdict": "invalid",
+      "expected_findings": [
+        "ecl.error.decision-binding-invalid.v1: a succeeded attempt lacks consumed authority or release evidence",
+        "ecl.error.decision-binding-invalid.v1: envelope 2: a release of single-use authority has no recorded consumption",
+        "ecl.error.obligation-unproven.v1: object 2: /extensions/0/value/obligations/0/fresh_until: is not later than the release plus its declared release guard"
+      ]
+    }
+  ]
+}

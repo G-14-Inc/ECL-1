@@ -69,7 +69,8 @@ that names where the topic belongs.
 
 | Part | What it is |
 |---|---|
-| The core standard, its companion protocols and profiles, and the binding profiles | Normative |
+| The core standard, its companion protocols and profiles whose status is normative, including the binding profiles | Normative |
+| CONFORMANCE-CLAIMS-1, DEPLOYMENT-PROFILES-1 and OFFLINE-VERIFICATION-1 | Informative guides |
 | Schemas, registries and the requirement ledger | Normative machine-readable artifacts |
 | The conformance tests with their expected results, the incident replay suite, the assessment procedures and checklist, and sample evidence | Test and assessment material |
 | The agent and tool integration contract and the guides | Informative guidance |

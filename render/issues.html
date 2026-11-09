@@ -103,8 +103,10 @@ approved text whose destination changes.</p>
 <h2 id="ecl-issue-005-obligations-at-an-oauth-resource-server">ECL-ISSUE-005: Obligations at an OAuth resource server</h2>
 <p>Status: <strong>resolved in the candidate requirements and assessment procedure.</strong></p>
 <p>Resolution: <a href="oauth-authority-1.html#OA1-008">OA1-008</a> explicitly limits Version 1.0 to admits with an
-empty obligations list. All three verifiers reject issuance carrying any
-obligation; the private issuer also refuses it. Three negative corpus cases
+empty obligations list. All three verifiers reject an OAuth presentation record
+whose token was issued from an admit with a nonempty obligations list. The
+maintainer reports the same restriction for its issuer, which is outside this
+public package. Three negative corpus cases
 cover before-release, during-execution and after-execution obligations. Fresh
 proof retrieval and critical token-condition modes are not defined by this
 version. Actions needing them use an appropriate DCMP-2 enforcement path.</p>
@@ -127,8 +129,8 @@ support only some of these ways, provided that it states its capability boundary
 and that an obligation it does not support fails safely.</p>
 <h2 id="ecl-issue-006-evidence-retention-and-lawful-erasure">ECL-ISSUE-006: Evidence retention and lawful erasure</h2>
 <p>Status: <strong>resolved in the candidate requirements and assessment procedure.</strong></p>
-<p>Resolution: <a href="ecl-1_standard.html#ECL1N-0050">ECL1N-0050</a> gives a recorded legal-conflict procedure with
-qualified legal review, deadlines, minimization, lawful accountability records
+<p>Resolution: <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to <a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a> give a recorded legal-conflict procedure
+with qualified legal review, deadlines, minimization, lawful accountability records
 and assessment consequences. <a href="ecl-1_standard.html#ECL1N-0051">ECL1N-0051</a>, <a href="ecl-1_standard.html#FR-113">FR-113</a> and the lifecycle hold/precedence
 rules use the same exception. Destroyed or unavailable evidence is not treated
 as a complete original bundle. This resolves the technical precedence contract;
@@ -175,8 +177,8 @@ make the general prohibition and the class allowances refer to the same
 capabilities, keeping the existing disclosure and assessment obligations.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>standard/ISSUES.md</code>, SHA-256 <code>bab4bdbdb1c6cb3ea160113b5e8f9e8e48f3614a9de00138fa921e3e361a16f5</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>standard/ISSUES.md</code>, SHA-256 <code>bcf0fc2129eac0e198a2c54ff13f5474c29e5e895585716192ef88aed087ed69</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

@@ -709,8 +709,17 @@ def _signer_status(
     `at`; with `current`, the current policy's revocations apply too (TP1-006)."""
     signatures = envelope["signatures"]
     owner = _principal(payload)
+    integrity_policy = payload["integrity_policy"]
+    accepted_suites = integrity_policy["accepted_suites"]
+    eligible_keys = integrity_policy.get("eligible_key_ids", [])
     keys: list[TrustedKey] = []
     for signature in signatures:
+        # EBMP2-057 applies the payload-policy clauses of IE1-040 step 6(a)
+        # to every signature, including one not needed for the threshold.
+        if signature["suite_id"] not in accepted_suites or (
+            eligible_keys and signature["key_id"] not in eligible_keys
+        ):
+            return POLICY_INVALID
         key = _trusted_key(policy, signature["key_id"])
         if key is None or not _key_acceptable(key, signature, purpose, owner, original):
             return POLICY_INVALID
@@ -1202,6 +1211,11 @@ def _signer_dependencies(
     historical check, its historical status under the named version and the current policy's
     revocations, and its current status under the current policy at `now`."""
     owner = _principal(payload)
+    integrity_policy = _mapping(payload, "integrity_policy") or {}
+    accepted_suites = integrity_policy.get("accepted_suites")
+    accepted = accepted_suites if type(accepted_suites) is list else []
+    eligible_keys = integrity_policy.get("eligible_key_ids")
+    eligible = eligible_keys if type(eligible_keys) is list else []
     result: list[TrustDependency] = []
     signatures = envelope.get("signatures")
     for signature in signatures if type(signatures) is list else []:
@@ -1209,18 +1223,27 @@ def _signer_dependencies(
             continue
         key_id = _member_text(signature, "key_id")
         suite = _member_text(signature, "suite_id")
+        in_payload_policy = suite in accepted and (not eligible or key_id in eligible)
         own = times.get(key_id, at)
         key = _trusted_key(version, key_id)
         if envelope_status in _ENVELOPE_WIDE:
             historical = envelope_status
-        elif key is None or not _key_acceptable(key, signature, purpose, owner, None):
+        elif (
+            not in_payload_policy
+            or key is None
+            or not _key_acceptable(key, signature, purpose, owner, None)
+        ):
             historical = POLICY_INVALID
         else:
             historical = _key_time_status(key, version, own, current)
             if historical == "valid" and not _signature_valid(key, signature, envelope, version):
                 historical = INTEGRITY_INVALID
         present = _trusted_key(current, key_id)
-        if present is None or not _key_acceptable(present, signature, purpose, owner, version):
+        if (
+            not in_payload_policy
+            or present is None
+            or not _key_acceptable(present, signature, purpose, owner, version)
+        ):
             now_status = POLICY_INVALID
         else:
             now_status = _key_time_status(present, current, now)

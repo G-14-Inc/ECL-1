@@ -1,57 +1,63 @@
-# ECL-1: External Control Layer Standard
+# ECL-1 — External Control Layer Standard
 
-ECL-1 is a standard for controlling the consequential actions of AI systems:
-the actions that change something outside the system, such as a record, a
-payment, a message, an account or a piece of equipment. It requires a control
-layer outside the AI system whose actions it governs. Each in-scope action is
-decided and authorized before it takes effect, and enforced at the point where
-it takes effect. Each decision leaves signed evidence that a third party can
-check and, from level `L2`, verify offline: which component asserted what, with
-which key, about which request and decision.
+**An open standard for governing AI actions before they take effect.**
 
-This repository holds **ECL-1 Version 1.0**, a published standard maintained by
-G-14, Inc. [RELEASE-NOTES-1.0.md](RELEASE-NOTES-1.0.md) says what Version 1.0
-is and what changed from the last release candidate, and
-[CHANGELOG.md](CHANGELOG.md) lists the requirements that each version
-introduced, changed and retired.
+ECL-1 specifies how consequential AI actions are authorized, enforced and
+recorded. It is for people who build, operate, procure or assess systems that can
+change records, move money, send messages or operate equipment.
 
-## Start here
+**Authored and produced by Robert F. Tilley Jr. and G-14, Inc.**
 
-[Choose your first task](docs/start-here.md): verify supplied evidence, run one
-[bounded teaching workflow](examples/bounded_workflow/README.md), implement a
-boundary, assess a claim or contribute a correction. The
-[release brief](docs/release-brief.md) lists the public materials and their
-limits. `CITATION.cff` identifies the exact standard version for citation.
+[**Explore ECL-1 → externalcontrollayer.ai**](https://externalcontrollayer.ai/) ·
+[**Read the reference book**](https://doi.org/10.5281/zenodo.24092833) ·
+[**Get the current release**](https://github.com/G-14-Inc/ECL-1/releases/latest)
 
-## Release files and verification
+![An AI system proposes an action; an external control layer checks authority and enforces a decision before release, leaving signed evidence.](docs/assets/ecl-control-path.svg)
 
-The [Version 1.0 GitHub release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0)
-provides five files: `ecl-1-1.0.zip`, `ecl-1-1.0-manifest.json`,
-`ecl-verify.cdx.json`, `ecl-ts.cdx.json` and `SHA256SUMS`. The archive contains
-the public specification, supporting documents, formal models, conformance
-corpus, verifiers and teaching workflow. The two CycloneDX SBOMs describe the
-Python and TypeScript verifiers' exact public dependency locks.
+An AI system may be able to reach a tool or use a credential. ECL-1 requires a
+separate decision about whether the exact action may proceed. For the actions
+covered by a mediation claim, an enforcement boundary outside the governed AI's
+control applies that decision. Missing required authorization or proof leads
+to denial, restriction or halt. Signed records connect the decision to the
+request and to what the enforcing component reports.
 
-Download all five files from the same release. From their directory, check:
+The standard brings these obligations together with emergency controls,
+integration profiles, evidence formats and assessment rules. Each implementation
+must establish conformance within its declared actions, boundaries and trust
+assumptions. [Read the guarantee and its scope](#the-guarantee).
 
-```sh
-sha256sum --check --strict SHA256SUMS
-```
+## Start with what you need
 
-On Windows, `Get-FileHash -Algorithm SHA256 <filename>` computes a file's
-digest for comparison with `SHA256SUMS`. The manifest also lists every archive
-member's size and SHA-256. Version 1.0 is cryptographically unsigned; these
-checks establish agreement with the release's published digests, rather than
-an independently authenticated publisher identity.
+| Your task | Start here |
+|---|---|
+| Understand the standard | [Website](https://externalcontrollayer.ai/) · [Core specification](standard/ECL-1_Standard.md) |
+| Read or cite the complete reference | [Version 1 reference edition — 603 pages](https://doi.org/10.5281/zenodo.24092833) |
+| Try one controlled action | [Run the simulated workflow](examples/bounded_workflow/README.md) |
+| Check supplied evidence | [Browser verifier](https://externalcontrollayer.ai/verifier) · [Verification quickstart](docs/quickstart.md) |
+| Build an integration | [Integration contract](docs/integration-contract.md) · [Implementation guidance](https://externalcontrollayer.ai/implementation) |
+| Assess a claim | [Conformance](https://externalcontrollayer.ai/conformance) · [Section 11 checklist](standard/ECL-1_Standard.md#11-conformance-checklist) |
+| Examine the design | [Formal models and recorded checks](formal/README.md) · [Reviewer guide](docs/reviewer-guide.md) |
 
-The [release notes](RELEASE-NOTES-1.0.md#review-status) disclose the review
-status and the maintainer's
-[Version 1.0 release exception](governance/RELEASE_POLICY.md#version-10-release-exception).
-The [formal specification and model-checking description](#formal-specification-and-model-checking)
-explains all 32 TLC configurations and the nine separate Tamarin checks,
-including their assumptions, expected counterexamples, reproduction commands
-and limits. These results apply to the modeled design; implementation and
-deployment conformance require their own evidence.
+## What is available
+
+**ECL-1 Version 1.0 · Current source release v1.0.1 · Complete Reference Edition, Version 1**
+
+- **628 requirement entries** across the core standard and normative companions.
+- **1,011 conformance test vectors**, with expected results and capability scopes.
+- **Protocols and integration profiles** for authorization, evidence, MCP, OAuth,
+  AuthZEN, AARM, OWASP ACS and OpenTelemetry.
+- **Verification tools** in TypeScript, Python, Go and the browser, with their
+  supported capabilities documented.
+- **TLA+ and Tamarin models**, recorded checks, deliberately broken variants,
+  reachability witnesses and stated assumptions.
+- **A 603-page reference book**, bringing the specification, guides, model listings
+  and indexes together in one citable edition.
+
+The standard and public tools are free under their published licenses. The text
+is licensed under [CC BY 4.0](LICENSE-CC-BY-4.0); code and machine-readable
+artifacts are under [Apache-2.0](LICENSE). See [LICENSING.md](LICENSING.md) and
+the [essential-claims patent pledge](PATENTS.md) for the terms that apply.
+Implementing ECL-1 does not require purchasing a G-14 product or service.
 
 ## The guarantee
 
@@ -157,8 +163,8 @@ and every measured unit of the coverage denominator
 ([conformance/coverage-denominator.json](conformance/coverage-denominator.json))
 has a passing and a failing vector. Sample evidence, signed bundles with the
 trust policy that verifies them, is in `conformance/fixtures/evidence/`. A run
-of the tests is recorded in the conformance report template
-[conformance/report-template-v2.json](conformance/report-template-v2.json).
+of the tests is recorded in a report following the conformance report template
+[conformance/report-template-v3.json](conformance/report-template-v3.json).
 [conformance/scenarios/](conformance/scenarios/README.md) holds ten incident
 scenarios from the Control Gap Record, each with the outcome every step must
 have.
@@ -195,9 +201,8 @@ deployment's conformance claim require their own evidence.
 | [formal/protocol/DCMP2_Binding.spthy](formal/protocol/DCMP2_Binding.spthy) | The separate Tamarin model of signed DCMP-2 messages and their binding |
 
 **TLA+ is the specification language; TLC is the explicit-state model checker.**
-TLAPS is a separate system for checking deductive proofs. This package's TLA+
-assurance comes from TLC model checking, not a TLAPS proof of the entire
-standard or its implementations. The distinctions are described by the
+TLAPS is a separate system for checking deductive proofs. This package uses
+TLC to check selected finite configurations. The distinctions are described by the
 [TLA+ tools documentation](https://lamport.azurewebsites.net/tla/tools.html).
 TLC runs as an engineering check of the model; it is not an authorization
 service invoked before each deployed action. The deployed control layer must
@@ -216,7 +221,9 @@ The model represents the following participants and state.
   evidence, or reach an effect around enforcement.
 - **The decision service** returns `admit`, `deny`, `hold` or `challenge` under
   policy and trust state. Only an `admit` issues authority. Reuse of a request
-  identifier with different request content is denied. An authenticated
+  identifier with different request content is denied when the earlier
+  request has a recorded decision. A request closed by timeout without a
+  decision is outside that collision history. An authenticated
   approval or signed witness can resolve a hold or challenge through a new
   decision based on verifiable inputs; that resolution is not a step the actor
   can perform. Decision-service failure and recovery are explicit transitions.
@@ -265,8 +272,9 @@ in the issued set and the checks defined by `Admissible`:
 3. The executing enforcement point is the authority's audience.
 4. Time is in the half-open validity interval: `from <= now < until`.
 5. The authority has not already been consumed.
-6. Its local revocation view does not revoke the authority, and its epoch is
-   acceptable against the enforcement point's refreshed epoch.
+6. The executing enforcement point's local revocation view does not revoke
+   the authority, and the authority's epoch is acceptable against that
+   enforcement point's refreshed epoch.
 7. The enforcement point's control state is within its staleness bound.
 8. The enforcement point has not acknowledged a halt.
 
@@ -278,7 +286,7 @@ idempotency or exactly-once delivery.
 ### Every checked safety property
 
 Safety describes what must never go wrong. The three correct configurations
-each check **11 state invariants and four action properties**. An invariant
+each check **12 state invariants and five action properties**. An invariant
 constrains each reachable state; an action property constrains transitions,
 including how an effect relates to the control state immediately before it.
 The requirement mappings for every property are in
@@ -295,8 +303,10 @@ The requirement mappings for every property are in
 | `EffectHasEvidence` | State invariant | Every modeled effect has its corresponding modeled evidence record. |
 | `OneWayRule` | State invariant | Every decision is at least as restrictive as the policy outcome supported by verifiable inputs alone. Actor-influenced self-reports and judgment cannot turn a verifiable denial into admission. |
 | `AdmitOnlyAllowed` | State invariant | Every `admit` concerns an action in the set supported by the model's verifiable inputs. |
-| `NoEffectDuringOutage` | State invariant | An effect during a service outage uses authority issued before the outage and remains inside the staleness bound counted from its start; the other authority checks still apply. The name does not mean that all effects during every outage are prohibited. |
+| `NoEffectDuringOutage` | State invariant | An effect during a service outage uses authority issued before the outage and remains inside the staleness bound counted from the start of the outage; the other authority checks still apply. The name does not mean that all effects during every outage are prohibited. |
 | `SafeStateHasNoEffect` | State invariant | A request that ended in denial or the declared safe state has no effect. A late decision must not revive that closed request. |
+| `DeadlineBound` | State invariant | Model time cannot pass an unresolved decision or hold deadline; the constraint is encoded in `Tick`. |
+| `NoLateDecision` | Action property | A new decision for a pending or held request precedes its deadline, using the model's conservative exclusive boundary. |
 | `NoEffectAtHaltedEP` | Action property | Once an enforcement point acknowledges a halt, it produces no new effect. |
 | `NoEffectWithKnownRevocation` | Action property | An enforcement point produces no new effect using authority it already knows is revoked or from an ended epoch. |
 | `LogAppendOnly` | Action property | Existing evidence records are retained unchanged and in order; transitions cannot erase or rewrite the log's existing prefix. |
@@ -328,13 +338,18 @@ halt, or the environment to restore the failed service. A timeout can satisfy
 resolution through safe closure; liveness does not promise that each request
 will be approved or that an admitted request will actually execute.
 
-Time advances only while the model's connected-propagation and
-halt-acknowledgment obligations are respected. Those transition guards encode
+Time advances only while the model's connected-propagation, halt-acknowledgment
+and pending-request/hold deadline obligations are respected. It can reach an
+unresolved deadline but cannot pass it until the request is resolved. Decisions
+require `now < deadline`; this exclusive boundary is a conservative model
+choice, while TS1-009 says a gate that "exceeds" its deadline enters the safe
+state. Deadlines are clamped to `MaxTime`; a request submitted at that horizon
+or with a zero decision deadline permits only timeout resolution. Those transition guards encode
 the timing contract being analyzed. TLC does not demonstrate that real
 hardware, networks, scheduling or operators can meet its bounds. That requires
 implementation and deployment measurements, including release-boundary clock
-checks. The configuration also sets `CHECK_DEADLOCK FALSE`; these runs should
-not be presented as a separate general deadlock-freedom result.
+checks. All 32 TLC configurations set `CHECK_DEADLOCK FALSE`, disabling
+deadlock checking. The modeled clock stops at `MaxTime`.
 
 ### The finite configurations and what they cover
 
@@ -360,12 +375,17 @@ deployment limit.
 | Halt acknowledgment bound `B` | 1 tick; no halt in this configuration | 1 tick | 1 tick |
 | Refresh without new control information | Omitted as redundant under these bounds | Permitted | Permitted |
 | Symmetry reduction | Enforcement points and request identifiers | Enforcement points and request identifiers | None |
-| Properties checked | All 15 safety properties | All 15 safety properties | All 15 safety properties plus three liveness properties |
+| Properties checked | All 17 safety properties | All 17 safety properties | All 17 safety properties plus three liveness properties |
 
 The binding configuration exercises changed targets, parameters, request
 identifiers and audiences. The control configuration exercises failure,
 recovery, revocation, trust change and halt. The liveness configuration checks
-resolution and halt acknowledgment under fairness. Symmetry reduction treats
+resolution and halt acknowledgment under fairness. Some properties hold
+trivially in configurations that disable their triggering behavior:
+`correct-binding` permits no outages, revocations, trust changes or halt;
+`correct-control` contains only the allowed action; and `correct-liveness`
+permits neither revocation nor trust change. The witnesses below establish
+their named situations within their own bounds. Symmetry reduction treats
 interchangeable enforcement-point and request-identifier names alike; it is
 disabled for liveness because it can hide a liveness violation. A result for
 these configurations is not an inductive proof for an arbitrary fleet size,
@@ -373,7 +393,7 @@ number of requests or time horizon.
 
 ### Deliberately broken designs: every negative TLC check
 
-Each variant removes a named rule. The runner requires TLC to find a violation
+Each variant removes or alters a named rule. The runner requires TLC to find a violation
 of the particular property listed below. A counterexample is therefore the
 **expected successful outcome of the negative test**, not a passing result for
 the defective design. These variants demonstrate the significance of the
@@ -432,15 +452,16 @@ enforcement and timing meet the declared contract.
 ### Recorded results and how to reproduce them
 
 The checked-in [results record](formal/results.json) reports these positive
-TLC runs. State counts are separate explored graphs and are not added together
-as a count of unique system states. Durations describe the recorded machine,
+TLC runs of November 7, 2026 on the repaired model. The original release record
+remains in the original release archive. State counts describe separately
+explored state graphs; their sum would not count unique system states. Durations describe the recorded machine,
 not a deployment performance guarantee.
 
 | Correct configuration | Distinct states | States generated | Search depth | Recorded seconds | Outcome |
 |---|---:|---:|---:|---:|---|
-| `correct-binding` | 1,724,911 | 7,528,740 | 14 | 69.4 | No error found |
-| `correct-control` | 7,613,132 | 29,655,925 | 24 | 160.6 | No error found |
-| `correct-liveness` | 131,839 | 456,742 | 17 | 22.5 | No error found |
+| `correct-binding` | 453,291 | 1,081,821 | 14 | 13.9 | No error found |
+| `correct-control` | 4,606,888 | 17,564,984 | 24 | 104.4 | No error found |
+| `correct-liveness` | 58,148 | 136,618 | 17 | 9.2 | No error found |
 
 The record also reports the required counterexample for each of the 22 broken
 variants and seven witnesses. Its `passed` field means that the observed
@@ -453,10 +474,12 @@ The runner pins **TLC 1.7.4** and verifies the `tla2tools.jar` SHA-256
 `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`.
 It runs TLC with one worker and a 1,500 MB Java heap. The per-check time limit
 is controlled by `--timeout` (in seconds), which defaults to `900`.
-The reproduction guide calls for Java 21; the
-checked-in historical record reports Java `17.0.20.1`. Record the actual Java
-version used by a new run rather than describing that historical record as a
-Java 21 run. Pinned Tamarin and Maude downloads and their digests are listed in
+The runner records the actual Java runtime per check and imposes no Java 21
+gate. The new TLC checks used Java `17.0.20.1`; the original record also named
+that version in its shared field but lacked per-check runtime metadata.
+New v2 records retain per-check input and output hashes, commands and timestamps;
+complete captured outputs are in `formal/evidence/`. Pinned Tamarin and Maude
+downloads and their digests are listed in
 [the reproduction guide](formal/README.md#running-the-checks).
 
 From the repository root, with Python 3.10 or later and the pinned TLC JAR:
@@ -488,14 +511,14 @@ python3 formal/run_checks.py \
 ```
 
 `ECL_TLA2TOOLS_JAR`, `ECL_TAMARIN_PROVER` and `ECL_MAUDE_DIR` provide the same
-tool locations. Missing tools or mismatched pins cause refusal unless the
-explicit exploratory `--allow-unpinned` option is selected. A run with
+tool locations. A missing tool causes refusal. Mismatched pins cause refusal
+unless the explicit exploratory `--allow-unpinned` option is selected. A run with
 mismatched pins cannot produce a recorded result, even with that override.
 A TLC-only or single-configuration run is not the
 complete formal suite. `--readme` only regenerates the detailed guide's result
 tables from the existing record; it does not run a checker.
 
-Every check's recorded `inputs` binds the model files and, for TLC, the exact
+Every check's recorded `inputs` field binds the model files and, for TLC, the exact
 configuration by SHA-256. `--record` can preserve checks not selected in that
 invocation, so the presence of a combined file alone does not show that all
 checks ran in the current invocation. Inspect its coverage, input digests,
@@ -532,8 +555,8 @@ deployment evidence. In particular:
 
 - **Mediation and separation are modeled boundaries.** The correct design
   gives the actor no bypass or write access to control records; the broken
-  variants show the consequences of removing that separation. They do not
-  discover every credential, network path, administrative capability or
+  variants show the consequences of removing that separation. The models do
+  not discover every credential, network path, administrative capability or
   alternate tool route in a real deployment.
 - **Cryptographic detail is abstracted.** TLA+ uses exact structured values
   rather than cryptographic digests, and its append-only sequence is not a
@@ -580,8 +603,7 @@ deployment evidence. In particular:
   halt bounds, trusted verifiable sources and separately authenticated control
   are part of the model's contract. A larger configuration or a real system
   that violates those assumptions can fail despite these model-checking
-  results. The results alone supply no implementation certification,
-  conformance level, control-independence class or release qualification.
+  results.
 
 [From the models to an implementation](formal/README.md#from-the-models-to-an-implementation)
 maps these abstraction boundaries to the relevant requirements. The formal
@@ -611,12 +633,12 @@ node dist/cli/ecl-verify.js ../../conformance/fixtures/evidence/succeeded.json \
 Python (`ecl-verify`) and Go (`ecl-verify-go`) command-line verifiers are also
 published in [packages/ecl-verify](packages/ecl-verify/README.md) and
 [go/crosscheck](go/crosscheck/README.md). The [quickstart](docs/quickstart.md)
-runs all three and the shared corpus from this package alone.
+runs all three and the shared corpus from this release alone.
 
-It prints the verdict (`verified`, `invalid`, `incomplete` or
+The `ecl-verify-ts` command prints the verdict (`verified`, `invalid`, `incomplete` or
 `current-trust-failed`), what the verdict establishes and what it does not, and
-it exits with 0 for a verified bundle. `--json` prints the report as JSON. The
-package's own unit and browser tests ship with it (`npm test`,
+it exits with 0 for a verified bundle. Its `--json` option prints the report as
+JSON. The TypeScript package's unit and browser tests ship with that package (`npm test`,
 `npm run test:browser`), and `node scripts/check-corpus.mjs` runs
 `ecl-verify-ts` on every bundle and package vector of the conformance tests and
 compares each verdict with the expected one.
@@ -648,17 +670,18 @@ requirement governs.
 
 ## Taking part
 
-G-14, Inc. and Robert Tilley Jr. provide the interim editorial and contact
+G-14, Inc. and Robert F. Tilley Jr. provide the interim editorial and contact
 function while the community working group is being formed. ECL-1 is open to
 community participation and stewardship under the charter. Community roles,
 working-session dates and agendas will be announced publicly as they are
 established; no outside appointment or completed meeting is implied.
 Contact ecl@g14.ai to participate.
 
-ECL-1 is developed in the open by the ECL-1 Working Group. Anyone may join, at
-no cost, by signing up through this repository, as [community/WORKING_GROUP.md](community/WORKING_GROUP.md)
-describes; the working group meets in public working sessions and keeps public
-notes. The [charter](governance/CHARTER.md) sets out how it works: the editors
+The charter provides for open development through the ECL-1 Working Group.
+Anyone may join, at no cost, by signing up through this repository, as
+[community/WORKING_GROUP.md](community/WORKING_GROUP.md) describes. Working
+sessions and public notes will follow the charter's procedures once sessions
+are established and announced. The [charter](governance/CHARTER.md) sets out how it works: the editors
 propose, the working group discusses, and the editors decide by rough consensus
 and record the reason. [governance/](governance/README.md) holds the change,
 errata, registry, release and appeals procedures.
@@ -695,3 +718,37 @@ editors and the chair of the working group, runs public review, and publishes
 releases and errata. G-14 is developing a commercial implementation of ECL-1. Nothing in the
 standard depends on it, and an implementation's conformance claim, G-14's
 included, is self-declared under the same rules as any other.
+
+## Release identity and verification
+
+The [v1.0.1 release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0.1)
+contains `ecl-1-1.0.1.zip`, `ecl-1-1.0.1-manifest.json`,
+`ecl-verify.cdx.json`, `ecl-ts.cdx.json` and `SHA256SUMS`, together with the
+Version 1 reference PDF, font notices and correction record. The archive contains
+the public specification, supporting documents, formal models, conformance
+corpus, verifiers and teaching workflow. The two CycloneDX SBOMs describe the
+Python and TypeScript verifiers' exact public dependency locks.
+
+`SHA256SUMS` covers every supplied release asset other than itself. Download
+them into one directory, then check:
+
+```sh
+sha256sum --check --strict SHA256SUMS
+```
+
+On Windows, `Get-FileHash -Algorithm SHA256 <filename>` computes a file's
+digest for comparison with `SHA256SUMS`. The manifest also lists every archive
+member's size and SHA-256. G-14, Inc. supplies no separate maintainer
+signature for this release. Hashes establish file integrity;
+any hosting-service attestation has its own identity and verification scope.
+The [original v1.0 release](https://github.com/G-14-Inc/ECL-1/releases/tag/v1.0)
+and its five assets remain available under their original names and digests.
+
+The [release notes](RELEASE-NOTES-1.0.md#review-status) disclose the review
+status and the maintainer's
+[correction-release exception](governance/RELEASE_POLICY.md#correction-release-exception-v101).
+The [formal specification and model-checking description](#formal-specification-and-model-checking)
+explains all 32 TLC configurations and the nine separate Tamarin checks,
+including their assumptions, expected counterexamples, reproduction commands
+and limits. These results apply to the modeled design; implementation and
+deployment conformance require their own evidence.

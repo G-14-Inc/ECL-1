@@ -88,7 +88,9 @@ matches it, which makes it `corroborated` (EBMP2-061). What the evidence cannot
 show, such as the absence of another path or of another credential, you
 establish by procedure.
 
-You can check the verifier before you rely on it. In
+Installing the pinned dependencies with `npm ci` may require network access;
+verification after installation is offline. The commands below run the
+package's own checks. In
 [packages/ecl-ts](../packages/ecl-ts/README.md), after `npm ci` and
 `npm run build`, `npm test` runs its unit tests, `npm run test:browser` the
 browser page's tests in Chromium, `node scripts/build-verifier.mjs --check`

@@ -110,7 +110,10 @@ subject to the recorded legal determination under ECL1N-0195 to ECL1N-0199.
 and bounded.
 
 **EL1-027** — Conflicting lifecycle instructions MUST enter hold or
-indeterminate state until an authorized precedence decision is recorded under
-ECL1N-0050, within the applicable deadline. A hold MUST NOT authorize retention
+indeterminate state until an authorized precedence decision is recorded within
+the applicable deadline. A conflict about legal retention obligations MUST
+follow ECL1N-0195 to ECL1N-0199; other conflicts MUST be resolved under the
+declared lifecycle policy and the applicable profile's authority and
+change-control requirements (EL1-002, EL1-003 and EL1-010). A hold MUST NOT authorize retention
 that the legal determination prohibits. Unavailable evidence MUST remain
 disclosed, with verification and assessment limited to the evidence retained.

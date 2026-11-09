@@ -96,7 +96,7 @@ decision-request purpose
 ([TP1-009](../render/trust-policy-1.html#TP1-009)), never a key that signs
 evidence events ([ECL1N-0156](../render/ecl-1_standard.html#ECL1N-0156)).
 
-### What it may not do before the decision
+### What it must not do or hold
 
 - Cause the effect: Enforcement applies the outcome before execution
   ([ECL1N-0036](../render/ecl-1_standard.html#ECL1N-0036)), and no undisclosed
@@ -256,9 +256,11 @@ From `conformance/vectors/dcmp-2/valid-decision-request.json`:
 ```
 
 The agent is the actor and the tenant the subject
-([DCMP2-009](../render/dcmp-2.html#DCMP2-009)); target and parameters are the
-subject of the decision, bound by `parameters_digest`
-([DCMP2-007](../render/dcmp-2.html#DCMP2-007)); `constraints` and `budget_debit`
+([DCMP2-009](../render/dcmp-2.html#DCMP2-009)). The parameters are bound by
+`parameters_digest` ([DCMP2-007](../render/dcmp-2.html#DCMP2-007)); the target
+and complete action, together with the request identifier, are bound by the
+authorization's `scope_digest` ([DCMP2-044](../render/dcmp-2.html#DCMP2-044)).
+`constraints` and `budget_debit`
 are the agent's statements ([DCMP2-054](../render/dcmp-2.html#DCMP2-054)). An
 `admit` must name the enforcement point
 `urn:example:enforcement:payments-gate-1` with a single-use authorization of at
@@ -526,28 +528,40 @@ guard added, and forwards exactly the bound call
   write ([MG1-014](../render/mcp-gateway-1.html#MG1-014)).
 - `forwarded_at` and the release event's `observed_at` are the final observation
   ([MG1-015](../render/mcp-gateway-1.html#MG1-015),
-  [EBMP2-071](../render/ebmp-2.html#EBMP2-071)). A send that completes at or
-  after `valid_until` is marked in a critical extension and reported, after the
-  fact ([MG1-015](../render/mcp-gateway-1.html#MG1-015),
+  [EBMP2-071](../render/ebmp-2.html#EBMP2-071)). Immediately after the transport
+  write returns, the gateway measures elapsed monotonic time from the final
+  observation. If the final wall-clock observation plus that elapsed time is
+  at or after `valid_until`, it sets the critical `released_after_valid_until`
+  marker and reports the late write. The server's answer time does not set
+  this marker ([MG1-015](../render/mcp-gateway-1.html#MG1-015),
   [EBMP2-072](../render/ebmp-2.html#EBMP2-072)).
 
 ### Journal and recovery
 
-- A gateway that retains exchange records journals each event, with the record
-  and the signed decision messages, makes each entry durable before the step it
-  evidences, and keeps it until the record and bundle are durable
+- A gateway that retains exchange records makes the signed decision messages
+  durable before consumption. It commits each consumed use with its signed
+  `authority_consumed` event in the authoritative use store, journals the same
+  event, and makes each required journal entry durable before proceeding to
+  the next release step. The journal remains until the record and bundle are durable
   ([MG1-016](../render/mcp-gateway-1.html#MG1-016)), which preserves the
   recovery information of [ECL1N-0189](../render/ecl-1_standard.html#ECL1N-0189)
   before the release.
-- At start, each journal is settled by what it holds, never by what it lacks,
-  without retrying: a release without a terminal becomes `unknown`, and no
-  release becomes `cancelled` after an `admit`
+- At start, recovery uses the journal and the authoritative consumption record
+  without retrying. A journal with `execution_released` and no terminal event
+  yields `unknown`. Without `execution_released`, a committed use yields
+  `cancelled`; an admit established to have consumed no use, or an exchange
+  without a verified decision, yields `denied`; a verified non-admit retains
+  its non-release state. Unresolved consumption produces no terminal asserting
+  a resolved state and blocks further uses of the authorization
   ([MG1-016](../render/mcp-gateway-1.html#MG1-016)). The claim declares which of
   process exit, host crash, storage failure and evidence-service loss the
   journal survives ([MG1-016](../render/mcp-gateway-1.html#MG1-016),
   [ECL1N-0190](../render/ecl-1_standard.html#ECL1N-0190)).
 - An entry that cannot be made durable before the release stops it, with -31011
-  unless an earlier cause applies
+  under MG1-006's precedence and cancellation exception. A committed use stays
+  consumed; a failure before consumption cannot be recorded as consuming or
+  cancelling a use. If the terminal cannot be made durable, the gateway reports
+  that failure and retains the available recovery information
   ([MG1-017](../render/mcp-gateway-1.html#MG1-017)).
 
 ### What it records
@@ -707,8 +721,8 @@ of a DCMP-2 response that an ECL decision point signs for the exact request
 - **Pass as `verifiable`.** A Guardian decision carried by a hook is
   `actor_supplied` unless the decision point verifies the Guardian's own
   signature under a key that the governed AI system cannot use, which an
-  ACS-Core HMAC is not, and the decision of an `agent` or `composite` evaluator
-  is `judgment` ([AC1-004](../render/acs-binding-1.html#AC1-004)); AARM's R2, R3
+  ACS-Core HMAC is not, and the decision of an `agent` or `composite` evaluator,
+  or of a Guardian that states no evaluator, is `judgment` ([AC1-004](../render/acs-binding-1.html#AC1-004)); AARM's R2, R3
   and R7 outputs are `judgment`
   ([AB1-006](../render/aarm-binding-1.html#AB1-006)).
 - **Create authority or release.** An ACS `allow` creates no ECL authority
@@ -764,7 +778,7 @@ decision appears once, as an R4 `judgment` input
 | A key that signs decision responses, evidence events, observations or time attestations, or a way to invoke one except through its component | The governed AI system | [ECL1N-0156](../render/ecl-1_standard.html#ECL1N-0156); one role per key, [ECL1N-0157](../render/ecl-1_standard.html#ECL1N-0157), [TP1-009](../render/trust-policy-1.html#TP1-009); the inventory, [ECL1N-0155](../render/ecl-1_standard.html#ECL1N-0155); from `L2`, non-exportable keys and recorded signing, [ECL1N-0160](../render/ecl-1_standard.html#ECL1N-0160) |
 | The power to change the policy, the register, the reachable tool manifest, an enforcement configuration, the trust policy or a detection response without another person's review | Anyone, its author included | [ECL1N-0170](../render/ecl-1_standard.html#ECL1N-0170), [ECL1N-0166](../render/ecl-1_standard.html#ECL1N-0166) |
 | A power to rewrite, disable or bypass a control responsibility, its evidence and signing records included | The governed AI system | [ECL1N-0032](../render/ecl-1_standard.html#ECL1N-0032), [ECL1N-0046](../render/ecl-1_standard.html#ECL1N-0046), [ECL1N-0160](../render/ecl-1_standard.html#ECL1N-0160), [FR-001](../render/ecl-1_standard.html#FR-001) |
-| Write access to a source of a `verifiable` input | The governed AI system | [ECL1N-0178](../render/ecl-1_standard.html#ECL1N-0178) |
+| Ability to produce or overwrite a verifiable input's asserted value without independent validation, or to alter or bypass its authenticity or transition checks | The governed AI system | [ECL1N-0178](../render/ecl-1_standard.html#ECL1N-0178) |
 | Unilateral change to control approval or evidence verification, in a `Class B` or `Class C` claim | The governed AI system and ordinary operators | [ECL1N-0143](../render/ecl-1_standard.html#ECL1N-0143) |
 
 ## 8. The evidence a buyer's verifier must be able to check
@@ -910,9 +924,10 @@ chain or log record never shows that an action was authorized or released
   [MG1-009](../render/mcp-gateway-1.html#MG1-009); checklist item
   [EA-25](../render/ecl-1_standard.html#1133-enforcement-and-action-controls)).
 - **A component's test result.** The conformance tests that apply to a
-  component show, for a named version, whether it meets the connection
-  requirements of this contract for its role. That result says nothing about a
-  deployment's evidence or enforcement, and it is not a conformance claim: a
+  component show, for a named version, whether its records and messages agree
+  with the expected results of the vectors for its role. Requirements those
+  records cannot establish still need an assessor's procedure. The vector
+  result establishes no deployment's evidence or enforcement, and it is not a conformance claim: a
   claim declares a System of Interest, boundary class and level
   ([ECL1N-0009](../render/ecl-1_standard.html#ECL1N-0009),
   [ECL1N-0073](../render/ecl-1_standard.html#ECL1N-0073),

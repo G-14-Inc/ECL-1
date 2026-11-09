@@ -75,8 +75,8 @@ maps to `deny`; STEP_UP maps to `challenge` naming the approval required
 
 **AB1-004** — A MODIFY decision MUST NOT release the original action. The
 modified action, if it is to go ahead, MUST be submitted as a new DCMP-2
-decision request that carries the modified parameters, as the same JSON values,
-in `action.parameters` and `action.parameters_digest`, carries the original
+decision request that carries the modified parameters as the same JSON values
+in `action.parameters`, and their digest in `action.parameters_digest`, carries the original
 request's `issuer`, `actor`, `subject`, `delegation_chain`, `authority_request`,
 `constraints` and `integrity_policy`, and its `action` with only `action_id`,
 `parameters` and `parameters_digest` changed, names the original request as a
@@ -222,7 +222,10 @@ fails a rule MUST be reported with that rule. The decision basis of the record's
 basis of the `response`, member for member, and MUST record the same inputs,
 compared as input names are, each with the `class`, `required`, `source` and
 `derived_from` that the record's `inputs` give it; a record that breaks this
-MUST be reported as `ecl.rule.aarm-inputs-match-basis.v1`.
+MUST be reported as `ecl.rule.aarm-inputs-match-basis.v1`. The modification
+request MUST be decided under the register version of the first decision. If
+that version is no longer in force, the Decision Layer MUST NOT admit the
+modification.
 
 The record is the adapter's account of a decision, and the response is the
 decision point's signed account of the same decision. If the two could
@@ -242,9 +245,7 @@ the same reason, since its `admit` releases the modified action. The new request
 is the original action with the modified parameters (AB1-004), of the same
 action class, so the register version declares the same inputs for both
 decisions; the status, effect, reference and times of each input describe the
-new decision and may differ. The new request is decided under the register
-version of the first decision; if that version is no longer in force, the
-modification is not admitted.
+new decision and may differ.
 
 ## Decision mapping (informative)
 

@@ -1,0 +1,612 @@
+theory DCMP2_Binding
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, pae/2, pair/2, pk/1, sign/2, snd/1, true/0,
+           verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+restriction RequestSignatureVerified:
+  "∀ x #i. (RequestSignature( x ) @ #i) ⇒ (x = true)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x #i. (RequestSignature( x ) @ #i) ⇒ (x = true)"
+  */
+
+restriction UniqueRequestIdentifier:
+  "∀ d rid #i #j.
+    ((DP_Seen( d, rid ) @ #i) ∧ (DP_Seen( d, rid ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ d rid #i #j.
+    ((DP_Seen( d, rid ) @ #i) ∧ (DP_Seen( d, rid ) @ #j)) ⇒ (#i = #j)"
+  */
+
+restriction ResponseSignatureVerified:
+  "∀ x #i. (ResponseSignature( x ) @ #i) ⇒ (x = true)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x #i. (ResponseSignature( x ) @ #i) ⇒ (x = true)"
+  */
+
+restriction ResponseAnswersTheRequest:
+  "∀ r1 r2 d1 d2 #i.
+    (ResponseAnswers( r1, r2, d1, d2 ) @ #i) ⇒ ((r1 = r2) ∧ (d1 = d2))"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ r1 r2 d1 d2 #i.
+    (ResponseAnswers( r1, r2, d1, d2 ) @ #i) ⇒ ((r1 = r2) ∧ (d1 = d2))"
+  */
+
+restriction ScopeCoversTheAction:
+  "∀ s1 s2 #i. (ScopeCheck( s1, s2 ) @ #i) ⇒ (s1 = s2)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ s1 s2 #i. (ScopeCheck( s1, s2 ) @ #i) ⇒ (s1 = s2)"
+  */
+
+restriction SingleUse:
+  "∀ e a #i #j.
+    ((Consume( e, a ) @ #i) ∧ (Consume( e, a ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ e a #i #j.
+    ((Consume( e, a ) @ #i) ∧ (Consume( e, a ) @ #j)) ⇒ (#i = #j)"
+  */
+
+restriction UsePolicy:
+  "∀ u #i. (UseCheck( u ) @ #i) ⇒ (u = 'single_use')"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ u #i. (UseCheck( u ) @ #i) ⇒ (u = 'single_use')"
+  */
+
+restriction EnforcementClock:
+  "∀ a w #i #j.
+    ((InWindow( a, w ) @ #i) ∧ (Expired( a, w ) @ #j)) ⇒ (#i < #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ a w #i #j.
+    ((InWindow( a, w ) @ #i) ∧ (Expired( a, w ) @ #j)) ⇒ (#i < #j)"
+  */
+
+restriction OneRegistration:
+  "∀ x r k1 k2 #i #j.
+    ((Registered( x, r, k1 ) @ #i) ∧ (Registered( x, r, k2 ) @ #j)) ⇒
+    (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x r k1 k2 #i #j.
+    ((Registered( x, r, k1 ) @ #i) ∧ (Registered( x, r, k2 ) @ #j)) ⇒
+    (#i = #j)"
+  */
+
+rule (modulo E) Register:
+   [ Fr( ~sk ) ]
+  --[ Registered( $X, $R, pk(~sk) ) ]->
+   [ !Ltk( $X, $R, ~sk ), !Pk( $X, $R, pk(~sk) ), Out( pk(~sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Reveal:
+   [ !Ltk( $X, $R, sk ) ] --[ Reveal( $X, $R ) ]-> [ Out( sk ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) EP_Request:
+   [ Fr( ~rid ), !Ltk( $E, 'request', skE ), In( <t, p> ) ]
+  --[
+  EP_Sent( $E, ~rid,
+           h(<'decision_request', ~rid, $E, $E, <t, p>, 'single_use'>), t, p
+  )
+  ]->
+   [
+   EP_Wait( $E, ~rid,
+            <'decision_request', ~rid, $E, $E, <t, p>, 'single_use'>, t, p
+   ),
+   Out( <<'decision_request', ~rid, $E, $E, <t, p>, 'single_use'>, 
+         sign(pae('dcmp',
+                  <'decision_request', ~rid, $E, $E, <t, p>, 'single_use'>),
+              skE)
+        >
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) DP_Decide:
+   [
+   In( <<'decision_request', rid, issuer, aud, <t, p>, use>, rsig> ),
+   !Pk( issuer, 'request', pkI ), !Ltk( $D, 'response', skD ), Fr( ~aid ),
+   Fr( ~win ), Fr( ~mid )
+   ]
+  --[
+  RequestSignature( verify(rsig,
+                           pae('dcmp', <'decision_request', rid, issuer, aud, <t, p>, use>), pkI)
+  ),
+  DP_Seen( $D, rid ),
+  DP_Issue( $D, issuer, aud, rid,
+            h(<'decision_request', rid, issuer, aud, <t, p>, use>), ~aid, t, p, ~win
+  )
+  ]->
+   [
+   !Window( ~aid, ~win ),
+   Out( <
+         <'decision_response', ~mid, rid, 
+          h(<'decision_request', rid, issuer, aud, <t, p>, use>), 'admit', 
+          <'authorization', ~aid, aud, h(<rid, t, p>), use, ~win>, $D>, 
+         sign(pae('dcmp',
+                  <'decision_response', ~mid, rid, 
+                   h(<'decision_request', rid, issuer, aud, <t, p>, use>), 'admit', 
+                   <'authorization', ~aid, aud, h(<rid, t, p>), use, ~win>, $D>),
+              skD)
+        >
+   )
+   ]
+
+  /*
+  rule (modulo AC) DP_Decide:
+     [
+     In( <<'decision_request', rid, issuer, aud, <t, p>, use>, rsig> ),
+     !Pk( issuer, 'request', pkI ), !Ltk( $D, 'response', skD ), Fr( ~aid ),
+     Fr( ~win ), Fr( ~mid )
+     ]
+    --[
+    RequestSignature( z ), DP_Seen( $D, rid ),
+    DP_Issue( $D, issuer, aud, rid,
+              h(<'decision_request', rid, issuer, aud, <t, p>, use>), ~aid, t, p, ~win
+    )
+    ]->
+     [
+     !Window( ~aid, ~win ),
+     Out( <
+           <'decision_response', ~mid, rid, 
+            h(<'decision_request', rid, issuer, aud, <t, p>, use>), 'admit', 
+            <'authorization', ~aid, aud, h(<rid, t, p>), use, ~win>, $D>, 
+           sign(pae('dcmp',
+                    <'decision_response', ~mid, rid, 
+                     h(<'decision_request', rid, issuer, aud, <t, p>, use>), 'admit', 
+                     <'authorization', ~aid, aud, h(<rid, t, p>), use, ~win>, $D>),
+                skD)
+          >
+     )
+     ]
+    variants (modulo AC)
+    1. aud   = aud.31
+       issuer
+             = issuer.32
+       p     = p.33
+       pkI   = pkI.34
+       rid   = rid.35
+       rsig  = rsig.36
+       t     = t.38
+       use   = use.39
+       z     = verify(rsig.36,
+                      pae('dcmp',
+                          <'decision_request', rid.35, issuer.32, aud.31, <t.38, p.33>, use.39>),
+                      pkI.34)
+    
+    2. aud   = aud.128
+       issuer
+             = issuer.129
+       p     = p.130
+       pkI   = pk(x.250)
+       rid   = rid.132
+       rsig  = sign(pae('dcmp',
+                        <'decision_request', rid.132, issuer.129, aud.128, <t.135, p.130>, 
+                         use.136>),
+                    x.250)
+       t     = t.135
+       use   = use.136
+       z     = true
+  */
+
+rule (modulo E) Clock_expires:
+   [ !Window( a, w ) ] --[ Expired( a, w ) ]-> [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) EP_Receive:
+   [
+   EP_Wait( E, rid, <'decision_request', rid, E, E, <t, p>, 'single_use'>,
+            t, p
+   ),
+   In( <
+        <'decision_response', mid, rid2, dreq, 'admit', 
+         <'authorization', aid, aud, scope, use, win>, D>, 
+        ssig>
+   ),
+   !Pk( D, 'response', pkD )
+   ]
+  --[
+  ResponseSignature( verify(ssig,
+                            pae('dcmp',
+                                <'decision_response', mid, rid2, dreq, 'admit', 
+                                 <'authorization', aid, aud, scope, use, win>, D>),
+                            pkD)
+  ),
+  ResponseAnswers( rid2, rid, dreq,
+                   h(<'decision_request', rid, E, E, <t, p>, 'single_use'>)
+  ),
+  EP_Accept( E, D, rid,
+             h(<'decision_request', rid, E, E, <t, p>, 'single_use'>), aid
+  )
+  ]->
+   [ EP_Accepted( E, D, rid, t, p, aid, aud, scope, use, win ) ]
+
+  /*
+  rule (modulo AC) EP_Receive:
+     [
+     EP_Wait( E, rid, <'decision_request', rid, E, E, <t, p>, 'single_use'>,
+              t, p
+     ),
+     In( <
+          <'decision_response', mid, rid2, dreq, 'admit', 
+           <'authorization', aid, aud, scope, use, win>, D>, 
+          ssig>
+     ),
+     !Pk( D, 'response', pkD )
+     ]
+    --[
+    ResponseSignature( z ),
+    ResponseAnswers( rid2, rid, dreq,
+                     h(<'decision_request', rid, E, E, <t, p>, 'single_use'>)
+    ),
+    EP_Accept( E, D, rid,
+               h(<'decision_request', rid, E, E, <t, p>, 'single_use'>), aid
+    )
+    ]->
+     [ EP_Accepted( E, D, rid, t, p, aid, aud, scope, use, win ) ]
+    variants (modulo AC)
+    1. D     = D.38
+       aid   = aid.40
+       aud   = aud.41
+       dreq  = dreq.42
+       mid   = mid.43
+       pkD   = pkD.45
+       rid2  = rid2.47
+       scope = scope.48
+       ssig  = ssig.49
+       use   = use.51
+       win   = win.52
+       z     = verify(ssig.49,
+                      pae('dcmp',
+                          <'decision_response', mid.43, rid2.47, dreq.42, 'admit', 
+                           <'authorization', aid.40, aud.41, scope.48, use.51, win.52>, D.38>),
+                      pkD.45)
+    
+    2. D     = D.141
+       aid   = aid.143
+       aud   = aud.144
+       dreq  = dreq.145
+       mid   = mid.146
+       pkD   = pk(x.280)
+       rid2  = rid2.150
+       scope = scope.151
+       ssig  = sign(pae('dcmp',
+                        <'decision_response', mid.146, rid2.150, dreq.145, 'admit', 
+                         <'authorization', aid.143, aud.144, scope.151, use.154, win.155>, D.141
+                        >),
+                    x.280)
+       use   = use.154
+       win   = win.155
+       z     = true
+  */
+
+rule (modulo E) EP_Execute:
+   [ EP_Accepted( E, D, rid, t, p, aid, aud, scope, use, win ) ]
+  --[
+  AudienceCheck( aud, E ), ScopeCheck( scope, h(<rid, t, p>) ),
+  UseCheck( use ), InWindow( aid, win ), Consume( E, aid ),
+  Execute( E, t, p, aid, rid, win, D )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) EP_Present:
+   [
+   In( <t, p, 
+        <'decision_response', mid, rid, dreq, 'admit', 
+         <'authorization', aid, aud, scope, use, win>, D>, 
+        ssig>
+   ),
+   !Pk( D, 'response', pkD )
+   ]
+  --[
+  ResponseSignature( verify(ssig,
+                            pae('dcmp',
+                                <'decision_response', mid, rid, dreq, 'admit', 
+                                 <'authorization', aid, aud, scope, use, win>, D>),
+                            pkD)
+  ),
+  AudienceCheck( aud, $E ), ScopeCheck( scope, h(<rid, t, p>) ),
+  UseCheck( use ), InWindow( aid, win ), Consume( $E, aid ),
+  Execute( $E, t, p, aid, rid, win, D )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) EP_Present:
+     [
+     In( <t, p, 
+          <'decision_response', mid, rid, dreq, 'admit', 
+           <'authorization', aid, aud, scope, use, win>, D>, 
+          ssig>
+     ),
+     !Pk( D, 'response', pkD )
+     ]
+    --[
+    ResponseSignature( z ), AudienceCheck( aud, $E ),
+    ScopeCheck( scope, h(<rid, t, p>) ), UseCheck( use ),
+    InWindow( aid, win ), Consume( $E, aid ),
+    Execute( $E, t, p, aid, rid, win, D )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. D     = D.33
+       aid   = aid.34
+       aud   = aud.35
+       dreq  = dreq.36
+       mid   = mid.37
+       pkD   = pkD.39
+       rid   = rid.40
+       scope = scope.41
+       ssig  = ssig.42
+       use   = use.44
+       win   = win.45
+       z     = verify(ssig.42,
+                      pae('dcmp',
+                          <'decision_response', mid.37, rid.40, dreq.36, 'admit', 
+                           <'authorization', aid.34, aud.35, scope.41, use.44, win.45>, D.33>),
+                      pkD.39)
+    
+    2. D     = D.81
+       aid   = aid.82
+       aud   = aud.83
+       dreq  = dreq.84
+       mid   = mid.85
+       pkD   = pk(x.159)
+       rid   = rid.88
+       scope = scope.89
+       ssig  = sign(pae('dcmp',
+                        <'decision_response', mid.85, rid.88, dreq.84, 'admit', 
+                         <'authorization', aid.82, aud.83, scope.89, use.92, win.93>, D.81>),
+                    x.159)
+       use   = use.92
+       win   = win.93
+       z     = true
+  */
+
+lemma executable:
+  exists-trace
+  "∃ E D t p a rid w #i #j.
+    ((EP_Sent( E, rid,
+               h(<'decision_request', rid, E, E, <t, p>, 'single_use'>), t, p
+      ) @ #j) ∧
+     (Execute( E, t, p, a, rid, w, D ) @ #i)) ∧
+    (¬(∃ X R #r. Reveal( X, R ) @ #r))"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ E D t p a rid w #i #j.
+  (EP_Sent( E, rid,
+            h(<'decision_request', rid, E, E, <t, p>, 'single_use'>), t, p
+   ) @ #j) ∧
+  (Execute( E, t, p, a, rid, w, D ) @ #i)
+ ∧
+  ∀ X R #r. (Reveal( X, R ) @ #r) ⇒ ⊥"
+*/
+by sorry
+
+lemma request_origin:
+  all-traces
+  "∀ D I aud rid hreq a t p w #i.
+    (DP_Issue( D, I, aud, rid, hreq, a, t, p, w ) @ #i) ⇒
+    ((∃ #k. (EP_Sent( I, rid, hreq, t, p ) @ #k) ∧ (#k < #i)) ∨
+     (∃ #r. (Reveal( I, 'request' ) @ #r) ∧ (#r < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ D I aud rid hreq a t p w #i.
+  (DP_Issue( D, I, aud, rid, hreq, a, t, p, w ) @ #i)
+ ∧
+  (∀ #k. (EP_Sent( I, rid, hreq, t, p ) @ #k) ⇒ ¬(#k < #i)) ∧
+  (∀ #r. (Reveal( I, 'request' ) @ #r) ⇒ ¬(#r < #i))"
+*/
+by sorry
+
+lemma response_authenticity:
+  all-traces
+  "∀ E D rid hreq a #i.
+    (EP_Accept( E, D, rid, hreq, a ) @ #i) ⇒
+    ((∃ I aud rid2 hreq2 t p w #j.
+       (DP_Issue( D, I, aud, rid2, hreq2, a, t, p, w ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #r. (Reveal( D, 'response' ) @ #r) ∧ (#r < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E D rid hreq a #i.
+  (EP_Accept( E, D, rid, hreq, a ) @ #i)
+ ∧
+  (∀ I aud rid2 hreq2 t p w #j.
+    (DP_Issue( D, I, aud, rid2, hreq2, a, t, p, w ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #r. (Reveal( D, 'response' ) @ #r) ⇒ ¬(#r < #i))"
+*/
+by sorry
+
+lemma request_response_binding:
+  all-traces
+  "∀ E D rid hreq a #i.
+    (EP_Accept( E, D, rid, hreq, a ) @ #i) ⇒
+    ((∃ t p w #j.
+       (DP_Issue( D, E, E, rid, hreq, a, t, p, w ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #r. (Reveal( D, 'response' ) @ #r) ∧ (#r < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E D rid hreq a #i.
+  (EP_Accept( E, D, rid, hreq, a ) @ #i)
+ ∧
+  (∀ t p w #j.
+    (DP_Issue( D, E, E, rid, hreq, a, t, p, w ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #r. (Reveal( D, 'response' ) @ #r) ⇒ ¬(#r < #i))"
+*/
+by sorry
+
+lemma authorization_scope_and_audience:
+  all-traces
+  "∀ E t p a rid w D #i.
+    (Execute( E, t, p, a, rid, w, D ) @ #i) ⇒
+    ((∃ I hreq #j.
+       (DP_Issue( D, I, E, rid, hreq, a, t, p, w ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #r. (Reveal( D, 'response' ) @ #r) ∧ (#r < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E t p a rid w D #i.
+  (Execute( E, t, p, a, rid, w, D ) @ #i)
+ ∧
+  (∀ I hreq #j.
+    (DP_Issue( D, I, E, rid, hreq, a, t, p, w ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #r. (Reveal( D, 'response' ) @ #r) ⇒ ¬(#r < #i))"
+*/
+simplify
+solve( Execute( E, t, p, a, rid, w, D ) @ #i )
+  case EP_Present
+  solve( !Pk( D, 'response', pk(x) ) ▶₁ #i )
+    case Register
+    solve( !KU( sign(pae('dcmp',
+                         <'decision_response', mid, rid, dreq, 'admit', 
+                          <'authorization', a, aud, h(<rid, t, p>), 'single_use', w>, $X>),
+                     ~sk)
+           ) @ #vk.28 )
+      case DP_Decide
+      solve( !KU( sign(pae('dcmp',
+                           <'decision_request', rid, $X, aud, <t, p>, 'single_use'>),
+                       ~sk.1)
+             ) @ #vk.38 )
+        case EP_Request
+        solve( !KU( ~mid ) @ #vk.12 )
+          case DP_Decide
+          solve( !KU( ~aid ) @ #vk.27 )
+            case DP_Decide
+            solve( !KU( ~win ) @ #vk.35 )
+              case DP_Decide
+              solve( !KU( ~rid ) @ #vk.25 )
+                case EP_Request
+                solve( !KU( h(<~rid, t, p>) ) @ #vk.34 )
+                  case DP_Decide
+                  solve( !KU( sign(pae('dcmp',
+                                       <'decision_request', ~rid, $X.2, aud, <t, p>, use>),
+                                   ~sk.3)
+                         ) @ #vk.47 )
+                    case EP_Request
+                    solve( !KU( h(<'decision_request', ~rid, $X, $X, <t, p>, 'single_use'>)
+                           ) @ #vk.31 )
+                      case DP_Decide_case_1
+                      SOLVED // trace found
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma single_use:
+  all-traces
+  "∀ E1 E2 t1 t2 p1 p2 a rid1 rid2 w1 w2 D #i #j.
+    ((Execute( E1, t1, p1, a, rid1, w1, D ) @ #i) ∧
+     (Execute( E2, t2, p2, a, rid2, w2, D ) @ #j)) ⇒
+    ((#i = #j) ∨ (∃ #r. Reveal( D, 'response' ) @ #r))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E1 E2 t1 t2 p1 p2 a rid1 rid2 w1 w2 D #i #j.
+  (Execute( E1, t1, p1, a, rid1, w1, D ) @ #i) ∧
+  (Execute( E2, t2, p2, a, rid2, w2, D ) @ #j)
+ ∧
+  (¬(#i = #j)) ∧ (∀ #r. (Reveal( D, 'response' ) @ #r) ⇒ ⊥)"
+*/
+by sorry
+
+lemma one_effect_per_request:
+  all-traces
+  "∀ E1 E2 t1 t2 p1 p2 a1 a2 rid w1 w2 D #i #j.
+    ((Execute( E1, t1, p1, a1, rid, w1, D ) @ #i) ∧
+     (Execute( E2, t2, p2, a2, rid, w2, D ) @ #j)) ⇒
+    ((#i = #j) ∨ (∃ #r. Reveal( D, 'response' ) @ #r))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E1 E2 t1 t2 p1 p2 a1 a2 rid w1 w2 D #i #j.
+  (Execute( E1, t1, p1, a1, rid, w1, D ) @ #i) ∧
+  (Execute( E2, t2, p2, a2, rid, w2, D ) @ #j)
+ ∧
+  (¬(#i = #j)) ∧ (∀ #r. (Reveal( D, 'response' ) @ #r) ⇒ ⊥)"
+*/
+by sorry
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: 82780bbaf3328a45f624ddb41e51bf75425f851c (with uncommited changes), branch: master
+Compiled at: 2026-03-07 14:22:39.174278293 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: DCMP2_Binding.spthy
+
+  processing time: 3.93s
+  
+  executable (exists-trace): analysis incomplete (1 steps)
+  request_origin (all-traces): analysis incomplete (1 steps)
+  response_authenticity (all-traces): analysis incomplete (1 steps)
+  request_response_binding (all-traces): analysis incomplete (1 steps)
+  authorization_scope_and_audience (all-traces): falsified - found trace (13 steps)
+  single_use (all-traces): analysis incomplete (1 steps)
+  one_effect_per_request (all-traces): analysis incomplete (1 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory DCMP2_Binding] Theory loaded
+[Theory DCMP2_Binding] Theory translated
+[Theory DCMP2_Binding] Derivation checks started
+[Open Chains] Too many chain constraints, stopping precomputation. Open Chains limits (can be changed with -c=): 10
+[Open Chains] Too many chain constraints, stopping precomputation. Open Chains limits (can be changed with -c=): 10
+[Theory DCMP2_Binding] Derivation checks ended
+[Theory DCMP2_Binding] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Open Chains] Too many chain constraints, stopping precomputation. Open Chains limits (can be changed with -c=): 10
+[Saturating Sources] Step 2 (Max 5)
+[Saturating Sources] Done

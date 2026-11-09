@@ -264,7 +264,7 @@ disclosed claim boundaries.</p>
 <tr>
 <td>CE-21</td>
 <td>Actions admitted and then denied, and actions whose authorization expired</td>
-<td>Each bundle verifies with its recorded non-release state, the authority issued and unused, never <code>incomplete</code></td>
+<td>Each bundle verifies with its recorded non-release state and issued authority, with no <code>authority_consumed</code> event; a charged use remains counted under <a href="transactional-effect-1.html#TE1-010">TE1-010</a>. These conditions do not by themselves make the bundle <code>incomplete</code>.</td>
 </tr>
 <tr>
 <td>CE-22</td>
@@ -310,8 +310,8 @@ disclosed claim boundaries.</p>
 </table>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/TRANSACTIONAL-EFFECT-1.md</code>, SHA-256 <code>c4b7db9ab00a1d8b0d12037d8f68512e120da6dd1ceef2d5e16876df9c0ae071</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>profiles/TRANSACTIONAL-EFFECT-1.md</code>, SHA-256 <code>dd28c7f714dc630aa23ee04203b4359cd1857fdfb21a5829c7137e9627b0ebdb</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

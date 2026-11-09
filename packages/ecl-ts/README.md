@@ -25,7 +25,7 @@ The package provides verification. ZIP and content fixture builders live under
   object, XR1-010, among them), the adapter binding and the safe-state profile.
 - The records of the five binding profiles (AARM-BINDING-1, ACS-BINDING-1,
   MCP-GATEWAY-1, OTEL-EVIDENCE-EXPORT-1 and OAUTH-AUTHORITY-1): each record's
-  schema, then the profile's 28 registered rules, with RFC 8785 for the content
+  schema, then the applicable rules among the five profiles' 30 registered rules, with RFC 8785 for the content
   they bind and compact JWS for OAuth access tokens and DPoP proofs (ES256 and
   EdDSA, RFC 7638 thumbprints). An AARM or ACS record's inputs are compared with
   the decision basis of its response, and with that of a modification's
@@ -54,7 +54,7 @@ The package provides verification. ZIP and content fixture builders live under
   and released as its events record or that the effects happened: a verified
   bundle's records are signed, bound and complete, and their statements remain
   their producers' statements.
-- Offline packages (OFFLINE-VERIFICATION-1): a strict reader and writer of the
+- Offline packages (OFFLINE-VERIFICATION-1): a strict reader of the
   `ecl.zip.store.v1` archive, over bytes and without decompression, and the
   checks of IE1-022 in order, which give a package the verdict of the evidence
   bundle it carries or the error of the first check it fails. Entry names are
@@ -101,11 +101,12 @@ It verifies a file that begins with the bytes `PK` as an offline package of at
 most 1 GiB, the declared archive limit, and any other file as a JSON evidence
 bundle of at most 1 MiB. A usage error is one line on standard error,
 `error: CODE: MESSAGE` when the refusal has a registered code and
-`error: MESSAGE` otherwise, as the reference's `ecl-verify` writes it. A file
-over its byte limit (a trust
-policy over 256 KiB, a bundle or register over 1 MiB, a package over 1 GiB) is
-refused before it is parsed with `ecl.error.resource-limit-exceeded.v1`
-(TP1-007). `verifyBundleBytes` and `verifyPackageBytes` give that code as the
+`error: MESSAGE` otherwise, as the reference's `ecl-verify` writes it. A trust
+policy over 256 KiB or a bundle or register over 1 MiB is refused as a usage
+error before parsing, with `ecl.error.resource-limit-exceeded.v1` (TP1-007).
+A package over 1 GiB is instead reported as `invalid` (status 1), with that
+finding (IE1-022), under valid caller inputs. It is refused without loading
+the archive into memory. `verifyBundleBytes` and `verifyPackageBytes` give that code as the
 `code` of their `VerifierInputError` for a trust policy, history version,
 register or bundle over its limit; `verifyPackageBytes` reports an archive over
 one of its declared limits (IE1-028) as an `invalid` report whose finding is
@@ -138,8 +139,10 @@ apply the reference verification profile,
   EBMP2-060); a signature that does not verify, counted or not, makes its
   dependency historically invalid with `ecl.error.integrity-invalid.v1` and
   keeps `envelope-signatures` (for an envelope or observation) or
-  `trusted-time` (for an attestation) out of `established`, without changing
-  the verdict;
+  `trusted-time` (for an attestation) out of `established`. This additional
+  scope accounting leaves the verdict unchanged only if envelope verification
+  still satisfies the required-key and signature-threshold rules; failure of
+  either rule invalidates the envelope;
 - the pairing and binding of requests, responses and events, a continuation
   after a challenge (EBMP2-078), one causal graph over every object of the
   bundle, the DCMP-2 messages and the observations included (EBMP2-059,
@@ -259,6 +262,8 @@ Copyright 2026 G-14, Inc. Licensed under the Apache License, Version 2.0
 implementations of ECL-1 is in the repository's `PATENTS.md`; G-14 has patents
 pending. Its dependencies `@noble/curves` and `@noble/hashes` keep the MIT
 License.
+
+## Report format
 
 The canonical JSON report includes `primary`: the registered identifier of the
 primary finding, or `null` for `verified`. An `incomplete` report names

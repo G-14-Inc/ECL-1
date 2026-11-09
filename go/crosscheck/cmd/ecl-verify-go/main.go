@@ -11,7 +11,9 @@
 // IE1-022) of at most 1 GiB, the declared archive limit, under the same inputs; any other file is
 // a JSON evidence bundle of at most 1 MiB.
 //
-// An input that cannot be verified at all is a usage error, reported on standard error in one line,
+// An offline package above its archive-byte limit is invalid (exit status 1), with the registered
+// resource-limit finding (IE1-022). An unreadable file or invalid caller input is a usage error,
+// reported on standard error in one line,
 // "error: CODE: MESSAGE" when the refusal has a registered code (every refusal of a declared limit
 // is ecl.error.resource-limit-exceeded.v1) and "error: MESSAGE" otherwise.
 //
@@ -255,10 +257,25 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		if packaged {
 			// An offline package (IE1-022) is verified under the same inputs as a bundle.
 			archive, err := readPackage(bundlePath)
+			var limit *evidence.InputError
+			if err != nil {
+				if !errors.As(err, &limit) || limit.Code != evidence.ResourceLimitExceeded {
+					return nil, nil, err
+				}
+				// Obtain the ordinary rejected-archive context and validate caller inputs.
+				// No archive contents are read or claimed to have been verified.
+				archive = nil
+			}
+			report, current, err := offline.VerifyBytes(archive, policy, history, offline.Options{Options: options})
 			if err != nil {
 				return nil, nil, err
 			}
-			return offline.VerifyBytes(archive, policy, history, offline.Options{Options: options})
+			if limit != nil {
+				report.Verdict = evidence.Invalid
+				report.Findings = []evidence.BundleFinding{{Code: limit.Code, Message: limit.Message}}
+				report = evidence.WithScope(report)
+			}
+			return report, current, nil
 		}
 		bundle, err := readLimited(bundlePath, evidence.MaxBundleBytes, "bundle", "1 MiB")
 		if err != nil {

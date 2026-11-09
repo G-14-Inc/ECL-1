@@ -34,9 +34,11 @@ The table in `ERRATA.md` ("Classify it") states how each change class is
 published and what it does to the version, so that the policy and the
 procedure cannot disagree. A behavioral correction is never an erratum, even
 when the earlier behavior was unintended. A defect capable of producing a false
-conformance pass blocks new claims and may require withdrawal, reassessment,
-or the review of affected listings in the implementers registry
-(`CONFORMANCE_CLAIMS.md`).
+conformance pass blocks new claims that rely on the affected text or vectors.
+The notice identifies those claims and states when the block can be lifted
+through an approved corrective erratum or a superseding version under
+`ERRATA.md`. Withdrawal, reassessment or review of affected listings in the
+implementers registry may also be required (`CONFORMANCE_CLAIMS.md`).
 
 ## Historical integrity
 

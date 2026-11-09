@@ -654,6 +654,15 @@ function combined(statuses: readonly string[]): string {
  */
 function signerStatus(envelope: JsonObject, payload: JsonObject, policy: TrustPolicy, purpose: string, timeOf: (keyId: string) => string, original?: TrustPolicy, compromise?: TrustPolicy): string {
   const signatures = envelope["signatures"] as JsonObject[];
+  const integrityPolicy = payload["integrity_policy"] as JsonObject;
+  const acceptedSuites = integrityPolicy["accepted_suites"] as string[];
+  const eligibleKeys = (integrityPolicy["eligible_key_ids"] ?? []) as string[];
+  // EBMP2-057 applies the payload-policy clauses of IE1-040 step 6(a)
+  // to every signature, including one not needed for the threshold.
+  if (signatures.some((signature) => !acceptedSuites.includes(signature["suite_id"] as string)
+      || (eligibleKeys.length > 0 && !eligibleKeys.includes(signature["key_id"] as string)))) {
+    return POLICY_INVALID;
+  }
   const role = { purpose, principal: principalOf(payload) };
   return combined(signatures.map((signature) => keyStatus(signature, policy, role, timeOf(signature["key_id"] as string), original, compromise)));
 }
@@ -1018,11 +1027,22 @@ function evaluateEnvelope(
     // A status that is the envelope's and no one signer's is each signer's.
     const envelopeWide = historical === CLOCK_REGRESSED || historical === TRUSTED_TIME_INVALID || historical === TRUSTED_TIME_REQUIRED;
     const role = { purpose, principal: principalOf(payload) };
+    const integrityPolicy = payload["integrity_policy"] as JsonObject;
+    const acceptedSuites = integrityPolicy["accepted_suites"] as string[];
+    const eligibleKeys = (integrityPolicy["eligible_key_ids"] ?? []) as string[];
+    const inPayloadPolicy = (signature: JsonObject): boolean =>
+      acceptedSuites.includes(signature["suite_id"] as string)
+      && (eligibleKeys.length === 0 || eligibleKeys.includes(signature["key_id"] as string));
     const message = signingInput(envelope["payload_type"] as string, decodePayload(envelope));
     dependencies = signatures.filter(isObject).map((signature) => {
       const keyId = signature["key_id"] as string;
       const own = timeOf(keyId);
-      let status = envelopeWide ? historical : keyStatus(signature, version, role, own, undefined, currentPolicy);
+      const allowedByPayload = inPayloadPolicy(signature);
+      let status = envelopeWide
+        ? historical
+        : !allowedByPayload
+          ? POLICY_INVALID
+          : keyStatus(signature, version, role, own, undefined, currentPolicy);
       if (status === "valid" && !signatureVerifies(signature, version, message)) {
         status = INTEGRITY_INVALID;
       }
@@ -1038,7 +1058,7 @@ function evaluateEnvelope(
         historical: status,
         currentPolicyVersion: currentPolicy.version,
         revokedEffectiveAt: revokedEffectiveAt(currentPolicy, keyId, version.key(keyId)?.publicKey),
-        current: keyStatus(signature, currentPolicy, role, now, version),
+        current: !allowedByPayload ? POLICY_INVALID : keyStatus(signature, currentPolicy, role, now, version),
       };
     });
     for (const counter of counters) {

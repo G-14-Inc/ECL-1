@@ -169,6 +169,10 @@ is the base64url SHA-256 of the access token; and whose <code>jti</code>, a stri
 256 characters, the resource server has not accepted within that window, a
 repeated <code>jti</code> being refused with <code>ecl.error.replay.v1</code>. For mutual TLS the
 client certificate's SHA-256 thumbprint MUST equal <code>x5t#S256</code>.</p>
+<p>This profile uses a stricter URI comparison than the normalization recommended
+by RFC 9449, Section 4.3. For a presentation to pass, the client and resource
+server need the same URI spelling apart from the transformations in <a href="oauth-authority-1.html#OA1-004">OA1-004</a>.
+Otherwise equivalent URI spellings can be refused.</p>
 <p><span id="OA1-005"><strong>OA1-005</strong></span><a class="requirement-link" href="#OA1-005" aria-label="Link to OA1-005">§</a> — A resource server or enforcement point MUST accept the token only
 for a request whose target, operation and parameter digest equal the
 <code>identifier</code>, the <code>actions</code> member and the <code>parameters_digest</code> of the token's
@@ -220,7 +224,8 @@ a resource server refuses the <code>application/at+jwt</code> that RFC 9068, Sec
 lets it accept, and a <code>typ</code> that differs only in letter case, such as the
 <code>at+JWT</code> of the example in RFC 9068, Section 3, although media type names are
 case-insensitive (RFC 7515, Section 4.1.9). The default set also leaves out
-RS256, which RFC 9068, Section 2.1 asks implementations to support; a claim may
+RS256, which RFC 9068, Section 2.1 requires conforming authorization servers and
+resource servers to support; a claim may
 declare RS256, which the vectors do not exercise.</p>
 <p><span id="OA1-008"><strong>OA1-008</strong></span><a class="requirement-link" href="#OA1-008" aria-label="Link to OA1-008">§</a> — An authority issuer MUST issue a token only for a verified <code>admit</code>,
 never for <code>deny</code>, <code>hold</code> or <code>challenge</code> (<a href="dcmp-2.html#DCMP2-014">DCMP2-014</a>); when the admit&#x27;s
@@ -230,8 +235,9 @@ the token MUST become unusable within the declared revocation propagation bound,
 through introspection or a lifetime no longer than that bound. Version 1.0 of
 this profile supports only an admit whose <code>obligations</code> list is empty. An issuer
 MUST NOT issue a token for any admit carrying an obligation, including one
-claimed to have been discharged, and the presentation verifier MUST reject
-such an issuance with <code>ecl.rule.oauth-token-expresses-admit.v1</code>. A token, custom
+claimed to have been discharged, and a verifier of an
+<code>ecl_oauth_presentation_v1</code> record MUST reject a record of such an issuance
+with <code>ecl.rule.oauth-token-expresses-admit.v1</code>. A token, custom
 claim or successful issuance MUST NOT be treated as discharging an obligation
 at a later release boundary. Actions requiring obligations use a declared
 DCMP-2 enforcement path with release-time proofs; they are outside this
@@ -407,7 +413,7 @@ gives the value of each claim for an ECL admit.</p>
 </tr>
 <tr>
 <td><code>iat</code>, <code>nbf</code></td>
-<td>Integer seconds, not earlier than <code>authorization.valid_from</code></td>
+<td>Integer seconds. <code>nbf</code>, or <code>iat</code> when <code>nbf</code> is absent, is not earlier than <code>authorization.valid_from</code>.</td>
 </tr>
 <tr>
 <td><code>exp</code></td>
@@ -457,15 +463,16 @@ misuse, which is the gap that <a href="ecl-1_standard.html#ECL1N-0033">ECL1N-003
 describe. Binding the token to a proof-of-possession key that the governed AI
 system cannot read makes a copied token useless, and binding it to one admit and
 one parameter digest makes a stolen proof and token usable only for the action
-already admitted, once, before <code>exp</code>. The verifier's own key configuration
+already admitted, once for that captured DPoP proof, within the ECL
+authorization window and the token-validity checks, including any declared
+clock-skew allowance. The verifier's own key configuration
 closes the attacks that take a key or an algorithm from the token's own header,
 such as the <code>none</code> and algorithm-substitution attacks of RFC 8725, Section 2.1,
 and the <code>kid</code>, <code>jku</code> and <code>x5u</code> misuse of its Section 3.10, and reading every
 segment under the strict JSON profile leaves no room for two verifiers to read
 one token differently. Replay protection holds only as far as the use counts and
 the remembered <code>jti</code> values reach, which is why every instance of a resource
-server shares them (<a href="oauth-authority-1.html#OA1-005">OA1-005</a>). Token exchange across trust domains is where
-authority is most often widened by interpretation; <a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a> requires a denial
+server shares them (<a href="oauth-authority-1.html#OA1-005">OA1-005</a>). Token exchange across trust domains can widen authority by interpretation; <a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a> requires a denial
 when the intersection with the parent authority cannot be shown.</p>
 <h2 id="conformance">Conformance</h2>
 <table tabindex="0">
@@ -491,8 +498,8 @@ suite are signed with test keys that each presentation record names as the
 issuer's keys.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/OAUTH-AUTHORITY-1.md</code>, SHA-256 <code>dfa51b9755e4e9d92107964a92d18b16904b313cf63ce7ffc791cbb9e4a5bbc9</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>profiles/OAUTH-AUTHORITY-1.md</code>, SHA-256 <code>abfa19199f5ccd6db3cd14ae570d7ce53485e3e5c44d1594174f88aedb64ede6</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

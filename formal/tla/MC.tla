@@ -16,10 +16,12 @@ MCAllowed == {[target |-> t1, params |-> p1]}
 MCSymmetry == Permutations(EPs) \cup Permutations(ReqIds)
 
 (***************************************************************************)
-(* Reachability witnesses. Each is an invariant that the correct design    *)
-(* must violate: the violation shows that the situation the safety         *)
-(* properties speak about is reachable, so they do not hold vacuously, and *)
-(* it records a window that the normative text permits.                    *)
+(* Reachability witnesses. The correct design must violate each negated    *)
+(* reachability condition in its own configuration. Five are state         *)
+(* invariants; the revocation-window and halt-window conditions are action *)
+(* properties. These witnesses establish their specific situations, not    *)
+(* nonvacuity of every property in every configuration. Only the outage,    *)
+(* revocation and halt witnesses concern permitted timing windows.         *)
 (***************************************************************************)
 
 (* An effect occurs.                                                       *)

@@ -30,7 +30,10 @@ A `Class A` claim discloses that the control plane uses same-operator separated
 controls (ECL1N-0076). A `Class B` or `Class C` claim identifies the separately
 administered trust domain, its administrators and its controls (ECL1N-0143),
 and a `Class C` claim also the externally independent authority (ECL1N-0144).
-For example:
+The wording below is an abbreviated example. Before use, replace "the declared
+SoI" with its identifier or bounded description and identify the applicable
+companion version set. The complete claim also supplies the trust-domain
+information required above.
 
 > ECL-1 Version 1.0, L2, assessment-only, bounded-action-class-mediation,
 > Class B independence, assessed 2027-01-15 for the declared SoI using DCMP-2
@@ -52,13 +55,17 @@ SHA-256 digest of each file it links:
   ([the conformance tests](../conformance/README.md)), and records the result
   of every vector in a report that follows the conformance report template in
   `conformance/` and its schema in `schemas/`, bound to the digest of the
-  suite's manifest.
+  shared corpus's exact index (`conformance/shared-corpus.json`).
 - **The offline verifier's output on its evidence.** The implementer runs the
-  offline verifier, in the browser ([web/verifier](../web/verifier/README.md))
-  or on the command line (`ecl-verify-ts`,
-  [packages/ecl-ts](../packages/ecl-ts/README.md)), on evidence bundles that
-  its implementation produced, and publishes the verifier's output with the
-  bundles or their digests.
+  offline verifier on evidence bundles that its implementation produced and
+  publishes the verifier's output with the bundles or their digests. The
+  verifier may be the [browser verifier](../web/verifier/README.md),
+  `ecl-verify-ts` ([TypeScript](../packages/ecl-ts/README.md)), the
+  [Go verifier](../go/crosscheck/README.md), or another implementation of
+  `evidence-bundle-verification` (and `offline-package-verification` when
+  packages are submitted). It uses the caller's trust policy, never a policy
+  taken from the evidence. These are capability criteria, not a restriction
+  to a programming language or user interface.
 
 ## How to be listed
 
@@ -153,8 +160,10 @@ fields, and only these:
 | `report` | The link to the conformance report |
 | `assessment` | Optional: the link to an assessor's assessment record |
 
-Write every value in double quotes, so that dates and levels stay strings. An
-entry:
+Write every value in double quotes, so that dates and levels stay strings.
+This abbreviated structural example uses placeholder organizations, URLs,
+dates and a claim statement that needs the SoI and companion-version details
+described above:
 
 ```yaml
 implementers:

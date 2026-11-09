@@ -12,19 +12,19 @@ This folder holds two models of the ECL-1 design and the script that checks them
 - `run_checks.py` runs every check, compares each outcome with its expectation and records
   the results in `results.json`.
 
-The models check the design as the normative text states it. They do not check any
-implementation: the conformance vectors and an implementation's own tests exercise its code, each
+The models check the abstractions of the design encoded below; their correspondence to the
+normative text is a separate review obligation. They do not check any implementation: the conformance vectors and an implementation's own tests exercise its code, each
 only as far as its cases reach, and the section "From the models to an implementation" below
-says where an implementation takes several steps where the models take one. A model that passes says that the rules it encodes are enough
-for the property in every behavior of the bounded configuration, and nothing about
-configurations or rules outside it.
+says where an implementation takes several steps where the models take one. A successful TLC
+check covers the configured finite state space. Tamarin reasons over the symbolic theory and
+its trace restrictions; neither result establishes a property outside the model's assumptions.
 
-Every check has an expected outcome. The correct design must pass every property and prove
-every lemma. Each deliberately broken variant removes one rule and must produce a
-counterexample to the property that rule protects, which shows that the property can fail and
-that the check would notice. Each reachability witness must also produce a counterexample,
-which shows that the situation a property speaks about occurs, so the property does not hold
-only because nothing happens.
+Every check has an expected outcome. The correct model must satisfy each selected property
+and verify each selected lemma. Each deliberately broken variant changes a rule or restriction
+and must produce a counterexample to its designated property. Each reachability witness must
+also produce a counterexample to its negated condition, establishing that particular situation
+in its own configuration. These checks do not establish nonvacuity of every property in every
+configuration or guarantee detection of other defects.
 
 ## The TLA+ model
 
@@ -38,7 +38,10 @@ only because nothing happens.
   It has no step that writes a decision, an authority object or evidence, and no path to an
   effect other than an enforcement point.
 - **The decision service** answers `admit`, `deny`, `hold` or `challenge` under the current
-  policy and trust epoch. A request identifier reused with other content is denied (DCMP2-005).
+  policy and trust epoch. It denies a request whose identifier matches a different request
+  already in `decisions`. A request closed by `DecisionTimeout` without a decision is absent
+  from that collision history. This abstraction does not establish full immutable-message
+  handling or explicit supersession under DCMP2-005.
   An `admit` issues one authority object bound to the request identifier and the action (the
   scope digest of DCMP2-044), the requesting enforcement point as audience, a validity window,
   the trust epoch and a single use. An authenticated approval resolves a hold or challenge
@@ -47,16 +50,19 @@ only because nothing happens.
 - **Enforcement points** execute only with an issued authority object that matches the
   presented request, names them as audience, is inside its window, unused, unrevoked in their
   view and of a current epoch, while their control state is fresh and no halt is acknowledged.
-  The effect and its evidence record are one step (TE1-004). A request without a decision by
-  its deadline, and a hold without an answer by its deadline, end in the declared safe state.
+  The effect and its evidence record are one step (TE1-004). Decisions and authenticated
+  resolutions are enabled only before their deadlines. At the deadline, an unresolved request
+  or hold can only time out to the declared safe state; time cannot advance beyond that
+  deadline until it is resolved. Weak fairness requires enabled timeouts eventually to occur.
 - **The control plane** revokes authority objects and changes the policy and trust epoch.
   Enforcement points learn of both by refreshing their control state while the control plane
   is reachable.
 - **The emergency plane** requests a halt and each enforcement point acknowledges it. It does
   not depend on the decision service.
 - **Time** is a discrete tick. Time advances only while the deadlines the control layer owes
-  are met: connected propagation within the propagation bound, and halt acknowledgment within
-  the bound B.
+  are met: connected propagation within the propagation bound, halt acknowledgment within
+  the bound B, and resolution of pending requests and holds at their deadlines. These limits
+  constrain the model clock; they do not prove that an implementation can meet a latency bound.
 
 ### What it abstracts, and why
 
@@ -64,7 +70,7 @@ only because nothing happens.
 |---|---|---|
 | Signatures, digests and the hash chain are not modelled. Only the decision service can create an authority object; an action's digest is the action itself; the log is a sequence only the control layer appends to. | The model is about which rules prevent which effects. Cryptographic binding is the subject of the Tamarin model and of the conformance vectors. | A forged or colliding digest is outside the model. The broken variants `actor_writes_authority`, `actor_writes_decision` and `actor_erases_evidence` show what follows when the separation fails. |
 | Policy is one set of allowed actions over the verifiable inputs. | The one-way rule concerns which inputs may admit, not the content of a policy. | Policy ambiguity, obligations (DCMP2-017) and budgets are not modelled. |
-| One decision service, one global clock. | Several decision services and clock skew multiply the state space without a new rule to check at this level. | Clock skew between enforcement points and the decision service (DCMP2-047, TE1-009) is not modelled. |
+| One decision service, one global clock and one availability flag. | This keeps the configured state space finite and small. | Clock skew (DCMP2-047, TE1-009) and selective enforcement-point partitions are not modeled. `dsUp` enables both decision service access and control-state refresh for every enforcement point; the emergency halt plane is separate. |
 | Each configuration is small: at most two enforcement points, two request identifiers, two targets, two parameter values and the times 0 to 4. | TLC enumerates every state; these bounds keep each check inside its time box. | A property can still fail in a larger configuration that these do not reach. |
 | Liveness is checked only in the liveness configuration, with weak fairness for the steps the control layer owes (time, refresh, halt acknowledgment, timeouts) and none for the actor, the operators or outages. | Liveness needs fairness assumptions; the control layer is the only party ECL-1 can oblige. | A control layer that never takes its steps is outside the guarantee. |
 
@@ -98,6 +104,8 @@ bundle and its report. The conformance vectors of the `evidence-bundle` suite te
 | `NoEffectDuringOutage` | invariant | An effect while the decision service is down rests on an `admit` issued before the outage began, inside the staleness bound counted from its start. | DCMP2-041, FR-003, FR-110, ECL1N-0102, ECL1N-0103 |
 | `SafeStateHasNoEffect` | invariant | A request that ended in `deny` or the declared safe state has no effect. | DCMP2-014, DCMP2-018, DCMP2-041, TS1-009 |
 | `TypeOK` | invariant | Every variable has its declared type. | |
+| `DeadlineBound` | invariant | Model time does not pass an unresolved decision or hold deadline. This follows from the encoded scheduling constraint on `Tick`. | DCMP2-018, DCMP2-041, TS1-009 |
+| `NoLateDecision` | action property | A new decision for a pending or held request precedes its deadline. The strict boundary is a conservative modeling choice. | DCMP2-018, DCMP2-041, TS1-009 |
 | `HoldResolves` | liveness | A held or challenged request is eventually decided or ends in the safe state. | DCMP2-018 |
 | `RequestResolves` | liveness | Every submitted request is eventually decided or ends in the safe state. | DCMP2-041, TS1-009 |
 | `HaltTakesEffect` | liveness | A halt request is eventually acknowledged at every enforcement point. | FR-004, TS1-036 |
@@ -120,7 +128,27 @@ The three base configurations differ in what they vary:
 | control | 2 | 1 | 1 (allowed) | 4 | 1 | one outage, one revocation, one trust change, one halt | validity 4, propagation 1, staleness 2, B 1 |
 | liveness | 1 | 1 | 2 (one allowed) | 3 | 2 | one outage, one halt | validity 2, propagation 1, staleness 1, B 1 |
 
-Decision and hold deadlines are one tick in each. The binding and control configurations use a
+The repaired correct configurations check 20 distinct properties: 12 state invariants, five
+action properties (17 safety properties in total) and three liveness properties. The original
+release checked 18 properties, before `DeadlineBound` and `NoLateDecision` were added.
+
+Decision and hold deadlines are one tick in each of the three correct configurations.
+With the strict guard, decisions and authenticated resolutions in those configurations occur
+in the same tick as the request or hold they answer; after a tick, only timeout remains.
+Separate two-tick diagnostics described below exercise later-tick decisions and resolutions.
+The model clamps every new deadline to
+`Min(now + deadline, MaxTime)`, so requests and holds near the finite horizon can have shorter
+waits. Decisions and authenticated resolutions require `now < deadline`; at the deadline only
+timeout can resolve the request. This exclusive boundary is a conservative model choice:
+TS1-009 says a gate that "exceeds" its deadline enters the safe state, so equality behavior in
+an implementation is not established here. A zero decision deadline or submission at
+`MaxTime` permits no decision; a zero hold deadline permits no authenticated resolution.
+Weak fairness supplies the eventual timeout transition even when `Tick` has reached its horizon.
+In the `no_decision_timeout` and `hold_never_times_out` variants, the decision/resolution
+guards still exclude the deadline and later times while the timeout path is disabled.
+Those variants therefore expose requests that remain unresolved after the nominal deadline.
+
+The binding and control configurations use a
 symmetry reduction over enforcement points and request identifiers; the liveness configuration
 does not, because a symmetry reduction can hide a liveness violation from TLC.
 
@@ -153,8 +181,9 @@ checks only the property its flaw must break:
 | `broken-no-decision-timeout` | A request waits for a decision without a deadline. | `RequestResolves` | DCMP2-041, TS1-009 |
 | `broken-halt-ack-lost` | Enforcement points never acknowledge a halt. | `HaltTakesEffect` | FR-004 |
 
-The witnesses run the correct design and must violate an invariant that says the situation
-never occurs:
+The witnesses run the correct design and must violate a state invariant or action property
+that says their particular situation never occurs. They establish that situation only in the
+configuration used, not nonvacuity of every property in every configuration:
 
 | Configuration | What it shows can happen |
 |---|---|
@@ -166,9 +195,9 @@ never occurs:
 | `witness-effect-in-halt-window` | An effect occurs after a halt request and before its acknowledgment: the window that the bound B of TS1-036 permits. |
 | `witness-timeout` | A request ends in the safe state with no decision at all. |
 
-The last three record windows that the normative text permits on purpose. A deployment that
-needs them closed declares smaller bounds; the model shows that the bounds, not some other
-rule, are what limit them.
+The outage, revocation-window and halt-window witnesses exhibit the corresponding permitted
+timing windows. Their counterexamples do not establish that every deployment can achieve a
+smaller bound.
 
 ## The protocol model
 
@@ -176,8 +205,9 @@ rule, are what limit them.
 
 An enforcement point signs a decision request for an action, names itself as the requested
 audience and sends it to a decision point. The decision point verifies the request signature
-under the key the trust policy registers for the request role, refuses a message identifier
-it has seen (DCMP2-005), and answers with a signed `admit` that names the request by identifier
+under the key the trust policy registers for the request role, permits at most one decision
+per decision-point identity and request identifier (an assumption stronger than DCMP2-005),
+and answers with a signed `admit` that names the request by identifier
 and digest (DCMP2-045, DCMP2-046) and carries an authorization bound to the audience
 (DCMP2-048), the scope digest of the request identifier and action (DCMP2-044), the single-use
 policy (DCMP2-050) and a validity window (DCMP2-049). The enforcement point verifies the
@@ -191,28 +221,32 @@ action, and the rule `EP_Present` lets it present any signed response together w
 at any enforcement point. Its own request-signing key, where requests are agent-signed, is a
 revealed key.
 
-Signatures are perfect and digests are perfect hashes. The DSSE pre-authentication encoding
-is a free constructor of payload type and payload, so the payload type is part of every
-signing input (IE1-009, IE1-010). The decision point's policy is abstracted to `admit`: `deny`,
+Signatures and hashes are ideal symbolic primitives. The model includes the payload type in
+the signing input using the free constructor `pae`. Honest requests and responses both use the
+single symbolic payload type `dcmp`; message tags and key roles distinguish them. The theory
+does not exercise replay between different honest protocol media types or validate concrete
+DSSE (Dead Simple Signing Envelope) encodings and parsers (IE1-009, IE1-010). The decision point's policy is abstracted to `admit`: `deny`,
 `hold` and `challenge` carry no authorization (DCMP2-012) and are covered by the TLA+ model.
 The enforcement point's clock is an assumption (restriction `EnforcementClock`): the model
 shows that the window an enforcement point checks is the one the decision point signed, not
-that its clock is right. The trust policy is trusted and holds one key per principal and role.
+that its clock is right. The trusted policy holds at most one registered key per principal
+and role; this registration cap excludes key rotation and multiple keys for one role.
 
 ### Lemmas
 
-| Lemma | What it proves, unless the named key was revealed | Requirements |
+| Lemma | What it proves, with its key-reveal exception | Requirements |
 |---|---|---|
-| `executable` | The honest flow completes with no key revealed (a sanity check that the model is not vacuous). | |
-| `request_origin` | A decision point issues authority only for a request that its named issuer signed. | IE1-009, TP1-004, TP1-005 |
-| `response_authenticity` | A response an enforcement point accepts was issued by the decision point it names. | IE1-009, IE1-010, TP1-004, TP1-005, ECL1N-0157 |
-| `request_response_binding` | The response answers exactly the request the enforcement point sent, by identifier and digest, with that enforcement point as audience. | DCMP2-045, DCMP2-046, DCMP2-048 |
-| `authorization_scope_and_audience` | Every execution was admitted for exactly that enforcement point, request identifier, target and parameters, inside the window the decision point signed. | DCMP2-044, DCMP2-048, DCMP2-049, DCMP2-051 |
-| `single_use` | An authorization is executed once. | DCMP2-050, EBMP2-008 |
-| `one_effect_per_request` | One request identifier yields at most one effect. | DCMP2-005, TE1-003 |
+| `executable` | An existence check, not a security property: some trace in which no key is revealed contains an enforcement point's decision request and an execution for the same enforcement point, request identifier, target and parameters. The execution can come from `EP_Execute` or `EP_Present`; the lemma does not by itself show that `EP_Accept` is reachable. | |
+| `request_origin` | A decision point issues authority only for a request that its named issuer signed, unless that issuer's request key was revealed before the issuance. | IE1-009, TP1-004, TP1-005 |
+| `response_authenticity` | A response an enforcement point accepts was issued by the decision point it names, unless that decision point's response key was revealed before the acceptance. | IE1-009, IE1-010, TP1-004, TP1-005, ECL1N-0157 |
+| `request_response_binding` | The response answers exactly the request the enforcement point sent, by identifier and digest, with that enforcement point as audience, unless the decision point's response key was revealed before the acceptance. | DCMP2-045, DCMP2-046, DCMP2-048 |
+| `authorization_scope_and_audience` | Every execution rests on an authorization that the named decision point issued earlier for that enforcement point as audience and for that request identifier, target, parameters and window value, whoever signed the request, unless that decision point's response key was revealed before the execution. That the execution precedes the window's expiry is the `EnforcementClock` assumption, not part of the lemma. | DCMP2-044, DCMP2-048, DCMP2-049, DCMP2-051 |
+| `single_use` | Two executions of one authorization that name the same decision point are one execution, unless that decision point's response key is revealed at any point in the trace, before or after them. | DCMP2-050, EBMP2-008 |
+| `one_effect_per_request` | Two executions that carry the same request identifier and name the same decision point are one execution, unless that decision point's response key is revealed at any point in the trace. Executions authorized by different decision points for one request identifier are not covered. | DCMP2-005, TE1-003 |
 
-Each flaw, selected with `-D=<flag>`, removes one check and must falsify the lemma it
-protects:
+Each flaw is selected with `-D=<flag>` and must falsify its designated lemma. Seven remove
+a named restriction; `shared_role_key` instead adds `Register_shared`, permitting one key to
+serve the request and response roles:
 
 | Flag | The flaw | Lemma falsified |
 |---|---|---|
@@ -230,10 +264,10 @@ expiry is covered only as far as the clock assumption allows.
 
 ## From the models to an implementation
 
-Passing bounded models are not proofs of a program. A model that passes shows that the rules
-it encodes are enough for its properties in every behavior of its bounded configurations; it
-says nothing about an implementation that takes a step in another order, splits it into
-several, or leaves a rule out. Each transition of the TLA+ model is one atomic step, and an
+The model results do not prove a program. TLC explores each configured finite state space;
+Tamarin proves or falsifies lemmas over its symbolic rules and restrictions. Neither establishes
+a refinement from an implementation that orders steps differently, splits an atomic transition
+into several steps, or omits a rule. Each transition of the TLA+ model is one atomic step, and an
 implementation usually takes several steps where the model takes one. The normative text says
 what must hold between those steps. What the models abstract away, and where the text binds an
 implementation:
@@ -270,16 +304,23 @@ implementation:
 - **Crashes and storage failures.** No step of either model ends a process or loses storage. A
   conformance claim declares which of them it covers (ECL1N-0190). Recovery can itself be
   interrupted or repeated, which the model has no step for: its log only grows (`LogAppendOnly`).
-  In an MCP gateway under MCP-GATEWAY-1, recovery records its decision before it writes and
+  In an MCP gateway under MCP-GATEWAY-1, recovery records its decision before it writes any
+  resulting record or bundle and
   settles each journal once, so a repeated recovery writes the same records and never a second
   signed terminal (MG1-016).
 - **Revocation, halt and trust changes.** Propagation is one step within a bound in the model
   (`RevocationBound`), and a halt is acknowledged in one step within its bound. An enforcement
   point that holds no feed of revocations or halts relies on the authorization's validity to
   bound what a revocation or a halt issued after the decision can miss.
-- **The protocol model's clock and memory.** The restriction `EnforcementClock` assumes the
-  enforcement point's clock, and the lemma `single_use` assumes one enforcement point that
-  remembers every consumed authorization. An implementation's timing for the release boundary is
+- **The protocol model's clock and memory.** `EnforcementClock` requires each `InWindow(a, w)`
+  event to precede every `Expired(a, w)` event for that authorization and window. It neither
+  forces an expiry event to occur nor models clock arithmetic. `SingleUse` forbids two
+  consumption events for the same enforcement-point identity and authorization; each identity
+  represents one logical consumption store across its instances. `UniqueRequestIdentifier`
+  forbids a decision-point identity from deciding a request identifier twice, including an
+  identical replay. That is stronger than DCMP2-005's prohibition on reusing an identifier
+  with different content. TE1-003 and TE1-006 separately require effect-store uniqueness where
+  the transaction profile applies. An implementation's timing for the release boundary is
   one that ECL1N-0188 allows: a check made at the release boundary, a declared bound on the delay
   between the check and the release that is enforced, or a check of the authority at the point of
   effect. It counts each use of an authorization atomically with every other use by any instance
@@ -300,8 +341,11 @@ needs Python 3.10 or later and nothing else, uses these pinned releases and refu
 | Tamarin prover | 1.12.0 | `https://github.com/tamarin-prover/tamarin-prover/releases/download/1.12.0/tamarin-prover-1.12.0-linux64-ubuntu.tar.gz` | archive `201be06f469e47cff554df6ca93db8366fc2c69d70c61fcbd1370a1074b469c6`, binary `9d3fcbaa65aeea244cff5b8074338d129427161cc8b02e5aee72d30ee072acc9` |
 | Maude | 3.5.1 | `https://github.com/maude-lang/Maude/releases/download/Maude3.5.1/Maude-3.5.1-linux-x86_64.zip` | archive `72ed1ca87e3b3d0dfc6ee1436baf154bf04c45ff97d521bec040c5e8dfc8f92c`, binary `9dd4044e693944aae97ad72086bc70275fa34bf635f9b377a5b2100bf3ed8655` |
 
-TLC runs on Java 21 with a 1,500 MB heap and one worker. Point the script at the tools with
-options or environment variables:
+TLC runs with a 1,500 MB heap and one worker. The runner requires an executable Java runtime
+that can run the pinned JAR, records its actual version and imposes no Java version gate.
+The original published record reports Java 17.0.20.1 in its top-level field; it does not
+identify the runtime of each earlier invocation merged into that record. Point the script
+at the tools with options or environment variables:
 
 ```bash
 export ECL_TLA2TOOLS_JAR=/path/to/tla2tools.jar
@@ -309,78 +353,102 @@ export ECL_TAMARIN_PROVER=/path/to/tamarin-prover
 export ECL_MAUDE_DIR=/path/to/maude-directory
 python3 formal/run_checks.py                   # every check
 python3 formal/run_checks.py --only correct-binding --only protocol-correct
-python3 formal/run_checks.py --skip-tamarin --record formal/results.json
+python3 formal/run_checks.py --derivcheck-timeout 10 --record formal-results-new.json --log-dir formal-logs-new
 python3 formal/run_checks.py --readme          # render the tables below
+python3 formal/run_checks.py --skip-tlc --derivcheck-timeout 10 --log-dir derivation-logs
 ```
 
-Without the tools the script prints these sources and digests and exits with status 2.
-`--record` writes each result with the SHA-256 of the model files it ran on and keeps the results
-of checks that did not run, so a long run can be split. The maintainer's tests fail when a
-recorded result does not match the committed models, when a check is missing or unexpected, or
-when the tables below differ from the record.
+Without the tools the script prints their sources and digests and exits with status 2.
+New records use `ecl_formal_results_v2`. Every check, including a timeout or tool failure,
+records its model-input hashes, runner hash, command, start and finish times, output hash and
+actual Java version for TLC. `--log-dir` retains complete tool output in a new directory.
+`--record` can merge compatible v2 invocations, preserving each check's own provenance; it
+refuses stale retained inputs, incompatible settings and legacy v1 records. Keep the original
+v1 record unchanged and use a new output file. Use one writer per record path. After checking
+a complete new record against every expected check and its current input/output hashes,
+preserve the earlier record and logs before installing the reviewed new record as
+`formal/results.json` and its logs in `formal/evidence/`; then `--readme` renders its tables.
+A partial run is not a complete replacement record. The top-level `java` value is only the runtime
+of the most recently recorded TLC invocation; per-check fields control mixed-runtime records.
+
+The historical Tamarin command used `--derivcheck-timeout=0`, disabling message-derivation
+diagnostics. That remains the runner's default for reproducing the command. A positive number
+of seconds enables the diagnostic, including in deliberately flawed variants, and is recorded
+in the settings. A diagnostic timeout or failure must be assessed from the retained output;
+absence of a warning from the disabled diagnostic is not evidence that it passed.
 
 ## Results
 
-All 32 TLC checks and nine Tamarin checks give their expected outcome. The correct design
-passes every safety property in all three base configurations and every liveness property in
-the liveness configuration. Each of the 22 broken variants and seven witnesses yields a
-counterexample to the property named for it. The seven lemmas are proved for the correct
-protocol, and each of the eight flaws falsifies its lemma. The times were measured on a shared
-machine with two CPUs and are indicative only.
+The table records the local repair checks performed on November 7, 2026: 32 TLC checks
+and nine Tamarin checks, all with their expected outcomes. Each correct TLC configuration
+satisfied its 17 selected safety properties; `correct-liveness` also satisfied the three
+liveness properties. Each of the 22 broken variants and seven witnesses produced the named
+counterexample. Tamarin verified the seven lemmas of the correct theory and falsified the
+selected lemma for each of eight flaws. Message-derivation diagnostics were enabled with a
+10-second limit, and every theory's output reported successful well-formedness checks.
+
+`results.json` preserves each check's command, input hashes, runtime metadata and output hash.
+Complete captured tool output is retained in `formal/evidence/`, under the basename in each
+check's `log_file` field (stdout followed by stderr). The exact driver used for these runs is
+also retained there as `run_checks-<runner_sha256>.py`; subsequent runner robustness repairs
+do not relabel a previous invocation. The original published v1 record remains
+in the unchanged original release archive. The repaired TLA+ model strengthens deadline
+behavior, so its state counts need not match the original. Durations reflect these local
+runs on a shared host and are not deployment latency claims.
 
 <!-- formal:results -->
 | TLC check | Expected | Observed | Distinct states | States generated | Depth | Trace states | Seconds |
 |---|---|---|---:|---:|---:|---:|---:|
-| `correct-binding` | no error | no error | 1,724,911 | 7,528,740 | 14 |  | 69.4 |
-| `correct-control` | no error | no error | 7,613,132 | 29,655,925 | 24 |  | 160.6 |
-| `correct-liveness` | no error | no error | 131,839 | 456,742 | 17 |  | 22.5 |
-| `broken-outage-proceeds` | `NoEffectDuringOutage` | `NoEffectDuringOutage` | 235 | 407 | 5 | 5 | 0.7 |
-| `broken-late-decision-used` | `SafeStateHasNoEffect` | `SafeStateHasNoEffect` | 10,302 | 26,836 | 6 | 6 | 1.1 |
+| `correct-binding` | no error | no error | 453,291 | 1,081,821 | 14 |  | 13.9 |
+| `correct-control` | no error | no error | 4,606,888 | 17,564,984 | 24 |  | 104.4 |
+| `correct-liveness` | no error | no error | 58,148 | 136,618 | 17 |  | 9.2 |
+| `broken-outage-proceeds` | `NoEffectDuringOutage` | `NoEffectDuringOutage` | 230 | 397 | 5 | 5 | 0.7 |
+| `broken-late-decision-used` | `SafeStateHasNoEffect` | `SafeStateHasNoEffect` | 10,136 | 36,434 | 6 | 6 | 1.1 |
 | `broken-no-digest-binding` | `EffectHasMatchingAdmit` | `EffectHasMatchingAdmit` | 216 | 478 | 4 | 4 | 0.7 |
 | `broken-no-target-binding` | `EffectHasMatchingAdmit` | `EffectHasMatchingAdmit` | 216 | 478 | 4 | 4 | 0.7 |
 | `broken-no-audience-binding` | `EffectWithinAuthority` | `EffectWithinAuthority` | 216 | 478 | 4 | 4 | 0.7 |
-| `broken-no-window` | `EffectWithinAuthority` | `EffectWithinAuthority` | 8,855 | 22,926 | 6 | 6 | 1.0 |
-| `broken-no-single-use` | `SingleUse` | `SingleUse` | 1,449 | 3,863 | 5 | 5 | 0.8 |
-| `broken-ignore-revocation` | `NoEffectWithKnownRevocation` | `NoEffectWithKnownRevocation` | 439 | 871 | 6 | 6 | 0.7 |
-| `broken-ignore-staleness` | `NoEffectDuringOutage` | `NoEffectDuringOutage` | 5,375 | 12,011 | 8 | 8 | 0.9 |
-| `broken-no-propagation-deadline` | `RevocationBound` | `RevocationBound` | 2,243 | 4,610 | 7 | 7 | 0.8 |
-| `broken-ignore-halt` | `NoEffectAtHaltedEP` | `NoEffectAtHaltedEP` | 497 | 989 | 6 | 6 | 0.7 |
-| `broken-halt-unbounded` | `NoEffectBeyondHaltBound` | `NoEffectBeyondHaltBound` | 5,455 | 13,013 | 8 | 8 | 0.9 |
+| `broken-no-window` | `EffectWithinAuthority` | `EffectWithinAuthority` | 6,760 | 17,343 | 6 | 6 | 0.9 |
+| `broken-no-single-use` | `SingleUse` | `SingleUse` | 1,373 | 3,708 | 5 | 5 | 0.8 |
+| `broken-ignore-revocation` | `NoEffectWithKnownRevocation` | `NoEffectWithKnownRevocation` | 435 | 839 | 6 | 6 | 0.7 |
+| `broken-ignore-staleness` | `NoEffectDuringOutage` | `NoEffectDuringOutage` | 5,064 | 11,167 | 8 | 8 | 0.8 |
+| `broken-no-propagation-deadline` | `RevocationBound` | `RevocationBound` | 2,067 | 4,158 | 7 | 7 | 0.8 |
+| `broken-ignore-halt` | `NoEffectAtHaltedEP` | `NoEffectAtHaltedEP` | 493 | 957 | 6 | 6 | 0.7 |
+| `broken-halt-unbounded` | `NoEffectBeyondHaltBound` | `NoEffectBeyondHaltBound` | 5,116 | 12,035 | 8 | 8 | 0.9 |
 | `broken-evidence-not-atomic` | `EffectHasEvidence` | `EffectHasEvidence` | 215 | 476 | 4 | 4 | 0.7 |
 | `broken-bypass` | `EffectHasMatchingAdmit` | `EffectHasMatchingAdmit` | 25 | 38 | 3 | 3 | 0.7 |
 | `broken-actor-writes-authority` | `EffectHasMatchingAdmit` | `EffectHasMatchingAdmit` | 254 | 568 | 4 | 4 | 0.7 |
 | `broken-actor-writes-decision` | `AdmitOnlyAllowed` | `AdmitOnlyAllowed` | 39 | 59 | 3 | 3 | 0.7 |
-| `broken-actor-erases-evidence` | `LogAppendOnly` | `LogAppendOnly` | 1,449 | 3,847 | 5 | 5 | 0.8 |
+| `broken-actor-erases-evidence` | `LogAppendOnly` | `LogAppendOnly` | 1,373 | 3,692 | 5 | 5 | 0.8 |
 | `broken-judgment-admits` | `OneWayRule` | `OneWayRule` | 36 | 54 | 3 | 3 | 0.7 |
 | `broken-self-report-admits` | `OneWayRule` | `OneWayRule` | 37 | 54 | 3 | 3 | 0.7 |
-| `broken-hold-never-times-out` | `HoldResolves` | `HoldResolves` | 62,599 | 175,151 |  | 12 | 3.7 |
-| `broken-no-decision-timeout` | `RequestResolves` | `RequestResolves` | 64,374 | 172,087 |  | 12 | 3.7 |
-| `broken-halt-ack-lost` | `HaltTakesEffect` | `HaltTakesEffect` | 64,506 | 212,548 |  | 13 | 3.6 |
+| `broken-hold-never-times-out` | `HoldResolves` | `HoldResolves` | 55,603 | 143,625 |  | 16 | 3.8 |
+| `broken-no-decision-timeout` | `RequestResolves` | `RequestResolves` | 58,448 | 134,613 |  | 13 | 3.8 |
+| `broken-halt-ack-lost` | `HaltTakesEffect` | `HaltTakesEffect` | 28,677 | 62,758 |  | 12 | 2.0 |
 | `witness-effect` | `WitnessNoEffect` | `WitnessNoEffect` | 215 | 476 | 4 | 4 | 0.7 |
 | `witness-admit-after-hold` | `WitnessNoAdmitAfterHold` | `WitnessNoAdmitAfterHold` | 219 | 510 | 4 | 4 | 0.7 |
-| `witness-collision-deny` | `WitnessNoCollisionDeny` | `WitnessNoCollisionDeny` | 510 | 1,329 | 5 | 5 | 0.7 |
-| `witness-effect-during-outage` | `WitnessNoEffectDuringOutage` | `WitnessNoEffectDuringOutage` | 126 | 229 | 5 | 5 | 0.7 |
-| `witness-effect-in-revocation-window` | `WitnessNoEffectInRevocationWindow` | `WitnessNoEffectInRevocationWindow` | 114 | 211 | 5 | 5 | 0.7 |
-| `witness-effect-in-halt-window` | `WitnessNoEffectInHaltWindow` | `WitnessNoEffectInHaltWindow` | 129 | 238 | 5 | 5 | 0.7 |
-| `witness-timeout` | `WitnessNoTimeout` | `WitnessNoTimeout` | 61 | 95 | 4 | 4 | 0.7 |
+| `witness-collision-deny` | `WitnessNoCollisionDeny` | `WitnessNoCollisionDeny` | 506 | 1,309 | 5 | 5 | 0.7 |
+| `witness-effect-during-outage` | `WitnessNoEffectDuringOutage` | `WitnessNoEffectDuringOutage` | 126 | 225 | 5 | 5 | 0.7 |
+| `witness-effect-in-revocation-window` | `WitnessNoEffectInRevocationWindow` | `WitnessNoEffectInRevocationWindow` | 114 | 207 | 5 | 5 | 0.7 |
+| `witness-effect-in-halt-window` | `WitnessNoEffectInHaltWindow` | `WitnessNoEffectInHaltWindow` | 129 | 234 | 5 | 5 | 0.7 |
+| `witness-timeout` | `WitnessNoTimeout` | `WitnessNoTimeout` | 58 | 91 | 4 | 4 | 0.7 |
 
 | Tamarin check | Lemma | Result | Proof steps | Seconds |
 |---|---|---|---:|---:|
-| `protocol-correct` | `executable` | verified | 14 | 8.9 |
+| `protocol-correct` | `executable` | verified | 14 | 6.9 |
 |  | `request_origin` | verified | 7 |  |
 |  | `response_authenticity` | verified | 7 |  |
 |  | `request_response_binding` | verified | 7 |  |
 |  | `authorization_scope_and_audience` | verified | 12 |  |
 |  | `single_use` | verified | 72 |  |
 |  | `one_effect_per_request` | verified | 60 |  |
-| `protocol-skip-response-signature` | `response_authenticity` | falsified - found trace | 8 | 1.5 |
-| `protocol-shared-role-key` | `response_authenticity` | falsified - found trace | 10 | 6.0 |
-| `protocol-response-not-bound` | `request_response_binding` | falsified - found trace | 13 | 2.3 |
-| `protocol-no-scope-check` | `authorization_scope_and_audience` | falsified - found trace | 13 | 2.7 |
-| `protocol-no-audience-check` | `authorization_scope_and_audience` | falsified - found trace | 13 | 2.8 |
-| `protocol-no-single-use` | `single_use` | falsified - found trace | 16 | 5.2 |
-| `protocol-dp-no-message-identity` | `one_effect_per_request` | falsified - found trace | 20 | 20.5 |
-| `protocol-dp-skips-request-signature` | `request_origin` | falsified - found trace | 5 | 1.5 |
+| `protocol-skip-response-signature` | `response_authenticity` | falsified - found trace | 8 | 3.7 |
+| `protocol-shared-role-key` | `response_authenticity` | falsified - found trace | 10 | 5.8 |
+| `protocol-response-not-bound` | `request_response_binding` | falsified - found trace | 13 | 4.1 |
+| `protocol-no-scope-check` | `authorization_scope_and_audience` | falsified - found trace | 13 | 4.0 |
+| `protocol-no-audience-check` | `authorization_scope_and_audience` | falsified - found trace | 13 | 4.0 |
+| `protocol-no-single-use` | `single_use` | falsified - found trace | 16 | 4.6 |
+| `protocol-dp-no-message-identity` | `one_effect_per_request` | falsified - found trace | 20 | 11.1 |
+| `protocol-dp-skips-request-signature` | `request_origin` | falsified - found trace | 5 | 3.5 |
 <!-- /formal:results -->
 
 "Depth" is the search depth TLC reported when it stopped; TLC reports none for a liveness
@@ -389,23 +457,34 @@ of a flaw analyzes only the lemma named for it.
 
 TLC checks liveness at intervals of time during its search, so the states and the trace length
 it reports for the three broken liveness variants change from run to run with the machine's
-speed; the property it falsifies does not. The table records the run of 5 October 2026, made
-after the models' comments last changed. The run recorded before it, with the same tools and
-settings and the earlier comments, gave every check the same outcome and the same counts except
-those of the three variants: 28,485, 27,545 and 33,709 distinct states, with traces of 11, 10
-and 11 states.
+speed; the required violated property remains the same. The original published record's
+October-run history is preserved in the original release archive. The November 7 repair
+record above is separate evidence for the new input hashes. Fourteen additional reduced-model
+diagnostics exercised decision priority, zero/one-tick deadlines, the finite-horizon clamp,
+and four deliberate removals of the new guards. All matched their specified expectations;
+these diagnostics are retained in the local repair package and are not counted among the
+32 standard TLC configurations. Three further diagnostics use two-tick decision and hold
+deadlines: a safety/liveness check and two witnesses, one for a decision and one for an
+authenticated resolution at tick 1 of a request or hold created at tick 0. All three matched
+their specified expectations. Together these are 17 focused diagnostics, separate from the
+32 standard configurations; their complete inputs, records and outputs are in the local
+repair package.
 
 ## Limits
 
 - The TLA+ checks are exhaustive only within each configuration's bounds.
-- Both models check the design as stated; a defect in an implementation is found by the
-  conformance vectors, the implementation's own tests and review, not here. "From the models to
-  an implementation" says where an implementation departs from the models' atomic steps.
-- Cryptography is perfect in both models. Encoding attacks below the DSSE pre-authentication
-  encoding, weak keys and side channels are out of scope.
-- The protocol model assumes the enforcement point's clock and a trust policy with one key per
-  principal and role. TRUST-POLICY-1 now requires that assumption: a verifier refuses a trust
-  policy whose key carries the purposes of two roles (TP1-009), and counts a decision request or
-  response only under a key of its role (TP1-010). The flaw `shared_role_key` shows what the rule
-  prevents; the model itself is unchanged and does not represent the refusal.
+- Both models check stated abstractions; correspondence with the normative text requires
+  separate review. Implementation defects must be sought through conformance vectors,
+  implementation tests and review; these methods do not guarantee detection of every defect.
+  "From the models to an implementation" describes departures from the models' atomic steps.
+- TLA+ omits cryptographic operations and enforces creation and separation through its
+  transition relation. Tamarin uses ideal symbolic primitives under its equational theory.
+  Concrete encoding attacks, weak keys and side channels are outside these checks.
+- The protocol model assumes the enforcement point's clock (restriction `EnforcementClock`) and a
+  trust policy that holds at most one key per principal and role (restriction `OneRegistration`),
+  so key rotation and several keys for one role are outside it. Each modeled key is generated for
+  one role (rule `Register`, ECL1N-0157). TRUST-POLICY-1 requires separation of request and response purposes (TP1-009), and counts a
+  decision request or response only under a key of its role (TP1-010). It does not limit a
+  principal to one key per role. The flaw `shared_role_key` exercises role sharing; the correct
+  theory assumes separate role keys and has no verifier-refusal transition.
 - What the TLA+ model leaves out is listed under "What it abstracts, and why".

@@ -2,8 +2,9 @@
 
 ## External Control Layer Standard for Autonomous AI Systems
 
-- Status: Version 1.0, a public standard maintained by G-14, Inc., in the release
-  state "published version" (`governance/RELEASE_POLICY.md`)
+- Status: ECL-1 Version 1.0, corrected source release `v1.0.1`,
+  maintained by G-14, Inc. Original publication: 5 November 2026;
+  correction prepared: 9 November 2026 (`governance/RELEASE_POLICY.md`).
 - Conformance corpus: every measured unit of the published coverage
   denominator, which holds each branch of the wire, extension-value, claim and
   assessment document schemas and each active semantic rule, has a positive and
@@ -14,21 +15,21 @@
 - Version date: `October 2026`
 - Predecessor: RC-6 (`1.0-rc.6`), the last release candidate of Version 1.0,
   retired, as are RC-5 (`1.0-rc.5`) and RC-4 (`1.0-rc.4`). RC-3 (`1.0-rc.3`)
-  is the frozen predecessor of the release candidates. `RELEASE-NOTES-1.0.md`
+  is the frozen predecessor of RC-4 to RC-6. `RELEASE-NOTES-1.0.md`
   states what Version 1.0 changed from RC-6, and `CHANGELOG.md` lists the
   requirements that each version introduced, changed or retired.
 - Editor: `G-14, Inc.`
-- Author: `R. F. Tilley Jr.`
+- Authors and producers: `Robert F. Tilley Jr.` and `G-14, Inc.`
 
 ## Version history
 
 | Version | State |
 |---|---|
-| `1.0` | Version 1.0, a public standard |
+| `1.0` | Version 1.0; corrected source release `v1.0.1` |
 | `1.0-rc.6` | Unpublished review candidate, retired |
 | `1.0-rc.5` | Unpublished review candidate, retired |
 | `1.0-rc.4` | Unpublished review candidate, retired |
-| `1.0-rc.3` | Frozen predecessor of the release candidates |
+| `1.0-rc.3` | Frozen predecessor of RC-4 to RC-6 |
 
 ## The ECL-1 Guarantee (Informative)
 
@@ -74,7 +75,8 @@ leaves to other tools, and how to read the rest.
    ambiguity, and the loss of a required dependency end in denial, restricted
    mode, or halt (FR-003, ECL1N-0043, Section 8.8). A loss of required proof
    restricts the action classes that need that proof, and a critical integrity
-   failure or an emergency activation stops the whole deployment (ECL1N-0191).
+   failure, an emergency activation, or operator-safety cessation stops the
+   whole deployment (ECL1N-0191).
 4. **Bounded, revocable authority.** Authority is typed, transaction-bound,
    time-bounded, and revocable, and each delegation hop preserves or narrows it
    (ECL1N-0031, ECL1N-0035, ECL1N-0042). An enforcement point releases an
@@ -298,7 +300,7 @@ Informative examples (non-normative):
 Consequential Action Register MUST be validated against the actual runtime
 capability inventory, including tool manifests, API permissions, delegated
 authority paths, workflow triggers, and external service bindings reachable by
-the SoI. Any reachable capability path not represented in the register MUST be
+the System of Interest (SoI). Any reachable capability path not represented in the register MUST be
 included in scope or disclosed in the Negative Boundary Annex.
 
 ### 2.5 Conformance Claim Boundary and Claim Classes
@@ -445,9 +447,10 @@ Informative examples (non-normative):
 
 ECL-1 standardizes one layer: the decision, authority, enforcement, and evidence
 around each consequential action. It leaves the functions below to other tools
-and states how each one connects. No connection changes the guarantee: whatever
-these tools report, an `admit` rests on policy evaluated over `verifiable`
-inputs (ECL1N-0180), and a failure that removes required proof ends closed.
+and states how each one connects. A conformant mediation claim requires an
+`admit` to rest on policy evaluated over `verifiable` inputs (ECL1N-0180).
+ECL1N-0187 requires missing required proof to prevent release and the action
+to end in its declared safe state, whatever these tools report.
 
 | Function left to other tools | Examples | How it connects to ECL-1 |
 | --- | --- | --- |
@@ -552,8 +555,16 @@ treated as co-normative for that profile.
 
 ### 3.7 Editorial and Conformance Rules for Reference Usage
 
-- **ECL1N-0024** — An implementation claim MUST cite the reference identifier used by each
-  control assertion in Sections 6, 7, 10, and 11.
+- **ECL1N-0024** — For each control that an ECL-1 conformance claim asserts from
+  Sections 6, 7, 10, or 11, the claim MUST cite the control's requirement or
+  checklist identifier, or its section when no such identifier is assigned, and
+  each normative or bibliographic reference on which the assertion relies. A
+  reference in Section 3 or the Bibliography MUST be cited by its bracketed
+  reference identifier in this standard, such as `[ECL-DCMP2]` or `[NIST-RMF]`,
+  with the edition or immutable reference required by ECL1N-0021 and
+  ECL1N-0025. This applies within the stated boundary of a full-system
+  mediation, bounded action-class mediation, or component or profile
+  implementation claim.
 - **ECL1N-0025** — Any living-specification reference used normatively in a claim or profile
   MUST be frozen by version, date, or immutable hash in the relevant package.
 - **ECL1N-0026** — A mapping claim to an external framework MUST distinguish direct runtime
@@ -765,21 +776,34 @@ because the requester's principal can end it by supplying the evidence it names
 defined condition changes that the requester cannot bring about by answering
 (DCMP2-018). One outcome is at least as strict as another when it comes later in
 this order, or when both are `deny`. One `hold` is at least as strict as another
-`hold`, and one `challenge` as another `challenge`, when its condition for
-progress is met only when the other's is, its deadline is no later, and its
-timeout disposition is at least as strict, one that releases nothing that the
-other's does not release (DCMP2-018); two `hold` or two `challenge` outcomes are
-equally strict only when their conditions for progress, deadlines, and timeout
-dispositions are the same. One `admit` is at least as strict as another only
-when its authorization is contained in the other's on every dimension of
+`hold`, and one `challenge` as another `challenge`, when, and only when, its
+condition for progress implies the other's, its deadline is no later, and its
+timeout disposition is at least as strict (DCMP2-018). An absent deadline
+counts as later than every finite deadline; two absent deadlines are equal.
+A timeout disposition is a non-admitting outcome or the fallback state that
+applies when the deadline passes. For the held action, `deny` and a fallback
+state that prevents its release are equally strict; `hold` remains less
+strict than `deny`. A timeout, a satisfied progress condition, or a containment
+allowlist does not authorize release of that held action: release requires a
+new `admit` from a new evaluation (DCMP2-014, DCMP2-021, DCMP2-057). Any
+separately allowed containment action needs its own applicable admission.
+Two `hold` or two `challenge` outcomes are equally strict only when their
+conditions for progress, deadlines, and timeout
+dispositions are the same. One `admit` is at least as strict as another when,
+and only when, its authorization is contained in the other's on every dimension of
 ECL1N-0031, in its validity interval, and in its use policy and maximum uses; it
 carries every obligation of the other; it debits each consequence budget by at
 least as much and no later; and every human-approval threshold that applies to
 the other applies to it with, for the same parameter or measure and the same
 unit, a value no higher and at least as many approvers, and a threshold that
 applies only to it makes it no less strict (ECL1N-0177). A threshold in another
-unit is not comparable, and the `admit` is then not at least as strict. An
-outcome that is not at least as strict as another is less strict than it.
+unit is not comparable, and the `admit` is then not at least as strict. These
+conditions are jointly sufficient for the comparison; satisfying them does
+not waive another requirement governing a response. Its safe state remains
+the declared action-class rule (DCMP2-041), not a condition that an input can
+relax. For the prohibition in ECL1N-0179, an outcome that is not at least as
+strict as its verifiable-only outcome is treated as less strict, including
+when the compared values are incomparable.
 
 **Typed Authority**: Transaction-bound authority scoped by principal context,
 resource target, operation set, and time window.
@@ -892,7 +916,8 @@ paths that a reader might otherwise over-read as covered.
 
 **Control Independence Class A**: Same-operator separated controls with
 distinct roles, keys, or privilege domains and auditable change boundaries,
-subject to FR-001's prohibition on a single power controlling both planes.
+subject to FR-001's prohibition on a single power controlling both the governed
+AI system and the ECL control plane.
 The same organization can administer both planes; a single administrative
 credential, role or host root that can alter both planes does not satisfy it.
 
@@ -989,8 +1014,7 @@ actions.
 Negative Boundary Annex. Omitted paths are treated as claim defects, not as
 implicit exclusions.
 
-**ECL1N-0039** — Evidence of complete mediation is always bounded by the declared path-
-enumeration method, exercised negative tests, and the reachable capability
+**ECL1N-0039** — Evidence of complete mediation is always bounded by the declared path-enumeration method, exercised negative tests, and the reachable capability
 inventory available at assessment time. A conformant claim MUST therefore
 document the enumeration method, exercised interception points, and any
 residual untested path classes rather than presenting no-bypass as a mere
@@ -1032,9 +1056,11 @@ evidence of the decision MUST identify that input by reference and digest.
 The one-way rule (ECL1N-0178 to ECL1N-0182) classifies every decision input and
 lets only `verifiable` inputs admit an action. Inputs that the governed AI
 system controls as assertions, and judgments about meaning or risk, can make an
-outcome stricter and nothing else. Whether a decision complies is decided by
-comparing its outcome with its verifiable-only outcome in the strictness order
-(Section 4.3): the decision complies when its outcome is at least as strict.
+outcome stricter and nothing else. The strictness comparison tests
+ECL1N-0179's outcome-ordering condition: whether the decision's outcome is at
+least as strict as its verifiable-only outcome (Section 4.3). The other applicable
+decision-basis requirements also apply, including ECL1N-0181, ECL1N-0182 and,
+at `L2` and above for the consequence classes it names, ECL1N-0165.
 
 **ECL1N-0178** — For each in-scope action class, the Consequential Action
 Register MUST declare, for each decision input that ECL1N-0164 requires it to
@@ -1069,8 +1095,12 @@ age in `maximum_age_seconds`, any deadline in `deadline_milliseconds`, and the
 inputs from which an input is computed in `derived_from`. An input that arrives
 with the request, such as a statement of the governed AI system, needs no
 deadline. The registered rule `ecl.rule.register-declarations-consistent.v1`
-checks a register document against the declarations of this requirement that
-its schema cannot express.
+checks structural constraints that the schema cannot express: unique action
+classes and inputs, references to other declared inputs of the same class, no
+`verifiable` input derived from a non-verifiable input, and no direct or
+indirect self-derivation. Establishing the declared sources' authority and the
+controls on their values requires the claim evidence assessed under EA-15 and
+EA-21.
 
 **ECL1N-0179** — An `actor_supplied` or `judgment` input MUST NOT be the basis
 of an `admit`. The outcome of a decision MUST be no less strict, in the
@@ -1099,19 +1129,42 @@ decision was made, and each decision input that the Decision Layer consulted
 and each that the register declares for the action class, each input once, with
 its declared class, whether the action class requires it, whether it was
 available, late, unavailable, or malformed, its reference and digest when it
-was available, and its effect on the outcome: `supports` when it is part of the
-basis on which the verifiable-only outcome permits the action, whatever the
-final outcome; `restricts` when it made the outcome stricter; and `none` when
-it had no effect. The decision response MUST carry this record in the
-registered extension `ecl.ext.decision-basis.v1` (DCMP2-053).
+was available, and its effect on the outcome. The decision response MUST
+carry this record in the registered extension `ecl.ext.decision-basis.v1`
+(DCMP2-053). Effects are relative to the verifiable-only outcome of Section
+4.3 and the authorization, obligations, consequence-budget debits, and
+human-approval requirements that accompany it:
+
+- `supports`: the input is part of the basis on which the verifiable-only
+  outcome permits the action, whatever the final outcome. An input that
+  belongs to both the permitting and restricting bases MUST be recorded as
+  `supports`;
+- `restricts`: the input is part of the basis on which the verifiable-only
+  outcome refuses or narrows the action, through a `verifiable` input's value
+  or the absence of a required `verifiable` input; or it is part of the basis
+  on which the final outcome is stricter than the verifiable-only outcome,
+  through an `actor_supplied` or `judgment` input or an unavailable, late, or
+  malformed optional input (ECL1N-0179, ECL1N-0182);
+- `none`: the input is part of neither basis.
+
 
 The record can also give the verifiable-only outcome, the time at which the
 Decision Layer received the request, and, for each input, the time at which the
 Decision Layer obtained it and the time its value describes. These are the
-Decision Layer's statements, signed with its response. A verifier checks that
-they agree with each other, with the outcome and, given the register, with each
-input's declared deadline and maximum age (DCMP2-053); it cannot check them
-against the sources.
+Decision Layer's statements, signed with its response, as are the effect
+labels. An effect label identifies a basis of the evaluation; it does not
+report a separate evaluation with that input removed. When the verifiable-only
+outcome is `deny`, no final outcome can be stricter: `actor_supplied` and
+`judgment` inputs therefore have effect `none`, while a `verifiable` input
+whose value or required absence is a basis of the refusal has effect
+`restricts`. An input that both permits and limits an admitted action, such as
+a mandate permitting transfers up to a ceiling, is recorded as `supports`.
+
+A verifier checks the record conditions of DCMP2-053, including the allowed
+uses of `supports`, the order of recorded outcome enums, and, when the record
+and register supply the needed fields, input timing. It does not re-evaluate
+the policy, establish the full strictness comparison of Section 4.3, or verify
+the claimed `restricts` and `none` effects against the input sources.
 
 **ECL1N-0182** — A declared decision input is late when the Decision Layer
 obtains it after its declared deadline, or when its value is older than its
@@ -1125,9 +1178,11 @@ the outcome stricter and MUST NOT otherwise affect it.
 
 A probabilistic component that contributes to decision evaluation supplies
 `judgment` inputs. Under ECL1N-0179 and ECL1N-0180 its output can make an
-outcome stricter but is never the basis of an `admit`, so the basis of every
-`admit` is policy over `verifiable` inputs, which a reviewer can evaluate again
-exactly. Where probabilistic components contribute to decision evaluation,
+outcome stricter but is never the basis of an `admit`. A conformant `admit`
+rests on policy over `verifiable` inputs. A reviewer can repeat that
+verifiable-only evaluation when the recorded policy version, trust state and
+referenced input values are available and that policy evaluation is
+deterministic. Where probabilistic components contribute to decision evaluation,
 `reproducible` (ECL1N-0040) means that the logged inputs, including the
 recorded reference and digest of each `judgment` input, the policy version,
 trust state, and decision outcome are sufficient for a competent reviewer to
@@ -1168,8 +1223,7 @@ effect.
 - fail closed on control-path ambiguity, policy ambiguity, or integrity failure;
 - preserve a separately auditable control path for emergency halt or
   quarantine; and
-- restrict the emergency control plane to halt, quarantine, or other pre-
-  declared containment actions rather than ordinary runtime policy editing.
+- restrict the emergency control plane to halt, quarantine, or other pre-declared containment actions rather than ordinary runtime policy editing.
 
 ECL-1 recognizes two enforcement classes:
 
@@ -1288,11 +1342,20 @@ remote, as when a gateway forwards a call to a server, the check does not show
 that the server acted before the authority expired: that needs a check at the
 point of effect, such as a resource server's check of a presented token under
 OAUTH-AUTHORITY-1, or a declared bound on the delay between release and effect.
-Under the second timing argument the recorded release time is the final
-observation that precedes the release, and the release begins within the
-declared bound after it; the evidence carries that bound with the observation,
-so a verifier tests the observation plus the bound against the window
-(EBMP2-050, EBMP2-071).
+Every EBMP-2 `execution_released` event carries a final pre-release
+observation and a declared `release_guard_ms`, whichever timing argument the
+claim uses. The observation follows the blocking operations except the event
+recording and any intervening steps that the profile explicitly bounds by the
+guard (EBMP2-071). The release begins within that guard, and the verifier
+compares the observation plus the guard with the authority window (EBMP2-050).
+For a check with no intervening blocking step, the guard bounds the releasing
+step itself; the minimum encoded guard of one millisecond does not prescribe
+a delay. A timing argument that permits intervening work bounds that work as
+well. A check at the point of effect supplies the argument for a release
+boundary located there. Where the point of effect follows an earlier release
+boundary, its check does not replace the earlier boundary's authority and
+evidence duties. The profile identifies both boundaries and how each is
+observed (ECL1N-0185).
 A record made before the release is evidence that a release was intended, not
 that it happened, and a record made after it can describe the release
 accurately but cannot undo a release that ought not to have happened
@@ -1341,7 +1404,8 @@ not recover evidence that was never written. TIMING-SAFE-STATE-1 governs
 buffered evidence and its recovery (TS1-021 to TS1-024). Recovery information
 that one enforcement-point instance at a time can settle keeps a second instance
 from recording as not released an attempt that the first is releasing, and a
-recovery that records its decision durably before it writes anything writes the
+recovery that records its decision durably before writing any resulting record
+or bundle writes the
 same records when it is repeated or interrupted; information that recovery
 cannot read, such as a journal that does not parse or holds more than one
 attempt, leaves its attempt unresolved, kept and reported, with no authority
@@ -1377,10 +1441,10 @@ triggers.
 when doing so would prevent a competent assessor from determining whether the
 action was properly constrained.
 
-**ECL1N-0050** — Evidence bundles MUST be retained for at least the longer of:
+**ECL1N-0050** — Evidence bundles MUST be retained for at least the longest of:
 
 - the active assessment cycle for the claimed level;
-- any applicable regulatory, contractual, or legal retention requirement; or
+- any applicable regulatory, contractual, or legal retention requirement; and
 - 12 months from creation.
 
 **ECL1N-0195** — Where a qualified legal reviewer determines that applicable law requires earlier
@@ -1404,8 +1468,8 @@ applicable deadline; an administrative hold MUST NOT be used to extend a
 legally prohibited retention.
 
 **ECL1N-0199** — The claim MUST disclose unavailable evidence;
-a verifier MUST NOT treat its destruction record as the missing evidence or
-claim the original bundle is complete. For EBMP-2 bundle verification, the
+a verifier MUST NOT treat the destruction record for unavailable evidence as
+that missing evidence or claim the original bundle is complete. For EBMP-2 bundle verification, the
 verifier MUST apply that protocol's defined verdict and primary-finding rules
 to the evidence present; lawful destruction MUST NOT introduce an additional
 success verdict. The assessor MUST separately record the consequence for the
@@ -1541,12 +1605,20 @@ The companion interoperability artifact set defines:
 - failure behavior for invalid, expired, or semantically incomplete artifacts;
 - positive and negative conformance vectors with expected results.
 
-**ECL1N-0058** — For `L2` and above, the companion interoperability artifact set, which is
-part of the normative assessment surface at every level (ECL1N-0022), MUST
-include a public vector-coverage manifest. Every schema branch and semantic
-rule MUST have a positive case where applicable and at least one negative or
-mutation case that fails for the intended primary error. Passing an arbitrary
-vector count without rule coverage is insufficient.
+**ECL1N-0058** — For `L2` and above, the claimant MUST include or immutably
+reference the public vector-coverage manifest for its version-locked companion
+interoperability artifact set, as part of the claim package under ECL1N-0069.
+Every schema branch and semantic rule in that artifact set MUST have a positive
+case where applicable and at least one negative or mutation case that fails
+for the intended primary error. Passing an arbitrary vector count without
+rule coverage is insufficient.
+
+ECL1N-0022 assigns publication of the complete version-locked artifact set to
+the release publisher at every level. ECL1N-0058 and ECL1N-0069 assign the
+additional package and coverage duties to an `L2` or higher claimant. A claimant
+can cite the publisher's immutable artifacts without republishing identical
+copies, while still supplying the version declarations, validator output, and
+coverage results for its claimed surface (ECL1N-0069, PR-01).
 
 **ECL1N-0059** — Canonical JSON is the mandatory Version 1 interchange floor. A CBOR/COSE,
 transport, or sector-specific representation MAY be used only through a
@@ -1644,8 +1716,8 @@ decimal string, and the number of distinct authorized persons whose approval it
 needs. An action is at or above a `parameter` threshold when the value at the
 pointer is a non-negative integer, or a string in the decimal form of `value`,
 that is at or above `value`, the two compared as exact decimals; when the
-pointer names no value, or a value of another form, a negative number among
-them, the action counts as at or above it. An action at or above several
+pointer names no value, or names a value of any other form (including a negative
+number), the action counts as at or above the threshold. An action at or above several
 thresholds needs, for each of them, the approvals that it requires; one person's
 approval counts toward each threshold that it applies to.
 
@@ -1664,7 +1736,7 @@ lower-level requirements unless explicitly stated otherwise.
   text opens with a level qualifier, such as "For `L2` and above" or "`L3`:".
   The same rule gives the level of each requirement of a companion document.
   `DCMP-2`, `EBMP-2`, and ECL Integrity Envelope 1 therefore apply at every
-  level (ECL1N-0022), and FR-102 to FR-104, FR-107, and FR-108 add `L2`
+  level (ECL1N-0022), and FR-101 to FR-104, FR-107, FR-108 and FR-113 add `L2`
   requirements to rules that apply at every level.
 - **ECL1N-0061** — Alternative technical implementations MAY be used.
 - **ECL1N-0062** — Conformance evidence for an alternative technical implementation
@@ -1705,7 +1777,7 @@ lower-level requirements unless explicitly stated otherwise.
 | FR-111 | L2 | Critical verification failures, integrity drift affecting enforcement, or emergency control-plane activation MUST trigger pre-declared response behavior within the declared timing case. | Verification rules, response automation tests, alert and mode-transition evidence. |
 | FR-112 | L2 | The deployment MUST continuously monitor its declared timing case for revocation propagation, offline-control staleness, and delayed evidence export, and MUST retain timing-breach evidence. | Continuous timing telemetry, threshold configuration, breach records. |
 | FR-113 | L2 | In addition to ECL1N-0050, which applies to evidence bundles at every level, related verifier-critical artifacts MUST be retained for the same minimum, and the claim MUST evidence the retention of both. Sector profiles MAY extend but MUST NOT shorten this minimum except under the documented legal-conflict procedure of ECL1N-0195 to ECL1N-0199. | Evidence-retention policy, storage lifecycle controls, retention configuration, legal determinations where applicable, deletion logs or archival proofs. |
-| FR-201 | L3 | The implementation MUST verify absence of bypass paths at least annually and after major architecture changes using adversarial negative testing rather than documentation review alone. | Independent architecture assessment, penetration test report, remediation log. |
+| FR-201 | L3 | The implementation MUST test for bypass paths at least annually and after major architecture changes using adversarial negative testing rather than documentation review alone, and MUST document the tested scope and residual untested path classes. | Independent architecture assessment, penetration test report, remediation log. |
 | FR-202 | L3 | Enforcement and decision integrity MUST be attested by tamper-resistant mechanisms or approved equivalent controls. Consequential action classes with `L4` consequence or equivalent criticality MUST use Hard Enforcement. If an equivalent control is asserted in place of tamper-resistant or hard-enforcement properties, the equivalence dossier MUST identify the preserved threat-resistance property and include independent validation. | Attestation evidence, isolation configuration, enforcement-class mapping, control equivalency rationale, equivalence dossier, and independent validation if applicable. |
 | FR-203 | L3 | Delegation chains MUST preserve actor/subject separation, enforce scope attenuation at each hop through Authority-layer logic, provide non-repudiable signed linkage, and remain independently replayable from the signed delegation chain without relying on claimant narrative alone. | Delegation graph, signed hop artifacts, attenuation policy tests, and independent replay procedure. |
 | FR-204 | L3 | The Verification component MUST perform continuous integrity monitoring and generate actionable alerts on policy drift, schema drift, trust-root anomalies, and verifier failures. | Monitoring rules, alert samples, incident response records. |
@@ -1722,9 +1794,9 @@ lower-level requirements unless explicitly stated otherwise.
   control properties.
 - Requirements `FR-301` through `FR-305` add critical-infrastructure assurance
   constraints.
-- **ECL1N-0066** — Conformance claims MUST NOT represent compliance with this section as proof
-  of liveness guarantees, business-outcome guarantees, or universal model
-  correctness.
+- **ECL1N-0066** — Conformance claims MUST NOT represent compliance with the functional
+  requirements in Section 6 as proof of liveness guarantees, business-outcome
+  guarantees, or universal model correctness.
 
 ### 6.4 Interoperability and Profile Baselines
 
@@ -1779,9 +1851,13 @@ high-water-mark scoring across:
 
 `required_level = max(autonomy_level, data_level, consequence_level)`
 
-**ECL1N-0072** — If any dimension cannot be defensibly scored due to missing information, the
-scorer MUST assign the next higher provisional level until evidence is
-provided.
+**ECL1N-0072** — If any dimension cannot be defensibly scored due to missing
+information, the scorer MUST identify the missing dimensions and assign a
+provisional level. Its baseline is the highest defensibly scored dimension,
+or `L1` when none can be scored; the provisional level MUST be one level above
+that baseline, capped at `L4`. A baseline of `L4` therefore remains provisionally
+`L4`. The result MUST remain identified as provisional until the missing
+information is provided and all dimensions can be scored under ECL1N-0071.
 
 ### 7.3 Risk Dimension Guidance
 
@@ -1905,8 +1981,8 @@ disclosure or an equivalent assessor-approved format.
 The conformance assessment taxonomy is hierarchical:
 
 1. Section 11 checklist items are scored `Pass`, `Fail`, or `Not Applicable`.
-2. Failed checklist items receive finding severity such as `critical`,
-   `major`, or `minor`.
+2. Each failed checklist item receives one finding severity: `critical`,
+   `major`, or `minor` (ECL1N-0147).
 3. Aggregated findings determine the claim status in Section 7.6.
 4. Claim status informs procurement gate decisions in Section 11.4.
 
@@ -1943,7 +2019,8 @@ Assessment competency and independence baseline:
 
 - **ECL1N-0148** — The assessment MUST be signed by a reviewer who is not the primary
   implementer for the assessed SoI; at `L1` it MAY be internal.
-- **ECL1N-0086** — `L2`: independent assessor or assessor team with no direct implementation,
+- **ECL1N-0086** — `L2`: the assessment MUST be performed by an independent assessor or
+  assessor team with no direct implementation,
   managed-operation, or claim-approval authority over the SoI during the
   assessment period or prior 24 months; compensation MUST NOT be contingent on
   claim issuance; material affiliate or reseller relationships with the
@@ -2083,24 +2160,25 @@ fault conditions:
 
 - connected revocation propagation;
 - maximum offline control-state staleness before restricted mode or halt;
-- delay from first approved transfer path to evidence export completion.
+- delay from the first availability of an approved transfer path to evidence export completion.
 
-**ECL1N-0098** — The table below is the default baseline. A sector profile or engineering timing
-case MAY adopt stricter values, and the claim packet MUST then publish the
-rationale, control assumptions, and residual risk. A claim MUST NOT adopt a less
-strict value unless, in addition, its assessor has approved the deviation and
-the claim packet records that approval.
+**ECL1N-0098** — The table below is the default baseline. A sector profile or
+engineering timing case MAY adopt stricter values. For every value that differs
+from the default, the claim packet MUST publish the rationale, control
+assumptions, and residual risk. A claim MUST NOT adopt a less strict value
+unless its assessor has approved the deviation and the claim packet records
+that approval.
 
-| Claimed Level | Default connected revocation propagation | Default offline control-state staleness before restricted mode | Default delay from first approved transfer path to evidence export completion |
+| Claimed Level | Default connected revocation propagation | Default offline control-state staleness before restricted mode | Default delay from first availability of an approved transfer path to evidence export completion |
 | --- | --- | --- | --- |
 | L1 | 24 hours | 24 hours | 72 hours |
 | L2 | 15 minutes | 4 hours | 24 hours |
 | L3 | 5 minutes | 1 hour | 4 hours |
 | L4 | 60 seconds | 15 minutes | 1 hour |
 
-These defaults are revocation-propagation deadlines, distinct from halt bounds
-under TS1-035, and a claim declares its halt acknowledgment bound separately
-(TS1-036).
+The connected revocation propagation defaults are deadlines distinct from
+halt bounds under TS1-035. A claim declares its halt acknowledgment bound
+separately (TS1-036).
 
 **ECL1N-0099** — For federated deployments, trust-bundle updates and revocation exchange across
 domains MUST satisfy the same connected revocation timing case.
@@ -2155,10 +2233,11 @@ before-release obligation is unproven, is refused under ECL1N-0187 and
 DCMP2-017 whatever the mode. ECL1N-0191 to ECL1N-0193 set which action classes
 such a fault restricts and when the restriction ends, so that two assessors
 reach the same scope for the same fault. Within the scope of a restriction,
-Restricted Mode has the effect that ECL1N-0103 gives it (Section 4.2).
+Restricted Mode (Section 4.2) has the effect that ECL1N-0103 gives it.
 
 **ECL1N-0191** — The state that ECL1N-0146 requires for missing proof, for a
-critical integrity failure and for an emergency control activation MUST cover
+critical integrity failure, for an emergency control activation, and for an
+operator-safety condition requiring cessation MUST cover
 at least the scope that the following table gives for the fault, determined
 under the claim's dependency model (ECL1N-0192), and a fault that matches more
 than one row MUST bring the widest scope and the strictest state of the rows it
@@ -2171,7 +2250,7 @@ that class in order to keep the class outside the scope (TS1-032).
 | --- | --- |
 | Required proof unobtainable for one action class, from a dependency that no other in-scope action class requires | `Restricted Mode` for that action class |
 | A dependency that supplies required proof to more than one action class fails or goes stale | `Restricted Mode` for every action class that requires the dependency, directly or through other dependencies |
-| Critical integrity failure or emergency control activation | The state that ECL1N-0146 gives the trigger, for the whole deployment and in its order of precedence; no action-class scope or local exception applies |
+| Critical integrity failure, emergency control activation, or operator safety requiring cessation | The state that ECL1N-0146 gives the trigger, for the whole deployment and in its order of precedence; no action-class scope or local exception applies |
 | Required proof lost where the scope of the loss cannot be established | `Restricted Mode` for the enclosing scope that the dependency model declares for the dependency, and for the whole deployment where it declares none |
 
 **ECL1N-0192** — Each claim MUST declare its dependency model with its mode
@@ -2189,9 +2268,12 @@ the trigger brings. A restriction MUST NOT be lifted for an action class until
 required proof for that class has been obtained again after the fault, not
 taken from state cached or recorded before it, and until that authorization, or
 one that another requirement of this standard requires, has been recorded; a
-deployment-wide state brought by a critical integrity failure or an emergency
-control activation MUST be lifted only by a recorded control action that the
-claim's mode definitions authorize (ECL1N-0168, TS1-014, TS1-027).
+deployment-wide state brought by a critical integrity failure, an emergency
+control activation, or operator safety requiring cessation MUST be lifted only
+by a recorded control action that the claim's mode definitions authorize
+(ECL1N-0168, TS1-014, TS1-027). An operator-safety halt MUST NOT be lifted until
+the condition requiring cessation has been resolved and that resolution is
+recorded.
 
 Informative examples (non-normative):
 
@@ -2201,8 +2283,9 @@ Informative examples (non-normative):
   calendar changes continue with their own required proof intact (first row).
 - Both classes take their decisions from one decision service. When it stops
   answering, both classes are restricted until it answers again with fresh
-  decisions (second row); the outage steps of the incident replay suite
-  (`record-1-knight-2012`, `record-17-operator-2025`) replay this case.
+  decisions (second row). The added outage steps of `record-17-operator-2025`
+  exercise this shared-dependency case. The added outage in
+  `record-1-knight-2012` restricts its sole action class.
 - The enforcement point finds that its policy bundle has been altered. The
   whole deployment enters Emergency Halt, whatever action-class scopes it
   declares (third row).
@@ -2213,7 +2296,7 @@ Informative examples (non-normative):
 
 ### 8.9 Procurement and Adoption Guidance (Informative)
 
-Source-grounded procurement patterns support staged adoption:
+Informative staged-adoption practices include:
 
 - sandbox or testbed deployment before broad scale-up;
 - explicit incident reporting and evidence-retention expectations;
@@ -2265,12 +2348,19 @@ alone.
 
 - malicious or compromised agent principals;
 - compromised plugins, tools, or upstream dependencies;
-- external attackers with network and supply-chain access attempts;
+- external attackers attempting network or supply-chain access;
 - privileged insider misuse against policy, keys, or evidence surfaces;
 - boundary manipulation by a claimant seeking to narrow scope while preserving
   marketing language.
 
 ### 9.3 Threat Categories and Layered Controls
+
+The response lists summarize controls defined by the cited numbered
+requirements. Those requirements determine each control's normative force,
+minimum conformance level, claim boundary, and applicability; the summaries
+introduce no additional requirement or lower-level obligation. Assessment
+records trace the applicable requirements to evidence through the Section 11
+checklist and requirement-to-evidence matrix.
 
 #### 9.3.1 Bypass and Side-Channel Execution
 
@@ -2278,9 +2368,9 @@ Risk: consequential actions execute outside the Enforcement Layer.
 
 Required response:
 
-- complete mediation checks;
-- path enumeration and negative-boundary disclosure;
-- deny-by-default on uncertain routing.
+- complete mediation checks (ECL1N-0028, ECL1N-0033, ECL1N-0039, FR-101, FR-201);
+- path enumeration and negative-boundary disclosure (ECL1N-0038, ECL1N-0039, FR-006, FR-007);
+- deny-by-default on uncertain routing (ECL1N-0043, FR-003).
 
 #### 9.3.2 Confused Deputy and Delegation Abuse
 
@@ -2288,9 +2378,9 @@ Risk: intermediary actors misuse broad or ambiguous delegated authority.
 
 Required response:
 
-- transaction-bound typed authority;
-- actor/subject separation in decision contracts;
-- external delegation attenuation and expiry constraints.
+- transaction-bound typed authority (ECL1N-0042, FR-104);
+- actor/subject separation in decision contracts (ECL1N-0042, ECL1N-0057, FR-102);
+- external delegation attenuation and expiry constraints (ECL1N-0031, ECL1N-0042, FR-203).
 
 #### 9.3.3 Decision or Policy Poisoning
 
@@ -2298,9 +2388,9 @@ Risk: corrupted policy inputs or decision semantics create unsafe allows.
 
 Required response:
 
-- versioned policy with approval provenance;
-- reproducible decision evaluation;
-- verification alerts on policy drift.
+- versioned policy with approval provenance (ECL1N-0040, ECL1N-0170);
+- reproducible decision evaluation (ECL1N-0040);
+- policy-drift detection and the alerts required at the claimed level (ECL1N-0052, FR-204).
 
 #### 9.3.4 Credential Theft and Replay
 
@@ -2308,9 +2398,9 @@ Risk: long-lived or replayable authority artifacts enable unauthorized actions.
 
 Required response:
 
-- short-lived credentials;
-- explicit audience/resource binding;
-- revocation propagation and freshness checks.
+- short-lived credential support and the rotation and lifetime limits required at the claimed level (ECL1N-0042, FR-105);
+- explicit audience/resource binding (ECL1N-0067, ECL1N-0186, FR-104);
+- revocation propagation and freshness checks (ECL1N-0053, ECL1N-0097, ECL1N-0099, ECL1N-0186, ECL1N-0188).
 
 #### 9.3.5 Provenance Tampering or Evidence Flooding
 
@@ -2319,9 +2409,9 @@ low-value evidence volume makes verification unusable.
 
 Required response:
 
-- signed tamper-evident evidence bundles;
-- tiered evidence granularity;
-- independent evidence export and review paths.
+- signed tamper-evident evidence bundles (ECL1N-0047, ECL1N-0057, ECL1N-0117, ECL1N-0118);
+- tiered evidence granularity (ECL1N-0048, ECL1N-0145);
+- reviewable evidence export, with verification outside the primary control plane at `L2` and above (ECL1N-0052, FR-108).
 
 #### 9.3.6 Common-Mode Fleet Compromise
 
@@ -2329,9 +2419,9 @@ Risk: one control failure pattern scales across many instances.
 
 Required response:
 
-- staged rollout controls;
-- fleet quarantine and coordinated shutdown paths;
-- verification signals aggregated across instances for anomaly detection.
+- staged rollout or equivalent blast-radius controls, with staged rollout and rollback at `L3` and above (ECL1N-0053, ECL1N-0054, FR-205);
+- fleet quarantine or coordinated shutdown paths (ECL1N-0053, FR-004);
+- declared detections and the responses that apply to the affected action classes, including cross-instance anomaly signals where the declared detection design uses them (ECL1N-0167, ECL1N-0168, FR-204).
 
 #### 9.3.7 Language-Mediated Boundary Manipulation and Prompt Injection
 
@@ -2344,14 +2434,14 @@ Required response:
 
 - treat conversational inputs, retrieved content, tool-returned content, and
   machine-consumable outputs as untrusted when they can influence
-  consequential action release or disclosure;
+  consequential action release or disclosure (ECL1N-0018, ECL1N-0110);
 - ensure no language-originated path bypasses the Enforcement Layer for any
-  in-scope consequential effect;
+  in-scope consequential effect (ECL1N-0028, ECL1N-0033);
 - classify output-mediated workflow triggers, approvals, denials, notices,
   instructions, and machine-consumed messages in the Consequential Action
-  Register or Negative Boundary Annex; and
+  Register or Negative Boundary Annex (ECL1N-0007, ECL1N-0008, ECL1N-0010, ECL1N-0017); and
 - deny or restrict execution when the conversational-to-action boundary is
-  ambiguous or unverifiable.
+  ambiguous or unverifiable (ECL1N-0043, ECL1N-0110).
 
 #### 9.3.8 Decision-Input Manipulation
 
@@ -2364,8 +2454,8 @@ that an admitted action stored without independent validation, or by feeding
 content it wrote into a deterministic check whose result is then treated as
 `verifiable`. This differs from an authoritative source independently validating
 a permitted state transition: causal influence on that transition does not
-make its authoritative observation actor-supplied (Section 4.3). It can turn a stale value
-into a fresh-looking one by having a check computed from it. A record of the
+make its authoritative observation actor-supplied (Section 4.3). The governed AI system can also turn a stale value into a fresh-looking one
+by having a check computed from that value. A record of the
 decision basis that omits an input, lists one twice, hides a derivation, or
 names no register can hide what a decision rested on, and so can a register
 that declares an action class twice.
@@ -2407,23 +2497,26 @@ mechanism for governing consequential actions.
 
 ### 9.5 Privacy and Sensitive Data Considerations
 
-**ECL1N-0112** — Security controls SHOULD minimize sensitive-data exposure:
+**ECL1N-0112** — Security controls SHOULD minimize sensitive-data exposure.
+Secrets SHOULD be passed via reference-based mechanisms where possible.
 
-- secrets SHOULD be passed via reference-based mechanisms where possible;
-- **ECL1N-0113** — Evidence bundles SHOULD support redaction or partitioning while preserving
-  auditability;
-- **ECL1N-0114** — Provenance exports SHOULD preserve required accountability with least
-  necessary disclosure;
-- **ECL1N-0115** — If redaction hides materially relevant context, a sealed-review or escrow
-  path MUST exist for the assessor or regulator authorized to inspect it.
-- the digest of a value that can take only a few forms, such as a score, a
-  yes-or-no approval, or a person's identifier, lets anyone who can list the
-  possible forms confirm which one a record holds; a digest in the
-  decision-basis record (ECL1N-0181) or in exported evidence protects such a
-  value only when the content it digests also holds a random value that the
-  reader cannot guess, or when the digest is keyed with a secret that the
-  reader does not hold, as OTEL-EVIDENCE-EXPORT-1 does for exported telemetry
-  (OE1-010).
+**ECL1N-0113** — Evidence bundles SHOULD support redaction or partitioning while preserving
+auditability.
+
+**ECL1N-0114** — Provenance exports SHOULD preserve required accountability with least
+necessary disclosure.
+
+**ECL1N-0115** — If redaction hides materially relevant context, a sealed-review or escrow
+path MUST exist for the assessor or regulator authorized to inspect it.
+
+The digest of a value that can take only a few forms, such as a score, a
+yes-or-no approval, or a person's identifier, lets anyone who can list the
+possible forms confirm which one a record holds; a digest in the
+decision-basis record (ECL1N-0181) or in exported evidence protects such a
+value only when the content it digests also holds a random value that the
+reader cannot guess, or when the digest is keyed with a secret that the
+reader does not hold, as OTEL-EVIDENCE-EXPORT-1 does for exported telemetry
+(OE1-010).
 
 ### 9.6 Operational Security Posture
 
@@ -2596,8 +2689,8 @@ Disallowed shorthand (non-normative):
 
 The table below is informative and illustrative. It does not replace the
 packet-level mappings and residual-gap statements that Section 10.3 calls for in
-a public claim. No mapping packet for these surfaces is published with this
-release, so the last column is empty; a claim that cites one of these surfaces
+a public claim. No completed mapping packet for these surfaces is published with this
+release, as the last column states; a claim that cites one of these surfaces
 names its own packet.
 
 | External surface | Example obligation | ECL-1 role | Packet reference |
@@ -2705,13 +2798,13 @@ the full package.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | IA-01 | L1 | FR-001 | Always | Does the SoI satisfy the required independence class and avoid single-credential or single-trust-root control collapse? | Trust-boundary architecture, privilege matrix, trust-root analysis | Review the capability matrix for AI, operators, administrators, key custodians and host roots; attempt a cross-plane change using each single power, including shared host or hypervisor root | No single credential, role, privilege domain or trust root can change both planes; co-hosting is no exception, and every additional boundary for the claimed class holds | [ ] Pass [ ] Fail [ ] N/A |
 | IA-02 | L2 | FR-105 | Workload identity used | Is workload identity cryptographically attested? | Identity issuance and attestation records | Evidence review and spot verification | Identity proof chain is valid and current | [ ] Pass [ ] Fail [ ] N/A |
-| IA-03 | L2 | FR-104 | Runtime authority artifacts used | Are authority artifacts transaction-bound and scope-limited? | Token profile and sample signed artifacts | Schema and claim inspection | Subject, actor, resource, audience, and time binding are present and replay-resistant | [ ] Pass [ ] Fail [ ] N/A |
-| IA-04 | L2 | FR-105 | Runtime credentials used | Are credentials short-lived and auto-rotated? | TTL policy and rotation logs | Configuration and log review | No runtime static credential exceeds the allowed lifetime | [ ] Pass [ ] Fail [ ] N/A |
+| IA-03 | L2 | FR-104 | Runtime authority artifacts used | Are authority artifacts transaction-bound and scope-limited? | Token profile and sample signed artifacts | Schema, token-claim and scope inspection | Subject, actor, resource, audience and time binding are present and replay-resistant, and authority is limited to the admitted operation and data scope | [ ] Pass [ ] Fail [ ] N/A |
+| IA-04 | L2 | FR-105 | Runtime credentials used | Are credentials short-lived and auto-rotated? | TTL policy and rotation logs | Configuration and log review | Runtime credentials rotate automatically, and no runtime static credential exceeds the allowed lifetime | [ ] Pass [ ] Fail [ ] N/A |
 | IA-05 | L3 | FR-203 | Delegation used | Is delegation attenuation enforced externally at each hop? | Signed delegation chain examples and attenuation policy | Delegation-path validation | Each hop narrows or preserves least privilege through Authority-layer controls | [ ] Pass [ ] Fail [ ] N/A |
 | IA-06 | L3 | FR-202 | Hard Enforcement required or claimed | Is the hard-enforcement path integrity-attested? | Attestation and isolation artifacts | Integrity-path validation | Hard-enforcement components run in attested environment or approved equivalent | [ ] Pass [ ] Fail [ ] N/A |
-| IA-07 | L4 | FR-303 | L4 claim | Are independent emergency authority channels defined? | Override runbooks and access matrix | Procedure and access review | At least two independently controlled override channels exist | [ ] Pass [ ] Fail [ ] N/A |
-| IA-08 | L2 | FR-001 | L2 or higher claim, or any `Class B` or `Class C` claim | Are control approval and evidence verification both performed in a separately administered trust domain that the governed AI system and its ordinary operators cannot unilaterally modify (ECL1N-0143)? | Trust-domain declaration naming its administrators; role, credential and key assignments for the approval and verification services; change-control records for both | Administration-boundary review, and a negative test in which an ordinary operator and the governed AI system each attempt to change an approval rule and a verification result | Both functions sit in the separate domain, every attempt fails, and no ordinary credential can change either function | [ ] Pass [ ] Fail [ ] N/A |
-| IA-09 | L4 | FR-001 | L4 claim, or any `Class C` claim | Are control approval and evidence verification held by an externally independent authority outside the SoI operator's boundary (ECL1N-0144)? | Authority identification, independence statement, contracts or charters, and the authority's own approval and verification records | Independence review against the assessor-independence rules | The authority is outside the operator's control and holds both functions, and IA-08 passes | [ ] Pass [ ] Fail [ ] N/A |
+| IA-07 | L4 | FR-303 | L4 claim | Is human-on-the-loop monitoring continuous for critical operations, and is emergency override available through at least two independently controlled channels? | Monitoring coverage report, override runbooks, access matrix, override drill logs and channel independence proof | Review monitoring coverage and channel independence, and exercise each channel | Monitoring is continuous for critical operations, and at least two independently controlled override channels are demonstrated to be available | [ ] Pass [ ] Fail [ ] N/A |
+| IA-08 | L1 | FR-001 | L2 or higher claim, or any `Class B` or `Class C` claim | Are control approval and evidence verification both performed in a separately administered trust domain that the governed AI system and its ordinary operators cannot unilaterally modify (ECL1N-0143)? | Trust-domain declaration naming its administrators; role, credential and key assignments for the approval and verification services; change-control records for both | Administration-boundary review, and a negative test in which an ordinary operator and the governed AI system each attempt to change an approval rule and a verification result | Both functions sit in the separate domain, every attempt fails, and no ordinary credential can change either function | [ ] Pass [ ] Fail [ ] N/A |
+| IA-09 | L1 | FR-001 | L4 claim, or any `Class C` claim | Are control approval and evidence verification held by an externally independent authority outside the SoI operator's boundary (ECL1N-0144)? | Authority identification, independence statement, contracts or charters, and the authority's own approval and verification records | Independence review against the assessor-independence rules | The authority is outside the operator's control and holds both functions, and IA-08 passes | [ ] Pass [ ] Fail [ ] N/A |
 
 #### 11.3.3 Enforcement and Action Controls
 
@@ -2727,7 +2820,7 @@ the full package.
 | EA-08 | L2 | FR-109 | Risk thresholds defined | Are HITL thresholds implemented for high-risk actions? | Threshold configuration and approval records | Workflow review | High-risk actions trigger the configured approval flow | [ ] Pass [ ] Fail [ ] N/A |
 | EA-09 | L2 | FR-110 | Offline-capable or cache-backed deployment | Does local enforcement continue under signed cached policy until staleness expiry? | Offline-mode tests, cache policy, restricted-mode logs | Offline-control review | Signed cached policy is used only within allowed staleness and expiry causes fallback state | [ ] Pass [ ] Fail [ ] N/A |
 | EA-10 | L2 | FR-112 | Always | Is the declared timing case continuously monitored and evidenced? | Timing telemetry, threshold config, breach records | Telemetry review and spot replay | Timing metrics are monitored continuously and breaches are retained as evidence | [ ] Pass [ ] Fail [ ] N/A |
-| EA-11 | L3 | FR-201 | L3 or higher claim | Has no-bypass verification been adversarially tested within the required period? | Independent test report and remediation log | Third-party report validation | Qualifying negative testing was completed within the required period | [ ] Pass [ ] Fail [ ] N/A |
+| EA-11 | L3 | FR-201 | L3 or higher claim | Have bypass paths been adversarially tested within the required period, with the tested scope and residual untested path classes recorded? | Independent test report, scope and residual-risk statement, remediation log | Third-party report validation | Qualifying negative testing was completed within the required period, with its tested scope and residual untested path classes documented | [ ] Pass [ ] Fail [ ] N/A |
 | EA-12 | L4 | FR-301 | L4 claim | Are redundant enforcement paths independently implemented with diverse failure modes? | Redundancy design and fault tests | Architecture and fault-isolation review | Single-path failure defaults to deny or safe state | [ ] Pass [ ] Fail [ ] N/A |
 | EA-13 | L1 | Section 5.10 | Always | Does the register state, for each in-scope action class, the largest aggregate effect in one hour and in one day if every action were admitted (ECL1N-0172)? | Consequential Action Register | Register review, checked against rate and capacity limits | Every in-scope class states both figures in units that measure its consequence | [ ] Pass [ ] Fail [ ] N/A |
 | EA-14 | L2 | Section 5.10 | Action classes with financial, legal, data-disclosure, communication, identity, infrastructure, or physical consequence | Is each such class bounded by an externally enforced consequence budget that counts every session, workflow, and instance (ECL1N-0173, DCMP2-052)? | Budget configuration, budget ledger, decision samples | Negative test: drive actions through two sessions or instances until the budget is reached, then attempt one more | The next action is denied or held, the ledger counts every session and instance, and no `admit` carries a budget result other than `authorized` | [ ] Pass [ ] Fail [ ] N/A |
@@ -2736,16 +2829,16 @@ the full package.
 | EA-17 | L1 | Section 5.11 | Human approval used | Does each approval show human-readable consequential fields and bind the presentation to the exact released action, with a fresh approval after a consequential change (ECL1N-0174)? | Consequential-field declarations, full approval presentations and accessible alternatives, action and presentation digests, approval records | Present a harmless summary with a hidden amount, recipient, scope or privilege change; test truncation, look-alike identities and localization; change amount or destination after approval | Every consequential field is understandable and accessible, digest-only approval is refused, the exact action is bound, and no changed action releases under the old approval | [ ] Pass [ ] Fail [ ] N/A |
 | EA-18 | L2 | Section 5.11 | Human approval used | Is a minimum review time declared and enforced (ECL1N-0175, EBMP2-063)? | Declared minimum review times, approval records carrying `ecl.ext.approval-record.v1` | Negative test: approve immediately after presentation | The early approval does not release the action | [ ] Pass [ ] Fail [ ] N/A |
 | EA-19 | L3 | Section 5.11 | Human approval used | Are approval rates and review times measured per approver and action class, and do declared anomalies trigger review (ECL1N-0176)? | Monitoring configuration, anomaly and review records | Record review and an induced anomaly | The induced anomaly is detected and leads to a review of that approver's decisions | [ ] Pass [ ] Fail [ ] N/A |
-| EA-20 | L1 | Section 5.11 | The register declares a human-approval threshold | Are actions at or above the threshold kept from release until the approvals that the threshold requires are recorded (ECL1N-0177)? | Decision samples, approval records, and the definition of each measure that a threshold names by URI | Review of each threshold's parameter or measure definition against the register, and a negative test: submit an action above the threshold with no approval | The decision is `hold` or `challenge`, or `deny` where its verifiable-only outcome or another requirement of this standard requires a `deny`, and no effect occurs until the approvals that the threshold requires are recorded | [ ] Pass [ ] Fail [ ] N/A |
+| EA-20 | L1 | Section 5.11 | The register declares a human-approval threshold | Are actions at or above the threshold kept from release until the approvals that the threshold requires are recorded (ECL1N-0177)? | Decision samples, approval records, and the definition of each measure that a threshold names by URI | Review each threshold's parameter or measure definition against the register. Without the required approvals, test a measure exactly at the threshold and one above it; for a parameter threshold, also test a missing pointer value, a value of another form and a negative number | The decision is `hold` or `challenge`, or `deny` where its verifiable-only outcome or another requirement of this standard requires a `deny`, and no effect occurs until the approvals that the threshold requires are recorded | [ ] Pass [ ] Fail [ ] N/A |
 | EA-21 | L1 | Section 5.2 | Always | Does the register declare, for each decision input of each in-scope class, its class (`verifiable`, `actor_supplied`, or `judgment`), whether the class requires it, its source, its maximum age, any deadline, and the inputs it is computed from, and does the Decision Layer consult no input that the register does not declare (ECL1N-0178)? | Consequential Action Register, data-flow description, write-access configuration of the input sources, the channel through which each input reaches the Decision Layer, decision service configuration | Register review against the data flow, the write access of each source, and the channel of each input; review of the decision service configuration for inputs the register does not declare | Every input has a class, a required or optional declaration, a source, and a maximum age, and every input that the Decision Layer obtains from a source within a set time has a deadline; no actor-controlled assertion or bypassable authenticity or transition check is declared `verifiable`; an independently validated transition is distinguished from an actor assertion; selection, completeness and freshness are evidenced; no model or detector output about meaning or risk is declared `verifiable`; each action class and each input of a class is declared once; an input computed from others is declared with the inputs it is computed from and has the least trusted class among them; and the Decision Layer consults no undeclared input | [ ] Pass [ ] Fail [ ] N/A |
-| EA-22 | L1 | Section 5.2 | Always | Is every outcome at least as strict as its verifiable-only outcome, so that `actor_supplied` and `judgment` inputs only make outcomes stricter and every `admit` rests on policy over `verifiable` inputs (ECL1N-0179, ECL1N-0180, DCMP2-053)? | Policy, decision samples with their recorded basis, test records | Negative tests: give a `judgment` input that rates an action safe, or an `actor_supplied` claim of approval or authority, for an action that policy over the `verifiable` inputs does not admit; give a `judgment` input that rates an admitted action safe, and check that it neither widens the authorization nor reduces or defers the consequence-budget debit, and that it changes no `deny` or `hold` into a `challenge`; then withhold all the `verifiable` inputs that the record of a sampled `admit` shows as supporting it | No test yields an outcome less strict than the verifiable-only outcome, and every sampled decision passes the decision-basis rule of DCMP2-053 | [ ] Pass [ ] Fail [ ] N/A |
+| EA-22 | L1 | Section 5.2 | Always | Is every outcome at least as strict as its verifiable-only outcome, so that `actor_supplied` and `judgment` inputs only make outcomes stricter and every `admit` rests on policy over `verifiable` inputs (ECL1N-0179, ECL1N-0180, DCMP2-053)? | Policy, decision samples with their recorded basis, test records | Negative tests: give a favorable `judgment` input or an `actor_supplied` claim of approval or authority for an action whose verifiable-only outcome is `deny`, `hold`, or `challenge`, and check that the final outcome is no less strict; include a declared detection hold where applicable and check that a favorable input does not lift it; for a verifiable-only `admit`, check that such an input neither widens authorization, removes an obligation, reduces or defers a consequence-budget debit, nor raises or removes an approval threshold or reduces its approver count; then withhold all the `verifiable` inputs that a sampled `admit` records as supporting it | No test yields an outcome less strict than the verifiable-only outcome, and every sampled decision passes the decision-basis rule of DCMP2-053 | [ ] Pass [ ] Fail [ ] N/A |
 | EA-23 | L1 | Section 5.2 | Always | Does the evidence of each decision name the register version it was made under and record every input that the Decision Layer consulted and every input that the register declares, each once, with its class, availability, reference and digest, and effect on the outcome (ECL1N-0181)? | Decision responses carrying `ecl.ext.decision-basis.v1`, the register | Sample review against the register, and offline verification of the sampled evidence with the register supplied | Every sampled decision names its register version and records every input the register declares for its class and no other, each once, and each available input by reference and digest | [ ] Pass [ ] Fail [ ] N/A |
 | EA-24 | L1 | Section 5.2 | Always | Does an unavailable, late, or malformed input have the declared effect: no `admit` when the class requires it, and no effect other than a stricter outcome when it is optional (ECL1N-0182)? | Register declarations, failure-injection records | Negative test: make a required input unavailable, then late, then malformed, and repeat for an optional input | No required-input failure yields an `admit`, and each optional-input failure yields an outcome at least as strict as the one policy reaches without that input | [ ] Pass [ ] Fail [ ] N/A |
 | EA-25 | L1 | Section 5.1 | Claim includes mediated action classes | Does every in-scope action cross the Enforcement Boundary before its effect, with no undisclosed path, and can the governed AI system neither rewrite, disable nor bypass enforcement (ECL1N-0028, ECL1N-0033, ECL1N-0039, ECL1N-0046, ECL1N-0141)? | Path-enumeration method, exercised interception points, register reconciliation, inventory of the credentials the governed AI system holds or can obtain through its tools | An interception test on each declared path; a direct call to each point of effect with every credential the governed AI system holds or can obtain through its tools; an attempt, with each such credential, to change the enforcement point's configuration, policy or decision binding and to stop it; and an attempt to reach each point of effect through every queue, workflow trigger and delegated execution path in the capability inventory | No in-scope action reaches its effect except through the enforcement point, every reachable path is in scope or in the Negative Boundary Annex, every attempt to change the enforcement point's configuration, policy or decision binding fails, every attempt to stop the enforcement point fails or leaves every in-scope action without effect until enforcement is restored, and residual untested path classes are documented | [ ] Pass [ ] Fail [ ] N/A |
 | EA-26 | L1 | Section 9.7 | Always | Do decision requests, decision responses and evidence pass strict parsing, schema validation, semantic rules, critical-extension processing and payload-bound integrity policy (ECL1N-0057, ECL1N-0117, ECL1N-0118)? | Samples of signed requests, responses and evidence bundles; validator and verifier output | Validation of the samples with the companion validator and offline verifier, and a negative test with a malformed and a mis-signed message | Every sample validates and verifies, and the malformed and mis-signed messages are refused before release | [ ] Pass [ ] Fail [ ] N/A |
-| EA-27 | L1 | Section 5.4 | Claim includes mediated action classes | Do the claim and each enforcement profile it relies on name the release boundary and any later effect boundary of each in-scope action class, and does the enforcement point release an action only after establishing, at that boundary, its exact binding and audience, the authority's validity there, an available use, the required control state, the absence of an applicable halt, quarantine or revocation, every before-release obligation with proof still fresh at the boundary, and the evidence capacity, with the release time it records being the final observation that precedes the release, after which the release begins within the declared bound (ECL1N-0185 to ECL1N-0188)? | Statements of the release and effect boundaries and of the timing argument with its declared bound, enforcement-point configuration, the obligation types the enforcement point supports, negative-test records | Negative tests at the release boundary: an admit with a before-release obligation whose proof is missing, of an unsupported kind, stale, bound to another action or replayed, one whose proof stops being fresh between its check and the release, and an admit with several obligations of which one is unproven; an authorization that expires while each operation that can block between the last check and the release is delayed, and one that expires at the boundary itself; a clock stepped back between the last check and the release; concurrent and repeated uses of a single-use authorization; a halt and a revocation delivered before the release; an evidence store that cannot take the required record; then an action with valid proof and current authority | No negative test releases the action or produces an effect, each ends in the declared safe state with its reason recorded, the recorded release time is the final observation that precedes the release and the release begins within the declared bound after it, and the action with valid proof and current authority is released once | [ ] Pass [ ] Fail [ ] N/A |
+| EA-27 | L1 | Section 5.4 | Claim includes mediated action classes | Do the claim and each enforcement profile it relies on name the release boundary and any later effect boundary of each in-scope action class, and does the enforcement point release an action only after establishing, at that boundary, its exact binding and audience, the authority's validity there, an available use, the required control state, the absence of an applicable halt, quarantine or revocation, every before-release obligation with proof still fresh at the boundary, and the evidence capacity, with the release time it records being the final observation that precedes the release, after which the release begins within the declared bound that the release event carries, under whichever timing argument of ECL1N-0188 the claim declares (ECL1N-0185 to ECL1N-0188, EBMP2-071)? | Statements of the release and effect boundaries and of the timing argument with its declared bound, enforcement-point configuration, the obligation types the enforcement point supports, negative-test records | Negative tests at the release boundary: an admit with a before-release obligation whose proof is missing, of an unsupported kind, stale, bound to another action or replayed, one whose proof stops being fresh between its check and the release, and an admit with several obligations of which one is unproven; an authorization that expires while each operation that can block between the last check and the release is delayed, and one that expires at the boundary itself; a clock stepped back between the last check and the release; concurrent and repeated uses of a single-use authorization; a halt and a revocation delivered before the release; an evidence store that cannot take the required record; then an action with valid proof and current authority | No negative test releases the action or produces an effect, each ends in the declared safe state with its reason recorded, the recorded release time is the final observation that precedes the release and the release begins within the declared bound that the release event carries (EBMP2-050, EBMP2-071), under whichever timing argument the claim declares, and the action with valid proof and current authority is released once | [ ] Pass [ ] Fail [ ] N/A |
 | EA-28 | L1 | Section 5.4 | Claim includes mediated action classes | Before it releases an action, does the enforcement point durably keep the recovery information that its declared failure model requires; after each failure that the claim declares covered, does recovery classify every outstanding attempt as executed, not executed or unresolved without inferring it from a missing terminal record or from information it cannot read; and does one instance at a time settle a given store of recovery information, with a recovery that writes the same records when repeated or interrupted (ECL1N-0189, ECL1N-0190)? | Declaration of the failures covered, recovery procedure, journal or transaction design, the lock or other mechanism that gives one instance the store, fault-injection records | For each failure that the claim declares covered, stop the enforcement point before and after each step from the use of the authority to the evidence record (the record made before release, the release, the response and the terminal record) and restart it; start a second instance on the same recovery store while the first is releasing; stop recovery after it has decided an attempt and run it again, and run two recoveries at once; damage the recovery information of an attempt (cut its last line, remove its first entry, append another attempt's entries); then make the evidence store full, and make its writes fail | Every outstanding attempt is recovered or shown not to have been released, an attempt whose outcome cannot be established stays recorded as unresolved with its residual uncertainty, no authority is used again, no attempt is retried in a way that can repeat its effect, the second instance stops before it settles anything, a repeated or concurrent recovery leaves one record per attempt and never a second signed terminal record, damaged information is kept and reported with nothing settled from it, and a store that cannot record stops new releases | [ ] Pass [ ] Fail [ ] N/A |
-| EA-29 | L1 | Section 8.8 | Always | Does a loss of required proof bring the scope and state that ECL1N-0191 gives it under the declared dependency model, and is each restriction lifted only after fresh proof returns and the declared authorization is recorded (ECL1N-0191 to ECL1N-0193)? | Dependency model, mode definitions, safe-state profile, mode-transition records | Fault tests: make the required proof of one action class unobtainable where no other class needs it; fail a dependency that two classes require; inject a critical integrity failure; fail a dependency whose scope of loss cannot be established; then restore each and attempt actions of the restricted classes before and after the declared authorization | Each test ends in the scope and state that the table of ECL1N-0191 gives, classes outside the scope continue only with their own required proof, no dependency that supplies required proof is treated as advisory, and no restricted class releases an action before fresh proof returns and the declared authorization is recorded | [ ] Pass [ ] Fail [ ] N/A |
+| EA-29 | L1 | Section 8.8 | Always | Does each loss of required proof or deployment-wide halt trigger bring at least the scope and state required by ECL1N-0191, and are all applicable lifting conditions of ECL1N-0193 met? | Dependency model, mode definitions, safe-state profile, mode-transition records, including any recorded operator-safety resolution | Fault tests: make one class's required proof unobtainable; fail a dependency shared by two classes; separately inject critical integrity failure, emergency-control activation, and operator safety requiring cessation; lose proof where the affected scope cannot be established; then attempt actions before and after recovery, recorded operator-safety resolution where applicable, and the declared authorization | Every affected class reaches at least the required scope and state; wider restrictions and stricter states are permitted under ECL1N-0105; classes outside the restricted scope continue only with their own required proof intact; no required-proof dependency is treated as advisory; no restriction or halt is lifted before all applicable fresh-proof, recorded-resolution, and recorded-authorization conditions are met | [ ] Pass [ ] Fail [ ] N/A |
 
 #### 11.3.4 Provenance and Evidence Controls
 
@@ -2753,11 +2846,11 @@ the full package.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PA-01 | L2 | FR-107 | In-scope consequential actions exist | Does each consequential action produce a complete `EBMP-2` evidence record, including any profile-triggered consequence-coupling outcomes? | Evidence bundle schema and samples, profiled extension declarations if used | Field-level completeness review | Required fields populate for sampled actions, and any required witness, capability-manifest, budget, commit, or quorum fields are present when the profile invokes them | [ ] Pass [ ] Fail [ ] N/A |
 | PA-02 | L2 | FR-108 | Evidence produced | Are evidence records tamper-evident and independently verifiable? | Signature and verification tooling output | Offline verification walkthrough | Verifier confirms integrity without primary control-plane trust | [ ] Pass [ ] Fail [ ] N/A |
-| PA-03 | L2 | FR-107 | Evidence produced | Is the evidence-granularity tier appropriate to the action class and event type? | Granularity policy, sampled bundles, incident bundles if present | Evidence sufficiency review | Summary evidence is not used where expanded evidence is required | [ ] Pass [ ] Fail [ ] N/A |
+| PA-03 | L1 | Section 5.5 (ECL1N-0048, ECL1N-0145) | Evidence produced | Is the evidence-granularity tier appropriate to the action class and event type? | Granularity policy, sampled bundles, incident bundles if present | Evidence sufficiency review | Summary evidence preserves reconstructability, and expanded evidence covers overrides, incidents, critical actions, denied critical actions, integrity failures and post-incident forensic triggers | [ ] Pass [ ] Fail [ ] N/A |
 | PA-04 | L3 | FR-203 | Delegation used | Are delegation relationships represented and auditable in provenance? | Delegation graph and signed lineage | Graph integrity and signature check | Delegation chain is unbroken and verifiable | [ ] Pass [ ] Fail [ ] N/A |
 | PA-05 | L4 | FR-304 | L4 claim | Is evidence storage replicated across independent trust domains? | Replication topology and integrity checks | Replication and restore test review | Replication and recoverability are verified | [ ] Pass [ ] Fail [ ] N/A |
 | PA-06 | L4 | FR-305 | Offline or air-gapped critical deployment | Is chain-of-custody preserved for offline evidence export? | Export procedure and custody logs | Procedure and sample export review | Custody controls are present and testable | [ ] Pass [ ] Fail [ ] N/A |
-| PA-07 | L2 | FR-113 | Evidence produced | Are evidence bundles retained for the required minimum period? | Evidence-retention policy, storage lifecycle controls, archival configuration, deletion or archival logs | Retention-policy and storage-control review, including legal determinations, minimization, holds and verification impact where applicable | Retention meets the floor or follows the recorded legal-conflict procedure; unavailable evidence is disclosed and is never treated as a complete original bundle | [ ] Pass [ ] Fail [ ] N/A |
+| PA-07 | L1 | Section 5.5 (ECL1N-0050, ECL1N-0195 to ECL1N-0199) / FR-113 | Evidence produced | Are evidence bundles retained for the required minimum at every level, and related verifier-critical artifacts for the same minimum at L2 and above? | Evidence-retention policy, storage lifecycle controls, archival configuration, deletion or archival logs; at L2 and above, inventory and retention evidence for related verifier-critical artifacts | Retention-policy and storage-control review, including legal determinations, minimization, holds and verification impact where applicable | Evidence bundles at every level, and related verifier-critical artifacts at L2 and above, meet the retention floor or follow the recorded legal-conflict procedure; unavailable evidence is disclosed and is never treated as a complete original bundle | [ ] Pass [ ] Fail [ ] N/A |
 | PA-08 | L1 | Section 9.8 | Signed evidence produced | Is every evidence-signing key inventoried, held out of the governed AI system's reach, and bound to one component role (ECL1N-0155 to ECL1N-0157)? | Key inventory, every trust-policy version in force during the assessment period, key-store access configuration | Reconciliation of the inventory with the trust policy, and a negative test in which the governed AI system attempts to read, export, and directly invoke each key | Every accepted key is inventoried with all required fields, every attempt by the governed AI system fails, and no key signs for two of the decision point, enforcement point, observer, and time authority | [ ] Pass [ ] Fail [ ] N/A |
 | PA-09 | L1 | Section 9.8 | Signed evidence produced | Are evidence-signing keys rotated within their declared lifetime with overlap, and is key compromise handled by an exercised revocation procedure (ECL1N-0158, ECL1N-0159)? | Rotation records, retained trust-policy versions, compromise-response procedure, record of the last exercise | Offline verification of a bundle signed by a retired key under the retained trust-policy version, and replay of the compromise exercise | No key exceeded its declared lifetime, each successor was accepted before its predecessor stopped signing, the retired key's bundle verifies, and the exercised revocation took effect no later than the suspected compromise time and reached every verifier within the declared bound | [ ] Pass [ ] Fail [ ] N/A |
 | PA-10 | L2 | Section 9.8 | L2 or higher claim with signed evidence | Are evidence-signing keys non-exportable, and is every signing operation recorded (ECL1N-0160)? | Key-store export policy and configuration, signing-operation records | Configuration review, an export attempt, and reconciliation of sampled evidence signatures with signing records | Export fails, each sampled signature matches a record attributed to the requesting component, and the governed AI system cannot modify the records | [ ] Pass [ ] Fail [ ] N/A |
@@ -2776,7 +2869,7 @@ the full package.
 | VF-06 | L1 | Section 5.6 | Always | Are the detections that indicate wrong behavior declared, each with its response (ECL1N-0167)? | Detection register | Register review | Every declared detection names the affected action classes and a response of `hold`, restricted mode, quarantine, or emergency halt | [ ] Pass [ ] Fail [ ] N/A |
 | VF-07 | L2 | Section 5.6 | Always | Does each declared detection take effect without a person's action, within the declared bound (ECL1N-0168)? | Wiring from detections to the Decision Layer, timing records | Negative test: inject each declared detection and attempt the next action | The response is in effect within the bound, and only a recorded control action lifts it | [ ] Pass [ ] Fail [ ] N/A |
 | VF-08 | L1 | Section 5.4 | Always | Is a change that disables, bypasses, or sets a control to automatic approval approved by another person, time-limited, and recorded (ECL1N-0166, EBMP2-064)? | Control-change records carrying `ecl.ext.control-change.v1` | Record review and an attempted self-approved change | The self-approved change is refused, and every recorded change names a different approver and an expiry | [ ] Pass [ ] Fail [ ] N/A |
-| VF-09 | L2 | Section 5.6 | Always | Is a control that is off or not operating without a recorded change detected as a critical verification failure (ECL1N-0169)? | Verification rules, drill records | Negative test: switch a control off outside the change process | The Verification Layer raises a critical verification failure and the declared response follows | [ ] Pass [ ] Fail [ ] N/A |
+| VF-09 | L2 | Section 5.6 | Always | Is a control that is off or not operating without a recorded change detected as a critical verification failure (ECL1N-0169)? | Verification rules, drill records | Negative test: switch a control off outside the change process | The Verification Layer raises a critical verification failure and the declared response follows within the declared timing case | [ ] Pass [ ] Fail [ ] N/A |
 | VF-10 | L1 | Section 5.7 | Always | Is every change to the policy, the register, the tool or capability manifest, an enforcement configuration, the trust policy, or a detection response reviewed by another person before it takes effect (ECL1N-0170, EBMP2-064)? | Change records with digests and reviewers | Sample of changes since the last assessment, and an attempted unreviewed change | Every sampled change names a reviewer other than its author, and the unreviewed change does not take effect | [ ] Pass [ ] Fail [ ] N/A |
 | VF-11 | L2 | Section 5.7 | Always | Is each change to the AI system's model, instructions, or tool set versioned, and does each decision request identify the requesting version (ECL1N-0171)? | Version records, decision requests carrying `ecl.ext.runtime-configuration.v1` | Sample of decision requests compared with the version records | Every sampled request names a recorded version and digest | [ ] Pass [ ] Fail [ ] N/A |
 | VF-12 | L1 | Section 5.6 | Evidence verified for the claim | Does each verifier that the claim relies on report a check that it did not make, or could not make for lack of information, as unchecked rather than passed, and keep verification of a producer's assertion apart from corroboration of the asserted event (ECL1N-0194)? | Verifier documentation, sample verification reports | Verification of a bundle whose release time and before-release obligations only its producer asserts, and of a bundle whose effect a separately keyed observation corroborates | The first report does not present the release time or the obligations as independently checked, and the second distinguishes the corroborated effect from an asserted one | [ ] Pass [ ] Fail [ ] N/A |
@@ -2785,7 +2878,7 @@ the full package.
 
 | ID | Min Level | Related FR | Applicability Predicate | Control Question | Required Evidence | Assessor Method | Pass Criteria | Result |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PR-01 | L2 | FR-002 | Public or procurement claim made | Is the declared `DCMP-2` / `EBMP-2` companion package published with the claim surface, and are artifacts validated using the normative companion validator or an equivalent independently verifiable validator? | Companion package index, schema and registry version declaration, validator output, expected-result manifest, and vector-coverage results | Companion-package, validator replay, and version review | The version-locked companion package is published, includes the required validator and rule-coverage corpus, and published artifacts pass the declared schema and semantic versions | [ ] Pass [ ] Fail [ ] N/A |
+| PR-01 | L2 | FR-002 / Section 6.4 (ECL1N-0069) | Public or procurement claim made | Is the declared `DCMP-2` / `EBMP-2` companion package published with the claim surface, and are artifacts validated using the normative companion validator or an equivalent independently verifiable validator? | Companion package index, schema and registry version declaration, validator output, expected-result manifest, and vector-coverage results | Companion-package, validator replay, and version review | The version-locked companion package is published, includes the required validator and rule-coverage corpus, and published artifacts pass the declared schema and semantic versions | [ ] Pass [ ] Fail [ ] N/A |
 | PR-02 | L2 | FR-007 | Boundary class not `component-or-profile-implementation` | Has the Negative Boundary Annex been challenged by negative testing? | Negative-boundary test notes and findings | Boundary challenge review | Tests did not discover undeclared reachable effect paths | [ ] Pass [ ] Fail [ ] N/A |
 | PR-03 | L2 | Section 7 | L2 or higher claim | Does the assessment package include assessor independence disclosures, disqualifying-conflict review, and the mandatory negative-testing report? | Assessor declaration, conflict disclosures, negative test report, and conflict-disposition statement if applicable | Independence and method review | Required disclosures are complete, no disqualifying conflict remains unresolved, and negative-testing minimums are satisfied | [ ] Pass [ ] Fail [ ] N/A |
 | PR-04 | L2 | Section 7 | Public or procurement claim made | Does the claim declare the ECL core version, interop artifact version, and any sector profile version? | Claim statement, version manifest | Claim review | Version set is explicit and current | [ ] Pass [ ] Fail [ ] N/A |
@@ -2806,6 +2899,15 @@ Recommended gate logic:
 
 **ECL1N-0135** — For `L4` claims, conditional award SHOULD NOT be used where regulator or
 safety authority requires full closure before operation.
+
+A conditional award is a procurement decision with conditions still to be met;
+it is separate from conditional conformance (ECL1N-0081). It supplies no ECL-1
+conformance status or permission to operate before a regulator's or safety
+authority's required closure. ECL1N-0077 prohibits conditional conformance at
+`L4` regardless of the procurement decision. ECL1N-0135 recommends against
+conditional award under its stated conditions; departures are assessed under
+RFC 2119, Section 4, without waiving any mandatory closure or conformance
+requirement.
 
 ### 11.5 Checklist Deliverables Package
 
@@ -2868,7 +2970,7 @@ Security lineage:
 - [SCHNEIDER] Schneider, F. B. "Enforceable Security Policies," ACM TISSEC, vol. 3, no. 1, February 2000.
 - [ALPERN] Alpern, B., and Schneider, F. B. "Defining Liveness," Information Processing Letters, vol. 21, no. 4, October 1985.
 
-Governance and regulatory surfaces used in external-framework mappings (Section 10):
+Governance and regulatory works (background and Section 10 mappings):
 
 - [NIST-RMF] NIST AI 100-1, *Artificial Intelligence Risk Management Framework (AI RMF 1.0)*, January 2023.
 - [NIST-GEN] NIST AI 600-1, *Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile*, July 2024.

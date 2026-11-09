@@ -22,9 +22,9 @@ versioning rules below instead.
   public repository, naming the document, section, requirement IDs and
   version. During a public review window, a comment on the draft under review
   is a public review comment instead ([PUBLIC_REVIEW](PUBLIC_REVIEW.md)).
-- Report an error that could let an action bypass a control, forge or hide
-  evidence, widen authority or produce a false conformance pass privately,
-  under [SECURITY](SECURITY.md).
+- Report privately, under [SECURITY](SECURITY.md), an error that could let an
+  action bypass a control, forge or hide evidence, widen authority or produce
+  a false conformance pass.
 
 ## Classify it
 
@@ -54,8 +54,10 @@ shortened, and what implementers should do.
   category of the discussions, before the editors decide it by rough
   consensus, unless it is a security fix under embargo.
 - A conformance defect that could have produced a false pass blocks new claims
-  that rely on the affected vectors until the erratum is approved. The notice
-  says whether earlier claims need reassessment (ECL1N-0152) and names the
+  that rely on the affected text or vectors. The notice identifies those claims
+  and states when the block can be lifted through an approved corrective
+  erratum or a superseding version, according to the change class. It says
+  whether earlier claims need reassessment (ECL1N-0152) and names the
   listings of the implementers registry that the defect may affect
   ([CONFORMANCE_CLAIMS](CONFORMANCE_CLAIMS.md)).
 
@@ -77,13 +79,17 @@ the erratum in, and the change log names it.
 - Released bytes are never replaced. The original release, the erratum and any
   superseding version stay separately digest-addressable, as
   ERRATA_AND_DISCLOSURE requires.
-- A claim names the errata it applies along with the core version and the
-  version set (ECL1N-0087).
+- A claim declares the core version, companion interoperability version set
+  and any invoked sector-profile version as ECL1N-0087 requires. Under this
+  errata policy, it also names the errata it applies.
 - The patent pledge covers the errata that G-14, Inc. publishes for a covered
   version ([PATENTS](../PATENTS.md), section 2).
 
 ## Errata index: Version 1.0
 
-No erratum has been approved or published for Version 1.0. An approved erratum
-of Version 1.0 is listed here with its identifier, `ERR-1.0-<number>`, and its
-record.
+Erratum `ERR-1.0-001`, collected in correction release `v1.0.1`, records the source repairs approved by the
+maintainer. [CORRECTIONS-1.0.1.json](../release/CORRECTIONS-1.0.1.json)
+records their requirement text and affected paths; the release notes summarize
+their behavior. The [correction-release exception](RELEASE_POLICY.md#correction-release-exception-v101)
+records the procedures waived for this release. The original Version 1.0
+archive remains preserved for comparison.

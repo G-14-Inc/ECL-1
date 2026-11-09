@@ -1,8 +1,8 @@
 # ECL incident replay suite
 
-The ECL incident replay suite replays 10 entries of the Control Gap Record
-against a deployment configured as ECL-1 describes, and states what must happen
-at each step. Each scenario is a JSON file in this folder that satisfies
+The ECL incident replay suite defines 10 scenarios, derived from entries of
+the Control Gap Record, for replay against a deployment configured as ECL-1
+describes, and states what must happen at each step. Each scenario is a JSON file in this folder that satisfies
 `../../schemas/ecl-incident-scenario-v1.schema.json`. It declares the
 deployment facts a control system is configured with, a timed sequence of
 steps, and the outcome each step must have. A scenario names no product: any
@@ -139,8 +139,8 @@ counted a budget or waited for a review time shows nothing about the system.
 ### Capabilities
 
 Each kind of step needs a capability of the system under test. `decision`,
-`effects` and `decision-basis` are required, and a system without `evidence`
-stops at the evidence check.
+`effects`, `evidence` and `decision-basis` are required to pass a scenario;
+a system without `evidence` stops at the evidence check.
 
 | Capability | Steps that need it | What the system must do |
 |---|---|---|
@@ -225,9 +225,10 @@ passes only when it agrees with the point of effect.
 ### The decision basis
 
 Each decision response carries `ecl.ext.decision-basis.v1` (ECL1N-0181,
-DCMP2-053), and the replay reads the basis of every decision from the verified
-evidence, never from the system's own account. The inputs and their sources are
-named as follows, with `<scenario>` the scenario's `scenario_id`; every entry
+DCMP2-053). The replay reads each decision's recorded basis from its signed
+response in the verified evidence. Verification authenticates this producer
+statement and checks its bindings; it does not establish which inputs the
+decision actually used. The inputs and their sources are named as follows, with `<scenario>` the scenario's `scenario_id`; every entry
 names its `source` (DCMP2-053):
 
 | Input | `input` | `source` |

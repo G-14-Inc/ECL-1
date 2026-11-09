@@ -49,10 +49,11 @@ on its own. These ideas recur across the profiles:
   account in which the governed AI system can execute code or that it can
   start, stop or reconfigure. A component inside them can carry a decision to
   an ECL decision point, and the decision is then enforced elsewhere.
-- **Failures.** When the other system does not answer, answers late
-  or answers with something that cannot be checked, the action is not
-  released. Where the other system's own default would let the action go ahead,
-  the profile overrides that default for every action an ECL claim covers.
+- **Failures.** When a required decision or proof source does not answer,
+  answers late or answers with something that cannot be checked, the action is
+  not released. Each profile separately states how to handle optional inputs
+  and telemetry export failures. A dependency's permissive default does not
+  waive required proof for an action within the ECL claim.
 - **Modifications.** When the other system changes an
   action's parameters, the changed action goes through ECL as a new decision
   request that names the original with `ecl.relation.modification-of.v1`. The
@@ -122,8 +123,8 @@ and digest: a record that disagrees with the decision basis of its response is
 refused. So the adapter's record cannot class an output as `judgment` while the
 signed decision rests on it (AB1-013). In the judgment-source role the record
 lists the AARM decision itself once, as an R4 input of class `judgment`, so an
-AARM decision listed without its requirement cannot escape that class
-(AB1-006).
+AARM decision cannot escape that class by omitting its
+`aarm_requirement: R4` label (AB1-006).
 The response, and the response to a modified action, must also satisfy the
 one-way rule of DCMP-2 (DCMP2-053), as it would in a signed evidence bundle: a
 record whose response admits while a required input was unavailable, or rests
@@ -240,14 +241,15 @@ governed AI system and the MCP servers it uses. It pins MCP revision
 credential for the servers or for the systems their tools reach, and that the
 gateway run in a process, container and account that the governed AI system
 can neither start, stop or configure nor execute code in, so that the gateway
-is the only way to cause an effect through them (MG1-001). For each
+is the only way to cause an effect through them within the declared boundary,
+any other path being closed or disclosed in the Negative Boundary Annex (MG1-001). For each
 `tools/call`, the gateway:
 
 1. refuses, before any decision, a call that holds, in any member, a number
-   that RFC 8785 may not represent exactly, without a record, which could not
-   hold the call as it arrived, and a call with a member other than
-   `jsonrpc`, `id`, `method` and `params`, with a record of the refusal
-   (MG1-004);
+   that RFC 8785 cannot represent exactly; it creates no exchange record,
+   because that record could not hold the call as received. It also refuses,
+   before any decision, a call with a top-level member other than `jsonrpc`,
+   `id`, `method` and `params`, but records that refusal (MG1-004);
 2. checks that the tool has a reviewed mapping, and that the tool's current
    definition and the server's name and version still match it;
 3. builds a DCMP-2 decision request whose action class, operation and target
@@ -287,20 +289,23 @@ When a step fails, the gateway forwards nothing and returns a JSON-RPC error
 from the profile's table, codes -31001 to -31008, -31010 and -31011, with the
 cause and a registered reason in `data.ecl`. When several causes hold, it
 returns the code of the first in the order that MG1-006 gives: -31007, -31008,
--31004, -31005, the decision's outcome, -31010, -31011, then -31006. Code
+-31004, -31005, the decision's outcome, -31010, -31011, then -31006, except
+that after a use is consumed a journal failure that cancels the attempt is
+reported as -31011 before -31010 or -31006. Code
 -31009 reports a forwarded call whose server never answered; the evidence
 records its effect as unknown.
 
 The release boundary is the write of the forwarded request to the server's
 transport (MG1-014). On a verified admit the gateway takes these steps in order
 and writes nothing unless each passes: under a lock, it reads a monotonic clock
-and then its wall clock and consumes one use when the authorization is valid at
-that time and until the release guard after it; it records `authority_consumed`,
+and then its wall clock and commits one use, as MG1-005 requires, when the authorization is valid at
+that time and until the release guard after it; it records the committed `authority_consumed` event,
 then `release_prepared`, which names the attempt; it proves the pre-release
 obligations and records, for each proof, the instant after which it no longer
 shows the obligation met (`fresh_until`); it reads the monotonic clock and then
 the wall clock again under the lock, the final observation, and releases only
-when that observation passes the same test and, with the guard added, precedes
+when that observation satisfies the same `valid_from` and `valid_until`
+comparisons, with no further use consumed, and, with the guard added, precedes
 every `fresh_until`, refusing with -31006 and `ecl.error.clock-regressed.v1` a
 wall clock that reads earlier than at the first check or that disagrees with the
 monotonic clock by more than the guard; and it records `execution_released`,
@@ -324,23 +329,31 @@ beside its scope, not as a finding (MG1-015). Nothing in the profile establishes
 when the server, or a system behind it, acted on the request.
 
 Each EBMP-2 event of a side-effecting request, with the exchange record and
-the signed decision messages once the decision is known, is journaled before
-the step that it evidences, one journal per exchange, each entry flushed to
-storage, and the journal is kept until the exchange's record and bundle are
+the signed decision messages once the decision is known, is journaled in the
+order of MG1-014—`authority_consumed` after step 1 consumes the use, each
+required entry flushed to storage before the next release step, and
+`execution_released` durable before the transport write—one journal per
+exchange, and the journal is kept until the exchange's record and bundle are
 durable (MG1-016). One gateway instance owns an evidence directory at a time: it holds
 an exclusive lock on the directory, taken before it reads a journal, and a
 second gateway, a recovery command or a library caller that finds the lock held
 stops before it reads or writes anything else there. Only the entry that opens
 an exchange creates its journal; an append that finds no journal before the
-release refuses the request with -31011 and restores the use. When the journal
+release refuses the request with -31011, keeps any consumed use consumed and
+reports the missing journal. When the journal
 cannot record an entry before the release, because a write or a flush fails, the
 storage is full or the sink fails in any other way, the gateway refuses with
--31011, restores a use it had consumed and writes nothing to the server
+-31011 under MG1-006's precedence rules, keeps any consumed use consumed and writes nothing to the server
 (MG1-017). When the gateway starts, under the lock, it settles each journal that
 an earlier run left: a journal with `execution_released` and no terminal event
-becomes a terminal in state `unknown`, a journal without `execution_released` an
-attempt that was not sent, `cancelled` after an `admit`, and a request is never
-sent again. Recovery records its decision in the journal before it writes any
+becomes a terminal in state `unknown`. An intact journal without
+`execution_released` identifies an attempt that was not sent. Recovery resolves
+that exchange's consumption against the authoritative store: a committed use is
+`cancelled`; an admit known not to have consumed a use is `denied`, without an
+authority reference; a non-admit decision gives its own non-release state. No
+verified decision resolves to `denied`. Unresolved or inconsistent consumption
+is retained and reported without inventing a terminal or permitting another use.
+Recovery never resends the request. Recovery records its decision in the journal before it writes any
 record and its completion after, derives record identifiers from the journal and
 never signs a terminal twice, so a recovery that is interrupted or repeated
 writes the same files; a journal that does not open with its first entry, holds
@@ -351,7 +364,13 @@ process, a crash of its host, a failure of its storage and the loss of an
 evidence service that it writes to (MG1-016). A gateway that counts the uses of
 an authorization in the instance that holds them needs every use of an
 authorization routed through one instance, or a use store that its instances
-share (MG1-005).
+share (MG1-005). Consumption history must also survive restart and journal
+retirement; rebuilding only unsettled journals does not establish the complete
+use count. The use count and exact signed consumption event commit atomically,
+bound to a persistent gateway-assigned exchange identity distinct from a client
+JSON-RPC `id`. An uncertain commit blocks further uses until the store resolves
+it; absence from an exchange journal does not resolve it. A cancellation does
+not restore a consumed use.
 
 A claim may list `server/discover`, `tools/list`, `resources/list`,
 `resources/templates/list`, `prompts/list` and `subscriptions/listen` to pass
@@ -394,11 +413,11 @@ clock or with a second process.
 | A stall before the write, on the real clock (MG1-014) | Nothing written; -31006 |
 | A server answer that arrives after `valid_until` for a request written inside its window, on the real clock (MG1-015) | `forward_completed_at` after `valid_until` and no `released_after_valid_until`, which is the gateway's own observation of its write; the checker reports nothing |
 | A stall before the write longer than the release guard, with the window open (MG1-014, MG1-015) | Nothing written; -31006, the attempt cancelled with a residual state that names the guard; the checker takes the cause from the record |
-| The journal at each step (MG1-016) | Every entry that a step rests on is in the journal and flushed before the step |
-| A write or flush failure, or full storage, before the release (MG1-017) | -31011, no upstream call |
-| A storage failure with an obligation pending (MG1-006) | -31010, no upstream call |
+| The journal at each step (MG1-016) | The use count and signed `authority_consumed` event commit atomically in the use store at step 1; the same event is flushed to the journal at step 2; each required entry is durable before the next release step, and `execution_released` is durable before the transport write |
+| A write or flush failure, or full storage, before the release (MG1-017) | -31011 under MG1-006's precedence rules, no upstream call; an already consumed use stays consumed |
+| A storage failure with an obligation pending (MG1-006) | Before consumption, -31010 takes precedence; after consumption, a journal failure cancelling the attempt is -31011; no upstream call |
 | A storage failure after the release (MG1-016) | The server's response is returned; the journal keeps the release; recovery records `unknown` and sends nothing |
-| A crash before and after the release, the send and the response (MG1-016) | Recovery: no release becomes `cancelled`, a release without a terminal becomes `unknown`; no retry; the consumed use is kept; the bundle verifies |
+| A crash before and after the release, the send and the response (MG1-016) | Recovery: an exchange with no release becomes `cancelled`, naming the authority, when the store holds its committed use, `denied` with no authority reference and `ecl.error.evidence-unavailable.v1` when the store establishes that no use was committed, or the decision's non-release state after a deny, hold or challenge; unresolved consumption settles nothing and blocks the authorization; a release without a terminal becomes `unknown`; no retry; a committed use is kept; the bundle verifies |
 | A crash during retention, with one of two files written (MG1-016) | The recorded outcome is kept and the files are written once |
 | A crash after the discharge (MG1-013, MG1-016) | The recovered record carries the discharge, and the recovered bundle carries the proof and verifies |
 | The exit of the gateway's process after the write (MG1-016) | Another process records the outcome as `unknown` |
@@ -413,8 +432,9 @@ records so that observability and SIEM tools can ingest them. It pins
 OpenTelemetry Specification 1.61.0, OTLP 1.11.1 and Semantic Conventions 1.44.0.
 
 The export is a copy. The signed evidence bundle stays the record that a claim
-relies on and that a third party can check and, from `L2`, verify offline. The
-exporter reads an object only after it is recorded. An export failure, such as
+relies on and that a third party can verify offline (EBMP-2 section 11).
+From `L2`, the evidence must be independently verifiable outside the primary
+control plane (FR-108). The exporter reads an object only after it is recorded. An export failure, such as
 an unreachable collector or a full disk, does not change a decision, and it does
 not delay or block the release of an action or the recording of evidence
 (OE1-002).
@@ -441,22 +461,24 @@ the identifiers of people and records, `ecl.actor.id`, `ecl.subject.id` and
 `ecl.action.target`, which the exporter copies only when the export policy
 declares them (OE1-005).
 
-A record never carries a digest of the object or of what it holds that anyone
-can compute, such as the SHA-256 digest of the object or the parameters digest
-it holds: a reader who can list the possible values of an amount or an account
-could test each one against it. When the deployment holds an export key, a
+A record retains the policy digest required by OE1-004. It exports the evidence
+object's digest and parameters digest only as keyed digests under OE1-010: an
+unkeyed digest would let a reader who can list possible amounts or accounts
+test those candidates against it. When the deployment holds an export key, a
 secret of at least 32 bytes used for nothing else, the record carries the
 object's digest and its parameters digest as HMAC-SHA-256 under that key, with
 the key's identifier as a string, so a consumer that holds the key can still
 match the record to the bundle (OE1-010).
-A consumer that does not hold the key a record names cannot compare its digests,
-and still checks their form: each is the `stringValue` of 64 lowercase
-hexadecimal digits, and the keyed parameters digest is there exactly when the
-object has a parameters digest, so the object's SHA-256 is refused in any other
-kind or form (OE1-010). The digest of the policy that decided leaves as the
-response holds it: it identifies the policy, as the policy's identifier and
-version, which are exported too, do (OE1-004). Without an export key, the record
-carries no digest. The digests inside the signed evidence bundle do not change.
+A consumer without the named export key cannot test guesses against the keyed
+object and parameter digests by recomputing them. It still checks their form:
+each is a `stringValue` of 64 lowercase hexadecimal digits, and the keyed
+parameters digest is present exactly when the object has a parameters digest
+(OE1-010). Those format checks alone cannot authenticate a correctly shaped
+digest. The policy identifier, version and unkeyed policy digest are copied
+from the response (OE1-004). Without an export key, the record carries no
+object or parameter digest; the policy digest remains. Other exported
+identifiers and metadata retain the disclosure risks described in the profile.
+The digests inside the signed evidence bundle do not change.
 Severity follows a fixed table, with `SeverityText` the table's name for the
 number, and a consumer infers nothing about authorization from it or from a
 missing record. The profile also has an informative note on mapping the records
@@ -478,9 +500,11 @@ tokens enforce an ECL `admit` without learning DCMP-2. One token expresses one
 - For a delegated action, the RFC 8693 `act` claim names the actor apart from
   the subject.
 
-An issuer issues a token only for a verified `admit`, never for `deny`, `hold`
-or `challenge` (OA1-008), with every claim that RFC 9068 requires of a JWT
-access token, among them `iss`, `client_id` and `jti` as strings, and with a
+An issuer issues a token only for a verified `admit` with an empty
+`obligations` array. It refuses every nonempty obligations array, including
+obligations claimed to have been discharged, and never issues a token for
+`deny`, `hold` or `challenge` (OA1-008). The token carries every claim that
+RFC 9068 requires of a JWT access token, among them `iss`, `client_id` and `jti` as strings, and with a
 lifetime greater than zero (OA1-001, OA1-003). A resource server accepts the
 token only for the request it names, within its use limit and with a valid proof
 of possession (OA1-004, OA1-005). A verifier takes the issuer's keys from its
@@ -493,15 +517,18 @@ header, an issuer it is not configured for and a signature that does not verify
 claim is an integer and a NumericDate with a fraction is refused, and refuses a
 segment whose base64url text is not canonical, which would let two token strings
 carry one signature (OA1-007). It may allow a clock skew of at most 60 seconds
-on `nbf` and `exp`, none by default, but the presentation must fall inside the
+on `nbf` (or `iat` when `nbf` is absent) and `exp`, none by default, but the
+presentation must fall inside the
 ECL entry's window with no allowance (OA1-003). It checks the DPoP proof's
 signature with the key that the proof carries before it compares that key with
 `cnf.jkt` (OA1-004), refuses a proof that carries no `jti` string of 1 to 256
 characters, since its replay cannot be checked or recorded, and a token whose
-`cnf` names its key by anything but a string (OA1-004), keeps the `jti` values
-and use counts in one store that every instance shares (OA1-005), and refuses a
-presentation with the code that the profile's table gives for the first check
-that fails (OA1-011). Where AUTHZEN-BINDING-1 is also claimed, an AuthZEN permit
+`cnf` names its key by anything but a string (OA1-004). The resource server
+keeps the accepted `jti` values and use counts in one store that all its
+instances share (OA1-005), and refuses a presentation with the code that the
+profile's table gives for the first check that fails (OA1-011). An offline
+presentation-record verifier checks the recorded exchange; it does not provide
+that live shared store. Where AUTHZEN-BINDING-1 is also claimed, an AuthZEN permit
 is never a reason to issue a token, and an AuthZEN check at the resource server
 can only narrow the request.
 

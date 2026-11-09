@@ -160,6 +160,8 @@ COUPLING_EXTENSION = "ecl.ext.consequence-coupling.v1"
 
 VERIFY_WITNESS = "ecl.obligation.verify-witness.v1"
 
+OUTCOME_REASON = "ecl.ext.outcome-reason.v1"
+
 RECOVERY_CLASSES = frozenset({"not-released", "outcome-unknown", "outcome-recorded"})
 
 FAILURE_RULE = "ecl.rule.mcp-decision-failure-not-forwarded.v1"
@@ -545,9 +547,10 @@ def refusal_cause(record: Mapping[str, Any]) -> tuple[str, str | None, str | Non
      and the first that holds is the one the gateway returns. A record cannot show that the
      gateway's evidence log failed (-31011, MG1-017): when the gateway returned that error, the cause
      is taken in its place in the order, after every earlier cause was found not to hold, or
-     before an undischarged obligation when the terminal is `cancelled`: the use was then
-     consumed, and the journal's failure cancelled the attempt before any proof was examined
-    ."""
+     before an undischarged obligation when the terminal is `cancelled`, under the explicit
+     post-consumption journal-failure exception. The record does not establish the physical
+     failure or when an obligation proof was examined.
+    """
     record, _ = decoded_record(record, CONTENT_PATHS)
     view = _view(record)
     params = obj(view.call, "params")
@@ -927,12 +930,28 @@ def _recovered(view: _View, terminal: dict[str, Any] | None) -> list[tuple[str, 
         problems.append(
             ("/terminal/event/state", "a released request of unknown outcome is not unknown")
         )
-    if classification == "not-released" and (
-        view.forwarded is not None or (state not in NON_RELEASE and state != "cancelled")
-    ):
-        problems.append(
-            ("/terminal/event/state", "a request that was not released is recorded as released")
-        )
+    if classification == "not-released":
+        # MG1-016: the record does not show the authoritative store, so an admit may have ended as
+        # `cancelled` (a committed use) or `denied` (no use committed, with
+        # `ecl.error.evidence-unavailable.v1` as its reason); an answered deny, hold or challenge
+        # gives its own state; anything else is `denied`. `_result` checks the authority reference.
+        outcome = text(view.response, "outcome")
+        if view.admitted():
+            expected: frozenset[str] | set[str] = {"cancelled", "denied"}
+            if state == "denied":
+                reasons = [value.get("code") for value in extension_values(terminal, OUTCOME_REASON)]
+                if reasons != [EVIDENCE_UNAVAILABLE]:
+                    problems.append(
+                        ("/terminal/extensions", "an unconsumed admit is denied without evidence-unavailable as its reason")
+                    )
+        elif view.status == "answered" and outcome in REFUSAL_FOR_OUTCOME:
+            expected = {REFUSAL_FOR_OUTCOME[str(outcome)]}
+        else:
+            expected = {"denied"}
+        if view.forwarded is not None or state not in expected:
+            problems.append(
+                ("/terminal/event/state", "a request that was not released is recorded as released")
+            )
     return problems
 
 
@@ -952,19 +971,47 @@ def _completion_problems(view: _View, terminal: dict[str, Any]) -> list[tuple[st
 def _result(view: _View) -> list[tuple[str, str]]:
     terminal = obj(view.record, "terminal")
     problems: list[tuple[str, str]] = _recovered(view, terminal)
+    authority = member(terminal, "event", "authority")
+    if authority is not None and view.admitted() and not same_digest(
+        member(authority, "digest"), digest_of(member(view.response, "authorization"))
+    ):
+        problems.append(("/terminal/event/authority/digest", "not the digest of the granted authorization"))
     if view.forwarded is None:
         state = text(terminal, "event", "state")
+        if array(terminal, "event", "side_effects"):
+            problems.append(("/terminal/event/side_effects", "a non-forwarded attempt records side effects"))
+        if state == "cancelled" and not (text(terminal, "event", "residual_state") or "").strip():
+            problems.append(("/terminal/event/residual_state", "a cancelled attempt lacks its non-release residual state"))
         # MG1-014: a refusal after the authorization was consumed is a cancelled attempt, and a
-        # cancelled attempt is one whose use the gateway consumed, or that recovery settled. A
+        # cancelled attempt records a committed use. The record does not expose the use store. A
         # journal that failed (MG1-017) may have recorded the consumed use and not the prepared
         # release, which the record then cannot show.
         consumed = view.record.get("prepared") is not None or view.released is not None
+        if consumed and terminal is None:
+            problems.append(("/terminal", "a consumed attempt has no terminal evidence"))
         unseen = view.recovery is not None or _journal_failed(view.record)
         allowed = (
             {"cancelled"} if consumed else (NON_RELEASE | {"cancelled"} if unseen else NON_RELEASE)
         )
         if terminal is not None and state not in allowed:
             problems.append(("/terminal/event/state", "a refused request is recorded as released"))
+        # MG1-010, EBMP2-049, EBMP2-053: a cancelled attempt names the authorization it consumed,
+        # bound to the admit that granted it; a terminal that consumed no use names none.
+        authority = member(terminal, "event", "authority")
+        if state == "cancelled" and authority is None:
+            problems.append(("/terminal/event/authority", "a cancelled attempt names no authority"))
+        if authority is not None and (state in NON_RELEASE or not view.admitted()):
+            problems.append(
+                ("/terminal/event/authority", "a terminal that consumed no use names the authority")
+            )
+        if terminal is not None and view.request is not None:
+            try:
+                check_event_binding(
+                    terminal, request=view.request,
+                    response=view.response if view.status == "answered" else None,
+                )
+            except BindingError as error:
+                problems.append(("/terminal", f"the terminal event is not bound: {error.code}"))
         return problems
     if view.recovery is not None:
         # The journal does not show what the governed AI system received (MG1-016).

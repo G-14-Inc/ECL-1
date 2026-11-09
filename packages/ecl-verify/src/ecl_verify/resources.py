@@ -179,7 +179,7 @@ def validator_for(schema_id: str) -> Validator:
 
 
 def schema_is_valid(schema_id: str, value: Any) -> bool:
-    """Check a schema without exposing a validator, its errors or the cached schema registry.
+    """Check value against the named schema without exposing a validator, its errors or the cache.
 
     Each call creates its own validator. Its referenced schemas remain in the same private
     registry used by object_findings; no object returned by this function can mutate them.

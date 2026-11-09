@@ -39,6 +39,7 @@ const (
 	mcpDischarge     = "ecl.ext.obligation-discharge.v1"
 	mcpCoupling      = "ecl.ext.consequence-coupling.v1"
 	mcpVerifyWitness = "ecl.obligation.verify-witness.v1"
+	mcpOutcomeReason = "ecl.ext.outcome-reason.v1"
 
 	// MCPServerErrorCode replaces a server error's code when that code is one of the error
 	// table's (MG1-010).
@@ -956,8 +957,27 @@ func mcpRecovered(view mcpView, terminal map[string]any, hasTerminal bool) []pro
 	if classification == "outcome-unknown" && (view.forwarded == nil || state != "unknown" || holds(view.record, "server_response")) {
 		problems = append(problems, problem{"/terminal/event/state", "a released request of unknown outcome is not unknown"})
 	}
-	if classification == "not-released" && (view.forwarded != nil || !isText || (!mcpNonRelease[state] && state != "cancelled")) {
-		problems = append(problems, problem{"/terminal/event/state", "a request that was not released is recorded as released"})
+	if classification == "not-released" {
+		// MG1-016: after an admit, cancelled when the authoritative store confirms consumption, and denied,
+		// naming no authority (EBMP2-053), when the store confirms no consumption; otherwise
+		// the state that the decision gives.
+		expected := map[string]bool{"denied": true}
+		if view.admitted() {
+			expected = map[string]bool{"cancelled": true, "denied": true}
+			if state == "denied" {
+				reasons := extensionValues(terminal, mcpOutcomeReason)
+				if len(reasons) != 1 || !pyjson.Equal(reasons[0]["code"], errEvidenceUnavailable) {
+					problems = append(problems, problem{"/terminal/extensions", "an unconsumed admit is denied without evidence-unavailable as its reason"})
+				}
+			}
+		} else if outcome, known := textOf(view.response, "outcome"); known && view.status == "answered" {
+			if refused, mapped := mcpRefusalForOutcome[outcome]; mapped {
+				expected = map[string]bool{refused: true}
+			}
+		}
+		if view.forwarded != nil || !isText || !expected[state] {
+			problems = append(problems, problem{"/terminal/event/state", "a request that was not released is recorded as released"})
+		}
 	}
 	return problems
 }
@@ -980,13 +1000,27 @@ func mcpCompletionProblems(view mcpView, terminal map[string]any) []problem {
 func mcpResult(view mcpView) []problem {
 	terminal, hasTerminal := object(view.record, "terminal")
 	problems := mcpRecovered(view, terminal, hasTerminal)
+	authority := member(terminal, "event", "authority")
+	if authority != nil && view.admitted() && !sameDigest(member(authority, "digest"), digestOf(member(view.response, "authorization"))) {
+		problems = append(problems, problem{"/terminal/event/authority/digest", "not the digest of the granted authorization"})
+	}
 	if view.forwarded == nil {
 		state, isText := textOf(terminal, "event", "state")
+		if len(array(terminal, "event", "side_effects")) != 0 {
+			problems = append(problems, problem{"/terminal/event/side_effects", "a non-forwarded attempt records side effects"})
+		}
+		residual, _ := textOf(terminal, "event", "residual_state")
+		if state == "cancelled" && strings.TrimSpace(residual) == "" {
+			problems = append(problems, problem{"/terminal/event/residual_state", "a cancelled attempt lacks its non-release residual state"})
+		}
 		// MG1-014: a refusal after the authorization was consumed is a cancelled attempt, and a
-		// cancelled attempt is one whose use the gateway consumed, or that recovery settled. A
+		// cancelled attempt records a committed use. The record does not expose the use store. A
 		// journal that failed (MG1-017) may have recorded the consumed use and not the prepared
 		// release, which the record then cannot show.
 		consumed := member(view.record, "prepared") != nil || view.released != nil
+		if consumed && !hasTerminal {
+			problems = append(problems, problem{"/terminal", "a consumed attempt has no terminal evidence"})
+		}
 		allowed := mcpNonRelease
 		if consumed {
 			allowed = map[string]bool{"cancelled": true}
@@ -998,6 +1032,28 @@ func mcpResult(view mcpView) []problem {
 		}
 		if hasTerminal && (!isText || !allowed[state]) {
 			problems = append(problems, problem{"/terminal/event/state", "a refused request is recorded as released"})
+		}
+		// MG1-010, EBMP2-049, EBMP2-053: a cancelled attempt names the authorization it consumed,
+		// bound to the admit that granted it; a terminal that consumed no use names none.
+		authority := member(terminal, "event", "authority")
+		if state == "cancelled" && authority == nil {
+			problems = append(problems, problem{"/terminal/event/authority", "a cancelled attempt names no authority"})
+		}
+		if authority != nil && (mcpNonRelease[state] || !view.admitted()) {
+			problems = append(problems, problem{"/terminal/event/authority", "a terminal that consumed no use names the authority"})
+		}
+		if hasTerminal && view.request != nil {
+			response := view.response
+			if view.status != "answered" {
+				response = nil
+			}
+			err := evidence.CheckEventBinding(terminal, view.request, response)
+			var refusal *evidence.BindingError
+			if errors.As(err, &refusal) {
+				problems = append(problems, problem{"/terminal", "the terminal event is not bound: " + refusal.Code})
+			} else if err != nil {
+				raise(err)
+			}
 		}
 		return problems
 	}

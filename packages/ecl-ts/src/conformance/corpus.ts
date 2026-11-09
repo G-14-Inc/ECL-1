@@ -1,7 +1,7 @@
 /**
  * The shared-corpus runner for this library (Node.js only): it evaluates every vector that
  * `conformance/shared-corpus.json` names, stage by stage, as conformance/README.md defines the
- * stages, and writes a cross-implementation report (version 2) with one raw evidence file per
+ * stages, and writes a cross-implementation report (version 3) with one raw evidence file per
  * vector, each bound to its report row by its digest. Expected results are read only to state
  * whether each was met; they never enter an evaluation.
  */
@@ -60,7 +60,7 @@ export const CAPABILITIES = [
 ] as const;
 
 export const DISCLOSURE =
-  "Same-operator implementation diversity, not an independent implementation or assessment. The TypeScript library is maintained in this repository by the maintainers of the Python reference; it does not import or call the reference.";
+  "Robert F. Tilley Jr. and G-14, Inc. maintain this TypeScript library and the Python reference. This library implements the documented behavior without importing or calling the reference.";
 
 const MAX_ARTIFACT_BYTES = 16 * 1024 * 1024;
 const SCHEMA_INVALID = "ecl.error.schema-invalid.v1";
@@ -242,6 +242,7 @@ export interface EvaluationContext {
   /** The export keys of the vector's suite, when its manifest names a key file. */
   readonly exportKeys?: ReadonlyMap<string, ExportKey>;
   readonly verdicts: Map<string, string>;
+  readonly canonicalDigests?: Map<string, string>;
   /** Receives, by vector identifier, the scope and evidence levels of a signed bundle's report. */
   readonly scopes?: Map<string, ObservedScope>;
 }
@@ -280,7 +281,7 @@ export function scopeMatches(vector: CorpusVector, observed: ObservedScope | und
   if (vector.expected_unresolved_predecessor_ids !== undefined) {
     const reported = new Set(observed.unresolved_predecessor_ids);
     const expected = new Set(vector.expected_unresolved_predecessor_ids);
-    if (reported.size !== expected.size || [...expected].some((identifier) => !reported.has(identifier))) {
+    if (reported.size !== observed.unresolved_predecessor_ids.length || reported.size !== expected.size || [...expected].some((identifier) => !reported.has(identifier))) {
       return false;
     }
   }
@@ -322,6 +323,7 @@ export function observedForVector(vector: CorpusVector, context: EvaluationConte
       ...(register === undefined ? {} : { register }),
     });
     context.verdicts.set(vector.id, report.verdict);
+    context.scopes?.set(vector.id, observedScope(report));
     return packageIdentifiers(report);
   }
   let value: JsonValue;
@@ -336,8 +338,11 @@ export function observedForVector(vector: CorpusVector, context: EvaluationConte
   switch (vector.stage) {
     case "strict-json":
       return [];
-    case "canonical":
-      return sha256Hex(canonicalize(value)) === vector.expected_canonical_sha256 ? [] : ["ecl.error.canonicalization-mismatch.v1"];
+    case "canonical": {
+      const digest = sha256Hex(canonicalize(value));
+      context.canonicalDigests?.set(vector.id, digest);
+      return digest === vector.expected_canonical_sha256 ? [] : ["ecl.error.canonicalization-mismatch.v1"];
+    }
     case "bundle": {
       const records = get(value, "records");
       if (!isObject(value) || !isArray(records)) {
@@ -436,8 +441,25 @@ export interface ResultRow {
   status: "met" | "not-met" | "unsupported";
   observed_primary_id?: string | null;
   observed_secondary_ids: string[];
+  observed_verdict?: string | null;
+  observed_scope?: ObservedScope["scope"] | null;
+  observed_effects?: ObservedScope["effects"] | null;
+  observed_unresolved_predecessor_ids?: readonly string[] | null;
+  observed_canonical_sha256?: string | null;
   unsupported_capability?: string;
   raw_result_sha256?: string;
+}
+
+/** Record actual observations only for expectations the vector declares. */
+export function recordObservations(row: ResultRow, vector: CorpusVector, verdict: string | undefined, observed: ObservedScope | undefined, canonicalDigest: string | undefined): boolean {
+  if (row.status === "unsupported") return false;
+  if (vector.expected_verdict !== undefined) row.observed_verdict = verdict ?? null;
+  if (vector.expected_scope !== undefined) row.observed_scope = observed?.scope ?? null;
+  if (vector.expected_effects !== undefined) row.observed_effects = observed?.effects ?? null;
+  if (vector.expected_unresolved_predecessor_ids !== undefined) row.observed_unresolved_predecessor_ids = observed?.unresolved_predecessor_ids ?? null;
+  if (vector.expected_canonical_sha256 !== undefined) row.observed_canonical_sha256 = canonicalDigest ?? null;
+  return (vector.expected_verdict === undefined || verdict === vector.expected_verdict) &&
+    (vector.expected_canonical_sha256 === undefined || vector.expected === "fail" || canonicalDigest === vector.expected_canonical_sha256) && scopeMatches(vector, observed);
 }
 
 export interface RunSummary {
@@ -518,6 +540,7 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
   const policies = new Map<string, TrustPolicy>();
   const keyFiles = new Map<string, Map<string, ExportKey>>();
   const verdicts = new Map<string, string>();
+  const canonicalDigests = new Map<string, string>();
   const evidenceDirectory = reportPath.replace(/\.[^./]*$/, "") + "-evidence";
   const evidenceName = evidenceDirectory.split("/").pop() as string;
   mkdirSync(evidenceDirectory, { mode: 0o700 });
@@ -558,6 +581,7 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
         root,
         semantics,
         verdicts,
+        canonicalDigests,
         scopes,
         ...(policy === undefined ? {} : { trustPolicy: policy }),
         ...(keys === undefined ? {} : { exportKeys: keys }),
@@ -571,7 +595,8 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
       row.observed_secondary_ids = secondary;
       // EBMP2-076 and EBMP2-061: a vector that names the scope or the evidence levels of its
       // verdict is met only with them.
-      const met = (vector.expected === "pass" ? primary === null : primary === vector.expected_primary_id) && scopeMatches(vector, scopes.get(vector.id));
+      const observationsMet = recordObservations(row, vector, verdicts.get(vector.id), scopes.get(vector.id), canonicalDigests.get(vector.id));
+      const met = (vector.expected === "pass" ? primary === null && secondary.length === 0 : primary === vector.expected_primary_id) && observationsMet;
       row.status = met ? "met" : "not-met";
       if (!met) {
         allMet = false;
@@ -588,7 +613,7 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
     }
     const { raw_result_sha256: _omit, ...unbound } = row;
     void _omit;
-    const raw = encode({ schema_version: "ecl_external_vector_raw_result_v2", implementation_revision: revision, result: unbound }) + "\n";
+    const raw = encode({ schema_version: "ecl_external_vector_raw_result_v3", implementation_revision: revision, result: unbound }) + "\n";
     const relativePath = `${evidenceName}/${String(index).padStart(4, "0")}.json`;
     const descriptor = openSync(join(evidenceDirectory, `${String(index).padStart(4, "0")}.json`), "wx", 0o600);
     writeSync(descriptor, raw);
@@ -613,9 +638,9 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
     timePolicies["package"] = ["ecl.verification-profile.reference-trusted-time.v1", "ecl.verification-profile.reference.v1"];
   }
   const report = {
-    schema_version: "ecl_cross_implementation_report_v2",
+    schema_version: "ecl_cross_implementation_report_v3",
     candidate_version: candidate,
-    profile_version: "2",
+    profile_version: "3",
     decision,
     implementation: {
       name: "ECL TypeScript library",
@@ -625,7 +650,7 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
       source_tree_sha256: source.digest,
       language: "TypeScript",
       runtime,
-      maintainer: "ECL repository maintainers",
+      maintainer: "Robert F. Tilley Jr.; G-14, Inc.",
       relationship_disclosure: DISCLOSURE,
       imports_ecl_reference: false,
       capabilities,
@@ -644,7 +669,7 @@ export function runCorpus(root: string, revision: string, reportPath: string, so
       "ML-DSA-65 envelope signatures are not implemented; trust policy version 1 cannot hold such keys, and a keyring built by hand with one makes verification fail with UnsupportedSuiteError instead of a verdict.",
       DISCLOSURE,
     ],
-    claim_boundary: "cross-implementation-replay-only-not-independent-assessment",
+    claim_boundary: "cross-implementation-corpus-replay",
   };
   const descriptor = openSync(reportPath, "wx", 0o600);
   writeSync(descriptor, encode(report) + "\n");

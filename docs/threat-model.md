@@ -69,9 +69,9 @@ cause in a fixed order (MG1-006); and a server error that uses a code of the
 error table reaches the governed AI system with -32603 (MG1-010). The core rules
 are ECL1N-0033, ECL1N-0046 and ECL1N-0141.
 
-What remains: the gateway compares definitions, not behavior. A server that
-behaves differently from its reviewed definition is outside the boundary; its
-effects are limited to the admitted target and parameters.
+What remains: the gateway compares definitions, not behavior. The gateway limits the forwarded call to the admitted target and parameters.
+Whether the server performs only those effects depends on the server and the
+declared effect boundary.
 
 ### ACS-BINDING-1: the fail-open default
 
@@ -128,21 +128,21 @@ leaves unless the export policy declares the attribute and its data class, and
 no undeclared attribute or body is emitted (OE1-005, EBMP2-034, EBMP2-035); the
 identifiers of people and records, `ecl.actor.id`, `ecl.subject.id` and
 `ecl.action.target`, also leave only when the export policy declares them
-(OE1-005); telemetry is a copy and never the evidence (OE1-001); no record
-carries a digest that can be computed without a secret, such as the SHA-256
-digest of the object or the parameters digest it carries (OE1-004), because a
+(OE1-005); telemetry is a copy and never the evidence (OE1-001); object and
+parameter digests are exported only as keyed digests (OE1-010), because a
 reader who can list the possible parameter values (an amount, a short list of
 accounts) could compute each candidate's digest and confirm which one was used;
 with the deployment's export key, the object's digest and its parameters digest
 are HMAC-SHA-256 under that key, each the `stringValue` of 64 lowercase
 hexadecimal digits that a consumer without the key still checks, and without one
-no digest is exported (OE1-010); each attribute key appears once, so that no
+no object or parameter digest is exported (OE1-010); each attribute key appears once, so that no
 reader takes a first attribute of a key that no check saw (OE1-003); nothing is
 inferred from severity or absence (OE1-008); and an export failure changes no
 decision, release or evidence (OE1-002).
 
-What remains: the exported object identifiers and outcomes still describe
-activity, and a declared identifier of a person or record tells every reader of
+What remains: the unkeyed policy digest, policy identifier and version remain
+in the export under OE1-004. The exported object identifiers and outcomes still
+describe activity, and a declared identifier of a person or record tells every reader of
 the pipeline who acted or on what. A reader who obtains the export key can confirm guesses as an unkeyed digest
 would allow, so the key's custody, an assessor check, decides how far the keyed
 digests protect. The `object_id` of an EBMP-2 event is derived from its content
@@ -225,8 +225,9 @@ requester's key, an enforcement point or, where requests are agent-signed, the
 governed AI system, can then sign a decision response that standalone envelope
 verification counts, since both purposes sign the DCMP-2 media type.
 Mitigations: a verifier refuses a trust policy whose
-key carries more than one of the decision-request, decision-response,
-observation and trusted-time purposes (TP1-009, ECL1N-0157); envelope
+key carries more than one of the decision-request, decision-response, control,
+observation and trusted-time purposes (TP1-009, ECL1N-0157); the evidence-event
+purpose may accompany one of those roles (TP1-009). Envelope
 verification under a trust policy, standalone or within a bundle, counts a
 decision request only under a key with the decision-request purpose and a
 decision response only under a key with the decision-response purpose
@@ -235,10 +236,16 @@ purpose (TP1-004).
 
 What remains: a trust policy does not say who holds a key, so whether the
 governed AI system holds a requester's key that also carries the evidence-event
-purpose, which ECL1N-0156 forbids, is an assessor check. A challenge, a
-challenge response or a control message has no purpose of its own, so
-standalone verification binds it to its media type only, and its role check
-stays with the bundle verifier.
+purpose, which ECL1N-0156 forbids, is an assessor check. Standalone envelope
+verification under a trust policy counts a challenge response only under a key
+with the decision-request purpose, a challenge only under a key with the
+decision-response purpose, and a control message only under a key with the
+control purpose (TP1-010, IE1-039). Standalone verification cannot distinguish an
+evidence event from an observation. Bundle verification distinguishes those
+EBMP-2 roles by their place in the bundle and binds signers to the object's
+principal; it carries decision requests, decision responses and EBMP-2 records,
+and does not verify the other DCMP-2 message types (EBMP2-057, TP1-004, TP1-005).
+These checks do not establish operational separation or custody of the keys.
 
 ### Hostile input to parsers and verifiers
 
@@ -258,9 +265,9 @@ derives causal order from authenticated references, not from the order of the
 bundle (EBMP2-029); and an unknown critical extension is rejected (XR1-006).
 
 What remains: the limits bound the work that an input can cause, and the values
-a verifier declares decide how much work that is. A defect in a parser is found
-by testing that parser with such input, which each implementation does for its
-own code.
+a verifier declares decide how much work that is. Testing with such input can reveal parser defects; each implementer needs to
+test its own code. Passing those tests does not establish the absence of other
+parser defects.
 
 ## Attacks on the release path
 
@@ -365,7 +372,8 @@ the only record left when it ends says that the call had no effect. Nothing has
 to be forged. Mitigations: one instance at a time owns the evidence directory
 under an exclusive lock taken before it reads anything, a second instance stops
 before it reads or writes, only the opening entry creates a journal, recovery
-records its decision durably before it writes and settles each journal once,
+records its decision durably before it writes any record or bundle and settles
+each journal once,
 never deleting one, and a journal it cannot read is kept and listed with nothing
 settled from it (MG1-016; ECL1N-0189 forbids inferring non-execution from
 information recovery cannot read). In the second, an approval that expires just

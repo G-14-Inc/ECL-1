@@ -50,7 +50,7 @@ var Capabilities = []string{
 }
 
 // Disclosure states how this implementation relates to the reference.
-const Disclosure = "Same-operator implementation diversity, not an independent implementation or assessment. The imported foundation core is separately maintained; the library packages, the RC-4, control-extension and binding-profile rules and this runner are repository code maintained by the maintainers of the Python reference, written to its documented behavior without importing or calling it."
+const Disclosure = "Robert F. Tilley Jr. and G-14, Inc. maintain this repository's Go library packages, protocol and profile rules, runner and Python reference. The imported foundation core is separately maintained. The repository code implements the documented behavior without importing or calling the Python reference."
 
 const schemaInvalid = "ecl.error.schema-invalid.v1"
 
@@ -144,6 +144,12 @@ type Result struct {
 	Secondary    []string `json:"observed_secondary_ids"`
 	Unsupported  string   `json:"unsupported_capability,omitempty"`
 	RawHash      string   `json:"raw_result_sha256,omitempty"`
+	// An outer nil omits a field; a pointer to nil records an unavailable observation.
+	ObservedVerdict    *any `json:"observed_verdict,omitempty"`
+	ObservedScope      *any `json:"observed_scope,omitempty"`
+	ObservedEffects    *any `json:"observed_effects,omitempty"`
+	ObservedUnresolved *any `json:"observed_unresolved_predecessor_ids,omitempty"`
+	ObservedCanonical  *any `json:"observed_canonical_sha256,omitempty"`
 }
 
 // Context is what the vectors of one run share.
@@ -155,7 +161,8 @@ type Context struct {
 	ExportKeys map[string]bindings.ExportKey
 	Semantics  semantic.Options
 	// Verdicts receives the verdict of each evidence-bundle vector.
-	Verdicts map[string]string
+	Verdicts         map[string]string
+	CanonicalDigests map[string]string
 	// Reports receives the report of each evidence-bundle and package vector.
 	Reports map[string]*evidence.Report
 }
@@ -338,6 +345,9 @@ func Evaluate(data []byte, vector Vector, context *Context) ([]string, error) {
 		computed, err := canon.Digest(value)
 		if err != nil {
 			return nil, err
+		}
+		if context.CanonicalDigests != nil {
+			context.CanonicalDigests[vector.ID] = computed
 		}
 		if computed != vector.CanonicalHash {
 			return []string{"ecl.error.canonicalization-mismatch.v1"}, nil
@@ -729,6 +739,7 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 	allMet := true
 	counts := map[string]int{"met": 0, "not-met": 0, "unsupported": 0}
 	verdicts := map[string]string{}
+	canonicalDigests := map[string]string{}
 	reports := map[string]*evidence.Report{}
 	scopeMismatches := []string{}
 	scopeChecks := 0
@@ -751,7 +762,7 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 			result.Unsupported = item.Capability
 			unsupported[item.Capability]++
 		} else {
-			context := &Context{Root: root, Semantics: semantic.Registered(), Verdicts: verdicts, Reports: reports}
+			context := &Context{Root: root, Semantics: semantic.Registered(), Verdicts: verdicts, Reports: reports, CanonicalDigests: canonicalDigests}
 			if path := policies[item.ID]; path != "" {
 				if loaded[path] == nil {
 					if loaded[path], err = loadPolicyFile(root, path); err != nil {
@@ -789,7 +800,11 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 				primaryValue = primary
 			}
 			result.Primary = &primaryValue
-			met := (vector.Expected == "pass" && primary == "") || (vector.Expected == "fail" && primary == vector.Primary)
+			recordObservations(&result, vector, verdicts[item.ID], reports[item.ID], canonicalDigests[item.ID])
+			met := (vector.Expected == "pass" && primary == "" && len(secondary) == 0) || (vector.Expected == "fail" && primary == vector.Primary)
+			if vector.CanonicalHash != "" && vector.Expected == "pass" && canonicalDigests[item.ID] != vector.CanonicalHash {
+				met = false
+			}
 			result.Status = "met"
 			if !met {
 				result.Status = "not-met"
@@ -806,6 +821,7 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 				verdictChecks++
 				if verdicts[item.ID] != vector.ExpectedVerdict {
 					verdictMismatches = append(verdictMismatches, item.ID)
+					result.Status = "not-met"
 					allMet = false
 				}
 			}
@@ -821,7 +837,7 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 			}
 		}
 		// Raw evidence binds every supported or unsupported result to this revision.
-		raw := map[string]any{"schema_version": "ecl_external_vector_raw_result_v2", "implementation_revision": revision, "result": result}
+		raw := map[string]any{"schema_version": "ecl_external_vector_raw_result_v3", "implementation_revision": revision, "result": result}
 		rawData, err := encode(raw)
 		if err != nil {
 			return nil, false, err
@@ -860,10 +876,10 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 	if has(Capabilities, "offline-package-verification") {
 		timePolicies["package"] = []string{"ecl.verification-profile.reference-trusted-time.v1", "ecl.verification-profile.reference.v1"}
 	}
-	report := map[string]any{"schema_version": "ecl_cross_implementation_report_v2", "candidate_version": "1.0", "profile_version": "2", "decision": decision,
-		"implementation": map[string]any{"name": "ECL Go library", "version": "1.0", "source_repository": "go/crosscheck", "source_revision": revision, "source_tree_sha256": sourceHash, "language": "Go", "runtime": runtime.Version(), "maintainer": "ECL repository maintainers", "relationship_disclosure": Disclosure, "imports_ecl_reference": false, "capabilities": Capabilities},
+	report := map[string]any{"schema_version": "ecl_cross_implementation_report_v3", "candidate_version": "1.0", "profile_version": "3", "decision": decision,
+		"implementation": map[string]any{"name": "ECL Go library", "version": "1.0", "source_repository": "go/crosscheck", "source_revision": revision, "source_tree_sha256": sourceHash, "language": "Go", "runtime": runtime.Version(), "maintainer": "Robert F. Tilley Jr.; G-14, Inc.", "relationship_disclosure": Disclosure, "imports_ecl_reference": false, "capabilities": Capabilities},
 		"suite":          map[string]any{"id": "ecl-1-v1.0-shared", "manifest_sha256": digest(corpusData), "vector_count": len(results), "corpus_version": corpus.Version}, "network_used": false, "time_policies": timePolicies, "vector_results": results, "evidence": evidenceRows,
-		"limitations": limitations, "claim_boundary": "cross-implementation-replay-only-not-independent-assessment"}
+		"limitations": limitations, "claim_boundary": "cross-implementation-corpus-replay"}
 	encoded, err := encode(report)
 	if err != nil {
 		return nil, false, err

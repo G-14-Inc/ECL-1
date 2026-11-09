@@ -1,0 +1,32 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 74 and seed -6864031153988489381 with 1 worker on 32 cores with 1333MB heap and 64MB offheap memory [pid: 101] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/administrator/G-14/ECL-1/work/ecl-1-source-repairs-20261107-1/source/formal/tla/MC.tla
+Parsing file /home/administrator/G-14/ECL-1/work/ecl-1-source-repairs-20261107-1/source/formal/tla/ECLCore.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/TLC.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/Integers.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/FiniteSets.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/Sequences.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Starting... (2026-11-07 13:32:05)
+Warning: The set ReqIds has been defined to be a symmetry set but contains less than two elements.
+(Use the -nowarning option to disable this warning.)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-07 13:32:05.
+Progress(12) at 2026-11-07 13:32:08: 516,287 states generated (516,287 s/min), 209,579 distinct states found (209,579 ds/min), 106,478 states left on queue.
+Progress(19) at 2026-11-07 13:33:08: 10,769,880 states generated (10,253,593 s/min), 3,155,477 distinct states found (2,945,898 ds/min), 547,351 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 3.2E-6
+  based on the actual fingerprints:  val = 1.6E-6
+17564984 states generated, 4606888 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 24.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 8 and the 95th percentile is 3).
+Finished in 01min 44s at (2026-11-07 13:33:48)

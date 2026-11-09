@@ -207,7 +207,7 @@
       "additionalProperties": false,
       "properties": {
         "parameter": {
-          "description": "An RFC 6901 JSON Pointer to the value in the request's action.parameters that the threshold compares. An action is at or above the threshold when that value is a non-negative integer, or a string in the decimal form of value, at or above value, the two compared as exact decimals; when the pointer names no value, or a value of another form, a negative number among them, the action counts as at or above the threshold.",
+          "description": "An RFC 6901 JSON Pointer to the value in the request's action.parameters that the threshold compares. An action is at or above the threshold when that value is a non-negative integer, or a string in the decimal form of value, at or above value, the two compared as exact decimals; when the pointer names no value, or names a value of any other form (including a negative number), the action counts as at or above the threshold.",
           "type": "string",
           "minLength": 1,
           "maxLength": 1024,

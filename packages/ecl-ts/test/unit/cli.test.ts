@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, truncateSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -107,6 +107,29 @@ test("ecl-verify-ts reports a package in the bundle's form, requires each decisi
   result = run(args(overLimit));
   assert.equal(result.status, 1);
   assert.ok(result.stdout.includes("finding: ecl.error.resource-limit-exceeded.v1: "));
+});
+
+test("an oversized package has an invalid verdict; invalid caller time stays a usage error", () => {
+  const folder = mkdtempSync(join(tmpdir(), "ecl-cli-limit-"));
+  try {
+    const path = join(folder, "over-limit.zip");
+    writeFileSync(path, "PK");
+    truncateSync(path, 1024 ** 3 + 1);
+    const result = run([...args(vector("package-valid-verified"), path), "--json"]);
+    const report = JSON.parse(result.stdout);
+    assert.equal(result.status, 1);
+    assert.equal(result.stderr, "");
+    assert.equal(report.verdict, "invalid");
+    assert.equal(report.primary, "ecl.error.resource-limit-exceeded.v1");
+    assert.deepEqual(report.scope.established, []);
+    const badTime = run([path, "--trust-policy", join(repoRoot(), "conformance/suites/offline-package/trust-policy.json"),
+      "--now", "not-a-time", "--json"]);
+    assert.equal(badTime.status, 2);
+    assert.equal(badTime.stdout, "");
+    assert.match(badTime.stderr, /invalid evaluation time or option/);
+  } finally {
+    rmSync(folder, { recursive: true, force: true });
+  }
 });
 
 test("ecl-verify-ts still reads a file that does not begin with PK as a JSON bundle", () => {

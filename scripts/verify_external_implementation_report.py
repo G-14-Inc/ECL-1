@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "packages" / "ecl-verify" / "src"))
 sys.path.insert(0, str(ROOT))
 
 from scripts.external_report_v2 import verify_v2  # noqa: E402
+from scripts.external_report_v3 import verify_v3  # noqa: E402
 
 from ecl_verify.canonical import MAX_JSON_BYTES, load_json_strict  # noqa: E402
 from ecl_verify.offline import safe_relative_path  # noqa: E402
@@ -135,9 +136,20 @@ def verify(
     *,
     evidence_root: Path | None = None,
     implementation_root: Path | None = None,
+    allow_legacy_v2: bool = False,
 ) -> dict[str, Any]:
+    if report.get("schema_version") == "ecl_cross_implementation_report_v3":
+        return verify_v3(root, report, evidence_root=evidence_root, implementation_root=implementation_root, source_tree=source_tree, confined_file=confined_file, sha256_file=sha256_file)
     if report.get("schema_version") == "ecl_cross_implementation_report_v2":
-        return verify_v2(root, report, evidence_root=evidence_root, implementation_root=implementation_root, source_tree=source_tree, confined_file=confined_file, sha256_file=sha256_file)
+        if not allow_legacy_v2:
+            raise ValueError("version 2 omits observation bindings required by profile 3; use --allow-legacy-v2 only to inspect legacy report integrity")
+        result = verify_v2(root, report, evidence_root=evidence_root, implementation_root=implementation_root, source_tree=source_tree, confined_file=confined_file, sha256_file=sha256_file)
+        result["claim_boundary"] = "legacy-v2-primary-only-observations-unverified"
+        return result
+    if report.get("schema_version") != "ecl_cross_implementation_report_v1":
+        raise ValueError("unsupported external implementation report version")
+    if not allow_legacy_v2:
+        raise ValueError("version 1 bound the frozen RC-3 suite and says nothing about the Version 1.0 corpus; use --allow-legacy-v2 only to inspect legacy report integrity")
     schema = read_json(
         root / "schemas" / "ecl-cross-implementation-report-v1.schema.json"
     )
@@ -286,7 +298,7 @@ def verify(
         "implementation_source_file_count": len(source_entries),
         "verified_evidence_file_count": len(verified_evidence),
         "verified_raw_result_count": len(results),
-        "claim_boundary": report["claim_boundary"],
+        "claim_boundary": "legacy-v1-rc3-suite-observations-unverified",
     }
 
 
@@ -296,11 +308,13 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--implementation-root", type=Path)
+    parser.add_argument("--allow-legacy-reports", "--allow-legacy-v2", dest="allow_legacy_v2", action="store_true", help="inspect historical v1 or v2 bindings without the observations required by profile 3")
     args = parser.parse_args()
     try:
         result = verify(
             args.root.resolve(),
             read_json(args.report.resolve()),
+            allow_legacy_v2=args.allow_legacy_v2,
             evidence_root=(
                 args.evidence_root.resolve()
                 if args.evidence_root is not None

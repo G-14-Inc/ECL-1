@@ -48,7 +48,7 @@ Each row cites the identically named `framework_clause` in the linked packet; th
 
 ## OWASP Agent Control Standard (ACS)
 
-Edition: `v0.1.0 (release v0.1.2, 2026-09-09)`. Packet: [owasp-acs-core.json](../conformance/crosswalks/owasp-acs-core.json).
+Edition: `v0.1.0 (source tag v0.1.2; commit authored 2026-09-09)`. Packet: [owasp-acs-core.json](../conformance/crosswalks/owasp-acs-core.json).
 
 Source: [OWASP Agent Control Standard (ACS) source](https://raw.githubusercontent.com/GenAI-Security-Project/agent-control-standard/7743826b2ec02e3daf47a08c82170fc7a43b0838/docs/spec/conformance.md). Exact captured-source revision, digest and clause extraction are recorded in the packet assumptions.
 

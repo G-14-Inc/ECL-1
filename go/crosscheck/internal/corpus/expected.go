@@ -54,7 +54,7 @@ func ReportMatches(report *evidence.Report, scope *ExpectedScope, effects []Expe
 		for _, identifier := range *unresolved {
 			want[identifier] = true
 		}
-		if len(got) != len(want) {
+		if len(got) != len(report.UnresolvedPredecessorIDs) || len(got) != len(want) {
 			return false
 		}
 		for identifier := range want {

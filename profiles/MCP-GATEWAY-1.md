@@ -20,7 +20,8 @@ step that can block (MG1-014). One gateway instance owns an evidence directory
 at a time, and recovery settles each journal once (MG1-016).
 The governed AI system holds no credential for the servers or for the systems
 their tools reach, so that, with the placement and path rules of MG1-001, the
-gateway is the only path to an effect. A change to a server's tools is a
+gateway mediates effects within the declared boundary. Other effect paths are
+closed or disclosed in the Negative Boundary Annex as MG1-001 requires. A change to a server's tools is a
 control change that waits for review.
 
 The profile adds requirements to a claim that declares it. It removes none of
@@ -125,11 +126,30 @@ earlier than the authorization's `valid_from` and that, with the release guard
 added, is earlier than its `valid_until`; it MUST forward exactly the call that
 the admitted request binds: the forwarded request's `method` and `params` MUST
 be the call's, `params` MUST have the digest `params_digest`, and the gateway
-MUST NOT add, remove or change any member of the call. The gateway counts the
-uses of an authorization in the instance that holds them, so a deployment MUST
-route every use of an authorization through one gateway instance, or share the
-use store among its instances by a mechanism that this profile does not
-specify, so that the count of ECL1N-0186 item 3 covers every instance.
+MUST NOT add, remove or change any member of the call. The gateway MUST count every use of an authorization in one authoritative
+store shared by all instances that can use it, or route every use through the
+one instance that owns that store. Under the lock of MG1-014 step 1, it MUST
+atomically and durably commit both the next use count and the complete signed
+`authority_consumed` event, bound to the exchange's persistent identity
+(MG1-016), its request and its response. That commit is consumption; step 2
+copies the same event into the exchange journal. Repeating the commit for the
+same exchange identity MUST return the existing result and MUST NOT count a
+second use. The store MUST order commits for an authorization across all
+instances and enforce its use policy against the committed count atomically;
+two exchanges MUST NOT commit the same use count. The committed event MUST
+carry `use_count`, equal to the count committed with that event (EBMP2-073),
+including count 1 for a single-use authorization. The store MUST preserve these bindings and consumed-use counts
+across every failure that the claim declares covered, including restarts and
+retirement of exchange journals. Cancellation MUST NOT restore a committed use.
+Before another use, the gateway MUST establish the complete committed count.
+If a commit's result is unknown, it MUST block further uses of that authorization
+until the store resolves that operation as committed or as not committed and
+unable to commit later. A missing journal entry is not such a resolution.
+Unavailable, unreadable or inconsistent consumption state MUST NOT be treated
+as unused authority. If the state cannot be established or durably updated,
+the gateway MUST refuse with -31011 under MG1-006's precedence rules. An
+in-memory cache alone does not satisfy this requirement (ECL1N-0186 item 3,
+ECL1N-0189). The storage and transaction mechanism is a deployment choice.
 
 **MG1-006** — For every request that it does not forward, the gateway MUST return
 a JSON-RPC error response with the code that the error table of this profile
@@ -139,12 +159,15 @@ JSON-RPC 2.0 reserves (-32768 to -32000), as the pinned MCP text asks of
 application-defined errors. When more than one cause holds, the gateway MUST
 return the code of the first that holds in this order: -31007, -31008, -31004,
 -31005, then the code of the decision's outcome (-31001, -31002 or -31003), then
--31010, -31011 and -31006. A pre-release obligation that the gateway has not
-discharged when it refuses is unproven, so the refusal of an admit that carries
-one is -31010, whether or not its authorization is also unusable. A record
-cannot show that the gateway's journal failed (-31011, MG1-017), so a checker
-that reads a record whose refusal is -31011 checks only that no earlier cause
-holds.
+-31010, -31011 and -31006, with one exception: after a use has been consumed,
+a journal failure that cancels the attempt under MG1-017 is reported as -31011
+before -31010 or -31006. Earlier mapping, decision-service and decision-outcome
+causes retain their precedence. Otherwise, a pre-release obligation not
+discharged when the gateway refuses is unproven, so an admit carrying one is
+refused with -31010 even when its authorization is also unusable. A record
+cannot establish that the journal actually failed. For a claimed -31011, a
+checker checks the visible earlier causes, applying the stated exception when
+the terminal state is `cancelled`; it does not attest to the storage failure.
 
 **MG1-007** — When the decision service cannot be reached, does not answer
 within the declared total timeout, or answers with anything other than a
@@ -171,8 +194,10 @@ authenticated under the claim's trust policy as issued by a principal that the
 claim accepts for that obligation, never the governed AI system, and, for an
 approval record, signed only by keys that the trust policy marks with
 `ecl.purpose.approval.v1`; that names this
-decision request by its `message_id`, with the request's digest or the digest of
-its action; that is fresh under the rule that the claim declares for the
+decision request by its `message_id` and binds the proof to it as follows: an ECL
+object uses the binding member specified for its type in EBMP2-070, including a
+causal predecessor naming the request by `message_id` and digest; a proof that
+is not an ECL object uses the request's digest or the digest of its action; that is fresh under the rule that the claim declares for the
 obligation's type, both when the gateway checks it and at the final observation
 of MG1-014; and that the gateway has not used for another release. It MUST check
 the proof with the verifier that the claim declares for the obligation's type.
@@ -209,19 +234,24 @@ not observe, so a check at the release boundary does not show that the
 authorization was valid when the server acted (ECL1N-0185, ECL1N-0188). An admit
 whose obligation list names one obligation `id` more than once fails the
 gateway's reading of the decision: the gateway MUST refuse it with -31005 before
-step 1 and consume no use. On a verified `admit` the gateway MUST take these
+step 1 and consume no use. An admit that carries a pre-release obligation of a
+type that the claim does not declare, or for which the claim declares no
+verifier or source (MG1-013), MUST be refused with -31010 before step 1 and
+consume no use. On a verified `admit` the gateway MUST take these
 steps in this order, and MUST NOT write the request unless every step passes:
 (1) under a lock that orders it with every other use of the same authorization,
 after it holds the lock, read a monotonic clock and then its wall clock and,
 only when the wall reading is no earlier than the authorization's `valid_from`,
 the reading plus the release guard is earlier than its `valid_until`, and the
-use policy allows another use, consume one use; (2) record `authority_consumed`;
+use policy allows another use, commit one use as MG1-005 requires; (2) record
+the committed `authority_consumed` event in the exchange journal;
 (3) record `release_prepared`, which names the attempt; (4) discharge the
 pre-release obligations (MG1-013); (5) under the lock, read the monotonic clock
 first and the wall clock after it, so that a pause between the two readings
 shortens what remains of the window and never extends it; the wall reading is
-the final observation, and the gateway MUST release only when it passes the test
-of step 1 and, with the release guard added, is earlier than every `fresh_until`
+the final observation, and the gateway MUST release only when it satisfies the `valid_from` and
+`valid_until` comparisons of step 1, using the use consumed at step 1 and
+consuming no other, and, with the release guard added, is earlier than every `fresh_until`
 of the discharge, and MUST refuse with -31006 and the outcome reason
 `ecl.error.clock-regressed.v1` when the final observation is earlier than the
 wall reading of step 1, or when the wall time elapsed since step 1 differs from
@@ -235,9 +265,10 @@ observation, measured by the monotonic clock, is within the release guard and
 that the final observation plus that time is earlier than `valid_until` and
 than every `fresh_until`, and MUST NOT write the request otherwise. When it
 refuses after
-step 1, the gateway MUST record an `execution_terminal` event in state
-`cancelled`, with no side effect, a `residual_state` stating that the request
-was not written, and the registered reason of the refusal in
+step 1, the gateway MUST keep the use consumed at step 1 consumed and, when the
+evidence sink can accept it (MG1-017), MUST record an `execution_terminal`
+event in state `cancelled`, with no side effect, a `residual_state` stating
+that the request was not written, and the registered reason of the refusal in
 `ecl.ext.outcome-reason.v1`, since a non-release state would contradict the
 consumed authority (EBMP2-053); it returns -31010 when a proof is stale at step
 5, whether or not the authorization is also unusable, and -31006 when the
@@ -295,7 +326,8 @@ digest of the RFC 8785 canonical form of the response the server returned and
 the forward's completion (MG1-015); for a refused request, an
 `execution_terminal` event in the non-release state that EBMP2-051 gives, or in
 state `cancelled` when the gateway consumed the authorization before it refused
-(MG1-014). The response the gateway returns to the governed AI system for a forwarded request
+(MG1-014). A `cancelled` terminal for a consumed use MUST carry
+`event.authority` bound to that authorization under EBMP2-049. The response the gateway returns to the governed AI system for a forwarded request
 MUST be the response whose digest the evidence records, with one exception: the
 gateway MUST NOT return a server error that uses a code of the error table, and
 returns such an error with its `error.code` replaced by -32603 and every other
@@ -329,35 +361,60 @@ profile's rules to the content it decodes.
 
 **MG1-016** — A gateway that retains exchange records MUST record each EBMP-2
 event of a side-effecting request in a journal, together with the exchange
-record and the signed decision messages once the decision is known, and MUST
-make each entry durable, by flushing the journal file and, when it creates the
-file, its directory to storage, before it takes the step that the entry
-evidences. The gateway MUST hold an exclusive lock on its evidence directory,
+record and the signed decision messages once the decision is known. It MUST
+make each entry durable by flushing the journal file and, when it creates the
+file, its directory to storage. The order is MG1-014: the use consumed at step 1
+is committed with its `authority_consumed` event in the authoritative use store;
+the same event is journaled at step 2. Required journal writes MUST be
+durable before proceeding to the next release step, and `execution_released`
+MUST be durable before the request is written to the transport. The gateway MUST hold an exclusive lock on its evidence directory,
 taken before it reads, settles or writes any journal there and held for as long
 as it can write there, so that one instance at a time owns the directory; a
 gateway, a recovery command or a library caller that finds the lock held MUST
 stop before it reads or writes anything else in the directory. It MUST create
 the evidence directory and the directories of its journals, records and bundles
 accessible to its own account only, and MUST flush each new directory into its
-parent. One journal holds exactly one exchange: only the entry that opens the
-exchange creates its journal, and every later entry is appended to the journal
+parent. One journal holds exactly one exchange. Before step 1, the gateway MUST durably
+open the exchange with a gateway-assigned persistent identity unique across
+instances and restarts; that identity MUST bind the journal to the request and
+any consumption commit, and the signed decision messages MUST be durable in the
+journal before step 1, so that a journal bound to a committed use always holds
+the admit that the commit binds. A client-controlled JSON-RPC `id` is not this identity.
+Only the entry that opens the exchange creates its journal, and every later entry is appended to the journal
 that exists; when no journal exists for an entry before `execution_released` has
-been journaled, the gateway MUST refuse the request with -31011 and restore the
-use, and after `execution_released` it MUST report the condition and still
+been journaled, the gateway MUST refuse the request with -31011, keep consumed any use
+already consumed and report the missing journal, and after `execution_released` it MUST report the condition and, when the evidence sink can write it, still
 record the terminal event from what it holds in memory; an opening entry for a
 journal that already exists MUST be refused with -31011 before any use is
-consumed. The gateway MUST keep an exchange's journal until the exchange's
-record and evidence bundle are durable, and MUST NOT delete a journal when it
-recovers. When it starts, under the lock, it MUST settle each journal that
-remains by what the journal holds, never by what it lacks, and MUST NOT retry
-the request. It MUST first truncate an incomplete final line, as the gateway
+consumed. The gateway MUST keep an exchange's
+journal until the exchange's
+record and evidence bundle are durable, MUST NOT delete a journal when it
+recovers, and MUST NOT retire a settled journal unless the consumed-use count and the binding
+from each consumed use to its exchange identity and signed consumption event
+remain durable under MG1-005. When it starts, under the lock, it MUST settle each journal using the retained
+journal and the authoritative consumption record, and MUST NOT retry the
+request or infer unused authority from a missing journal entry. It MUST first truncate an incomplete final line, as the gateway
 also does before it appends to a journal. An exchange whose journal holds
 `execution_released` and no `execution_terminal` event has an unknown outcome,
 recorded by a terminal event in state `unknown` with no side effect known and a
-`residual_state` that states the uncertainty; an exchange whose journal holds no
-`execution_released` was not sent, and is recorded as `cancelled` after an
-`admit` and in the non-release state that the decision gives otherwise; and an
-exchange whose journal holds its terminal event keeps it. A journal that does
+`residual_state` that states the uncertainty; an exchange whose intact journal holds no `execution_released` was not sent;
+and an exchange whose journal holds its terminal event keeps it. For an
+unsettled exchange without a release event, recovery MUST resolve consumption
+by the persistent exchange identity before it records a terminal. A committed
+use requires `cancelled`, no side effect, an authority reference bound under
+EBMP2-049, and a residual state saying the request was not written. If the
+journal lacks the consumption event, recovery MUST copy the exact signed event
+from the authoritative store, retaining its original identifiers, time,
+bindings and use count; it MUST NOT consume another use or invent the event.
+If the store establishes that the exchange consumed no use and cannot commit
+one later, an answered `admit` requires `denied`, no authority reference and
+`ecl.error.evidence-unavailable.v1` as the outcome reason; an answered `deny`,
+`hold` or `challenge` requires `denied`, `held` or `challenged`, respectively;
+and an exchange without a verified decision requires `denied`. If consumption
+cannot be resolved, or its record conflicts with the journal, recovery MUST
+preserve and report that uncertainty, emit no terminal that asserts a resolved
+consumption state, and block further uses of the authorization under MG1-005.
+A journal without any verified admit cannot establish that it consumed a use. A journal that does
 not open with the entry that opens an exchange, that holds entries of more than
 one exchange, or that cannot be parsed beyond an incomplete final line is
 damaged: recovery MUST keep it in place, list it in its report with the reason,
@@ -374,25 +431,31 @@ and never signed again, and recovery MUST NOT produce a second signed terminal
 event for one exchange. A terminal event that recovery records MUST carry
 `recovered_at` in its `ecl.ext.mcp-binding.v1`, and its record MUST carry
 `recovery`, with the time of the recovery and what the journal showed. The claim
-MUST declare which of these failures its journal survives: the exit of the
-gateway's process, a crash of its host, a failure of its storage, and the loss
-of an evidence service that it writes to.
+MUST declare which of these failures its journal and its authoritative use store
+survive: the exit of the gateway's process, a crash of its host, a failure of
+its storage, and the loss of an evidence service that it writes to (ECL1N-0190).
 
 **MG1-017** — When the gateway cannot make durable an entry that MG1-016
 requires before the release, because a write or a flush fails, its storage is
 exhausted or its evidence sink fails in any other way, it MUST NOT release the
-request and MUST NOT take the step that the entry would evidence, and it MUST
-return -31011 unless an earlier cause of MG1-006 holds. The gateway MUST catch
-every error that the evidence sink raises, so that none ends the exchange with a
-use consumed and no terminal recorded. When the failure comes after the use was
-consumed, the gateway MUST restore the use and record the attempt as `cancelled`
-when the journal can take the entry; when it cannot, the journal shows
-`release_prepared` without `execution_released`, which recovery settles as not
-released. Once `execution_released` is durable, a failure of the sink MUST NOT
-stop the write: the gateway reports the failure, and the records that it could
-not write are produced by the next recovery from the journal. Only a release
-that was durably journaled and whose terminal event is missing is recorded as
-`unknown` on recovery.
+request or proceed to the next release step, and MUST return -31011 under the
+precedence and cancellation exception of MG1-006. A committed use remains
+consumed. When the journal can accept it and consumption is known, the gateway
+MUST record the terminal state that MG1-016 requires; a failure before
+consumption MUST NOT be recorded as consuming or cancelling a use. An unknown
+commit result MUST be handled under MG1-005, never by restoring or consuming
+another use. If no terminal can be made durable, the gateway MUST report that
+failure and preserve all recovery information it can retain; it MUST NOT claim
+that a terminal was recorded. An intact journal with no `execution_released`
+establishes non-release, whether or not it contains `release_prepared`, but a
+missing or damaged journal establishes neither non-release nor unused authority.
+A later exchange is subject to the original request binding, time window and
+remaining-use limit; it cannot restore or reuse a consumed use. Once
+`execution_released` is durable, a sink failure by itself MUST NOT stop the write,
+but every final timing and proof-freshness check of MG1-014 still applies. The
+gateway reports the failure, and recovery produces only records supported by
+retained evidence. A durably journaled release with no terminal is recovered as
+`unknown`, not retried.
 
 ## Error table
 
@@ -420,7 +483,7 @@ server's own error never carries one of these codes to the governed AI system
 | -31008 | `unreviewed-change` | The tool list, a tool definition or the server identity differs from the reviewed mapping | `ecl.error.control-change-unreviewed.v1` |
 | -31009 | `forward-failed` | The request was forwarded and no response arrived within the forwarding timeout, so its effect is unknown | `ecl.error.dependency-unavailable.v1` |
 | -31010 | `obligation-unproven` | The admit carries an obligation whose `satisfaction` is `before_release`, or defers a state witness, that the gateway did not discharge: its type is not one that the claim declares, or its proof is absent, not authenticated, bound to another request, stale when checked or no longer fresh at the final observation, already used, or fails its check (MG1-013, MG1-014) | `ecl.error.obligation-unproven.v1` |
-| -31011 | `evidence-unavailable` | The gateway cannot make durable an event that must precede the release: a write or a flush of its journal fails, its storage is exhausted or its evidence sink fails, or the exchange's journal is missing or already exists when the gateway opens it (MG1-016, MG1-017) | `ecl.error.evidence-unavailable.v1` |
+| -31011 | `evidence-unavailable` | The gateway cannot establish or durably update the authorization's consumption state (MG1-005), or cannot make durable an event that must precede the release: a write or a flush of its journal fails, its storage is exhausted or its evidence sink fails, or the exchange's journal is missing or already exists when the gateway opens it (MG1-005, MG1-016, MG1-017) | `ecl.error.evidence-unavailable.v1` |
 
 ## Evidence states (informative)
 
@@ -431,8 +494,11 @@ server's own error never carries one of these codes to the governed AI system
 | An `InputRequiredResult`, or a task handle | `unknown`, with `residual_state` naming the input request or task; the retry or the task's later result is a new request |
 | No response within the forwarding timeout, or a broken stream | `unknown`, with `residual_state` stating that the effect is uncertain |
 | No write: the gateway consumed the authorization and then refused, for an unproven obligation or one whose proof was no longer fresh at the final observation, a failed final check, a regressed clock, a journal that failed or an evidence sink that failed (MG1-014, MG1-017) | `cancelled`, with no side effect, `residual_state` stating that the request was not written and the refusal's reason in `ecl.ext.outcome-reason.v1` |
+| No write: an evidence failure occurred before consumption, and the store establishes that the admitted exchange consumed no use and cannot commit one later (MG1-005, MG1-017) | `denied`, no authority reference, with `ecl.error.evidence-unavailable.v1` as the outcome reason |
+| Live or recovered: the result of a consumption commit is unresolved (MG1-005, MG1-017) | No terminal asserting a resolved consumption state; retain the recovery information and block further uses of the authorization |
 | Recovery: the journal holds `execution_released` and no terminal event (MG1-016) | `unknown`, recovered, with `residual_state` stating that the outcome is not known |
-| Recovery: the journal holds no `execution_released` (MG1-016) | `cancelled` after an admit, otherwise the non-release state of the decision, recovered |
+| Recovery: an intact journal holds no `execution_released`; the authoritative store resolves consumption (MG1-016) | `cancelled` for a committed use; `denied` for an unconsumed admit or no verified decision; otherwise the decision's non-release state; all recovered |
+| Recovery: consumption cannot be resolved or conflicts with the journal (MG1-005, MG1-016) | No invented terminal: retain and report the uncertainty; block further uses of the authorization |
 | Recovery: the journal is damaged, since it does not open with the exchange's first entry, holds more than one exchange or does not parse beyond a torn final line (MG1-016) | None: the journal is kept and listed with its reason; nothing is settled and no use is restored |
 
 The digest in `ecl.ext.mcp-binding.v1` covers the whole JSON-RPC response
@@ -445,8 +511,8 @@ The digests of MCP content (tool definitions, input responses, request state and
 responses) are of its RFC 8785 canonical form, which keeps floating-point
 numbers. The decision request's `action.parameters_digest` is of the restricted
 canonical form (IE1-001), which has none, so a call whose arguments, read from
-their RFC 8785 form, hold a number with a fractional part, or an integer beyond
-2^53 in magnitude, is refused with -31007 rather than rounded. A number written
+their RFC 8785 form, hold a number with a fractional part, or an integer of magnitude
+greater than 2^53 - 1, is refused with -31007 rather than rounded. A number written
 with a fraction or an exponent whose value is an integer, such as `2.0` or
 `1E+0`, is that integer in RFC 8785 form, so a call that holds one is decided
 with the integer, which its record holds (MG1-004, MG1-012). Elsewhere in
@@ -512,7 +578,9 @@ the authorization to that point by other means.
 
 A journal that meets MG1-016 can be one file per exchange in the evidence
 directory, to which the gateway appends each entry and which it flushes to
-storage before it takes the step that the entry evidences. The lock of MG1-016
+storage in the order of MG1-014: the count and signed consumption event commit
+atomically in the use store before the same event is journaled; the release
+entry is durable before the transport write. The lock of MG1-016
 is held by whatever writes the directory, for as long as it can write there: a
 gateway that serves requests, a recovery run or a library caller. A second
 holder is refused before it reads or writes anything else, so two writers in
@@ -521,7 +589,8 @@ creates its journal, and an opening entry for a journal that exists is refused.
 A failure or exhaustion of the storage before the release makes the gateway
 refuse with -31011, so no request is sent without its evidence; the gateway
 catches every error of its sink, and a failure after the use was consumed
-restores the use and ends the attempt as `cancelled` (MG1-017). After the
+keeps the use consumed and records the attempt as `cancelled` when its journal
+can accept the terminal entry, otherwise reporting the recording failure (MG1-017). After the
 release, such a failure leaves the journal as it stood: the gateway returns the
 server's response, since the request may have had its effect, and recovery
 produces the records. A deployment that places its evidence directory on
@@ -544,9 +613,18 @@ the local journal cannot be made one atomic step. A request whose release the
 journal holds and whose outcome it does not hold is recorded, after recovery, as
 `unknown`, and stays unknown until the server's records or another observation
 settle it; the gateway never retries it, since a retry could repeat an effect. A
-gateway that holds the use counts of authorizations in memory restores, on
-recovery, those that unsettled journals show, and a response binds one decision
-request (DCMP2-044, DCMP2-045), so it cannot serve a later call after a restart.
+gateway can rebuild a cache from unsettled journals, but those journals omit
+exchanges already retired after their records and bundles became durable.
+Request binding (DCMP2-044, DCMP2-045) prevents use for a different request; it
+does not reject re-presentation of the same admitted request. Under MG1-005, the durable
+consumption history survives journal retirement and restart. Recovery of an intact journal does not restore a use,
+and unreadable or missing history does not establish that authority is unused.
+Consumption records remain subject to the claim's recovery and evidence-retention
+rules. Expiration alone does not settle an unresolved exchange or permit removal
+of information still required for its recovery. One way to resolve an uncertain
+commit is to write a no-consumption resolution under the same uniqueness
+constraint as the consumption commit; either result excludes the other, including
+a delayed commit. Recovery reads the result that became durable.
 Two instances that each hold a use count for one authorization do not see each
 other's uses, which is why MG1-005 routes every use of an authorization through
 one instance or a shared use store.
@@ -578,8 +656,8 @@ record after its schema.
 
 ## Security considerations
 
-The gateway's guarantee rests on two facts that an assessor checks: no other path
-reaches the servers or the systems behind them (MG1-001, MG1-009), and the
+The gateway's guarantee rests on two facts that an assessor checks: effect paths outside the
+gateway are closed or disclosed in the Negative Boundary Annex (MG1-001, MG1-009), and the
 gateway's decision path cannot be altered by the governed AI system, because
 the gateway runs outside everything that system can execute code in or control
 (MG1-001). Tool
@@ -589,7 +667,8 @@ why a change waits for review (MG1-008) and why annotations never choose the
 action class. The call's complete `params` are bound by digest, so an admitted
 request cannot be forwarded with other arguments, with other `_meta` members or
 with a member that changes how the server runs it, such as a task, and the
-authorization's use policy prevents a second forward. A member outside `params`
+authorization's use policy prevents a second forward only when its consumption
+count is enforced across instances, restarts and journal retirement (MG1-005). A member outside `params`
 and a number that RFC 8785 would round reach no decision at all: the gateway
 refuses the request first (MG1-004). The error data names a cause and a registered reason only, so a
 refusal does not return policy details to the governed AI system. An obligation
@@ -598,8 +677,10 @@ approval, is proven before the release by a proof that names the request and
 that the governed AI system cannot issue (MG1-013): recognizing the obligation
 does not prove it. The release order checks the authorization after every step
 that can block, so a slow evidence store or a wait for a lock cannot carry an
-expired authorization to the server (MG1-014), and every event is durable
-before the step that it evidences (MG1-016). One instance owns an evidence
+expired authorization to the server (MG1-014), and journal entries are made
+durable in the order of MG1-014, with `authority_consumed` recorded after step 1
+consumes the use and `execution_released` durable before the transport write
+(MG1-016). One instance owns an evidence
 directory at a time, so a second instance cannot settle a running instance's
 exchanges as not written, and recovery settles each journal once, so a repeated
 or interrupted recovery leaves one signed terminal event (MG1-016). The clock is
@@ -612,6 +693,6 @@ freshness is tested at the release, not only when the proof is obtained
 
 | Kind | What the citation establishes |
 | --- | --- |
-| Vectors | The `mcp-gateway` suite holds a passing record for each row of the error table, each with the error that row gives, and passing records of a refused request whose method the claim neither maps nor lists, of a call refused for the first of two causes, of a call whose arguments hold a number with a fractional part or lack the argument the target comes from, of a call whose `arguments` is null, refused although its mapping gives a fixed target, of a server error returned with -32603, of content held in the encoded form, and of a call whose `id` holds a Unicode noncharacter, which puts the call and both responses in the encoded form, and refusals of a call with a member that no decision binds and of a call whose `_meta` holds a number that RFC 8785 rounds. It refuses a forward while the decision service is unavailable, without an `admit`, after the authorization expired, a second time under a single-use authorization, with arguments, a method, a tool or an `id` other than the call's and the admit's, among them the `id` `"1"` for a call whose `id` is 1 and the `id` `true`, which the record schema refuses, or with a member that the call did not carry; a forward on an answered `admit` whose decision basis breaks DCMP2-053, or that carries no decision basis; a decision request for a call with a member outside `params` or a number of magnitude greater than 2^53 - 1, and one that declares a negative budget debit; a forward of an unlisted method, or to a tool that has no mapping or whose definition changed after review; a decision request whose class or parameters do not come from the mapping and the call, whose `params_digest` does not cover a `_meta` member of the call, or that lacks the binding extension; a refusal returned as a result, with another code, with the code of a later cause or with an `id` other than the call's, among them the `id` `"1"` for a call whose `id` is 1; a forwarded response that the evidence does not bind, among them one returned with `0` where the server's response holds `false`, that the governed AI system did not receive, that reaches it with a code of the error table, or whose state the evidence misreads; a result returned for a forward that the server never answered; and encoded content that is not canonical base64, not the RFC 8785 form of its content, content within the restricted profile, or content that the record schema would refuse when held as itself: a call with a null `id`, forwarded without one or refused with an error that has none, and a call forwarded with the `jsonrpc` 1.0. For the release path (MG1-013 to MG1-017) the suite holds passing records of a forward whose two obligations and deferred witness are discharged, of the release order, of a refusal at the first check of an obligation that no declared verifier checks, of cancelled attempts after an unproven obligation, a failed final check and a journal that failed, with and without a recorded prepared release, and of recovered records of an unknown outcome and of a request that was not released; it refuses a forward on an admit with obligations whose release records no discharge, or a discharge without the deferred witness or the approval; a refusal of an undischarged obligation with -31006 or -31011; a release within the release guard of the window's end; a `forwarded_at` earlier than the release that the evidence records; a send that completed after `valid_until`, marked or not; a cancelled refusal recorded as `expired_before_release`, and a refusal at the first check recorded as cancelled; a recovered record of an unknown outcome that claims success, or whose classification is not one that the schema lists; and a record without the response returned. The suite also holds a refusal, with -31005 and no use consumed, of an admit that names one obligation twice; cancelled attempts whose proof was no longer fresh at the final observation (-31010), whose clock regressed (-31006 with `ecl.error.clock-regressed.v1`) and whose write could not begin within the release guard after the final observation (-31006); a release whose event carries `release_guard_ms`; and a forward written inside its window whose answer arrived after `valid_until`, recorded with `forward_completed_at` after the window and without `released_after_valid_until`; it refuses a release event without `release_guard_ms` and a discharge entry whose `fresh_until` is not later than the final observation plus the guard |
-| Deployment tests | A gateway's tests of its release path, with faults injected at each step of the release order and of the journal: a run on the real clock, crashes at each step followed by recovery, failures and exhaustion of its storage, two instances on one evidence directory, two writers of one evidence directory in one process and threads on one authorization, damaged journals of each class, a recovery stopped after its decision, run twice and run concurrently, a torn last line, a stale approval and an over-age witness at the release, a clock stepped back between the first check and the final observation and between the two readings of step 5, the evidence sink failing at each step, a full and a read-only directory, and a late answer inside the window; `docs/bindings.md` lists what each of these tests must observe |
-| Assessor procedure | Path enumeration and the absence of credentials in the governed AI system, transport configuration and change review; the declared release guard, obligation types and their verifiers, the failures that the journal survives, and the statement that every use of an authorization passes through one instance or a shared use store (MG1-005, MG1-013, MG1-014, MG1-016; the assessment area `mcp-release-order-and-journal-declarations` of `conformance/requirement-evaluations.json`) |
+| Vectors | The `mcp-gateway` suite holds a passing record for each row of the error table, each with the error that row gives, and passing records of a refused request whose method the claim neither maps nor lists, of a call refused for the first of two causes, of a call whose arguments hold a number with a fractional part or lack the argument the target comes from, of a call whose `arguments` is null, refused although its mapping gives a fixed target, of a server error returned with -32603, of content held in the encoded form, and of a call whose `id` holds a Unicode noncharacter, which puts the call and both responses in the encoded form, and refusals of a call with a member that no decision binds and of a call whose `_meta` holds a number that RFC 8785 rounds. It refuses a forward while the decision service is unavailable, without an `admit`, after the authorization expired, a second time under a single-use authorization, with arguments, a method, a tool or an `id` other than the call's and the admit's, among them the `id` `"1"` for a call whose `id` is 1 and the `id` `true`, which the record schema refuses, or with a member that the call did not carry; a forward on an answered `admit` whose decision basis breaks DCMP2-053, or that carries no decision basis; a decision request for a call with a member outside `params` or a number of magnitude greater than 2^53 - 1, and one that declares a negative budget debit; a forward of an unlisted method, or to a tool that has no mapping or whose definition changed after review; a decision request whose class or parameters do not come from the mapping and the call, whose `params_digest` does not cover a `_meta` member of the call, or that lacks the binding extension; a refusal returned as a result, with another code, with the code of a later cause or with an `id` other than the call's, among them the `id` `"1"` for a call whose `id` is 1; a forwarded response that the evidence does not bind, among them one returned with `0` where the server's response holds `false`, that the governed AI system did not receive, that reaches it with a code of the error table, or whose state the evidence misreads; a result returned for a forward that the server never answered; and encoded content that is not canonical base64, not the RFC 8785 form of its content, content within the restricted profile, or content that the record schema would refuse when held as itself: a call with a null `id`, forwarded without one or refused with an error that has none, and a call forwarded with `jsonrpc` set to `"1.0"`. For the release path (MG1-013 to MG1-017) the suite holds passing records of a forward whose two obligations and deferred witness are discharged, of the release order, of a refusal at the first check of an obligation that no declared verifier checks, of cancelled attempts after an unproven obligation, a failed final check and a journal that failed, with and without a recorded prepared release, and of recovered records of an unknown outcome and of a request that was not released; it refuses a forward on an admit with obligations whose release records no discharge, or a discharge without the deferred witness or the approval; a refusal of an undischarged obligation with -31006 or -31011; a release within the release guard of the window's end; a `forwarded_at` earlier than the release that the evidence records; a transport write recorded as completing at or after `valid_until` by `released_after_valid_until` set to `true`; a cancelled refusal recorded as `expired_before_release`, and a refusal at the first check recorded as cancelled; a recovered record of an unknown outcome that claims success, or whose classification is not one that the schema lists; and a record without the response returned. The suite also holds a refusal, with -31005 and no use consumed, of an admit that names one obligation twice; cancelled attempts whose proof was no longer fresh at the final observation (-31010), whose clock regressed (-31006 with `ecl.error.clock-regressed.v1`) and whose write could not begin within the release guard after the final observation (-31006); a release whose event carries `release_guard_ms`; and a forward written inside its window whose answer arrived after `valid_until`, recorded with `forward_completed_at` after the window and without `released_after_valid_until`; it refuses a release event without `release_guard_ms` and a discharge entry whose `fresh_until` is not later than the final observation plus the guard. Additional recovery vectors cover consumed and unconsumed admits, answered non-admit decisions, invalid decision responses and already-recorded outcomes; they reject wrong states, forbidden or missing authority references, incorrect authority and decision digests, missing recovery reasons, side effects on non-forwarded attempts and missing cancellation residual states |
+| Deployment tests | A gateway's tests of its release path, with faults injected at each step of the release order and of the journal: a run on the real clock, crashes at each step followed by recovery, failures and exhaustion of its storage, two instances on one evidence directory, two writers of one evidence directory in one process threads on one authorization, two instances sharing a use store, an uncertain commit resolved as committed and as unable to commit, crashes between the store commit and its journal copy, damaged journals of each class, a recovery stopped after its decision, run twice and run concurrently, a torn last line, a stale approval and an over-age witness at the release, a clock stepped back between the first check and the final observation and between the two readings of step 5, the evidence sink failing at each step, a full and a read-only directory, and a late answer inside the window; `docs/bindings.md` lists what each of these tests must observe |
+| Assessor procedure | Path enumeration and the absence of credentials in the governed AI system, transport configuration and change review; the declared release guard, obligation types and their verifiers, the failures that the journal and the use store survive, and the statement that every use of an authorization passes through one instance or a shared use store whose consumed-use history survives restarts and journal retirement and fails closed when unavailable (MG1-005, MG1-013, MG1-014, MG1-016; the assessment area `mcp-release-order-and-journal-declarations` of `conformance/requirement-evaluations.json`) |

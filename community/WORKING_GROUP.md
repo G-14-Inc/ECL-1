@@ -1,11 +1,12 @@
 # The ECL-1 Working Group
 
-The ECL-1 Working Group develops and maintains ECL-1 in the open. G-14, Inc.
-maintains ECL-1 and provides the editors and the chair; anyone may join, and
+The charter assigns open development and maintenance of ECL-1 to the ECL-1
+Working Group. G-14, Inc. maintains ECL-1 and provides the editors and the
+chair; anyone may join, and
 joining is free. The [charter](../governance/CHARTER.md) sets out the roles,
 how decisions are made and what the maintainer may not do.
 
-G-14, Inc. and Robert Tilley Jr. provide the interim editorial and contact
+G-14, Inc. and Robert F. Tilley Jr. provide the interim editorial and contact
 function while the community working group is being formed. ECL-1 is open to
 community participation and stewardship under the charter. Community roles,
 working-session dates and agendas will be announced publicly as they are
@@ -53,8 +54,10 @@ contact address, ecl@g14.ai.
 
 ## Working sessions
 
-- **Schedule.** The working group meets in public working sessions. The chair
-  publishes the schedule on the ECL-1 site and in the "Announcements" category
+These arrangements apply once working sessions are established and announced.
+
+- **Schedule.** The working group will meet in public working sessions. The chair
+  will publish the schedule on the ECL-1 site and in the "Announcements" category
   of the repository's discussions ([DISCUSSIONS](DISCUSSIONS.md)).
 - **Agenda.** The chair posts each session's agenda, with the details for
   joining it, in the "Working sessions" category at least seven days before

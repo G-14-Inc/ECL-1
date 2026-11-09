@@ -9,8 +9,9 @@ it runs, and the governed AI system must not be able to bypass or change it
 (standard, Sections 5.1 and 5.4). The layer
 decides, enforces the decision, and denies, restricts or halts when proof is
 missing, integrity fails or the policy is ambiguous. It produces signed
-evidence that a third party, someone other than the supplier, can check and,
-from L2, verify offline. An instruction given to the AI does not count as a
+evidence that a third party, someone other than the supplier, can verify
+offline. From L2, the evidence must be independently verifiable outside the
+primary control plane (FR-108). An instruction given to the AI does not count as a
 control. Scores from AI models and the governed AI system's own statements can
 make a decision stricter, but they never approve an action; each decision
 records which inputs it rested on (Section 5.2).
@@ -43,8 +44,9 @@ claim.
 - **Levels.** L1 Foundational, L2 Standard, L3 Advanced, L4 Critical
   Infrastructure. Each level includes the ones below it. The required level
   follows the riskiest of autonomy, data sensitivity and action consequence.
-- **Independence.** Class A: one operator, with separated roles and keys.
-  Class B: approval of controls and verification of evidence both sit in a
+- **Independence.** Class A: one operator, with separated roles and keys and no
+  principal holding unilateral power to change both the governed AI system
+  and a control responsibility. Class B: approval of controls and verification of evidence both sit in a
   separately administered domain that the governed AI system and its ordinary
   operators cannot change on their own. Class C: Class B, held by an authority
   outside the operator. L2 and L3 need at least Class B, and L4 needs Class C.
@@ -77,8 +79,8 @@ show that an effect occurred: the verifier lists both among what its verdict
 does not establish. A matching record from a separately keyed observer makes
 the effect corroborated, which is stronger evidence but still not proof. The verifier
 reports one of four verdicts: verified, invalid, incomplete, or a current trust
-failure, which means that a signing key is revoked or expired today although
-the evidence was valid when it was made.
+failure: the evidence passes the historical checks, but the applicable current
+trust or expiry checks fail at the selected evaluation time.
 
 ## Where the standard stands
 
@@ -97,6 +99,7 @@ lists submitted claims as self-declared, and lists an assessor's assessment
 separately when the supplier provides one; G-14 certifies nothing.
 
 The text of ECL-1 is licensed under CC BY 4.0 and its code and machine-readable
-artifacts under Apache-2.0, and G-14, Inc. pledges not to assert its essential
-patent claims against implementations, royalty-free ([PATENTS.md](../PATENTS.md)). G-14 has
+artifacts under Apache-2.0. Within the scope and conditions of
+[PATENTS.md](../PATENTS.md), G-14, Inc. pledges, royalty-free, not to assert its
+Essential Claims against Covered Implementations. G-14 has
 patents pending.

@@ -144,7 +144,9 @@ only the credit that the commenter chose.
 ## Ending the review
 
 A review ends when every comment has a disposition, every appeal is closed,
-the log is complete, no finding classed as critical remains open, and any
-further review that behavioral or breaking changes required has closed. The
+the log is complete, no finding classified as Critical under
+[the reviewer guide's Report findings section](../docs/reviewer-guide.md#report-findings)
+remains open, and any further review that behavioral or breaking changes
+required has closed. The
 release record states the status of the outside security review separately;
 the end of a review does not imply it.
