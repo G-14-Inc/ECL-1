@@ -23,8 +23,9 @@ in this file is legal advice; the license texts and the pledge govern.
   the browser verifier (`web/verifier/`), the Python verifier package
   (`packages/ecl-verify/`) and the Go verifier module (`go/crosscheck/`), each
   as a whole, its README included, the public scripts and every other
-  machine-readable file. The license text is in [`LICENSE`](LICENSE), and each
-  verifier package carries a copy.
+  machine-readable file. The license text is in [`LICENSE`](LICENSE). The
+  Python, TypeScript and Go packages carry a copy; the browser verifier is
+  covered by the root `LICENSE` and the notices in `verifier.js`.
 
 The license of each file is decided file by file by the rules of
 [`licenses/license-map.json`](licenses/license-map.json), applied in order;
@@ -51,7 +52,9 @@ requirement registry, the requirement evaluation catalog and the schema
 descriptions quote or cite it. Each artifact is licensed as a whole under
 Apache-2.0, and the same text in the Markdown sources is licensed under
 CC BY 4.0. Both grants come from the same licensors, so a reuser may rely on
-the license of the form that it uses.
+the license of the form that it uses. The [contribution terms](#contributions)
+provide for both grants in new normative text reproduced in generated
+artifacts, including checklist items, definitions, and rule descriptions.
 
 ## Patents
 
@@ -64,14 +67,27 @@ ECL-1. Its full terms are in [`PATENTS.md`](PATENTS.md). G-14, Inc. has
 patents pending.
 
 CC BY 4.0 grants no patent rights. Apache-2.0 includes, in its Section 3, a
-patent license from each contributor of code for the claims that the
-contributor's own contribution infringes; the pledge is separate from that
-license and does not limit it.
+patent license from each contributor for licensable claims necessarily
+infringed by that contributor's contribution, alone or combined with the work
+to which it was submitted. The pledge is separate from that license and does
+not limit it.
 
 ## Contributions
 
 A contribution is licensed under the license of the files it changes:
 CC BY 4.0 for text and Apache-2.0 for code and machine-readable artifacts.
+For new requirement or other normative source text submitted under these
+terms, the contributor also grants Apache-2.0 rights in that text as
+reproduced in generated machine-readable artifacts. This additional grant leaves the Markdown
+source's CC BY 4.0 grant intact. It applies only to text that the contributor
+has authority to license under both licenses. Earlier contributions require
+their rights holders' express confirmation before this additional grant can
+be applied; third-party material retains its own terms. Contributed normative
+text that cannot carry both grants is excluded from generated artifacts
+licensed as a whole under Apache-2.0 unless the rights holder separately
+authorizes the needed grant. Any retained third-party quotation is identified
+and kept under its own terms.
+
 Every commit carries a Developer Certificate of Origin sign-off, and each
 contributor makes the same patent pledge for its contributions as G-14 makes
 for its own. There is no contributor license agreement
@@ -94,7 +110,8 @@ license texts in this repository, and the Developer Certificate of Origin in
 
 ## Implementations
 
-The licenses cover ECL-1 and the files of its public repository. G-14's own
-implementation of ECL-1 is not part of the standard and is not in that
-repository; its own terms apply to it. The pledge says which claims it covers
-and which it does not ([`PATENTS.md`](PATENTS.md), section 3).
+The licenses cover ECL-1 and the files of its public repository, including the
+public verifier implementations under their stated licenses. G-14's private
+control-platform implementation, deployment code and private systems are not
+included in this repository; their own terms apply. The pledge says which
+claims it covers and which it does not ([`PATENTS.md`](PATENTS.md), section 3).

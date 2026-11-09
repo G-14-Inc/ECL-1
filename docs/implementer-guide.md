@@ -208,8 +208,9 @@ Rules for results:
 - A vector that needs an optional capability you do not implement is marked
   unsupported, with no findings.
 - A result agrees with a vector only when its one primary finding is the
-  expected one. A different depth of secondary findings is recorded as a
-  reporting difference, never treated as agreement.
+  expected one. A difference in the depth of secondary findings is recorded
+  separately as a reporting difference; it does not change whether the primary
+  finding matches.
 
 The TypeScript package that holds the offline verifier shows one way to run
 part of the corpus: `node scripts/check-corpus.mjs`, run in
@@ -220,13 +221,16 @@ status with the expected ones.
 
 ## Record the run in a conformance report
 
-Start from [report-template-v2.json](../conformance/report-template-v2.json).
+Start from [report-template-v3.json](../conformance/report-template-v3.json).
 It is a schema-valid skeleton in the `not_run` state, with empty result rows,
 example identities and hash placeholders. It validates only as a shape; it is
 never a record of a run. Replace every placeholder with your component's source
-identity, the identity of the corpus you ran, one result row for each vector
-and the digests of your raw evidence, following [the report
-schema](../schemas/ecl-cross-implementation-report-v2.schema.json), and set
+identity, the identity of the corpus you ran, one result row for each vector,
+and the digests of your raw evidence. Record the actual verdict, scope, effect
+levels, unresolved predecessor identifiers and canonical digest whenever the
+vector declares the corresponding expectation, following the
+[report profile](../conformance/EXTERNAL_IMPLEMENTATION_PROFILE.md) and [the report
+schema](../schemas/ecl-cross-implementation-report-v3.schema.json), and set
 `decision` to the outcome of the run. The schema refuses a report that states a
 pass or a fail with no results, and a `not_run` report that carries results.
 Validate the completed report against the schema with any JSON Schema draft

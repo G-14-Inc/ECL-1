@@ -16,7 +16,7 @@ results:
 - the assessment procedures, `requirement-evaluations.json`;
 - the incident replay suite, `scenarios/`;
 - the crosswalks to AARM and to the OWASP Agent Control Standard, `crosswalks/`;
-- the conformance report template, `report-template-v2.json`.
+- the conformance report template, `report-template-v3.json`.
 
 A schema-valid object is not necessarily semantically conformant.
 
@@ -58,7 +58,7 @@ The steps that several stages share:
 | `protocol` | A DCMP-2 message, EBMP-2 record or adapter binding, and the vector's `schema`. | Parse; Object; Schema; Rules for the object's `protocol` (`DCMP-2` or `EBMP-2`), for `ECL-IE-1` (the integrity policy it carries) and, for an adapter binding, for `ECL adapter binding`. The rules are evaluated whatever the Schema step found. | `ecl.error.schema-invalid.v1` when Schema fails, and every rule finding. |
 | `semantic` | As `protocol`. | As `protocol`. | As `protocol`. The two stages make the same checks; the manifests use both names. |
 | `safe-state-profile` | A safe-state profile document and the vector's `schema`. | Parse; Object; Schema; Rules for `SAFE-STATE-PROFILE`, whatever Schema found. | As `protocol`. |
-| `document` | A claim or assessment document or a work intent, and the vector's `schema`. | Parse; Object; Schema; Rules for the document's `protocol` member (`ECL-WI-1` for a work intent) and for the vector's `schema` (`ecl.rule.register-declarations-consistent.v1` for an action register), whatever Schema found. | As `protocol`. |
+| `document` | An action register, conformance claim, assessment package, mapping packet, deployment profile, evidence lifecycle policy, offline verification package or work intent, and the vector's `schema`. | Parse; Object; Schema; Rules for the document's `protocol` member (`ECL-WI-1` for a work intent) and for the vector's `schema` (`ecl.rule.register-declarations-consistent.v1` for an action register), whatever Schema found. | As `protocol`. |
 | `binding` | A binding record, the vector's `schema` and, for the OpenTelemetry suite, the export keys that the manifest's `export_keys_path` names (OE1-010). | Parse; Object; Schema, and stop when it fails; Rules for the `$id` of the record's schema and, for an AARM, ACS or MCP exchange record, `ecl.rule.decision-basis-one-way.v1` on each decision response that the record holds (for an MCP record, that of a decision whose `status` is `answered`), with the response's outcome and `evaluated_at` and the decision request that the record pairs with it, and the semantic rules of DCMP-2 on each DCMP-2 message that the record holds, other than the response of an MCP decision whose `status` is `invalid` (AB1-013, AC1-012, MG1-007). | `ecl.error.schema-invalid.v1` alone, or every rule finding. |
 | `envelope` | An ECL-IE-1 envelope, the vector's `schema` and the suite's trust policy (the manifest's `trust_policy_path`). | Parse; Object; Schema, and stop when it fails; decode the payload as canonical JSON; take the payload's own time, `issued_at` for DCMP-2 and `observed_at` otherwise (`ecl.error.schema-invalid.v1` when it has none); verify the envelope under the suite's trust policy at that time, with the verification-time policy `ecl.time.issued-at.v1` or `ecl.time.observed-at.v1` (IE1-023). | None, or the error code that INTEGRITY-ENVELOPE-1 assigns to the first verification check that fails. |
 | `trust-policy` | The artifact. The vector's `schema` names `trust-policy/1` and is not otherwise read. | Load the bytes as a trust policy (TRUST-POLICY-1): at most 262,144 bytes of strict JSON, then `trust-policy/1`, then the profile's conditions on keys, roles and revocations. | None, or the one error code that TRUST-POLICY-1 assigns to the first layer that fails. |
@@ -114,8 +114,8 @@ The `document-coverage` suite evaluates the action register, conformance claim,
 assessment package, mapping packet, deployment profile, evidence lifecycle
 policy, offline verification package and work intent at the `document` stage:
 strict parsing, then the schema the vector names, then, for a work intent, the
-registered extension rules whose `applies_to` names ECL-WI-1. Its passing
-vectors are the published examples in `../profiles/examples/`, or authored
+registered extension rules whose `applies_to` names ECL-WI-1 and, for an action
+register, `ecl.rule.register-declarations-consistent.v1`. Its passing vectors are the published examples in `../profiles/examples/`, or authored
 documents where none is published, and each failing vector changes one of them
 in one place. A document vector shows that a document has the form its schema
 requires; it does not show that the deployment the document describes has the
@@ -179,18 +179,30 @@ no-automatic-legal-compliance boundaries.
 
 An implementer that runs the conformance tests against its component records the
 run in the conformance report template,
-[report-template-v2.json](report-template-v2.json), whose form the schema
-[ecl-cross-implementation-report-v2.schema.json](../schemas/ecl-cross-implementation-report-v2.schema.json)
-defines: the implementation's identity and source revision, the corpus it ran,
-the capabilities it declares, one result for each vector of the shared corpus,
-the time policies above and the raw evidence that each result rests on. The
-template is a schema-valid skeleton in the `not_run` state, with example
-identities and all-zero digest placeholders; it is never a result. With the
-report goes the offline verifier's output on the implementation's own
-evidence, from the [browser verifier](../web/verifier/README.md) or from
-`ecl-verify-ts` in the [TypeScript package](../packages/ecl-ts/README.md), run
-under a trust policy that the verifier's caller supplies and never one taken
-from the evidence.
+[report-template-v3.json](report-template-v3.json), whose form the schema
+[ecl-cross-implementation-report-v3.schema.json](../schemas/ecl-cross-implementation-report-v3.schema.json)
+and [EXTERNAL_IMPLEMENTATION_PROFILE.md](EXTERNAL_IMPLEMENTATION_PROFILE.md)
+define: the implementation's identity and source revision, the corpus it ran,
+the capabilities it declares, one result for each vector of the shared corpus
+(with its observed findings and, where the vector declares an expectation, its
+observed verdict, scope, effect levels, unresolved predecessors or canonical
+digest), the time policies above and the raw evidence that each result rests
+on. The template is a schema-valid skeleton in the `not_run`
+state, with example identities and all-zero digest placeholders; it is never a
+result. Any implementation that declares at least the required corpus
+capabilities and does not import, call, vendor or translate the Python
+reference (`packages/ecl-verify`) may produce a shared-corpus report; in this
+repository, the Go (`../go/crosscheck/`) and TypeScript (`../packages/ecl-ts/`)
+runners are shared-corpus report producers and offline verifiers, whereas the
+Python package is the reference verifier and the [browser verifier](../web/verifier/README.md)
+is an offline evidence-bundle and package verifier rather than a shared-corpus
+runner. With the report goes the offline verifier's output on the
+implementation's own evidence, from the [browser verifier](../web/verifier/README.md),
+from `ecl-verify-ts` in the [TypeScript package](../packages/ecl-ts/README.md),
+from the Go verifier in `../go/crosscheck/`, or from another verifier that
+implements `evidence-bundle-verification` (and `offline-package-verification`
+when packages are submitted), run under a trust policy that the verifier's
+caller supplies and never one taken from the evidence.
 
 A conformance claim made with that report is self-declared. The implementer
 submits it to the implementers registry by the process in

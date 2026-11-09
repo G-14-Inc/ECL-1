@@ -8,8 +8,9 @@ begin
  * Parties. An enforcement point (EP) signs a decision request for an action,
  * names itself as the requested audience and sends it to a decision point
  * (DP). The DP verifies the request signature under a key the trust policy
- * registers for the request role, refuses a message identifier it has seen
- * (DCMP2-005), and answers an admit with a signed decision response that
+ * registers for the request role and permits one decision per DP identity
+ * and request identifier (stronger than DCMP2-005). It answers an admit with
+ * a signed decision response that
  * names the request by identifier and digest (DCMP2-045, DCMP2-046) and
  * carries an authorization bound to the audience (DCMP2-048), the scope
  * digest of the request identifier and action (DCMP2-044), the single-use
@@ -35,8 +36,9 @@ begin
  * one the DP signed. The trust policy is trusted: it holds at most one key
  * per principal and role, and an attacker cannot add one (TP1-001).
  *
- * Each check is an action fact constrained by a named restriction, so that a
- * deliberate flaw removes exactly one check. Select a flaw with -D=<flag>:
+ * Seven flaw variants remove a named restriction. shared_role_key instead
+ * adds Register_shared, permitting one key to serve both request and
+ * response roles. Select a flaw with -D=<flag>:
  *   skip_response_signature    the EP accepts a response without its signature
  *   shared_role_key            one key serves the request and response roles
  *   response_not_bound         the EP does not check request_id and digest
@@ -63,7 +65,8 @@ restriction RequestSignatureVerified:
 
 #ifdef dp_no_message_identity
 #else
-/* DCMP2-005: a decision point refuses a message identifier it has seen. */
+/* One decision per DP identity and request identifier. This restriction
+   also excludes identical replay, which DCMP2-005 alone does not forbid. */
 restriction UniqueRequestIdentifier:
   "All d rid #i #j. DP_Seen(d, rid) @ #i & DP_Seen(d, rid) @ #j ==> #i = #j"
 #endif
@@ -219,7 +222,9 @@ rule EP_Present:
 /* ------------------------------------------------------------------ */
 /* Lemmas                                                              */
 
-/* The honest flow is possible without any key compromise. */
+/* Existence of a request and matching execution without key compromise.
+   Execute may come from EP_Execute or EP_Present; EP_Accept is not required
+   by this lemma, so it does not establish nonvacuity of every antecedent. */
 lemma executable:
   exists-trace
   "Ex E D t p a rid w #i #j.
@@ -244,30 +249,35 @@ lemma response_authenticity:
        | (Ex #r. Reveal(D, 'response') @ #r & #r < #i)"
 
 /* Request-response binding: the response answers exactly the request the EP
-   sent, by identifier and digest, with the EP as audience. */
+   sent, by identifier and digest, with the EP as audience, unless the named
+   DP response key was revealed before acceptance. */
 lemma request_response_binding:
   "All E D rid hreq a #i.
      EP_Accept(E, D, rid, hreq, a) @ #i
      ==> (Ex t p w #j. DP_Issue(D, E, E, rid, hreq, a, t, p, w) @ #j & #j < #i)
        | (Ex #r. Reveal(D, 'response') @ #r & #r < #i)"
 
-/* No use of an authorization for another target, parameters, request or
-   audience, or with another window: every execution was admitted for exactly
-   that enforcement point, request identifier, target and parameters, inside
-   the window the decision point signed. */
+/* Every execution matches an authorization issued earlier by its named DP
+   for that audience, request identifier, target, parameters and symbolic
+   window, unless the DP response key was revealed before execution. Expiry
+   ordering is the separate EnforcementClock restriction. */
 lemma authorization_scope_and_audience:
   "All E t p a rid w D #i.
      Execute(E, t, p, a, rid, w, D) @ #i
      ==> (Ex I hreq #j. DP_Issue(D, I, E, rid, hreq, a, t, p, w) @ #j & #j < #i)
        | (Ex #r. Reveal(D, 'response') @ #r & #r < #i)"
 
-/* No replay inside the validity window: an authorization is executed once. */
+/* Two executions of an authorization naming the same DP are one event,
+   unless that DP response key is revealed anywhere in the trace. This is
+   an at-most-once property; it does not require an execution. */
 lemma single_use:
   "All E1 E2 t1 t2 p1 p2 a rid1 rid2 w1 w2 D #i #j.
      Execute(E1, t1, p1, a, rid1, w1, D) @ #i & Execute(E2, t2, p2, a, rid2, w2, D) @ #j
      ==> #i = #j | (Ex #r. Reveal(D, 'response') @ #r)"
 
-/* No replay of a request: one request identifier yields at most one effect. */
+/* At most one effect per request identifier and named DP, unless that DP
+   response key is revealed anywhere in the trace. Different DPs are outside
+   this uniqueness conclusion. */
 lemma one_effect_per_request:
   "All E1 E2 t1 t2 p1 p2 a1 a2 rid w1 w2 D #i #j.
      Execute(E1, t1, p1, a1, rid, w1, D) @ #i & Execute(E2, t2, p2, a2, rid, w2, D) @ #j

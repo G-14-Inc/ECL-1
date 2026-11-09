@@ -11,7 +11,7 @@ section 8).
 | Class | Examples | Minimum effect | Discussion before the editors decide |
 | --- | --- | --- | --- |
 | Editorial | Typo, formatting, non-normative clarification | No semantic or test change | The pull request's review |
-| Corrective | Erratum that restores already intended behavior | Erratum or patch version; regression proof | 7 days; a proposed erratum is open for comment for 30 days ([ERRATA](ERRATA.md)) |
+| Corrective | Erratum that restores already intended behavior | Erratum or patch version; regression proof | At least 30 days, with an announcement, for a proposed corrective erratum ([ERRATA](ERRATA.md)); an embargoed security fix follows SECURITY |
 | Additive | New optional field, profile, or non-critical allocation | Minor version, with positive and negative vectors | 14 days |
 | Behavioral | Changed rule, default, error, criticality, or claim meaning | Minor version, with explicit compatibility review and versioned migration | 14 days, after an announcement in the "Announcements" category of the discussions |
 | Breaking | Removed or renamed required surface, or widened or narrowed incompatible semantics | Major version; old identifiers never reused | 30 days, after an announcement |
@@ -21,7 +21,9 @@ Classification follows semantic effect, not diff size or author label. Any
 uncertainty is classified at the stricter class until resolved. A new minor or
 major version also has a public review window before it is published: 30 days
 for a minor version and 60 days for a major version
-([PUBLIC_REVIEW](PUBLIC_REVIEW.md)). Patch versions and errata have none.
+([PUBLIC_REVIEW](PUBLIC_REVIEW.md)). Patch versions and errata have no
+additional version-wide review window; their proposal comment and review
+periods still apply.
 
 ## Proposal contents
 

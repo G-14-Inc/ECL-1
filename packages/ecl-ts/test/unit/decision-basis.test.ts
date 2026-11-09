@@ -369,7 +369,7 @@ test("a verifiable-only admit rests on a verifiable input and on no missing requ
 
 test("a required judgment or actor_supplied input does not change the verifiable-only outcome", () => {
   for (const identifier of [ANOMALY, JUSTIFICATION]) {
-    const records = changed(inputs(), identifier, { required: true, status: "unavailable", reference: undefined, effect: "none" });
+    const records = changed(inputs(), identifier, { required: true, status: "unavailable", reference: undefined, effect: "restricts" });
     for (const outcome of ["deny", "hold", "challenge"]) {
       const value = withBasis(responseFor(outcome), records);
       basisValue(value)["verifiable_only_outcome"] = "admit";

@@ -1,0 +1,88 @@
+{
+  "action": {
+    "action_class": "ecl.action.ai-proposed-operation.v1",
+    "action_id": "https://externalcontrollayer.ai/ns/action/sha256/a71319f67ab68b78388bfaed1a7eb03fadafe9c3139569947d4aa23bca97ac5d",
+    "operation": "records.update",
+    "parameters": {
+      "patch": {
+        "status": "closed"
+      },
+      "record_id": "r-1"
+    },
+    "parameters_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "f65639bb433b900ea16ab77da6949d20c13204685a6365257d84de18eb5b251f"
+    },
+    "required_evidence_profile": "ecl.evidence.standard.v1",
+    "risk_class": "ecl.risk.high.v1",
+    "target": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "fca01a85827b7275e118f35d09638a73fd679279696fda729b59399d6ebbc8e5"
+      },
+      "uri": "https://externalcontrollayer.ai/ns/target/sha256/fca01a85827b7275e118f35d09638a73fd679279696fda729b59399d6ebbc8e5"
+    }
+  },
+  "actor": {
+    "id": "urn:example:agent:vector",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.workload.v1"
+  },
+  "authority_request": {
+    "audience": "urn:example:ep:test",
+    "requested_validity_seconds": 15,
+    "use_policy": "single_use"
+  },
+  "constraints": {},
+  "delegation_chain": [],
+  "expires_at": "2026-09-29T10:00:30.000000Z",
+  "extensions": [],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:vector-ed",
+      "urn:example:key:error-contract-b"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:vector-ed",
+      "urn:example:key:error-contract-b"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "8ba1938f9f43005d04c16b90f2160004118d515856b20c3b8f0410fa7c2074b1"
+      },
+      "epoch": 1,
+      "id": "urn:example:trust-policy:vectors",
+      "version": "1"
+    },
+    "verification_time_policy": "ecl.time.issued-at.v1"
+  },
+  "issued_at": "2026-09-29T10:00:00.000000Z",
+  "issuer": {
+    "id": "urn:example:agent:vector",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.workload.v1"
+  },
+  "message_id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27",
+  "message_type": "decision_request",
+  "protocol": "DCMP-2",
+  "schema_version": "2.0",
+  "subject": {
+    "id": "urn:example:tenant:test-1",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.tenant.v1"
+  },
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [],
+    "root_trace_id": "urn:example:trace:events-1",
+    "sequence": 11,
+    "workflow_id": "urn:example:workflow:events-1"
+  }
+}

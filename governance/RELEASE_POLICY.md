@@ -6,11 +6,10 @@ withdrawn or superseded.
 
 ## Version 1.0 release exception
 
-On 5 November 2026, the maintainer waived the two-person release rebuild and
-checklist signatures, and externally exercised email and GitHub private
-security-intake tests, as prepublication conditions for Version 1.0. Those
-activities have not been completed for this release and are not represented
-as passed. This exception takes precedence over the corresponding conditions
+On 5 November 2026, the maintainer waived these prepublication conditions for
+Version 1.0: the two-person release rebuild and checklist signatures, and the
+externally exercised email and GitHub private security-intake tests. Those
+activities were not completed before publication. This exception takes precedence over the corresponding conditions
 below for Version 1.0 only.
 
 The exception does not change the standard's normative requirements,
@@ -18,6 +17,33 @@ implementation-assessment obligations, technical test results, review-status
 disclosures or release-artifact integrity checks. Publication remains the
 maintainer's decision. The general requirements below continue to apply to
 later releases unless changed through the published change process.
+
+## Correction-release exception: v1.0.1
+
+On 9 November 2026, Robert F. Tilley Jr., for G-14, Inc., authorized a
+one-time process exception for correction release `v1.0.1` of ECL-1
+Version 1.0 and its Version 1 reference edition.
+The exception permits its preparation and publication without completing:
+
+- the separate second-person review of corrective changes;
+- the two-person release rebuild and both release-checklist signatures;
+- the corrective-erratum comment period and the charter-change discussion
+  period for the corrections included in this release; and
+- the externally exercised email and GitHub private security-intake tests.
+
+For `v1.0.1` only, this exception takes precedence over the corresponding
+conditions of this policy, [CHANGE_CONTROL](CHANGE_CONTROL.md),
+[ERRATA](ERRATA.md), and [CHARTER](CHARTER.md) section 16 for the charter
+classification correction identified in the release notes.
+
+These activities are waived as prepublication conditions for this correction
+release; the exception records no successful completion of them. The exception
+itself alters no normative technical requirements, implementation-assessment duties,
+recorded test results, compatibility obligations or the evidence required for
+a conformance claim. It preserves the original release and its disclosures.
+The general review and release rules continue to apply to later releases.
+The final release manifest identifies the exact corrected files; publication
+still requires the maintainer's authorization of those artifacts.
 
 ## Versions and release states
 

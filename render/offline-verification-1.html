@@ -150,15 +150,17 @@ never the check that refuses an archive.</p>
 stage is <code>package</code>, and <code>conformance/README.md</code> states its input, steps and
 output. Its capability, <code>offline-package-verification</code>, is optional, and an
 implementation that declares it also declares <code>evidence-bundle-verification</code>.
-The offline verifier implements the capability: <code>verifyOfflinePackage</code> of the
-TypeScript package <code>packages/ecl-ts</code>, which the browser verifier also uses, and
-the command <code>ecl-verify-ts</code>, which verifies a package as well as a bundle. A
-file that begins with the bytes <code>PK</code> is read as a package of at most 1 GiB, the
-command's declared archive limit, and is verified under the same inputs and
-reported with the same output and exit statuses as a bundle. A larger file is a
-usage error (exit status 2): the command refuses to read it, so it gets no
-verdict, and in particular not <code>invalid</code> with
-<code>ecl.error.resource-limit-exceeded.v1</code>.</p>
+The Python, Go and TypeScript verifiers implement <code>offline-package-verification</code>;
+the browser uses the TypeScript <code>verifyOfflinePackage</code> implementation. Their
+command interfaces also verify offline packages. Each command treats a file
+that begins with the bytes <code>PK</code> as a package, with a declared archive limit of
+1 GiB. Under valid caller inputs, a package above this limit is reported as
+<code>invalid</code> (exit status 1), with <code>ecl.error.resource-limit-exceeded.v1</code>, without
+loading the archive into memory. A file that grows past the limit while being
+read receives the same verdict. An unreadable file, malformed caller trust
+policy or register, or invalid evaluation time remains a usage error (exit
+status 2), without a verdict. Other packages use the same caller inputs,
+report format and exit statuses as an evidence bundle.</p>
 <h2 id="air-gap-transfer">Air-gap transfer</h2>
 <p>Transfer media custody is evidence distinct from package integrity. A transfer
 record binds source package digest, sender, receiver, media or channel
@@ -174,8 +176,8 @@ an authorization to execute, or evidence that a later environment retained the
 same state. Those claims require their own current evidence and authority.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/OFFLINE-VERIFICATION-1.md</code>, SHA-256 <code>fcf4ab18cca8fb47dd601b550e066ff52df2868b35859c4242bbe85027f2e278</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>profiles/OFFLINE-VERIFICATION-1.md</code>, SHA-256 <code>2b58c3048e7757af89a363eaf9f8017291fc2335e6d6c0ccd308c49e981e875b</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

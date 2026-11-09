@@ -22,8 +22,12 @@ legal decision operates. Assessors examine the controls and keep the results.
 
 For each applicable case, inspect the source's actual privileges and validation,
 try an unauthorized assertion or transition, and record the source, scope,
-freshness and completeness on which the policy relies. The wire-level one-way
-rule still prevents actor assertions and judgments from relaxing an outcome.
+freshness and completeness on which the policy relies. Wire-level checks
+reject a record that labels an `actor_supplied` or `judgment` input as
+`supports`. When `verifiable_only_outcome` is recorded, they also compare that
+outcome category with the response's. Establishing an input's actual source
+classification and the full authorization comparison requires the deployment
+evidence described above.
 
 ## Human approval
 

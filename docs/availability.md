@@ -4,10 +4,10 @@ This page is informative. It adds no requirement, and it recommends nothing
 that the normative text forbids; where the normative text leaves a choice to the
 deployment or to its assessor, the page says so.
 
-ECL-1 requires that a failure ends in denial, restricted mode or halt, never in
-the action going ahead: missing or invalid required proof fails closed
-(TS1-018, TS1-032), and the Enforcement Layer fails closed on control-path
-ambiguity, policy ambiguity or integrity failure (ECL1N-0043). A deployment that answers every
+ECL-1 requires denial, restricted mode or halt when required proof is missing
+or invalid (TS1-018, TS1-032), or when the Enforcement Layer encounters
+control-path ambiguity, policy ambiguity or integrity failure (ECL1N-0043).
+Advisory dependencies follow the declared rules in section 2. A deployment that answers every
 fault by refusing everything becomes fragile: the outage of one decision
 service stops every consequential action, including actions whose proof is
 intact. The four patterns below keep a deployment useful during faults without
@@ -50,11 +50,13 @@ the rules when:
   halt acknowledgment bound and the revocation propagation deadline are
   declared separately (TS1-035) and hold for the slowest instance.
 
-The ECL incident replay suite's outage steps (`record-1-knight-2012` and
-`record-17-operator-2025` in `../conformance/scenarios/`) show the behavior that
-remains when every decision point is unavailable: no effect, and restricted
-mode for every class that the decision service decides until it answers again
-(the second row of the table in section 2, ECL1N-0191).
+The ECL incident replay suite's added outage steps (`record-1-knight-2012` and
+`record-17-operator-2025` in `../conformance/scenarios/`) specify expected
+behavior when the decision service is unavailable: no effect, and restricted
+mode for each class that requires it. Knight has one such class; Operator has
+two and illustrates the shared-dependency case in the second row of the table
+in section 2 (ECL1N-0191). Recovery requires fresh proof after the fault and any
+required lifting authorization to be recorded (ECL1N-0193).
 
 ## 2. Restricted mode scoped by action class
 
@@ -78,8 +80,9 @@ fail-closed (TS1-017), it never covers a dependency whose loss removes required
 proof (TS1-033), and a deployment that claims STRICT-FAILURE-1 declares none
 (SF1-001, SF1-002). Triggers that concern the whole deployment still bring at
 least the state that ECL1N-0146 gives them, in its order of precedence:
-emergency halt for a critical integrity failure or an emergency control
-activation, and restricted mode when cached state expires or the degraded-mode
+emergency halt for a critical integrity failure, an emergency control
+activation, or operator safety requiring cessation, and restricted mode when
+cached state expires or the degraded-mode
 window is exceeded (ECL1N-0029, ECL1N-0146). Within its scope, restricted mode
 denies every new consequential action except explicit safe-state or
 containment actions (ECL1N-0103).
@@ -96,14 +99,16 @@ when the scope of a loss cannot be established.
 |---|---|---|
 | Required proof unobtainable for one action class only | Restricted mode for that class; each other class continues only with its own required proof and controls intact | The system of record behind payments is unreachable: payments are refused, and calendar changes continue |
 | A dependency that several classes require fails or goes stale | Restricted mode for every class that requires it, directly or through other dependencies | The decision service stops answering: every class it decides is restricted |
-| Critical integrity failure or emergency control activation | The state that ECL1N-0146 gives it, for the whole deployment; no class scope or local exception applies | The enforcement point's policy bundle has been altered: emergency halt |
+| Critical integrity failure, emergency control activation, or operator safety requiring cessation | The state that ECL1N-0146 gives it, for the whole deployment; no class scope or local exception applies | The enforcement point's policy bundle has been altered, or an operator-safety condition requires cessation: emergency halt |
 | A loss of required proof whose scope cannot be established | Restricted mode for the enclosing scope that the dependency model declares, or for the whole deployment where it declares none | A shared cache of state witnesses fails, and no one can tell whose witnesses it held |
 
 A restriction ends for a class only when its required proof has been obtained
 again after the fault, not taken from a cache made before it, and the
 authorization that the mode definitions declare for lifting it is recorded; a
-deployment-wide state brought by an integrity failure or an emergency
-activation ends only by a recorded control action (ECL1N-0193). A single action
+deployment-wide state brought by an integrity failure, an emergency
+activation, or operator safety requiring cessation ends only by a recorded
+control action, after any operator-safety condition has been resolved and its
+resolution recorded (ECL1N-0193). A single action
 whose required proof is missing, such as one whose before-release obligation is
 unproven, is refused whatever the mode (ECL1N-0187).
 
@@ -155,7 +160,7 @@ within the rules when:
 
 Each claim publishes a declared timing case with three bounds: connected
 revocation propagation, maximum offline control-state staleness before
-restricted mode or halt, and the delay from the first approved transfer path to
+restricted mode or halt, and the delay from the first availability of an approved transfer path to
 completed evidence export (ECL1N-0097). Each bound names its observation
 points, its objective type, its clock, and the load and fault conditions under
 which it holds (TS1-034); the default values by level are in ECL1N-0098. A
@@ -172,10 +177,9 @@ safe-state rule when a gate exceeds its deadline (TS1-009).
 The authorization validity window bounds what a revocation can still miss. The
 claim declares a maximum authorization validity that producer, consumer and
 verifier each enforce (TE1-009), and after a control change is acknowledged no
-effect that depends on the revoked authority may commit (TE1-005). An
-enforcement point that checks its control state at release, rather than relying
-on the authorization alone, closes the window between a revocation and the
-expiry of authorizations issued before it. Either way, the halts, quarantines
+effect that depends on the revoked authority may commit (TE1-005). Checking current local control state at release prevents use after the
+revocation has reached the enforcement point; the declared propagation
+deadline still bounds the preceding interval. In either case, the halts, quarantines
 and revocations that the declared timing case requires to have reached the
 enforcement point are among the checks it makes at the release boundary
 (ECL1N-0186).

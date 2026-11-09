@@ -12,9 +12,10 @@ not the copy. The exporter sits after the evidence path: it reads objects once
 they are recorded, and its failure changes no decision and blocks no evidence.
 Each record carries the identifiers of the request, response and action it
 belongs to and, when the deployment holds an export key, a digest of the object
-keyed with that key, so that a consumer can match the record to the bundle
-without the telemetry letting its readers test guesses about what the object
-holds.
+keyed with that key, so that a consumer holding the key can match the record to
+the bundle. Readers without the export key cannot recompute those keyed digest
+fields to test guesses; other exported identifiers and metadata retain the
+risks described below.
 
 The profile adds requirements to a claim that declares it. It removes none of
 the core requirements or of the requirements of DCMP-2 and EBMP-2.
@@ -132,11 +133,14 @@ execution event carries, lets a reader of the telemetry who can list the
 possible values, such as an amount or a short list of accounts, compute the
 digest of each candidate and confirm which one was used. A digest keyed with a
 secret that the telemetry's readers do not hold still lets a consumer that holds
-the key match a record to the bundle, and it gives everyone else nothing to
-compare a guess with. The digests inside the signed evidence bundle are not
-keyed and do not change. Replacing the export key changes its identifier, so a
-consumer knows which key a record needs. An exporter without an export key
-exports no digest, and a consumer then matches records to the bundle by their
+the key match a record to the bundle. A reader without that key cannot compare
+a guessed object by recomputing the keyed digest. The digests inside the signed evidence bundle are not
+keyed and do not change. When replacing an export key, give the new key an
+identifier that no earlier export key of the deployment has used, so that
+retained records continue to identify the key they require. Changing key
+material does not itself change the identifier. An exporter without an export key
+exports no object or parameter digest; the unkeyed policy digest required by
+OE1-004 remains. A consumer then matches records to the bundle by their
 identifiers.
 
 ## Attribute table
@@ -192,7 +196,7 @@ that the row names and that holds the source member.
 | `ecl.policy.id` | decision response | `policy.id` |
 | `ecl.policy.version` | decision response | `policy.version` |
 | `ecl.policy.digest` | decision response | the value of `policy.digest` |
-| `ecl.authorization.id` | admit response; authority events | `authorization.authorization_id` or `authorization_id` |
+| `ecl.authorization.id` | admit response; authority events | `authorization.authorization_id` or `event.authorization_id` |
 | `ecl.event.kind` | EBMP-2 | `event.kind` |
 | `ecl.event.state` | EBMP-2 | `event.state` |
 | `ecl.event.decision_id` | decision events; execution events | `event.decision.uri` |

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -46,6 +47,36 @@ func TestCommandLimitRefusalsNameTheRegisteredCode(t *testing.T) {
 	status := run([]string{write("at-limit.json", at), "--trust-policy", policy, "--now", "2026-10-01T00:00:00Z"}, &stdout, &stderr)
 	if status != 1 || stderr.Len() != 0 || !strings.HasPrefix(stdout.String(), "verdict: invalid") {
 		t.Errorf("bundle at the limit: %d %q %q", status, stdout.String(), stderr.String())
+	}
+}
+
+// IE1-022: a package-byte limit is an invalid verdict, not a usage error.
+func TestArchiveByteLimitIsAVerdict(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "over-limit.zip")
+	if err := os.WriteFile(file, []byte("PK"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(file, 1024*1024*1024+1); err != nil {
+		t.Fatal(err)
+	}
+	policy := path("conformance/suites/offline-package/trust-policy.json")
+	var stdout, stderr bytes.Buffer
+	status := run([]string{file, "--trust-policy", policy, "--now", "2026-10-01T00:00:00Z", "--json"}, &stdout, &stderr)
+	var report map[string]any
+	if err := json.Unmarshal(stdout.Bytes(), &report); err != nil {
+		t.Fatal(err, stderr.String())
+	}
+	if status != 1 || stderr.Len() != 0 || report["verdict"] != "invalid" || report["primary"] != evidence.ResourceLimitExceeded {
+		t.Fatalf("%d %s %s", status, stdout.String(), stderr.String())
+	}
+	if len(report["scope"].(map[string]any)["established"].([]any)) != 0 {
+		t.Fatal("oversized archive established a verification claim")
+	}
+	stdout.Reset()
+	stderr.Reset()
+	status = run([]string{file, "--trust-policy", policy, "--now", "not-a-time", "--json"}, &stdout, &stderr)
+	if status != 2 || stdout.Len() != 0 || !strings.Contains(stderr.String(), "invalid evaluation time or option") {
+		t.Fatalf("invalid caller time: %d %s %s", status, stdout.String(), stderr.String())
 	}
 }
 

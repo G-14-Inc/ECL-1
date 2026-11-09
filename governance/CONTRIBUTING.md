@@ -39,8 +39,14 @@ the terms of every contribution and what a contribution needs.
   International license for text and documentation, and the Apache License,
   Version 2.0 for code and machine-readable artifacts
   ([LICENSING](../LICENSING.md), [LICENSE-MATRIX](../licenses/LICENSE-MATRIX.md)).
-  A new file takes the license of its class. The contributor keeps the
-  copyright in the contribution.
+  A new file takes the license of its class. New requirement or other normative
+  source text submitted under these terms is also offered under Apache-2.0
+  when reproduced in generated machine-readable artifacts, as described in
+  [LICENSING](../LICENSING.md#contributions). The contributor has authority
+  to make both grants; third-party material is disclosed under its own terms.
+  Earlier contributions are not given this additional license without the
+  rights holder's express confirmation. The contributor keeps the copyright
+  in the contribution.
 - **The patent pledge.** By contributing, the contributor makes for its
   contributions the same patent pledge that G-14, Inc. makes for ECL-1
   ([PATENTS](../PATENTS.md), section 7).

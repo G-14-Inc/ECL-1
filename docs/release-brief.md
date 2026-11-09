@@ -27,8 +27,8 @@ the version actually obtained.
 
 ## How it relates to existing work
 
-The [binding guide](bindings.md) explains ECL-1's profiles for AuthZEN, AARM,
-ACS, MCP, OAuth and OpenTelemetry. Their pinned versions and residual duties
+The [AuthZEN guide](authzen-binding.md) explains that profile, and the
+[binding guide](bindings.md) covers AARM, ACS, MCP, OAuth and OpenTelemetry. Their pinned versions and residual duties
 matter. These relationships establish no endorsement, universal superiority
 or automatic conformance to the other framework.
 

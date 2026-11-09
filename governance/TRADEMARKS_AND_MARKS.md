@@ -18,8 +18,8 @@ product. No product, G-14's included, is described as "ECL-1".
 ## Conformance claims
 
 A conformance claim names the version, the level and the claim boundary, with
-the other elements that Section 7.7 of the standard requires, and it is
-self-declared unless an assessment of it is listed
+the other elements that Section 7.7 of the standard requires. It remains
+self-declared; any listed assessment is the assessor's separate statement
 ([CONFORMANCE_CLAIMS](CONFORMANCE_CLAIMS.md)). A statement such as
 "ECL-1 compliant", which omits those elements, is not a valid claim
 (Section 7.7).
@@ -53,15 +53,16 @@ ECL-1 has no certification mark, and the maintainer certifies nothing. A
 United States certification mark cannot be held by a party that produces or
 markets the goods or services that the mark certifies, and the charter
 discloses the maintainer's interests ([CHARTER](CHARTER.md), section 12); a
-certification program would need a separate certifying body. Assessments are
-made by assessors outside G-14 under
-[ASSESSOR_INDEPENDENCE](ASSESSOR_INDEPENDENCE.md). The implementers registry
+certification program would need a separate certifying body. Assessments follow
+[ASSESSOR_INDEPENDENCE](ASSESSOR_INDEPENDENCE.md) and the level-specific
+requirements of core Sections 7.8 and 7.11. At L1, an internal reviewer who is
+not the primary implementer may perform the assessment (ECL1N-0148). The implementers registry
 lists self-declared claims, and a listing is not a mark.
 
 ## The licenses and marks
 
 Neither the Creative Commons Attribution 4.0 International license nor the
 Apache License, Version 2.0 grants rights in the name "ECL-1" or in any mark
-([LICENSING](../LICENSING.md)). Section 6 of the Apache License permits only
-the reasonable and customary use of names that describing the origin of the
-work and reproducing the content of the `NOTICE` file require.
+([LICENSING](../LICENSING.md)). Apache-2.0 Section 6 provides no general
+trademark permission. Its exception concerns reasonable and customary
+identification of the work's origin and reproduction of the `NOTICE` file.

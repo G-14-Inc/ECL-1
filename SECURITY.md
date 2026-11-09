@@ -14,8 +14,10 @@ expected instead. Keep credentials and other sensitive material out of the
 report, or say what you can share privately.
 
 [governance/SECURITY.md](governance/SECURITY.md) describes how a report is
-handled and disclosed. A correction to a published text is issued as an
-erratum ([governance/ERRATA.md](governance/ERRATA.md)).
+handled and disclosed. A correction to published text is issued as an erratum
+or, when it changes obligations or behavior, in a new version under
+[governance/ERRATA.md](governance/ERRATA.md) and
+[governance/CHANGE_CONTROL.md](governance/CHANGE_CONTROL.md).
 
 A problem in a product that implements ECL-1 goes to that product's supplier.
 

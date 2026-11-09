@@ -20,6 +20,7 @@ checks and the results.
 from __future__ import annotations
 
 import argparse
+import datetime
 import hashlib
 import json
 import os
@@ -40,9 +41,10 @@ PROTOCOL = FORMAL / "protocol"
 THEORY = "DCMP2_Binding.spthy"
 RESULTS = FORMAL / "results.json"
 README = FORMAL / "README.md"
-RECORD_SCHEMA = "ecl_formal_results_v1"
+RECORD_SCHEMA = "ecl_formal_results_v2"
 JAVA_HEAP = "-Xmx1500m"
 DEFAULT_TIMEOUT = 900
+DERIVCHECK_TIMEOUT = 0  # Historical command; positive seconds enable derivation diagnostics.
 START = "<!-- formal:results -->"
 END = "<!-- /formal:results -->"
 
@@ -158,6 +160,14 @@ class Result:
     lemmas: dict[str, str] = field(default_factory=dict)
     steps: dict[str, int] = field(default_factory=dict)
     inputs: dict[str, str] = field(default_factory=dict)
+    started_utc: str | None = None
+    finished_utc: str | None = None
+    java: str | None = None
+    runner_sha256: str | None = None
+    command: list[str] = field(default_factory=list)
+    returncode: int | None = None
+    output_sha256: str | None = None
+    log_file: str | None = None
 
 
 @dataclass(frozen=True)
@@ -211,9 +221,49 @@ def tlc_command(tools: Tools, name: str, workdir: Path) -> list[str]:
 
 
 def checked_liveness(name: str) -> list[str]:
-    """The liveness properties that configuration `name` checks."""
+    """Liveness names in PROPERTY/PROPERTIES declarations, excluding comments."""
     text = (TLA / "configs" / f"{name}.cfg").read_text(encoding="utf-8")
-    return [word for word in re.findall(r"\w+", text) if word in LIVENESS]
+    clean: list[str] = []
+    index, depth = 0, 0
+    while index < len(text):
+        if not depth and text.startswith("\\*", index):
+            end = text.find("\n", index)
+            index = len(text) if end < 0 else end
+        elif not depth and text[index] == '"':
+            # A quoted constant can contain comment delimiters or property names.
+            index += 1
+            while index < len(text):
+                if text[index] == "\\":
+                    index += 2
+                elif text[index] == '"':
+                    index += 1
+                    break
+                else:
+                    index += 1
+            clean.append(" ")
+        elif text.startswith("(*", index):
+            depth += 1
+            index += 2
+            clean.append(" ")
+        elif depth and text.startswith("*)", index):
+            depth -= 1
+            index += 2
+        else:
+            if not depth:
+                clean.append(text[index])
+            index += 1
+    keywords = {
+        "CONSTANT", "CONSTANTS", "INIT", "NEXT", "SPECIFICATION", "INVARIANT", "INVARIANTS",
+        "PROPERTY", "PROPERTIES", "CONSTRAINT", "CONSTRAINTS", "ACTION_CONSTRAINT",
+        "ACTION_CONSTRAINTS", "SYMMETRY", "VIEW", "ALIAS", "CHECK_DEADLOCK", "POSTCONDITION",
+    }
+    active, names = False, []
+    for word in re.findall(r"\w+", "".join(clean)):
+        if word in keywords:
+            active = word in {"PROPERTY", "PROPERTIES"}
+        elif active and word in LIVENESS and word not in names:
+            names.append(word)
+    return names
 
 
 def parse_tlc(name: str, expected: str, output: str, seconds: float) -> Result:
@@ -238,31 +288,75 @@ def parse_tlc(name: str, expected: str, output: str, seconds: float) -> Result:
     return result
 
 
-def run_tlc(tools: Tools, name: str, timeout: int, workdir: Path) -> Result:
-    expected = TLC_CHECKS[name]
+def execute_check(
+    tools: Tools, name: str, timeout: int, command: list[str], cwd: Path,
+    *, environment: dict[str, str] | None = None, log_dir: Path | None = None,
+) -> Result:
+    """Bind successful, failed and timed-out checks to the bytes present before execution."""
+    tlc = name in TLC_CHECKS
+    lemma = None if tlc else TAMARIN_CHECKS[name][1]
+    expected = TLC_CHECKS[name] if tlc else (
+        "all verified" if lemma is None else f"{lemma} falsified"
+    )
+    digests = inputs(name)
+    runner_digest = sha256(Path(__file__))
+    java = java_version(tools.java) if tlc and tools.java else None
+    started = datetime.datetime.now(datetime.timezone.utc).isoformat()
     start = time.monotonic()
+    returncode = None
     try:
-        # The command is this module's own: the pinned tools on the committed configurations.
         completed = subprocess.run(  # noqa: S603
-            tlc_command(tools, name, workdir),
-            cwd=TLA,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
+            command, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+            env=environment, check=False,
         )
         output = completed.stdout + completed.stderr
-    except subprocess.TimeoutExpired:
-        return Result(name, "tlc", expected, "timeout", False, float(timeout))
-    result = parse_tlc(name, expected, output, time.monotonic() - start)
-    result.inputs = inputs(name)
+        returncode = completed.returncode
+        seconds = time.monotonic() - start
+        result = parse_tlc(name, expected, output, seconds) if tlc else parse_tamarin(
+            name, lemma, output, seconds
+        )
+        # TLC uses nonzero status for expected counterexamples. A success banner
+        # accompanying abnormal exit is not a successful exhaustive check.
+        if returncode != 0 and (not tlc or result.observed == "pass"):
+            result.observed, result.passed = "tool-error", False
+    except subprocess.TimeoutExpired as error:
+        def decoded(value: str | bytes | None) -> str:
+            return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
+        output = decoded(error.stdout) + decoded(error.stderr)
+        result = Result(name, "tlc" if tlc else "tamarin", expected, "timeout", False,
+                        round(time.monotonic() - start, 1))
+    except OSError as error:
+        output = f"{type(error).__name__}: {error}\n"
+        result = Result(name, "tlc" if tlc else "tamarin", expected, "tool-error", False,
+                        round(time.monotonic() - start, 1))
+    result.inputs = digests
+    if inputs(name) != digests or sha256(Path(__file__)) != runner_digest:
+        result.observed, result.passed = "inputs-changed", False
+    result.started_utc, result.finished_utc = started, datetime.datetime.now(datetime.timezone.utc).isoformat()
+    result.java, result.runner_sha256 = java, runner_digest
+    result.command, result.returncode = command, returncode
+    result.output_sha256 = hashlib.sha256(output.encode("utf-8")).hexdigest()
+    if log_dir is not None:
+        log = log_dir / f"{name}.log"
+        with log.open("x", encoding="utf-8") as stream:
+            stream.write(output)
+        result.log_file = log.name
     return result
 
 
-def tamarin_command(tools: Tools, flag: str | None, lemma: str | None) -> list[str]:
+def run_tlc(
+    tools: Tools, name: str, timeout: int, workdir: Path, log_dir: Path | None = None,
+) -> Result:
+    return execute_check(tools, name, timeout, tlc_command(tools, name, workdir), TLA,
+                         log_dir=log_dir)
+
+
+def tamarin_command(
+    tools: Tools, flag: str | None, lemma: str | None, derivcheck: int = DERIVCHECK_TIMEOUT,
+) -> list[str]:
     if tools.tamarin is None:
         raise ValueError("Tamarin checks need tamarin-prover")
-    command = [str(tools.tamarin), "--derivcheck-timeout=0"]
+    command = [str(tools.tamarin), f"--derivcheck-timeout={derivcheck}"]
     command.append("--prove" if lemma is None else f"--prove={lemma}")
     if flag is not None:
         command.append(f"-D={flag}")
@@ -295,45 +389,33 @@ def parse_tamarin(name: str, lemma: str | None, output: str, seconds: float) -> 
     return result
 
 
-def run_tamarin(tools: Tools, name: str, timeout: int) -> Result:
+def run_tamarin(
+    tools: Tools, name: str, timeout: int, derivcheck: int = DERIVCHECK_TIMEOUT,
+    log_dir: Path | None = None,
+) -> Result:
     flag, lemma = TAMARIN_CHECKS[name]
     environment = dict(os.environ, LC_ALL="C.UTF-8", LANG="C.UTF-8")
     if tools.maude_dir is not None:
         environment["PATH"] = f"{tools.maude_dir}{os.pathsep}{environment.get('PATH', '')}"
-    start = time.monotonic()
-    try:
-        completed = subprocess.run(  # noqa: S603
-            tamarin_command(tools, flag, lemma),
-            cwd=PROTOCOL,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            env=environment,
-            check=False,
-        )
-        output = completed.stdout + completed.stderr
-    except subprocess.TimeoutExpired:
-        expected = "all verified" if lemma is None else f"{lemma} falsified"
-        return Result(name, "tamarin", expected, "timeout", False, float(timeout))
-    result = parse_tamarin(name, lemma, output, time.monotonic() - start)
-    result.inputs = inputs(name)
-    return result
+    return execute_check(tools, name, timeout, tamarin_command(tools, flag, lemma, derivcheck),
+                         PROTOCOL, environment=environment, log_dir=log_dir)
 
 
 def find_tools(arguments: argparse.Namespace) -> Tools:
     def path(option: str | None, variable: str, command: str | None = None) -> Path | None:
         value = option or os.environ.get(variable)
         if value:
-            return Path(value)
+            return Path(value).resolve()
         found = shutil.which(command) if command else None
-        return Path(found) if found else None
+        return Path(found).resolve() if found else None
 
     tamarin = path(arguments.tamarin, "ECL_TAMARIN_PROVER", "tamarin-prover")
     maude_dir = path(arguments.maude_dir, "ECL_MAUDE_DIR")
     if maude_dir is None and (maude := shutil.which("maude")):
-        maude_dir = Path(maude).parent
+        maude_dir = Path(maude).resolve().parent
+    java = shutil.which(arguments.java or "java")
     return Tools(
-        java=arguments.java or shutil.which("java"),
+        java=str(Path(java).resolve()) if java else None,
         tla2tools=path(arguments.tla2tools, "ECL_TLA2TOOLS_JAR"),
         tamarin=tamarin,
         maude_dir=maude_dir,
@@ -345,18 +427,20 @@ def pin_problems(tools: Tools, *, tlc: bool, tamarin: bool) -> list[str]:
     problems: list[str] = []
     if tlc:
         if tools.java is None:
-            problems.append("java (21 or later) is not on PATH")
+            problems.append("java not found: pass an executable --java or put java on PATH")
+        elif shutil.which(tools.java) is None:
+            problems.append(f"java not found: {tools.java} is not executable")
         if tools.tla2tools is None or not tools.tla2tools.is_file():
             problems.append("tla2tools.jar not found: pass --tla2tools or set ECL_TLA2TOOLS_JAR")
         elif sha256(tools.tla2tools) != PINS["tla2tools"]["sha256"]:
             problems.append(f"{tools.tla2tools.name} is not the pinned tla2tools.jar 1.7.4")
     if tamarin:
-        if tools.tamarin is None or not tools.tamarin.is_file():
+        if tools.tamarin is None or not tools.tamarin.is_file() or not os.access(tools.tamarin, os.X_OK):
             problems.append("tamarin-prover not found: pass --tamarin or set ECL_TAMARIN_PROVER")
         elif sha256(tools.tamarin) != PINS["tamarin"]["sha256"]:
             problems.append("tamarin-prover is not the pinned 1.12.0 Linux binary")
         maude = tools.maude_dir / "maude" if tools.maude_dir is not None else None
-        if maude is None or not maude.is_file():
+        if maude is None or not maude.is_file() or not os.access(maude, os.X_OK):
             problems.append("maude not found: pass --maude-dir or set ECL_MAUDE_DIR")
         elif sha256(maude) != PINS["maude"]["sha256"]:
             problems.append("maude is not the pinned 3.5.1 Linux binary")
@@ -375,37 +459,66 @@ def java_version(java: str) -> str | None:
     return match.group(1) if match else None
 
 
-def write_record(path: Path, results: list[Result], tools: Tools, timeout: int) -> None:
-    """Write `results` to `path`, keeping the results of other checks from an existing record."""
-    settings = {"java_heap": JAVA_HEAP, "tlc_workers": 1, "timeout_seconds": timeout}
-    pins = {
-        name: {key: value for key, value in pin.items() if key != "source"}
-        for name, pin in PINS.items()
-    }
-    kept: list[dict[str, object]] = []
-    java = java_version(tools.java) if tools.java else None
-    if path.exists():
-        earlier = json.loads(path.read_text(encoding="utf-8"))
-        if earlier.get("schema_version") != RECORD_SCHEMA:
-            raise ValueError(f"{path} is not a formal results record")
-        if earlier.get("settings") != settings or earlier.get("tools") != pins:
-            raise ValueError(f"{path} was recorded with other settings or tools; remove it first")
-        ran = {result.name for result in results}
-        kept = [check for check in earlier["checks"] if check["name"] not in ran]
-        java = java if any(result.tool == "tlc" for result in results) else earlier.get("java")
+def record_settings(timeout: int, derivcheck: int) -> dict[str, object]:
+    return {"java_heap": JAVA_HEAP, "tlc_workers": 1, "timeout_seconds": timeout,
+            "derivcheck_timeout": derivcheck}
+
+
+def record_pins() -> dict[str, dict[str, str]]:
+    return {name: {key: value for key, value in pin.items() if key != "source"}
+            for name, pin in PINS.items()}
+
+
+def retained_checks(path: Path, names: set[str], timeout: int, derivcheck: int) -> list[dict[str, Any]]:
+    """Refuse legacy, incompatible or stale retained evidence before running new work."""
+    if not path.exists():
+        return []
+    earlier = json.loads(path.read_text(encoding="utf-8"))
+    if earlier.get("schema_version") != RECORD_SCHEMA:
+        raise ValueError(f"{path} is not a {RECORD_SCHEMA} record; preserve it and use a new file")
+    if earlier.get("settings") != record_settings(timeout, derivcheck) or earlier.get("tools") != record_pins():
+        raise ValueError(f"{path} was recorded with other settings or tools; use a new file")
+    checks = earlier["checks"]
+    if len({check["name"] for check in checks}) != len(checks):
+        raise ValueError(f"{path} contains duplicate checks")
+    kept = [check for check in checks if check["name"] not in names]
+    for check in kept:
+        name = check["name"]
+        if name not in TLC_CHECKS and name not in TAMARIN_CHECKS:
+            raise ValueError(f"{path} contains an unknown check: {name}")
+        expected = TLC_CHECKS[name] if name in TLC_CHECKS else (
+            "all verified" if TAMARIN_CHECKS[name][1] is None
+            else f"{TAMARIN_CHECKS[name][1]} falsified"
+        )
+        if check.get("expected") != expected or check.get("tool") != (
+            "tlc" if name in TLC_CHECKS else "tamarin"
+        ):
+            raise ValueError(f"{path} retains {name} under another expectation or tool; rerun it")
+        if check.get("inputs") != inputs(name):
+            raise ValueError(f"{path} contains stale retained inputs for {name}; rerun it or use a new file")
+        if not all(check.get(key) for key in ("started_utc", "finished_utc", "runner_sha256", "output_sha256", "command")):
+            raise ValueError(f"{path} lacks invocation provenance for {name}")
+    return kept
+
+
+def write_record(
+    path: Path, results: list[Result], tools: Tools, timeout: int,
+    derivcheck: int = DERIVCHECK_TIMEOUT,
+) -> None:
+    """Merge only compatible v2 entries; each retains its own runtime, timestamps and hashes."""
+    kept = retained_checks(path, {result.name for result in results}, timeout, derivcheck)
+    java = next((result.java for result in reversed(results) if result.tool == "tlc"), None)
+    if not any(result.tool == "tlc" for result in results) and path.exists():
+        java = json.loads(path.read_text(encoding="utf-8")).get("java")
     order = {name: index for index, name in enumerate([*TLC_CHECKS, *TAMARIN_CHECKS])}
-    checks = sorted(
-        [*kept, *(asdict(result) for result in results)],
-        key=lambda check: order.get(str(check["name"]), len(order)),
-    )
-    record = {
-        "schema_version": RECORD_SCHEMA,
-        "tools": pins,
-        "java": java,
-        "settings": settings,
-        "checks": checks,
-    }
-    path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    checks = sorted([*kept, *(asdict(result) for result in results)],
+                    key=lambda check: order.get(str(check["name"]), len(order)))
+    record = {"schema_version": RECORD_SCHEMA, "tools": record_pins(), "java": java,
+              "settings": record_settings(timeout, derivcheck), "checks": checks}
+    temporary = path.with_name(path.name + ".tmp")
+    with temporary.open("x", encoding="utf-8") as stream:
+        stream.write(json.dumps(record, indent=2, sort_keys=True) + "\n")
+    temporary.replace(path)
 
 
 def cell(value: object) -> str:
@@ -492,7 +605,7 @@ def instructions() -> str:
         if "archive_sha256" in pin:
             lines.append(f"    archive SHA-256 {pin['archive_sha256']}")
         lines.append(f"    {'jar' if name == 'tla2tools' else 'binary'} SHA-256 {pin['sha256']}")
-    lines.append("Java 21 runs TLC. See formal/README.md, 'Running the checks'.")
+    lines.append("TLC needs a Java runtime that can run tla2tools.jar 1.7.4; no Java version gate is imposed.")
     return "\n".join(lines)
 
 
@@ -501,11 +614,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--tla2tools", help="path to the pinned tla2tools.jar")
     parser.add_argument("--tamarin", help="path to the pinned tamarin-prover binary")
     parser.add_argument("--maude-dir", help="directory that holds the pinned maude binary")
-    parser.add_argument("--java", help="the java to run TLC with (default: java on PATH)")
+    parser.add_argument("--java", help="executable Java for TLC; actual version recorded (default: java on PATH)")
     parser.add_argument("--only", action="append", default=[], metavar="CHECK")
     parser.add_argument("--skip-tlc", action="store_true")
     parser.add_argument("--skip-tamarin", action="store_true")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT, metavar="SECONDS")
+    parser.add_argument("--derivcheck-timeout", type=int, default=DERIVCHECK_TIMEOUT,
+                        metavar="SECONDS", help="Tamarin derivation diagnostics: 0 disables (historical setting)")
+    parser.add_argument("--log-dir", type=Path, help="fresh directory for complete tool output")
     parser.add_argument("--record", type=Path, metavar="FILE", help="write the results as JSON")
     parser.add_argument("--allow-unpinned", action="store_true", help="run other tool versions")
     parser.add_argument(
@@ -514,6 +630,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
     if arguments.readme:
         return update_readme(check=False)
+    if arguments.timeout <= 0 or arguments.derivcheck_timeout < 0:
+        parser.error("--timeout must be positive and --derivcheck-timeout must be nonnegative")
 
     names = [*TLC_CHECKS, *TAMARIN_CHECKS]
     unknown = sorted(set(arguments.only) - set(names))
@@ -524,6 +642,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     tamarin_names = [
         name for name in selected if name in TAMARIN_CHECKS and not arguments.skip_tamarin
     ]
+    if not tlc_names and not tamarin_names:
+        parser.error("no checks selected")
     tools = find_tools(arguments)
     problems = pin_problems(tools, tlc=bool(tlc_names), tamarin=bool(tamarin_names))
     missing = [
@@ -534,21 +654,41 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(instructions(), file=sys.stderr)
         return 2
 
-    results: list[Result] = []
-    with tempfile.TemporaryDirectory(prefix="ecl-formal-") as scratch:
-        workdir = Path(scratch)
-        for name in tlc_names:
-            results.append(run_tlc(tools, name, arguments.timeout, workdir))
-            print(summary(results[-1]), flush=True)
-        for name in tamarin_names:
-            results.append(run_tamarin(tools, name, arguments.timeout))
-            print(summary(results[-1]), flush=True)
-
     if arguments.record is not None:
         if problems:
             print("error: a record needs the pinned tools", file=sys.stderr)
             return 2
-        write_record(arguments.record, results, tools, arguments.timeout)
+        try:
+            temporary = arguments.record.with_name(arguments.record.name + ".tmp")
+            if temporary.exists():
+                raise ValueError(f"{temporary} already exists; preserve it and select another record path")
+            retained_checks(arguments.record, set(tlc_names + tamarin_names),
+                            arguments.timeout, arguments.derivcheck_timeout)
+        except (ValueError, KeyError, TypeError, OSError) as error:
+            print(f"error: {error}", file=sys.stderr)
+            return 2
+    if arguments.log_dir is not None:
+        try:
+            arguments.log_dir.mkdir(parents=True, exist_ok=False)
+        except OSError as error:
+            print(f"error: log directory must be new and writable: {error}", file=sys.stderr)
+            return 2
+    results: list[Result] = []
+    with tempfile.TemporaryDirectory(prefix="ecl-formal-") as scratch:
+        workdir = Path(scratch)
+        for name in tlc_names:
+            results.append(run_tlc(tools, name, arguments.timeout, workdir, arguments.log_dir))
+            print(summary(results[-1]), flush=True)
+        for name in tamarin_names:
+            results.append(run_tamarin(tools, name, arguments.timeout, arguments.derivcheck_timeout, arguments.log_dir))
+            print(summary(results[-1]), flush=True)
+
+    if arguments.record is not None:
+        try:
+            write_record(arguments.record, results, tools, arguments.timeout, arguments.derivcheck_timeout)
+        except (ValueError, KeyError, TypeError, OSError) as error:
+            print(f"error: results could not be recorded: {error}", file=sys.stderr)
+            return 2
     failed = [result.name for result in results if not result.passed]
     print(f"{len(results) - len(failed)} of {len(results)} checks as expected")
     return 1 if failed else 0

@@ -103,8 +103,9 @@ it states them at the pinned revision:
 
 ## License texts
 
-`LICENSE` and `packages/ecl-ts/LICENSE` hold the Apache License, Version 2.0,
-and `LICENSE-CC-BY-4.0` holds the Creative Commons Attribution 4.0
+`LICENSE`, `packages/ecl-ts/LICENSE`, `packages/ecl-verify/LICENSE` and
+`go/crosscheck/LICENSE` hold the Apache License, Version 2.0, and
+`LICENSE-CC-BY-4.0` holds the Creative Commons Attribution 4.0
 International legal code. Each is reproduced unmodified, as its steward
 publishes it, from the source that `license-map.json` names with its SHA-256
 digest.

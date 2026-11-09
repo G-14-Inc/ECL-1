@@ -66,14 +66,13 @@ restricted canonical JSON (IE1-001) of that value. A consumer MUST reject a
 mismatch with `ecl.rule.parameters-digest-matches.v1`.
 
 **DCMP2-008** — A mutable resource reference used in a consequential decision
-MUST include a digest, version, immutable snapshot reference, or a profile-
-defined witness that makes the evaluated state reconstructable.
+MUST include a digest, version, immutable snapshot reference, or a profile-defined witness that makes the evaluated state reconstructable.
 
 **DCMP2-009** — Actor and subject MUST remain distinct through delegation. A
 consumer MUST NOT infer that a workload is the legal, organizational, or human
 subject merely because it submitted the request.
 
-**DCMP2-010** — Each delegation hop MUST be independently referencable,
+**DCMP2-010** — Each delegation hop MUST be independently referenceable,
 integrity-verifiable, audience-bound, expiry-bounded, and scope-attenuating.
 An elevation is a new authority root, not an attenuation hop.
 
@@ -173,10 +172,13 @@ names a decision input that the register declares for the action class
 `judgment`), whether the action class requires it (`required`), whether it was
 `available`, `unavailable`, `late`, or `malformed` (`status`), its value by
 reference and digest when available (`reference`), and its effect on the
-outcome (`effect`): `supports` when it is part of the basis on which the
-verifiable-only outcome (ECL-1 Section 4.3) permits the action, whatever the
-final outcome, `restricts` when it made the outcome stricter, and `none` when
-it had no effect. Each entry also names the input's `source`, as the register
+outcome (`effect`), taken against the verifiable-only outcome (ECL-1 Section
+4.3) as ECL1N-0181 defines the three values: `supports` when it is part of the
+basis on which the verifiable-only outcome permits the action, whatever the
+final outcome, `restricts` when it is part of the basis on which the
+verifiable-only outcome refuses or narrows the action or on which the decision's
+outcome is stricter than its verifiable-only outcome, and `none` when it is part
+of neither basis. Each entry also names the input's `source`, as the register
 declares it, and can name, in `derived_from`, the other inputs of the record
 from which the input was computed. The value can also give `verifiable_only_outcome`, the decision's
 verifiable-only outcome (ECL-1 Section 4.3), and `received_at`, the time at
@@ -201,9 +203,9 @@ least one `verifiable` input with the `effect` `supports`, and MUST NOT record
 an input whose `required` is `true` and whose `status` is not `available`. When
 the extension gives `verifiable_only_outcome`, the response's `outcome` MUST NOT
 come before it in the strictness order `admit`, `challenge`, `hold`, `deny` of
-ECL-1 Section 4.3; an entry MUST NOT have the `effect` `supports` unless it is
-`admit`; and when it is `admit`, at least one `verifiable` entry MUST have the
-`effect` `supports`, and an entry whose `class` is `verifiable` and whose
+ECL-1 Section 4.3; an entry MUST NOT have the `effect` `supports` unless
+`verifiable_only_outcome` is `admit`; and when `verifiable_only_outcome` is
+`admit`, at least one `verifiable` entry MUST have the `effect` `supports`, and an entry whose `class` is `verifiable` and whose
 `required` is `true` MUST have the `status` `available`. In these conditions an
 input also counts as not `available` when its `derived_from` names, directly or
 through other entries, an input whose `status` is not `available` (ECL-1 Section
@@ -266,7 +268,7 @@ and `workflow.root_trace_id`; a `workflow.attempt` greater than the continued
 request's; and an `action`, `actor`, `subject` and `authority_request` equal to
 the continued request's. It MUST carry `continues` with `request_id`, the
 continued request's `message_id`; `response_id`, the `message_id` of the
-challenge response; and `approval_id`, the `object_id` of the EBMP-2
+`decision_response` whose `outcome` is `challenge`; and `approval_id`, the `object_id` of the EBMP-2
 `human_intervention` event whose `operation` is `approve` and whose `target_id`
 is the continued request's `message_id`. It MUST list that response and that
 event among its `workflow.causal_predecessors`, each by identifier and digest.
@@ -286,9 +288,9 @@ issued after the challenge's deadline, whose `expires_at` is at or before the
 continuation's evaluation, whose approver or approval key is revoked at that
 evaluation, or that a control message has revoked; nor on an approval that
 another continuation has already used; nor when the policy in force no longer
-accepts that approver for the action. It MUST then answer the continuation with
-a new response, a new `challenge` or a `deny`, and never by changing an earlier
-response.
+accepts that approver for the action. It MUST then answer the continuation with a new `decision_response` under
+the applicable decision rules, including `challenge` or `deny` when appropriate,
+and never by changing an earlier response.
 
 ### 3.4 Control message
 
@@ -350,8 +352,7 @@ DCMP2-043.
 **DCMP2-033** — Wall-clock timestamps alone MUST NOT override a causal
 relationship or trusted sequence observation.
 
-**DCMP2-034** — A verifier MUST apply the declared verification-time and clock-
-skew policy. A local parser default is not a trust policy.
+**DCMP2-034** — A verifier MUST apply the declared verification-time and clock-skew policy. A local parser default is not a trust policy.
 
 ## 6. Integrity and extension behavior
 

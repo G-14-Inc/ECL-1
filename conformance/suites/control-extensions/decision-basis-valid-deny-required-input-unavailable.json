@@ -10,7 +10,7 @@
         "inputs": [
           {
             "class": "verifiable",
-            "effect": "supports",
+            "effect": "none",
             "input": "urn:example:input:payee-allow-list",
             "reference": {
               "digest": {
@@ -69,7 +69,8 @@
           },
           "uri": "urn:example:register:payments",
           "version": "2026-07-27"
-        }
+        },
+        "verifiable_only_outcome": "deny"
       },
       "version": 1
     }

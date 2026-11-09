@@ -1290,7 +1290,8 @@
         "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/allOf/0/if#if[0]",
         "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/class/enum#enum",
         "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/effect/enum#enum",
-        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum"
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/$defs/decisionInput/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1#/properties/verifiable_only_outcome/enum#enum"
       ],
       "expected": "pass",
       "expected_secondary_ids": [],
@@ -1304,7 +1305,7 @@
         "base_vector": "conformance/suites/control-extensions/decision-basis-valid-admit-on-verifiable-inputs.json",
         "generator": "scripts/generate_control_extension_vectors.py",
         "kind": "mutation",
-        "mutation": "deny the action because a required verifiable input is unavailable"
+        "mutation": "deny because required verifiable input is unavailable, with a recorded verifiable-only deny and no supporting input"
       },
       "stage": "protocol"
     },

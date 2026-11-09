@@ -137,15 +137,17 @@ The suite `conformance/suites/offline-package/` holds the package vectors; its
 stage is `package`, and `conformance/README.md` states its input, steps and
 output. Its capability, `offline-package-verification`, is optional, and an
 implementation that declares it also declares `evidence-bundle-verification`.
-The offline verifier implements the capability: `verifyOfflinePackage` of the
-TypeScript package `packages/ecl-ts`, which the browser verifier also uses, and
-the command `ecl-verify-ts`, which verifies a package as well as a bundle. A
-file that begins with the bytes `PK` is read as a package of at most 1 GiB, the
-command's declared archive limit, and is verified under the same inputs and
-reported with the same output and exit statuses as a bundle. A larger file is a
-usage error (exit status 2): the command refuses to read it, so it gets no
-verdict, and in particular not `invalid` with
-`ecl.error.resource-limit-exceeded.v1`.
+The Python, Go and TypeScript verifiers implement `offline-package-verification`;
+the browser uses the TypeScript `verifyOfflinePackage` implementation. Their
+command interfaces also verify offline packages. Each command treats a file
+that begins with the bytes `PK` as a package, with a declared archive limit of
+1 GiB. Under valid caller inputs, a package above this limit is reported as
+`invalid` (exit status 1), with `ecl.error.resource-limit-exceeded.v1`, without
+loading the archive into memory. A file that grows past the limit while being
+read receives the same verdict. An unreadable file, malformed caller trust
+policy or register, or invalid evaluation time remains a usage error (exit
+status 2), without a verdict. Other packages use the same caller inputs,
+report format and exit statuses as an evidence bundle.
 
 ## Air-gap transfer
 

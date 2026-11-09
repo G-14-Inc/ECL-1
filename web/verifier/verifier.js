@@ -4731,7 +4731,7 @@
     { "id": "ecl.rule.coupling-results-permit-admit.v1", "status": "active", "precedence": 170, "applies_to": ["DCMP-2"], "description": "An admit response carries only permitting consequence-coupling results: budget authorized, witness satisfied, quorum met, and no blocker reason." },
     { "id": "ecl.rule.approval-review-time-respected.v1", "status": "active", "precedence": 265, "applies_to": ["EBMP-2"], "description": "A human approval or rejection that records its presentation is decided no sooner than the minimum review time after that presentation." },
     { "id": "ecl.rule.control-change-approved-and-bounded.v1", "status": "active", "precedence": 270, "applies_to": ["EBMP-2"], "description": "A recorded control change names approvers other than its requester, and a change that disables, bypasses or automates approval of a control expires after it takes effect." },
-    { "id": "ecl.rule.decision-basis-one-way.v1", "status": "active", "precedence": 175, "applies_to": ["DCMP-2"], "description": "A response that records its decision basis lists each input once, input names compared after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1; cites no actor_supplied or judgment input, and no input that was not available or was computed from one that was not, as supporting it; records no input computed from an input that is not verifiable as verifiable; and has no input computed from itself, directly or through other inputs. An admit cites at least one verifiable input as supporting it and no required input that was not available or was computed from one that was not. The outcome is no less strict than a recorded verifiable-only outcome; while that outcome is not admit, no input supports the outcome, and when it is admit, a verifiable input supports it and no required verifiable input was not available. No input obtained after the decision is recorded as available, and no value describes a time after the decision or after the input was obtained; a record that gives when an input was obtained gives when the request was received, no later than the decision, and a record that gives when the request was received gives both times of each available input. A verifier that holds the request refuses an input recorded as verifiable whose source is the request's actor, and a request received before it was issued. Each decision response that an AARM, ACS or MCP exchange record holds carries exactly one decision basis and is checked with the request the record holds." },
+    { "id": "ecl.rule.decision-basis-one-way.v1", "status": "active", "precedence": 175, "applies_to": ["DCMP-2"], "description": "A response that records its decision basis lists each input once, input names compared after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1; cites no actor_supplied or judgment input, and no input that was not available or was computed from one that was not, as supporting it; records no input computed from an input that is not verifiable as verifiable; and has no input computed from itself, directly or through other inputs. An admit cites at least one verifiable input as supporting it and no required input that was not available or was computed from one that was not. The outcome is no less strict than a recorded verifiable-only outcome; while that outcome is not admit, no input supports the outcome, and when it is admit, a verifiable input supports it and no required verifiable input was not available. No input obtained after the decision is recorded as available, and no value describes a time after the decision or after the input was obtained; a record that gives obtained_at gives received_at, no later than the decision, and a record that gives received_at gives both obtained_at and value_at for each available input. A verifier that holds the request rejects a response recording as verifiable an input whose source is the request's actor, or recording received_at earlier than the request's issued_at by more than the response clock-skew allowance of DCMP2-047. Each decision response that an AARM, ACS or MCP exchange record holds carries exactly one decision basis and is checked with the request the record holds." },
     { "id": "ecl.rule.decision-basis-required.v1", "status": "active", "precedence": 176, "stage": 3, "applies_to": ["EBMP-2 bundle"], "description": "Each decision response in the evidence of a decision carries its decision basis in ecl.ext.decision-basis.v1." },
     { "id": "ecl.rule.decision-basis-matches-register.v1", "status": "active", "precedence": 177, "stage": 3, "applies_to": ["EBMP-2 bundle"], "description": "A decision basis that a verifier checks against a register it holds names that register version and lists exactly the inputs that the register declares for the request's action class, each once, with the declared class, required flag, derived_from and source, the source compared as input names are; and no input recorded as available was obtained more than its declared deadline after the request was received or has a value older than its declared maximum age at the time of the decision." },
     { "id": "ecl.rule.register-declarations-consistent.v1", "status": "active", "precedence": 178, "applies_to": ["https://externalcontrollayer.ai/ns/schema/action-register/1"], "description": "A Consequential Action Register declares each action class once and each decision input of a class once, input names compared as DCMP2-053 compares them; each name in a declaration's derived_from is another input declared for the same class; no input declared verifiable is computed from one that is not; and no input is computed from itself, directly or through other inputs." },
@@ -4765,7 +4765,7 @@
     { "id": "ecl.rule.oauth-token-signature-checked.v1", "status": "active", "precedence": 882, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server accepts a token only when every segment reads under the strict JSON profile, it verifies under a configured issuer key with an allowed asymmetric algorithm and no header key, unknown kid or crit member, and its iss is the configured issuer." },
     { "id": "ecl.rule.oauth-presentation-checked.v1", "status": "active", "precedence": 884, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server accepts a presentation only for its own audience, within the token's validity with the declared clock-skew allowance and within its entry's window, with a valid proof of possession, for the entry's target, operation and parameter digest, and within its uses." },
     { "id": "ecl.rule.oauth-refusal-named.v1", "status": "active", "precedence": 886, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server that refuses a presentation names the code that the presentation table gives for the first check the presentation fails." },
-    { "id": "ecl.rule.prerelease-obligations-discharged.v1", "status": "active", "precedence": 280, "stage": 8, "applies_to": ["EBMP-2 bundle"], "description": "An execution_released event whose decision response carries an obligation to be met before release, or a witness result required before release, records in ecl.ext.obligation-discharge.v1 a discharge of each such obligation, recorded as satisfied with a proof reference and digest and checked no later than the release was observed; no entry names an obligation that the response does not carry, names one twice, was checked before the decision was issued, has a proof obtained after it was checked, or names an object of the bundle by another digest. A proof that is an ECL object is carried in the bundle as its own object and checked there, each failure reported with ecl.error.obligation-unproven.v1: a valid envelope under the trust policy, signed by the issuer the obligation names and never by the requesting actor, of a type the obligation admits, bound to this exchange and fresh at the release." }
+    { "id": "ecl.rule.prerelease-obligations-discharged.v1", "status": "active", "precedence": 280, "stage": 8, "applies_to": ["EBMP-2 bundle"], "description": "An execution_released event whose decision response carries an obligation to be met before release, or a witness result required before release, records in ecl.ext.obligation-discharge.v1 a discharge of each such obligation, recorded as satisfied with a proof reference and digest and checked no later than the release was observed. Missing discharge entries, unknown or duplicate obligations, invalid result or check ordering, and a carried proof digest mismatch use this rule. An unknown or duplicate obligation gates the remaining checks for that entry. A carried proof digest mismatch gates its envelope-validity, signer, type, binding and proof-freshness checks. Other proof failures, and an entry fresh_until that is not later than the release observation plus release_guard_ms, use ecl.error.obligation-unproven.v1. A carried ECL proof whose digest matches is checked for valid envelope, authorized signer and purpose, admitted type, exchange binding and freshness under EBMP2-070." }
   ];
   var EXTENSIONS = [
     { "id": "ecl.ext.trusted-time-evidence.v1", "status": "deprecated", "version": 1 },
@@ -5120,7 +5120,7 @@
             "additionalProperties": false,
             "properties": {
               "parameter": {
-                "description": "An RFC 6901 JSON Pointer to the value in the request's action.parameters that the threshold compares. An action is at or above the threshold when that value is a non-negative integer, or a string in the decimal form of value, at or above value, the two compared as exact decimals; when the pointer names no value, or a value of another form, a negative number among them, the action counts as at or above the threshold.",
+                "description": "An RFC 6901 JSON Pointer to the value in the request's action.parameters that the threshold compares. An action is at or above the threshold when that value is a non-negative integer, or a string in the decimal form of value, at or above value, the two compared as exact decimals; when the pointer names no value, or names a value of any other form (including a negative number), the action counts as at or above the threshold.",
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 1024,
@@ -7796,7 +7796,7 @@
                 ]
               },
               "effect": {
-                "description": "supports: part of the basis on which the verifiable-only outcome permits the action, whatever the final outcome; restricts: made the outcome stricter; none: no effect on the outcome (ECL1N-0179 to ECL1N-0181).",
+                "description": "supports: part of the basis on which the verifiable-only outcome permits the action, whatever the final outcome; restricts: part of the basis on which the verifiable-only outcome refuses or narrows the action, or on which the decision's outcome is stricter than its verifiable-only outcome; none: part of neither basis (ECL1N-0179 to ECL1N-0182).",
                 "enum": [
                   "supports",
                   "restricts",
@@ -12802,6 +12802,12 @@
   }
   function signerStatus(envelope, payload, policy, purpose, timeOf, original, compromise) {
     const signatures = envelope["signatures"];
+    const integrityPolicy = payload["integrity_policy"];
+    const acceptedSuites = integrityPolicy["accepted_suites"];
+    const eligibleKeys = integrityPolicy["eligible_key_ids"] ?? [];
+    if (signatures.some((signature) => !acceptedSuites.includes(signature["suite_id"]) || eligibleKeys.length > 0 && !eligibleKeys.includes(signature["key_id"]))) {
+      return POLICY_INVALID;
+    }
     const role = { purpose, principal: principalOf(payload) };
     return combined(signatures.map((signature) => keyStatus(signature, policy, role, timeOf(signature["key_id"]), original, compromise)));
   }
@@ -13075,11 +13081,16 @@
       }
       const envelopeWide = historical === CLOCK_REGRESSED || historical === TRUSTED_TIME_INVALID || historical === TRUSTED_TIME_REQUIRED;
       const role = { purpose, principal: principalOf(payload) };
+      const integrityPolicy = payload["integrity_policy"];
+      const acceptedSuites = integrityPolicy["accepted_suites"];
+      const eligibleKeys = integrityPolicy["eligible_key_ids"] ?? [];
+      const inPayloadPolicy = (signature) => acceptedSuites.includes(signature["suite_id"]) && (eligibleKeys.length === 0 || eligibleKeys.includes(signature["key_id"]));
       const message = signingInput(envelope["payload_type"], decodePayload(envelope));
       dependencies = signatures.filter(isObject).map((signature) => {
         const keyId = signature["key_id"];
         const own = timeOf(keyId);
-        let status2 = envelopeWide ? historical : keyStatus(signature, version, role, own, void 0, currentPolicy);
+        const allowedByPayload = inPayloadPolicy(signature);
+        let status2 = envelopeWide ? historical : !allowedByPayload ? POLICY_INVALID : keyStatus(signature, version, role, own, void 0, currentPolicy);
         if (status2 === "valid" && !signatureVerifies(signature, version, message)) {
           status2 = INTEGRITY_INVALID2;
         }
@@ -13095,7 +13106,7 @@
           historical: status2,
           currentPolicyVersion: currentPolicy.version,
           revokedEffectiveAt: revokedEffectiveAt(currentPolicy, keyId, version.key(keyId)?.publicKey),
-          current: keyStatus(signature, currentPolicy, role, now, version)
+          current: !allowedByPayload ? POLICY_INVALID : keyStatus(signature, currentPolicy, role, now, version)
         };
       });
       for (const counter of counters) {

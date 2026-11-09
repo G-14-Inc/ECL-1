@@ -129,8 +129,8 @@ which an assessor checks against the deployment.
 **AC1-005** — A `modify` decision MUST NOT release the original action. The
 action that the modification produces, if it is to go ahead, MUST be submitted
 as a new DCMP-2 decision request that carries the effective parameters after
-the modification, as the same JSON values, in `action.parameters` and
-`action.parameters_digest`, carries the original request's `issuer`, `actor`,
+the modification as the same JSON values in `action.parameters`, and their
+digest in `action.parameters_digest`, carries the original request's `issuer`, `actor`,
 `subject`, `delegation_chain`, `authority_request`, `constraints` and
 `integrity_policy`, and its `action` with only `action_id`, `parameters` and
 `parameters_digest` changed, names the original request as a causal predecessor
@@ -280,7 +280,10 @@ fails a rule MUST be reported with that rule. The decision basis of the record's
 basis of the `response`, member for member, and MUST record the same inputs,
 compared as input names are, each with the `class`, `required`, `source` and
 `derived_from` that the record's `inputs` give it; a record that breaks this
-MUST be reported as `ecl.rule.acs-inputs-match-basis.v1`.
+MUST be reported as `ecl.rule.acs-inputs-match-basis.v1`. The modification
+request MUST be decided under the register version of the first decision. If
+that version is no longer in force, the Decision Layer MUST NOT admit the
+modification.
 
 The record is the adapter's account of a decision, and the response is the
 decision point's signed account of the same decision. If the two could
@@ -300,17 +303,15 @@ the same reason, since its `admit` releases the modified action. The new request
 is the original action with other parameters (AC1-005), of the same action
 class, so the register version declares the same inputs for both decisions; the
 status, effect, reference and times of each input describe the new decision and
-may differ. The new request is decided under the register version of the first
-decision; if that version is no longer in force, the modification is not
-admitted.
+may differ.
 
 ## Disposition mapping (informative)
 
 | ACS disposition | ECL outcome | Release |
 | --- | --- | --- |
 | `allow` from a `deterministic` evaluator | `admit` when ECL policy over `verifiable` inputs permits it, otherwise `deny` | Only on a verified `admit` |
-| `allow` from an `agent` or `composite` evaluator, or one that states no evaluator | As above; the Guardian decision is a `judgment` input and is never part of the basis | Only on a verified `admit` |
-| `allow` from a `deterministic` evaluator that a hook point carried to the decision point | As above; the Guardian decision is an `actor_supplied` input and is never part of the basis | Only on a verified `admit` |
+| `allow` from an `agent` or `composite` evaluator, or one that states no evaluator | As above; the Guardian decision is a `judgment` input, recorded in the decision basis but never the basis of an `admit` | Only on a verified `admit` |
+| `allow` from a `deterministic` evaluator that a hook point carried to the decision point | As above; the Guardian decision is an `actor_supplied` input, recorded in the decision basis but never the basis of an `admit` | Only on a verified `admit` |
 | `deny` | `deny` | None |
 | `modify` | `deny` of the original; a new request carrying the effective parameters, if the modified action is to go ahead | Only the new request's admitted parameters |
 | `ask` | `challenge` until the approval is recorded; `hold` or `deny` for an approver-incapable client | None until a new evaluation admits |

@@ -102,7 +102,8 @@ versioned core transition.</p>
 together identify an immutable object version. Systems MUST report conflicting
 digests rather than selecting one silently.</p>
 <h2 id="3-signing-input">3. Signing input</h2>
-<p>The signing input is the DSSE v1 pre-authentication encoding:</p>
+<p>The signing input uses the DSSE (Dead Simple Signing Envelope) v1
+pre-authentication encoding:</p>
 <p><code>&quot;DSSEv1&quot; SP LEN(payloadType) SP payloadType SP LEN(payload) SP payload</code></p>
 <p>Lengths are the decimal octet lengths of the immediately following byte
 strings.</p>
@@ -134,9 +135,23 @@ reject a payload-bound policy that fails any of these conditions with
 <code>ecl.rule.integrity-threshold-consistent.v1</code>.</p>
 <p>These are the only conditions of that rule. An empty list of eligible keys
 leaves the eligible keys unbounded, so mandatory signers need no eligible list.
-A threshold higher than the number of eligible keys, or a key whose suite the
-policy does not accept, is not a consistency failure: no envelope can then meet
-the policy, and verification refuses each one under <a href="integrity-envelope-1.html#IE1-040">IE1-040</a>.</p>
+Payload object validation applies <a href="integrity-envelope-1.html#IE1-013">IE1-013</a>, including its required-key subset
+check, with <code>ecl.rule.integrity-threshold-consistent.v1</code>; bundle verification
+performs that check at <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a> stage 3. Standalone envelope verification
+instead follows <a href="integrity-envelope-1.html#IE1-040">IE1-040</a>: step 4 checks the listed policy conditions with
+<code>ecl.error.signature-policy-invalid.v1</code>. If earlier checks pass, a required
+signer outside a non-empty eligible-key list cannot count in step 6, and step
+7 refuses the envelope with the code of the earliest reason in step 6, in the
+order of step 6's sub-steps, that some signature has, or
+<code>ecl.error.threshold-not-met.v1</code> when no signature has any of those reasons.</p>
+<p>A threshold higher than the number of keys in a non-empty eligible-key list
+is not an <a href="integrity-envelope-1.html#IE1-013">IE1-013</a> consistency failure, but no envelope can meet that threshold.
+A signature using a suite the policy does not accept cannot count under
+<a href="integrity-envelope-1.html#IE1-040">IE1-040</a> step 6(a). In standalone verification, other acceptable signatures can
+still satisfy the threshold and every required signer, and the presence of that
+additional uncounted signature does not by itself make the envelope fail. A
+bundle verifier is stricter with every signature of an envelope, counted or not
+(section 11, <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>).</p>
 <p><span id="IE1-014"><strong>IE1-014</strong></span><a class="requirement-link" href="#IE1-014" aria-label="Link to IE1-014">§</a> — Each valid signer MUST count at most once toward threshold,
 independent of duplicate signature entries.</p>
 <p><span id="IE1-015"><strong>IE1-015</strong></span><a class="requirement-link" href="#IE1-015" aria-label="Link to IE1-015">§</a> — A key MUST be acceptable under the trust policy, eligible-key
@@ -184,7 +199,9 @@ verifier treats it.</p>
 carries MUST be treated as evidence and MUST NOT automatically be treated as a
 trust anchor. A verifier MUST verify an offline package under the trust
 policy, the earlier versions of that policy and the evaluation time that its
-caller supplies, never under a policy or time that the package carries. The
+caller supplies, never under a policy or time that the package carries. Bundle
+verification uses the caller-selected verification profile, or the default
+when the caller selects none, as <a href="ebmp-2.html#EBMP2-067">EBMP2-067</a> requires. The
 manifest is not authenticated: its <code>expires_at</code> is the producer's statement and
 limits only a holder who does not change it. The verifier MUST make these
 checks in order and report the verdict of <a href="ebmp-2.html#EBMP2-060">EBMP2-060</a> and the error code that the
@@ -200,13 +217,13 @@ at the check that meets the limit:</p>
 <li>every artifact that the archive holds has the size and SHA-256 digest of its manifest entry: <code>invalid</code>, <code>ecl.error.integrity-invalid.v1</code>;</li>
 <li>every <code>envelope</code> and <code>observation</code> artifact is strict JSON and a JSON object: <code>invalid</code>, <code>ecl.error.schema-invalid.v1</code>; these artifacts are the envelopes and observations of the package's evidence bundle;</li>
 <li>every <code>payload</code> artifact is the payload of a packaged envelope or observation: <code>invalid</code>, <code>ecl.error.integrity-invalid.v1</code>;</li>
-<li>when the package carries an envelope, its bundle, verified with the caller&#x27;s inputs as <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a> to <a href="ebmp-2.html#EBMP2-062">EBMP2-062</a> require, is not <code>invalid</code>: <code>invalid</code>, with the bundle's findings;</li>
+<li>when the package carries an envelope, its bundle, verified with the caller's inputs under EBMP-2 section 11, is not <code>invalid</code>: <code>invalid</code>, with the bundle's findings;</li>
 <li>the archive holds every artifact that the manifest names or <a href="integrity-envelope-1.html#IE1-021">IE1-021</a> requires and the payload of every packaged envelope and observation, and the package carries an envelope: <code>incomplete</code>, <code>ecl.error.causal-closure-incomplete.v1</code>;</li>
 <li>the bundle is not <code>incomplete</code>: <code>incomplete</code>, with the bundle's findings;</li>
 <li>otherwise the package has its bundle's verdict and findings, except that a package whose <code>expires_at</code> is not later than the evaluation time is <code>current-trust-failed</code>, with <code>ecl.error.expired.v1</code>, where its bundle is <code>verified</code>.</li>
 </ol>
-<p><span id="IE1-023"><strong>IE1-023</strong></span><a class="requirement-link" href="#IE1-023" aria-label="Link to IE1-023">§</a> — Verification at issue time, observation time, trusted timestamp
-time, current time, or another declared time are distinct policies. A verifier
+<p><span id="IE1-023"><strong>IE1-023</strong></span><a class="requirement-link" href="#IE1-023" aria-label="Link to IE1-023">§</a> — The policies for verification at issue time, observation time,
+trusted timestamp time, current time, and other declared times are distinct. A verifier
 MUST state which policy it applied.</p>
 <p><span id="IE1-024"><strong>IE1-024</strong></span><a class="requirement-link" href="#IE1-024" aria-label="Link to IE1-024">§</a> — A signature MUST NOT count, even when its cryptographic check
 passes, if its key is not acceptable under the trust policy, suite, purpose or
@@ -270,9 +287,10 @@ silently replace a finite limit with an unlimited value.</p>
 <p>The libraries of this repository declare the same defaults for strict JSON input
 in every lane: a nesting depth of 256, counted from 0 for the top-level value,
 and 1,000,000 values; the byte limit is each lane's declared one (the reference
-library's is 64 MiB). The ceilings above bound what a configuration can raise a
-limit to, so a configured limit is the same number in every lane, and an input
-at or beyond a ceiling has the same finding everywhere.</p>
+library's is 64 MiB). Each configured limit is bounded by the ceiling above. An input exactly at
+a ceiling can still exceed a consumer's lower declared limit; acceptance and
+findings depend on that consumer's declared limits and the ordered checks of
+<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>.</p>
 <p><span id="IE1-029"><strong>IE1-029</strong></span><a class="requirement-link" href="#IE1-029" aria-label="Link to IE1-029">§</a> — An implementation MUST enforce applicable resource limits before
 unbounded allocation, decompression, recursive traversal, or cryptographic
 work. It MUST use bounded or incremental processing where an input can exceed
@@ -357,16 +375,18 @@ counts each signature as evaluated at the time this rule gives it. Version 1.0
 defines no archive renewal: an attestation carries no countersignature of its
 own (<a href="integrity-envelope-1.html#IE1-032">IE1-032</a>), so a later attestation is one more countersignature, verified on
 its own, and does not protect an earlier one.</p>
-<p>Note (informative), countersignature and backdating: an evidence signer that a
-revocation in the current policy, whatever its reason (TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>),
-makes untrusted from a time between an object's own time and its attested time
-makes a countersigned envelope not historically valid, while the same
-envelope without a countersignature is only not acceptable now
-(<code>current-trust-failed</code> in a bundle, EBMP-2 <a href="ebmp-2.html#EBMP2-060">EBMP2-060</a>). The difference is
-intended. A trusted time is independent evidence; when it shows the signature
-existing only after the compromise, the signer's earlier own time cannot be
-relied on. Without a trusted time a verifier cannot detect backdating, and can
-only report that the signer is not acceptable now.</p>
+<p>Note (informative), countersignature and backdating: a trusted-time
+countersignature is a separate time authority's signed statement that the
+covered payload and signatures existed no later than the attested time; it does
+not establish when a signature was created. <a href="integrity-envelope-1.html#IE1-034">IE1-034</a> evaluates a covered
+signature at its earliest attested time. When a revocation is effective at or
+before that time, the signature fails historical validity under <a href="trust-policy-1.html#TP1-006">TP1-006</a>, even
+if it was actually created earlier. The object's asserted time alone cannot
+exclude backdating. An otherwise verified bundle with a current trust failure
+is reported as <code>current-trust-failed</code> unless the caller explicitly accepts that
+failure, in which case the acceptance accompanies the <code>verified</code> verdict
+(<a href="ebmp-2.html#EBMP2-060">EBMP2-060</a>). Distinct issuer identities do not by themselves establish
+independent key custody.</p>
 <p><span id="IE1-035"><strong>IE1-035</strong></span><a class="requirement-link" href="#IE1-035" aria-label="Link to IE1-035">§</a> — A verification profile MAY require trusted time. Under such a
 profile a verifier MUST refuse an envelope that carries no trusted-time
 countersignature, or one of whose signature entries no trusted-time
@@ -460,8 +480,8 @@ signature of a bundle's envelope, counted or not, passes steps 6 (a) to (c)
 under the object&#x27;s purpose and principal (<a href="trust-policy-1.html#TP1-004">TP1-004</a>, <a href="trust-policy-1.html#TP1-005">TP1-005</a>, <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>).</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/INTEGRITY-ENVELOPE-1.md</code>, SHA-256 <code>e62354456ea1bb398f318e2453debef08a0625058d6580eb8dd75c4008680afe</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>protocols/INTEGRITY-ENVELOPE-1.md</code>, SHA-256 <code>43383e10e6d20d808036e401b86146f17ab3a0b6067c910605eaf784fa73e6e8</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

@@ -38,8 +38,9 @@ The security response lead records:
   Fleet, availability, or conformance claims;
 - severity, embargo, owners, milestones, and reassessment effect.
 
-Potential release bypass, signature acceptance, authority widening, or false
-conformance pass is presumed high severity until disproved.
+Potential release bypass, acceptance of an invalid or unauthorized signature,
+authority widening, or a false conformance pass is presumed high severity until
+disproved.
 
 ## Response controls
 

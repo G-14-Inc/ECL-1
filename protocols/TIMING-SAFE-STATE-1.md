@@ -121,8 +121,9 @@ dependency model, the loss of a dependency that only one action class requires
 restricts that class, and the loss of one that several classes require, directly
 or through other dependencies, restricts each of them. A loss whose scope cannot
 be established restricts the enclosing scope that the model declares, or the
-whole deployment where it declares none, and a critical integrity failure or an
-emergency control activation applies to the whole deployment. Within that scope
+whole deployment where it declares none, and a critical integrity failure, an
+emergency control activation, or operator safety requiring cessation applies to
+the whole deployment. Within that scope
 each action is refused with a disposition that fails closed under TS1-032, and
 the dependency keeps its classification as one that supplies required proof
 (TS1-031).
@@ -138,8 +139,7 @@ available for diagnosis, recovery, or safe shutdown.
 **TS1-021** — Local evidence buffering MUST declare capacity, durability,
 encryption, ordering, overflow, and export behavior.
 
-**TS1-022** — Evidence buffer exhaustion MUST NOT silently drop verifier-
-critical events.
+**TS1-022** — Evidence buffer exhaustion MUST NOT silently drop verifier-critical events.
 
 **TS1-023** — A deployment MUST declare whether exhaustion denies new actions,
 enters restricted mode, sheds only non-critical telemetry, or uses another

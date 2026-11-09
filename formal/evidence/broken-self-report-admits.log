@@ -1,0 +1,105 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 16 and seed -3378900291914922868 with 1 worker on 32 cores with 1333MB heap and 64MB offheap memory [pid: 1284] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/administrator/G-14/ECL-1/work/ecl-1-source-repairs-20261107-1/source/formal/tla/MC.tla
+Parsing file /home/administrator/G-14/ECL-1/work/ecl-1-source-repairs-20261107-1/source/formal/tla/ECLCore.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/TLC.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/Integers.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/FiniteSets.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/Sequences.tla
+Parsing file /tmp/ecl-formal-mtl3zk8g/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Starting... (2026-11-07 13:34:12)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-07 13:34:12.
+Error: Invariant OneWayRule is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}] )
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 2: <Submit line 198, col 5 to line 204, col 61 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}] )
+/\ submitted = {[action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1]}
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    deadline |-> 1 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 3: <Next line 470, col 8 to line 470, col 77 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}] )
+/\ submitted = {[action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1]}
+/\ issued = { [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    epoch |-> 0,
+    aud |-> e1,
+    from |-> 0,
+    until |-> 2 ] }
+/\ pending = {}
+/\ decisions = { [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    outcome |-> "admit",
+    epoch |-> 0,
+    at |-> 0 ] }
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+54 states generated, 37 distinct states found, 33 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 12 (minimum is 5, the maximum 19 and the 95th percentile is 19).
+Finished in 00s at (2026-11-07 13:34:12)

@@ -76,7 +76,7 @@ does not and 2 when the corpus cannot be evaluated.
 | `canon` | Writes canonical JSON (RFC 8785 restricted to integers, with no noncharacter in a string or member name) and its SHA-256 digest. |
 | `schema` | Validates values against the embedded ECL-1 schemas (JSON Schema Draft 2020-12, the keywords the schemas use). |
 | `semantic` | Checks the rules that schemas cannot express, for DCMP-2 messages, EBMP-2 objects, bundles of records, adapter bindings and safe-state profiles, the registered control-extension rules, the one-way rule for a recorded decision basis (DCMP2-053) among them, and the extension rules of every object that carries extensions (one version of an extension per object, XR1-010, among them). |
-| `bindings` | Checks the records of AARM-BINDING-1, ACS-BINDING-1, MCP-GATEWAY-1, OTEL-EVIDENCE-EXPORT-1 and OAUTH-AUTHORITY-1: the record's schema, then the profile's 28 registered rules, among them the agreement of an AARM or ACS record's inputs with its response's decision basis and with that of a modification's response, which records them with their declarations (AB1-013, AC1-012), and OpenTelemetry digests keyed with HMAC-SHA-256 under an export key (OE1-004, OE1-010). It has RFC 8785 for the content the profiles bind and compact JWS for OAuth access tokens and DPoP proofs (ES256 and EdDSA, RFC 7638 thumbprints). |
+| `bindings` | Checks the records of AARM-BINDING-1, ACS-BINDING-1, MCP-GATEWAY-1, OTEL-EVIDENCE-EXPORT-1 and OAUTH-AUTHORITY-1: the record's schema, then the applicable rules among the five profiles' 30 registered rules, among them the agreement of an AARM or ACS record's inputs with its response's decision basis and with that of a modification's response, which records them with their declarations (AB1-013, AC1-012), and OpenTelemetry digests keyed with HMAC-SHA-256 under an export key (OE1-004, OE1-010). It has RFC 8785 for the content the profiles bind and compact JWS for OAuth access tokens and DPoP proofs (ES256 and EdDSA, RFC 7638 thumbprints). |
 | `documents` | Checks the claim and assessment documents (the action register, conformance claim, assessment package, mapping packet, deployment profile, lifecycle policy, offline verification package and work intent) against their schemas, a work intent against the extension rules, and an action register against `ecl.rule.register-declarations-consistent.v1`. |
 | `envelope` | Verifies ECL-IE-1 envelopes: canonical base64, payload digest, DSSE pre-authentication encoding, Ed25519 and ECDSA P-256 signatures, and the integrity policy inside the payload; under a keyring from a trust policy, each DCMP-2 message counts only under a key of its role (TP1-010, IE1-039). A refusal carries the error code of the step of IE1-040 that fails. |
 | `trust` | Loads trust policies (TRUST-POLICY-1), refusing a key that holds two roles (TP1-009) and a document past a declared limit with the resource-limit error (TP1-007), and turns them into keyrings and verification contexts. |
@@ -86,14 +86,31 @@ does not and 2 when the corpus cannot be evaluated.
 ## Verifying a bundle
 
 ```go
-bundle, _ := os.ReadFile("bundle.json")
-policy, _ := os.ReadFile("trust-policy.json")
-report, _, err := evidence.VerifyBytes(bundle, policy, nil, evidence.Options{Now: "2026-10-01T00:00:00Z"})
-if err != nil {
-	// The files could not be verified at all: a malformed trust policy, a
-	// bundle that is not strict JSON, or an invalid evaluation time.
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
+)
+
+func main() {
+	bundle, err := os.ReadFile("bundle.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	policy, err := os.ReadFile("trust-policy.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	report, _, err := evidence.VerifyBytes(bundle, policy, nil, evidence.Options{Now: "2026-10-01T00:00:00Z"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(report.Verdict)
 }
-fmt.Println(report.Verdict)
 ```
 
 `Now` is the evaluation time at which current trust is checked. Pass earlier
@@ -165,17 +182,37 @@ computing it needs the policy (ECL1N-0179).
 ## Verifying an offline package
 
 ```go
-data, _ := os.ReadFile("evidence.zip")
-document, _ := os.ReadFile("trust-policy.json")
-policy, err := trust.Load(document)
-if err != nil {
-	// A malformed trust policy.
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/offline"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/trust"
+)
+
+func main() {
+	data, err := os.ReadFile("evidence.zip")
+	if err != nil {
+		log.Fatal(err)
+	}
+	document, err := os.ReadFile("trust-policy.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	policy, err := trust.Load(document)
+	if err != nil {
+		log.Fatal(err)
+	}
+	report, err := offline.Verify(data, policy, offline.Options{Options: evidence.Options{Now: "2026-10-01T00:00:00Z"}})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(report.Verdict, offline.Identifiers(report))
 }
-report, err := offline.Verify(data, policy, offline.Options{Options: evidence.Options{Now: "2026-10-01T00:00:00Z"}})
-if err != nil {
-	// An invalid option or limit: the package was not read.
-}
-fmt.Println(report.Verdict, offline.Identifiers(report))
 ```
 
 The trust policy, earlier versions and evaluation time are yours, never the
@@ -189,22 +226,42 @@ package over a limit is `invalid` with `ecl.error.resource-limit-exceeded.v1`.
 `offline.VerifyBytes` verifies a package file against trust policy files, as
 `evidence.VerifyBytes` verifies a bundle file. `ecl-verify-go` uses it for a
 file that begins with the bytes `PK`, up to 1 GiB, the declared archive limit.
+Under valid caller inputs, a larger package is reported as `invalid` (status 1),
+with `ecl.error.resource-limit-exceeded.v1`. A file already above the limit is
+refused unread; a file that grows past the limit during the read receives the
+same verdict. An unreadable file or invalid caller input remains a usage error
+(status 2), without a verdict.
 
 ## Checking a binding record
 
 ```go
-data, _ := os.ReadFile("exchange.json")
-record, err := strict.Parse(data)
-if err != nil {
-	// Not restricted JSON.
-}
-findings, err := bindings.EvaluateRecord(bindings.MCPExchangeSchema, record)
-if err != nil {
-	// The Python verifier raises on this record (a *bindings.PythonError), or the
-	// schema is unknown.
-}
-for _, finding := range findings {
-	fmt.Println(finding.RuleID, finding.Path, finding.Detail)
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/bindings"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
+)
+
+func main() {
+	data, err := os.ReadFile("exchange.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	record, err := strict.Parse(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	findings, err := bindings.EvaluateRecord(bindings.MCPExchangeSchema, record)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, finding := range findings {
+		fmt.Println(finding.RuleID, finding.Path, finding.Detail)
+	}
 }
 ```
 
@@ -249,6 +306,8 @@ Copyright 2026 G-14, Inc. Licensed under the Apache License, Version 2.0
 code was written. G-14's patent pledge for implementations of ECL-1 is in the
 repository's `PATENTS.md`; G-14 has patents pending. The module uses only the
 Go standard library.
+
+## Report format
 
 The canonical JSON report includes `primary`: the registered identifier of the
 primary finding, or `null` for `verified`. An `incomplete` report names

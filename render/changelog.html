@@ -1,0 +1,4197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECL-1 change log</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Documents"><a href="index.html">Document index</a></nav>
+<main id="main">
+<h1 id="ecl-1-change-log">ECL-1 change log</h1>
+<p>For each version of ECL-1, and each candidate that preceded Version 1.0, that the
+requirement ledger records, this log gives the requirements that it introduced, changed
+and retired, by identifier, with the document and the section where each requirement
+stands. A requirement is changed in a version when its text differs from its text in the
+version before; a text that changes within the version that introduced it is new there,
+not changed. The ledger begins with the requirements of the frozen RC-3 candidate, which
+it records as introduced in 1.0-rc.3. The text of each requirement is in the document
+named and in <code>registries/requirements-compiled.json</code>. The wire values and registry entries
+that changed between versions are listed in the release notes of each version
+(<code>RELEASE-NOTES-1.0.md</code> for Version 1.0). Like the rest of the text of ECL-1, this log is
+licensed under CC BY 4.0, as <code>LICENSING.md</code> states.</p>
+<p>The historical version sections are generated from
+<code>registries/requirement-ledger.json</code> (version 1.0). The correction section
+is generated from <code>release/CORRECTIONS-1.0.1.json</code> by
+<code>scripts/generate_correction_changelog.py</code>, using the preserved original
+release archive as its historical input.</p>
+<h2 id="correction-release-101">Correction release 1.0.1</h2>
+<p>This release corrects the Version 1.0 source and the accompanying Version 1
+reference edition. It retains all 628 requirement identifiers; 53 requirement
+texts differ from the original publication. The exact before/after texts are
+in <a href="../release/CORRECTIONS-1.0.1.json">CORRECTIONS-1.0.1.json</a>. The
+<a href="../RELEASE-NOTES-1.0.md#correction-release-v101">release notes</a> describe the
+verifier, model, corpus, explanatory and governance corrections. The earlier
+version ledger below remains the historical record of the original release.</p>
+<h2 id="10">1.0</h2>
+<p>Introduced: 9. Changed: 27. Retired: 0.</p>
+<h3 id="introduced">Introduced</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-056">DCMP2-056</a></td>
+<td>DCMP-2</td>
+<td>3.3 Challenge exchange</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-057">DCMP2-057</a></td>
+<td>DCMP-2</td>
+<td>3.3 Challenge exchange</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-077">EBMP2-077</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-078">EBMP2-078</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0196">ECL1N-0196</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0197">ECL1N-0197</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0198">ECL1N-0198</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="changed">Changed</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-053">DCMP2-053</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-055">EBMP2-055</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-057">EBMP2-057</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-059">EBMP2-059</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-060">EBMP2-060</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-061">EBMP2-061</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-062">EBMP2-062</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-068">EBMP2-068</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-074">EBMP2-074</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-076">EBMP2-076</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0051">ECL1N-0051</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0056">ECL1N-0056</a></td>
+<td>ECL-1</td>
+<td>5.8 Packaging and Independence Constraints</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0159">ECL1N-0159</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0164">ECL1N-0164</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0174">ECL1N-0174</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-008">EL1-008</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>3. Retention and hold</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-021">EL1-021</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>7. Destruction</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-025">EL1-025</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>8. Precedence</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-027">EL1-027</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>8. Precedence</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-113">FR-113</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-033">IE1-033</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-034">IE1-034</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-035">IE1-035</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-008">OA1-008</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Signatures, issuance and records</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-006">TP1-006</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-007">TP1-007</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retired">Retired</h3>
+<p>None.</p>
+<h2 id="10-rc6">1.0-rc.6</h2>
+<p>Introduced: 22. Changed: 10. Retired: 0.</p>
+<h3 id="introduced-1">Introduced</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-070">EBMP2-070</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-071">EBMP2-071</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-072">EBMP2-072</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-073">EBMP2-073</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-074">EBMP2-074</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-075">EBMP2-075</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-076">EBMP2-076</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0185">ECL1N-0185</a></td>
+<td>ECL-1</td>
+<td>5.4.1 Release Contract</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0186">ECL1N-0186</a></td>
+<td>ECL-1</td>
+<td>5.4.1 Release Contract</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0187">ECL1N-0187</a></td>
+<td>ECL-1</td>
+<td>5.4.1 Release Contract</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0188">ECL1N-0188</a></td>
+<td>ECL-1</td>
+<td>5.4.1 Release Contract</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0189">ECL1N-0189</a></td>
+<td>ECL-1</td>
+<td>5.4.2 Recovery After Failure</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0190">ECL1N-0190</a></td>
+<td>ECL-1</td>
+<td>5.4.2 Recovery After Failure</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0191">ECL1N-0191</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0192">ECL1N-0192</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0193">ECL1N-0193</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0194">ECL1N-0194</a></td>
+<td>ECL-1</td>
+<td>5.6 Verification Layer</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-013">MG1-013</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Release boundary and pre-release obligations</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-014">MG1-014</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Release boundary and pre-release obligations</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-015">MG1-015</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Release boundary and pre-release obligations</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-016">MG1-016</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Evidence and records</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-017">MG1-017</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Evidence and records</td>
+</tr>
+</tbody>
+</table>
+<h3 id="changed-1">Changed</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-050">EBMP2-050</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-059">EBMP2-059</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-062">EBMP2-062</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-068">EBMP2-068</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-028">IE1-028</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-029">IE1-029</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-037">IE1-037</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-005">MG1-005</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Forwarding and refusal</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-006">MG1-006</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Forwarding and refusal</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-010">MG1-010</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Evidence and records</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retired-1">Retired</h3>
+<p>None.</p>
+<h2 id="10-rc5">1.0-rc.5</h2>
+<p>Introduced: 80. Changed: 65. Retired: 0.</p>
+<h3 id="introduced-2">Introduced</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-001">AB1-001</a></td>
+<td>AARM-BINDING-1</td>
+<td>Roles and declarations</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-002">AB1-002</a></td>
+<td>AARM-BINDING-1</td>
+<td>Roles and declarations</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-003">AB1-003</a></td>
+<td>AARM-BINDING-1</td>
+<td>Decisions</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-004">AB1-004</a></td>
+<td>AARM-BINDING-1</td>
+<td>Decisions</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-005">AB1-005</a></td>
+<td>AARM-BINDING-1</td>
+<td>Decisions</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-006">AB1-006</a></td>
+<td>AARM-BINDING-1</td>
+<td>Judgment inputs</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-007">AB1-007</a></td>
+<td>AARM-BINDING-1</td>
+<td>Receipts and evidence</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-008">AB1-008</a></td>
+<td>AARM-BINDING-1</td>
+<td>Receipts and evidence</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-009">AB1-009</a></td>
+<td>AARM-BINDING-1</td>
+<td>Receipts and evidence</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-010">AB1-010</a></td>
+<td>AARM-BINDING-1</td>
+<td>Interception, telemetry and credentials</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-011">AB1-011</a></td>
+<td>AARM-BINDING-1</td>
+<td>Interception, telemetry and credentials</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-012">AB1-012</a></td>
+<td>AARM-BINDING-1</td>
+<td>Interception, telemetry and credentials</td>
+</tr>
+<tr>
+<td><a href="aarm-binding-1.html#AB1-013">AB1-013</a></td>
+<td>AARM-BINDING-1</td>
+<td>Decision basis</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-001">AC1-001</a></td>
+<td>ACS-BINDING-1</td>
+<td>Roles and declarations</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-002">AC1-002</a></td>
+<td>ACS-BINDING-1</td>
+<td>Roles and declarations</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-003">AC1-003</a></td>
+<td>ACS-BINDING-1</td>
+<td>Roles and declarations</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-004">AC1-004</a></td>
+<td>ACS-BINDING-1</td>
+<td>Dispositions</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-005">AC1-005</a></td>
+<td>ACS-BINDING-1</td>
+<td>Dispositions</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-006">AC1-006</a></td>
+<td>ACS-BINDING-1</td>
+<td>Failure and timeouts</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-007">AC1-007</a></td>
+<td>ACS-BINDING-1</td>
+<td>Failure and timeouts</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-008">AC1-008</a></td>
+<td>ACS-BINDING-1</td>
+<td>Session chain and evidence</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-009">AC1-009</a></td>
+<td>ACS-BINDING-1</td>
+<td>Session chain and evidence</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-010">AC1-010</a></td>
+<td>ACS-BINDING-1</td>
+<td>Session chain and evidence</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-011">AC1-011</a></td>
+<td>ACS-BINDING-1</td>
+<td>Session chain and evidence</td>
+</tr>
+<tr>
+<td><a href="acs-binding-1.html#AC1-012">AC1-012</a></td>
+<td>ACS-BINDING-1</td>
+<td>Decision basis</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-053">DCMP2-053</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-054">DCMP2-054</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-055">DCMP2-055</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-065">EBMP2-065</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-066">EBMP2-066</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-067">EBMP2-067</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-068">EBMP2-068</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-069">EBMP2-069</a></td>
+<td>EBMP-2</td>
+<td>8. Error and version behavior</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0179">ECL1N-0179</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0180">ECL1N-0180</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0181">ECL1N-0181</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0182">ECL1N-0182</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0183">ECL1N-0183</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0184">ECL1N-0184</a></td>
+<td>ECL-1</td>
+<td>8.10 Profile Extension Rules</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-037">IE1-037</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-038">IE1-038</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-039">IE1-039</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>11. Envelope verification</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-040">IE1-040</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>11. Envelope verification</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-001">MG1-001</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Scope and mapping</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-002">MG1-002</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Scope and mapping</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-003">MG1-003</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Scope and mapping</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-004">MG1-004</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Scope and mapping</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-005">MG1-005</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Forwarding and refusal</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-006">MG1-006</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Forwarding and refusal</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-007">MG1-007</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Forwarding and refusal</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-008">MG1-008</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Change control and credentials</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-009">MG1-009</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Change control and credentials</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-010">MG1-010</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Evidence and records</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-011">MG1-011</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Evidence and records</td>
+</tr>
+<tr>
+<td><a href="mcp-gateway-1.html#MG1-012">MG1-012</a></td>
+<td>MCP-GATEWAY-1</td>
+<td>Evidence and records</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-001">OA1-001</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Token content</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-002">OA1-002</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Token content</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-003">OA1-003</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Token content</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-004">OA1-004</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Sender constraint and presentation</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-005">OA1-005</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Sender constraint and presentation</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-006">OA1-006</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Delegation</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-007">OA1-007</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Signatures, issuance and records</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-008">OA1-008</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Signatures, issuance and records</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-009">OA1-009</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Signatures, issuance and records</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-010">OA1-010</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Signatures, issuance and records</td>
+</tr>
+<tr>
+<td><a href="oauth-authority-1.html#OA1-011">OA1-011</a></td>
+<td>OAUTH-AUTHORITY-1</td>
+<td>Presentation checks and refusals</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-001">OE1-001</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Copy, not record</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-002">OE1-002</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Copy, not record</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-003">OE1-003</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-004">OE1-004</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-005">OE1-005</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-006">OE1-006</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-007">OE1-007</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-008">OE1-008</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-009">OE1-009</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Log records</td>
+</tr>
+<tr>
+<td><a href="otel-evidence-export-1.html#OE1-010">OE1-010</a></td>
+<td>OTEL-EVIDENCE-EXPORT-1</td>
+<td>Keyed digests</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-005">SF1-005</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-009">TP1-009</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-010">TP1-010</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="changed-2">Changed</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-002">DCMP2-002</a></td>
+<td>DCMP-2</td>
+<td>2. Conformance surface</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-013">DCMP2-013</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-020">DCMP2-020</a></td>
+<td>DCMP-2</td>
+<td>3.3 Challenge exchange</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-029">DCMP2-029</a></td>
+<td>DCMP-2</td>
+<td>4. Workflow and causality</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-038">DCMP2-038</a></td>
+<td>DCMP-2</td>
+<td>6. Integrity and extension behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-043">DCMP2-043</a></td>
+<td>DCMP-2</td>
+<td>7. Failure and safe behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-052">DCMP2-052</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-011">EBMP2-011</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-025">EBMP2-025</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-040">EBMP2-040</a></td>
+<td>EBMP-2</td>
+<td>7. Lifecycle</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-046">EBMP2-046</a></td>
+<td>EBMP-2</td>
+<td>9. Event kinds and states</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-056">EBMP2-056</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-057">EBMP2-057</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-058">EBMP2-058</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-060">EBMP2-060</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-062">EBMP2-062</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0014">ECL1N-0014</a></td>
+<td>ECL-1</td>
+<td>2.8 Boundary Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0022">ECL1N-0022</a></td>
+<td>ECL-1</td>
+<td>3.4 ECL Companion Interoperability Artifacts</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0032">ECL1N-0032</a></td>
+<td>ECL-1</td>
+<td>5. Architectural Components</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0041">ECL1N-0041</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0046">ECL1N-0046</a></td>
+<td>ECL-1</td>
+<td>5.4 Enforcement Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0052">ECL1N-0052</a></td>
+<td>ECL-1</td>
+<td>5.6 Verification Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0058">ECL1N-0058</a></td>
+<td>ECL-1</td>
+<td>5.9 Interoperability and Companion Artifacts</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0062">ECL1N-0062</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0068">ECL1N-0068</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0095">ECL1N-0095</a></td>
+<td>ECL-1</td>
+<td>8.5 Model D: Offline-Capable Edge or Embedded Deployment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0100">ECL1N-0100</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0108">ECL1N-0108</a></td>
+<td>ECL-1</td>
+<td>8.10 Profile Extension Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0110">ECL1N-0110</a></td>
+<td>ECL-1</td>
+<td>9.4 Normative Security Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0123">ECL1N-0123</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0143">ECL1N-0143</a></td>
+<td>ECL-1</td>
+<td>7.5 Minimum Independence Class by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0148">ECL1N-0148</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0156">ECL1N-0156</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0160">ECL1N-0160</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0165">ECL1N-0165</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0174">ECL1N-0174</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0177">ECL1N-0177</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-001">FR-001</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-101">FR-101</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-102">FR-102</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-103">FR-103</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-104">FR-104</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-107">FR-107</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-108">FR-108</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-002">IE1-002</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-004">IE1-004</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-013">IE1-013</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>4. Payload-bound policy</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-018">IE1-018</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-021">IE1-021</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-022">IE1-022</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-024">IE1-024</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-030">IE1-030</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-031">IE1-031</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-032">IE1-032</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-034">IE1-034</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-002">SF1-002</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-004">SF1-004</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-001">TP1-001</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-002">TP1-002</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-003">TP1-003</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-006">TP1-006</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-007">TP1-007</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-032">TS1-032</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-006">XR1-006</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-010">XR1-010</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retired-2">Retired</h3>
+<p>None.</p>
+<h2 id="10-rc4">1.0-rc.4</h2>
+<p>Introduced: 119. Changed: 74. Retired: 0.</p>
+<h3 id="introduced-3">Introduced</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-001">AZB1-001</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-002">AZB1-002</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-003">AZB1-003</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-004">AZB1-004</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-005">AZB1-005</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-006">AZB1-006</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-007">AZB1-007</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="authzen-binding-1.html#AZB1-008">AZB1-008</a></td>
+<td>AUTHZEN-BINDING-1</td>
+<td>ECL AuthZEN Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-043">DCMP2-043</a></td>
+<td>DCMP-2</td>
+<td>7. Failure and safe behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-044">DCMP2-044</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-045">DCMP2-045</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-046">DCMP2-046</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-047">DCMP2-047</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-048">DCMP2-048</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-049">DCMP2-049</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-050">DCMP2-050</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-051">DCMP2-051</a></td>
+<td>DCMP-2</td>
+<td>8. Response binding</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-052">DCMP2-052</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-001">DHB1-001</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-002">DHB1-002</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-003">DHB1-003</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-004">DHB1-004</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-005">DHB1-005</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-006">DHB1-006</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-007">DHB1-007</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="dcmp2-http-1.html#DHB1-008">DHB1-008</a></td>
+<td>DCMP2-HTTP-1</td>
+<td>ECL DCMP-2 HTTP Binding Profile 1</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-046">EBMP2-046</a></td>
+<td>EBMP-2</td>
+<td>9. Event kinds and states</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-047">EBMP2-047</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-048">EBMP2-048</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-049">EBMP2-049</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-050">EBMP2-050</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-051">EBMP2-051</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-052">EBMP2-052</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-053">EBMP2-053</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-054">EBMP2-054</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-055">EBMP2-055</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-056">EBMP2-056</a></td>
+<td>EBMP-2</td>
+<td>10. Event binding</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-057">EBMP2-057</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-058">EBMP2-058</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-059">EBMP2-059</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-060">EBMP2-060</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-061">EBMP2-061</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-062">EBMP2-062</a></td>
+<td>EBMP-2</td>
+<td>11. Signed evidence bundle verification</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-063">EBMP2-063</a></td>
+<td>EBMP-2</td>
+<td>3.3 Human intervention</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-064">EBMP2-064</a></td>
+<td>EBMP-2</td>
+<td>3.3 Human intervention</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0141">ECL1N-0141</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0142">ECL1N-0142</a></td>
+<td>ECL-1</td>
+<td>7.5 Minimum Independence Class by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0143">ECL1N-0143</a></td>
+<td>ECL-1</td>
+<td>7.5 Minimum Independence Class by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0144">ECL1N-0144</a></td>
+<td>ECL-1</td>
+<td>7.5 Minimum Independence Class by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0145">ECL1N-0145</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0146">ECL1N-0146</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0147">ECL1N-0147</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0148">ECL1N-0148</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0149">ECL1N-0149</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0150">ECL1N-0150</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0151">ECL1N-0151</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0152">ECL1N-0152</a></td>
+<td>ECL-1</td>
+<td>7.12 Versioning, Compatibility, and Reassessment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0153">ECL1N-0153</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0154">ECL1N-0154</a></td>
+<td>ECL-1</td>
+<td>11.2 Rating Method</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0155">ECL1N-0155</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0156">ECL1N-0156</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0157">ECL1N-0157</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0158">ECL1N-0158</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0159">ECL1N-0159</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0160">ECL1N-0160</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0161">ECL1N-0161</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0162">ECL1N-0162</a></td>
+<td>ECL-1</td>
+<td>9.8 Evidence-Signing Key Custody (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0163">ECL1N-0163</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0164">ECL1N-0164</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0165">ECL1N-0165</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0166">ECL1N-0166</a></td>
+<td>ECL-1</td>
+<td>5.4 Enforcement Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0167">ECL1N-0167</a></td>
+<td>ECL-1</td>
+<td>5.6 Verification Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0168">ECL1N-0168</a></td>
+<td>ECL-1</td>
+<td>5.6 Verification Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0169">ECL1N-0169</a></td>
+<td>ECL-1</td>
+<td>5.6 Verification Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0170">ECL1N-0170</a></td>
+<td>ECL-1</td>
+<td>5.7 Fleet Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0171">ECL1N-0171</a></td>
+<td>ECL-1</td>
+<td>5.7 Fleet Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0172">ECL1N-0172</a></td>
+<td>ECL-1</td>
+<td>5.10 Consequence-Coupling Controls</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0173">ECL1N-0173</a></td>
+<td>ECL-1</td>
+<td>5.10 Consequence-Coupling Controls</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0174">ECL1N-0174</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0175">ECL1N-0175</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0176">ECL1N-0176</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0177">ECL1N-0177</a></td>
+<td>ECL-1</td>
+<td>5.11 Human Approval (Normative)</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-032">IE1-032</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-033">IE1-033</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-034">IE1-034</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-035">IE1-035</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-036">IE1-036</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>9. Trusted time</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-001">SF1-001</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-002">SF1-002</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-003">SF1-003</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="strict-failure-1.html#SF1-004">SF1-004</a></td>
+<td>STRICT-FAILURE-1</td>
+<td>ECL Strict Failure Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-001">TE1-001</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-002">TE1-002</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-003">TE1-003</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-004">TE1-004</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-005">TE1-005</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-006">TE1-006</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-007">TE1-007</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-008">TE1-008</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-009">TE1-009</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-010">TE1-010</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-011">TE1-011</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-012">TE1-012</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="transactional-effect-1.html#TE1-013">TE1-013</a></td>
+<td>TRANSACTIONAL-EFFECT-1</td>
+<td>ECL Transactional Effect Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-001">TP1-001</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-002">TP1-002</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-003">TP1-003</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-004">TP1-004</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-005">TP1-005</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-006">TP1-006</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-007">TP1-007</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="trust-policy-1.html#TP1-008">TP1-008</a></td>
+<td>TRUST-POLICY-1</td>
+<td>ECL Trust Policy Profile 1</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-031">TS1-031</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-032">TS1-032</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-033">TS1-033</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-034">TS1-034</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-035">TS1-035</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-036">TS1-036</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-023">XR1-023</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+</tbody>
+</table>
+<h3 id="changed-3">Changed</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-006">DCMP2-006</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-007">DCMP2-007</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-012">DCMP2-012</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-022">DCMP2-022</a></td>
+<td>DCMP-2</td>
+<td>3.4 Control message</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-025">DCMP2-025</a></td>
+<td>DCMP-2</td>
+<td>3.4 Control message</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-031">DCMP2-031</a></td>
+<td>DCMP-2</td>
+<td>5. Time and expiry</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-032">DCMP2-032</a></td>
+<td>DCMP-2</td>
+<td>5. Time and expiry</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-013">EBMP2-013</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-016">EBMP2-016</a></td>
+<td>EBMP-2</td>
+<td>3.3 Human intervention</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-019">EBMP2-019</a></td>
+<td>EBMP-2</td>
+<td>3.4 Verification and fleet events</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0001">ECL1N-0001</a></td>
+<td>ECL-1</td>
+<td>2.2 Systems In Scope</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0006">ECL1N-0006</a></td>
+<td>ECL-1</td>
+<td>2.4 Consequential Action Classification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0012">ECL1N-0012</a></td>
+<td>ECL-1</td>
+<td>2.7 Scope Constraints and Non-Goals</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0013">ECL1N-0013</a></td>
+<td>ECL-1</td>
+<td>2.8 Boundary Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0014">ECL1N-0014</a></td>
+<td>ECL-1</td>
+<td>2.8 Boundary Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0016">ECL1N-0016</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0018">ECL1N-0018</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0019">ECL1N-0019</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0020">ECL1N-0020</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0023">ECL1N-0023</a></td>
+<td>ECL-1</td>
+<td>3.6 Sector and Safety Extensions (Normative When Invoked by Deployment Profile)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0024">ECL1N-0024</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0025">ECL1N-0025</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0027">ECL1N-0027</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0028">ECL1N-0028</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0029">ECL1N-0029</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0030">ECL1N-0030</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a></td>
+<td>ECL-1</td>
+<td>5.3 Authority Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0032">ECL1N-0032</a></td>
+<td>ECL-1</td>
+<td>5. Architectural Components</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0060">ECL1N-0060</a></td>
+<td>ECL-1</td>
+<td>5.10 Consequence-Coupling Controls</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0061">ECL1N-0061</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0062">ECL1N-0062</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0064">ECL1N-0064</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0065">ECL1N-0065</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0067">ECL1N-0067</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0068">ECL1N-0068</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0069">ECL1N-0069</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0070">ECL1N-0070</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0077">ECL1N-0077</a></td>
+<td>ECL-1</td>
+<td>7.6 Conformance Claim Status</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0078">ECL1N-0078</a></td>
+<td>ECL-1</td>
+<td>7.7 Minimum Public Claim Statement</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0082">ECL1N-0082</a></td>
+<td>ECL-1</td>
+<td>7.10 Overclaim Boundaries</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0086">ECL1N-0086</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0087">ECL1N-0087</a></td>
+<td>ECL-1</td>
+<td>7.12 Versioning, Compatibility, and Reassessment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0097">ECL1N-0097</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0098">ECL1N-0098</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0102">ECL1N-0102</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0103">ECL1N-0103</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0104">ECL1N-0104</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0110">ECL1N-0110</a></td>
+<td>ECL-1</td>
+<td>9.4 Normative Security Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0113">ECL1N-0113</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0114">ECL1N-0114</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0115">ECL1N-0115</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0117">ECL1N-0117</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0119">ECL1N-0119</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0120">ECL1N-0120</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0121">ECL1N-0121</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0122">ECL1N-0122</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0123">ECL1N-0123</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0124">ECL1N-0124</a></td>
+<td>ECL-1</td>
+<td>10.2 Mapping Claim Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0125">ECL1N-0125</a></td>
+<td>ECL-1</td>
+<td>10.3 Minimum Mapping Contents</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0128">ECL1N-0128</a></td>
+<td>ECL-1</td>
+<td>10.7 Boundary on Borrowed Legitimacy</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0129">ECL1N-0129</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0130">ECL1N-0130</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0131">ECL1N-0131</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0138">ECL1N-0138</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0139">ECL1N-0139</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-001">FR-001</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-101">FR-101</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-113">FR-113</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-001">IE1-001</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-007">IE1-007</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>2. Payload digest and logical identity</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-018">IE1-018</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-031">IE1-031</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-002">XR1-002</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-017">XR1-017</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>4. Private-use extensions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retired-3">Retired</h3>
+<p>None.</p>
+<h2 id="10-rc3">1.0-rc.3</h2>
+<p>Introduced: 398. Changed: 0. Retired: 0.</p>
+<h3 id="introduced-4">Introduced</h3>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Document</th>
+<th scope="col">Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-001">DCMP2-001</a></td>
+<td>DCMP-2</td>
+<td>2. Conformance surface</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-002">DCMP2-002</a></td>
+<td>DCMP-2</td>
+<td>2. Conformance surface</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-003">DCMP2-003</a></td>
+<td>DCMP-2</td>
+<td>2. Conformance surface</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-004">DCMP2-004</a></td>
+<td>DCMP-2</td>
+<td>2. Conformance surface</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-005">DCMP2-005</a></td>
+<td>DCMP-2</td>
+<td>2. Conformance surface</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-006">DCMP2-006</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-007">DCMP2-007</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-008">DCMP2-008</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-009">DCMP2-009</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-010">DCMP2-010</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-011">DCMP2-011</a></td>
+<td>DCMP-2</td>
+<td>3.1 Decision request</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-012">DCMP2-012</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-013">DCMP2-013</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-014">DCMP2-014</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-015">DCMP2-015</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-016">DCMP2-016</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-017">DCMP2-017</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-018">DCMP2-018</a></td>
+<td>DCMP-2</td>
+<td>3.2 Decision response</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-019">DCMP2-019</a></td>
+<td>DCMP-2</td>
+<td>3.3 Challenge exchange</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-020">DCMP2-020</a></td>
+<td>DCMP-2</td>
+<td>3.3 Challenge exchange</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-021">DCMP2-021</a></td>
+<td>DCMP-2</td>
+<td>3.3 Challenge exchange</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-022">DCMP2-022</a></td>
+<td>DCMP-2</td>
+<td>3.4 Control message</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-023">DCMP2-023</a></td>
+<td>DCMP-2</td>
+<td>3.4 Control message</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-024">DCMP2-024</a></td>
+<td>DCMP-2</td>
+<td>3.4 Control message</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-025">DCMP2-025</a></td>
+<td>DCMP-2</td>
+<td>3.4 Control message</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-026">DCMP2-026</a></td>
+<td>DCMP-2</td>
+<td>4. Workflow and causality</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-027">DCMP2-027</a></td>
+<td>DCMP-2</td>
+<td>4. Workflow and causality</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-028">DCMP2-028</a></td>
+<td>DCMP-2</td>
+<td>4. Workflow and causality</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-029">DCMP2-029</a></td>
+<td>DCMP-2</td>
+<td>4. Workflow and causality</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-030">DCMP2-030</a></td>
+<td>DCMP-2</td>
+<td>4. Workflow and causality</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-031">DCMP2-031</a></td>
+<td>DCMP-2</td>
+<td>5. Time and expiry</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-032">DCMP2-032</a></td>
+<td>DCMP-2</td>
+<td>5. Time and expiry</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-033">DCMP2-033</a></td>
+<td>DCMP-2</td>
+<td>5. Time and expiry</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-034">DCMP2-034</a></td>
+<td>DCMP-2</td>
+<td>5. Time and expiry</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-035">DCMP2-035</a></td>
+<td>DCMP-2</td>
+<td>6. Integrity and extension behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-036">DCMP2-036</a></td>
+<td>DCMP-2</td>
+<td>6. Integrity and extension behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-037">DCMP2-037</a></td>
+<td>DCMP-2</td>
+<td>6. Integrity and extension behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-038">DCMP2-038</a></td>
+<td>DCMP-2</td>
+<td>6. Integrity and extension behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-039">DCMP2-039</a></td>
+<td>DCMP-2</td>
+<td>7. Failure and safe behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-040">DCMP2-040</a></td>
+<td>DCMP-2</td>
+<td>7. Failure and safe behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-041">DCMP2-041</a></td>
+<td>DCMP-2</td>
+<td>7. Failure and safe behavior</td>
+</tr>
+<tr>
+<td><a href="dcmp-2.html#DCMP2-042">DCMP2-042</a></td>
+<td>DCMP-2</td>
+<td>7. Failure and safe behavior</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-001">DW1-001</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>1. Scope</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-002">DW1-002</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>1. Scope</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-003">DW1-003</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>1. Scope</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-004">DW1-004</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>1. Scope</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-005">DW1-005</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>2. Causal graph</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-006">DW1-006</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>2. Causal graph</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-007">DW1-007</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>2. Causal graph</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-008">DW1-008</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>2. Causal graph</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-009">DW1-009</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>2. Causal graph</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-010">DW1-010</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>2. Causal graph</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-011">DW1-011</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>3. Delegation and multi-agent action</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-012">DW1-012</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>3. Delegation and multi-agent action</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-013">DW1-013</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>3. Delegation and multi-agent action</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-014">DW1-014</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>3. Delegation and multi-agent action</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-015">DW1-015</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>3. Delegation and multi-agent action</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-016">DW1-016</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>4. Epochs and stale work</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-017">DW1-017</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>4. Epochs and stale work</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-018">DW1-018</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>4. Epochs and stale work</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-019">DW1-019</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>4. Epochs and stale work</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-020">DW1-020</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>5. Partial and uncertain outcome</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-021">DW1-021</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>5. Partial and uncertain outcome</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-022">DW1-022</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>5. Partial and uncertain outcome</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-023">DW1-023</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>5. Partial and uncertain outcome</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-024">DW1-024</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>5. Partial and uncertain outcome</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-025">DW1-025</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>6. Human and automated coordination</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-026">DW1-026</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>6. Human and automated coordination</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-027">DW1-027</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>6. Human and automated coordination</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-028">DW1-028</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>7. Bundle closure</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-029">DW1-029</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>7. Bundle closure</td>
+</tr>
+<tr>
+<td><a href="distributed-workflow-1.html#DW1-030">DW1-030</a></td>
+<td>DISTRIBUTED-WORKFLOW-1</td>
+<td>7. Bundle closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-001">EBMP2-001</a></td>
+<td>EBMP-2</td>
+<td>2. Evidence primitives</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-002">EBMP2-002</a></td>
+<td>EBMP-2</td>
+<td>2. Evidence primitives</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-003">EBMP2-003</a></td>
+<td>EBMP-2</td>
+<td>2. Evidence primitives</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-004">EBMP2-004</a></td>
+<td>EBMP-2</td>
+<td>2. Evidence primitives</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-005">EBMP2-005</a></td>
+<td>EBMP-2</td>
+<td>3. Event types</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-006">EBMP2-006</a></td>
+<td>EBMP-2</td>
+<td>3.1 Decision and authority events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-007">EBMP2-007</a></td>
+<td>EBMP-2</td>
+<td>3.1 Decision and authority events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-008">EBMP2-008</a></td>
+<td>EBMP-2</td>
+<td>3.1 Decision and authority events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-009">EBMP2-009</a></td>
+<td>EBMP-2</td>
+<td>3.1 Decision and authority events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-010">EBMP2-010</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-011">EBMP2-011</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-012">EBMP2-012</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-013">EBMP2-013</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-014">EBMP2-014</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-015">EBMP2-015</a></td>
+<td>EBMP-2</td>
+<td>3.2 Execution events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-016">EBMP2-016</a></td>
+<td>EBMP-2</td>
+<td>3.3 Human intervention</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-017">EBMP2-017</a></td>
+<td>EBMP-2</td>
+<td>3.3 Human intervention</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-018">EBMP2-018</a></td>
+<td>EBMP-2</td>
+<td>3.3 Human intervention</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-019">EBMP2-019</a></td>
+<td>EBMP-2</td>
+<td>3.4 Verification and fleet events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-020">EBMP2-020</a></td>
+<td>EBMP-2</td>
+<td>3.4 Verification and fleet events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-021">EBMP2-021</a></td>
+<td>EBMP-2</td>
+<td>3.4 Verification and fleet events</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-022">EBMP2-022</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-023">EBMP2-023</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-024">EBMP2-024</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-025">EBMP2-025</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-026">EBMP2-026</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-027">EBMP2-027</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-028">EBMP2-028</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-029">EBMP2-029</a></td>
+<td>EBMP-2</td>
+<td>4. Causal closure</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-030">EBMP2-030</a></td>
+<td>EBMP-2</td>
+<td>5. Identity and integrity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-031">EBMP2-031</a></td>
+<td>EBMP-2</td>
+<td>5. Identity and integrity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-032">EBMP2-032</a></td>
+<td>EBMP-2</td>
+<td>5. Identity and integrity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-033">EBMP2-033</a></td>
+<td>EBMP-2</td>
+<td>5. Identity and integrity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-034">EBMP2-034</a></td>
+<td>EBMP-2</td>
+<td>6. Privacy and fidelity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-035">EBMP2-035</a></td>
+<td>EBMP-2</td>
+<td>6. Privacy and fidelity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-036">EBMP2-036</a></td>
+<td>EBMP-2</td>
+<td>6. Privacy and fidelity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-037">EBMP2-037</a></td>
+<td>EBMP-2</td>
+<td>6. Privacy and fidelity</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-038">EBMP2-038</a></td>
+<td>EBMP-2</td>
+<td>7. Lifecycle</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-039">EBMP2-039</a></td>
+<td>EBMP-2</td>
+<td>7. Lifecycle</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-040">EBMP2-040</a></td>
+<td>EBMP-2</td>
+<td>7. Lifecycle</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-041">EBMP2-041</a></td>
+<td>EBMP-2</td>
+<td>7. Lifecycle</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-042">EBMP2-042</a></td>
+<td>EBMP-2</td>
+<td>7. Lifecycle</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-043">EBMP2-043</a></td>
+<td>EBMP-2</td>
+<td>8. Error and version behavior</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-044">EBMP2-044</a></td>
+<td>EBMP-2</td>
+<td>8. Error and version behavior</td>
+</tr>
+<tr>
+<td><a href="ebmp-2.html#EBMP2-045">EBMP2-045</a></td>
+<td>EBMP-2</td>
+<td>8. Error and version behavior</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0001">ECL1N-0001</a></td>
+<td>ECL-1</td>
+<td>2.2 Systems In Scope</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0002">ECL1N-0002</a></td>
+<td>ECL-1</td>
+<td>2.2 Systems In Scope</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0003">ECL1N-0003</a></td>
+<td>ECL-1</td>
+<td>2.3 Systems Out of Scope</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0004">ECL1N-0004</a></td>
+<td>ECL-1</td>
+<td>2.4 Consequential Action Classification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0005">ECL1N-0005</a></td>
+<td>ECL-1</td>
+<td>2.4 Consequential Action Classification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0006">ECL1N-0006</a></td>
+<td>ECL-1</td>
+<td>2.4 Consequential Action Classification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0007">ECL1N-0007</a></td>
+<td>ECL-1</td>
+<td>2.4 Consequential Action Classification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0008">ECL1N-0008</a></td>
+<td>ECL-1</td>
+<td>2.4 Consequential Action Classification</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0009">ECL1N-0009</a></td>
+<td>ECL-1</td>
+<td>2.5 Conformance Claim Boundary and Claim Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0010">ECL1N-0010</a></td>
+<td>ECL-1</td>
+<td>2.5 Conformance Claim Boundary and Claim Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0011">ECL1N-0011</a></td>
+<td>ECL-1</td>
+<td>2.5 Conformance Claim Boundary and Claim Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0012">ECL1N-0012</a></td>
+<td>ECL-1</td>
+<td>2.7 Scope Constraints and Non-Goals</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0013">ECL1N-0013</a></td>
+<td>ECL-1</td>
+<td>2.8 Boundary Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0014">ECL1N-0014</a></td>
+<td>ECL-1</td>
+<td>2.8 Boundary Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0015">ECL1N-0015</a></td>
+<td>ECL-1</td>
+<td>2.8 Boundary Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0016">ECL1N-0016</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0017">ECL1N-0017</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0018">ECL1N-0018</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0019">ECL1N-0019</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0020">ECL1N-0020</a></td>
+<td>ECL-1</td>
+<td>2.9 Conversational and Language-Mediated Systems</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0021">ECL1N-0021</a></td>
+<td>ECL-1</td>
+<td>3.3 Version-Locked Living Specification References</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0022">ECL1N-0022</a></td>
+<td>ECL-1</td>
+<td>3.4 ECL Companion Interoperability Artifacts</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0023">ECL1N-0023</a></td>
+<td>ECL-1</td>
+<td>3.6 Sector and Safety Extensions (Normative When Invoked by Deployment Profile)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0024">ECL1N-0024</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0025">ECL1N-0025</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0026">ECL1N-0026</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0027">ECL1N-0027</a></td>
+<td>ECL-1</td>
+<td>3.7 Editorial and Conformance Rules for Reference Usage</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0028">ECL1N-0028</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0029">ECL1N-0029</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0030">ECL1N-0030</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a></td>
+<td>ECL-1</td>
+<td>5.3 Authority Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0032">ECL1N-0032</a></td>
+<td>ECL-1</td>
+<td>5. Architectural Components</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0033">ECL1N-0033</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0034">ECL1N-0034</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0035">ECL1N-0035</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0036">ECL1N-0036</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0037">ECL1N-0037</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0038">ECL1N-0038</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0039">ECL1N-0039</a></td>
+<td>ECL-1</td>
+<td>5.1 Runtime Control Invariant (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0040">ECL1N-0040</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0041">ECL1N-0041</a></td>
+<td>ECL-1</td>
+<td>5.2 Decision Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0042">ECL1N-0042</a></td>
+<td>ECL-1</td>
+<td>5.3 Authority Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0043">ECL1N-0043</a></td>
+<td>ECL-1</td>
+<td>5.4 Enforcement Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0044">ECL1N-0044</a></td>
+<td>ECL-1</td>
+<td>5.4 Enforcement Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0045">ECL1N-0045</a></td>
+<td>ECL-1</td>
+<td>5.4 Enforcement Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0046">ECL1N-0046</a></td>
+<td>ECL-1</td>
+<td>5.4 Enforcement Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0047">ECL1N-0047</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0048">ECL1N-0048</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0049">ECL1N-0049</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0050">ECL1N-0050</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0051">ECL1N-0051</a></td>
+<td>ECL-1</td>
+<td>5.5 Provenance Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0052">ECL1N-0052</a></td>
+<td>ECL-1</td>
+<td>5.6 Verification Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0053">ECL1N-0053</a></td>
+<td>ECL-1</td>
+<td>5.7 Fleet Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0054">ECL1N-0054</a></td>
+<td>ECL-1</td>
+<td>5.7 Fleet Layer</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0055">ECL1N-0055</a></td>
+<td>ECL-1</td>
+<td>5.8 Packaging and Independence Constraints</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0056">ECL1N-0056</a></td>
+<td>ECL-1</td>
+<td>5.8 Packaging and Independence Constraints</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0057">ECL1N-0057</a></td>
+<td>ECL-1</td>
+<td>5.9 Interoperability and Companion Artifacts</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0058">ECL1N-0058</a></td>
+<td>ECL-1</td>
+<td>5.9 Interoperability and Companion Artifacts</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0059">ECL1N-0059</a></td>
+<td>ECL-1</td>
+<td>5.9 Interoperability and Companion Artifacts</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0060">ECL1N-0060</a></td>
+<td>ECL-1</td>
+<td>5.10 Consequence-Coupling Controls</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0061">ECL1N-0061</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0062">ECL1N-0062</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0063">ECL1N-0063</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0064">ECL1N-0064</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0065">ECL1N-0065</a></td>
+<td>ECL-1</td>
+<td>6.1 Requirement Format and Applicability</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0066">ECL1N-0066</a></td>
+<td>ECL-1</td>
+<td>6.3 Safety-Enforcement Boundary and Overclaim Controls</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0067">ECL1N-0067</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0068">ECL1N-0068</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0069">ECL1N-0069</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0070">ECL1N-0070</a></td>
+<td>ECL-1</td>
+<td>6.4 Interoperability and Profile Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0071">ECL1N-0071</a></td>
+<td>ECL-1</td>
+<td>7.2 Required Minimum Level Determination</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0072">ECL1N-0072</a></td>
+<td>ECL-1</td>
+<td>7.2 Required Minimum Level Determination</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0073">ECL1N-0073</a></td>
+<td>ECL-1</td>
+<td>7.4 Claim Boundary Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0074">ECL1N-0074</a></td>
+<td>ECL-1</td>
+<td>7.4 Claim Boundary Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0075">ECL1N-0075</a></td>
+<td>ECL-1</td>
+<td>7.5 Minimum Independence Class by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0076">ECL1N-0076</a></td>
+<td>ECL-1</td>
+<td>7.5 Minimum Independence Class by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0077">ECL1N-0077</a></td>
+<td>ECL-1</td>
+<td>7.6 Conformance Claim Status</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0078">ECL1N-0078</a></td>
+<td>ECL-1</td>
+<td>7.7 Minimum Public Claim Statement</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0079">ECL1N-0079</a></td>
+<td>ECL-1</td>
+<td>7.7 Minimum Public Claim Statement</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0080">ECL1N-0080</a></td>
+<td>ECL-1</td>
+<td>7.8 Assessment Expectations by Level</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0081">ECL1N-0081</a></td>
+<td>ECL-1</td>
+<td>7.9 Assessment Status Hierarchy</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0082">ECL1N-0082</a></td>
+<td>ECL-1</td>
+<td>7.10 Overclaim Boundaries</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0083">ECL1N-0083</a></td>
+<td>ECL-1</td>
+<td>7.10 Overclaim Boundaries</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0084">ECL1N-0084</a></td>
+<td>ECL-1</td>
+<td>7.10 Overclaim Boundaries</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0085">ECL1N-0085</a></td>
+<td>ECL-1</td>
+<td>7.10 Overclaim Boundaries</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0086">ECL1N-0086</a></td>
+<td>ECL-1</td>
+<td>7.11 Finalized Assessment Baselines</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0087">ECL1N-0087</a></td>
+<td>ECL-1</td>
+<td>7.12 Versioning, Compatibility, and Reassessment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0088">ECL1N-0088</a></td>
+<td>ECL-1</td>
+<td>7.12 Versioning, Compatibility, and Reassessment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0089">ECL1N-0089</a></td>
+<td>ECL-1</td>
+<td>8.1 Cross-Model Invariants (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0090">ECL1N-0090</a></td>
+<td>ECL-1</td>
+<td>8.1 Cross-Model Invariants (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0091">ECL1N-0091</a></td>
+<td>ECL-1</td>
+<td>8.2 Model A: Centralized Control Plane with Distributed Enforcement</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0092">ECL1N-0092</a></td>
+<td>ECL-1</td>
+<td>8.3 Model B: Federated Multi-Domain Governance</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0093">ECL1N-0093</a></td>
+<td>ECL-1</td>
+<td>8.4 Model C: Sovereign Self-Managed Deployment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0094">ECL1N-0094</a></td>
+<td>ECL-1</td>
+<td>8.5 Model D: Offline-Capable Edge or Embedded Deployment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0095">ECL1N-0095</a></td>
+<td>ECL-1</td>
+<td>8.5 Model D: Offline-Capable Edge or Embedded Deployment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0096">ECL1N-0096</a></td>
+<td>ECL-1</td>
+<td>8.6 Model E: Air-Gapped or High-Assurance Segmented Deployment</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0097">ECL1N-0097</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0098">ECL1N-0098</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0099">ECL1N-0099</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0100">ECL1N-0100</a></td>
+<td>ECL-1</td>
+<td>8.7 Declared Timing Case (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0101">ECL1N-0101</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0102">ECL1N-0102</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0103">ECL1N-0103</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0104">ECL1N-0104</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0105">ECL1N-0105</a></td>
+<td>ECL-1</td>
+<td>8.8 Operational Fallback States (Normative)</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0106">ECL1N-0106</a></td>
+<td>ECL-1</td>
+<td>8.10 Profile Extension Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0107">ECL1N-0107</a></td>
+<td>ECL-1</td>
+<td>8.10 Profile Extension Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0108">ECL1N-0108</a></td>
+<td>ECL-1</td>
+<td>8.10 Profile Extension Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0109">ECL1N-0109</a></td>
+<td>ECL-1</td>
+<td>9.2 Baseline Adversary Model</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0110">ECL1N-0110</a></td>
+<td>ECL-1</td>
+<td>9.4 Normative Security Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0111">ECL1N-0111</a></td>
+<td>ECL-1</td>
+<td>9.4 Normative Security Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0112">ECL1N-0112</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0113">ECL1N-0113</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0114">ECL1N-0114</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0115">ECL1N-0115</a></td>
+<td>ECL-1</td>
+<td>9.5 Privacy and Sensitive Data Considerations</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0116">ECL1N-0116</a></td>
+<td>ECL-1</td>
+<td>9.6 Operational Security Posture</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0117">ECL1N-0117</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0118">ECL1N-0118</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0119">ECL1N-0119</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0120">ECL1N-0120</a></td>
+<td>ECL-1</td>
+<td>9.7 Security Interoperability Baseline</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0121">ECL1N-0121</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0122">ECL1N-0122</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0123">ECL1N-0123</a></td>
+<td>ECL-1</td>
+<td>10.1 Positioning Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0124">ECL1N-0124</a></td>
+<td>ECL-1</td>
+<td>10.2 Mapping Claim Classes</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0125">ECL1N-0125</a></td>
+<td>ECL-1</td>
+<td>10.3 Minimum Mapping Contents</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0126">ECL1N-0126</a></td>
+<td>ECL-1</td>
+<td>10.3 Minimum Mapping Contents</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0127">ECL1N-0127</a></td>
+<td>ECL-1</td>
+<td>10.4 Minimum Mapping-Backed Claim Form</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0128">ECL1N-0128</a></td>
+<td>ECL-1</td>
+<td>10.7 Boundary on Borrowed Legitimacy</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0129">ECL1N-0129</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0130">ECL1N-0130</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0131">ECL1N-0131</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0132">ECL1N-0132</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0133">ECL1N-0133</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0134">ECL1N-0134</a></td>
+<td>ECL-1</td>
+<td>11.1 Usage Rules</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0135">ECL1N-0135</a></td>
+<td>ECL-1</td>
+<td>11.4 Procurement Decision Gates</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0136">ECL1N-0136</a></td>
+<td>ECL-1</td>
+<td>11.5 Checklist Deliverables Package</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0137">ECL1N-0137</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0138">ECL1N-0138</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0139">ECL1N-0139</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#ECL1N-0140">ECL1N-0140</a></td>
+<td>ECL-1</td>
+<td>11.6 Baseline Clarifications</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-001">EL1-001</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>1. Principle</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-002">EL1-002</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>1. Principle</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-003">EL1-003</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>1. Principle</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-004">EL1-004</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>2. Sealing and verification</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-005">EL1-005</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>2. Sealing and verification</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-006">EL1-006</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>2. Sealing and verification</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-007">EL1-007</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>3. Retention and hold</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-008">EL1-008</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>3. Retention and hold</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-009">EL1-009</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>3. Retention and hold</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-010">EL1-010</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>3. Retention and hold</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-011">EL1-011</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>4. Export and chain of custody</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-012">EL1-012</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>4. Export and chain of custody</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-013">EL1-013</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>4. Export and chain of custody</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-014">EL1-014</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>5. Redaction and minimization</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-015">EL1-015</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>5. Redaction and minimization</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-016">EL1-016</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>5. Redaction and minimization</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-017">EL1-017</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>5. Redaction and minimization</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-018">EL1-018</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>6. Supersession and revocation</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-019">EL1-019</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>6. Supersession and revocation</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-020">EL1-020</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>6. Supersession and revocation</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-021">EL1-021</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>7. Destruction</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-022">EL1-022</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>7. Destruction</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-023">EL1-023</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>7. Destruction</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-024">EL1-024</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>7. Destruction</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-025">EL1-025</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>8. Precedence</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-026">EL1-026</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>8. Precedence</td>
+</tr>
+<tr>
+<td><a href="evidence-lifecycle-1.html#EL1-027">EL1-027</a></td>
+<td>EVIDENCE-LIFECYCLE-1</td>
+<td>8. Precedence</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-001">FR-001</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-002">FR-002</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-003">FR-003</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-004">FR-004</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-005">FR-005</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-006">FR-006</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-007">FR-007</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-008">FR-008</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-101">FR-101</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-102">FR-102</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-103">FR-103</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-104">FR-104</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-105">FR-105</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-106">FR-106</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-107">FR-107</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-108">FR-108</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-109">FR-109</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-110">FR-110</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-111">FR-111</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-112">FR-112</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-113">FR-113</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-201">FR-201</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-202">FR-202</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-203">FR-203</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-204">FR-204</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-205">FR-205</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-301">FR-301</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-302">FR-302</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-303">FR-303</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-304">FR-304</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="ecl-1_standard.html#FR-305">FR-305</a></td>
+<td>ECL-1</td>
+<td>6.2 Core Requirements</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-001">IE1-001</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-002">IE1-002</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-003">IE1-003</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-004">IE1-004</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>1. Security goal</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-005">IE1-005</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>2. Payload digest and logical identity</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-006">IE1-006</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>2. Payload digest and logical identity</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-007">IE1-007</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>2. Payload digest and logical identity</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-008">IE1-008</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>2. Payload digest and logical identity</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-009">IE1-009</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>3. Signing input</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-010">IE1-010</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>3. Signing input</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-011">IE1-011</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>3. Signing input</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-012">IE1-012</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>4. Payload-bound policy</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-013">IE1-013</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>4. Payload-bound policy</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-014">IE1-014</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>4. Payload-bound policy</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-015">IE1-015</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>4. Payload-bound policy</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-016">IE1-016</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-017">IE1-017</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-018">IE1-018</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-019">IE1-019</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-020">IE1-020</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>5. Initial suite registry</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-021">IE1-021</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-022">IE1-022</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-023">IE1-023</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-024">IE1-024</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>6. Verification material and time</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-025">IE1-025</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>7. Countersignature and transition</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-026">IE1-026</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>7. Countersignature and transition</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-027">IE1-027</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>7. Countersignature and transition</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-028">IE1-028</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-029">IE1-029</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-030">IE1-030</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="integrity-envelope-1.html#IE1-031">IE1-031</a></td>
+<td>INTEGRITY-ENVELOPE-1</td>
+<td>8. Resource safety and deterministic containers</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-001">TS1-001</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>1. Time classes</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-002">TS1-002</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>1. Time classes</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-003">TS1-003</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>1. Time classes</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-004">TS1-004</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>1. Time classes</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-005">TS1-005</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>1. Time classes</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-006">TS1-006</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-007">TS1-007</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-008">TS1-008</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-009">TS1-009</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>2. Latency declaration</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-010">TS1-010</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>3. Dependency failure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-011">TS1-011</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>3. Dependency failure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-012">TS1-012</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>3. Dependency failure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-013">TS1-013</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>3. Dependency failure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-014">TS1-014</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>3. Dependency failure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-015">TS1-015</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-016">TS1-016</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-017">TS1-017</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-018">TS1-018</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-019">TS1-019</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-020">TS1-020</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>4. Fail behavior</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-021">TS1-021</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>5. Buffering and backpressure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-022">TS1-022</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>5. Buffering and backpressure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-023">TS1-023</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>5. Buffering and backpressure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-024">TS1-024</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>5. Buffering and backpressure</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-025">TS1-025</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>6. Emergency and precedence</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-026">TS1-026</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>6. Emergency and precedence</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-027">TS1-027</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>6. Emergency and precedence</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-028">TS1-028</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>6. Emergency and precedence</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-029">TS1-029</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>7. Evidence</td>
+</tr>
+<tr>
+<td><a href="timing-safe-state-1.html#TS1-030">TS1-030</a></td>
+<td>TIMING-SAFE-STATE-1</td>
+<td>7. Evidence</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-001">XR1-001</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-002">XR1-002</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-003">XR1-003</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-004">XR1-004</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-005">XR1-005</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>1. Extension descriptor</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-006">XR1-006</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-007">XR1-007</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-008">XR1-008</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-009">XR1-009</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-010">XR1-010</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>2. Consumer behavior</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-011">XR1-011</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>3. Registry operations</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-012">XR1-012</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>3. Registry operations</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-013">XR1-013</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>3. Registry operations</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-014">XR1-014</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>3. Registry operations</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-015">XR1-015</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>3. Registry operations</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-016">XR1-016</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>3. Registry operations</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-017">XR1-017</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>4. Private-use extensions</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-018">XR1-018</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>4. Private-use extensions</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-019">XR1-019</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>4. Private-use extensions</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-020">XR1-020</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>5. Compatibility</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-021">XR1-021</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>5. Compatibility</td>
+</tr>
+<tr>
+<td><a href="extension-registry-1.html#XR1-022">XR1-022</a></td>
+<td>EXTENSION-REGISTRY-1</td>
+<td>5. Compatibility</td>
+</tr>
+</tbody>
+</table>
+<h3 id="changed-4">Changed</h3>
+<p>None.</p>
+<h3 id="retired-4">Retired</h3>
+<p>None.</p>
+<aside class="source-record" aria-label="Source record">
+<dl>
+<dt>Source</dt><dd><code>CHANGELOG.md</code>, SHA-256 <code>f09066881a5b2f475de53ea2f0e23d2f13d0445d0d20ad66f23f96bf14d6b178</code></dd>
+<dt>Release status</dt><dd>absent</dd>
+<dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
+</dl>
+</aside>
+</main>
+</body>
+</html>

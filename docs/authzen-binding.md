@@ -59,11 +59,11 @@ any call.
 
 `enc` percent-encodes the UTF-8 bytes of an identifier that lie outside the
 unreserved characters of RFC 3986, the percent sign included. The encoding is
-injective, so two ECL identifiers never reach the PDP as one, and it sends no
-raw character that a policy engine's identifier syntax rejects (AZB1-004). An
-identifier longer than the engine accepts is refused rather than shortened. A
-raw identifier with colons, such as a URN, is not read the same way by every
-engine, which is why the mapping never sends one.
+injective on the mapped strings. The configured PDP must accept those strings
+and preserve their distinctions; an identifier it cannot represent without
+aliasing or truncation is refused (AZB1-004). Percent encoding alone does not
+establish compatibility with every engine's accepted characters or
+normalization rules.
 
 The mapping omits `action.parameters`, `constraints`, `authority_request`,
 `workflow` and `extensions`; the ECL decision point checks them natively. An
@@ -74,16 +74,16 @@ than `decision_request`, is refused before any PDP call (AZB1-004).
 
 | PDP behavior | Result |
 |---|---|
-| Bare `{"decision":true}`, or `true` with an empty `context` | Contributes to an `admit`, with no reason |
-| Boolean `false` | Deny, `ecl.reason.authzen-denied.v1` |
-| Non-empty `context` on `true` | Deny, `ecl.error.binding-unsupported.v1`; a qualified permit is never flattened into an unqualified one |
+| `{"decision":true}` or `{"decision":true,"context":{}}` | Contributes to an `admit`, with no reason |
+| An otherwise valid response object with `"decision":false` | Deny, `ecl.reason.authzen-denied.v1` |
+| Non-empty `context` in a response object with `"decision":true` | Deny, `ecl.error.binding-unsupported.v1`; a qualified permit is never flattened into an unqualified one |
 | Missing or non-boolean `decision`, a body or `context` that is not an object, duplicate members, a number with a fractional part anywhere, malformed JSON | Deny, `ecl.error.dependency-response-invalid.v1` |
 | An unknown top-level member, a wrong media type, or a body over the cap | Deny, `ecl.error.dependency-response-invalid.v1` |
 | A redirect, a 4xx or 5xx status, a connection or TLS failure, a body cut short | Deny, `ecl.error.dependency-unavailable.v1`; a redirect is never followed |
 | A slow trickle of bytes, a DNS lookup that does not return, or exhausted connection capacity | Deny, `ecl.error.dependency-unavailable.v1`, by the total deadline or the bounded capacity |
 
-An empty `context` does not qualify the decision, and a valid `false` is a policy
-denial, not a transport failure (AZB1-002, AZB1-003). The parser refuses numbers
+An empty `context` does not qualify the decision, and an otherwise valid
+response object with `"decision":false` is a policy denial, not a transport failure (AZB1-002, AZB1-003). The parser refuses numbers
 with a fractional part, duplicate names, invalid Unicode, excess depth and
 excess nodes, which is stricter than the I-JSON recommendation of AuthZEN
 §11.5. The client also denies an unknown top-level member, although AuthZEN

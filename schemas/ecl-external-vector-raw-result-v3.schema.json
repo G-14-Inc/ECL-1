@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/3",
+  "title": "ECL External Implementation Raw Vector Result v3",
+  "description": "One raw result of a cross-implementation report v3: exactly three members. The report row's raw_result_sha256 is the SHA-256 of the exact bytes of the evidence file that holds this object.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_revision",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_external_vector_raw_result_v3"
+    },
+    "implementation_revision": {
+      "description": "The report's implementation.source_revision, unchanged.",
+      "type": "string",
+      "minLength": 1
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "suite",
+        "artifact_sha256",
+        "expected",
+        "status",
+        "observed_secondary_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The SHA-256 of the exact bytes of the vector's artifact."
+        },
+        "expected": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "suite": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "met",
+            "not-met",
+            "unsupported"
+          ]
+        },
+        "observed_primary_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "observed_secondary_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unsupported_capability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_verdict": {
+          "anyOf": [
+            {
+              "enum": [
+                "verified",
+                "invalid",
+                "incomplete",
+                "current-trust-failed"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare."
+        },
+        "observed_scope": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "established",
+                "not_established",
+                "reasons"
+              ],
+              "properties": {
+                "established": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                },
+                "not_established": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                },
+                "reasons": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare."
+        },
+        "observed_effects": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "action_id",
+                  "level"
+                ],
+                "properties": {
+                  "action_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "level": {
+                    "enum": [
+                      "none",
+                      "issuer-asserted",
+                      "corroborated"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare."
+        },
+        "observed_unresolved_predecessor_ids": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare."
+        },
+        "observed_canonical_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unsupported"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "unsupported_capability"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "observed_primary_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "observed_verdict"
+                  ]
+                },
+                {
+                  "required": [
+                    "observed_scope"
+                  ]
+                },
+                {
+                  "required": [
+                    "observed_effects"
+                  ]
+                },
+                {
+                  "required": [
+                    "observed_unresolved_predecessor_ids"
+                  ]
+                },
+                {
+                  "required": [
+                    "observed_canonical_sha256"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "observed_secondary_ids": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "observed_primary_id"
+            ],
+            "not": {
+              "required": [
+                "unsupported_capability"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "observed_primary_id"
+            ],
+            "properties": {
+              "observed_primary_id": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "observed_secondary_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -663,10 +663,19 @@ func keyAcceptable(key trust.Key, signature map[string]any, purpose, owner strin
 func signerStatus(envelopeValue, payload map[string]any, policy *trust.Policy, purpose, at string, original *trust.Policy, times map[string]string, current *trust.Policy) string {
 	signatures, _ := pyjson.Array(envelopeValue["signatures"])
 	owner, hasOwner := principalOf(payload)
+	integrityPolicy, _ := pyjson.Object(payload["integrity_policy"])
+	acceptedSuites, _ := pyjson.Array(integrityPolicy["accepted_suites"])
+	eligibleKeys, _ := pyjson.Array(integrityPolicy["eligible_key_ids"])
 	keys := make([]trust.Key, 0, len(signatures))
 	for _, item := range signatures {
 		signature, _ := pyjson.Object(item)
 		keyID, _ := pyjson.Text(signature["key_id"])
+		// EBMP2-057 applies the payload-policy clauses of IE1-040 step 6(a)
+		// to every signature, including one not needed for the threshold.
+		if !pyjson.InList(signature["suite_id"], acceptedSuites) ||
+			(len(eligibleKeys) > 0 && !pyjson.InList(keyID, eligibleKeys)) {
+			return PolicyInvalid
+		}
 		key, known := policy.Key(keyID)
 		if !known || !keyAcceptable(key, signature, purpose, owner, hasOwner, original) {
 			return PolicyInvalid
@@ -1004,6 +1013,9 @@ var envelopeWide = map[string]bool{ClockRegressed: true, TrustedTimeInvalid: tru
 // current policy's revocations, and its current status under the current policy at now.
 func signerDependencies(envelopeValue, payload map[string]any, index int, purpose string, version, current *trust.Policy, now string, times map[string]string, at string, envelopeStatus string) []TrustDependency {
 	owner, hasOwner := principalOf(payload)
+	integrityPolicy, _ := pyjson.Object(payload["integrity_policy"])
+	acceptedSuites, _ := pyjson.Array(integrityPolicy["accepted_suites"])
+	eligibleKeys, _ := pyjson.Array(integrityPolicy["eligible_key_ids"])
 	var result []TrustDependency
 	signatures, _ := pyjson.Array(envelopeValue["signatures"])
 	for _, item := range signatures {
@@ -1013,6 +1025,8 @@ func signerDependencies(envelopeValue, payload map[string]any, index int, purpos
 		}
 		keyID, _ := pyjson.Text(signature["key_id"])
 		suite, _ := pyjson.Text(signature["suite_id"])
+		inPayloadPolicy := pyjson.InList(signature["suite_id"], acceptedSuites) &&
+			(len(eligibleKeys) == 0 || pyjson.InList(keyID, eligibleKeys))
 		own := at
 		if moment, present := times[keyID]; present {
 			own = moment
@@ -1022,7 +1036,7 @@ func signerDependencies(envelopeValue, payload map[string]any, index int, purpos
 		switch {
 		case envelopeWide[envelopeStatus]:
 			historical = envelopeStatus
-		case !known || !keyAcceptable(key, signature, purpose, owner, hasOwner, nil):
+		case !inPayloadPolicy || !known || !keyAcceptable(key, signature, purpose, owner, hasOwner, nil):
 			historical = PolicyInvalid
 		default:
 			historical = keyTimeStatus(key, version, own, current)
@@ -1033,8 +1047,10 @@ func signerDependencies(envelopeValue, payload map[string]any, index int, purpos
 			}
 		}
 		status := PolicyInvalid
-		if present, inCurrent := current.Key(keyID); inCurrent && keyAcceptable(present, signature, purpose, owner, hasOwner, version) {
-			status = keyTimeStatus(present, current, now, nil)
+		if inPayloadPolicy {
+			if present, inCurrent := current.Key(keyID); inCurrent && keyAcceptable(present, signature, purpose, owner, hasOwner, version) {
+				status = keyTimeStatus(present, current, now, nil)
+			}
 		}
 		revoked, found := currentRevocation(current, keyID, material(version, keyID))
 		// A dependency not evaluated, because the envelope's status was decided for the whole

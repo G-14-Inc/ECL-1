@@ -64,6 +64,7 @@ def raw_result_problem(
     row: dict[str, Any],
     revision: str,
     validator: Draft202012Validator,
+    *, version: int = 2,
 ) -> str | None:
     """Why an evidence file is not the raw result of `row`, or None when it is.
 
@@ -78,7 +79,7 @@ def raw_result_problem(
     problem = first_schema_error(validator, raw)
     if problem is not None:
         return (
-            f"the raw result does not satisfy external-vector-raw-result/2 at "
+            f"the raw result does not satisfy external-vector-raw-result/{version} at "
             f"{location(problem)}: {problem.message[:200]}"
         )
     if raw["implementation_revision"] != revision:
@@ -112,10 +113,27 @@ def verify_v2(
     confined_file: Callable[[Path, str], Path],
     sha256_file: Callable[[Path], str],
 ) -> dict[str, Any]:
-    error = first_schema_error(Draft202012Validator(read(root / REPORT_SCHEMA)), report)
+    return _verify_bound_report(root, report, evidence_root=evidence_root,
+        implementation_root=implementation_root, source_tree=source_tree,
+        confined_file=confined_file, sha256_file=sha256_file, version=2)
+
+
+def _verify_bound_report(
+    root: Path, report: dict[str, Any], *, evidence_root: Path | None,
+    implementation_root: Path | None, source_tree: TreeReader,
+    confined_file: Callable[[Path, str], Path], sha256_file: Callable[[Path], str],
+    version: int,
+    observation_check: Callable[[dict[str, Any], dict[str, Any]], bool] | None = None,
+) -> dict[str, Any]:
+    """Common frozen-input, raw-evidence and result checks for versions 2 and 3."""
+    if version not in (2, 3) or (version == 3 and observation_check is None):
+        raise ValueError("unsupported report verification contract")
+    report_schema = f"schemas/ecl-cross-implementation-report-v{version}.schema.json"
+    raw_schema = f"schemas/ecl-external-vector-raw-result-v{version}.schema.json"
+    error = first_schema_error(Draft202012Validator(read(root / report_schema)), report)
     if error is not None:
         raise ValueError(
-            f"the report does not satisfy cross-implementation-report/2 at {location(error)}: "
+            f"the report does not satisfy cross-implementation-report/{version} at {location(error)}: "
             f"{error.message[:200]}"
         )
     if report["decision"] == "not_run":
@@ -194,7 +212,7 @@ def verify_v2(
         if total > 4 * 1024**3 or sha256_file(path) != row["sha256"]:
             raise ValueError("external evidence byte budget or digest mismatch")
         bound[row["sha256"]] = path
-    raw_validator = Draft202012Validator(read(root / RAW_RESULT_SCHEMA))
+    raw_validator = Draft202012Validator(read(root / raw_schema))
     seen: set[str] = set()
     failed: list[str] = []
     unsupported: list[str] = []
@@ -207,6 +225,7 @@ def verify_v2(
         ):
             raise ValueError(identifier + ": vector artifact/class/suite mismatch")
         capability = declaration["capability"]
+        observations_met = observation_check(row, vector) if observation_check is not None else True
         if row["status"] == "unsupported":
             if (
                 capability not in optional
@@ -227,8 +246,9 @@ def verify_v2(
                 if vector["expected"] == "pass"
                 else primary == vector["expected_primary_id"]
             )
+            met = met and observations_met
             if (row["status"] == "met") != met:
-                raise ValueError(identifier + ": status does not match actual primary result")
+                raise ValueError(identifier + ": status does not match actual vector expectations")
             if not met:
                 failed.append(identifier)
         raw_hash = row["raw_result_sha256"]
@@ -236,14 +256,14 @@ def verify_v2(
             raise ValueError(identifier + ": raw result is absent or reused")
         seen.add(raw_hash)
         problem = raw_result_problem(
-            bound[raw_hash], row, implementation["source_revision"], raw_validator
+            bound[raw_hash], row, implementation["source_revision"], raw_validator, version=version
         )
         if problem is not None:
             raise ValueError(f"{identifier}: {problem}")
     if report["decision"] != ("fail" if failed else "pass"):
         raise ValueError("external decision does not retain failed vectors")
     return {
-        "schema_version": "ecl_external_implementation_verification_v2",
+        "schema_version": f"ecl_external_implementation_verification_v{version}",
         "candidate_version": "1.0",
         "decision": "verified-report-integrity",
         "replay_decision": report["decision"],

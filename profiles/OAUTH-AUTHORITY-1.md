@@ -113,6 +113,11 @@ is the base64url SHA-256 of the access token; and whose `jti`, a string of 1 to
 repeated `jti` being refused with `ecl.error.replay.v1`. For mutual TLS the
 client certificate's SHA-256 thumbprint MUST equal `x5t#S256`.
 
+This profile uses a stricter URI comparison than the normalization recommended
+by RFC 9449, Section 4.3. For a presentation to pass, the client and resource
+server need the same URI spelling apart from the transformations in OA1-004.
+Otherwise equivalent URI spellings can be refused.
+
 **OA1-005** — A resource server or enforcement point MUST accept the token only
 for a request whose target, operation and parameter digest equal the
 `identifier`, the `actions` member and the `parameters_digest` of the token's
@@ -169,7 +174,8 @@ a resource server refuses the `application/at+jwt` that RFC 9068, Section 4 also
 lets it accept, and a `typ` that differs only in letter case, such as the
 `at+JWT` of the example in RFC 9068, Section 3, although media type names are
 case-insensitive (RFC 7515, Section 4.1.9). The default set also leaves out
-RS256, which RFC 9068, Section 2.1 asks implementations to support; a claim may
+RS256, which RFC 9068, Section 2.1 requires conforming authorization servers and
+resource servers to support; a claim may
 declare RS256, which the vectors do not exercise.
 
 **OA1-008** — An authority issuer MUST issue a token only for a verified `admit`,
@@ -180,8 +186,9 @@ the token MUST become unusable within the declared revocation propagation bound,
 through introspection or a lifetime no longer than that bound. Version 1.0 of
 this profile supports only an admit whose `obligations` list is empty. An issuer
 MUST NOT issue a token for any admit carrying an obligation, including one
-claimed to have been discharged, and the presentation verifier MUST reject
-such an issuance with `ecl.rule.oauth-token-expresses-admit.v1`. A token, custom
+claimed to have been discharged, and a verifier of an
+`ecl_oauth_presentation_v1` record MUST reject a record of such an issuance
+with `ecl.rule.oauth-token-expresses-admit.v1`. A token, custom
 claim or successful issuance MUST NOT be treated as discharging an obligation
 at a later release boundary. Actions requiring obligations use a declared
 DCMP-2 enforcement path with release-time proofs; they are outside this
@@ -253,7 +260,7 @@ gives the value of each claim for an ECL admit.
 | `sub` | `request.subject.id`, or `request.actor.id` when the request names no subject |
 | `act` | `{"sub": request.actor.id}` when the subject differs from the actor |
 | `aud` | `authorization.audience` |
-| `iat`, `nbf` | Integer seconds, not earlier than `authorization.valid_from` |
+| `iat`, `nbf` | Integer seconds. `nbf`, or `iat` when `nbf` is absent, is not earlier than `authorization.valid_from`. |
 | `exp` | Integer seconds, not later than `authorization.valid_until` |
 | `jti` | Unique per token |
 | `client_id` | The enforcement point or gateway that presents the token |
@@ -290,15 +297,16 @@ misuse, which is the gap that ECL1N-0033 and the direct-access control gap (G2)
 describe. Binding the token to a proof-of-possession key that the governed AI
 system cannot read makes a copied token useless, and binding it to one admit and
 one parameter digest makes a stolen proof and token usable only for the action
-already admitted, once, before `exp`. The verifier's own key configuration
+already admitted, once for that captured DPoP proof, within the ECL
+authorization window and the token-validity checks, including any declared
+clock-skew allowance. The verifier's own key configuration
 closes the attacks that take a key or an algorithm from the token's own header,
 such as the `none` and algorithm-substitution attacks of RFC 8725, Section 2.1,
 and the `kid`, `jku` and `x5u` misuse of its Section 3.10, and reading every
 segment under the strict JSON profile leaves no room for two verifiers to read
 one token differently. Replay protection holds only as far as the use counts and
 the remembered `jti` values reach, which is why every instance of a resource
-server shares them (OA1-005). Token exchange across trust domains is where
-authority is most often widened by interpretation; ECL1N-0031 requires a denial
+server shares them (OA1-005). Token exchange across trust domains can widen authority by interpretation; ECL1N-0031 requires a denial
 when the intersection with the parent authority cannot be shown.
 
 ## Conformance

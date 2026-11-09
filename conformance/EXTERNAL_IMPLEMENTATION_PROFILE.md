@@ -1,13 +1,13 @@
 # ECL-1 conformance report profile
 
-Version: 2
+Version: 3
 
 Status: reporting profile of ECL-1 Version 1.0, for an implementer, an
 assessor or an integrator who reports a run of the conformance tests. A report
 under this profile qualifies nothing beyond the integrity of its binding.
 
-This profile states everything an implementation needs, beside the corpus
-itself, to produce a report that `scripts/verify_external_implementation_report.py`
+This profile states everything an implementation needs, in addition to the
+corpus itself, to produce a report that `scripts/verify_external_implementation_report.py`
 accepts. The key words MUST and MUST NOT are used as in RFC 2119.
 
 ## What a report covers
@@ -93,8 +93,9 @@ result, or an unsupported result for a required capability, is refused.
 ## Report
 
 A report MUST validate against
-`schemas/ecl-cross-implementation-report-v2.schema.json`. Its members, beside
-the implementation's identity and capabilities:
+`schemas/ecl-cross-implementation-report-v3.schema.json` (`schema_version`
+`ecl_cross_implementation_report_v3`, `profile_version` `"3"`). Its members, in
+addition to the implementation's identity and capabilities:
 
 - `suite.manifest_sha256` is the SHA-256, in lowercase hexadecimal, of the
   exact bytes of `conformance/shared-corpus.json`. The member keeps the name it
@@ -122,10 +123,12 @@ the implementation's identity and capabilities:
   `not-met`, and `pass` otherwise, including when vectors of optional
   capabilities that the implementation does not declare are `unsupported`.
   `not_run` appears only in the unexecuted template
-  (`conformance/report-template-v2.json`), which is never replay evidence.
+  (`conformance/report-template-v3.json`), which is never replay evidence.
 
-For a failing vector, met means that the primary is exactly the manifest's
-expected primary. For a passing vector, met means no findings. An
+The finding comparison for a failing vector requires the primary to equal the
+manifest's expected primary; for a passing vector it requires no findings.
+The row is `met` only if this comparison and every applicable observation
+comparison below hold. An
 `evidence-bundle` or `package` vector expects as its primary the first finding
 in the order of checks of EBMP2-068 (after the checks of IE1-022 for a
 package) and lists no secondary finding, because a signed bundle has no
@@ -146,25 +149,51 @@ report for that action's terminal effect. A row whose `expected_verdict` is `inc
 `expected_unresolved_predecessor_ids`: the identifiers of the predecessors that the report must
 list in `unresolved_predecessor_ids` (EBMP2-076) because it could not resolve them; an empty list
 means that the report lists none. A row with `accept_current_trust_failure` is verified with the
-caller's current-trust waiver applied, as the row states. For such a row, an implementation's
-result is compared on its scope, its evidence levels and its unresolved predecessors as well as on
-its verdict and its findings: the two scope lists and the reasons are compared exactly, each
-listed action's level must equal the row's, and the unresolved predecessor identifiers are
-compared as a set. The row is `met` only when every one of these comparisons
-holds, and `not-met` otherwise. `conformance/README.md` gives the stage contract: the inputs of
-each `evidence-bundle` row, including the waiver, and the form of the comparison.
+caller's current-trust waiver applied, as the row states. A supported row for a vector that declares `expected_verdict`,
+`expected_scope`, `expected_effects` or `expected_unresolved_predecessor_ids`
+MUST carry the corresponding `observed_verdict`, `observed_scope`,
+`observed_effects` or `observed_unresolved_predecessor_ids` member in both
+`vector_results` and the bound raw-result `result` object, and MUST NOT carry
+those members when the vector does not declare them or when `status` is
+`unsupported`. A required observation that the implementation did not produce
+is recorded as null, which does not meet a value expectation. An actual empty
+list or scope is recorded as that value, not null. The verifier compares `observed_primary_id` (null with empty
+`observed_secondary_ids` when `expected` is `pass`, or equal to
+`expected_primary_id` when `expected` is `fail`), `observed_verdict` equal to
+`expected_verdict`, `observed_scope` (`established`, `not_established` and
+`reasons`) equal to `expected_scope`, `observed_effects` where all terminal
+effects for each expected `action_id` have the single expected `level`, and
+`observed_unresolved_predecessor_ids` equal as a set to
+`expected_unresolved_predecessor_ids` (with no duplicate entries). The row is
+`met` only when every applicable comparison holds, and `not-met` otherwise.
+`conformance/README.md` gives the stage contract: the inputs of each
+`evidence-bundle` row, including the waiver, and the form of the comparison.
+
+A supported canonical vector MUST also carry `observed_canonical_sha256` in
+the report row and raw result: the digest actually computed, or null if parsing
+or canonicalization did not produce one. For a passing canonical vector it
+MUST equal `expected_canonical_sha256` for the row to be `met`. A failing
+canonical vector is compared on its expected primary finding; its manifest's
+digest placeholder is not a digest expectation. Other rows omit this member.
+`observed_effects` records every terminal effect's action identifier and level,
+including actions not listed by the expectation; repeated action identifiers
+are retained when more than one terminal effect was reported. For each action
+the vector names, at least one effect must be reported and all its reported
+levels must equal the expected level. Effects of other actions do not change
+that comparison.
 
 ## Raw evidence
 
 Each row of `vector_results` has its own raw result in an evidence file:
 
 - A raw result MUST be a JSON object with exactly three members and MUST
-  validate against `https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/2`
-  (`schemas/ecl-external-vector-raw-result-v2.schema.json`):
-  `schema_version`, whose value is `ecl_external_vector_raw_result_v2`;
+  validate against `https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/3`
+  (`schemas/ecl-external-vector-raw-result-v3.schema.json`):
+  `schema_version`, whose value is `ecl_external_vector_raw_result_v3`;
   `implementation_revision`, whose value is the report's
   `implementation.source_revision`; and `result`, whose value is the row with
-  every member except `raw_result_sha256`, each with the row's value.
+  every member except `raw_result_sha256`, each with the row's value (including
+  all `observed_*` members present on the row).
 - The evidence file holds the raw result as any JSON text that strict parsing
   accepts (UTF-8 without a byte order mark, no repeated member name, integers
   only within the exact interoperable range). Member order, whitespace and
@@ -195,7 +224,8 @@ convert not-met or unsupported cases into passes.
 ## Comparison and reconciliation
 
 A report is compared with the corpus vector by vector: each row with the
-vector's expected primary finding, or with no finding for a passing vector. A
+vector's finding expectation and every applicable observation comparison
+above. A
 disagreement between a report and the corpus, or between two implementations,
 is investigated against the normative artifacts, and no implementation wins by
 default, the Python reference included. A disagreement that the text resolves
@@ -205,10 +235,19 @@ not resolve is reported to the editors as a question about the text
 
 ## Earlier report versions
 
-This profile describes report version 2, against the shared corpus of
-Version 1.0. The version 1 report and raw-result shapes of the frozen RC-3
-candidate are not part of Version 1.0, and a version 1 report says nothing
-about the corpus of Version 1.0.
+This profile describes report version 3, against the shared corpus of
+Version 1.0. Historical schemas `schemas/ecl-cross-implementation-report-v2.schema.json`
+and `schemas/ecl-external-vector-raw-result-v2.schema.json` are preserved
+unchanged. Because report version 2 bound only `observed_primary_id` and
+`observed_secondary_ids` and omitted `observed_verdict`, `observed_scope`,
+`observed_effects`, `observed_unresolved_predecessor_ids` and actual canonical
+digests, `scripts/verify_external_implementation_report.py` refuses version 2 reports by
+default and accepts them only when `--allow-legacy-reports` (with `--allow-legacy-v2` retained as an alias) is explicitly supplied,
+recording `claim_boundary` as `legacy-v2-primary-only-observations-unverified`.
+The version 1 report and raw-result shapes of the frozen RC-3 candidate are not
+part of Version 1.0, and a version 1 report says nothing about the corpus of
+Version 1.0; the verifier refuses one by default, accepts it only under the same
+flag, and records `claim_boundary` as `legacy-v1-rc3-suite-observations-unverified`.
 
 A report supports a named corpus replay with stated unsupported cases and
 findings. It qualifies nothing, and it does not imply certification, production

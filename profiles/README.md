@@ -25,8 +25,8 @@ Each of these has compiled requirement IDs and its own version.
 - `TRUST-POLICY-1.md` binds caller-supplied policy versions, key roles, principals, revocation and byte-loading limits. Its vectors are in the `trust-policy`, `key-roles`, `envelope` and `evidence-bundle` suites of `conformance/suites/`.
 - `STRICT-FAILURE-1.md` forbids fail-open dispositions for in-scope action classes and requires that required proof fail closed; a safe-state profile document claims it in its `claimed_profiles` member.
 - `DCMP2-HTTP-1.md` binds HTTPS framing, bearer principals, limits, signed outcomes and failure classes.
-- `TRANSACTIONAL-EFFECT-1.md` binds transaction, time, privilege and evidence obligations with the CE catalog.
-- `AUTHZEN-BINDING-1.md` binds the extra policy check, strict response mapping and native ECL responsibilities.
+- `TRANSACTIONAL-EFFECT-1.md` binds transaction, time, privilege and evidence obligations to its informative counterexample (CE) catalog.
+- `AUTHZEN-BINDING-1.md` binds an AuthZEN policy-engine input, in addition to ECL's native authority and control checks, with strict response mapping.
 
 ## Binding profiles
 

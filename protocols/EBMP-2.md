@@ -20,11 +20,12 @@ The BCP 14 interpretation stated in DCMP-2 applies to this document.
 
 Requirement identifiers are allocated in the order requirements were added and
 never reused, so a later identifier appears among earlier ones where its subject
-belongs: EBMP2-065 and EBMP2-066 follow EBMP2-011, EBMP2-070 and EBMP2-071
-follow EBMP2-015, EBMP2-069 follows EBMP2-045, EBMP2-072 follows EBMP2-050,
-EBMP2-075 follows EBMP2-051, EBMP2-073 follows EBMP2-052, EBMP2-074 follows
-EBMP2-055, EBMP2-077 follows EBMP2-029, EBMP2-078 follows EBMP2-058, and
-EBMP2-067, EBMP2-068 and EBMP2-076 are in section 11.
+belongs: EBMP2-065 and EBMP2-066 follow EBMP2-011; EBMP2-070 and EBMP2-071
+follow EBMP2-015; EBMP2-063 and EBMP2-064 follow EBMP2-018; EBMP2-077 follows
+EBMP2-029; EBMP2-069 follows EBMP2-045; EBMP2-072 follows EBMP2-050;
+EBMP2-075 follows EBMP2-051; EBMP2-073 follows EBMP2-052; EBMP2-074 follows
+EBMP2-055; EBMP2-078 follows EBMP2-058; and EBMP2-067, EBMP2-068 and
+EBMP2-076 are in section 11.
 
 ## 2. Evidence primitives
 
@@ -199,10 +200,13 @@ any other object among the `envelopes`, and `digest` is that object's digest; a
 proof that is not an ECL object is recorded by `kind`, `reference` and `digest`
 only. The table after this rule gives, for each obligation type, the object
 admitted as its proof, the member that binds the proof to the exchange and the
-issuer that the decision names for it. A verifier MUST report with
-`ecl.rule.prerelease-obligations-discharged.v1` an `execution_released` event
-that binds its request and response (section 10) and that lacks the extension or
-an entry for one of these obligations, or that carries an entry that:
+issuer that the decision names for it. For an `execution_released` event that
+binds its request and response (section 10), a verifier MUST report
+`ecl.rule.prerelease-obligations-discharged.v1` when the extension or an entry
+for a required obligation is missing, or an entry exhibits defect 1, 2, 3, 4,
+or 6 below. It MUST report `ecl.error.obligation-unproven.v1` for defect 5, 7,
+or 8. These are the entry defects, subject to the checks and gates described
+after the table:
 
 1. names an obligation that the response does not carry, or one that another
    entry also names;
@@ -236,11 +240,14 @@ an entry for one of these obligations, or that carries an entry that:
 | `ecl.obligation.verify-witness.v1`, a deferred witness result included | A `verification` event whose `decision` is `pass` and whose `subject.uri` is the witness | One of its `causal_predecessors` names the decision request by `message_id` and digest | The `source` of the witness result, when the response gives one; otherwise the decision names none |
 | Any other type | Any EBMP-2 event record; a decision request or a decision response is never a proof | One of its `causal_predecessors` names the decision request by `message_id` and digest | None |
 
-The rule belongs to stage 8 of EBMP2-068, and each condition is checked on the
-members that are present with the types that the value schema gives them
-(DCMP2-043). Conditions 5, 6 and 8 apply only to a proof that the bundle
-carries; the first test of condition 7 applies to every entry that has
-`fresh_until`, and its other two only to a carried proof. A verifier does not
+These checks belong to stage 8 of EBMP2-068 and read the members that are
+present with the types their value schema gives them (DCMP2-043). An entry
+with defect 1 is not checked further. The result and time checks in 2 to 4,
+and the entry's own `fresh_until` check in 7, apply to every remaining entry.
+Checks 5, 6, and 8 apply only to a proof carried in the bundle. A carried
+proof's digest mismatch (6) prevents checks 5 and 8 and the carried-proof
+freshness checks in 7 from using that mismatched object. The entry's own
+`fresh_until` check still applies whether or not the proof is carried. A verifier does not
 check the digest, the signer or the type of a proof held elsewhere, and does not
 tell from an uncarried proof's `kind` whether it is an ECL object. Where the
 decision names no issuer for an obligation, a witness result without `source` or
@@ -294,8 +301,7 @@ organizational principal (`actor`), operation, target (`target_id`), authority
 (`authority`), issue time (`issued_at`), expiry (`expires_at`), and reason
 (`reason`).
 
-**EBMP2-017** — An approval MUST expire, be supersedable, and be transaction-
-bound. A generic chat statement or interface click without this binding is not
+**EBMP2-017** — An approval MUST expire, be supersedable, and be transaction-bound. A generic chat statement or interface click without this binding is not
 release authority.
 
 An approval that discharges an obligation before a release shows the obligation
@@ -389,8 +395,7 @@ predecessor that the bundle holds and that fails this rule with
 
 ## 5. Identity and integrity
 
-**EBMP2-030** — A storage path, database primary key, display label, or tenant-
-local sequence MUST NOT substitute for canonical content identity.
+**EBMP2-030** — A storage path, database primary key, display label, or tenant-local sequence MUST NOT substitute for canonical content identity.
 
 **EBMP2-031** — The exact immutable version of a record MUST be identified by
 the pair of its logical identifier and canonical digest.
@@ -416,8 +421,7 @@ look complete.
 It MUST bind the sealed source digest, redaction policy, transformation,
 removed data classes, retained verifier-critical fields, producer, and time.
 
-**EBMP2-037** — Redaction MUST NOT preserve a claim whose required verifier-
-critical evidence was removed. The claim becomes bounded, indeterminate, or
+**EBMP2-037** — Redaction MUST NOT preserve a claim whose required verifier-critical evidence was removed. The claim becomes bounded, indeterminate, or
 failed as defined by the profile.
 
 ## 7. Lifecycle
@@ -437,7 +441,8 @@ lifecycle event that lacks one of these references with
 destruction proof where the profile requires one.
 
 **EBMP2-041** — Legal hold MUST take precedence over scheduled destruction
-until a separately authorized release-hold event.
+until a separately authorized release-hold event, subject to the recorded legal
+determination under ECL1N-0195 to ECL1N-0199.
 
 **EBMP2-042** — Lifecycle metadata MUST NOT falsely claim physical deletion
 beyond the observation and control boundary of its producer.
@@ -522,15 +527,28 @@ mismatch with `ecl.rule.event-type-kind-consistent.v1`. The state of an
 ## 10. Event binding
 
 These rules state what binds an event to the request and response it records.
-An execution event binds its request and response when it meets EBMP2-047 to
-EBMP2-049 and, for an `execution_released` event, belongs to an `admit`
-response (EBMP2-050), or, for an `execution_terminal` event, meets EBMP2-051;
-the validity window of EBMP2-050 is checked apart from the binding.
-A verifier applies them in the order listed and reports the first failure with
-the error code named for it, or with `ecl.error.decision-binding-invalid.v1`
-where none is named. The digest of an object is its `ecl.digest.sha-256.v1`
-digest over restricted canonical JSON. A member a rule reads that is missing or
-of the wrong type fails that rule.
+An execution event binds its request and response when it meets EBMP2-047,
+EBMP2-048, the admitting-response and authorization-identifier checks of
+EBMP2-049, and, for `execution_released`, belongs to an `admit` response
+(EBMP2-050), or, for `execution_terminal`, meets EBMP2-051. An
+`authority_issued` or `authority_consumed` event binds its response under
+EBMP2-052. Each event's core binding check follows the listed order and stops
+at its first failure, using the rule's named error code or
+`ecl.error.decision-binding-invalid.v1` where none is named.
+
+Only an event that passes its core binding check proceeds to its MCP call
+binding (EBMP2-075), terminal late-release flag (EBMP2-072), release-window
+check (EBMP2-050 and EBMP2-071), or inclusion as a bound consumption in the use
+count (EBMP2-073), as applicable. The authority-digest check (EBMP2-049) runs
+separately wherever the event has an authority reference and a paired response,
+even if its core binding failed. Message-reference checks (EBMP2-054), use
+counts over bound consumptions (EBMP2-073), and the cross-event non-release
+check (EBMP2-053) also collect their own findings. Stage 7 of EBMP2-068 orders
+all collected stage-7 findings across the bundle.
+
+An object's digest is its `ecl.digest.sha-256.v1` digest over restricted
+canonical JSON. A member that a rule reads and that is missing or has the wrong
+type fails that rule.
 
 **EBMP2-047** — An `execution_released` or `execution_terminal` event MUST bind
 its request: `event.action_id` MUST equal the request's `action.action_id`; when
@@ -601,8 +619,10 @@ and its `workflow_id`, `root_trace_id` and `attempt` MUST equal the response's.
 response under EBMP2-052 and carries `use_count` MUST give a value from 1 to the
 number of uses that the authorization allows: 1 when its `use_policy` is
 `single_use`, and otherwise its `max_uses` when it has one. A bundle MUST NOT
-hold, for one authorization, more such events than the authorization allows, or
-two such events with the same `use_count`. A verifier MUST report a bundle that
+hold, for one authorization, more `authority_consumed` events in state
+`consumed` that bind its response under EBMP2-052 than the authorization allows,
+whether or not those events carry `use_count`. Any two of those events that
+carry `use_count` MUST carry different values. A verifier MUST report a bundle that
 breaks this with `ecl.error.decision-binding-invalid.v1`, as a finding of stage
 7 of EBMP2-068.
 
@@ -618,12 +638,13 @@ and a digest the reference carries MUST be that message's digest. A
 response it references.
 
 **EBMP2-055** — A `succeeded` attempt MUST have an `authority_consumed` event in
-state `consumed` and an `execution_released` event for the same attempt. A
-verifier MUST apply this rule to every attempt of the bundle, whatever the
-causal closure of the rest of the bundle, except an attempt one of whose objects
-in the bundle (its request, its response or one of its events) names a causal
-predecessor that the bundle does not hold, since that predecessor could be the
-event that the rule asks for (EBMP2-059).
+state `consumed` that binds its response under EBMP2-052, and an
+`execution_released` event for the same attempt that binds its request and
+response (section 10). A verifier MUST apply this rule to every attempt of the
+bundle, whatever the causal closure of the rest of the bundle, except an attempt
+one of whose objects in the bundle (its request, its response or one of its
+events) names a causal predecessor that the bundle does not hold, since that
+predecessor could be the event that the rule asks for (EBMP2-059).
 
 **EBMP2-074** — An action attempt with an `execution_released` event that binds
 its request and response, and whose authorization's `use_policy` is
@@ -708,7 +729,7 @@ continuation's response is an `admit`, the verifier MUST also check that every
 key that signed the approval holds `ecl.purpose.approval.v1` in the
 trust-policy version that the approval names, and that no key that signed it is
 bound to the request's actor, as EBMP2-070 condition 5 asks of an approval
-record; and that the approval's `expires_at`, when present, is later than the
+record; and that the approval's required `expires_at` is later than the
 `evaluated_at` of that response. A continuation answered with a `deny` or a new
 `challenge`, as DCMP2-057 requires for an approval that is late, expired or not
 acceptable, is correct evidence and is not refused for its approval. A verifier MUST report a
@@ -760,10 +781,10 @@ dependencies that comes first in the order of stage 4 of EBMP2-068.
 
 **EBMP2-061** — A verifier MUST report the evidence level of each terminal
 effect: `none` when the terminal is not historically valid; `issuer-asserted`
-when it is; and `corroborated` only when the report establishes
-`envelope-signatures` and `causal-completeness` (EBMP2-076) and, for every side
-effect of a `succeeded` terminal, some observation
-is a historically valid `verification` event with decision `pass` whose
+when it is; and `corroborated` only when the terminal state is `succeeded`,
+the terminal lists at least one side effect, the report establishes
+`envelope-signatures` and `causal-completeness` (EBMP2-076), and every listed
+side effect has an observation that is a historically valid `verification` event with decision `pass` whose
 `subject` has the side effect's `uri` and digest, that names the terminal event
 among its causal predecessors by `object_id` and digest, that has the
 terminal's `workflow.workflow_id`, `workflow.root_trace_id` and
@@ -790,8 +811,8 @@ in the bundle. The stages are:
 4. the signers: each other envelope's historical validity (EBMP2-057, IE1-032 to IE1-036, IE1-040, TRUST-POLICY-1 TP1-006); `ecl.error.clock-regressed.v1`, `ecl.error.signature-policy-invalid.v1`, `ecl.error.trusted-time-invalid.v1`, `ecl.error.trusted-time-required.v1`, `ecl.error.revoked.v1`, `ecl.error.expired.v1`, `ecl.error.resource-limit-exceeded.v1`, `ecl.error.integrity-invalid.v1`, then `ecl.error.threshold-not-met.v1`;
 5. pairing (EBMP2-058, EBMP2-066, EBMP2-078); `ecl.error.schema-invalid.v1`, then `ecl.error.decision-binding-invalid.v1`;
 6. the binding of each response to its request (DCMP2-044 to DCMP2-051), each pair stopping at its first failure; `ecl.error.request-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, `ecl.error.audience-mismatch.v1`, then `ecl.error.scope-mismatch.v1`;
-7. the binding of each event (EBMP2-047 to EBMP2-054, EBMP2-072, EBMP2-073 and EBMP2-075); `ecl.error.decision-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, then `ecl.error.expired.v1`;
-8. causal analysis (section 4 over every object of the bundle, EBMP2-059, EBMP2-077, EBMP2-055 and EBMP2-074); `ecl.error.resource-limit-exceeded.v1`, then the registered rules in ascending order of precedence, then `ecl.error.decision-binding-invalid.v1`;
+7. the binding of each event and cross-event binding rules (EBMP2-047 to EBMP2-054, EBMP2-071, EBMP2-072, EBMP2-073 and EBMP2-075), ordered across all stage-7 findings of the bundle: `ecl.error.decision-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, then `ecl.error.expired.v1`;
+8. causal analysis and pre-release obligation discharge (section 4 over every object of the bundle, EBMP2-059, EBMP2-077, EBMP2-070, EBMP2-055 and EBMP2-074); `ecl.error.resource-limit-exceeded.v1`, then the registered rules in ascending order of precedence, then `ecl.error.decision-binding-invalid.v1`, then `ecl.error.obligation-unproven.v1`;
 9. outcome reasons (EBMP2-056); `ecl.error.semantic-invalid.v1`.
 
 A bundle rule that the registry adds names its stage in its `stage` attribute

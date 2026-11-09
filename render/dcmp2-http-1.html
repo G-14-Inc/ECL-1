@@ -41,11 +41,21 @@ payload's issue time, payload validity and request binding checks; an invalid
 well-framed request within the byte limit MUST receive an unsigned HTTP 400 error.</p>
 <p><span id="DHB1-005"><strong>DHB1-005</strong></span><a class="requirement-link" href="#DHB1-005" aria-label="Link to DHB1-005">§</a> — An authenticated decision_response MUST be returned signed with
 HTTP 200 for both admit and deny, and MUST copy the verified workflow attempt.</p>
-<p><span id="DHB1-006"><strong>DHB1-006</strong></span><a class="requirement-link" href="#DHB1-006" aria-label="Link to DHB1-006">§</a> — Status mapping MUST be 401 for unauthenticated requests, 400 for
-invalid well-framed requests, 411 for invalid Content-Length or Transfer-Encoding
-framing, 413 for an exceeded byte cap, 503 with body {&quot;error&quot;: &quot;retry&quot;} for a
-retryable condition with nothing issued, and 500 for an internal failure; the
-only success status for the decision exchange MUST be 200.</p>
+<p><span id="DHB1-006"><strong>DHB1-006</strong></span><a class="requirement-link" href="#DHB1-006" aria-label="Link to DHB1-006">§</a> — Malformed-message handling MUST follow the HTTP version in use
+before application status mapping. For HTTP/1.1, a request with invalid
+Content-Length or Transfer-Encoding framing, or with both fields, MUST be
+rejected with 400 and connection closure (RFC 9112, Sections 6.1 and 6.3).
+An otherwise well-framed request without the Content-Length required by
+<a href="dcmp2-http-1.html#DHB1-001">DHB1-001</a> MUST receive 411, including an otherwise valid chunked HTTP/1.1
+request (RFC 9110, Section 15.5.12; RFC 9112, Section 6.3). HTTP/2 and HTTP/3
+stream and connection error requirements (RFC 9113, Section 8.1.1; RFC 9114,
+Section 4.1.2) take precedence over this status mapping; an HTTP error response
+alone does not satisfy a required stream reset.
+For requests that pass framing checks, status mapping MUST be 401 for
+unauthenticated requests, 400 for invalid requests within the byte cap, 413
+for an exceeded byte cap, 503 with body {&quot;error&quot;: &quot;retry&quot;} for a retryable
+condition with nothing issued, and 500 for an internal failure. The only
+success status for the decision exchange MUST be 200.</p>
 <p><span id="DHB1-007"><strong>DHB1-007</strong></span><a class="requirement-link" href="#DHB1-007" aria-label="Link to DHB1-007">§</a> — The enforcement point MUST send one request per decision attempt
 within its declared total timeout, MUST NOT follow redirects or retry within the
 attempt, and MUST treat timeout, transport failure or a usable non-200 response
@@ -57,6 +67,12 @@ MUST NOT enter evidence; it MAY be retained for forensics outside the bundle.</p
 <code>admit</code> and <code>deny</code>, as signed 200 responses that carry the verified attempt.
 Schema and key checks can precede cryptographic verification; every check
 finishes before issuance.</p>
+<p>HTTP framing references:
+<a href="https://www.rfc-editor.org/rfc/rfc9112.html#section-6.1">RFC 9112, Section 6.1</a>,
+<a href="https://www.rfc-editor.org/rfc/rfc9112.html#section-6.3">RFC 9112, Section 6.3</a>,
+<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.12">RFC 9110, Section 15.5.12</a>,
+<a href="https://www.rfc-editor.org/rfc/rfc9113.html#section-8.1.1">RFC 9113, Section 8.1.1</a>,
+and <a href="https://www.rfc-editor.org/rfc/rfc9114.html#section-4.1.2">RFC 9114, Section 4.1.2</a>.</p>
 <h2 id="evidence">Evidence</h2>
 <table tabindex="0">
 <thead>
@@ -85,8 +101,8 @@ as a failure distinct from a timeout (<a href="dcmp2-http-1.html#DHB1-008">DHB1-
 tests by the procedures in <code>conformance/requirement-evaluations.json</code>.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/DCMP2-HTTP-1.md</code>, SHA-256 <code>664a53a36e89a002da088dbbabfbb87c7aca6ee0df0f11fea5b550422792c939</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>profiles/DCMP2-HTTP-1.md</code>, SHA-256 <code>12fdf650fe414035550454fef5ca98133172a305da2700c206d95fa5acfcf837</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

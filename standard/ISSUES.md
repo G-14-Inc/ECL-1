@@ -115,8 +115,10 @@ approved text whose destination changes.
 Status: **resolved in the candidate requirements and assessment procedure.**
 
 Resolution: OA1-008 explicitly limits Version 1.0 to admits with an
-empty obligations list. All three verifiers reject issuance carrying any
-obligation; the private issuer also refuses it. Three negative corpus cases
+empty obligations list. All three verifiers reject an OAuth presentation record
+whose token was issued from an admit with a nonempty obligations list. The
+maintainer reports the same restriction for its issuer, which is outside this
+public package. Three negative corpus cases
 cover before-release, during-execution and after-execution obligations. Fresh
 proof retrieval and critical token-condition modes are not defined by this
 version. Actions needing them use an appropriate DCMP-2 enforcement path.
@@ -145,8 +147,8 @@ and that an obligation it does not support fails safely.
 
 Status: **resolved in the candidate requirements and assessment procedure.**
 
-Resolution: ECL1N-0050 gives a recorded legal-conflict procedure with
-qualified legal review, deadlines, minimization, lawful accountability records
+Resolution: ECL1N-0195 to ECL1N-0199 give a recorded legal-conflict procedure
+with qualified legal review, deadlines, minimization, lawful accountability records
 and assessment consequences. ECL1N-0051, FR-113 and the lifecycle hold/precedence
 rules use the same exception. Destroyed or unavailable evidence is not treated
 as a complete original bundle. This resolves the technical precedence contract;

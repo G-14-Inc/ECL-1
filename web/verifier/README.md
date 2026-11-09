@@ -8,7 +8,8 @@ that you choose. Open it from disk (a `file://` address) or serve the folder;
 The page reads the files you choose in the browser and makes no network
 request. Its content security policy allows only its own script and its own
 inline style, forbids every connection, form submission and embedded content,
-and requires Trusted Types, so the script cannot write HTML from strings.
+and requires Trusted Types. In a browser that enforces those directives,
+protected HTML injection sinks reject strings.
 
 The result shows the verdict with an explanation and, right after it, what the
 verdict does not establish, each item with the reason the table of EBMP2-076
@@ -58,8 +59,10 @@ The page applies the reference verification profile,
   EBMP2-060); a signature that does not verify, counted or not, makes its
   dependency historically invalid with `ecl.error.integrity-invalid.v1` and
   keeps `envelope-signatures` (for an envelope or observation) or
-  `trusted-time` (for an attestation) out of `established`, without changing
-  the verdict;
+  `trusted-time` (for an attestation) out of `established`. This additional
+  scope accounting leaves the verdict unchanged only if envelope verification
+  still satisfies the required-key and signature-threshold rules; failure of
+  either rule invalidates the envelope;
 - the pairing and binding of requests, responses and events, a continuation
   after a challenge (EBMP2-078), one causal graph over every object of the
   bundle, the DCMP-2 messages and the observations included (EBMP2-059,
@@ -105,8 +108,10 @@ verification establishes: that the enforcement point checked and released as
 its events record, that the recorded times are the true times, that the effects
 happened, that the deployment has been assessed, and, when they apply, that the
 obligations were met. A recorded discharge is the enforcement point's
-statement: of a proof that the bundle carries, the page checks only the
-signatures and the digest, not what the proof shows. Without a register the page cannot tell whether a decision consulted an input that the
+statement. For a proof carried in the bundle, the verifier checks signatures,
+issuer, admitted type, binding to the exchange, freshness at release and the
+required digest (EBMP2-070). Establishing the truth of the proof's statement
+requires corroborating evidence. Without a register the page cannot tell whether a decision consulted an input that the
 register does not declare, and with one it still cannot see an input that a
 decision consulted and did not record. It compares a decision with its
 verifiable-only outcome only when the record states that outcome, since

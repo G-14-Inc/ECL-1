@@ -5,9 +5,12 @@ IE1-022) of at most 1 GiB, the declared archive limit; any other file is a JSON 
 at most 1 MiB (TP1-007). Both are verified under the same caller inputs and reported in the same
 form.
 
-An input that cannot be verified at all is a usage error (exit status 2), reported on standard
-error in one line: `error: CODE: MESSAGE` when the refusal has a registered code, every refusal of
-a declared limit being `ecl.error.resource-limit-exceeded.v1`, and `error: MESSAGE` otherwise.
+An offline package above its archive-byte limit is invalid (exit status 1), with the registered
+resource-limit finding (IE1-022). An unreadable file or invalid caller input is a usage error
+(exit status 2), reported on standard
+error in one line: `error: CODE: MESSAGE` when the refusal has a registered code,
+and `error: MESSAGE` otherwise. The code for an exceeded byte limit on a trust policy,
+history, register or JSON bundle is `ecl.error.resource-limit-exceeded.v1`.
 """
 
 from __future__ import annotations
@@ -15,6 +18,7 @@ from __future__ import annotations
 import argparse
 import sys
 from collections.abc import Sequence
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,6 +30,7 @@ from .bundle_verification import (
     primary_finding,
     report_to_json,
     verify_bundle,
+    with_scope,
 )
 from .canonical import CanonicalizationError, canonicalize, loads_json_strict
 from .offline import DEFAULT_OFFLINE_RESOURCE_LIMITS
@@ -47,9 +52,10 @@ RESOURCE_LIMIT = "ecl.error.resource-limit-exceeded.v1"
 
 
 class _InputError(ValueError):
-    """Input that cannot be verified at all. `code` is the registered code of the refusal when
-    there is one, and the command prints it first: every refusal of a declared limit is
-    `ecl.error.resource-limit-exceeded.v1`."""
+    """Input-read or caller-input failure with an optional registered code.
+
+    An archive-limit failure becomes an invalid verdict; other failures are usage errors.
+    """
 
     def __init__(self, message: str, code: str | None = None) -> None:
         super().__init__(message)
@@ -243,11 +249,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 raise _InputError(
                     f"cannot read offline package file ({type(error).__name__})"
                 ) from error
-            if oversized:
-                raise _InputError("offline package file exceeds the 1 GiB limit", RESOURCE_LIMIT)
-            package_bytes = _read_limited(
-                args.bundle, limit=MAX_PACKAGE_BYTES, kind="offline package", label="1 GiB"
-            )
+            package_limit: _InputError | None = None
+            try:
+                if oversized:
+                    raise _InputError("offline package file exceeds the 1 GiB limit", RESOURCE_LIMIT)
+                package_bytes = _read_limited(
+                    args.bundle, limit=MAX_PACKAGE_BYTES, kind="offline package", label="1 GiB"
+                )
+            except _InputError as error:
+                if error.code != RESOURCE_LIMIT:
+                    raise
+                package_limit = error
+                # Build the ordinary rejected-archive report context, checking every caller
+                # option. No archive contents are read or claimed to have been verified.
+                package_bytes = b""
             try:
                 report = verify_offline_package(
                     package_bytes,
@@ -260,6 +275,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             except ValueError as error:
                 raise _InputError(f"invalid --now: {error}") from error
+            if package_limit is not None:
+                report = with_scope(replace(
+                    report, verdict="invalid", findings=(f"{RESOURCE_LIMIT}: {package_limit}",)
+                ))
         else:
             bundle_bytes = _read_limited(
                 args.bundle, limit=MAX_BUNDLE_BYTES, kind="bundle", label="1 MiB"

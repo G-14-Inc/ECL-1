@@ -12,7 +12,21 @@ that changed between versions are listed in the release notes of each version
 (`RELEASE-NOTES-1.0.md` for Version 1.0). Like the rest of the text of ECL-1, this log is
 licensed under CC BY 4.0, as `LICENSING.md` states.
 
-Generated from `registries/requirement-ledger.json` (version 1.0).
+The historical version sections are generated from
+`registries/requirement-ledger.json` (version 1.0). The correction section
+is generated from `release/CORRECTIONS-1.0.1.json` by
+`scripts/generate_correction_changelog.py`, using the preserved original
+release archive as its historical input.
+
+## Correction release 1.0.1
+
+This release corrects the Version 1.0 source and the accompanying Version 1
+reference edition. It retains all 628 requirement identifiers; 53 requirement
+texts differ from the original publication. The exact before/after texts are
+in [CORRECTIONS-1.0.1.json](release/CORRECTIONS-1.0.1.json). The
+[release notes](RELEASE-NOTES-1.0.md#correction-release-v101) describe the
+verifier, model, corpus, explanatory and governance corrections. The earlier
+version ledger below remains the historical record of the original release.
 
 ## 1.0
 

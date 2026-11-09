@@ -14,19 +14,21 @@
  * JSON evidence bundle of at most 1 MiB.
  *
  * Exit status: 0 verified, 1 invalid, 2 usage error, 3 incomplete, 4 current trust failed
- * (EBMP2-060). A usage error is reported on standard error in one line, as the reference's
+ * (EBMP2-060). An offline package above its archive-byte limit is invalid, with the registered
+ * resource-limit finding (IE1-022). A usage error is reported on standard error in one line, as the reference's
  * `ecl-verify` reports it: `error: CODE: MESSAGE` when the refusal has a registered code (every
- * refusal of an input file above its byte limit is `ecl.error.resource-limit-exceeded.v1`,
- * TP1-007), and `error: MESSAGE` otherwise.
+ * refusal of a trust policy, history, register or JSON bundle above its byte limit is
+ * `ecl.error.resource-limit-exceeded.v1`, TP1-007), and `error: MESSAGE` otherwise.
  */
 
 import { closeSync, fstatSync, openSync, readSync, statSync } from "node:fs";
 import { oversizedInput, verifyBundleBytes, VerifierInputError } from "../evidence/bytes.js";
-import { primaryFinding, reportToJson, SCOPE_TEXT } from "../evidence/verify.js";
+import { primaryFinding, reportToJson, SCOPE_TEXT, withScope } from "../evidence/verify.js";
 import type { BundleReport } from "../evidence/verify.js";
 import { canonicalText } from "../json/canonical.js";
 import { MAX_TRUST_POLICY_BYTES } from "../trust/policy.js";
 import { MAX_BUNDLE_BYTES, MAX_REGISTER_BYTES } from "../evidence/bytes.js";
+import type { PackageBytesOptions } from "../offline/package.js";
 import { verifyPackageBytes } from "../offline/package.js";
 import { DEFAULT_OFFLINE_RESOURCE_LIMITS } from "../offline/zip.js";
 import { nowInstant } from "../time.js";
@@ -113,6 +115,30 @@ function readPackage(path: string): Uint8Array {
     throw oversizedInput("offline package", "1 GiB");
   }
   return readLimited(path, MAX_PACKAGE_BYTES, "offline package", "1 GiB");
+}
+
+/** Report archive-byte limits under IE1-022, including a file that grows during the read. */
+function verifyPackageFile(path: string, policyBytes: Uint8Array, options: PackageBytesOptions): ReturnType<typeof verifyPackageBytes> {
+  let archive: Uint8Array;
+  let limit: VerifierInputError | undefined;
+  try {
+    archive = readPackage(path);
+  } catch (error) {
+    if (!(error instanceof VerifierInputError) || error.code !== "ecl.error.resource-limit-exceeded.v1") {
+      throw error;
+    }
+    limit = error;
+    // Obtain the ordinary rejected-archive context and validate caller inputs.
+    // No archive contents are read or claimed to have been verified.
+    archive = new Uint8Array();
+  }
+  const result = verifyPackageBytes(archive, policyBytes, options);
+  if (limit !== undefined) {
+    result.report = withScope({ ...result.report, verdict: "invalid", findings: [
+      { code: "ecl.error.resource-limit-exceeded.v1", message: limit.message },
+    ] });
+  }
+  return result;
 }
 
 function human(report: BundleReport, currentVersion: string): string {
@@ -240,7 +266,7 @@ function main(argv: string[]): number {
     };
     // An offline package (IE1-022) is verified under the same inputs as a bundle.
     const { report, policy } = isPackage(bundlePath)
-      ? verifyPackageBytes(readPackage(bundlePath), policyBytes, options)
+      ? verifyPackageFile(bundlePath, policyBytes, options)
       : verifyBundleBytes(readLimited(bundlePath, MAX_BUNDLE_BYTES, "bundle", "1 MiB"), policyBytes, options);
     process.stdout.write(json ? canonicalText(reportToJson(report)) + "\n" : human(report, policy.version));
     return EXIT[report.verdict] as number;

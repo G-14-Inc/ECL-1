@@ -112,7 +112,7 @@ disclosed claim boundaries.
 | CE-13 | Each credential available to the services and agents attempts direct changes to protected resources, privilege changes and changes to evidence | Refused, apart from operations the claim declares and bounds |
 | CE-14 | A changed parameter under the same action key, or another action's authorization | Refused |
 | CE-16 | An authorization whose issue time is later than the admission instant | Refused as a clock rollback |
-| CE-21 | Actions admitted and then denied, and actions whose authorization expired | Each bundle verifies with its recorded non-release state, the authority issued and unused, never `incomplete` |
+| CE-21 | Actions admitted and then denied, and actions whose authorization expired | Each bundle verifies with its recorded non-release state and issued authority, with no `authority_consumed` event; a charged use remains counted under TE1-010. These conditions do not by themselves make the bundle `incomplete`. |
 | CE-22 | A `hold` or `challenge`, or an `admit` with obligations the enforcement point does not support | No effect; the terminal state is `held`, `challenged` or `denied`; every bundle verifies |
 | CE-24 | The authorization's maximum number of uses is reached | Further actions are refused; retries of charged actions still complete; a charged action denied later has consumed its charge |
 | CE-25 | Oversized and malformed input | Refused before any work on the store; no secret in any log or bundle |

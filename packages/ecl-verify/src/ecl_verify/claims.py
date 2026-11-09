@@ -491,12 +491,18 @@ def validate_procurement_gate(
     regulator_requires_full_closure: bool,
     procurement_decision: str,
 ) -> None:
+    """Check the no-departure procurement recommendation of ECL1N-0135.
+
+    A rejection flags a departure for assessment against RFC 2119 Section 4.
+    This helper does not assess the reasons for a departure, determine an ECL-1
+    conformance status, or authorize operation before required closure.
+    """
     if (
         level == 4
         and regulator_requires_full_closure
         and procurement_decision == "conditional_award"
     ):
-        raise ClaimError("L4 regulated operation cannot use conditional award")
+        raise ClaimError("L4 conditional award departs from ECL1N-0135; assess the procurement justification")
 
 
 @dataclass(frozen=True)

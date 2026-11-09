@@ -305,6 +305,32 @@
     {
       "covers": [],
       "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-final-check-cancelled-without-terminal",
+      "negates": [
+        "MG1-010",
+        "MG1-014",
+        "MG1-017"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-final-check-cancelled-without-terminal.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-014",
+        "MG1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Remove the terminal from a non-forwarded attempt whose prepared or released event records consumption."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
       "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
       "expected_secondary_ids": [],
       "id": "mcp-invalid-forwarded-admit-without-basis",
@@ -476,6 +502,30 @@
         "generator": "scripts/generate_mcp_gateway_vectors.py",
         "kind": "mutation",
         "mutation": "forward on an admit with a witness and an approval obligation, with a release event that records no discharge"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-forwarded-terminal-authority-digest",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-terminal-authority-digest.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A forwarded terminal names the correct authority URI but changes its digest."
       },
       "stage": "binding"
     },
@@ -692,6 +742,222 @@
       "stage": "binding"
     },
     {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-cancelled-foreign-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-foreign-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A live cancelled terminal with foreign-authority."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-cancelled-no-residual",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-no-residual.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A non-forwarded terminal violates its no-effects or cancellation residual-state requirement."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-cancelled-side-effects",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-side-effects.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A non-forwarded terminal violates its no-effects or cancellation residual-state requirement."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-cancelled-without-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-without-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A live cancelled terminal with without-authority."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-cancelled-wrong-authority-digest",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-wrong-authority-digest.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A live cancelled terminal with wrong-authority-digest."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-cancelled-wrong-decision-digest",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-wrong-decision-digest.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A live cancelled terminal with wrong-decision-digest."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-decision-unavailable-as-held",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-decision-unavailable-as-held.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-unavailable-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A refused live terminal disagrees with the accepted decision or its absence."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-denied-side-effects",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-denied-side-effects.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A non-forwarded terminal violates its no-effects or cancellation residual-state requirement."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-live-held-as-denied",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-held-as-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A refused live terminal disagrees with the accepted decision or its absence."
+      },
+      "stage": "binding"
+    },
+    {
       "covers": [
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/if#if[0]"
@@ -722,6 +988,510 @@
       "expected": "fail",
       "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
       "expected_secondary_ids": [],
+      "id": "mcp-invalid-recorded-cancelled-without-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-cancelled-without-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recorded cancellation still needs its authority reference."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recorded-denied-names-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-denied-names-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recorded denial cannot name consumed authority."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recorded-denied-wrong-state",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-denied-wrong-state.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "An outcome-recorded classification cannot waive decision/state binding."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recorded-held-wrong-state",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-held-wrong-state.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "An outcome-recorded classification cannot waive decision/state binding."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-admit-denied-names-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-names-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Unconsumed recovered admit with names-authority."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-admit-denied-with-prepared",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-with-prepared.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Unconsumed recovered admit with with-prepared."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-admit-denied-without-reason",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-without-reason.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Unconsumed recovered admit with without-reason."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-admit-denied-wrong-reason",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-wrong-reason.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Unconsumed recovered admit with wrong-reason."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-cancelled-foreign-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-foreign-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recovered cancelled terminal with foreign-authority."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-cancelled-without-authority",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-without-authority.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recovered cancelled terminal with without-authority."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-cancelled-wrong-authority-digest",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-wrong-authority-digest.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recovered cancelled terminal with wrong-authority-digest."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-cancelled-wrong-decision-digest",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-wrong-decision-digest.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recovered cancelled terminal with wrong-decision-digest."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-challenged-as-cancelled",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-challenged-as-cancelled.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered challenged decision as cancelled."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-challenged-as-denied",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-challenged-as-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered challenged decision as denied."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-challenged-as-held",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-challenged-as-held.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered challenged decision as held."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-denied-as-cancelled",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-denied-as-cancelled.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered denied decision as cancelled."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-denied-as-challenged",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-denied-as-challenged.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered denied decision as challenged."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-denied-as-held",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-denied-as-held.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered denied decision as held."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-held-as-cancelled",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-held-as-cancelled.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered held decision as cancelled."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-held-as-challenged",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-held-as-challenged.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered held decision as challenged."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-held-as-denied",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-held-as-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Record a recovered held decision as denied."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
       "id": "mcp-invalid-recovered-unknown-as-succeeded",
       "negates": [
         "MG1-016"
@@ -736,6 +1506,30 @@
         "generator": "scripts/generate_mcp_gateway_vectors.py",
         "kind": "mutation",
         "mutation": "record a released request whose outcome the journal does not hold as succeeded"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-recovered-unverified-as-cancelled",
+      "negates": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-unverified-as-cancelled.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-invalid-holds-refused-response.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Treat an unverified response as consumed authority."
       },
       "stage": "binding"
     },
@@ -968,6 +1762,32 @@
         "generator": "scripts/generate_mcp_gateway_vectors.py",
         "kind": "mutation",
         "mutation": "declare a release guard of 100 milliseconds in the release event while the record names 250"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
+      "expected_secondary_ids": [],
+      "id": "mcp-invalid-release-guard-exceeded-cancelled-without-terminal",
+      "negates": [
+        "MG1-010",
+        "MG1-014",
+        "MG1-017"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-release-guard-exceeded-cancelled-without-terminal.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-014",
+        "MG1-017"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-release-guard-exceeded-cancelled.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Remove the terminal from a non-forwarded attempt whose prepared or released event records consumption."
       },
       "stage": "binding"
     },
@@ -2009,6 +2829,120 @@
       "stage": "binding"
     },
     {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recorded-admit-denied",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recorded-admit-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-obligation-unsupported-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A previously recorded denied admit retains its original obligation-unproven reason."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recorded-denied",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recorded-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Recovery keeps an existing non-release terminal without a recovered-at extension."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recorded-held",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recorded-held.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Recovery keeps an existing non-release terminal without a recovered-at extension."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-challenged",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Recovery preserves an answered decision's challenged state."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-denied",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Recovery preserves an answered decision's denied state."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-held",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Recovery preserves an answered decision's held state."
+      },
+      "stage": "binding"
+    },
+    {
       "covers": [
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/properties/decision/properties/status/enum#enum",
@@ -2047,6 +2981,44 @@
       "source": {
         "generator": "scripts/generate_mcp_gateway_vectors.py",
         "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-unconsumed-admit-denied",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-unconsumed-admit-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "A recovered admit whose store resolution established no consumed use: denied, no authority, evidence-unavailable reason, following the response."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-recovered-unverified-decision-denied",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-unverified-decision-denied.json",
+      "requirement_ids": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-invalid-holds-refused-response.json",
+        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "kind": "mutation",
+        "mutation": "Recovery of a refused unverified response remains denied without authority."
       },
       "stage": "binding"
     },

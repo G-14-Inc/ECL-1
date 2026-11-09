@@ -37,11 +37,21 @@ well-framed request within the byte limit MUST receive an unsigned HTTP 400 erro
 **DHB1-005** — An authenticated decision_response MUST be returned signed with
 HTTP 200 for both admit and deny, and MUST copy the verified workflow attempt.
 
-**DHB1-006** — Status mapping MUST be 401 for unauthenticated requests, 400 for
-invalid well-framed requests, 411 for invalid Content-Length or Transfer-Encoding
-framing, 413 for an exceeded byte cap, 503 with body {"error": "retry"} for a
-retryable condition with nothing issued, and 500 for an internal failure; the
-only success status for the decision exchange MUST be 200.
+**DHB1-006** — Malformed-message handling MUST follow the HTTP version in use
+before application status mapping. For HTTP/1.1, a request with invalid
+Content-Length or Transfer-Encoding framing, or with both fields, MUST be
+rejected with 400 and connection closure (RFC 9112, Sections 6.1 and 6.3).
+An otherwise well-framed request without the Content-Length required by
+DHB1-001 MUST receive 411, including an otherwise valid chunked HTTP/1.1
+request (RFC 9110, Section 15.5.12; RFC 9112, Section 6.3). HTTP/2 and HTTP/3
+stream and connection error requirements (RFC 9113, Section 8.1.1; RFC 9114,
+Section 4.1.2) take precedence over this status mapping; an HTTP error response
+alone does not satisfy a required stream reset.
+For requests that pass framing checks, status mapping MUST be 401 for
+unauthenticated requests, 400 for invalid requests within the byte cap, 413
+for an exceeded byte cap, 503 with body {"error": "retry"} for a retryable
+condition with nothing issued, and 500 for an internal failure. The only
+success status for the decision exchange MUST be 200.
 
 **DHB1-007** — The enforcement point MUST send one request per decision attempt
 within its declared total timeout, MUST NOT follow redirects or retry within the
@@ -56,6 +66,13 @@ A decision point that supports `hold` and `challenge` returns them, like
 `admit` and `deny`, as signed 200 responses that carry the verified attempt.
 Schema and key checks can precede cryptographic verification; every check
 finishes before issuance.
+
+HTTP framing references:
+[RFC 9112, Section 6.1](https://www.rfc-editor.org/rfc/rfc9112.html#section-6.1),
+[RFC 9112, Section 6.3](https://www.rfc-editor.org/rfc/rfc9112.html#section-6.3),
+[RFC 9110, Section 15.5.12](https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.12),
+[RFC 9113, Section 8.1.1](https://www.rfc-editor.org/rfc/rfc9113.html#section-8.1.1),
+and [RFC 9114, Section 4.1.2](https://www.rfc-editor.org/rfc/rfc9114.html#section-4.1.2).
 
 ## Evidence
 

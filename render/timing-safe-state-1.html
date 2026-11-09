@@ -102,8 +102,9 @@ dependency model, the loss of a dependency that only one action class requires
 restricts that class, and the loss of one that several classes require, directly
 or through other dependencies, restricts each of them. A loss whose scope cannot
 be established restricts the enclosing scope that the model declares, or the
-whole deployment where it declares none, and a critical integrity failure or an
-emergency control activation applies to the whole deployment. Within that scope
+whole deployment where it declares none, and a critical integrity failure, an
+emergency control activation, or operator safety requiring cessation applies to
+the whole deployment. Within that scope
 each action is refused with a disposition that fails closed under <a href="timing-safe-state-1.html#TS1-032">TS1-032</a>, and
 the dependency keeps its classification as one that supplies required proof
 (<a href="timing-safe-state-1.html#TS1-031">TS1-031</a>).</p>
@@ -114,8 +115,7 @@ available for diagnosis, recovery, or safe shutdown.</p>
 <h2 id="5-buffering-and-backpressure">5. Buffering and backpressure</h2>
 <p><span id="TS1-021"><strong>TS1-021</strong></span><a class="requirement-link" href="#TS1-021" aria-label="Link to TS1-021">§</a> — Local evidence buffering MUST declare capacity, durability,
 encryption, ordering, overflow, and export behavior.</p>
-<p><span id="TS1-022"><strong>TS1-022</strong></span><a class="requirement-link" href="#TS1-022" aria-label="Link to TS1-022">§</a> — Evidence buffer exhaustion MUST NOT silently drop verifier-
-critical events.</p>
+<p><span id="TS1-022"><strong>TS1-022</strong></span><a class="requirement-link" href="#TS1-022" aria-label="Link to TS1-022">§</a> — Evidence buffer exhaustion MUST NOT silently drop verifier-critical events.</p>
 <p><span id="TS1-023"><strong>TS1-023</strong></span><a class="requirement-link" href="#TS1-023" aria-label="Link to TS1-023">§</a> — A deployment MUST declare whether exhaustion denies new actions,
 enters restricted mode, sheds only non-critical telemetry, or uses another
 profile-approved response.</p>
@@ -137,8 +137,8 @@ exclusions, breaches, and environment identity.</p>
 designed behavior, and untested assumption.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/TIMING-SAFE-STATE-1.md</code>, SHA-256 <code>4ab9b769aac73c151a455f0e9b21f8cfadbf1785ff355d71a4fd643dc9fa8623</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>protocols/TIMING-SAFE-STATE-1.md</code>, SHA-256 <code>08efebd8db96f6c4afb12bc69f185cc9b891684eead6e14db1af2b3450ee7c2b</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

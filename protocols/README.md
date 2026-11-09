@@ -7,7 +7,8 @@ This directory contains the human-readable normative protocol definitions for:
 - the ECL integrity envelope;
 - evidence lifecycle;
 - timing, availability, and safe-state behavior;
-- distributed and long-running workflow causality.
+- distributed and long-running workflow causality;
+- extension registration and critical-extension processing (EXTENSION-REGISTRY-1).
 
 JSON Schemas live under `schemas/`. Machine registries live under
 `registries/`. Wire examples of the protocols live under `protocols/examples/`. Conformance vectors and expected results live under

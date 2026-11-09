@@ -180,8 +180,8 @@ which an assessor checks against the deployment.</p>
 <p><span id="AC1-005"><strong>AC1-005</strong></span><a class="requirement-link" href="#AC1-005" aria-label="Link to AC1-005">§</a> — A <code>modify</code> decision MUST NOT release the original action. The
 action that the modification produces, if it is to go ahead, MUST be submitted
 as a new DCMP-2 decision request that carries the effective parameters after
-the modification, as the same JSON values, in <code>action.parameters</code> and
-<code>action.parameters_digest</code>, carries the original request's <code>issuer</code>, <code>actor</code>,
+the modification as the same JSON values in <code>action.parameters</code>, and their
+digest in <code>action.parameters_digest</code>, carries the original request's <code>issuer</code>, <code>actor</code>,
 <code>subject</code>, <code>delegation_chain</code>, <code>authority_request</code>, <code>constraints</code> and
 <code>integrity_policy</code>, and its <code>action</code> with only <code>action_id</code>, <code>parameters</code> and
 <code>parameters_digest</code> changed, names the original request as a causal predecessor
@@ -315,7 +315,10 @@ fails a rule MUST be reported with that rule. The decision basis of the record's
 basis of the <code>response</code>, member for member, and MUST record the same inputs,
 compared as input names are, each with the <code>class</code>, <code>required</code>, <code>source</code> and
 <code>derived_from</code> that the record's <code>inputs</code> give it; a record that breaks this
-MUST be reported as <code>ecl.rule.acs-inputs-match-basis.v1</code>.</p>
+MUST be reported as <code>ecl.rule.acs-inputs-match-basis.v1</code>. The modification
+request MUST be decided under the register version of the first decision. If
+that version is no longer in force, the Decision Layer MUST NOT admit the
+modification.</p>
 <p>The record is the adapter's account of a decision, and the response is the
 decision point's signed account of the same decision. If the two could
 disagree, each could pass its own check: a record could class an <code>agent</code>
@@ -333,9 +336,7 @@ the same reason, since its <code>admit</code> releases the modified action. The 
 is the original action with other parameters (<a href="acs-binding-1.html#AC1-005">AC1-005</a>), of the same action
 class, so the register version declares the same inputs for both decisions; the
 status, effect, reference and times of each input describe the new decision and
-may differ. The new request is decided under the register version of the first
-decision; if that version is no longer in force, the modification is not
-admitted.</p>
+may differ.</p>
 <h2 id="disposition-mapping-informative">Disposition mapping (informative)</h2>
 <table tabindex="0">
 <thead>
@@ -353,12 +354,12 @@ admitted.</p>
 </tr>
 <tr>
 <td><code>allow</code> from an <code>agent</code> or <code>composite</code> evaluator, or one that states no evaluator</td>
-<td>As above; the Guardian decision is a <code>judgment</code> input and is never part of the basis</td>
+<td>As above; the Guardian decision is a <code>judgment</code> input, recorded in the decision basis but never the basis of an <code>admit</code></td>
 <td>Only on a verified <code>admit</code></td>
 </tr>
 <tr>
 <td><code>allow</code> from a <code>deterministic</code> evaluator that a hook point carried to the decision point</td>
-<td>As above; the Guardian decision is an <code>actor_supplied</code> input and is never part of the basis</td>
+<td>As above; the Guardian decision is an <code>actor_supplied</code> input, recorded in the decision basis but never the basis of an <code>admit</code></td>
 <td>Only on a verified <code>admit</code></td>
 </tr>
 <tr>
@@ -479,8 +480,8 @@ an ACS product, and this profile claims no ACS conformance and no OWASP
 endorsement.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/ACS-BINDING-1.md</code>, SHA-256 <code>36f9642549b338ca1f738c04dc90b680624ac40006ad93bd0ab1312b510ad5d8</code></dd>
-<dt>Release status</dt><dd>published version 1.0; publication and release authorized; not authorized for signing</dd>
+<dt>Source</dt><dd><code>profiles/ACS-BINDING-1.md</code>, SHA-256 <code>a4f9f4a1c5fc6e9b22fac279115ecf71cb1bee393bf8048f7edf1e5b9fa3fbf7</code></dd>
+<dt>Release status</dt><dd>absent</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

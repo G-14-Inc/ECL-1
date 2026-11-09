@@ -122,6 +122,7 @@ const NON_RELEASE = new Set(["denied", "held", "challenged", "expired_before_rel
 const DISCHARGE_EXTENSION = "ecl.ext.obligation-discharge.v1";
 const COUPLING_EXTENSION = "ecl.ext.consequence-coupling.v1";
 const VERIFY_WITNESS = "ecl.obligation.verify-witness.v1";
+const OUTCOME_REASON = "ecl.ext.outcome-reason.v1";
 /** MG1-010: the code that replaces a server error's code when that code is one of the error table's. */
 export const SERVER_ERROR_CODE = -32603;
 /**
@@ -961,8 +962,26 @@ function recovered(current: View, terminal: JsonObject | null): Problem[] {
   if (classification === "outcome-unknown" && (current.forwarded === null || state !== "unknown" || holds(current.record, "server_response"))) {
     problems.push(["/terminal/event/state", "a released request of unknown outcome is not unknown"]);
   }
-  if (classification === "not-released" && (current.forwarded !== null || state === null || (!NON_RELEASE.has(state) && state !== "cancelled"))) {
-    problems.push(["/terminal/event/state", "a request that was not released is recorded as released"]);
+  if (classification === "not-released") {
+    // MG1-016: after an admit, `cancelled` when the authoritative store confirms consumption, and `denied`,
+    // naming no authority (EBMP2-053), when the store confirms no consumption; otherwise the
+    // state that the decision gives.
+    let expected: ReadonlySet<string> = new Set(["denied"]);
+    const outcome = text(current.response, "outcome");
+    if (admitted(current)) {
+      expected = new Set(["cancelled", "denied"]);
+      if (state === "denied") {
+        const reasons = extensionValues(terminal, OUTCOME_REASON).map((value) => at(value, "code"));
+        if (!(reasons.length === 1 && pythonEquals(reasons[0], EVIDENCE_UNAVAILABLE))) {
+          problems.push(["/terminal/extensions", "an unconsumed admit is denied without evidence-unavailable as its reason"]);
+        }
+      }
+    } else if (current.status === "answered" && outcome !== null && REFUSAL_FOR_OUTCOME.has(outcome)) {
+      expected = new Set([REFUSAL_FOR_OUTCOME.get(outcome) as string]);
+    }
+    if (current.forwarded !== null || state === null || !expected.has(state)) {
+      problems.push(["/terminal/event/state", "a request that was not released is recorded as released"]);
+    }
   }
   return problems;
 }
@@ -988,17 +1007,49 @@ function completionProblems(current: View, terminal: JsonObject): Problem[] {
 function resultBound(current: View): Problem[] {
   const terminal = obj(current.record, "terminal");
   const problems: Problem[] = recovered(current, terminal);
+  const authority = member(terminal, "event", "authority");
+  if (authority !== null && admitted(current) && !sameDigest(member(authority, "digest"), digestOf(member(current.response, "authorization")))) {
+    problems.push(["/terminal/event/authority/digest", "not the digest of the granted authorization"]);
+  }
   if (current.forwarded === null) {
     const state = text(terminal, "event", "state");
+    if (array(terminal, "event", "side_effects").length !== 0) {
+      problems.push(["/terminal/event/side_effects", "a non-forwarded attempt records side effects"]);
+    }
+    if (state === "cancelled" && (text(terminal, "event", "residual_state") ?? "").trim() === "") {
+      problems.push(["/terminal/event/residual_state", "a cancelled attempt lacks its non-release residual state"]);
+    }
     // MG1-014: a refusal after the authorization was consumed is a cancelled attempt, and a
-    // cancelled attempt is one whose use the gateway consumed, or that recovery settled. A journal
+    // cancelled attempt records a committed use. The record does not expose the use store. A journal
     // that failed (MG1-017) may have recorded the consumed use and not the prepared release, which
     // the record then cannot show.
     const consumed = member(current.record, "prepared") !== null || current.released !== null;
+    if (consumed && terminal === null) {
+      problems.push(["/terminal", "a consumed attempt has no terminal evidence"]);
+    }
     const unseen = current.recovery !== null || journalFailed(current.record);
     const allowed: ReadonlySet<string> = consumed ? new Set(["cancelled"]) : unseen ? new Set([...NON_RELEASE, "cancelled"]) : NON_RELEASE;
     if (terminal !== null && (state === null || !allowed.has(state))) {
       problems.push(["/terminal/event/state", "a refused request is recorded as released"]);
+    }
+    // MG1-010, EBMP2-049, EBMP2-053: a cancelled attempt names the authorization it consumed,
+    // bound to the admit that granted it; a terminal that consumed no use names none.
+    const authority = member(terminal, "event", "authority");
+    if (state === "cancelled" && authority === null) {
+      problems.push(["/terminal/event/authority", "a cancelled attempt names no authority"]);
+    }
+    if (authority !== null && ((state !== null && NON_RELEASE.has(state)) || !admitted(current))) {
+      problems.push(["/terminal/event/authority", "a terminal that consumed no use names the authority"]);
+    }
+    if (terminal !== null && current.request !== null) {
+      try {
+        checkEventBinding(terminal, current.request, current.status === "answered" ? current.response ?? undefined : undefined);
+      } catch (error) {
+        if (!(error instanceof BindingError)) {
+          throw error;
+        }
+        problems.push(["/terminal", `the terminal event is not bound: ${error.code}`]);
+      }
     }
     return problems;
   }

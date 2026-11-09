@@ -10,13 +10,13 @@ time-attestation construction, token issuance, decision builders, archive
 assembly and telemetry exporters belong to G-14's private producer library.
 Binding checks recompute expected values from records already in hand.
 
-It is one of three verifiers of ECL-1 Version 1.0, each written separately
-from the same text: this Python package, the TypeScript package
-(`packages/ecl-ts`, with the command `ecl-verify-ts` and the browser verifier)
-and the Go module (`go/crosscheck`, with the command `ecl-verify-go`). The
-three are maintained by the same operator, G-14, Inc. Their agreement on the
-conformance tests is a check of each against the text, not an independent
-assessment.
+It is one of three ECL-1 verifier implementations maintained by G-14, Inc.:
+this Python package, the TypeScript package (`packages/ecl-ts`, including
+`ecl-verify-ts` and the browser verifier), and the Go module (`go/crosscheck`,
+including `ecl-verify-go`). Comparing their results checks consistency on the
+shared conformance corpus. The Go module's component provenance and its
+relationship to the Python verifier are described in
+[go/crosscheck/NOTICE.md](../../go/crosscheck/NOTICE.md).
 
 ## Install
 
@@ -63,7 +63,7 @@ bundle of at most 1 MiB. The options:
 
 ### Exit status
 
-| Status | Verdict |
+| Status | Meaning |
 | --- | --- |
 | 0 | `verified` |
 | 1 | `invalid` |
@@ -71,8 +71,12 @@ bundle of at most 1 MiB. The options:
 | 3 | `incomplete` |
 | 4 | `current-trust-failed` |
 
-These are the statuses of EBMP2-060, the same for `ecl-verify-ts` and
-`ecl-verify-go`.
+Statuses 0, 1, 3 and 4 report the verdicts of EBMP2-060; status 2 reports a
+usage error. `ecl-verify`, `ecl-verify-ts` and `ecl-verify-go` use these same
+exit statuses. A package above the 1 GiB archive limit is `invalid` (status 1),
+with `ecl.error.resource-limit-exceeded.v1`, under valid caller inputs. A file
+already above the limit is refused unread; a file that grows past the limit
+during the read receives the same verdict.
 
 ## The samples
 
@@ -136,6 +140,8 @@ the repository's `PATENTS.md`; G-14 has patents pending. Its dependencies
 ECL-1 texts are licensed under CC BY 4.0, as `LICENSING.md` at the root of the
 ECL-1 package states.
 
+## Report and schema APIs
+
 The canonical JSON report includes `primary`: the registered identifier of the
 primary finding, or `null` for `verified`. An `incomplete` report names
 `ecl.error.causal-closure-incomplete.v1`; `current-trust-failed` names the first
@@ -145,6 +151,6 @@ expired offline package. This agrees with the text report's `primary:` line.
 `ecl_verify.bundle_verification.report_to_json(report)` returns that same
 JSON-compatible shape for Python callers.
 
-`ecl_verify.resources.schema_is_valid(schema_id, value)` checks a schema and
-returns a boolean. `validator_for(schema_id)` remains available when callers
+`ecl_verify.resources.schema_is_valid(schema_id, value)` checks `value`
+against the schema identified by `schema_id` and returns a boolean. `validator_for(schema_id)` remains available when callers
 need a mutable validator or detailed schema errors; each such validator is isolated.
