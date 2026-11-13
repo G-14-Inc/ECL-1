@@ -85,7 +85,7 @@ def build(root=ROOT):
             e['signatures'][0]['signature']=base64.b64encode(KEY.sign(signing_input(e['payload_type'],raw))).decode()
             envs.append(e)
         bundle={'schema_version':'ecl_evidence_bundle_v1','envelopes':envs}
-        path=str(DEST/(case_id+'.json')); outputs[Path(path)] = encoded(bundle)
+        path=(DEST/(case_id+'.json')).as_posix(); outputs[Path(path)] = encoded(bundle)
         # The signed verifier never exempts missing origin material; only the direct graph API
         # exposes allowed_external_predecessors, exercised separately by these same records.
         absent=sorted({ref['id'] for r in records for ref in r['workflow']['causal_predecessors'] if not any(p['object_id']==ref['id'] for p in records)})

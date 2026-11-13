@@ -55,7 +55,7 @@ def test_summary_separates_rules_suites_vectors_and_profile_rules(source):
 def test_bracket_and_backslash_titles_remain_one_literal_link_label(source):
     value = gap.read_data(source)
     value["record"]["entries"]["1"] = r"Knight ](https://example.invalid/injected) [Capital] \\ test"
-    (source / gap.DATA).write_text(json.dumps(value))
+    (source / gap.DATA).write_text(json.dumps(value), encoding="utf-8", newline="\n")
     text = gap.render(source)
     assert r"Knight \](https://example.invalid/injected) \[Capital\] \\\\ test" in text
     assert "[Record 1: Knight ](" not in text
@@ -68,7 +68,7 @@ def test_bracket_and_backslash_titles_remain_one_literal_link_label(source):
 ])
 def test_fixed_layout_record_decodes_single_and_double_quoted_titles(tmp_path, scalar, expected):
     path = tmp_path / "record.yml"
-    path.write_text(f"- n: 1\n  short: {scalar}\n  codes:\n    - code: G2\n")
+    path.write_text(f"- n: 1\n  short: {scalar}\n  codes:\n    - code: G2\n", encoding="utf-8", newline="\n")
     entries, coded = gap.record_codes(path)
     assert entries == {"1": expected}
     assert coded == {"G2": [1]}
@@ -82,7 +82,7 @@ def test_fixed_layout_record_decodes_single_and_double_quoted_titles(tmp_path, s
 ])
 def test_record_refresh_rejects_ambiguous_or_out_of_classification_input(tmp_path, content):
     path = tmp_path / "record.yml"
-    path.write_text(content)
+    path.write_text(content, encoding="utf-8", newline="\n")
     with pytest.raises(gap.GapCoverageError):
         gap.record_codes(path)
 
@@ -108,7 +108,7 @@ def test_refresh_parses_and_hashes_one_read_of_the_same_bytes(source):
 
 def test_invalid_refresh_does_not_write_data_or_derived_doc(source, tmp_path):
     path = tmp_path / "bad.yml"
-    path.write_text("- n: 1\n  short: 'unterminated\n")
+    path.write_text("- n: 1\n  short: 'unterminated\n", encoding="utf-8", newline="\n")
     before = (source / gap.DATA).read_bytes()
     assert gap.main(["--root", str(source), "--write", "--record", str(path)]) == 1
     assert (source / gap.DATA).read_bytes() == before
@@ -154,13 +154,13 @@ def test_per_gap_duplicates_cannot_inflate_association_counts(source, key):
 ])
 def test_quoted_yaml_control_punctuation_is_literal(tmp_path, scalar, expected):
     path = tmp_path / "record.yml"
-    path.write_text(f"- n: 1\n  short: {scalar}\n  codes:\n    - code: G2\n  not_coded:\n    - code: G1\n")
+    path.write_text(f"- n: 1\n  short: {scalar}\n  codes:\n    - code: G2\n  not_coded:\n    - code: G1\n", encoding="utf-8", newline="\n")
     assert gap.record_codes(path) == ({"1": expected}, {"G2": [1]})
 
 
 @pytest.mark.parametrize("suffix", ["G2 # comment", "garbage", "G٢"])
 def test_gap_code_lines_outside_fixed_subset_are_not_silently_dropped(tmp_path, suffix):
     path = tmp_path / "record.yml"
-    path.write_text(f"- n: 1\n  short: A title\n  codes:\n    - code: {suffix}\n")
+    path.write_text(f"- n: 1\n  short: A title\n  codes:\n    - code: {suffix}\n", encoding="utf-8", newline="\n")
     with pytest.raises(gap.GapCoverageError):
         gap.record_codes(path)

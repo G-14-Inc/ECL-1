@@ -228,10 +228,15 @@ def read_artifact(path: Path, prefix_bytes: int) -> tuple[bytes, str]:
         raise ValueError("vector artifact is not a regular file")
     if before.st_size > MAX_REPORT_ARTIFACT_BYTES:
         raise ValueError("vector artifact exceeds replay byte budget")
-    identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+    identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
+    version = lambda info: (*identity(info), info.st_ctime_ns)
     digest, prefix, total = hashlib.sha256(), bytearray(), 0
     with path.open("rb") as source:
-        if identity(os.fstat(source.fileno())) != identity(before):
+        opened = os.fstat(source.fileno())
+        # Windows stat() and fstat() can give ctime different meanings. Compare
+        # their common identity fields, then retain each API's own full baseline
+        # so a metadata change during reading still invalidates the observation.
+        if identity(opened) != identity(before):
             raise ValueError("vector artifact changed before reading")
         while chunk := source.read(1024 * 1024):
             total += len(chunk)
@@ -241,9 +246,9 @@ def read_artifact(path: Path, prefix_bytes: int) -> tuple[bytes, str]:
             remaining = prefix_bytes - len(prefix)
             if remaining > 0:
                 prefix.extend(chunk[:remaining])
-        if identity(os.fstat(source.fileno())) != identity(before):
+        if version(os.fstat(source.fileno())) != version(opened):
             raise ValueError("vector artifact changed during reading")
-    if total != before.st_size or identity(path.stat()) != identity(before):
+    if total != before.st_size or version(path.stat()) != version(before):
         raise ValueError("vector artifact changed during reading")
     return bytes(prefix), digest.hexdigest()
 

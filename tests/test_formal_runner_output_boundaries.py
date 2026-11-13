@@ -60,24 +60,27 @@ class RecoveryExecutableTests(unittest.TestCase):
         }]}
         (packet / "COMBINED-RESULTS.json").write_text(json.dumps(record), encoding="utf-8")
         self.output = self.root / "results"
-        self.executable = self.root / "jdk/bin/java"
+        self.executable = self.root / ("jdk/bin/java.cmd" if os.name == "nt" else "jdk/bin/java")
         self.executable.parent.mkdir(parents=True)
         self.stub()
 
     def tearDown(self):
         self.temp.cleanup()
 
-    def stub(self, *, version_exit=0, remove_after_version=False):
-        self.executable.write_text(
+    def stub(self, *, version_exit=0):
+        script = self.executable.with_suffix(".py") if os.name == "nt" else self.executable
+        script.write_text(
             f"#!{sys.executable}\n"
             "import os, sys\n"
             "if sys.argv[1:] == ['-version']:\n"
             "    print('openjdk version \\\"fixture\\\"', file=sys.stderr)\n"
-            f"    if {remove_after_version!r}: os.unlink(__file__)\n"
             f"    sys.exit({version_exit})\n"
             "print('Model checking completed. No error has been found.')\n",
             encoding="utf-8",
         )
+        if os.name == "nt":
+            self.executable.write_text(
+                f'@"{sys.executable}" "{script}" %*\n', encoding="utf-8", newline="\n")
         self.executable.chmod(0o755)
 
     def call(self, executable):
@@ -99,12 +102,12 @@ class RecoveryExecutableTests(unittest.TestCase):
         self.assertEqual(case["outputs"]["stdout.log"], recovery.sha256(self.output / "correct-control/stdout.log"))
 
     def test_relative_explicit_java_survives_case_directory(self):
-        self.assertEqual(self.call("./jdk/bin/java"), 0)
+        self.assertEqual(self.call("./jdk/bin/" + self.executable.name), 0)
         self.assert_success()
 
     def test_relative_path_entry_survives_case_directory(self):
         with patch.dict(os.environ, {"PATH": "jdk/bin"}):
-            self.assertEqual(self.call("java"), 0)
+            self.assertEqual(self.call(self.executable.name), 0)
         self.assert_success()
 
     def test_absolute_java_remains_supported(self):
@@ -125,8 +128,14 @@ class RecoveryExecutableTests(unittest.TestCase):
         self.assertFalse(self.output.exists())
 
     def test_executable_lost_after_preflight_is_recorded_as_failure(self):
-        self.stub(remove_after_version=True)
-        self.assertEqual(self.call(str(self.executable)), 1)
+        real_run = recovery.subprocess.run
+        def remove_after_probe(command, *args, **kwargs):
+            result = real_run(command, *args, **kwargs)
+            if command[1:] == ["-version"]:
+                self.executable.unlink()
+            return result
+        with patch.object(recovery.subprocess, "run", side_effect=remove_after_probe):
+            self.assertEqual(self.call(str(self.executable)), 1)
         result = self.result()
         self.assertTrue(result["complete"])
         self.assertFalse(result["all_expected_outcomes_matched"])

@@ -18,17 +18,17 @@ MISSING = 'tests.missing_module.test_absent'
 def put(root, path, value):
     destination = root / path
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(value) if isinstance(value, (dict, list)) else value)
+    destination.write_text(json.dumps(value) if isinstance(value, (dict, list)) else value, encoding="utf-8", newline="\n")
 
 
 def miniature(root, *, vectors=False):
     put(root, 'standard/ECL-1_Standard.md', '# Minimal\n\n**AB1-001** — A caller MUST bind its request.\n')
-    metadata = json.loads((ROOT / 'registries/requirement-metadata.json').read_text())
+    metadata = json.loads((ROOT / 'registries/requirement-metadata.json').read_text(encoding="utf-8"))
     metadata['prefix_profiles'] = {}; metadata['overrides'] = {}
-    group = copy.deepcopy(json.loads((ROOT / 'conformance/evaluation-implementation-map.json').read_text())['groups'][0])
+    group = copy.deepcopy(json.loads((ROOT / 'conformance/evaluation-implementation-map.json').read_text(encoding="utf-8"))['groups'][0])
     group.update(requirement_ids=['AB1-001'], evaluation_refs=[LOCAL])
     put(root, 'conformance/evaluation-implementation-map.json', {'schema_version': 'ecl_evaluation_implementation_map_v2', 'candidate_version': '1.0', 'groups': [group], 'traceability_refs': {}})
-    put(root, str(compiler.MAP_SCHEMA), (ROOT / compiler.MAP_SCHEMA).read_text())
+    put(root, str(compiler.MAP_SCHEMA), (ROOT / compiler.MAP_SCHEMA).read_text(encoding="utf-8"))
     put(root, 'conformance/manifest.json', {'vectors': [{'id': 'minimal-vector', 'requirement_ids': ['AB1-001'], 'negates': ['AB1-001']}] if vectors else []})
     put(root, 'tests/test_local.py', 'def test_exists(): pass\n')
     put(root, 'tests/test_conformance_harness.py', 'class ConformanceHarnessTests:\n    def test_all_foundation_vectors_produce_expected_result(self): pass\n')
@@ -43,12 +43,12 @@ def test_attached_table_rows_are_hashed_in_both_requirement_blocks(tmp_path, con
     if continued:
         text += '**AB1-001 (continued)** — The following table gives the baseline.\n\n'
     table = '| Level | Bound |\n|---|---|\n| L1 | 24 hours |'
-    source = tmp_path / 'profile.md'; source.write_text(text + table + '\n')
+    source = tmp_path / 'profile.md'; source.write_text(text + table + '\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert not orphans and len(rows) == 1
     assert '\n\n' + table in rows[0]['text']
     before = hashlib.sha256(rows[0]['text'].encode()).hexdigest()
-    source.write_text((text + table).replace('24 hours', '999 hours') + '\n')
+    source.write_text((text + table).replace('24 hours', '999 hours') + '\n', encoding="utf-8", newline="\n")
     changed, _ = compiler.extract(source, tmp_path)
     assert hashlib.sha256(changed[0]['text'].encode()).hexdigest() != before
 
@@ -56,7 +56,7 @@ def test_attached_table_rows_are_hashed_in_both_requirement_blocks(tmp_path, con
 @pytest.mark.parametrize('sentence', ['A caller MUST reject an untagged condition.', 'A caller must reject an untagged condition.'])
 def test_continuation_does_not_absorb_new_untagged_paragraph(tmp_path, sentence):
     source = tmp_path / 'profile.md'
-    source.write_text('**AB1-001** — A caller MUST bind.\n\n**AB1-001 (continued)** — It MUST check.\n\n' + sentence + '\n')
+    source.write_text('**AB1-001** — A caller MUST bind.\n\n**AB1-001 (continued)** — It MUST check.\n\n' + sentence + '\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert sentence not in rows[0]['text']
     assert [row['text'] for row in orphans] == [sentence]
@@ -65,7 +65,7 @@ def test_continuation_does_not_absorb_new_untagged_paragraph(tmp_path, sentence)
 @pytest.mark.parametrize('prefix', ['', '  ', '- ', '1. '])
 def test_explicit_continuations_preserve_paragraph_scope(tmp_path, prefix):
     source = tmp_path / 'profile.md'
-    source.write_text('**AB1-001** — A caller MUST bind.\n\n' + prefix + '**AB1-001 (continued)** — It MUST check.\n\n' + prefix + '**AB1-001 (continued)** — This explanatory paragraph retains its scope.\n')
+    source.write_text('**AB1-001** — A caller MUST bind.\n\n' + prefix + '**AB1-001 (continued)** — It MUST check.\n\n' + prefix + '**AB1-001 (continued)** — This explanatory paragraph retains its scope.\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert not orphans and len(rows) == 1
     assert rows[0]['text'] == 'A caller MUST bind.\n\nIt MUST check.\n\nThis explanatory paragraph retains its scope.'
@@ -73,7 +73,7 @@ def test_explicit_continuations_preserve_paragraph_scope(tmp_path, prefix):
 
 def test_attached_loose_list_retains_each_item_and_orphan_boundary(tmp_path):
     source = tmp_path / 'profile.md'
-    source.write_text('**AB1-001** — A caller MUST check:\n\n- first item;\n\n- second item.\n\nA separate caller MUST stop.\n')
+    source.write_text('**AB1-001** — A caller MUST check:\n\n- first item;\n\n- second item.\n\nA separate caller MUST stop.\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert rows[0]['text'] == 'A caller MUST check:\n\n- first item;\n\n- second item.'
     assert [row['text'] for row in orphans] == ['A separate caller MUST stop.']
@@ -81,7 +81,7 @@ def test_attached_loose_list_retains_each_item_and_orphan_boundary(tmp_path):
 
 def test_next_sibling_list_item_is_not_attached(tmp_path):
     source = tmp_path / 'profile.md'
-    source.write_text('- **AB1-001** — A caller MUST check:\n\n  - a nested item.\n\n- A second caller MUST stop.\n')
+    source.write_text('- **AB1-001** — A caller MUST check:\n\n  - a nested item.\n\n- A second caller MUST stop.\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert 'a nested item' in rows[0]['text']
     assert [row['text'] for row in orphans] == ['- A second caller MUST stop.']
@@ -89,7 +89,7 @@ def test_next_sibling_list_item_is_not_attached(tmp_path):
 
 def test_independent_requirement_rows_are_not_attached_to_prior_text(tmp_path):
     source = tmp_path / 'profile.md'
-    source.write_text('**AB1-001** — A caller MUST bind.\n\n| ID | Rule |\n|---|---|\n| AB1-002 | A producer MUST check. |\n')
+    source.write_text('**AB1-001** — A caller MUST bind.\n\n| ID | Rule |\n|---|---|\n| AB1-002 | A producer MUST check. |\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert not orphans
     assert [row['requirement_id'] for row in rows] == ['AB1-001', 'AB1-002']
@@ -104,7 +104,7 @@ def test_unrecorded_missing_test_reference_fails(tmp_path, slot, public_source):
     elif slot == 'prefix': metadata['prefix_profiles']['AB1'] = {'test_refs': [MISSING]}
     elif slot == 'override': metadata['overrides']['AB1-001'] = {'test_refs': [MISSING]}
     else:
-        path = tmp_path / 'conformance/evaluation-implementation-map.json'; value = json.loads(path.read_text())
+        path = tmp_path / 'conformance/evaluation-implementation-map.json'; value = json.loads(path.read_text(encoding="utf-8"))
         if slot == 'map': value['groups'][0]['evaluation_refs'] = [MISSING]
         else: value['traceability_refs']['AB1-001'] = [MISSING]
         put(tmp_path, path.relative_to(tmp_path), value)
@@ -155,7 +155,7 @@ def test_test_reference_resolution_considers_both_directories(tmp_path, name):
 @pytest.mark.parametrize('presence', ['all', 'partial', 'none'])
 def test_reference_class_is_separate_from_local_test_availability(tmp_path, presence):
     miniature(tmp_path)
-    path = tmp_path / 'conformance/evaluation-implementation-map.json'; value = json.loads(path.read_text())
+    path = tmp_path / 'conformance/evaluation-implementation-map.json'; value = json.loads(path.read_text(encoding="utf-8"))
     refs = {'all': [LOCAL], 'partial': [LOCAL, MISSING], 'none': [MISSING]}[presence]
     value['groups'][0]['evaluation_refs'] = refs; put(tmp_path, path.relative_to(tmp_path), value)
     put(tmp_path, str(compiler.INTERNAL_REFS), {'schema_version': 'ecl_requirement_internal_refs_v1', 'candidate_version': '1.0', 'requirements': [{'requirement_id': 'AB1-001', 'evaluation_refs': [MISSING]}]})
@@ -170,17 +170,17 @@ def test_reference_class_is_separate_from_local_test_availability(tmp_path, pres
 def test_attached_table_without_blank_line_keeps_rows(tmp_path):
     source = tmp_path / 'profile.md'
     table = '| Level | Bound |\n|---|---|\n| L1 | 24 hours |'
-    source.write_text('**AB1-001** — A caller MUST apply the table.\n' + table + '\n')
+    source.write_text('**AB1-001** — A caller MUST apply the table.\n' + table + '\n', encoding="utf-8", newline="\n")
     rows, orphans = compiler.extract(source, tmp_path)
     assert not orphans and '\n\n' + table in rows[0]['text']
 
 
 def test_prerelease_proof_gates_remain_part_of_the_compiled_requirement(tmp_path):
     relative = Path("protocols/EBMP-2.md")
-    source = (ROOT / relative).read_text()
+    source = (ROOT / relative).read_text(encoding="utf-8")
     target = tmp_path / relative
     target.parent.mkdir(parents=True)
-    target.write_text(source)
+    target.write_text(source, encoding="utf-8", newline="\n")
     rows, _ = compiler.extract(target, tmp_path)
     text = next(row["text"] for row in rows if row["requirement_id"] == "EBMP2-070")
     for phrase in (
@@ -199,7 +199,7 @@ def test_prerelease_proof_gates_remain_part_of_the_compiled_requirement(tmp_path
     changed = source.replace("An entry\nwith defect 1 is not checked further.",
                              "An entry\nwith defect 1 is checked further.", 1)
     assert changed != source
-    target.write_text(changed)
+    target.write_text(changed, encoding="utf-8", newline="\n")
     rows, _ = compiler.extract(target, tmp_path)
     amended = next(row["text"] for row in rows if row["requirement_id"] == "EBMP2-070")
     assert hashlib.sha256(amended.encode()).hexdigest() != old_digest
@@ -256,15 +256,15 @@ OWNED_PROSE_MUTATIONS = [('approval-purpose-alone',
 
 @pytest.mark.parametrize("case,relative,identifier,old,new", OWNED_PROSE_MUTATIONS, ids=[row[0] for row in OWNED_PROSE_MUTATIONS])
 def test_controlling_prose_mutation_changes_owning_requirement(tmp_path, case, relative, identifier, old, new):
-    source = (ROOT / relative).read_text()
+    source = (ROOT / relative).read_text(encoding="utf-8")
     assert source.count(old) == 1
     target = tmp_path / relative
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(source)
+    target.write_text(source, encoding="utf-8", newline="\n")
     before, orphans = compiler.extract(target, tmp_path)
     assert not orphans
     prior = {row["requirement_id"]: row["text"] for row in before}
-    target.write_text(source.replace(old, new, 1))
+    target.write_text(source.replace(old, new, 1), encoding="utf-8", newline="\n")
     after, orphans = compiler.extract(target, tmp_path)
     assert not orphans
     amended = {row["requirement_id"]: row["text"] for row in after}

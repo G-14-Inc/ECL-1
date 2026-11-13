@@ -86,8 +86,8 @@ def test_document_targeted_results_preserved(case, environment):
 def test_software_identity_matches_packages_and_review_descriptor():
     descriptor = render.build_descriptor(ROOT)
     assert __version__ == "1.0.2a1" and __build__ == descriptor["source_version"] == "1.0.2-review.1"
-    assert f'version = "{__version__}"' in (ROOT / "packages/ecl-verify/pyproject.toml").read_text()
-    assert f'name = "ecl-verify"\nversion = "{__version__}"' in (ROOT / "packages/ecl-verify/uv.lock").read_text()
+    assert f'version = "{__version__}"' in (ROOT / "packages/ecl-verify/pyproject.toml").read_text(encoding="utf-8")
+    assert f'name = "ecl-verify"\nversion = "{__version__}"' in (ROOT / "packages/ecl-verify/uv.lock").read_text(encoding="utf-8")
     package = json.loads((ROOT / "packages/ecl-ts/package.json").read_bytes())
     lock = json.loads((ROOT / "packages/ecl-ts/package-lock.json").read_bytes())
     assert package["version"] == lock["version"] == lock["packages"][""]["version"] == __build__
@@ -111,7 +111,7 @@ def test_version_set_binds_current_source_bytes_and_preserves_wire_versions():
 
 def test_continuations_include_all_prose_and_table_without_duplicate_id(tmp_path):
     source = tmp_path / "profile.md"
-    source.write_text("# Profile\n\n**AB1-001** — A caller MUST bind the request.\n\n## Details\n\n**AB1-001 (continued)** — It MUST check the value.\n\n**AB1-001 (continued)** — The dependent rule is TS1-035.\n\n| Value | Meaning |\n| --- | --- |\n| a | a complete binding |\n\n**AB1-002** — It MAY stop.\n")
+    source.write_text("# Profile\n\n**AB1-001** — A caller MUST bind the request.\n\n## Details\n\n**AB1-001 (continued)** — It MUST check the value.\n\n**AB1-001 (continued)** — The dependent rule is TS1-035.\n\n| Value | Meaning |\n| --- | --- |\n| a | a complete binding |\n\n**AB1-002** — It MAY stop.\n", encoding="utf-8", newline="\n")
     rows, orphans = requirements.extract(source, tmp_path)
     assert not orphans
     assert [row["requirement_id"] for row in rows] == ["AB1-001", "AB1-002"]
@@ -122,7 +122,7 @@ def test_continuations_include_all_prose_and_table_without_duplicate_id(tmp_path
 
 def test_unknown_continuation_is_refused(tmp_path):
     source = tmp_path / "profile.md"
-    source.write_text("# Profile\n\n**AB1-001 (continued)** — It MUST bind.\n")
+    source.write_text("# Profile\n\n**AB1-001 (continued)** — It MUST bind.\n", encoding="utf-8", newline="\n")
     with pytest.raises(ValueError, match="earlier definition"):
         requirements.extract(source, tmp_path)
 
@@ -146,7 +146,7 @@ def test_renderer_refuses_unresolved_or_false_release_identity(tmp_path, field, 
     (tmp_path / "release").mkdir()
     descriptor = json.loads((ROOT / render.STATUS).read_bytes())
     descriptor[field] = value
-    (tmp_path / render.STATUS).write_text(json.dumps(descriptor))
+    (tmp_path / render.STATUS).write_text(json.dumps(descriptor), encoding="utf-8", newline="\n")
     with pytest.raises(ValueError):
         render.release_status(tmp_path)
 
@@ -155,7 +155,7 @@ def test_renderer_retains_source_hash_body_and_review_credits(tmp_path):
     (tmp_path / "release").mkdir()
     (tmp_path / render.STATUS).write_bytes((ROOT / render.STATUS).read_bytes())
     source = "# Sample\n\nA complete source body.\n"
-    (tmp_path / "sample.md").write_text(source)
+    (tmp_path / "sample.md").write_text(source, encoding="utf-8", newline="\n")
     record = render.source_record(tmp_path, "sample.md")
     output, _, _ = render.render_document(source, {}, {}, {}, "sample.md", record)
     assert hashlib.sha256(source.encode()).hexdigest().encode() in output
@@ -206,7 +206,7 @@ def test_all_current_derived_registry_pointers_and_catalog_digests():
     assert replacement["introduced_in"] == "1.0.2-review.1"
     for term in terms:
         at = term["attributes"]
-        lines = (ROOT / at["source_path"]).read_text().splitlines()
+        lines = (ROOT / at["source_path"]).read_text(encoding="utf-8").splitlines()
         marker = "**" + at["term"] + "**:"
         starts = [i for i, line in enumerate(lines) if line.startswith(marker)]
         assert starts == [at["source_line"] - 1], term["id"]

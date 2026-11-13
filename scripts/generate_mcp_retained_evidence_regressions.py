@@ -36,8 +36,8 @@ def binding(value):
 
 cases = []
 def add(name, value, purpose):
-    outputs[str(DEST / (name + ".json"))] = copy.deepcopy(value)
-    cases.append({"id": name, "path": str(DEST / (name + ".json")), "purpose": purpose})
+    outputs[(DEST / (name + ".json")).as_posix()] = copy.deepcopy(value)
+    cases.append({"id": name, "path": (DEST / (name + ".json")).as_posix(), "purpose": purpose})
 
 answer = load("forward-complete-control")
 no_answer = load("forward-failed-complete-control")
@@ -149,7 +149,7 @@ add("halt-refusal-unreliable-final-intrinsic-error", value, "Failed final clock 
 
 # Intrinsic validity applies even when no reliable final observation survives.
 intrinsic_negatives = set()
-for name, base in (("halt", discharged), ("unreliable-final", outputs[str(DEST / "halt-refusal-unreliable-final-control.json")]), ("journal-before-final", outputs[str(DEST / "discharged-journal-before-final-control.json")])):
+for name, base in (("halt", discharged), ("unreliable-final", outputs[(DEST / "halt-refusal-unreliable-final-control.json").as_posix()]), ("journal-before-final", outputs[(DEST / "discharged-journal-before-final-control.json").as_posix()])):
     for label in ("expired-before-check", "expires-at-check", "fresh-after-check", "no-expiry"):
         value = copy.deepcopy(base)
         entry = value["obligation_discharge"]["obligations"][0]
@@ -159,7 +159,7 @@ for name, base in (("halt", discharged), ("unreliable-final", outputs[str(DEST /
         add(name_id, value, "A satisfied proof must be fresh when checked; an absent bound asserts no expiry")
         if label in ("expired-before-check", "expires-at-check"): intrinsic_negatives.add(name_id)
 
-value = copy.deepcopy(outputs[str(DEST / "discharged-journal-before-final-intrinsic-error.json")])
+value = copy.deepcopy(outputs[(DEST / "discharged-journal-before-final-intrinsic-error.json").as_posix()])
 value["returned"]["error"]["code"] = -31010
 value["returned"]["error"]["data"]["ecl"].update(code="obligation-unproven", reason="ecl.error.obligation-unproven.v1")
 for entry in value["terminal"]["extensions"]:
@@ -169,7 +169,7 @@ intrinsic_negatives.add("intrinsic-failure-before-final-obligation-refusal")
 
 unanswered_negatives = set()
 for name in ("ordinary-no-answer-control", "recovered-outcome-unknown-control", "recorded-unknown-completion-absent", "recorded-succeeded-completion-absent"):
-    base = outputs[str(DEST / (name + ".json"))]
+    base = outputs[(DEST / (name + ".json")).as_posix()]
     for label in ("digest-only", "time-only", "digest-and-time"):
         value = copy.deepcopy(base)
         if label != "time-only": binding(value)["response_digest"] = {"algorithm":"ecl.digest.sha-256.v1", "value":"0"*64}
@@ -201,7 +201,7 @@ for case in cases:
     case["schema_valid"] = case["id"] != "step5-halt-unsatisfied"
     case["accepted"] = case["schema_valid"] and not rules
     case["expected_rules"] = sorted(rules) if case["schema_valid"] else ["ecl.error.schema-invalid.v1"]
-outputs[str(DEST / "manifest.json")] = {
+outputs[(DEST / "manifest.json").as_posix()] = {
     "schema": SCHEMA,
     "authors_and_producers": ["Robert F. Tilley Jr.", "G-14, Inc."],
     "requirements": ["MG1-010", "MG1-013", "MG1-014", "MG1-015", "MG1-016", "MG1-017"],

@@ -206,6 +206,53 @@ def test_file_changed_during_stream_is_a_usage_error(tmp_path, monkeypatch):
         runner.sha256_file(path)
 
 
+@pytest.mark.parametrize('changed_handle', [False, True])
+def test_path_and_handle_timestamp_domains_preserve_change_detection(
+        tmp_path, monkeypatch, changed_handle):
+    """Windows can report creation time by path and metadata time by handle."""
+    from types import SimpleNamespace
+    path = tmp_path / 'input.bin'
+    data = b'unchanged input'
+    path.write_bytes(data)
+    real_fstat = runner.os.fstat
+    calls = 0
+    def handle_stat(fd):
+        nonlocal calls
+        calls += 1
+        value = real_fstat(fd)
+        fields = {name: getattr(value, name) for name in (
+            'st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns')}
+        fields['st_ctime_ns'] += 1000 + int(changed_handle and calls > 1)
+        return SimpleNamespace(**fields)
+    monkeypatch.setattr(runner.os, 'fstat', handle_stat)
+    if changed_handle:
+        with pytest.raises(ValueError, match='changed during reading'):
+            runner.read_artifact(path, 5)
+    else:
+        assert runner.read_artifact(path, 5) == (data[:5], hashlib.sha256(data).hexdigest())
+
+
+def test_path_metadata_change_is_not_hidden_by_unchanged_handle(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    path = tmp_path / 'input.bin'
+    path.write_bytes(b'unchanged input')
+    real_stat = Path.stat
+    calls = 0
+    def path_stat(current, *args, **kwargs):
+        nonlocal calls
+        value = real_stat(current, *args, **kwargs)
+        if current != path:
+            return value
+        calls += 1
+        fields = {name: getattr(value, name) for name in (
+            'st_mode', 'st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns')}
+        fields['st_ctime_ns'] += int(calls > 1)
+        return SimpleNamespace(**fields)
+    monkeypatch.setattr(Path, 'stat', path_stat)
+    with pytest.raises(ValueError, match='changed during reading'):
+        runner.read_artifact(path, 5)
+
+
 @pytest.mark.parametrize('finding', [
     'ecl.rule.json-strict-syntax.v1',
     'ecl.rule.json-no-duplicate-members.v1',
