@@ -13,12 +13,13 @@ import childProcess from "node:child_process";
 import {syncBuiltinESMExports} from "node:module";
 import {readFileSync} from "node:fs";
 import {pathToFileURL} from "node:url";
+import {basename,sep} from "node:path";
 const [script,root,reportPath]=process.argv.slice(2);
 const report=JSON.parse(readFileSync(reportPath,"utf8"));
 childProcess.spawnSync=(_exe,args)=>{
  let value=report;
- if(args[1].includes("/fixtures/evidence/")){
-  const name=args[1].split("/").at(-1).split(".")[0];
+ if(args[1].split(sep).join("/").includes("/fixtures/evidence/")){
+  const name=basename(args[1],".json");
   value={verdict:name==="tampered"?"invalid":"verified",effects:[{level:name==="corroborated"?"corroborated":name==="tampered"?"none":"issuer-asserted"}]};
  }
  return {status:value.verdict==="invalid"?1:0,stdout:JSON.stringify(value),stderr:""};
