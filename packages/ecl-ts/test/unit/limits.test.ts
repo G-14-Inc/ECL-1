@@ -206,17 +206,28 @@ function centralDirectory(count: number, corruptAfter?: number): Uint8Array {
 }
 
 test("IE1-029: the archive reader keeps no more directory entries than its member limit", () => {
-  const gc = collector();
   const limits = { ...DEFAULT_OFFLINE_RESOURCE_LIMITS, maxMemberCount: 10 };
-  const data = centralDirectory(300_000);
-  gc();
-  const before = process.memoryUsage().heapUsed;
-  assert.throws(
-    () => readStoredZip(data, limits),
-    (error: unknown) => error instanceof ArchiveRefusal && error.limit && error.message.includes("member count"),
-  );
-  const growth = process.memoryUsage().heapUsed - before;
-  assert.ok(growth < 4 * 1024 * 1024, `heap grew by ${growth} bytes; 90 MB before`);
+  // An instantaneous heap delta depends on when V8 collects temporary values and compiles code.
+  // Run the reader in its own process with 32 MiB of old-space instead: retaining all 300,000
+  // directory entries exceeds this allowance, while retaining the permitted ten does not.
+  const moduleUrl = new URL("../../src/offline/zip.js", import.meta.url).href;
+  const script = `
+    import assert from "node:assert/strict";
+    import { ArchiveRefusal, DEFAULT_OFFLINE_RESOURCE_LIMITS, readStoredZip } from ${JSON.stringify(moduleUrl)};
+    const centralDirectory = ${centralDirectory.toString()};
+    assert.throws(
+      () => readStoredZip(centralDirectory(300_000), { ...DEFAULT_OFFLINE_RESOURCE_LIMITS, maxMemberCount: 10 }),
+      (error) => error instanceof ArchiveRefusal && error.limit && error.message.includes("member count"),
+    );
+    process.stdout.write("member limit refused within heap allowance\\n");
+  `;
+  const result = spawnSync(process.execPath,
+    ["--max-old-space-size=32", "--input-type=module", "--eval", script],
+    { encoding: "utf8", timeout: 30_000, maxBuffer: 1024 * 1024 });
+  assert.equal(result.error, undefined, String(result.error));
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.signal, null);
+  assert.equal(result.stdout, "member limit refused within heap allowance\n");
   // The whole directory is still read first: a structure it cannot read is refused as such.
   assert.throws(
     () => readStoredZip(centralDirectory(30, 25), limits),
