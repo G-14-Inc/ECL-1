@@ -1,0 +1,91 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-deployment-timing-case",
+  "vectors": [
+    {
+      "covers": [
+        "ecl.rule.deployment-timing-case-consistent.v1"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "deployment-timing-case-exchange-boundary--1",
+      "path": "conformance/suites/deployment-timing-case/deployment-timing-case-exchange-boundary--1.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "exchange-boundary--1"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "ecl.rule.deployment-timing-case-consistent.v1"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "deployment-timing-case-exchange-boundary-0",
+      "path": "conformance/suites/deployment-timing-case/deployment-timing-case-exchange-boundary-0.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "exchange-boundary-0"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "ecl.rule.deployment-timing-case-consistent.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.deployment-timing-case-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "deployment-timing-case-exchange-boundary-1",
+      "negates": [
+        "ECL1N-0099"
+      ],
+      "path": "conformance/suites/deployment-timing-case/deployment-timing-case-exchange-boundary-1.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "exchange-boundary-1"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "ecl.rule.deployment-timing-case-consistent.v1"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "deployment-timing-case-exchange-zero-control",
+      "path": "conformance/suites/deployment-timing-case/deployment-timing-case-exchange-zero-control.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "exchange-zero-control"
+      },
+      "stage": "document"
+    }
+  ]
+}

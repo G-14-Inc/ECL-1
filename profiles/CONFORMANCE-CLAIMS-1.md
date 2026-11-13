@@ -1,7 +1,8 @@
 # ECL Conformance Claims 1
 
-Status: informative guide for ECL-1 Version 1.0, a published version. It states no
-requirement of its own: every obligation it describes is allocated, with an ID, in
+Status: informative guide for the ECL-1 Version 1 public-review local candidate.
+Source build: `1.0.2-review.1`; prepared `2026-11-10`.
+It states no requirement of its own: every obligation it describes is allocated, with an ID, in
 the core standard or a normative companion it cites.  
 Schemas:
 

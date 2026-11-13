@@ -30,7 +30,7 @@ export const TERMINAL_STATES: ReadonlySet<string> = new Set([
 
 const ALLOWED_TRANSITIONS: Record<string, ReadonlySet<string>> = {
   not_started: new Set(["prepared", "denied", "held", "challenged", "expired_before_release"]),
-  prepared: new Set(["released", "cancelled", "timed_out", "denied", "held", "expired_before_release"]),
+  prepared: new Set(["released", "cancelled", "timed_out", "denied", "held", "challenged", "expired_before_release"]),
   released: new Set(["running", "succeeded", "failed", "partially_succeeded", "cancelled", "timed_out", "unknown"]),
   running: new Set(["succeeded", "failed", "partially_succeeded", "cancelled", "timed_out", "rolled_back", "compensated", "unknown"]),
 };
@@ -62,16 +62,6 @@ function sequenceOf(record: JsonObject, path: string, findings: Finding[]): numb
     return 0;
   }
   return value;
-}
-
-function compareTuples(left: readonly string[], right: readonly string[]): number {
-  for (let index = 0; index < Math.min(left.length, right.length); index += 1) {
-    const order = compareCodePoints(left[index] as string, right[index] as string);
-    if (order !== 0) {
-      return order;
-    }
-  }
-  return left.length - right.length;
 }
 
 function sortedIds(values: Iterable<string>): string[] {
@@ -117,13 +107,12 @@ function cycleFindings(edges: Map<string, Set<string>>): Finding[] {
         continue;
       }
       const cycle = [...path.slice(positions.get(predecessor) as number), predecessor];
-      let canonical: string[] | undefined;
-      for (let index = 0; index < cycle.length - 1; index += 1) {
-        const rotated = [...cycle.slice(index, -1), ...cycle.slice(0, index), cycle[index] as string];
-        if (canonical === undefined || compareTuples(rotated, canonical) < 0) {
-          canonical = rotated;
-        }
+      // A simple DFS cycle has unique IDs, so its least rotation starts at its least ID.
+      let first = 0;
+      for (let index = 1; index < cycle.length - 1; index += 1) {
+        if (compareCodePoints(cycle[index] as string, cycle[first] as string) < 0) first = index;
       }
+      const canonical = [...cycle.slice(first, -1), ...cycle.slice(0, first), cycle[first] as string];
       const key = JSON.stringify(canonical);
       if (reported.has(key)) {
         continue;
@@ -140,7 +129,7 @@ function cycleFindings(edges: Map<string, Set<string>>): Finding[] {
   return findings;
 }
 
-function executionGroups(records: JsonObject[], findings: Finding[]): Map<string, { actionId: string; attemptId: string; records: JsonObject[] }> {
+function executionGroups(records: JsonObject[], findings: Finding[], identify: (record: JsonObject) => JsonValue | undefined): Map<string, { actionId: string; attemptId: string; records: JsonObject[] }> {
   const grouped = new Map<string, { actionId: string; attemptId: string; records: JsonObject[] }>();
   records.forEach((record, index) => {
     const rawEvent = get(record, "event");
@@ -171,7 +160,7 @@ function executionGroups(records: JsonObject[], findings: Finding[]): Map<string
     const keyed = group.records.map((record) => ({
       record,
       sequence: sequenceOf(record, "/records", findings),
-      id: str(get(record, "object_id")),
+      id: identify(record) as string,
     }));
     keyed.sort((a, b) => a.sequence - b.sequence || compareCodePoints(a.id, b.id));
     group.records = keyed.map((entry) => entry.record);
@@ -188,7 +177,7 @@ export interface AnalysisOptions {
   readonly identify?: (record: JsonObject) => JsonValue | undefined;
   /**
    * EBMP2-077: also check that each predecessor the records hold has its successor's root trace,
-   * is in its successor's workflow or the parent workflow it names, and, in the same workflow, has
+   * is in its successor's workflow, its named parent, or a child with a held origin path, and has
    * no greater attempt (`ecl.rule.bundle-causal-context-consistent.v1`).
    */
   readonly causalContext?: boolean;
@@ -207,8 +196,10 @@ function contextProblem(workflow: JsonObject, prior: JsonObject): string | undef
   }
   const sameWorkflow = pythonEquals(get(priorWorkflow, "workflow_id"), get(workflow, "workflow_id"));
   const parent = get(workflow, "parent_workflow_id");
-  if (!sameWorkflow && !(typeof parent === "string" && pythonEquals(get(priorWorkflow, "workflow_id"), parent))) {
-    return "is in a workflow that is neither its successor's nor its parent";
+  const childParent = get(priorWorkflow, "parent_workflow_id");
+  if (!sameWorkflow && !(typeof parent === "string" && pythonEquals(get(priorWorkflow, "workflow_id"), parent))
+      && !(typeof childParent === "string" && pythonEquals(childParent, get(workflow, "workflow_id")))) {
+    return "is in a workflow that is neither its successor's, its parent, nor its child";
   }
   const attempt = get(workflow, "attempt");
   const priorAttempt = get(priorWorkflow, "attempt");
@@ -217,6 +208,57 @@ function contextProblem(workflow: JsonObject, prior: JsonObject): string | undef
     return "has a later attempt than its successor";
   }
   return undefined;
+}
+
+/** O(V+E) extra work: iterative multi-source propagation and shared ancestor walks.
+ * childEdges already satisfy digest, root, workflow, parent, attempt and sequence constraints.
+ */
+function childOriginFindings(
+  childEdges: ReadonlyMap<string, ReadonlySet<string>>,
+  originSeeds: ReadonlySet<string>,
+  missing: ReadonlyMap<string, ReadonlySet<string>>,
+  parentConflicts: ReadonlyMap<string, ReadonlySet<string>>,
+  joins: readonly (readonly [string, string])[],
+  unresolved: Set<string>,
+): Finding[] {
+  const successors = new Map<string, string[]>();
+  for (const [child, predecessors] of childEdges) for (const prior of predecessors) {
+    const values = successors.get(prior) ?? [];
+    values.push(child); successors.set(prior, values);
+  }
+  const propagate = (seeds: Iterable<string>): Set<string> => {
+    const reached = new Set(seeds), pending = [...reached];
+    for (let i = 0; i < pending.length; i += 1) {
+      for (const child of successors.get(pending[i] as string) ?? []) if (!reached.has(child)) {
+        reached.add(child); pending.push(child);
+      }
+    }
+    return reached;
+  };
+  const originated = propagate(originSeeds), uncertain = propagate(missing.keys());
+  const needed = new Set<string>(), findings: Finding[] = [];
+  for (const [parent, child] of joins) {
+    if (originated.has(child)) continue;
+    if (uncertain.has(child)) needed.add(child);
+    else findings.push({ ruleId: CAUSAL_CONTEXT_RULE, path: `/records/${parent}/workflow/causal_predecessors`, message: `child predecessor ${child} has no digest-bound origin in its declared parent workflow` });
+  }
+  const pending = [...needed];
+  for (let i = 0; i < pending.length; i += 1) {
+    const child = pending[i] as string;
+    for (const missingId of missing.get(child) ?? []) unresolved.add(missingId);
+    for (const prior of childEdges.get(child) ?? []) if (uncertain.has(prior) && !needed.has(prior)) {
+      needed.add(prior); pending.push(prior);
+    }
+  }
+  const ancestry = new Set(joins.map(([, child]) => child)), ancestors = [...ancestry];
+  for (let i = 0; i < ancestors.length; i += 1) {
+    const child = ancestors[i] as string;
+    for (const prior of parentConflicts.get(child) ?? []) findings.push({ ruleId: CAUSAL_CONTEXT_RULE, path: `/records/${child}/workflow/causal_predecessors`, message: `child predecessor ${prior} changes the declared parent in joined child ancestry` });
+    for (const prior of childEdges.get(child) ?? []) if (!ancestry.has(prior)) {
+      ancestry.add(prior); ancestors.push(prior);
+    }
+  }
+  return findings;
 }
 
 /** Analyze EBMP-2 records; `allowedExternalPredecessors` are identifiers outside the records that
@@ -240,8 +282,7 @@ export function analyzeBundle(
   const findings: Finding[] = [];
   for (let index = 0; index < records.length; index += 1) {
     if (index >= maxRecords) {
-      findings.push({ ruleId: RESOURCE_LIMIT, path: "/records", message: "bundle record count exceeds the verifier budget" });
-      break;
+      return {status: "indeterminate", terminalActionIds: [], openActionIds: [], unresolvedPredecessorIds: [], findings: [{ruleId: RESOURCE_LIMIT, path: "/records", message: "bundle record count exceeds the verifier budget"}]};
     }
     const record = records[index] as JsonValue;
     if (!isObject(record)) {
@@ -251,25 +292,35 @@ export function analyzeBundle(
     values.push(record);
   }
   const byId = new Map<string, JsonObject>();
+  const collidingIds = new Set<string>();
   values.forEach((record, index) => {
     const objectId = identify(record);
     if (typeof objectId !== "string" || objectId === "") {
       findings.push({ ruleId: "ecl.rule.bundle-object-identifiers-unique.v1", path: `/records/${index}/object_id`, message: "bundle record is missing object_id" });
       return;
     }
+    if (collidingIds.has(objectId)) return;
     if (byId.has(objectId)) {
-      findings.push({ ruleId: "ecl.rule.bundle-object-identifiers-unique.v1", path: `/records/${index}/object_id`, message: `duplicate object_id ${objectId}` });
+      collidingIds.add(objectId);
+      byId.delete(objectId);
       return;
     }
     byId.set(objectId, record);
   });
+  for (const objectId of sortedIds(collidingIds)) findings.push({ruleId: "ecl.rule.bundle-object-identifiers-unique.v1", path: `/records/${objectId}/object_id`, message: `duplicate object_id ${objectId}`});
   const external = new Set(allowedExternalPredecessors);
   const unresolved = new Set<string>();
   const edges = new Map<string, Set<string>>();
+  const childEdges = new Map<string, Set<string>>();
+  const originSeeds = new Set<string>();
+  const missingOrigins = new Map<string, Set<string>>();
+  const parentConflicts = new Map<string, Set<string>>();
+  const parentJoins: Array<[string, string]> = [];
   for (const identifier of byId.keys()) {
     edges.set(identifier, new Set());
   }
-  for (const [objectId, record] of byId) {
+  for (const objectId of sortedIds(byId.keys())) {
+    const record = byId.get(objectId) as JsonObject;
     const path = `/records/${objectId}`;
     const sequence = sequenceOf(record, path, findings);
     const workflow = get(record, "workflow");
@@ -283,8 +334,7 @@ export function analyzeBundle(
       continue;
     }
     if (predecessors.length > maxPredecessorsPerRecord) {
-      findings.push({ ruleId: RESOURCE_LIMIT, path: path + "/workflow/causal_predecessors", message: "predecessor count exceeds the verifier budget" });
-      predecessors = predecessors.slice(0, maxPredecessorsPerRecord);
+      return {status: "indeterminate", terminalActionIds: [], openActionIds: [], unresolvedPredecessorIds: [], findings: [{ruleId: RESOURCE_LIMIT, path: path + "/workflow/causal_predecessors", message: "predecessor count exceeds the verifier budget"}]};
     }
     for (const predecessor of predecessors) {
       if (!isObject(predecessor)) {
@@ -297,10 +347,15 @@ export function analyzeBundle(
         continue;
       }
       (edges.get(objectId) as Set<string>).add(predecessorId);
+      if (collidingIds.has(predecessorId)) continue;
       const prior = byId.get(predecessorId);
       if (prior === undefined) {
         if (!external.has(predecessorId)) {
           unresolved.add(predecessorId);
+        }
+        if (options.causalContext === true && typeof get(workflow, "parent_workflow_id") === "string") {
+          const missing = missingOrigins.get(objectId) ?? new Set<string>();
+          missing.add(predecessorId); missingOrigins.set(objectId, missing);
         }
         continue;
       }
@@ -321,37 +376,55 @@ export function analyzeBundle(
       if (!matches) {
         findings.push({ ruleId: "ecl.rule.bundle-predecessor-digest-valid.v1", path: `/records/${objectId}/workflow/causal_predecessors`, message: `predecessor digest mismatch for ${predecessorId}` });
       }
+      const contextValid = options.causalContext === true && contextProblem(workflow, prior) === undefined;
       if (options.causalContext === true) {
-        const problem = contextProblem(workflow, prior);
-        if (problem !== undefined) {
+        if (!contextValid) {
           findings.push({ ruleId: CAUSAL_CONTEXT_RULE, path: `/records/${objectId}/workflow/causal_predecessors`, message: `predecessor ${predecessorId} is outside the causal context of ${objectId}` });
         }
       }
       const priorSequence = sequenceOf(prior, `/records/${predecessorId}`, findings);
       const priorWorkflow = get(prior, "workflow");
       const sameWorkflow = isObject(priorWorkflow) && pythonEquals(get(priorWorkflow, "workflow_id"), get(workflow, "workflow_id"));
+      if (contextValid && isObject(priorWorkflow)) {
+        const parent = get(workflow, "parent_workflow_id"), priorParent = get(priorWorkflow, "parent_workflow_id");
+        if (!sameWorkflow && pythonEquals(priorParent, get(workflow, "workflow_id"))) parentJoins.push([objectId, predecessorId]);
+        if (matches && typeof parent === "string") {
+          if (!sameWorkflow && pythonEquals(get(priorWorkflow, "workflow_id"), parent)) originSeeds.add(objectId);
+          else if (sameWorkflow && pythonEquals(priorParent, parent) && priorSequence < sequence) {
+            const predecessors = childEdges.get(objectId) ?? new Set<string>();
+            predecessors.add(predecessorId); childEdges.set(objectId, predecessors);
+          } else if (sameWorkflow && !pythonEquals(priorParent, parent)) {
+            const conflicts = parentConflicts.get(objectId) ?? new Set<string>();
+            conflicts.add(predecessorId); parentConflicts.set(objectId, conflicts);
+          }
+        }
+      }
       if (sameWorkflow && priorSequence >= sequence) {
         findings.push({ ruleId: "ecl.rule.bundle-causal-sequence-monotonic.v1", path: `/records/${objectId}/workflow/sequence`, message: `predecessor ${predecessorId} does not precede ${objectId}` });
       }
     }
   }
+  if (options.causalContext === true) findings.push(...childOriginFindings(childEdges, originSeeds, missingOrigins, parentConflicts, parentJoins, unresolved));
   findings.push(...cycleFindings(edges));
   const terminalActions = new Set<string>();
   const openActions = new Set<string>();
-  for (const group of executionGroups(values, findings).values()) {
+  for (const group of executionGroups([...byId.values()], findings, identify).values()) {
     const states = group.records.map((record) => {
       const rawEvent = get(record, "event");
       const event = truthy(rawEvent) ? rawEvent : {};
       return str(get(event, "state"));
     });
+    let invalidTransition = false;
     for (let index = 0; index + 1 < states.length; index += 1) {
       const prior = states[index] as string;
       const current = states[index + 1] as string;
       const allowed = Object.prototype.hasOwnProperty.call(ALLOWED_TRANSITIONS, prior) ? ALLOWED_TRANSITIONS[prior] : undefined;
       if (TERMINAL_STATES.has(prior) || allowed === undefined || !allowed.has(current)) {
+        invalidTransition = true;
         findings.push({ ruleId: "ecl.rule.execution-state-transition-valid.v1", path: `/attempts/${group.attemptId}`, message: `invalid execution transition ${prior} -> ${current}` });
       }
     }
+    if (invalidTransition) continue;
     const last = states[states.length - 1];
     if (last !== undefined && TERMINAL_STATES.has(last)) {
       terminalActions.add(group.actionId);
@@ -359,7 +432,7 @@ export function analyzeBundle(
       openActions.add(group.actionId);
     }
   }
-  const status = unresolved.size > 0 || openActions.size > 0 ? "incomplete" : findings.length > 0 ? "indeterminate" : "complete";
+  const status = collidingIds.size > 0 ? "indeterminate" : unresolved.size > 0 || openActions.size > 0 ? "incomplete" : findings.length > 0 ? "indeterminate" : "complete";
   return {
     status,
     terminalActionIds: sortedIds(terminalActions),

@@ -2,7 +2,8 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 This profile binds a DCMP-2 exchange over HTTPS between an enforcement point
 and a decision point at the decision endpoint, an HTTPS URL that the decision

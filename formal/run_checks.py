@@ -44,7 +44,7 @@ README = FORMAL / "README.md"
 RECORD_SCHEMA = "ecl_formal_results_v2"
 JAVA_HEAP = "-Xmx1500m"
 DEFAULT_TIMEOUT = 900
-DERIVCHECK_TIMEOUT = 0  # Historical command; positive seconds enable derivation diagnostics.
+DERIVCHECK_TIMEOUT = 10  # Current checks include message-derivation diagnostics.
 START = "<!-- formal:results -->"
 END = "<!-- /formal:results -->"
 
@@ -83,7 +83,7 @@ TLC_CHECKS: dict[str, str] = {
     "broken-no-window": "EffectWithinAuthority",
     "broken-no-single-use": "SingleUse",
     "broken-ignore-revocation": "NoEffectWithKnownRevocation",
-    "broken-ignore-staleness": "NoEffectDuringOutage",
+    "broken-ignore-staleness": "ControlStateFreshAtEffect",
     "broken-no-propagation-deadline": "RevocationBound",
     "broken-ignore-halt": "NoEffectAtHaltedEP",
     "broken-halt-unbounded": "NoEffectBeyondHaltBound",
@@ -98,15 +98,41 @@ TLC_CHECKS: dict[str, str] = {
     "broken-no-decision-timeout": "RequestResolves",
     "broken-halt-ack-lost": "HaltTakesEffect",
     "witness-effect": "WitnessNoEffect",
-    "witness-admit-after-hold": "WitnessNoAdmitAfterHold",
-    "witness-collision-deny": "WitnessNoCollisionDeny",
+    "witness-admit-after-challenge": "WitnessNoAdmitAfterChallenge",
+    "witness-collision-refusal": "WitnessNoCollisionRefusal",
     "witness-effect-during-outage": "WitnessNoEffectDuringOutage",
     "witness-effect-in-revocation-window": "WitnessNoEffectInRevocationWindow",
     "witness-effect-in-halt-window": "WitnessNoEffectInHaltWindow",
     "witness-timeout": "WitnessNoTimeout",
+    "correct-continuation": "pass",
+    "correct-delayed-continuation": "pass",
+    "broken-continuation-binding": "ContinuationAdmitBound",
+    "broken-approval-reuse": "OneAdmittingContinuation",
+    "broken-expired-approval": "ContinuationAdmitBound",
+    "broken-revoked-approval": "NoContinuationWithRevokedApproval",
+    "witness-approval-replay-refused": "WitnessNoApprovalReplayRefusal",
+    "witness-later-continuation": "WitnessNoLaterContinuationDecision",
+    "broken-recovery-without-reconciliation": "RecoveryBeforeNormal",
+    "broken-recovered-trust-state": "NoRecoveredEffectOnUnreconciledState",
+    "broken-restriction-bypass": "NoEffectWhileRestricted",
+    "broken-stale-recovery-proof": "RestrictionLiftRequiresFreshProof",
+    "broken-unrecorded-restriction-lift": "RestrictionLiftRequiresFreshProof",
+    "witness-effect-after-reconciliation": "WitnessNoEffectAfterRecovery",
+    "witness-effect-after-short-outage": "WitnessNoEffectAfterShortOutage",
+    "witness-revalidated-authority-after-restriction": "WitnessNoRevalidatedAuthorityAfterRestriction",
+    "broken-connected-stale-view": "ControlStateFreshAtEffect",
+    "correct-continuation-liveness": "pass",
+    "correct-repeated-staleness": "pass",
+    "broken-continuation-attempt-collision": "UniqueWorkflowAttempt",
+    "broken-repeated-staleness-proof": "FreshStalenessInvalidatesProof",
+    "broken-recovery-never-resumes": "RecoveryCompletes",
+    "witness-live-continuation-admit": "WitnessNoAdmitAfterChallenge",
+    "witness-live-continuation-timeout": "WitnessNoContinuationTimeout",
+    "witness-live-recovery-resumption": "WitnessNoEffectAfterRecovery",
+    "witness-revalidated-authority-after-repeated-staleness": "WitnessNoRevalidatedAuthorityAfterRepeatedStaleness",
 }
 
-LIVENESS = ("HoldResolves", "RequestResolves", "HaltTakesEffect")
+LIVENESS = ("HoldResolves", "RequestResolves", "HaltTakesEffect", "RecoveryCompletes")
 
 LEMMAS = (
     "executable",
@@ -116,15 +142,23 @@ LEMMAS = (
     "authorization_scope_and_audience",
     "single_use",
     "one_effect_per_request",
+    "execution_request_binding",
+    "agent_signed_executable",
+    "request_context_origin",
+    "execution_preserves_request",
+    "consumer_authorization_binding",
 )
 
 # Tamarin: check name -> (preprocessor flag or None, lemma it falsifies or None for all proved).
 TAMARIN_CHECKS: dict[str, tuple[str | None, str | None]] = {
     "protocol-correct": (None, None),
+    "protocol-skip-context-signature": ("skip_context_signature", "request_context_origin"),
+    "protocol-presentation-context-not-bound": ("presentation_context_not_bound", "execution_preserves_request"),
     "protocol-skip-response-signature": ("skip_response_signature", "response_authenticity"),
     "protocol-shared-role-key": ("shared_role_key", "response_authenticity"),
     "protocol-response-not-bound": ("response_not_bound", "request_response_binding"),
-    "protocol-no-scope-check": ("no_scope_check", "authorization_scope_and_audience"),
+    "protocol-presentation-not-bound": ("presentation_not_bound", "execution_request_binding"),
+    "protocol-no-scope-check": ("no_scope_check", "consumer_authorization_binding"),
     "protocol-no-audience-check": ("no_audience_check", "authorization_scope_and_audience"),
     "protocol-no-single-use": ("no_single_use", "single_use"),
     "protocol-dp-no-message-identity": ("dp_no_message_identity", "one_effect_per_request"),
@@ -139,8 +173,9 @@ _DEPTH = re.compile(r"The depth of the complete state graph search is (\d+)")
 _TRACE_STATE = re.compile(r"^State \d+:", re.MULTILINE)
 _ILL_FORMED = re.compile(r"wellformedness checks? failed")
 _SUMMARY = re.compile(
-    r"^\s+(\w+) \((?:all-traces|exists-trace)\): "
-    r"(verified|falsified - found trace|analysis incomplete)(?: \((\d+) steps\))?",
+    r"^\s+(\w+) \((all-traces|exists-trace)\): "
+    r"(verified|falsified - found trace|falsified - no trace found|analysis incomplete)"
+    r"(?: \((\d+) steps\))?",
     re.MULTILINE,
 )
 
@@ -220,8 +255,8 @@ def tlc_command(tools: Tools, name: str, workdir: Path) -> list[str]:
     ]
 
 
-def checked_liveness(name: str) -> list[str]:
-    """Liveness names in PROPERTY/PROPERTIES declarations, excluding comments."""
+def checked_properties(name: str) -> list[str]:
+    """All PROPERTY/PROPERTIES names, excluding comments and quoted values."""
     text = (TLA / "configs" / f"{name}.cfg").read_text(encoding="utf-8")
     clean: list[str] = []
     index, depth = 0, 0
@@ -261,9 +296,14 @@ def checked_liveness(name: str) -> list[str]:
     for word in re.findall(r"\w+", "".join(clean)):
         if word in keywords:
             active = word in {"PROPERTY", "PROPERTIES"}
-        elif active and word in LIVENESS and word not in names:
+        elif active and word not in names:
             names.append(word)
     return names
+
+
+def checked_liveness(name: str) -> list[str]:
+    """Known liveness names; not sufficient to attribute an unnamed failure."""
+    return [name for name in checked_properties(name) if name in LIVENESS]
 
 
 def parse_tlc(name: str, expected: str, output: str, seconds: float) -> Result:
@@ -273,8 +313,8 @@ def parse_tlc(name: str, expected: str, output: str, seconds: float) -> Result:
         observed = match.group(1)
     elif "Error: Temporal properties were violated." in output:
         # TLC does not name the temporal property; a configuration that checks only one does.
-        liveness = checked_liveness(name)
-        observed = liveness[0] if len(liveness) == 1 else "temporal"
+        properties = checked_properties(name)
+        observed = properties[0] if len(properties) == 1 else "temporal"
     else:
         observed = "error"
     result = Result(name, "tlc", expected, observed, observed == expected, round(seconds, 1))
@@ -315,9 +355,10 @@ def execute_check(
         result = parse_tlc(name, expected, output, seconds) if tlc else parse_tamarin(
             name, lemma, output, seconds
         )
-        # TLC uses nonzero status for expected counterexamples. A success banner
-        # accompanying abnormal exit is not a successful exhaustive check.
-        if returncode != 0 and (not tlc or result.observed == "pass"):
+        # TLC 1.7.4 uses 12/13 for safety/liveness counterexamples. Neither a
+        # success nor a violation banner can override an abnormal process exit.
+        valid_code = returncode == 0 if not tlc or result.observed == "pass" else returncode in (12, 13)
+        if not valid_code:
             result.observed, result.passed = "tool-error", False
     except subprocess.TimeoutExpired as error:
         def decoded(value: str | bytes | None) -> str:
@@ -365,8 +406,9 @@ def tamarin_command(
 
 def parse_tamarin(name: str, lemma: str | None, output: str, seconds: float) -> Result:
     found = _SUMMARY.findall(output)
-    lemmas = {match[0]: match[1] for match in found}
-    steps = {match[0]: int(match[2]) for match in found if match[2]}
+    quantifiers = {match[0]: match[1] for match in found}
+    lemmas = {match[0]: match[2] for match in found}
+    steps = {match[0]: int(match[3]) for match in found if match[3]}
     wellformed = _ILL_FORMED.search(output) is None
     if lemma is None:
         expected = "all verified"
@@ -377,9 +419,13 @@ def parse_tamarin(name: str, lemma: str | None, output: str, seconds: float) -> 
         )
     else:
         expected = f"{lemma} falsified"
+        falsified_status = {
+            "all-traces": "falsified - found trace",
+            "exists-trace": "falsified - no trace found",
+        }.get(quantifiers.get(lemma, ""))
         observed = (
             f"{lemma} falsified"
-            if wellformed and lemmas.get(lemma) == "falsified - found trace"
+            if wellformed and falsified_status is not None and lemmas.get(lemma) == falsified_status
             else f"{lemma} {lemmas.get(lemma, 'not analyzed')}"
         )
     result = Result(name, "tamarin", expected, observed, observed == expected, round(seconds, 1))

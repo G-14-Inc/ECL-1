@@ -38,11 +38,12 @@ later than the evaluation time is `current-trust-failed`, with the expired code,
 `verified`. A package that exceeds a declared limit of the verifier (IE1-028) is `invalid` with
 resource-limit-exceeded at the check that meets the limit, as a bundle over a limit is (EBMP2-062):
 the archive's limits at check 1, the strict JSON parser's limits at checks 3 and 7, and the artifact
-count and path bytes at check 4.
+count and path bytes at check 4. The fixed manifest schema bounds still apply at check 3;
+raising a verifier resource limit does not relax the schema.
 
 The caller's options are those of `verify_bundle`, passed to it unchanged, so an option that the
 bundle verifier gains reaches the package's bundle without a change here: among them, the decision
-basis is required unless the caller opts out, and a register is applied when the caller gives one.
+basis is required, and a register is applied when the caller gives one.
 """
 
 from __future__ import annotations
@@ -298,9 +299,10 @@ def verify_offline_package(
 def reported_package_identifiers(report: BundleReport) -> list[str]:
     """The identifiers of a package's report in order, each once, the primary first (IE1-022,
     EBMP2-068): the code of the first check of IE1-022 that fails, or the findings of the bundle
-    in the order of EBMP2-068; for a current-trust-failed package, after the expired code of a
-    package that has expired, the current status of each envelope that is not valid, in the order
-    of stage 4 of EBMP2-068; for an incomplete package without findings, the causal-closure code.
+    in the order of EBMP2-068. For a current-trust-failed package, report existing findings
+    first, then current-status codes in EBMP2-068 order. IE1-022 step 12 adds a package-expiry
+    finding only when the inner bundle verdict is verified. For an incomplete package without
+    findings, report the causal-closure code.
     """
     codes = list(dict.fromkeys(item.split(":", 1)[0] for item in report.findings))
     if report.verdict == CURRENT_TRUST_FAILED:

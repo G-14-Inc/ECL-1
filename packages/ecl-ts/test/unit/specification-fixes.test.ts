@@ -43,7 +43,8 @@ test("XR1-010: two versions of one extension conflict, known or not; the same ve
   };
   const findings = validator.validate(value);
   assert.deepEqual(pathsOf(findings, "ecl.rule.extension-single-version.v1"), ["/extensions/3"]);
-  assert.deepEqual(pathsOf(findings, "ecl.rule.extension-identifiers-unique.v1"), ["/extensions/2", "/extensions/4"]);
+  // ROOT-027: boolean true is malformed as a version, not a duplicate of integer 1.
+  assert.deepEqual(pathsOf(findings, "ecl.rule.extension-identifiers-unique.v1"), ["/extensions/2"]);
   const composable = new SemanticValidator(undefined, undefined, undefined, undefined, ["com.example.tag.v1"]);
   assert.deepEqual(pathsOf(composable.validate(value), "ecl.rule.extension-single-version.v1"), []);
   const malformed = validator.validate({ extensions: "x" });
@@ -137,6 +138,7 @@ test("AB1-013 and AC1-012: a record's inputs, without the profile's member, equa
   const record = (inputs: JsonValue[], ...bases: JsonValue[][]): JsonObject => ({
     inputs,
     response: {
+      protocol: "DCMP-2",
       extensions: bases.map((inputsOfBasis) => ({
         id: "ecl.ext.decision-basis.v1",
         version: 1,

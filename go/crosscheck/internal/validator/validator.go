@@ -12,7 +12,8 @@ import (
 	"time"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/canonical"
-	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/strictjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
 )
 
 const (
@@ -50,9 +51,9 @@ type Options struct {
 // Validate derives findings from exact artifact bytes. It never receives a
 // manifest expectation or expected rule identifier.
 func Validate(data []byte, options Options) ([]Finding, error) {
-	value, err := strictjson.Parse(data)
+	value, err := strict.Parse(data)
 	if err != nil {
-		var strictErr *strictjson.Error
+		var strictErr *strict.Error
 		if errors.As(err, &strictErr) {
 			return []Finding{{
 				RuleID: strictErr.RuleID,
@@ -62,6 +63,11 @@ func Validate(data []byte, options Options) ([]Finding, error) {
 		}
 		return nil, err
 	}
+	return ValidateValue(value, options)
+}
+
+// ValidateValue checks an already parsed value without imposing a second parser profile.
+func ValidateValue(value any, options Options) ([]Finding, error) {
 	root, ok := object(value)
 	if !ok {
 		return []Finding{finding(RuleArtifactRecognized, "/", "artifact root is not an object")}, nil
@@ -70,12 +76,12 @@ func Validate(data []byte, options Options) ([]Finding, error) {
 	// A DCMP-2 or EBMP-2 object is classified by its protocol before the bare-bundle shape: an
 	// EBMP-2 bundle manifest also has a records member, which holds references, not records.
 	switch {
-	case text(root["schema_version"]) == "ecl_adapter_binding_v1":
-		return validateAdapter(root)
 	case text(root["protocol"]) == "DCMP-2":
 		return validateDCMP(root, options), nil
 	case text(root["protocol"]) == "EBMP-2":
 		return validateRecord(root, options), nil
+	case text(root["schema_version"]) == "ecl_adapter_binding_v1":
+		return validateAdapter(root)
 	case root["records"] != nil:
 		return validateBundle(root, options)
 	default:
@@ -193,7 +199,8 @@ func validateAdapter(root map[string]any) ([]Finding, error) {
 
 func validateDCMP(root map[string]any, options Options) []Finding {
 	findings := make([]Finding, 0)
-	outcome := text(root["outcome"])
+	outcome, outcomeIsText := root["outcome"].(string)
+	isResponse := text(root["message_type"]) == "decision_response"
 	authorization, hasAuthorization := object(root["authorization"])
 	if outcome == "admit" {
 		if !hasAuthorization ||
@@ -207,15 +214,12 @@ func validateDCMP(root map[string]any, options Options) []Finding {
 			))
 		}
 	}
-	switch outcome {
-	case "deny", "hold", "challenge", "expired", "revoked", "cancelled", "superseded":
-		if hasAuthorization {
-			findings = append(findings, finding(
-				RuleNonAdmitAuthority,
-				"/authorization",
-				"non-admit outcome carries executable authority",
-			))
-		}
+	if isResponse && outcomeIsText && outcome != "admit" && hasAuthorization {
+		findings = append(findings, finding(
+			RuleNonAdmitAuthority,
+			"/authorization",
+			"non-admit response carries an authorization object",
+		))
 	}
 
 	if issued, issuedOK := timestamp(root["issued_at"]); issuedOK {
@@ -227,7 +231,7 @@ func validateDCMP(root map[string]any, options Options) []Finding {
 			))
 		}
 	}
-	if hasAuthorization {
+	if isResponse && hasAuthorization {
 		if start, startOK := timestamp(authorization["valid_from"]); startOK {
 			if end, endOK := timestamp(authorization["valid_until"]); endOK && !end.After(start) {
 				findings = append(findings, finding(
@@ -287,7 +291,7 @@ func validateRecord(root map[string]any, options Options) []Finding {
 	}
 	if text(root["event_type"]) == "lifecycle_transition" {
 		operation := text(event["operation"])
-		if (operation == "redact" || operation == "supersede") && event["derived_artifact"] == nil {
+		if (operation == "redact" || operation == "supersede") && !pyjson.Truthy(event["derived_artifact"]) {
 			findings = append(findings, finding(
 				RuleLifecycleDerivative,
 				"/event/derived_artifact",
@@ -451,29 +455,33 @@ func validateExtensions(root map[string]any, options Options) []Finding {
 		return nil
 	}
 	seen := map[string]bool{}
+	var findings []Finding
 	for index, item := range extensions {
 		extension, _ := object(item)
-		id := text(extension["id"])
+		id, idOK := extension["id"].(string)
 		version, versionOK := integer(extension["version"])
+		if !idOK || !versionOK {
+			continue
+		}
 		key := id + "\x00" + strconv.FormatInt(version, 10)
 		if seen[key] {
-			return []Finding{finding(
+			findings = append(findings, finding(
 				RuleExtensionUnique,
 				fmt.Sprintf("/extensions/%d", index),
 				"extension identifier and version pair is duplicated",
-			)}
+			))
 		}
 		seen[key] = true
 		if extension["critical"] == true &&
 			(!versionOK || !options.KnownExtensions[id][int(version)]) {
-			return []Finding{finding(
+			findings = append(findings, finding(
 				RuleUnknownCritical,
 				fmt.Sprintf("/extensions/%d", index),
 				"critical extension is not active in the frozen registry",
-			)}
+			))
 		}
 	}
-	return nil
+	return findings
 }
 
 func validateIntegrity(root map[string]any) []Finding {
@@ -605,13 +613,14 @@ func sameSequenceDomain(left, right map[string]any) bool {
 }
 
 func unique(findings []Finding) []Finding {
-	seen := map[string]bool{}
+	// Distinct locations of the same rule remain distinct diagnostic findings.
+	seen := map[Finding]bool{}
 	output := make([]Finding, 0, len(findings))
 	for _, current := range findings {
-		if seen[current.RuleID] {
+		if seen[current] {
 			continue
 		}
-		seen[current.RuleID] = true
+		seen[current] = true
 		output = append(output, current)
 	}
 	return output

@@ -1,7 +1,8 @@
 # ECL Deployment Profiles 1
 
-Status: informative guide for ECL-1 Version 1.0, a published version. It states no
-requirement of its own: every obligation it describes is allocated, with an ID, in
+Status: informative guide for the ECL-1 Version 1 public-review local candidate.
+Source build: `1.0.2-review.1`; prepared `2026-11-10`.
+It states no requirement of its own: every obligation it describes is allocated, with an ID, in
 the core standard or a normative companion it cites.  
 Schema: `https://externalcontrollayer.ai/ns/schema/deployment-profile/1`
 
@@ -56,8 +57,13 @@ Restricted operation permits only diagnosis, recovery, containment, or safe
 shutdown. The machine profile binds these controls to evidence and drills.
 A fallback state applies to a scope: a loss of required proof restricts the
 action classes that the claim's dependency model ties to the lost proof, and a
-critical integrity failure or an emergency activation applies to the whole
-deployment (core standard, ECL1N-0191 to ECL1N-0193).
+critical integrity failure, emergency activation, or operator safety requiring
+cessation brings Emergency Halt for the whole deployment. Lifting that state
+requires the applicable fresh proof, recorded resolution of any operator-safety
+condition, and recorded control authorization (core standard, ECL1N-0146 and
+ECL1N-0191 to ECL1N-0193). The November 10, 2026 clarification carries the
+operator-safety trigger and lifting conditions added in v1.0.1 into this guide;
+the earlier issue disposition remains a historical record of its narrower text.
 
 ## Public claim boundary
 

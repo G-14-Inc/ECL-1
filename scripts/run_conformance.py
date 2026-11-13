@@ -7,17 +7,21 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
+import stat
 import sys
 from pathlib import Path
 from types import ModuleType
 from typing import Any
 
-from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
+from jsonschema.exceptions import ValidationError
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.scope_expectations import effect_identifiers_nonblank, scope_expectation_matches  # noqa: E402
 # The Python verifier (packages/ecl-verify), when it is not installed in the environment.
 sys.path.insert(0, str(ROOT / "packages" / "ecl-verify" / "src"))
 
@@ -37,15 +41,16 @@ from ecl_verify.canonical import (  # noqa: E402
     load_json_strict,
     loads_json_strict,
 )
-from ecl_verify.offline import DEFAULT_OFFLINE_RESOURCE_LIMITS  # noqa: E402
+from ecl_verify.offline import DEFAULT_OFFLINE_RESOURCE_LIMITS, safe_relative_path  # noqa: E402
 from ecl_verify.resources import extension_value_validators  # noqa: E402
 from ecl_verify.semantic import (  # noqa: E402
     SemanticValidator,
     active_extension_versions,
+    extension_applicability,
     allocated_extension_versions,
     composable_extensions,
 )
-from ecl_verify.schema import ecl_format_checker  # noqa: E402
+from ecl_verify.schema import ecl_format_checker, parse_rfc3339_utc  # noqa: E402
 from ecl_verify.schema_patterns import schema_validator, validation_schema  # noqa: E402
 from ecl_verify.semantic_rc4 import validate_safe_state_profile  # noqa: E402
 from ecl_verify.integrity import IntegrityError, decode_canonical_json_payload, verify_envelope  # noqa: E402
@@ -98,6 +103,9 @@ SCHEMA_PATHS = {
     "https://externalcontrollayer.ai/ns/schema/conformance-claim/1": (
         "schemas/ecl-conformance-claim-v1.schema.json"
     ),
+    "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1": (
+        "schemas/ecl-component-implementation-report-v1.schema.json"
+    ),
     "https://externalcontrollayer.ai/ns/schema/deployment-profile/1": (
         "schemas/ecl-deployment-profile-v1.schema.json"
     ),
@@ -119,6 +127,13 @@ RESULT_PATH = Path("release/conformance-results.json")
 # repository) the runner first checks that the vectors are current; the ECL-1 package holds the
 # vectors without their generator.
 FOUNDATION_GENERATOR = Path("scripts/generate_foundation_vectors.py")
+# The replay tool binds whole-file hashes. This is its input budget, separate from
+# a stage's parser/package limits and equal to the report-integrity checker's bound-file budget.
+MAX_REPORT_ARTIFACT_BYTES = 512 * 1024 * 1024
+STAGES = frozenset({
+    "strict-json", "canonical", "protocol", "semantic", "bundle", "safe-state-profile",
+    "document", "binding", "envelope", "trust-policy", "evidence-bundle", "package",
+})
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -137,7 +152,7 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return read_artifact(path, 0)[1]
 
 
 def load_module(name: str, path: Path) -> ModuleType:
@@ -199,10 +214,43 @@ def strict_failure_id(exc: CanonicalizationError) -> str:
 MAX_PACKAGE_BYTES = DEFAULT_OFFLINE_RESOURCE_LIMITS.max_archive_bytes
 
 
-def read_limited(path: Path, limit: int) -> bytes:
-    """The artifact's bytes, read no further than one byte past `limit` (IE1-029)."""
+def read_artifact(path: Path, prefix_bytes: int) -> tuple[bytes, str]:
+    """Retain only the requested prefix while hashing the same bounded stream.
+
+    A stage receives at most its byte limit plus one. Hashing still covers the
+    entire file, including a refused suffix; the replay tool's independent budget
+    limits that work. A budget failure is a usage error, not a vector verdict.
+    """
+    if type(prefix_bytes) is not int or prefix_bytes < 0:
+        raise ValueError("invalid artifact prefix byte limit")
+    before = path.stat()
+    if not stat.S_ISREG(before.st_mode):
+        raise ValueError("vector artifact is not a regular file")
+    if before.st_size > MAX_REPORT_ARTIFACT_BYTES:
+        raise ValueError("vector artifact exceeds replay byte budget")
+    identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
+    version = lambda info: (*identity(info), info.st_ctime_ns)
+    digest, prefix, total = hashlib.sha256(), bytearray(), 0
     with path.open("rb") as source:
-        return source.read(limit + 1)
+        opened = os.fstat(source.fileno())
+        # Windows stat() and fstat() can give ctime different meanings. Compare
+        # their common identity fields, then retain each API's own full baseline
+        # so a metadata change during reading still invalidates the observation.
+        if identity(opened) != identity(before):
+            raise ValueError("vector artifact changed before reading")
+        while chunk := source.read(1024 * 1024):
+            total += len(chunk)
+            if total > MAX_REPORT_ARTIFACT_BYTES:
+                raise ValueError("vector artifact exceeds replay byte budget")
+            digest.update(chunk)
+            remaining = prefix_bytes - len(prefix)
+            if remaining > 0:
+                prefix.extend(chunk[:remaining])
+        if version(os.fstat(source.fileno())) != version(opened):
+            raise ValueError("vector artifact changed during reading")
+    if total != before.st_size or version(path.stat()) != version(before):
+        raise ValueError("vector artifact changed during reading")
+    return bytes(prefix), digest.hexdigest()
 
 
 def load_trust_policy(root: Path, value: str) -> TrustPolicy:
@@ -248,13 +296,19 @@ def evidence_bundle_findings(
                 "established": list(report.scope.established),
                 "not_established": list(report.scope.not_established),
                 "reasons": dict(sorted(report.scope.reasons.items())),
+                "checks": {
+                    item: {"checks": list(entry["checks"]), "objects": sorted(entry["objects"])}
+                    for item, entry in sorted(report.scope.checks.items())
+                },
             },
             "effects": [
                 {"action_id": item.action_id, "level": item.level} for item in report.effects
             ],
             # EBMP2-076: an incomplete report lists the predecessors it could not resolve. A
             # report without the member has none to compare.
-            "unresolved_predecessor_ids": getattr(report, "unresolved_predecessor_ids", None),
+            "unresolved_predecessor_ids": (list(report.unresolved_predecessor_ids)
+                if isinstance(getattr(report, "unresolved_predecessor_ids", None), tuple)
+                else getattr(report, "unresolved_predecessor_ids", None)),
         }
     return report.verdict, reported_identifiers(report)
 
@@ -270,12 +324,16 @@ def scope_matches(vector: dict[str, Any], observed: dict[str, Any] | None) -> bo
         return True
     if observed is None:
         return False
-    if "expected_scope" in vector and observed["scope"] != vector["expected_scope"]:
+    if "expected_scope" in vector and not scope_expectation_matches(observed["scope"], vector["expected_scope"]):
         return False
     if "expected_unresolved_predecessor_ids" in vector:
         reported = observed.get("unresolved_predecessor_ids")
-        if reported is None or set(reported) != set(vector["expected_unresolved_predecessor_ids"]):
+        if (not isinstance(reported, list) or not all(isinstance(item, str) for item in reported)
+            or len(reported) != len(set(reported))
+            or set(reported) != set(vector["expected_unresolved_predecessor_ids"])):
             return False
+    if "expected_effects" in vector and not effect_identifiers_nonblank(observed["effects"]):
+        return False
     for expected in vector.get("expected_effects", []):
         levels = {
             item["level"]
@@ -329,30 +387,39 @@ def observed_for_vector(
     verdicts: dict[str, str] | None = None,
     export_keys: dict[str, ExportKey] | None = None,
     scopes: dict[str, Any] | None = None,
+    artifact_hashes: dict[str, str] | None = None,
 ) -> list[str]:
-    path = root / vector["path"]
     stage = vector["stage"]
+    if stage not in STAGES:
+        raise ValueError(f"unknown conformance stage: {stage}")
+    path = safe_artifact_path(root, vector["path"])
+    limits = vector.get("strict_json_limits", {})
+    limit = (MAX_TRUST_POLICY_BYTES if stage == "trust-policy" else
+             MAX_PACKAGE_BYTES if stage == "package" else limits.get("max_bytes", MAX_JSON_BYTES))
+    if type(limit) is not int or limit < 0:
+        raise ValueError("invalid vector byte limit")
+    data, digest = read_artifact(path, limit + 1)
+    if artifact_hashes is not None:
+        artifact_hashes[vector["id"]] = digest
     if stage == "trust-policy":
         try:
-            with path.open("rb") as source:
-                TrustPolicy.load(source.read(MAX_TRUST_POLICY_BYTES + 1))
+            TrustPolicy.load(data)
         except TrustPolicyError as exc:
             return [exc.code]
         return []
     if stage == "package":
         # The artifact is an archive, so the stage reads bytes, not strict JSON.
-        verdict, codes = package_findings(root, vector, read_limited(path, MAX_PACKAGE_BYTES))
+        verdict, codes = package_findings(root, vector, data)
         if verdicts is not None:
             verdicts[vector["id"]] = verdict
         return codes
     # The Parse step applies the vector's declared limits when it states them (IE1-028), and
-    # otherwise the reference's own; a file is read no further than one byte past the byte limit.
-    limits = vector.get("strict_json_limits", {})
+    # otherwise the reference's own; the parser receives no more than one byte past the byte limit.
     try:
-        value = loads_json_strict(
-            read_limited(path, limits.get("max_bytes", MAX_JSON_BYTES)), **limits
-        )
+        value = loads_json_strict(data, **limits)
     except CanonicalizationError as exc:
+        if stage == "evidence-bundle" and verdicts is not None:
+            verdicts[vector["id"]] = "invalid"
         return [strict_failure_id(exc)]
     if stage == "strict-json":
         return []
@@ -391,7 +458,7 @@ def observed_for_vector(
         # A claim or assessment document: strict parsing, its declared schema, and the registered
         # semantic rules whose `applies_to` names its type, its `protocol` or the `$id` of its
         # schema. Of these documents only the work intent (ECL-WI-1) carries extensions, and the
-        # extension rules apply to it; the register declarations rule applies to an action register
+        # extension and advisory-context rules apply to it; the register declarations rule applies to an action register
         # (ECL1N-0178).
         scoped = document_rules(root, value.get("protocol")) | document_rules(
             root, vector["schema"]
@@ -405,25 +472,20 @@ def observed_for_vector(
             return ["ecl.error.schema-invalid.v1"]
         if trust_policy is None:
             raise ValueError("envelope suite requires a caller-supplied trust-policy artifact")
-        try:
-            payload = decode_canonical_json_payload(value)
-            at = (
-                payload.get("issued_at")
-                if payload.get("protocol") == "DCMP-2"
-                else payload.get("observed_at")
-            )
+        def envelope_context(payload: Any):
+            if not isinstance(payload, dict):
+                raise ValueError("envelope payload has no object time")
+            dcmp = payload.get("protocol") == "DCMP-2"
+            at = payload.get("issued_at" if dcmp else "observed_at")
             if not isinstance(at, str):
-                return ["ecl.error.schema-invalid.v1"]
-            time_policy = (
-                "ecl.time.issued-at.v1"
-                if payload.get("protocol") == "DCMP-2"
-                else "ecl.time.observed-at.v1"
+                raise ValueError("envelope payload lacks its verification-time timestamp")
+            parse_rfc3339_utc(at)
+            return trust_policy.verification_context(
+                evaluated_at=at,
+                time_policy="ecl.time.issued-at.v1" if dcmp else "ecl.time.observed-at.v1",
             )
-            verify_envelope(
-                value,
-                trust_policy.keyring(),
-                trust_policy.verification_context(evaluated_at=at, time_policy=time_policy),
-            )
+        try:
+            verify_envelope(value, trust_policy.keyring(), envelope_context)
         except IntegrityError as exc:
             return [exc.code]
         return []
@@ -487,19 +549,25 @@ def select_findings(
     if unknown:
         raise ValueError(f"unregistered findings: {sorted(unknown)}")
     strict = findings & STRICT_RULES
+    # A generic semantic failure can accompany a specific binding error or rule.
+    # conformance/README.md ranks it last; it is not a second interface error.
+    semantic_invalid = "ecl.error.semantic-invalid.v1"
+    reported = (findings & error_ids) - {semantic_invalid}
+    ranked = findings & set(precedence)
     if strict:
         primary = min(strict, key=precedence.__getitem__)
     elif "ecl.error.schema-invalid.v1" in findings:
         primary = "ecl.error.schema-invalid.v1"
-    elif findings & error_ids:
-        reported = findings & error_ids
+    elif reported:
         if len(reported) != 1:
             raise ValueError(
                 "ambiguous interface errors: a vector must have one loader or integrity error"
             )
         primary = next(iter(reported))
-    elif findings:
-        primary = min(findings, key=precedence.__getitem__)
+    elif ranked:
+        primary = min(ranked, key=precedence.__getitem__)
+    elif semantic_invalid in findings:
+        primary = semantic_invalid
     else:
         return None, []
     return primary, sorted(findings - {primary})
@@ -526,15 +594,18 @@ def registered_errors(root: Path) -> set[str]:
 
 
 def safe_artifact_path(root: Path, value: str) -> Path:
-    path = Path(value)
-    if (
-        path.is_absolute()
-        or ".." in path.parts
-        or path.as_posix() != value
-        or not (root / path).resolve().is_relative_to(root.resolve())
-    ):
+    try:
+        path = safe_relative_path(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("unsafe vector path") from exc
+    current = root.resolve()
+    for part in path.parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError("vector path traverses a symlink")
+    if not current.resolve().is_relative_to(root.resolve()):
         raise ValueError("unsafe vector path")
-    return root / path
+    return current
 
 
 def validate_manifest_coverage(root: Path, manifest: dict[str, Any] | list[dict[str, Any]]) -> None:
@@ -551,7 +622,7 @@ def validate_manifest_coverage(root: Path, manifest: dict[str, Any] | list[dict[
     paths: set[str] = set()
     shadowed: set[str] = set()
     for value in manifests:
-        Draft202012Validator(schema).validate(value)
+        schema_validator(schema, registry=Registry(), format_checker=ecl_format_checker()).validate(value)
         if value["suite"] in suites:
             raise ValueError("duplicate suite")
         suites.add(value["suite"])
@@ -563,6 +634,8 @@ def validate_manifest_coverage(root: Path, manifest: dict[str, Any] | list[dict[
             safe_artifact_path(root, value["export_keys_path"])
         for vector in value["vectors"]:
             safe_artifact_path(root, vector["path"])
+            if "register_path" in vector:
+                safe_artifact_path(root, vector["register_path"])
             if vector["stage"] in ("evidence-bundle", "package"):
                 for item in [vector["trust_policy_path"], *vector["trust_policy_history_paths"]]:
                     safe_artifact_path(root, item)
@@ -648,6 +721,7 @@ def run(root: Path) -> dict[str, Any]:
         allocated_versions=allocated_extension_versions(extensions["entries"]),
         composable=composable_extensions(extensions["entries"]),
         active_versions=active_extension_versions(extensions["entries"]),
+        applicability=extension_applicability(extensions["entries"]),
     )
     sections: list[dict[str, Any]] = []
     all_results: list[dict[str, Any]] = []
@@ -662,6 +736,7 @@ def run(root: Path) -> dict[str, Any]:
         for vector in manifest["vectors"]:
             verdicts: dict[str, str] = {}
             scopes: dict[str, Any] = {}
+            artifact_hashes: dict[str, str] = {}
             observed = observed_for_vector(
                 root,
                 vector,
@@ -672,6 +747,7 @@ def run(root: Path) -> dict[str, Any]:
                 verdicts=verdicts,
                 export_keys=export_keys,
                 scopes=scopes,
+                artifact_hashes=artifact_hashes,
             )
             if vector["stage"] in ("evidence-bundle", "package"):
                 primary, secondaries = select_bundle_finding(observed, precedence, errors)
@@ -704,7 +780,7 @@ def run(root: Path) -> dict[str, Any]:
                     "expected": vector["expected"],
                     "observed_primary_id": primary,
                     "observed_secondary_ids": secondaries,
-                    "artifact_sha256": sha256_file(root / vector["path"]),
+                    "artifact_sha256": artifact_hashes[vector["id"]],
                 }
             )
         all_results.extend(results)
@@ -715,8 +791,9 @@ def run(root: Path) -> dict[str, Any]:
         **result_section("ecl-1-v1.0-conformance", all_results),
         "suites": sections,
     }
-    Draft202012Validator(
-        read_json(root / "schemas/ecl-conformance-result-v2.schema.json")
+    schema_validator(
+        read_json(root / "schemas/ecl-conformance-result-v2.schema.json"),
+        registry=Registry(), format_checker=ecl_format_checker(),
     ).validate(report)
     return report
 
@@ -742,6 +819,7 @@ def main() -> int:
         TypeError,
         KeyError,
         json.JSONDecodeError,
+        ValidationError,
     ) as exc:
         print(f"conformance harness failed: {exc}", file=sys.stderr)
         return 2

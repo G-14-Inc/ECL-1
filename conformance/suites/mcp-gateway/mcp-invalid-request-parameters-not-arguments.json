@@ -238,6 +238,7 @@
     }
   },
   "forwarded": {
+    "forward_completed_at": "2026-09-30T09:00:00.380000Z",
     "forwarded_at": "2026-09-30T09:00:00.300000Z",
     "request": {
       "id": 7,
@@ -274,8 +275,176 @@
     }
   },
   "mcp_revision": "2026-07-28",
+  "prepared": {
+    "event": {
+      "action_id": "urn:example:action:mcp-fewer-parameters",
+      "attempt_id": "urn:example:attempt:mcp-fewer-parameters-1",
+      "authority": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "ef852ad14b17da6d4a06e1f61388f0c46f6465f8aeecc73937d87b9d000df4d7"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/authority/sha256/06aa2ec542787080152abd490880a27e7eb726da192d44f5e65821a761a0aea8"
+      },
+      "decision": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "ed0e59a1fddcd550163c07b6307ca804e6db67a418f82b6c1daacf198a3367c4"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/message/sha256/fdf7fcb251084b18e8dd52f882e0d838fcb259b0459642de34d9360207c27d3e"
+      },
+      "kind": "execution",
+      "state": "prepared"
+    },
+    "event_type": "release_prepared",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "38e8b9c5b7bb8a0efe3043524ffb05b509720b132b26c5c79abe2be6e125cdf4"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.observed-at.v1"
+    },
+    "object_id": "urn:example:synthetic-mcp-migration:8ba5c976341a54f4ab65ee2d:prepared",
+    "object_type": "event_record",
+    "observed_at": "2026-09-30T09:00:00.290000Z",
+    "producer": {
+      "id": "urn:example:enforcement-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.enforcement-point.v1"
+    },
+    "protocol": "EBMP-2",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:mcp-fewer-parameters",
+      "sequence": 4,
+      "workflow_id": "urn:example:workflow:mcp-fewer-parameters"
+    }
+  },
   "prior_uses": 0,
   "received_at": "2026-09-30T09:00:00.000000Z",
+  "release_guard_milliseconds": 250,
+  "release_observations": {
+    "final": {
+      "control_state": {
+        "fresh_until": "2026-09-30T09:05:00.000000Z",
+        "halt": false,
+        "quarantine": false,
+        "reference": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "e2c042f8b3688817e31719050ab7e224c9358a52d4c2086696ae1a4fd4b12b33"
+          },
+          "uri": "urn:example:control-snapshot:mcp-public-review-repair"
+        },
+        "revoked": false,
+        "status": "current"
+      },
+      "observed_at": "2026-09-30T09:00:00.300000Z"
+    },
+    "initial": {
+      "control_state": {
+        "fresh_until": "2026-09-30T09:05:00.000000Z",
+        "halt": false,
+        "quarantine": false,
+        "reference": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "e2c042f8b3688817e31719050ab7e224c9358a52d4c2086696ae1a4fd4b12b33"
+          },
+          "uri": "urn:example:control-snapshot:mcp-public-review-repair"
+        },
+        "revoked": false,
+        "status": "current"
+      },
+      "observed_at": "2026-09-30T09:00:00.110000Z"
+    }
+  },
+  "released": {
+    "event": {
+      "action_id": "urn:example:action:mcp-fewer-parameters",
+      "attempt_id": "urn:example:attempt:mcp-fewer-parameters-1",
+      "authority": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "ef852ad14b17da6d4a06e1f61388f0c46f6465f8aeecc73937d87b9d000df4d7"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/authority/sha256/06aa2ec542787080152abd490880a27e7eb726da192d44f5e65821a761a0aea8"
+      },
+      "decision": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "ed0e59a1fddcd550163c07b6307ca804e6db67a418f82b6c1daacf198a3367c4"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/message/sha256/fdf7fcb251084b18e8dd52f882e0d838fcb259b0459642de34d9360207c27d3e"
+      },
+      "kind": "execution",
+      "release_guard_ms": 250,
+      "state": "released"
+    },
+    "event_type": "execution_released",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "38e8b9c5b7bb8a0efe3043524ffb05b509720b132b26c5c79abe2be6e125cdf4"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.observed-at.v1"
+    },
+    "object_id": "urn:example:synthetic-mcp-migration:8ba5c976341a54f4ab65ee2d:released",
+    "object_type": "event_record",
+    "observed_at": "2026-09-30T09:00:00.300000Z",
+    "producer": {
+      "id": "urn:example:enforcement-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.enforcement-point.v1"
+    },
+    "protocol": "EBMP-2",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:mcp-fewer-parameters",
+      "sequence": 5,
+      "workflow_id": "urn:example:workflow:mcp-fewer-parameters"
+    }
+  },
   "returned": {
     "id": 7,
     "jsonrpc": "2.0",
@@ -351,6 +520,7 @@
         "critical": false,
         "id": "ecl.ext.mcp-binding.v1",
         "value": {
+          "forward_completed_at": "2026-09-30T09:00:00.380000Z",
           "mapping_id": "urn:example:mapping:issues-create",
           "mcp_revision": "2026-07-28",
           "method": "tools/call",
@@ -414,14 +584,14 @@
         {
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "f04d9fe1eb878b645268b2b39252dbad0d114606b53c8e5d50aef1568b5b53ed"
+            "value": "8829c555dcbb62f50844c5115af760b8a70172c5ea491d4f575d4e676624356a"
           },
-          "id": "https://externalcontrollayer.ai/ns/receipt/sha256/6d9db94a3a715f80822c52af9ce6025424b6895991d22a0492767642be8dd57b",
+          "id": "urn:example:synthetic-mcp-migration:8ba5c976341a54f4ab65ee2d:released",
           "relation": "ecl.relation.follows.v1"
         }
       ],
       "root_trace_id": "urn:example:trace:mcp-fewer-parameters",
-      "sequence": 5,
+      "sequence": 6,
       "workflow_id": "urn:example:workflow:mcp-fewer-parameters"
     }
   },

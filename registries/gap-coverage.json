@@ -61,7 +61,10 @@
         "ECL1N-0046",
         "ECL1N-0179",
         "ECL1N-0180",
-        "FR-001"
+        "FR-001",
+        "DCMP2-012",
+        "DCMP2-014",
+        "DCMP2-053"
       ],
       "profile_requirements": [
         "AB1-010",
@@ -96,6 +99,7 @@
         "ECL1N-0033",
         "ECL1N-0039",
         "ECL1N-0141",
+        "ECL1N-0156",
         "FR-101",
         "FR-106"
       ],
@@ -111,7 +115,7 @@
         "EA-25"
       ],
       "machine_checks": [],
-      "open": "Whether the AI system holds a credential that reaches a target directly is a property of the deployment that no message shows. At L1 the register is reconciled with the reachable capability inventory (ECL1N-0008), and each point of effect is called directly with every credential the AI system holds or can obtain through its tools (checklist item EA-25); the assessor's own negative tests and keeping secrets out of the AI system's context start at L2 (FR-101, FR-106).",
+      "open": "Whether the AI system holds a credential that reaches a target directly is a property of the deployment that no message shows. At L1 the register is reconciled with the reachable capability inventory (ECL1N-0008), and each point of effect is called directly with every credential the AI system holds or can obtain through its tools (checklist item EA-25). The assessor's own negative tests and the general plaintext-secret prohibition start at L2 (FR-101, FR-106). At every level, ECL1N-0156 already prevents the governed AI system from reading or exporting private keys that sign decision responses, evidence events, observations or time attestations, or invoking a signing operation with such a key outside its bound component.",
       "record_entries": [
         1,
         17,
@@ -180,7 +184,7 @@
         "EA-27"
       ],
       "machine_checks": [],
-      "open": "Inside the claim boundary, actions are mediated and fail closed. A path that the claim excludes is disclosed in the Negative Boundary Annex rather than blocked (ECL1N-0010, ECL1N-0038), so the boundary a reader relies on is the declared one. An enforcement point establishes the authority's validity and use, the control state and every before-release obligation at the release boundary itself (ECL1N-0186 to ECL1N-0188); where the effect takes place later and elsewhere, that check does not show that the authority was still valid when the effect occurred.",
+      "open": "Inside the claim boundary, actions are mediated and fail closed. A bounded action-class claim discloses excluded effect paths in its Negative Boundary Annex (ECL1N-0010, ECL1N-0038); a full-system mediation claim must include and mediate every reachable consequential action path for its SoI (Section 2.5). An enforcement point establishes the authority's validity and use, the control state and every before-release obligation at the release boundary itself (ECL1N-0186 to ECL1N-0188); where the effect takes place later and elsewhere, that check does not show that the authority was still valid when the effect occurred.",
       "record_entries": [
         3,
         22,
@@ -480,7 +484,8 @@
         "ECL1N-0162",
         "ECL1N-0189",
         "ECL1N-0190",
-        "ECL1N-0194"
+        "ECL1N-0194",
+        "DCMP2-053"
       ],
       "profile_requirements": [
         "AB1-008",

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from ..extension_selection import interpreted_extension
+
 import copy
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -16,6 +18,7 @@ from ecl_verify.canonical import same_json
 from ecl_verify.semantic import Finding
 
 from . import jcs
+from .terminal_reason import terminal_reason_findings
 from .common import (
     ONE_WAY_RULE,
     SCHEMA_INVALID,
@@ -53,6 +56,9 @@ SERVER_INFO_META = "io.modelcontextprotocol/serverInfo"
 
 SIDE_EFFECTING = frozenset({"tools/call", "tasks/update"})
 
+# Complete forwarding mappings, not an exhaustive classification of governed methods.
+MAPPED_METHODS = frozenset({"tools/call"})
+
 PASS_THROUGH = frozenset(
     {
         "server/discover",
@@ -83,6 +89,8 @@ ERRORS: Mapping[str, int] = MappingProxyType(
         "forward-failed": -31009,
         "obligation-unproven": -31010,
         "evidence-unavailable": -31011,
+        "control-blocked": -31012,
+        "control-state-unusable": -31013,
     }
 )
 
@@ -99,6 +107,8 @@ MESSAGES: Mapping[str, str] = MappingProxyType(
         "forward-failed": "The server did not answer; the effect is unknown.",
         "obligation-unproven": "A pre-release obligation is not proven.",
         "evidence-unavailable": "The evidence of the release cannot be recorded.",
+        "control-blocked": "A halt, quarantine or revocation blocks the request.",
+        "control-state-unusable": "Required control state is unavailable or stale.",
     }
 )
 
@@ -261,6 +271,7 @@ def changed(
         return True
     return (
         not same_digest(current, dict(mapping.tool_definition_digest))
+        or server.get("id") != mapping.server_id
         or server.get("name") != mapping.server_name
         or server.get("version") != mapping.server_version
         or definition.get("name") != mapping.tool
@@ -413,10 +424,10 @@ class _View:
     recovery: dict[str, Any] | None = None
 
     @property
-    def guard(self) -> int:
-        """MG1-014: the record's release guard in nanoseconds, zero when it gives none."""
+    def guard(self) -> int | None:
+        """MG1-014: the explicitly recorded release guard; absence is not zero."""
         milliseconds = integer(self.record, "release_guard_milliseconds")
-        return 0 if milliseconds is None or milliseconds < 0 else milliseconds * 1_000_000
+        return None if milliseconds is None or not 1 <= milliseconds <= 60000 else milliseconds * 1_000_000
 
     def admitted(self) -> bool:
         return (
@@ -436,31 +447,39 @@ def _mapping(record: Mapping[str, Any]) -> _ToolMapping | None:
         return None
 
 
-def _use_limit(response: object) -> int | None:
-    if text(response, "authorization", "use_policy") == "single_use":
-        return 1
-    return integer(response, "authorization", "max_uses")
+def _use_limit(response: object) -> int:
+    authorization = obj(response, "authorization") or {}
+    if authorization.get("use_policy") != "single_use" or (
+        "max_uses" in authorization and integer(authorization, "max_uses") != 1
+    ):
+        return 0  # Unsupported authority permits no use.
+    return 1
 
 
 def _unusable(view: _View, at: int | None) -> str | None:
-    """EXPIRED or REPLAY when an admit cannot be used at `at` and until the record's release
-    guard after it (MG1-014), else None."""
+    """Reject unsupported authority, or return EXPIRED or REPLAY when a supported admit
+    cannot be used at `at` through the release guard (MG1-014); otherwise return None."""
+    limit = _use_limit(view.response)
+    if limit == 0:
+        return UNSUPPORTED
+    if view.guard is None:
+        return None
     start = instant(member(view.response, "authorization", "valid_from"))
     end = instant(member(view.response, "authorization", "valid_until"))
     if at is None or start is None or end is None or not start <= at < end - view.guard:
         return EXPIRED
-    limit = _use_limit(view.response)
     prior = integer(view.record, "prior_uses") or 0
-    if limit is not None and prior + 1 > limit:
+    if prior + 1 > limit:
         return REPLAY
     return None
 
 
-def _side_effecting(method: object) -> bool:
-    """`method` names a request that MG1-002 sends to the Decision Layer. `refusal_cause` reads a
+def _mapped_method(method: object) -> bool:
+    """`method` has a complete forwarding mapping under MG1-002.
+    Other consequential methods remain governed and require a separate complete profile. `refusal_cause` reads a
     call held in the encoded form of MG1-012 without holding it to the record schema's shape, as
     `check` does, so its method may be any JSON value."""
-    return type(method) is str and method in SIDE_EFFECTING
+    return type(method) is str and method in MAPPED_METHODS
 
 
 def pre_release_obligations(response: object) -> tuple[list[tuple[str, str]], set[tuple[str, str]]]:
@@ -561,7 +580,7 @@ def refusal_cause(record: Mapping[str, Any]) -> tuple[str, str | None, str | Non
     if (
         view.mapping is None
         or unbound_problems(view.call)
-        or not _side_effecting(view.call.get("method"))
+        or not _mapped_method(view.call.get("method"))
         or member(params, "name") != view.mapping.tool
         or (present and (type(arguments) is not dict or digest_of(arguments) is None))
         or view.mapping.target(arguments if type(arguments) is dict else {}) is None
@@ -571,6 +590,8 @@ def refusal_cause(record: Mapping[str, Any]) -> tuple[str, str | None, str | Non
         return "unreviewed-change", UNREVIEWED, None
     if view.status == "unavailable" or view.status is None:
         return "decision-unavailable", UNAVAILABLE, None
+    if repeated_obligation_ids(view.response):
+        return "decision-invalid", "ecl.error.dependency-response-invalid.v1", None
     if view.status == "invalid":
         reason = text(record, "decision", "error")
         return "decision-invalid", reason, None
@@ -585,18 +606,24 @@ def refusal_cause(record: Mapping[str, Any]) -> tuple[str, str | None, str | Non
         return refused, text(first, "code"), request_id
     # MG1-017: once the use is consumed, a journal that fails cancels the attempt,
     # and that failure is the refusal's cause, whatever the gateway had still to discharge.
-    if _journal_failed(record) and text(record, "terminal", "event", "state") == "cancelled":
+    if view.released is None and _journal_failed(record) and text(record, "terminal", "event", "state") == "cancelled":
         return "evidence-unavailable", EVIDENCE_UNAVAILABLE, request_id
-    if not _discharged(view):
+    control = _control_cause(view)
+    if control is not None:
+        return *control, request_id
+    if not _discharged(view) or _stale_discharge(view):
         return "obligation-unproven", OBLIGATION_UNPROVEN, request_id
-    if _journal_failed(record):
+    if view.released is None and _journal_failed(record):
         return "evidence-unavailable", EVIDENCE_UNAVAILABLE, request_id
     # MG1-014 and MG1-015: the write begins within the declared release guard after
     # the final observation, or not at all; a cancelled terminal observed later than the release
     # event plus the guard shows a write that could not begin in time.
+    if member(record, "release_observations", "final", "clock_regressed") is True:
+        return "authorization-unusable", CLOCK_REGRESSED, request_id
     if _guard_exceeded(view):
         return "authorization-unusable", EXPIRED, request_id
-    problem = _unusable(view, instant(member(record, "returned_at")))
+    observation = obj(record, "release_observations", "final") or obj(record, "release_observations", "initial")
+    problem = _unusable(view, instant(member(observation, "observed_at"))) if observation is not None else None
     if problem is not None:
         return "authorization-unusable", problem, request_id
     return None
@@ -609,16 +636,25 @@ def _guard_exceeded(view: _View) -> bool:
         return False
     released_at = instant(member(view.released, "observed_at"))
     ended_at = instant(member(view.record, "terminal", "observed_at"))
-    return released_at is not None and ended_at is not None and ended_at > released_at + view.guard
+    return view.guard is not None and released_at is not None and ended_at is not None and ended_at > released_at + view.guard
 
 
 def _journal_failed(record: Mapping[str, Any]) -> bool:
     """The gateway returned -31011: its journal could not record an entry before the release
     (MG1-017), which the record itself cannot show."""
-    return (
+    returned_failure = (
         member(record, "returned", "error", "code") == ERRORS["evidence-unavailable"]
         and member(record, "returned", "error", "data", "ecl", "code") == "evidence-unavailable"
     )
+    # MG1-010/016: a recorded terminal survives the loss of the returned RPC
+    # response. Its reason retains the same self-reported journal failure;
+    # neither representation independently proves the physical storage failure.
+    recorded_failure = (
+        "returned" not in record
+        and text(record, "recovery", "classification") == "outcome-recorded"
+        and [value.get("code") for value in extension_values(obj(record, "terminal"), OUTCOME_REASON)] == [EVIDENCE_UNAVAILABLE]
+    )
+    return returned_failure or recorded_failure
 
 
 def _view(record: Mapping[str, Any]) -> _View:
@@ -650,7 +686,7 @@ def _failure(view: _View) -> list[tuple[str, str]]:
 def _review(view: _View) -> list[tuple[str, str]]:
     if view.forwarded is None:
         return []
-    if not _side_effecting(view.call.get("method")):
+    if not _mapped_method(view.call.get("method")):
         return [("/forwarded", "forwarded a request whose method has no mapping")]
     if view.mapping is None or member(view.call, "params", "name") != view.mapping.tool:
         return [("/forwarded", "forwarded a call to a tool that has no mapping")]
@@ -704,12 +740,212 @@ def _request(view: _View) -> list[tuple[str, str]]:
     return problems
 
 
+
+def _freshness_problems(value: object, at: int | None, guard: int | None, path: str) -> list[tuple[str, str]]:
+    problems: list[tuple[str, str]] = []
+    for index, entry in enumerate(array(value, "obligations")):
+        where = f"{path}/obligations/{index}"
+        checked = instant(member(entry, "checked_at"))
+        obtained = instant(member(entry, "proof", "obtained_at"))
+        until = instant(member(entry, "fresh_until"))
+        if checked is None or obtained is None or obtained > checked or (at is not None and checked > at):
+            problems.append((where, "proof acquisition, check and final observation are out of order"))
+        if until is not None and checked is not None and checked >= until:
+            problems.append((f"{where}/fresh_until", "the proof is not fresh when checked"))
+        if until is not None and at is not None and guard is not None and at + guard >= until:
+            problems.append((f"{where}/fresh_until", "the proof is not fresh beyond the final observation plus guard"))
+    return problems
+
+
+def _stale_discharge(view: _View) -> bool:
+    at = instant(member(view.record, "release_observations", "final", "observed_at"))
+    if member(view.record, "release_observations", "final", "clock_regressed") is True:
+        # The failed final wall reading cannot establish proof expiry or check order.
+        # Intrinsic acquisition-before-check ordering still has its earlier precedence.
+        return bool(_freshness_problems(member(view.record, "obligation_discharge"), None, view.guard, ""))
+    return bool(_freshness_problems(member(view.record, "obligation_discharge"), at, view.guard, ""))
+
+
+def _control_cause(view: _View) -> tuple[str, str] | None:
+    # Evaluate the initial observation first: an initial refusal cannot be erased by a later one.
+    for stage in ("initial", "final"):
+        observation = obj(view.record, "release_observations", stage)
+        if observation is None:
+            continue
+        control = obj(observation, "control_state")
+        if member(control, "halt") is True or member(control, "quarantine") is True:
+            return "control-blocked", "ecl.error.safe-state-required.v1"
+        if member(control, "revoked") is True:
+            return "control-blocked", "ecl.error.revoked.v1"
+        at, until = instant(member(observation, "observed_at")), instant(member(control, "fresh_until"))
+        if text(control, "status") != "current" or at is None or until is None or (view.guard is not None and at + view.guard >= until):
+            return "control-state-unusable", "ecl.error.safe-state-required.v1"
+    return None
+
+
+def _preparation_required(view: _View) -> bool:
+    """MG1-014 steps 4–6 follow durable preparation at step 3.
+
+    An initial observation alone precedes consumption and does not imply preparation.
+    Recovery or journal failure may retain a cancellation without any later-step evidence.
+    """
+    return (
+        view.released is not None or view.forwarded is not None
+        or obj(view.record, "obligation_discharge") is not None
+        or obj(view.record, "release_observations", "final") is not None
+    )
+
+
+def _newly_settled_unconsumed_admit(view: _View) -> bool:
+    """MG1-016 supplies this recovery terminal's reason; other checks retain state/use duties."""
+    return (text(view.recovery, "classification") == "not-released" and view.admitted()
+            and text(view.record, "terminal", "event", "state") == "denied")
+
+
+def _release_observations(view: _View) -> list[tuple[str, str]]:
+    problems: list[tuple[str, str]] = []
+    prepared = obj(view.record, "prepared")
+    later_step = _preparation_required(view)
+    if later_step and prepared is None:
+        problems.append(("/prepared", "later release steps require their preparation evidence"))
+    if view.released is not None:
+        if _unusable(view, instant(member(view.released, "observed_at"))) is not None:
+            problems.append(("/released/observed_at", "released when the authorization was unusable"))
+    observations = obj(view.record, "release_observations")
+    needed = prepared is not None or later_step
+    if needed and observations is None:
+        problems.append(("/release_observations", "the attempt lacks its initial and final control observations"))
+    if observations is None:
+        return problems
+    if not view.admitted():
+        problems.append(("/release_observations", "release observations require a verified admit"))
+    if view.guard is None:
+        problems.append(("/release_guard_milliseconds", "release observations require an explicit positive guard"))
+    initial = obj(observations, "initial")
+    final = obj(observations, "final")
+    if initial is None:
+        problems.append(("/release_observations/initial", "the initial control observation is absent"))
+    if (view.released is not None or view.forwarded is not None) and final is None:
+        problems.append(("/release_observations/final", "the release lacks its final control observation"))
+    times = []
+    if initial is not None:
+        times.append(("/release_observations/initial/observed_at", instant(member(initial, "observed_at"))))
+    if prepared is not None:
+        times.append(("/prepared/observed_at", instant(member(prepared, "observed_at"))))
+    if view.released is not None and view.forwarded is None:
+        times.append(("/released/observed_at", instant(member(view.released, "observed_at"))))
+    if final is not None:
+        times.append(("/release_observations/final/observed_at", instant(member(final, "observed_at"))))
+        if view.released is not None and member(final, "observed_at") != member(view.released, "observed_at") and not (view.forwarded is None and _control_cause(view) is not None):
+            problems.append(("/release_observations/final/observed_at", "not the release event's final observation"))
+    if obj(view.record, "terminal") is not None:
+        times.append(("/terminal/observed_at", instant(member(view.record, "terminal", "observed_at"))))
+    prior = instant(member(view.response, "issued_at"))
+    clock_regressed = member(final, "clock_regressed") is True
+    if clock_regressed and view.released is not None:
+        problems.append(("/released", "released after the recorded clock comparison failed"))
+    if clock_regressed and view.forwarded is not None:
+        problems.append(("/forwarded", "forwarded after the recorded clock comparison failed"))
+    for path, at in times:
+        if at is None or (prior is not None and at < prior and not (clock_regressed and path == "/release_observations/final/observed_at")):
+            problems.append((path, "release observations and retained events are out of order"))
+        prior = at
+    initial_view = _view({**view.record, "release_observations": {"initial": initial}}) if initial is not None else None
+    if needed and initial is not None and _unusable(view, instant(member(initial, "observed_at"))) is not None:
+        problems.append(("/release_observations/initial", "authority was consumed outside its initial window or use policy"))
+    if needed and initial_view is not None and _control_cause(initial_view) is not None:
+        problems.append(("/release_observations/initial", "authority was consumed despite blocked or unusable control state"))
+    cause = _control_cause(view)
+    if cause is not None and view.forwarded is not None:
+        problems.append(("/forwarded", "forwarded despite blocked or unusable control state"))
+    journal_cancellation = view.released is None and _journal_failed(view.record) and text(view.record, "terminal", "event", "state") == "cancelled"
+    if cause is not None and view.forwarded is None and not journal_cancellation:
+        expected = "cancelled" if needed else "denied"
+        if obj(view.record, "terminal") is not None and text(view.record, "terminal", "event", "state") != expected:
+            problems.append(("/terminal/event/state", "the control refusal does not match consumption"))
+        reasons = [value.get("code") for value in extension_values(obj(view.record, "terminal"), OUTCOME_REASON)]
+        if obj(view.record, "terminal") is not None and not _newly_settled_unconsumed_admit(view) and reasons != [cause[1]]:
+            problems.append(("/terminal/extensions", "the terminal does not record the control refusal reason"))
+    return problems
+
+
+def _decision_validation(view: _View) -> list[tuple[str, str]]:
+    duplicate = bool(repeated_obligation_ids(view.response))
+    unbound = view.request is not None and view.response is not None and not binds(view.request, view.response)
+    problems: list[tuple[str, str]] = []
+    if unbound and view.status != "invalid":
+        problems.append(("/decision", "an unbound response must be recorded as an invalid decision"))
+    if duplicate and (view.status != "invalid" or text(view.record, "decision", "error") != "ecl.error.dependency-response-invalid.v1"):
+        problems.append(("/decision", "duplicate obligation ids require decision-invalid before consumption"))
+    if (duplicate or unbound or view.status == "invalid") and (
+        member(view.record, "prepared") is not None or view.released is not None or view.forwarded is not None
+        or member(view.record, "terminal", "event", "decision") is not None
+        or member(view.record, "terminal", "event", "authority") is not None
+        or text(view.record, "terminal", "event", "state") == "cancelled"
+    ):
+        problems.append(("/decision", "an invalid decision cannot consume authority or prepare a release"))
+    return problems
+
+
+def _supplied_events(view: _View) -> list[tuple[str, str]]:
+    problems: list[tuple[str, str]] = []
+    attempt = None
+    for name, kind, state in (("prepared", "release_prepared", "prepared"), ("released", "execution_released", "released"), ("terminal", "execution_terminal", None)):
+        event = obj(view.record, name)
+        if event is None:
+            continue
+        if text(event, "event_type") != kind or text(event, "event", "kind") != "execution" or (state is not None and text(event, "event", "state") != state):
+            problems.append((f"/{name}/event_type", "not the event type and state declared for this field"))
+            continue
+        held_attempt = text(event, "event", "attempt_id")
+        if held_attempt is None or (attempt is not None and held_attempt != attempt):
+            problems.append((f"/{name}/event/attempt_id", "the supplied events name different attempts"))
+        attempt = held_attempt
+        if name == "terminal":
+            continue  # The result rule applies the terminal's state-specific binding.
+        if view.request is None or not view.admitted():
+            problems.append((f"/{name}", "release evidence requires a verified admit and its request"))
+            continue
+        if name == "released":
+            problems.extend(_call_binding_problems(view, event, "/released/extensions"))
+            try:
+                check_event_binding(event, request=view.request, response=view.response)
+            except BindingError as error:
+                problems.append((f"/{name}", f"the release event is not bound: {error.code}"))
+        else:
+            # release_prepared is not an execution_released event. Apply its explicit
+            # attempt/action/decision/authority contract without pretending it was released.
+            for key in ("workflow_id", "root_trace_id", "attempt"):
+                if not same_json(member(event, "workflow", key), member(view.request, "workflow", key)):
+                    problems.append((f"/{name}/workflow/{key}", "not the request's workflow and attempt"))
+            for key in ("operation", "parameters_digest", "target"):
+                repeated = member(event, "event", key)
+                expected = member(view.request, "action", key)
+                matches = same_digest(repeated, expected) if key == "parameters_digest" else (member(repeated, "uri") == member(expected, "uri") if key == "target" else same_json(repeated, expected))
+                if repeated is not None and not matches:
+                    problems.append((f"/{name}/event/{key}", "not the request action member"))
+            if member(event, "event", "action_id") != member(view.request, "action", "action_id"):
+                problems.append((f"/{name}/event/action_id", "not the request's action"))
+            if member(event, "event", "decision", "uri") != member(view.response, "message_id") or not same_digest(member(event, "event", "decision", "digest"), digest_of(view.response)):
+                problems.append((f"/{name}/event/decision", "not the verified decision and its digest"))
+        authority = member(event, "event", "authority")
+        if member(authority, "uri") != member(view.response, "authorization", "authorization_id") or not same_digest(member(authority, "digest"), digest_of(member(view.response, "authorization"))):
+            problems.append((f"/{name}/event/authority", "not the consumed authorization and its digest"))
+    declared = integer(view.record, "release_guard_milliseconds")
+    if view.released is not None and (declared is None or integer(view.released, "event", "release_guard_ms") != declared):
+        problems.append(("/released/event/release_guard_ms", "not an explicit matching record release guard"))
+    return problems
+
+
 def _forward(view: _View) -> list[tuple[str, str]]:
     if view.forwarded is None:
         return []
     if not view.admitted():
         return [("/forwarded", "forwarded without an admit bound to the decision request")]
     problems: list[tuple[str, str]] = []
+    for name in ("prepared", "released", "release_guard_milliseconds"):
+        if member(view.record, name) is None:
+            problems.append((f"/{name}", "a forwarded exchange requires this release evidence"))
     forwarded_at = instant(member(view.forwarded, "forwarded_at"))
     problem = _unusable(view, forwarded_at)
     if problem is not None:
@@ -841,19 +1077,31 @@ def _admitted(view: _View) -> _Bound:
 
 
 def _obligations(view: _View) -> list[tuple[str, str]]:
-    """MG1-013: a forward on an admit that leaves obligations to Enforcement before the release
-    rests on a release event that records the discharge of each of them."""
-    if view.forwarded is None or not view.admitted():
+    """MG1-013: retained discharge is internally consistent even without a release;
+    a recorded release additionally establishes final proof freshness."""
+    if not view.admitted():
         return []
     required, _ = pre_release_obligations(view.response)
-    if not required:
+    held = obj(view.record, "obligation_discharge")
+    if view.forwarded is None and view.released is None:
+        if held is None:
+            return []
+        if not required:
+            return [("/obligation_discharge", "the admit carries no pre-release obligation to discharge")]
+        problems = discharge_problems(held, view.response, "/obligation_discharge")
+        at = None if member(view.record, "release_observations", "final", "clock_regressed") is True else instant(member(view.record, "release_observations", "final", "observed_at"))
+        # Step 4 precedes a reliable Step 5. Freshness at Step 5 may fail and
+        # cause the refusal; no release guard is applied to that refused proof.
+        problems.extend(_freshness_problems(held, at, None, "/obligation_discharge"))
+        return problems
+    if not required and not extension_entries(view.released, DISCHARGE_EXTENSION) and obj(view.record, "obligation_discharge") is None:
         return []
     if view.released is None:
         return [("/released", "no release event records the discharge of the obligations")]
     entries = [
         (index, item)
         for index, item in enumerate(array(view.released, "extensions"))
-        if type(item) is dict and item.get("id") == DISCHARGE_EXTENSION
+        if type(item) is dict and item.get("id") == DISCHARGE_EXTENSION and interpreted_extension(view.released, item)
     ]
     if len(entries) != 1 or type(entries[0][1].get("value")) is not dict:
         return [("/released/extensions", "the release records no single discharge")]
@@ -861,15 +1109,17 @@ def _obligations(view: _View) -> list[tuple[str, str]]:
     problems = discharge_problems(
         entry["value"], view.response, f"/released/extensions/{index}/value"
     )
-    held = obj(view.record, "obligation_discharge")
+    problems.extend(_freshness_problems(entry["value"], instant(member(view.released, "observed_at")), view.guard, f"/released/extensions/{index}/value"))
+    if held is None:
+        problems.append(("/obligation_discharge", "the record lacks the release discharge"))
     if held is not None and not same_json(held, entry["value"]):
         problems.append(("/obligation_discharge", "not the discharge that the release records"))
     return problems
 
 
 def _refusal(view: _View) -> list[tuple[str, str]]:
-    if view.forwarded is not None or view.recovery is not None:
-        # A recovered record holds no response returned to the governed AI system (MG1-016).
+    if view.forwarded is not None or (view.recovery is not None and "returned" not in view.record):
+        # Recovery may omit a returned response, but retained responses still undergo checks.
         return []
     returned = obj(view.record, "returned") or {}
     if "result" in returned or "error" not in returned:
@@ -884,6 +1134,7 @@ def _refusal(view: _View) -> list[tuple[str, str]]:
         problems.append(("/returned/id", "the error does not answer the call"))
     cause = refusal_cause(view.record)
     if cause is None:
+        problems.append(("/returned/error", "the retained observations do not establish a defined refusal cause"))
         return problems
     name, reason, request_id = cause
     data = member(returned, "error", "data", "ecl")
@@ -892,13 +1143,7 @@ def _refusal(view: _View) -> list[tuple[str, str]]:
         expected["reason"] = reason
     if request_id is not None:
         expected["request_id"] = request_id
-    # MG1-014 step 5: a gateway refuses an authorization as unusable with
-    # `ecl.error.clock-regressed.v1` when its clock readings disagreed, which the record cannot
-    # show; a checker accepts that reason where the record shows the window as the cause.
-    regressed = (
-        {**expected, "reason": CLOCK_REGRESSED} if name == "authorization-unusable" else None
-    )
-    defined = data == expected or (regressed is not None and data == regressed)
+    defined = data == expected
     if member(returned, "error", "code") != ERRORS[name] or not defined:
         problems.append(("/returned/error", f"the cause {name} has another error"))
     return problems
@@ -948,7 +1193,7 @@ def _recovered(view: _View, terminal: dict[str, Any] | None) -> list[tuple[str, 
             expected = {REFUSAL_FOR_OUTCOME[str(outcome)]}
         else:
             expected = {"denied"}
-        if view.forwarded is not None or state not in expected:
+        if view.forwarded is not None or view.released is not None or state not in expected:
             problems.append(
                 ("/terminal/event/state", "a request that was not released is recorded as released")
             )
@@ -961,16 +1206,41 @@ def _completion_problems(view: _View, terminal: dict[str, Any]) -> list[tuple[st
     forward rule reads; it is not derived from the completion."""
     values = extension_values(terminal, BINDING_EXTENSION)
     completed = member(view.forwarded, "forward_completed_at")
+    problems: list[tuple[str, str]] = []
+    if view.recovery is None and obj(view.record, "server_response") is not None and completed is None:
+        problems.append(("/forwarded/forward_completed_at", "an answered forward lacks its completion observation"))
+    unanswered = obj(view.record, "server_response") is None and text(view.recovery, "classification") != "outcome-recorded"
+    if unanswered and completed is not None:
+        problems.append(("/forwarded/forward_completed_at", "an unanswered forward cannot record a server answer time"))
+    completed_at, terminal_at = instant(completed), instant(member(terminal, "observed_at"))
+    if completed_at is not None and terminal_at is not None and completed_at > terminal_at:
+        problems.append(("/forwarded/forward_completed_at", "the completion observation follows the terminal observation"))
     if len(values) != 1:
-        return []
+        return problems
+    if unanswered and "response_digest" in values[0]:
+        problems.append(("/terminal/extensions", "an unanswered forward cannot record a server response digest"))
     if values[0].get("forward_completed_at") != completed:
-        return [("/terminal/extensions", "the terminal does not record the forward's completion")]
-    return []
+        problems.append(("/terminal/extensions", "the terminal does not record the forward's completion"))
+    return problems
+
+
+def _call_binding_problems(view: _View, event: object, path: str) -> list[tuple[str, str]]:
+    """EBMP2-075: any carried call binding retains every request member."""
+    request_values = extension_values(view.request, BINDING_EXTENSION)
+    if len(request_values) != 1:
+        return []  # The request rule diagnoses an absent or ambiguous request binding.
+    expected = request_values[0]
+    return [
+        (path, "the event does not retain the request's call binding")
+        for value in extension_values(event, BINDING_EXTENSION)
+        if any(name not in value or not same_json(value[name], content) for name, content in expected.items())
+    ]
 
 
 def _result(view: _View) -> list[tuple[str, str]]:
     terminal = obj(view.record, "terminal")
     problems: list[tuple[str, str]] = _recovered(view, terminal)
+    problems.extend(_call_binding_problems(view, terminal, "/terminal/extensions"))
     authority = member(terminal, "event", "authority")
     if authority is not None and view.admitted() and not same_digest(
         member(authority, "digest"), digest_of(member(view.response, "authorization"))
@@ -986,8 +1256,8 @@ def _result(view: _View) -> list[tuple[str, str]]:
         # cancelled attempt records a committed use. The record does not expose the use store. A
         # journal that failed (MG1-017) may have recorded the consumed use and not the prepared
         # release, which the record then cannot show.
-        consumed = view.record.get("prepared") is not None or view.released is not None
-        if consumed and terminal is None:
+        consumed = view.record.get("prepared") is not None or _preparation_required(view)
+        if terminal is None and (consumed or (view.request is not None and view.recovery is None and not _journal_failed(view.record))):
             problems.append(("/terminal", "a consumed attempt has no terminal evidence"))
         unseen = view.recovery is not None or _journal_failed(view.record)
         allowed = (
@@ -995,6 +1265,9 @@ def _result(view: _View) -> list[tuple[str, str]]:
         )
         if terminal is not None and state not in allowed:
             problems.append(("/terminal/event/state", "a refused request is recorded as released"))
+        # MG1-005 and MG1-014: cancellation records a committed use even without prepared evidence.
+        if state == "cancelled" and view.admitted() and (integer(view.record, "prior_uses") or 0) >= 1:
+            problems.append(("/prior_uses", "a cancelled attempt consumes an authorization already used before this request"))
         # MG1-010, EBMP2-049, EBMP2-053: a cancelled attempt names the authorization it consumed,
         # bound to the admit that granted it; a terminal that consumed no use names none.
         authority = member(terminal, "event", "authority")
@@ -1004,6 +1277,27 @@ def _result(view: _View) -> list[tuple[str, str]]:
             problems.append(
                 ("/terminal/event/authority", "a terminal that consumed no use names the authority")
             )
+        cause = refusal_cause(view.record) if view.recovery is None or "returned" in view.record or text(view.recovery, "classification") == "outcome-recorded" else None
+        reasons = [value.get("code") for value in extension_values(terminal, OUTCOME_REASON)]
+        # A newly settled not-released recovery can lack the original refusal
+        # cause. A live refusal or a retained original terminal cannot omit it.
+        cause_retained = view.recovery is None or "returned" in view.record or text(view.recovery, "classification") == "outcome-recorded"
+        if terminal is not None and state == "cancelled" and cause_retained and len(reasons) != 1:
+            problems.append(("/terminal/extensions", "a cancelled refusal requires one outcome reason"))
+        # MG1-016 supplies a newly settled unconsumed admit's recovery reason.
+        # Other retained non-decision refusals keep their original first cause.
+        decision_outcome_refusal = cause is not None and cause[0] in REFUSAL_FOR_OUTCOME.values()
+        if terminal is not None and cause is not None and cause[1] is not None and not _newly_settled_unconsumed_admit(view) and (
+            state == "cancelled" or (state in NON_RELEASE and not decision_outcome_refusal)
+        ):
+            if reasons != [cause[1]]:
+                problems.append(("/terminal/extensions", "the terminal does not record the retained refusal reason"))
+        if terminal is not None and view.admitted() and cause is not None and cause[0] == "evidence-unavailable" and state != "cancelled":
+            if state != "denied":
+                problems.append(("/terminal/event/state", "an unconsumed evidence failure must end denied"))
+            reasons = [value.get("code") for value in extension_values(terminal, OUTCOME_REASON)]
+            if reasons != [EVIDENCE_UNAVAILABLE]:
+                problems.append(("/terminal/extensions", "the unconsumed terminal does not record evidence-unavailable"))
         if terminal is not None and view.request is not None:
             try:
                 check_event_binding(
@@ -1013,29 +1307,49 @@ def _result(view: _View) -> list[tuple[str, str]]:
             except BindingError as error:
                 problems.append(("/terminal", f"the terminal event is not bound: {error.code}"))
         return problems
-    if view.recovery is not None:
-        # The journal does not show what the governed AI system received (MG1-016).
-        if terminal is not None and view.request is not None:
-            try:
-                check_event_binding(terminal, request=view.request, response=view.response)
-            except BindingError as error:
-                problems.append(("/terminal", f"the terminal event is not bound: {error.code}"))
-        return problems
     server_response = obj(view.record, "server_response")
     returned = obj(view.record, "returned")
+    if server_response is not None and not same_json(server_response.get("id"), view.call.get("id")):
+        problems.append(("/server_response/id", "the server response does not answer the forwarded call"))
     # MG1-010: the response returned is the one the evidence binds, as the same JSON values, so
     # `false` returned as `0` is another response.
-    if server_response is not None and not same_json(returned, _expected_returned(server_response)):
+    if server_response is not None and (view.recovery is None or returned is not None) and not same_json(returned, _expected_returned(server_response)):
         problems.append(("/returned", "not the response the evidence binds, as MG1-010 returns it"))
-    if server_response is None and member(returned, "error", "code") != ERRORS["forward-failed"]:
+    if server_response is None and (view.recovery is None or returned is not None) and member(returned, "error", "code") != ERRORS["forward-failed"]:
         problems.append(("/returned", "an unanswered forward is not reported as forward-failed"))
+    if server_response is None and returned is not None:
+        if member(returned, "error", "data", "ecl") != {"code": "forward-failed", "reason": UNAVAILABLE} or returned.get("jsonrpc") != "2.0" or not same_json(returned.get("id"), view.call.get("id")) or "result" in returned:
+            problems.append(("/returned/error", "forward-failed lacks its defined error data or call binding"))
     if terminal is None:
         return [*problems, ("/terminal", "a forwarded request has no terminal evidence")]
     state, _ = _expected_terminal(server_response)
-    if text(terminal, "event", "state") != state:
+    if (server_response is not None or text(view.recovery, "classification") != "outcome-recorded") and text(terminal, "event", "state") != state:
         problems.append(("/terminal/event/state", f"the server's response reads as {state}"))
+    # Recovery may lack both observations; it may not contradict a retained observation.
     problems.extend(_completion_problems(view, terminal))
     values = extension_values(terminal, BINDING_EXTENSION)
+    if server_response is None and text(view.recovery, "classification") == "outcome-recorded":
+        retained_state = text(terminal, "event", "state")
+        if retained_state not in {"succeeded", "failed", "unknown"}:
+            problems.append(("/terminal/event/state", "the recorded outcome is outside the MCP response mapping"))
+        if retained_state in {"succeeded", "failed"} and (len(values) != 1 or type(values[0].get("response_digest")) is not dict):
+            problems.append(("/terminal/extensions", "a completed recorded outcome requires its response digest"))
+    entries = extension_entries(terminal, BINDING_EXTENSION)
+    request_values = extension_values(view.request, BINDING_EXTENSION)
+    # MG1-010: every forwarded terminal retains the call and mapping binding,
+    # including a forward with no answer. Outcome-only fields do not replace it.
+    binding_fields = (
+        "mcp_revision", "method", "server_id", "server_name", "server_version",
+        "tool", "tool_definition_digest", "mapping_id", "params_digest",
+        "input_responses_digest", "request_state_digest",
+    )
+    if len(entries) != 1 or len(values) != 1:
+        problems.append(("/terminal/extensions", "the forwarded terminal lacks one mcp-binding"))
+    elif len(request_values) != 1 or not same_json(
+        {name: values[0][name] for name in binding_fields if name in values[0]},
+        {name: request_values[0][name] for name in binding_fields if name in request_values[0]},
+    ):
+        problems.append(("/terminal/extensions", "the terminal does not retain the admitted call and mapping binding"))
     try:
         bound = None if server_response is None else jcs.digest(server_response)
     except jcs.JcsError:
@@ -1094,10 +1408,21 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
     result = findings(FAILURE_RULE, _failure(view))
     result += findings(REVIEW_RULE, _review(view))
     result += findings(REQUEST_RULE, _request(view))
-    result += findings(FORWARD_RULE, _forward(view))
+    result += findings(FORWARD_RULE, _forward(view) + _release_observations(view) + _supplied_events(view))
+    result += findings(FAILURE_RULE, _decision_validation(view))
     result += findings(OBLIGATION_RULE, _obligations(view))
     result += findings(REFUSAL_RULE, _refusal(view))
     result += findings(RESULT_RULE, _result(view))
+    result += [
+        Finding(item.rule_id, "/terminal" + item.path, item.message)
+        for item in terminal_reason_findings(
+            obj(decoded, "terminal"),
+            response_outcome=(text(view.response, "outcome")
+                              if view.status == "answered" and binds(view.request, view.response)
+                              and not repeated_obligation_ids(view.response) else None),
+            paired=True,
+        )
+    ]
     if view.status == "answered":
         # MG1-007: a decision held as answered is a verified decision response, which carries
         # exactly one decision basis and satisfies DCMP2-053 as any decision response does.
@@ -1112,4 +1437,15 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
     if view.status != "invalid":
         held += (("decision", "response"),)
     result += message_findings(decoded, *held)
+    # MG1-010: retained EBMP events satisfy the same object rules when nested in
+    # this record as when checked alone, including critical-extension handling.
+    from ecl_verify.resources import object_findings
+
+    for name in ("prepared", "released", "terminal"):
+        event = obj(decoded, name)
+        if event is not None:
+            result.extend(
+                Finding(item.rule_id, "/" + name + item.path, item.message)
+                for item in object_findings(event)
+            )
     return result

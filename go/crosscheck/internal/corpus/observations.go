@@ -1,6 +1,9 @@
 package corpus
 
-import "externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
+import (
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
+	"sort"
+)
 
 // recordObservations binds actual values without substituting expected values.
 // An absent report is null; empty observed arrays are arrays, not null.
@@ -28,9 +31,15 @@ func recordObservations(result *Result, vector Vector, verdict string, report *e
 			for key, value := range report.Scope.Reasons {
 				reasons[key] = value
 			}
+			checks := map[string]ExpectedChecks{}
+			for item, entry := range report.Scope.Checks {
+				indexes := append([]int{}, entry.Objects...)
+				sort.Ints(indexes)
+				checks[item] = ExpectedChecks{Checks: append([]string{}, entry.Checks...), Objects: indexes}
+			}
 			result.ObservedScope = pointer(ExpectedScope{
 				Established:    append([]string{}, report.Scope.Established...),
-				NotEstablished: append([]string{}, report.Scope.NotEstablished...), Reasons: reasons})
+				NotEstablished: append([]string{}, report.Scope.NotEstablished...), Reasons: reasons, Checks: &checks})
 		}
 	}
 	if vector.ExpectedEffects != nil {

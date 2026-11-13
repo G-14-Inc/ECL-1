@@ -88,7 +88,7 @@
     "version": "1"
   },
   "timing_case": {
-    "connected_revocation_seconds": 300,
+    "connected_revocation_seconds": 60,
     "control_assumptions": [
       "The trusted time source remains available during disconnection."
     ],
@@ -98,7 +98,7 @@
       "version": "1"
     },
     "offline_staleness_seconds": 3600,
-    "residual_risk": "Physical transfer can still delay evidence export beyond the stricter bound.",
+    "residual_risk": "The connected revocation bound is 60 seconds; offline staleness remains bounded at 3600 seconds and evidence export at 14400 seconds. Physical disconnection still prevents connected revocation delivery.",
     "trusted_time_or_secure_monotonic": true,
     "uses_default_baseline": false
   },

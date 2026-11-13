@@ -2,10 +2,12 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 This profile specifies a policy-engine contribution to an ECL decision. The
-guide `docs/authzen-binding.md` explains it and gives the exact capability table.
+guide `docs/authzen-binding.md` explains it. The normative capability table
+below fixes the dispositions required by AZB1-006.
 A native capability belongs to ECL's own path; its disposition assigns that
 responsibility and does not assert that a deployment implements every operation.
 
@@ -60,6 +62,52 @@ challenge as ECL semantics; this binding supports neither batch evaluation nor
 endpoint discovery. Outstanding authority staleness is bounded by its existing
 window, not by polling the policy engine.
 
+## Capability and loss table (normative)
+
+**AZB1-006 (continued)** — The following capability dispositions form part of
+the binding. A deployment publishes this table with its implementation evidence.
+
+**AZB1-006 (continued)** — `supported` means that the binding sends or consumes the capability. `native`
+means that the ECL protocol assigns the capability to ECL's own path, which the
+PDP cannot override; the disposition assigns that responsibility and does not
+claim that a deployment implements every native control operation.
+`unsupported` means that the binding neither sends the capability nor treats it
+as a release capability, so a request or response that depends on it is
+refused or not produced. A deployment publishes this table, with these
+dispositions, under AZB1-006.
+
+| Capability | Disposition | ECL behavior |
+|---|---|---|
+| evaluation | supported | One evaluation per decision attempt. |
+| decision-boolean | supported | Only unqualified boolean true contributes to admit. |
+| request-correlation | supported | Fresh request id and unpooled connection; echo recorded only. |
+| evaluations-batch | unsupported | No batch endpoint; an empty evaluations array could evaluate defaults under AuthZEN §7.1. |
+| metadata-discovery | unsupported | Evaluation URL is pinned configuration. |
+| search-subject | unsupported | No search endpoint. |
+| search-resource | unsupported | No search endpoint. |
+| search-action | unsupported | No search endpoint. |
+| decision-context | unsupported | A context-qualified permit denies; context is never interpreted as an obligation. |
+| signed-metadata | unsupported | No signed PDP metadata is accepted. |
+| policy-reference | unsupported | The PDP supplies no ECL policy identifier, version or digest. The DCMP-2 response binds the policy that the decision point applied (DCMP2-016); the digests of the PDP request and response and the PDP endpoint identify the exchange. |
+| outcome-hold | native | A boolean PDP cannot originate a DCMP-2 hold. |
+| outcome-challenge | native | A boolean PDP cannot originate a DCMP-2 challenge. |
+| obligations | native | ECL must handle obligations; PDP context never creates one. |
+| validity-window | native | ECL must set and check the authority window. |
+| use-policy | native | The ECL decision and enforcement path must own use charges and quota. |
+| safe-state | native | A dependency-failure deny must apply ECL's declared safe-state rule (DCMP2-041). |
+| control-cancel | native | ECL control path is specified separately; not an AuthZEN evaluation. |
+| control-revoke | native | ECL control path is specified separately; not an AuthZEN evaluation. |
+| control-supersede | native | ECL control path is specified separately; not an AuthZEN evaluation. |
+| control-quarantine | native | ECL control path is specified separately; not an AuthZEN evaluation. |
+| control-halt | native | ECL control path is specified separately; not an AuthZEN evaluation. |
+| action-parameters | unsupported | Parameters are not sent; the ECL decision path must check them. |
+| constraints | unsupported | Constraints are not sent; the ECL decision path must check them. |
+| delegation-chain | unsupported | Delegation is not sent; the ECL decision path must check it. |
+
+**AZB1-006 (continued)** — DCMP-2 control messages (`cancel`, `revoke`, `supersede`, `quarantine`, `halt`),
+`challenge` and `challenge_response` are refused by the binding; ECL processes
+the control and challenge flows it supports natively.
+
 ## Evidence
 
 | Kind | What the citation establishes |
@@ -72,6 +120,6 @@ this profile shows the client's behavior with tests of its own deployment: the
 strict acceptance of AZB1-002 and AZB1-003, an injective mapping that refuses
 what it cannot map (AZB1-004), the transport rules of AZB1-005, and the boundary
 of AZB1-001, under which a permit never replaces a native check such as
-revocation. The guide gives the exact capability table and the declared
-deviations (AZB1-006, AZB1-008). These tests do not establish assessor
+revocation. The normative table above gives the capability dispositions (AZB1-006);
+the guide describes the declared deviations (AZB1-008). These tests do not establish assessor
 independence or a production deployment claim.

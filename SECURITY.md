@@ -21,9 +21,9 @@ or, when it changes obligations or behavior, in a new version under
 
 A problem in a product that implements ECL-1 goes to that product's supplier.
 
-The Version 1.0 archive, manifest, checksums and verifier SBOMs linked from the
-[ECL-1 release page](https://externalcontrollayer.ai/ecl-1) are the release
-artifacts. Treat a package-registry distribution as official only when both
-that page and the Version 1.0 GitHub release link to it. A package that merely
-uses an ECL-1 or verifier name is not an official distribution; verify the
-published digest before installing it.
+The archive, manifest, checksums and verifier SBOMs for each release are linked
+from the [ECL-1 release page](https://externalcontrollayer.ai/ecl-1).
+Treat a package-registry distribution as official only when both that page
+and the GitHub release for the version being installed link to it. A package
+that merely uses an ECL-1 or verifier name is not an official distribution;
+verify the published digest before installing it.

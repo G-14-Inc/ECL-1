@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"hash/crc32"
 	"math/bits"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -38,10 +39,16 @@ var DefaultLimits = Limits{
 	MaxPathBytes:              4_096,
 }
 
-// ErrInvalidLimits is a limit that is not a positive integer.
-var ErrInvalidLimits = errors.New("every offline resource limit is a positive integer")
+// MaxArchiveBytesCeiling is IE1-028's ceiling for the archive's encoded input bytes.
+const MaxArchiveBytesCeiling int64 = 2_147_483_647
+
+// ErrInvalidLimits is a non-positive limit or an encoded archive limit above its ceiling.
+var ErrInvalidLimits = errors.New("every offline resource limit is a positive integer and MaxArchiveBytes is at most 2147483647")
 
 func (l Limits) check() error {
+	if l.MaxArchiveBytes > MaxArchiveBytesCeiling {
+		return ErrInvalidLimits
+	}
 	for _, value := range []int64{l.MaxArchiveBytes, l.MaxMemberCount, l.MaxEntryUncompressedBytes, l.MaxTotalUncompressedBytes, l.MaxCompressionRatio, l.MaxPathBytes} {
 		if value < 1 {
 			return ErrInvalidLimits
@@ -445,17 +452,17 @@ func ReadArchive(data []byte, limits Limits) ([]Member, error) {
 	var total uint64
 	for _, entry := range entries {
 		if entry.flags&0x1 != 0 {
-			return nil, departure("an encrypted member: " + string(entry.nameBytes))
+			return nil, departure("an encrypted member: " + strconv.QuoteToASCII(string(entry.nameBytes)))
 		}
 		if entry.fileSize > uint64(limits.MaxEntryUncompressedBytes) {
-			return nil, &ArchiveError{Message: "archive member exceeds the verifier budget: " + string(entry.nameBytes), Limit: true}
+			return nil, &ArchiveError{Message: "archive member exceeds the verifier budget: " + strconv.QuoteToASCII(string(entry.nameBytes)), Limit: true}
 		}
 		total += entry.fileSize
 		if total > uint64(limits.MaxTotalUncompressedBytes) {
 			return nil, &ArchiveError{Message: "archive expansion exceeds the verifier budget", Limit: true}
 		}
 		if entry.fileSize > 0 && ratioExceeded(entry.fileSize, entry.compressedSize, limits.MaxCompressionRatio) {
-			return nil, &ArchiveError{Message: "archive member compression ratio exceeds the verifier budget: " + string(entry.nameBytes), Limit: true}
+			return nil, &ArchiveError{Message: "archive member compression ratio exceeds the verifier budget: " + strconv.QuoteToASCII(string(entry.nameBytes)), Limit: true}
 		}
 	}
 	seen := map[string]bool{}
@@ -480,7 +487,7 @@ func ReadArchive(data []byte, limits Limits) ([]Member, error) {
 		}
 		seen[alias] = true
 		if entry.external != uint64(profileExternal) || entry.madeBy != profileMadeBy || entry.extractVersion != profileVersion ||
-			entry.disk != 0 || entry.internal != 0 || entry.date != profileDOSDate || entry.time != 0 || entry.method != 0 ||
+			entry.disk != 0 || entry.internal != 0 || entry.date != profileDOSDate || entry.time != 0 || entry.method != 0 || entry.compressedSize != entry.fileSize ||
 			entry.flags != 0 || entry.extraLength != 0 || entry.commentLength != 0 {
 			return nil, departure("member metadata or encoding outside the profile: " + name)
 		}

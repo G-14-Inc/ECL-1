@@ -42,13 +42,16 @@ def bound(tmp_path):
     for version in (2,3):
         for name in (f'ecl-cross-implementation-report-v{version}.schema.json',f'ecl-external-vector-raw-result-v{version}.schema.json'):
             dst=root/'schemas'/name;dst.parent.mkdir(exist_ok=True);shutil.copyfile(ROOT/'schemas'/name,dst)
+    for name in ('error-codes', 'semantic-rules'):
+        dst=root/'registries'/f'{name}.json';dst.parent.mkdir(exist_ok=True);shutil.copyfile(ROOT/'registries'/f'{name}.json',dst)
     report=json.loads((ROOT/'conformance/report-template-v3.json').read_text())
     report['decision']='pass';report['implementation'].update(source_tree_sha256=source_tree(implementation)[0],
         source_revision='synthetic-binding-fixture',capabilities=corpus['required_capabilities']+corpus['optional_capabilities'])
     report['suite'].update(manifest_sha256=digest(root/'conformance/shared-corpus.json'),vector_count=len(ids))
-    report['time_policies']={'envelope':['ecl.time.issued-at.v1','ecl.time.observed-at.v1'],
+    stage_policies={'envelope':['ecl.time.issued-at.v1','ecl.time.observed-at.v1'],
         'evidence-bundle':['ecl.verification-profile.reference-trusted-time.v1','ecl.verification-profile.reference.v1'],
         'package':['ecl.verification-profile.reference-trusted-time.v1','ecl.verification-profile.reference.v1']}
+    report['time_policies']={stage:value for stage,value in stage_policies.items() if any(v['stage']==stage for _,v in wanted)}
     rows=[]
     for p,v in wanted:
         m=json.loads(p.read_text());row=dict(id=v['id'],suite=m['suite'],artifact_sha256=digest(root/v['path']),
@@ -150,10 +153,41 @@ def test_unsupported_row_carries_no_observations(bound):
     dropped={capability[r['id']] for r in rows}|{'offline-package-verification'}
     report['implementation']['capabilities']=[c for c in report['implementation']['capabilities'] if c not in dropped]
     for cap,stage in (('evidence-bundle-verification','evidence-bundle'),('offline-package-verification','package')):
-        if cap in dropped:report['time_policies'].pop(stage)
+        if cap in dropped:report['time_policies'].pop(stage,None)
     for r in rows:
         r.update(status='unsupported',unsupported_capability=capability[r['id']]);r.pop('observed_primary_id')
         for name in OBSERVATIONS.values():r.pop(name,None)
     bind();assert check()['unsupported_optional_vectors']==sorted(r['id'] for r in rows)
     rows[0]['observed_verdict']=None;bind()
     with pytest.raises(ValueError,match='cross-implementation-report/3'):check()
+
+@pytest.mark.parametrize('mode', ['overlapping-scope', 'unknown-scope', 'mixed-effect-levels'])
+def test_failed_report_retains_actual_invalid_observations(bound, mode):
+    report, bind, check = bound
+    row = row_for(report, 'observed_effects' if mode == 'mixed-effect-levels' else 'observed_scope')
+    if mode == 'overlapping-scope':
+        row['observed_scope']['not_established'].append(row['observed_scope']['established'][0])
+    elif mode == 'unknown-scope':
+        row['observed_scope']['established'].append('unknown-claim-from-failing-implementation')
+    else:
+        effect = copy.deepcopy(row['observed_effects'][0])
+        effect['level'] = 'none' if effect['level'] != 'none' else 'issuer-asserted'
+        row['observed_effects'].append(effect)
+    bind()
+    with pytest.raises(ValueError, match='status does not match'):
+        check()
+    row['status'] = 'not-met'
+    report['decision'] = 'fail'
+    bind()
+    result = check()
+    assert result['replay_decision'] == 'fail'
+    assert result['not_met_vectors'] == [row['id']]
+
+@pytest.mark.parametrize('expected', ['pass', 'fail'])
+def test_canonical_observation_cannot_hide_trailing_newline(bound, expected):
+    report, bind, check = bound
+    row = next(r for r in report['vector_results'] if r['expected'] == expected and 'observed_canonical_sha256' in r)
+    row['observed_canonical_sha256'] = '0' * 64 + '\n'
+    bind()
+    with pytest.raises(ValueError, match='cross-implementation-report/3'):
+        check()

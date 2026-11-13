@@ -35,7 +35,8 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/trust"
 )
 
-const usage = "usage: ecl-verify-go BUNDLE --trust-policy FILE [--trust-policy-history FILE]... [--now RFC3339] [--accept-current-trust-failure] [--require-trusted-time] [--register FILE] [--json]\n"
+const usage = "usage: ecl-verify-go BUNDLE --trust-policy FILE [--trust-policy-history FILE]... [--now RFC3339] [--accept-current-trust-failure] [--require-trusted-time] [--register FILE] [--json]\n" +
+	"--accept-current-trust-failure accepts bundle trust-dependency failures; offline-package expiry is not waived.\n"
 
 var exits = map[string]int{evidence.Verified: 0, evidence.Invalid: 1, evidence.Incomplete: 3, evidence.CurrentTrustFailed: 4}
 
@@ -89,7 +90,7 @@ func orDash(value *string) string {
 
 func human(report *evidence.Report, currentVersion string) string {
 	// EBMP2-076: what the verdict does not establish comes with the verdict, then what it does.
-	lines := []string{"verdict: " + report.Verdict}
+	lines := []string{"verdict: " + report.Verdict, "software: ecl-verify-go " + evidence.SoftwareVersion + "; source-build=" + evidence.SourceBuild}
 	// EBMP2-060: the primary finding of a verdict other than verified, the failing current status
 	// of a trust dependency for current-trust-failed among them.
 	if primary := evidence.PrimaryFinding(report); primary != nil {
@@ -125,7 +126,7 @@ func human(report *evidence.Report, currentVersion string) string {
 	}
 	lines = append(lines, "evaluation-time: "+evaluationTime)
 	if report.AcceptedCurrentTrustFailure {
-		lines = append(lines, "accepted: current trust failure, by --accept-current-trust-failure")
+		lines = append(lines, "accepted: current trust failure of bundle dependencies, by --accept-current-trust-failure; offline-package expiry is not waived")
 	}
 	if report.Register != nil {
 		digest, _ := report.Register["digest"].(map[string]any)
@@ -174,7 +175,7 @@ func human(report *evidence.Report, currentVersion string) string {
 func run(arguments []string, stdout, stderr io.Writer) int {
 	var bundlePath, policyPath, now, registerPath string
 	var historyPaths []string
-	var nowSpecified bool
+	var nowSpecified, registerSpecified, bundleSpecified bool
 	accept, requireTrustedTime, asJSON := false, false, false
 	for index := 0; index < len(arguments); index++ {
 		argument := arguments[index]
@@ -203,13 +204,15 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 			requireTrustedTime = true
 		case argument == "--register":
 			registerPath, ok = next()
+			registerSpecified = true
 		case argument == "--json":
 			asJSON = true
 		case argument == "-h" || argument == "--help":
 			fmt.Fprint(stdout, usage)
 			return 0
-		case bundlePath == "" && !strings.HasPrefix(argument, "-"):
+		case !bundleSpecified && !strings.HasPrefix(argument, "-"):
 			bundlePath = argument
+			bundleSpecified = true
 		default:
 			ok = false
 		}
@@ -239,7 +242,7 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 			history = append(history, data)
 		}
 		options := evidence.Options{Now: now, AcceptCurrentTrustFailure: accept, RequireTrustedTime: requireTrustedTime}
-		if registerPath != "" {
+		if registerSpecified {
 			data, err := readLimited(registerPath, evidence.MaxRegisterBytes, "register", "1 MiB")
 			if err != nil {
 				return nil, nil, err

@@ -100,7 +100,8 @@
     "start_at": {
       "description": "The instant of offset zero. Step times are whole seconds after it.",
       "type": "string",
-      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$",
+      "format": "date-time"
     },
     "deployment": {
       "$ref": "#/$defs/deployment"
@@ -128,7 +129,7 @@
       "type": "string",
       "minLength": 3,
       "maxLength": 512,
-      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\t-\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$"
     },
     "uris": {
       "type": "array",
@@ -223,12 +224,45 @@
             "none",
             "committed"
           ]
+        }
+      }
+    },
+    "countedOutcomeExpectation": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "effect",
+        "count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "array",
+              "minItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/outcome"
+              }
+            }
+          ]
+        },
+        "effect": {
+          "description": "Whether the action's effect is observed at the point of effect after the step.",
+          "enum": [
+            "none",
+            "committed"
+          ]
         },
         "count": {
-          "description": "In `first`, how many of the repeated proposals this expectation covers.",
+          "description": "In first, how many selected proposals this expectation covers; no more than the selected population, as check_repository_metadata.py checks.",
           "type": "integer",
           "minimum": 1,
-          "maximum": 1000
+          "maximum": 100
         }
       }
     },
@@ -247,16 +281,7 @@
           "additionalProperties": false,
           "properties": {
             "first": {
-              "allOf": [
-                {
-                  "$ref": "#/$defs/outcomeExpectation"
-                },
-                {
-                  "required": [
-                    "count"
-                  ]
-                }
-              ]
+              "$ref": "#/$defs/countedOutcomeExpectation"
             },
             "rest": {
               "$ref": "#/$defs/outcomeExpectation"
@@ -858,7 +883,8 @@
       "required": [
         "step",
         "at",
-        "kind"
+        "kind",
+        "origin"
       ],
       "properties": {
         "step": {
@@ -891,7 +917,26 @@
             "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "origin"
+            ],
+            "properties": {
+              "origin": {
+                "const": "added"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "note"
+            ]
+          }
+        }
+      ]
     },
     "step": {
       "allOf": [
@@ -1020,7 +1065,33 @@
         "expect": {
           "$ref": "#/$defs/proposalExpectation"
         }
-      }
+      },
+      "dependentRequired": {
+        "spacing_seconds": [
+          "repeat"
+        ]
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "expect": {
+                "required": [
+                  "first"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "repeat"
+            ]
+          }
+        }
+      ]
     },
     "decide": {
       "description": "A person approves or rejects held actions of an earlier propose step, all of them or the one at index.",

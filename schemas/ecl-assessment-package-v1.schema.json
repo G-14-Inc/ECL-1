@@ -48,8 +48,7 @@
     "boundary_class": {
       "enum": [
         "full-system-mediation",
-        "bounded-action-class-mediation",
-        "component-or-profile-implementation"
+        "bounded-action-class-mediation"
       ]
     },
     "evaluated_at": {
@@ -142,8 +141,39 @@
                   "B",
                   "C"
                 ]
+              },
+              "direct_implementation_within_24_months": {
+                "const": false
+              },
+              "managed_operator_within_24_months": {
+                "const": false
+              },
+              "claim_approval_authority_within_24_months": {
+                "const": false
               }
-            }
+            },
+            "required": [
+              "direct_implementation_within_24_months"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "material_affiliate_or_reseller": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "material_affiliate_or_reseller"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "published_sector_exception"
+                  ]
+                }
+              }
+            ]
           }
         }
       }
@@ -175,6 +205,159 @@
                   "const": "conditional_conformance"
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "const": 1
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "claim_decision": {
+            "properties": {
+              "status": {
+                "not": {
+                  "const": "conditional_conformance"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "findings": {
+            "contains": {
+              "properties": {
+                "severity": {
+                  "const": "critical"
+                },
+                "disposition": {
+                  "enum": [
+                    "open",
+                    "accepted_condition"
+                  ]
+                }
+              },
+              "required": [
+                "severity",
+                "disposition"
+              ]
+            }
+          }
+        },
+        "required": [
+          "findings"
+        ]
+      },
+      "then": {
+        "properties": {
+          "claim_decision": {
+            "properties": {
+              "status": {
+                "const": "assessment_only"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "findings": {
+            "contains": {
+              "properties": {
+                "severity": {
+                  "const": "major"
+                },
+                "disposition": {
+                  "enum": [
+                    "open",
+                    "accepted_condition"
+                  ]
+                }
+              },
+              "required": [
+                "severity",
+                "disposition"
+              ]
+            }
+          }
+        },
+        "required": [
+          "findings"
+        ]
+      },
+      "then": {
+        "properties": {
+          "claim_decision": {
+            "properties": {
+              "status": {
+                "not": {
+                  "const": "full_conformance"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "checklist": {
+            "contains": {
+              "properties": {
+                "result": {
+                  "const": "fail"
+                }
+              },
+              "required": [
+                "result"
+              ]
+            }
+          }
+        },
+        "required": [
+          "checklist"
+        ]
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "contains": {
+              "properties": {
+                "severity": {
+                  "enum": [
+                    "critical",
+                    "major",
+                    "minor"
+                  ]
+                },
+                "disposition": {
+                  "enum": [
+                    "open",
+                    "accepted_condition"
+                  ]
+                }
+              },
+              "required": [
+                "severity",
+                "disposition"
+              ]
             }
           }
         }
@@ -473,6 +656,10 @@
         },
         "conflict_disclosure": {
           "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        "direct_implementation_within_24_months": {
+          "type": "boolean",
+          "description": "Direct implementation of the assessed system during the assessment period or preceding 24 months (ECL1N-0086)."
         }
       }
     },

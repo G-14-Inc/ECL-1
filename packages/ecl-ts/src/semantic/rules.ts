@@ -18,7 +18,6 @@ import {
   isArray,
   isInteger,
   isObject,
-  isPythonInt,
   isString,
   pythonEquals,
   pythonRepr,
@@ -26,8 +25,10 @@ import {
   truthy,
 } from "../json/value.js";
 import type { JsonObject, JsonValue } from "../json/value.js";
-import { activeExtensionVersions, allocatedExtensionVersions, composableExtensions, extensionValueSchemas, knownExtensions } from "../registry/registries.js";
+import { activeExtensionVersions, allocatedExtensionVersions, composableExtensions, extensionApplicability, extensionObjectType, extensionValueSchemas, knownExtensions } from "../registry/registries.js";
+import type { ExtensionApplicability } from "../registry/registries.js";
 import { eclSchemas } from "../schema/validator.js";
+import { reservedExtensionNamespace } from "../schema/formats.js";
 import type { SchemaSet } from "../schema/validator.js";
 import { InstantError, instantNanoseconds } from "../time.js";
 import {
@@ -35,7 +36,6 @@ import {
   inSet,
   isMalformedInputError,
   item,
-  pythonSet,
   PythonTypeError,
   str,
 } from "./python.js";
@@ -108,7 +108,7 @@ const APPROVAL_OPERATIONS = new Set(["approve", "reject"]);
 const DERIVED_OPERATIONS = new Set(["redact", "supersede"]);
 /** DCMP2-013: the members of an admit's authorization that bind its release authority. */
 const AUTHORITY_MEMBERS = ["authorization_id", "audience", "scope_digest", "valid_from", "valid_until", "use_policy"];
-const PROTOCOLS = new Set(["DCMP-2", "EBMP-2"]);
+const PROTOCOLS = new Set(["DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"]);
 /**
  * XR1-010: one object carries each extension identifier at one version, unless the registry entry
  * of that identifier declares its versions composable.
@@ -126,8 +126,9 @@ export function sortFindings(findings: Finding[]): Finding[] {
   );
 }
 
-function time(value: JsonValue | undefined): bigint {
-  return instantNanoseconds(value);
+function time(value: JsonValue | undefined): bigint | undefined {
+  try { return instantNanoseconds(value); }
+  catch (error) { if (!(error instanceof InstantError)) throw error; return undefined; }
 }
 
 /** (index, value) of each well-formed occurrence of one extension. */
@@ -147,7 +148,7 @@ function extensionValues(value: JsonObject, identifier: string): Array<[number, 
 }
 
 /** The extensions list of the reference's extension checks: absent, or a list of objects. */
-function extensionList(value: JsonObject): JsonObject[] | undefined {
+function extensionList(value: JsonObject): JsonValue[] | undefined {
   const extensions = get(value, "extensions");
   if (extensions === undefined || extensions === null) {
     return undefined;
@@ -155,12 +156,7 @@ function extensionList(value: JsonObject): JsonObject[] | undefined {
   if (!isArray(extensions)) {
     throw new PythonTypeError("extensions must be an array");
   }
-  return extensions.map((extension) => {
-    if (!isObject(extension)) {
-      throw new PythonTypeError("extension entries must be objects");
-    }
-    return extension;
-  });
+  return extensions;
 }
 
 /** Validates ECL cross-member semantics against a registry snapshot. */
@@ -171,6 +167,7 @@ export class SemanticValidator {
   private readonly allocated: ReadonlyMap<string, ReadonlySet<number>> | undefined;
   private readonly composable: ReadonlySet<string>;
   private readonly active: ReadonlyMap<string, ReadonlySet<number>> | undefined;
+  private readonly applicability: ExtensionApplicability;
 
   /**
    * `known` names the allocated identifiers, whatever their status (XR1-017). `allocated` gives
@@ -178,7 +175,8 @@ export class SemanticValidator {
    * of a known identifier. `composable` names the identifiers
    * whose versions the registry declares composable (XR1-010). `active` gives the versions of the
    * active entries the consumer implements, the only occurrences it knows (XR1-006); `undefined`
-   * falls back to `known` and `allocated`.
+   * falls back to `known` and `allocated`. `applicability` defaults to the shipped registry;
+   * custom entries supply their identifier/version/object-type declarations explicitly.
    */
   constructor(
     known: Iterable<string> = knownExtensions(),
@@ -187,6 +185,7 @@ export class SemanticValidator {
     allocated: ReadonlyMap<string, ReadonlySet<number>> | undefined = allocatedExtensionVersions(),
     composable: Iterable<string> = composableExtensions(),
     active: ReadonlyMap<string, ReadonlySet<number>> | undefined = activeExtensionVersions(),
+    applicability: ExtensionApplicability = extensionApplicability(),
   ) {
     this.known = new Set(known);
     this.valueSchemas = valueSchemas;
@@ -194,6 +193,7 @@ export class SemanticValidator {
     this.allocated = allocated;
     this.composable = new Set(composable);
     this.active = active;
+    this.applicability = applicability;
   }
 
   private isKnown(identifier: JsonValue | undefined): boolean {
@@ -205,7 +205,10 @@ export class SemanticValidator {
    * and version that the consumer implements, or, without that snapshot, a known identifier at a
    * version that the registry allocated for it (XR1-003, XR1-009).
    */
-  private interpretable(identifier: JsonValue | undefined, version: JsonValue | undefined): boolean {
+  private interpretable(identifier: JsonValue | undefined, version: JsonValue | undefined, value: JsonObject): boolean {
+    const kind = extensionObjectType(value);
+    if (!(typeof identifier === "string" && isInteger(version)
+        && typeof kind === "string" && (this.applicability.get(identifier)?.get(version)?.has(kind) ?? false))) return false;
     if (this.active !== undefined) {
       return typeof identifier === "string" && isInteger(version) && (this.active.get(identifier)?.has(version) ?? false);
     }
@@ -217,6 +220,14 @@ export class SemanticValidator {
       return true;
     }
     return isInteger(version) && versions.has(version);
+  }
+
+  /** Keep source positions while hiding uninterpretable data from extension-specific checks. */
+  private interpretedExtensions(value: JsonObject): JsonObject {
+    const extensions = get(value, "extensions");
+    if (!isArray(extensions)) return value;
+    return { ...value, extensions: extensions.map((entry) => isObject(entry)
+      && this.interpretable(get(entry, "id"), get(entry, "version"), value) ? entry : {}) };
   }
 
   /** XR1-023: a registered extension's value validates against its registered schema. */
@@ -231,6 +242,7 @@ export class SemanticValidator {
         return;
       }
       const identifier = get(extension, "id");
+      if (!this.interpretable(identifier, get(extension, "version"), value)) return;
       const schema = typeof identifier === "string" ? this.valueSchemas.get(identifier) : undefined;
       if (schema === undefined || !has(extension, "value")) {
         return;
@@ -259,13 +271,16 @@ export class SemanticValidator {
           continue;
         }
         const outcome = get(result, "outcome");
+        if (typeof outcome !== "string") {
+          continue;
+        }
         if (!inSet(outcome, permitting)) {
           findings.push(finding("ecl.rule.coupling-results-permit-admit.v1", `/extensions/${index}/value/${member}/outcome`, `an admit cannot carry ${member} outcome ${str(outcome)}`));
         } else if (pythonEquals(outcome, "required_before_release") && !deferred) {
           findings.push(finding("ecl.rule.coupling-results-permit-admit.v1", `/extensions/${index}/value/${member}/outcome`, "a deferred witness check needs a before_release obligation"));
         }
       }
-      if (has(coupling, "blocker_reason")) {
+      if (typeof get(coupling, "blocker_reason") === "string") {
         findings.push(finding("ecl.rule.coupling-results-permit-admit.v1", `/extensions/${index}/value/blocker_reason`, "an admit cannot carry a blocker reason"));
       }
     }
@@ -325,7 +340,10 @@ export class SemanticValidator {
       if (!isString(presented) || !isInteger(minimum)) {
         continue;
       }
-      if (time(item(event, "issued_at")) < time(presented) + BigInt(minimum) * 1_000_000_000n) {
+      const issuedTime = time(item(event, "issued_at"));
+      const presentedTime = time(presented);
+      if (issuedTime === undefined || presentedTime === undefined) continue;
+      if (issuedTime < presentedTime + BigInt(minimum) * 1_000_000_000n) {
         findings.push(finding("ecl.rule.approval-review-time-respected.v1", `/extensions/${index}/value/presented_at`, "the decision came sooner than the minimum review time after presentation"));
       }
     }
@@ -344,7 +362,9 @@ export class SemanticValidator {
       const effective = get(change, "effective_at");
       const expires = get(change, "expires_at");
       if (inSet(get(change, "change"), DISABLING_CHANGES) && isString(effective)) {
-        if (!isString(expires) || time(expires) <= time(effective)) {
+        const effectiveTime = time(effective);
+        const expiresTime = isString(expires) ? time(expires) : undefined;
+        if (!isString(expires) || (effectiveTime !== undefined && expiresTime !== undefined && expiresTime <= effectiveTime)) {
           findings.push(finding("ecl.rule.control-change-approved-and-bounded.v1", `/extensions/${index}/value/expires_at`, `a ${str(get(change, "change"))} change must expire after it takes effect`));
         }
       }
@@ -362,8 +382,8 @@ export class SemanticValidator {
     extensions.forEach((extension, index) => {
       const identifier = get(extension, "id");
       const version = get(extension, "version");
-      if (typeof identifier !== "string" || !isPythonInt(version)) {
-        throw new PythonTypeError("extension id and version have invalid types");
+      if (typeof identifier !== "string" || !isInteger(version)) {
+        return;
       }
       const key = identifier + "\u0000" + String(Number(version));
       if (seen.has(key)) {
@@ -413,7 +433,7 @@ export class SemanticValidator {
     }
     extensions.forEach((extension, index) => {
       const identifier = get(extension, "id");
-      if (typeof identifier === "string" && identifier.startsWith("ecl.") && !this.known.has(identifier)) {
+      if (typeof identifier === "string" && ((identifier.startsWith("ecl.") && !this.known.has(identifier)) || reservedExtensionNamespace(identifier))) {
         findings.push(finding("ecl.rule.extension-namespace-allocated.v1", `/extensions/${index}/id`, `unallocated ECL extension identifier ${identifier}`));
       }
     });
@@ -429,7 +449,7 @@ export class SemanticValidator {
     extensions.forEach((extension, index) => {
       const identifier = get(extension, "id");
       const version = get(extension, "version");
-      if (truthy(get(extension, "critical")) && !this.interpretable(identifier, version)) {
+      if (typeof identifier === "string" && isInteger(version) && get(extension, "critical") === true && !this.interpretable(identifier, version, value)) {
         findings.push(finding("ecl.rule.unknown-critical-extension-rejected.v1", `/extensions/${index}/id`, `unknown critical extension ${str(identifier)} version ${str(version)}`));
       }
     });
@@ -437,8 +457,11 @@ export class SemanticValidator {
   }
 
   private static selfCausation(value: JsonObject): Finding[] {
+    const protocol = get(value, "protocol");
     const messageId = get(value, "message_id");
-    const objectId = truthy(messageId) ? messageId : get(value, "object_id");
+    const intentId = protocol === "ECL-WI-1" ? get(value, "intent_id") : undefined;
+    const objectId = protocol === "DCMP-2" ? messageId : protocol === "EBMP-2" ? get(value, "object_id")
+      : truthy(intentId) ? intentId : truthy(messageId) ? messageId : get(value, "object_id");
     const workflow = get(value, "workflow");
     if (workflow === undefined || workflow === null) {
       return [];
@@ -451,10 +474,35 @@ export class SemanticValidator {
     if (!isArray(predecessors)) {
       throw new PythonTypeError("causal_predecessors must be an array");
     }
+    if ((protocol === "DCMP-2" || protocol === "EBMP-2") && !isString(objectId)) {
+      return [];
+    }
     if (truthy(objectId) && predecessors.some((entry) => isObject(entry) && pythonEquals(get(entry, "id"), objectId))) {
       return [finding("ecl.rule.message-cannot-cause-itself.v1", "/workflow/causal_predecessors", "an object cannot name itself as a causal predecessor")];
     }
     return [];
+  }
+
+  private static workIntentContext(value: JsonObject): Finding[] {
+    const workflow = get(value, "workflow");
+    if (!isObject(workflow)) return [];
+    const parent = get(get(value, "parent_workflow"), "uri"), contextParent = get(workflow, "parent_workflow_id");
+    const found: Finding[] = [], rule = "ecl.rule.work-intent-context-consistent.v1";
+    if (isString(parent) && isString(contextParent) && parent !== contextParent) {
+      found.push(finding(rule, "/parent_workflow/uri", "parent workflow identifiers disagree"));
+    }
+    for (const [path, identifier] of [["/parent_workflow/uri", parent], ["/workflow/parent_workflow_id", contextParent]] as const) {
+      if (isString(identifier) && identifier === get(workflow, "workflow_id")) {
+        found.push(finding(rule, path, "a workflow cannot identify itself as its parent"));
+      }
+    }
+    if (isString(parent) || isString(contextParent)) {
+      const predecessors = get(workflow, "causal_predecessors");
+      if (isArray(predecessors) && predecessors.length === 0) {
+        found.push(finding(rule, "/workflow/causal_predecessors", "a child work intent names its creating or delegating causal predecessor"));
+      }
+    }
+    return found;
   }
 
   private static integrityPolicy(value: JsonObject): Finding[] {
@@ -462,35 +510,30 @@ export class SemanticValidator {
     if (!isObject(policy)) {
       return [];
     }
-    const required = truthy(get(policy, "required"));
+    const required = get(policy, "required");
     const threshold = get(policy, "threshold");
     const requiredKeysValue = get(policy, "required_key_ids");
     const eligibleKeysValue = get(policy, "eligible_key_ids");
-    const requiredKeys = truthy(requiredKeysValue) ? requiredKeysValue : [];
-    const eligibleKeys = truthy(eligibleKeysValue) ? eligibleKeysValue : [];
-    if (!isArray(requiredKeys) || !isArray(eligibleKeys)) {
-      throw new PythonTypeError("integrity key identifiers must be arrays");
-    }
-    let invalid: boolean;
-    if (!isInteger(threshold)) {
-      invalid = true;
-    } else if (required && threshold < 1) {
-      invalid = true;
-    } else if (!required && threshold !== 0) {
-      invalid = true;
-    } else if (threshold < requiredKeys.length) {
-      invalid = true;
-    } else if (eligibleKeys.length > 0) {
-      const requiredSet = pythonSet(requiredKeys);
-      const eligibleSet = pythonSet(eligibleKeys);
-      invalid = [...requiredSet].some((key) => !eligibleSet.has(key));
-    } else {
-      invalid = false;
-    }
+    const requiredKeys = requiredKeysValue === undefined ? [] : requiredKeysValue;
+    const eligibleKeys = eligibleKeysValue === undefined ? [] : eligibleKeysValue;
+    const validRequired = isArray(requiredKeys) && requiredKeys.every(isString);
+    const validEligible = isArray(eligibleKeys) && eligibleKeys.every(isString);
+    const invalid = (typeof required === "boolean" && isInteger(threshold) && ((required && threshold < 1) || (!required && threshold !== 0)))
+      || (isInteger(threshold) && validRequired && threshold < requiredKeys.length)
+      || (validRequired && validEligible && eligibleKeys.length > 0 && requiredKeys.some((key) => !eligibleKeys.includes(key)));
     if (invalid) {
       return [finding("ecl.rule.integrity-threshold-consistent.v1", "/integrity_policy", "integrity required flag, threshold, eligible keys, and required keys are inconsistent")];
     }
     return [];
+  }
+
+  /** Only extension consumer/value rules, without payload policy checks. */
+  extensionFindings(value: JsonObject): Finding[] {
+    const extensions = get(value, "extensions");
+    if (extensions !== undefined && extensions !== null && !isArray(extensions)) {
+      return [finding(SCHEMA_INVALID, "/extensions", "extensions must be an array")];
+    }
+    return [...SemanticValidator.extensions(value), ...this.extensionVersions(value), ...this.extensionNamespace(value), ...this.criticalExtensions(value), ...this.extensionValueSchemas(value)];
   }
 
   // DCMP2-043: each DCMP-2 rule is checked on its own and only on input members of the types the
@@ -503,7 +546,8 @@ export class SemanticValidator {
     if (!(isString(issuedAt) && issuedAt !== "" && isString(expiresAt) && expiresAt !== "")) {
       return [];
     }
-    if (time(expiresAt) <= time(issuedAt)) {
+    const expiry = time(expiresAt), issued = time(issuedAt);
+    if (expiry !== undefined && issued !== undefined && expiry <= issued) {
       return [finding("ecl.rule.expiry-after-issue.v1", "/expires_at", "expires_at must be later than issued_at")];
     }
     return [];
@@ -561,11 +605,12 @@ export class SemanticValidator {
 
   /** DCMP2-012: a response whose outcome is not admit carries no authorization object. */
   private static nonAdmitAuthority(value: JsonObject): Finding[] {
-    if (!pythonEquals(get(value, "message_type"), "decision_response") || pythonEquals(get(value, "outcome"), "admit")) {
+    const outcome = get(value, "outcome");
+    if (!pythonEquals(get(value, "message_type"), "decision_response") || !isString(outcome) || outcome === "admit") {
       return [];
     }
     const authorization = get(value, "authorization");
-    if (isObject(authorization) && truthy(authorization)) {
+    if (isObject(authorization)) {
       return [finding("ecl.rule.non-admit-prohibits-authority.v1", "/authorization", "a non-admit response cannot issue authority")];
     }
     return [];
@@ -585,7 +630,8 @@ export class SemanticValidator {
     if (!(isString(start) && isString(end))) {
       return [];
     }
-    if (time(end) <= time(start)) {
+    const endTime = time(end), startTime = time(start);
+    if (endTime !== undefined && startTime !== undefined && endTime <= startTime) {
       return [finding("ecl.rule.expiry-after-issue.v1", "/authorization/valid_until", "authority validity interval is empty or reversed")];
     }
     return [];
@@ -597,8 +643,10 @@ export class SemanticValidator {
     if (!isObject(action) || !has(action, "parameters")) {
       return [];
     }
-    const expected = { algorithm: "ecl.digest.sha-256.v1", value: objectDigest(action["parameters"] as JsonValue) };
-    if (!pythonEquals(get(action, "parameters_digest"), expected)) {
+    let expected: JsonObject | undefined;
+    try { expected = { algorithm: "ecl.digest.sha-256.v1", value: objectDigest(action["parameters"] as JsonValue) }; }
+    catch (error) { if (!(error instanceof CanonicalizationError)) throw error; }
+    if (expected === undefined || !pythonEquals(get(action, "parameters_digest"), expected)) {
       return [finding("ecl.rule.parameters-digest-matches.v1", "/action/parameters_digest", "parameters_digest is not the SHA-256 digest of the canonical in-band parameters")];
     }
     return [];
@@ -683,25 +731,29 @@ export class SemanticValidator {
       ["admit authority", (target) => SemanticValidator.admitAuthority(target)],
       ["non-admit authority", (target) => SemanticValidator.nonAdmitAuthority(target)],
       ["authority interval", (target) => SemanticValidator.authorityInterval(target)],
-      ["consequence coupling", (target) => SemanticValidator.couplingResults(target)],
-      ["decision basis", (target) => SemanticValidator.decisionBasis(target)],
+      ["consequence coupling", (target) => SemanticValidator.couplingResults(this.interpretedExtensions(target))],
+      ["decision basis", (target) => SemanticValidator.decisionBasis(this.interpretedExtensions(target))],
     ];
     const ebmp: ReadonlyArray<readonly [string, (target: JsonObject) => Finding[]]> = [
       ["EBMP-2", (target) => SemanticValidator.ebmp(target)],
-      ["approval record", (target) => SemanticValidator.approvalRecords(target)],
-      ["control change", (target) => SemanticValidator.controlChanges(target)],
+      ["approval record", (target) => SemanticValidator.approvalRecords(this.interpretedExtensions(target))],
+      ["control change", (target) => SemanticValidator.controlChanges(this.interpretedExtensions(target))],
     ];
     for (const [name, check] of common) {
       guarded(name, check);
     }
     const protocol = get(value, "protocol");
-    if (typeof protocol === "string" && inSet(protocol, PROTOCOLS)) {
+    const kind = extensionObjectType(value);
+    if (typeof kind === "string" && inSet(kind, PROTOCOLS)) {
       guarded("extension value", (target) => this.extensionValueSchemas(target));
     }
     if (pythonEquals(protocol, "DCMP-2")) {
       for (const [name, check] of dcmp) {
         guarded(name, check);
       }
+    } else if (protocol === "ECL-WI-1") {
+      guarded("intent expiry", (target) => SemanticValidator.messageExpiry(target));
+      guarded("intent context", (target) => SemanticValidator.workIntentContext(target));
     } else if (pythonEquals(protocol, "EBMP-2")) {
       for (const [name, check] of ebmp) {
         guarded(name, check);
@@ -710,9 +762,23 @@ export class SemanticValidator {
       guarded("adapter binding", adapterBindingFindings);
     } else if (pythonEquals(get(value, "schema_version"), REGISTER_SCHEMA_VERSION)) {
       guarded("register declarations", (target) => SemanticValidator.registerDeclarations(target));
+    } else if (get(value, "schema_version") === "ecl_deployment_profile_v1") {
+      guarded("deployment timing", deploymentTimingFindings);
     }
     return sortFindings(findings);
   }
+}
+
+export const DEPLOYMENT_TIMING_RULE = "ecl.rule.deployment-timing-case-consistent.v1";
+export function deploymentTimingFindings(value: JsonObject): Finding[] {
+  const timing = get(value, "timing_case");
+  if (get(value, "model") !== "federated-multi-domain" || !isObject(timing)) return [];
+  const connected = get(timing, "connected_revocation_seconds"), exchange = get(timing, "federated_exchange_seconds");
+  if (typeof connected === "number" && Number.isSafeInteger(connected) && connected >= 0
+      && typeof exchange === "number" && Number.isSafeInteger(exchange) && exchange >= 0 && exchange > connected) {
+    return [finding(DEPLOYMENT_TIMING_RULE, "/timing_case/federated_exchange_seconds", "federated exchange exceeds the connected revocation interval")];
+  }
+  return [];
 }
 
 const ADAPTER_RULE = "ecl.rule.adapter-source-binding-valid.v1";
@@ -756,9 +822,9 @@ function entryStringLists(entries: JsonObject[] | undefined, member: string): st
   return values.every((item) => isArray(item) && item.every(isString)) ? (values as string[][]) : undefined;
 }
 
-/** Whether a JSON Pointer's first reference token is an array index (RFC 6901, section 4) less than `count`. */
+/** Whether a valid JSON Pointer starts with an array index (RFC 6901, sections 3 and 4) less than `count`. */
 function namesDerivedObject(pointer: string, count: number): boolean {
-  if (!pointer.startsWith("/")) {
+  if (!/^(?:\/(?:[^~/]|~[01])*)+$/u.test(pointer)) {
     return false;
   }
   const token = pointer.split("/")[1] ?? "";
@@ -1057,7 +1123,7 @@ export function oneWayProblems(value: JsonObject, admit: boolean, outcome?: Json
     const inputClass = get(entry, "class") ?? null;
     const status = get(entry, "status") ?? null;
     const available = pythonEquals(status, "available");
-    if (supports && inSet(inputClass, RESTRICTING_ONLY_CLASSES)) {
+    if (supports && typeof inputClass === "string" && inSet(inputClass, RESTRICTING_ONLY_CLASSES)) {
       problems.push([path + "/effect", `an input of class ${pythonRepr(inputClass)} can only make an outcome stricter`]);
     }
     if (supports && !available) {
@@ -1139,6 +1205,9 @@ function verifiableOnlyProblems(recorded: string, entries: ReadonlyArray<[number
     for (const [position, entry] of entries) {
       if (pythonEquals(get(entry, "effect"), "supports")) {
         problems.push([`/inputs/${position}/effect`, `no input supports an outcome whose verifiable-only outcome is ${pythonRepr(recorded)}`]);
+      }
+      if (recorded === "deny" && inList(get(entry, "class") ?? null, ["actor_supplied", "judgment"]) && pythonEquals(get(entry, "effect"), "restricts")) {
+        problems.push([`/inputs/${position}/effect`, "an actor_supplied or judgment input has no effect when the verifiable-only outcome is deny"]);
       }
     }
     return problems;

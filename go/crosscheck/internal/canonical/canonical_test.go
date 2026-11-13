@@ -20,6 +20,19 @@ func TestMarshalOrdersAndEscapesDeterministically(t *testing.T) {
 	}
 }
 
+func TestNumberLexicalFormsAreJSONIntegers(t *testing.T) {
+	for _, text := range []string{"01", "-01", "00", "-00", "-", "", "+1", "-0", "1.0", "1e0", " 1", "1 "} {
+		if encoded, err := Marshal(json.Number(text)); err == nil {
+			t.Errorf("accepted %q as %q", text, encoded)
+		}
+	}
+	for _, text := range []string{"0", "1", "-1", "9007199254740991", "-9007199254740991"} {
+		if encoded, err := Marshal(json.Number(text)); err != nil || string(encoded) != text {
+			t.Errorf("refused or changed %q: %q (%v)", text, encoded, err)
+		}
+	}
+}
+
 func TestMarshalUsesUTF16KeyOrder(t *testing.T) {
 	value := map[string]any{
 		"\uE000":     2,

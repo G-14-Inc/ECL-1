@@ -8,13 +8,15 @@ from dataclasses import dataclass
 from typing import Any
 
 from .canonical import CanonicalizationError, object_digest, same_json
+from .extension_selection import extension_object_type
+from .semantic_numbers import schema_int
 from .decision_basis_checks import (
     REGISTER_DOCUMENT_RULE,
     REGISTER_SCHEMA_VERSION,
     one_way_problems,
     register_document_problems,
 )
-from .schema import rfc3339_utc_nanoseconds
+from .schema import reserved_extension_namespace, rfc3339_utc_nanoseconds
 
 
 @dataclass(frozen=True)
@@ -24,8 +26,29 @@ class Finding:
     message: str
 
 
-def _time(value: str) -> int:
-    return rfc3339_utc_nanoseconds(value)
+DEPLOYMENT_TIMING_RULE = "ecl.rule.deployment-timing-case-consistent.v1"
+
+
+def deployment_timing_findings(value: Mapping[str, Any]) -> list[Finding]:
+    """Compare declared federation bounds; schema validation handles unreadable operands."""
+    timing = value.get("timing_case")
+    if value.get("model") != "federated-multi-domain" or not isinstance(timing, Mapping):
+        return []
+    connected, exchange = schema_int(timing.get("connected_revocation_seconds")), schema_int(timing.get("federated_exchange_seconds"))
+    if (type(connected) is int and type(exchange) is int
+        and 0 <= connected <= 9007199254740991 and 0 <= exchange <= 9007199254740991
+        and exchange > connected):
+        return [Finding(DEPLOYMENT_TIMING_RULE, "/timing_case/federated_exchange_seconds",
+                        "federated exchange exceeds the connected revocation interval")]
+    return []
+
+
+def _time(value: str) -> int | None:
+    """An instant usable by a semantic comparison; schema validation reports bad dates."""
+    try:
+        return rfc3339_utc_nanoseconds(value)
+    except ValueError:
+        return None
 
 
 # EBMP2-046: the event kind each core event type carries and, where the type fixes it, the
@@ -134,6 +157,24 @@ def active_extension_versions(
     )
 
 
+def extension_applicability(
+    entries: Iterable[Mapping[str, Any]],
+) -> dict[str, dict[int, frozenset[str]]]:
+    """The object types on which each allocated identifier/version has an interpretation."""
+    result: dict[str, dict[int, frozenset[str]]] = {}
+    for entry in entries:
+        attributes = entry.get("attributes")
+        if not isinstance(attributes, Mapping):
+            continue
+        identifier, version = entry.get("id"), attributes.get("version")
+        applies_to = attributes.get("applies_to")
+        if isinstance(identifier, str) and type(version) is int and isinstance(applies_to, list):
+            result.setdefault(identifier, {})[version] = frozenset(
+                value for value in applies_to if isinstance(value, str)
+            )
+    return result
+
+
 def composable_extensions(entries: Iterable[Mapping[str, Any]]) -> frozenset[str]:
     """The identifiers whose registry entry declares their versions composable (XR1-010).
 
@@ -210,9 +251,9 @@ def _entry_string_lists(
 
 
 def _names_derived_object(pointer: str, count: int) -> bool:
-    """Whether a JSON Pointer's first reference token is an array index (RFC 6901, section 4)
+    """Whether a valid JSON Pointer starts with an array index (RFC 6901, sections 3 and 4)
     less than `count`."""
-    if not pointer.startswith("/"):
+    if re.fullmatch(r"(?:/(?:[^~/]|~[01])*)+", pointer) is None:
         return False
     token = pointer.split("/")[1]
     if re.fullmatch("0|[1-9][0-9]*", token) is None:
@@ -382,7 +423,14 @@ def adapter_binding_findings(value: dict[str, Any]) -> list[Finding]:
 
 
 class SemanticValidator:
-    """Validate ECL cross-field semantics using an explicit registry snapshot."""
+    """Validate ECL cross-field semantics using an explicit registry snapshot.
+
+    Applicability defaults to the shipped registry. A custom implemented entry supplies its
+    identifier/version/object-type declarations through ``applicability``. Registered extension
+    value checks come from ``value_validators``; omitting it leaves that mapping empty. Use
+    ``resources.object_findings`` for DCMP-2, EBMP-2 and ECL-IE-1 checks with the shipped
+    registry and extension-value schemas.
+    """
 
     def __init__(
         self,
@@ -392,6 +440,7 @@ class SemanticValidator:
         allocated_versions: Mapping[str, Iterable[int]] | None = None,
         composable: Iterable[str] = (),
         active_versions: Mapping[str, Iterable[int]] | None = None,
+        applicability: Mapping[str, Mapping[int, Iterable[str]]] | None = None,
     ) -> None:
         # XR1-017: the allocated identifiers, whatever their status.
         self.known_extensions = frozenset(known_extensions)
@@ -418,10 +467,26 @@ class SemanticValidator:
             }
         )
 
-    def _interpretable(self, identifier: str, version: Any) -> bool:
+        if applicability is None:
+            from .resources import registry_document
+            applicability = extension_applicability(registry_document("extensions")["entries"])
+        self.applicability = (
+            {
+                identifier: {version: frozenset(kinds) for version, kinds in versions.items()}
+                for identifier, versions in applicability.items()
+            }
+        )
+
+    def _interpretable(self, identifier: str, version: Any, value: Mapping[str, Any]) -> bool:
         """Whether the consumer can interpret this occurrence (XR1-006): an active entry of its
         identifier and version that the consumer implements, or, without that snapshot, a known
         identifier at a version the registry allocated for it (XR1-003, XR1-009)."""
+        version = schema_int(version)
+        if self.applicability is not None and (
+            type(version) is not int
+            or extension_object_type(value) not in self.applicability.get(identifier, {}).get(version, ())
+        ):
+            return False
         if self.active_versions is not None:
             return type(version) is int and version in self.active_versions.get(
                 identifier, frozenset()
@@ -432,6 +497,17 @@ class SemanticValidator:
             return True
         return type(version) is int and version in self.allocated_versions[identifier]
 
+    def _interpreted_extensions(self, value: dict[str, Any]) -> dict[str, Any]:
+        """A semantic view keeps positions but hides uninterpretable occurrences."""
+        extensions = value.get("extensions")
+        if not isinstance(extensions, list):
+            return value
+        return {**value, "extensions": [
+            item if isinstance(item, dict) and isinstance(item.get("id"), str)
+            and self._interpretable(item["id"], item.get("version"), value) else {}
+            for item in extensions
+        ]}
+
     def _extension_value_schemas(self, value: dict[str, Any]) -> list[Finding]:
         """XR1-023: a registered extension's value validates against its registered schema."""
         findings: list[Finding] = []
@@ -441,7 +517,10 @@ class SemanticValidator:
         for index, extension in enumerate(extensions):
             if not isinstance(extension, dict):
                 continue
-            validate = self.value_validators.get(str(extension.get("id")))
+            identifier = extension.get("id")
+            if not isinstance(identifier, str) or not self._interpretable(identifier, extension.get("version"), value):
+                continue
+            validate = self.value_validators.get(identifier)
             if validate is None or "value" not in extension:
                 continue
             errors = sorted(validate(extension["value"]))
@@ -473,6 +552,8 @@ class SemanticValidator:
                 if not isinstance(result, dict):
                     continue
                 outcome = result.get("outcome")
+                if not isinstance(outcome, str):
+                    continue
                 if outcome not in permitting:
                     findings.append(
                         Finding(
@@ -489,7 +570,7 @@ class SemanticValidator:
                             "a deferred witness check needs a before_release obligation",
                         )
                     )
-            if "blocker_reason" in coupling:
+            if isinstance(coupling.get("blocker_reason"), str):
                 findings.append(
                     Finding(
                         "ecl.rule.coupling-results-permit-admit.v1",
@@ -547,10 +628,13 @@ class SemanticValidator:
         findings: list[Finding] = []
         for index, record in _extension_values(value, APPROVAL_RECORD):
             presented = record.get("presented_at")
-            minimum = record.get("minimum_review_seconds")
+            minimum = schema_int(record.get("minimum_review_seconds"))
             if not isinstance(presented, str) or type(minimum) is not int:
                 continue
-            if _time(event["issued_at"]) < _time(presented) + minimum * 1_000_000_000:
+            issued_time, presented_time = _time(event["issued_at"]), _time(presented)
+            if issued_time is None or presented_time is None:
+                continue
+            if issued_time < presented_time + minimum * 1_000_000_000:
                 findings.append(
                     Finding(
                         "ecl.rule.approval-review-time-respected.v1",
@@ -577,7 +661,12 @@ class SemanticValidator:
                 )
             effective, expires = change.get("effective_at"), change.get("expires_at")
             if change.get("change") in DISABLING_CHANGES and isinstance(effective, str):
-                if not isinstance(expires, str) or _time(expires) <= _time(effective):
+                effective_time = _time(effective)
+                expires_time = _time(expires) if isinstance(expires, str) else None
+                if not isinstance(expires, str) or (
+                    effective_time is not None and expires_time is not None
+                    and expires_time <= effective_time
+                ):
                     findings.append(
                         Finding(
                             "ecl.rule.control-change-approved-and-bounded.v1",
@@ -598,11 +687,11 @@ class SemanticValidator:
             raise TypeError("extensions must be an array")
         for index, extension in enumerate(extensions):
             if not isinstance(extension, dict):
-                raise TypeError("extension entries must be objects")
+                continue
             identifier = extension.get("id")
-            version = extension.get("version")
-            if not isinstance(identifier, str) or not isinstance(version, int):
-                raise TypeError("extension id and version have invalid types")
+            version = schema_int(extension.get("version"))
+            if not isinstance(identifier, str) or type(version) is not int:
+                continue
             key = (identifier, version)
             if key in seen:
                 findings.append(
@@ -628,9 +717,9 @@ class SemanticValidator:
         findings: list[Finding] = []
         for index, extension in enumerate(extensions):
             if not isinstance(extension, dict):
-                raise TypeError("extension entries must be objects")
+                continue
             identifier = extension.get("id")
-            version = extension.get("version")
+            version = schema_int(extension.get("version"))
             # Other types are refused by the schema and by the uniqueness check.
             if not isinstance(identifier, str) or type(version) is not int:
                 continue
@@ -657,12 +746,14 @@ class SemanticValidator:
             raise TypeError("extensions must be an array")
         for index, extension in enumerate(extensions):
             if not isinstance(extension, dict):
-                raise TypeError("extension entries must be objects")
+                continue
             identifier = extension.get("id")
             if (
                 isinstance(identifier, str)
-                and identifier.startswith("ecl.")
-                and identifier not in self.known_extensions
+                and (
+                    (identifier.startswith("ecl.") and identifier not in self.known_extensions)
+                    or reserved_extension_namespace(identifier)
+                )
             ):
                 findings.append(
                     Finding(
@@ -682,10 +773,13 @@ class SemanticValidator:
             raise TypeError("extensions must be an array")
         for index, extension in enumerate(extensions):
             if not isinstance(extension, dict):
-                raise TypeError("extension entries must be objects")
-            identifier = str(extension.get("id"))
-            if extension.get("critical") and not self._interpretable(
-                identifier, extension.get("version")
+                continue
+            identifier = extension.get("id")
+            version = schema_int(extension.get("version"))
+            if not isinstance(identifier, str) or type(version) is not int:
+                continue
+            if extension.get("critical") is True and not self._interpretable(
+                identifier, version, value
             ):
                 findings.append(
                     Finding(
@@ -699,7 +793,14 @@ class SemanticValidator:
 
     @staticmethod
     def _self_causation(value: dict[str, Any]) -> list[Finding]:
-        object_id = value.get("message_id") or value.get("object_id")
+        protocol = value.get("protocol")
+        if protocol == "DCMP-2":
+            object_id = value.get("message_id")
+        elif protocol == "EBMP-2":
+            object_id = value.get("object_id")
+        else:
+            object_id = ((value.get("intent_id") if protocol == "ECL-WI-1" else None)
+                         or value.get("message_id") or value.get("object_id"))
         workflow = value.get("workflow")
         if workflow is None:
             return []
@@ -708,6 +809,8 @@ class SemanticValidator:
         predecessors = workflow.get("causal_predecessors") or []
         if not isinstance(predecessors, list):
             raise TypeError("causal_predecessors must be an array")
+        if protocol in ("DCMP-2", "EBMP-2") and not isinstance(object_id, str):
+            return []
         if object_id and any(
             isinstance(item, dict) and item.get("id") == object_id
             for item in predecessors
@@ -722,25 +825,45 @@ class SemanticValidator:
         return []
 
     @staticmethod
+    def _work_intent_context(value: dict[str, Any]) -> list[Finding]:
+        """DW1-002 declarations; resolving the causal object is a separate check."""
+        workflow = value.get("workflow")
+        if not isinstance(workflow, dict):
+            return []
+        reference = value.get("parent_workflow")
+        parent = reference.get("uri") if isinstance(reference, dict) else None
+        context_parent = workflow.get("parent_workflow_id")
+        findings: list[Finding] = []
+        rule = "ecl.rule.work-intent-context-consistent.v1"
+        if isinstance(parent, str) and isinstance(context_parent, str) and parent != context_parent:
+            findings.append(Finding(rule, "/parent_workflow/uri", "parent workflow identifiers disagree"))
+        workflow_id = workflow.get("workflow_id")
+        for path, identifier in (("/parent_workflow/uri", parent), ("/workflow/parent_workflow_id", context_parent)):
+            if isinstance(identifier, str) and identifier == workflow_id:
+                findings.append(Finding(rule, path, "a workflow cannot identify itself as its parent"))
+        if isinstance(parent, str) or isinstance(context_parent, str):
+            predecessors = workflow.get("causal_predecessors")
+            if isinstance(predecessors, list) and not predecessors:
+                findings.append(Finding(rule, "/workflow/causal_predecessors", "a child work intent names its creating or delegating causal predecessor"))
+        return findings
+
+    @staticmethod
     def _integrity_policy(value: dict[str, Any]) -> list[Finding]:
         policy = value.get("integrity_policy")
         if not isinstance(policy, dict):
             return []
-        required = bool(policy.get("required"))
-        threshold = policy.get("threshold")
-        required_keys = policy.get("required_key_ids") or []
-        eligible_keys = policy.get("eligible_key_ids") or []
-        if not isinstance(required_keys, list) or not isinstance(
-            eligible_keys, list
-        ):
-            raise TypeError("integrity key identifiers must be arrays")
+        required = policy.get("required")
+        threshold = schema_int(policy.get("threshold"))
+        required_keys = policy.get("required_key_ids", [])
+        eligible_keys = policy.get("eligible_key_ids", [])
+        required_list = isinstance(required_keys, list) and all(isinstance(key, str) for key in required_keys)
+        eligible_list = isinstance(eligible_keys, list) and all(isinstance(key, str) for key in eligible_keys)
         invalid = (
-            not isinstance(threshold, int)
-            or isinstance(threshold, bool)
-            or (required and threshold < 1)
-            or (not required and threshold != 0)
-            or threshold < len(required_keys)
-            or (eligible_keys and not set(required_keys).issubset(eligible_keys))
+            (type(required) is bool and type(threshold) is int and (
+                (required and threshold < 1) or (not required and threshold != 0)
+            ))
+            or (type(threshold) is int and required_list and threshold < len(required_keys))
+            or (required_list and eligible_list and eligible_keys and not set(required_keys).issubset(eligible_keys))
         )
         if invalid:
             return [
@@ -752,16 +875,29 @@ class SemanticValidator:
             ]
         return []
 
+    def extension_findings(self, value: dict[str, Any]) -> list[Finding]:
+        """Only extension consumer/value rules; no payload policy checks."""
+        if value.get("extensions") is not None and not isinstance(value["extensions"], list):
+            return [Finding("ecl.error.schema-invalid.v1", "/extensions", "extensions must be an array")]
+        return (
+            self._extensions(value)
+            + self._extension_versions(value)
+            + self._extension_namespace(value)
+            + self._critical_extensions(value)
+            + self._extension_value_schemas(value)
+        )
+
     # DCMP2-043: each DCMP-2 rule is checked on its own and only on input members of the types the
     # schema requires, so that a member one rule cannot read leaves the other rules' findings.
     @staticmethod
     def _message_expiry(value: dict[str, Any]) -> list[Finding]:
-        """DCMP2-032: a message's `expires_at` is later than its `issued_at`."""
+        """DCMP2-032 and DW1-015: expiry is later than issue."""
         issued_at = value.get("issued_at")
         expires_at = value.get("expires_at")
         if not (isinstance(issued_at, str) and issued_at and isinstance(expires_at, str) and expires_at):
             return []
-        if _time(expires_at) <= _time(issued_at):
+        expiry, issued = _time(expires_at), _time(issued_at)
+        if expiry is not None and issued is not None and expiry <= issued:
             return [
                 Finding(
                     "ecl.rule.expiry-after-issue.v1",
@@ -836,10 +972,12 @@ class SemanticValidator:
     @staticmethod
     def _non_admit_authority(value: dict[str, Any]) -> list[Finding]:
         """DCMP2-012: a response whose outcome is not admit carries no authorization object."""
-        if value.get("message_type") != "decision_response" or value.get("outcome") == "admit":
+        outcome = value.get("outcome")
+        if (value.get("message_type") != "decision_response"
+                or not isinstance(outcome, str) or outcome == "admit"):
             return []
         authorization = value.get("authorization")
-        if isinstance(authorization, dict) and authorization:
+        if isinstance(authorization, dict):
             return [
                 Finding(
                     "ecl.rule.non-admit-prohibits-authority.v1",
@@ -861,7 +999,8 @@ class SemanticValidator:
         end = authorization.get("valid_until")
         if not (isinstance(start, str) and isinstance(end, str)):
             return []
-        if _time(end) <= _time(start):
+        end_time, start_time = _time(end), _time(start)
+        if end_time is not None and start_time is not None and end_time <= start_time:
             return [
                 Finding(
                     "ecl.rule.expiry-after-issue.v1",
@@ -878,11 +1017,14 @@ class SemanticValidator:
         if not isinstance(action, dict) or "parameters" not in action:
             return []
         declared = action.get("parameters_digest")
-        expected = {
-            "algorithm": "ecl.digest.sha-256.v1",
-            "value": object_digest(action["parameters"]),
-        }
-        if declared != expected:
+        try:
+            expected = {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": object_digest(action["parameters"]),
+            }
+        except CanonicalizationError:
+            expected = None
+        if expected is None or declared != expected:
             return [
                 Finding(
                     "ecl.rule.parameters-digest-matches.v1",
@@ -1030,7 +1172,8 @@ class SemanticValidator:
         guarded("self-causation", self._self_causation)
         guarded("integrity policy", self._integrity_policy)
         protocol = value.get("protocol")
-        if isinstance(protocol, str) and protocol in {"DCMP-2", "EBMP-2"}:
+        interpreted = self._interpreted_extensions(value)
+        if extension_object_type(value) in {"DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"}:
             guarded("extension value", self._extension_value_schemas)
         if protocol == "DCMP-2":
             guarded("message expiry", self._message_expiry)
@@ -1040,14 +1183,19 @@ class SemanticValidator:
             guarded("admit authority", self._admit_authority)
             guarded("non-admit authority", self._non_admit_authority)
             guarded("authority interval", self._authority_interval)
-            guarded("consequence coupling", self._coupling_results)
-            guarded("decision basis", self._decision_basis)
+            guarded("consequence coupling", lambda _: self._coupling_results(interpreted))
+            guarded("decision basis", lambda _: self._decision_basis(interpreted))
+        elif protocol == "ECL-WI-1":
+            guarded("intent expiry", self._message_expiry)
+            guarded("intent context", self._work_intent_context)
         elif protocol == "EBMP-2":
             guarded("EBMP-2", self._ebmp)
-            guarded("approval record", self._approval_records)
-            guarded("control change", self._control_changes)
+            guarded("approval record", lambda _: self._approval_records(interpreted))
+            guarded("control change", lambda _: self._control_changes(interpreted))
         elif value.get("schema_version") == "ecl_adapter_binding_v1":
             guarded("adapter binding", adapter_binding_findings)
         elif value.get("schema_version") == REGISTER_SCHEMA_VERSION:
             guarded("register declarations", self._register_declarations)
+        elif value.get("schema_version") == "ecl_deployment_profile_v1":
+            guarded("deployment timing", deployment_timing_findings)
         return sorted(findings, key=lambda item: (item.rule_id, item.path, item.message))

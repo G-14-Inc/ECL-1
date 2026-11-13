@@ -1,4 +1,4 @@
-// Package canonical emits the restricted canonical JSON used by ECL-1 RC-3.
+// Package canonical emits the restricted canonical JSON used by ECL-1.
 package canonical
 
 import (
@@ -15,9 +15,12 @@ import (
 
 // Marshal returns deterministic restricted canonical JSON. Objects use UTF-16
 // code-unit key ordering, arrays retain order, strings use the shortest JSON
-// escapes required by the profile, and only integer json.Number values are
-// accepted.
+// escapes required by the profile, and numbers are exact integers. The declared
+// depth, node and encoded-byte limits are checked before serialization.
 func Marshal(value any) ([]byte, error) {
+	if err := validateValue(value); err != nil {
+		return nil, err
+	}
 	var output bytes.Buffer
 	if err := appendValue(&output, value); err != nil {
 		return nil, err
@@ -55,10 +58,14 @@ func appendValue(output *bytes.Buffer, value any) error {
 		if raw == "" || raw == "-0" {
 			return fmt.Errorf("canonical number is not an allowed integer: %q", raw)
 		}
-		for index, character := range raw {
-			if character == '-' && index == 0 {
-				continue
-			}
+		digits := raw
+		if digits[0] == '-' {
+			digits = digits[1:]
+		}
+		if digits == "" || (len(digits) > 1 && digits[0] == '0') {
+			return fmt.Errorf("canonical number is not an allowed integer: %q", raw)
+		}
+		for _, character := range digits {
 			if character < '0' || character > '9' {
 				return fmt.Errorf("canonical number is not an integer: %q", raw)
 			}

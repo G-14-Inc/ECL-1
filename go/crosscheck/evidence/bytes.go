@@ -69,7 +69,7 @@ func VerifyBytes(bundle, policy []byte, history [][]byte, options Options) (*Rep
 	}
 	report, err := Verify(value, current, options)
 	if err != nil {
-		if errors.Is(err, ErrInvalidNow) || errors.Is(err, ErrNegativeSkew) {
+		if errors.Is(err, ErrInvalidNow) || errors.Is(err, ErrNegativeSkew) || errors.Is(err, ErrReferenceSkew) {
 			return nil, nil, &InputError{Message: fmt.Sprintf("invalid evaluation time or option: %v", err)}
 		}
 		if errors.Is(err, ErrInvalidRegister) {

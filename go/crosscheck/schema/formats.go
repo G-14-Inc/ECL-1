@@ -157,6 +157,9 @@ func partition(text, separator string) (string, bool, string) {
 func bracketedNetlocValid(netloc string) bool {
 	hostAndPort := netloc
 	if at := strings.LastIndexByte(netloc, '@'); at >= 0 {
+		if strings.ContainsAny(netloc[:at], "[]") {
+			return false
+		}
 		hostAndPort = netloc[at+1:]
 	}
 	before, hasOpen, bracketed := partition(hostAndPort, "[")
@@ -165,8 +168,8 @@ func bracketedNetlocValid(netloc string) bool {
 		if before != "" {
 			return false
 		}
-		host, _, port := partition(bracketed, "]")
-		if port != "" && !strings.HasPrefix(port, ":") {
+		host, hasClose, port := partition(bracketed, "]")
+		if !hasClose || strings.ContainsAny(host+port, "[]") || (port != "" && !strings.HasPrefix(port, ":")) {
 			return false
 		}
 		hostname = host

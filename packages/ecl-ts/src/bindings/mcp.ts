@@ -48,7 +48,9 @@
  * JSON value there.
  */
 
+import { interpretedExtension } from "../registry/registries.js";
 import { BindingError, checkEventBinding } from "../binding/binding.js";
+import { objectFindings } from "../semantic/object.js";
 import { isInteger, isObject, pythonEquals, pythonStr } from "../json/value.js";
 import type { JsonObject, JsonValue } from "../json/value.js";
 import { recordSchemas } from "../schema/validator.js";
@@ -79,13 +81,14 @@ import {
 } from "./common.js";
 import type { Problem } from "./common.js";
 import { JcsError, jcsDigest } from "./jcs.js";
+import { terminalReasonFindings } from "./terminal-reason.js";
 
 export const REVISION = "2026-07-28";
 export const EXCHANGE_VERSION = "ecl_mcp_gateway_exchange_v1";
 export const EXCHANGE_SCHEMA = "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1";
 export const BINDING_EXTENSION = "ecl.ext.mcp-binding.v1";
-/** MG1-002: the requests a gateway always sends to the Decision Layer before forwarding. */
-const SIDE_EFFECTING = new Set(["tools/call", "tasks/update"]);
+/** MG1-002: complete forwarding mappings; other consequential methods remain governed. */
+const MAPPED_METHODS = new Set(["tools/call"]);
 /** The error table of MG1-006: outside the range that JSON-RPC 2.0 reserves. */
 export const ERRORS: ReadonlyMap<string, number> = new Map([
   ["denied", -31001],
@@ -99,6 +102,8 @@ export const ERRORS: ReadonlyMap<string, number> = new Map([
   ["forward-failed", -31009],
   ["obligation-unproven", -31010],
   ["evidence-unavailable", -31011],
+  ["control-blocked", -31012],
+  ["control-state-unusable", -31013],
 ]);
 const REFUSAL_FOR_OUTCOME: ReadonlyMap<string, string> = new Map([
   ["deny", "denied"],
@@ -289,6 +294,7 @@ function changed(mapping: ToolMapping, definition: JsonObject | null, server: Js
   }
   return (
     !sameDigest(current, mapping.toolDefinitionDigest) ||
+    !pythonEquals(at(server, "id"), mapping.serverId) ||
     !pythonEquals(at(server, "name"), mapping.serverName) ||
     !pythonEquals(at(server, "version"), mapping.serverVersion) ||
     !pythonEquals(at(definition, "name"), mapping.tool)
@@ -349,21 +355,23 @@ function view(record: JsonObject): View {
   };
 }
 
-/** MG1-014: the record's release guard in nanoseconds, zero when it gives none. */
-function guard(current: View): bigint {
+/** MG1-014: the explicit release guard; absence is not zero. */
+function guard(current: View): bigint | null {
   const milliseconds = integer(current.record, "release_guard_milliseconds");
-  return milliseconds === null || milliseconds < 0 ? 0n : BigInt(milliseconds) * 1_000_000n;
+  return milliseconds === null || milliseconds < 1 || milliseconds > 60000 ? null : BigInt(milliseconds) * 1_000_000n;
 }
 
 function admitted(current: View): boolean {
   return current.status === "answered" && text(current.response, "outcome") === "admit" && binds(current.request, current.response);
 }
 
-function useLimit(response: JsonValue): number | null {
-  if (text(response, "authorization", "use_policy") === "single_use") {
-    return 1;
+function useLimit(response: JsonValue): number {
+  const authorization = obj(response, "authorization") ?? {};
+  if (text(authorization, "use_policy") !== "single_use" ||
+      (holds(authorization, "max_uses") && integer(authorization, "max_uses") !== 1)) {
+    return 0; // Unsupported authority permits no use.
   }
-  return integer(response, "authorization", "max_uses");
+  return 1;
 }
 
 /**
@@ -380,26 +388,30 @@ function guardExceeded(current: View): boolean {
   }
   const releasedAt = instant(member(current.released, "observed_at"));
   const endedAt = instant(member(current.record, "terminal", "observed_at"));
-  return releasedAt !== null && endedAt !== null && endedAt > releasedAt + guard(current);
+  const heldGuard = guard(current);
+  return heldGuard !== null && releasedAt !== null && endedAt !== null && endedAt > releasedAt + heldGuard;
 }
 
 function unusable(current: View, time: bigint | null): string | null {
+  const limit = useLimit(current.response);
+  if (limit === 0) return UNSUPPORTED;
+  const heldGuard = guard(current);
+  if (heldGuard === null) return null;
   const start = instant(member(current.response, "authorization", "valid_from"));
   const end = instant(member(current.response, "authorization", "valid_until"));
-  if (time === null || start === null || end === null || !(start <= time && time < end - guard(current))) {
+  if (time === null || start === null || end === null || !(start <= time && time < end - heldGuard)) {
     return EXPIRED;
   }
-  const limit = useLimit(current.response);
   const prior = integer(current.record, "prior_uses") ?? 0;
-  if (limit !== null && prior + 1 > limit) {
+  if (prior + 1 > limit) {
     return REPLAY;
   }
   return null;
 }
 
-/** `method` names a request that MG1-002 sends to the Decision Layer. */
-function sideEffecting(method: JsonValue): boolean {
-  return typeof method === "string" && SIDE_EFFECTING.has(method);
+/** `method` has a complete forwarding mapping; this does not classify other methods as ungoverned. */
+function mappedMethod(method: JsonValue): boolean {
+  return typeof method === "string" && MAPPED_METHODS.has(method);
 }
 
 /** The key of an obligation, as the reference's (`obligation_id`, `type`) pair. */
@@ -503,10 +515,15 @@ export function dischargeProblems(value: JsonValue, response: JsonValue, path: s
  * which the record itself cannot show.
  */
 function journalFailed(record: JsonObject): boolean {
-  return (
+  const returnedFailure = (
     pythonEquals(member(record, "returned", "error", "code"), ERRORS.get("evidence-unavailable") as number) &&
     pythonEquals(member(record, "returned", "error", "data", "ecl", "code"), "evidence-unavailable")
   );
+  // A retained terminal keeps the same self-reported failure when recovery
+  // lacks the returned RPC response. This does not prove a physical failure.
+  const recordedFailure = !holds(record, "returned") && text(record, "recovery", "classification") === "outcome-recorded" &&
+    sameJson(extensionValues(obj(record, "terminal"), OUTCOME_REASON).map(value => at(value, "code")), [EVIDENCE_UNAVAILABLE]);
+  return returnedFailure || recordedFailure;
 }
 
 /** The record shows a discharge of every pre-release obligation of its admit (MG1-013). */
@@ -558,7 +575,7 @@ export function refusalCause(original: JsonObject): readonly [string, string | n
   if (
     current.mapping === null ||
     unboundProblems(current.call).length > 0 ||
-    !sideEffecting(method) ||
+    !mappedMethod(method) ||
     !pythonEquals(member(params, "name"), current.mapping.tool) ||
     (argumentsPresent && (!isObject(argumentsValue) || digestOf(argumentsValue) === null)) ||
     target(current.mapping, isObject(argumentsValue) ? argumentsValue : {}) === null
@@ -570,6 +587,9 @@ export function refusalCause(original: JsonObject): readonly [string, string | n
   }
   if (current.status === "unavailable" || current.status === null) {
     return ["decision-unavailable", UNAVAILABLE, null];
+  }
+  if (repeatedObligationIds(current.response).length > 0) {
+    return ["decision-invalid", "ecl.error.dependency-response-invalid.v1", null];
   }
   if (current.status === "invalid") {
     return ["decision-invalid", text(record, "decision", "error"), null];
@@ -587,22 +607,26 @@ export function refusalCause(original: JsonObject): readonly [string, string | n
   }
   // MG1-017: once the use is consumed, a journal that fails cancels the attempt,
   // and that failure is the refusal's cause, whatever the gateway had still to discharge.
-  if (journalFailed(record) && text(record, "terminal", "event", "state") === "cancelled") {
+  if (current.released === null && journalFailed(record) && text(record, "terminal", "event", "state") === "cancelled") {
     return ["evidence-unavailable", EVIDENCE_UNAVAILABLE, requestId];
   }
-  if (!discharged(current)) {
+  const control = controlCause(current);
+  if (control !== null) return [control[0], control[1], requestId];
+  if (!discharged(current) || staleDischarge(current)) {
     return ["obligation-unproven", OBLIGATION_UNPROVEN, requestId];
   }
-  if (journalFailed(record)) {
+  if (current.released === null && journalFailed(record)) {
     return ["evidence-unavailable", EVIDENCE_UNAVAILABLE, requestId];
   }
   // MG1-014 and MG1-015: the write begins within the declared release guard after
   // the final observation, or not at all; a cancelled terminal observed later than the release
   // event plus the guard shows a write that could not begin in time.
+  if (member(record, "release_observations", "final", "clock_regressed") === true) return ["authorization-unusable", CLOCK_REGRESSED, requestId];
   if (guardExceeded(current)) {
     return ["authorization-unusable", EXPIRED, requestId];
   }
-  const problem = unusable(current, instant(member(record, "returned_at")));
+  const observation = obj(record, "release_observations", "final") ?? obj(record, "release_observations", "initial");
+  const problem = observation === null ? null : unusable(current, instant(member(observation, "observed_at")));
   if (problem !== null) {
     return ["authorization-unusable", problem, requestId];
   }
@@ -650,7 +674,7 @@ function review(current: View): Problem[] {
   if (current.forwarded === null) {
     return [];
   }
-  if (!sideEffecting(at(current.call, "method"))) {
+  if (!mappedMethod(at(current.call, "method"))) {
     return [["/forwarded", "forwarded a request whose method has no mapping"]];
   }
   if (current.mapping === null || !pythonEquals(member(current.call, "params", "name"), current.mapping.tool)) {
@@ -717,6 +741,159 @@ function requestFromCall(current: View): Problem[] {
   return problems;
 }
 
+
+function freshnessProblems(value: JsonValue, time: bigint | null, heldGuard: bigint | null, path: string): Problem[] {
+  const problems: Problem[] = [];
+  array(value, "obligations").forEach((entry, index) => {
+    const where = `${path}/obligations/${index}`;
+    const checked = instant(member(entry, "checked_at"));
+    const obtained = instant(member(entry, "proof", "obtained_at"));
+    const until = instant(member(entry, "fresh_until"));
+    if (checked === null || obtained === null || obtained > checked || (time !== null && checked > time)) problems.push([where, "proof acquisition, check and final observation are out of order"]);
+    if (until !== null && checked !== null && checked >= until) problems.push([`${where}/fresh_until`, "the proof is not fresh when checked"]);
+    if (until !== null && time !== null && heldGuard !== null && time + heldGuard >= until) problems.push([`${where}/fresh_until`, "the proof is not fresh beyond the final observation plus guard"]);
+  });
+  return problems;
+}
+
+function staleDischarge(current: View): boolean {
+  const time = instant(member(current.record, "release_observations", "final", "observed_at"));
+  if (member(current.record, "release_observations", "final", "clock_regressed") === true) {
+    // An unreliable final wall reading cannot establish proof expiry; intrinsic order still applies.
+    return freshnessProblems(member(current.record, "obligation_discharge"), null, guard(current), "").length > 0;
+  }
+  return freshnessProblems(member(current.record, "obligation_discharge"), time, guard(current), "").length > 0;
+}
+
+function controlCause(current: View): readonly [string, string] | null {
+  for (const stage of ["initial", "final"]) {
+    const observation = obj(current.record, "release_observations", stage);
+    if (observation === null) continue;
+    const control = obj(observation, "control_state");
+    if (member(control, "halt") === true || member(control, "quarantine") === true) return ["control-blocked", "ecl.error.safe-state-required.v1"];
+    if (member(control, "revoked") === true) return ["control-blocked", "ecl.error.revoked.v1"];
+    const time = instant(member(observation, "observed_at"));
+    const until = instant(member(control, "fresh_until"));
+    const heldGuard = guard(current);
+    if (text(control, "status") !== "current" || time === null || until === null || (heldGuard !== null && time + heldGuard >= until)) return ["control-state-unusable", "ecl.error.safe-state-required.v1"];
+  }
+  return null;
+}
+
+/** MG1-014 steps 4–6 follow preparation; an initial observation alone precedes consumption. */
+function preparationRequired(current: View): boolean {
+  return current.released !== null || current.forwarded !== null
+    || obj(current.record, "obligation_discharge") !== null
+    || obj(current.record, "release_observations", "final") !== null;
+}
+
+/** MG1-016 supplies this recovery terminal's reason; other checks retain state/use duties. */
+function newlySettledUnconsumedAdmit(current: View): boolean {
+  return text(current.recovery, "classification") === "not-released" && admitted(current) &&
+    text(current.record, "terminal", "event", "state") === "denied";
+}
+
+function releaseObservations(current: View): Problem[] {
+  const problems: Problem[] = [];
+  const prepared = obj(current.record, "prepared");
+  const laterStep = preparationRequired(current);
+  if (laterStep && prepared === null) problems.push(["/prepared", "later release steps require their preparation evidence"]);
+  if (current.released !== null) {
+    if (unusable(current, instant(member(current.released, "observed_at"))) !== null) problems.push(["/released/observed_at", "released when the authorization was unusable"]);
+  }
+  const observations = obj(current.record, "release_observations");
+  const needed = prepared !== null || laterStep;
+  if (needed && observations === null) problems.push(["/release_observations", "the attempt lacks its initial and final control observations"]);
+  if (observations === null) return problems;
+  if (!admitted(current)) problems.push(["/release_observations", "release observations require a verified admit"]);
+  if (guard(current) === null) problems.push(["/release_guard_milliseconds", "release observations require an explicit positive guard"]);
+  const initial = obj(observations, "initial");
+  const final = obj(observations, "final");
+  if (initial === null) problems.push(["/release_observations/initial", "the initial control observation is absent"]);
+  if ((current.released !== null || current.forwarded !== null) && final === null) problems.push(["/release_observations/final", "the release lacks its final control observation"]);
+  const times: Array<[string, bigint | null]> = [];
+  if (initial !== null) times.push(["/release_observations/initial/observed_at", instant(member(initial, "observed_at"))]);
+  if (prepared !== null) times.push(["/prepared/observed_at", instant(member(prepared, "observed_at"))]);
+  if (current.released !== null && current.forwarded === null) times.push(["/released/observed_at", instant(member(current.released, "observed_at"))]);
+  if (final !== null) {
+    times.push(["/release_observations/final/observed_at", instant(member(final, "observed_at"))]);
+    if (current.released !== null && !sameJson(member(final, "observed_at"), member(current.released, "observed_at")) && !(current.forwarded === null && controlCause(current) !== null)) problems.push(["/release_observations/final/observed_at", "not the release event's final observation"]);
+  }
+  if (obj(current.record, "terminal") !== null) times.push(["/terminal/observed_at", instant(member(current.record, "terminal", "observed_at"))]);
+  let prior = instant(member(current.response, "issued_at"));
+  const clockRegressed = member(final, "clock_regressed") === true;
+  if (clockRegressed && current.released !== null) problems.push(["/released", "released after the recorded clock comparison failed"]);
+  if (clockRegressed && current.forwarded !== null) problems.push(["/forwarded", "forwarded after the recorded clock comparison failed"]);
+  for (const [path, time] of times) {
+    if (time === null || (prior !== null && time < prior && !(clockRegressed && path === "/release_observations/final/observed_at"))) problems.push([path, "release observations and retained events are out of order"]);
+    prior = time;
+  }
+  if (needed && initial !== null && unusable(current, instant(member(initial, "observed_at"))) !== null) problems.push(["/release_observations/initial", "authority was consumed outside its initial window or use policy"]);
+  if (needed && initial !== null && controlCause(view({ ...current.record, release_observations: { initial } })) !== null) problems.push(["/release_observations/initial", "authority was consumed despite blocked or unusable control state"]);
+  const cause = controlCause(current);
+  if (cause !== null && current.forwarded !== null) problems.push(["/forwarded", "forwarded despite blocked or unusable control state"]);
+  const journalCancellation = current.released === null && journalFailed(current.record) && text(current.record, "terminal", "event", "state") === "cancelled";
+  if (cause !== null && current.forwarded === null && obj(current.record, "terminal") !== null && !journalCancellation) {
+    if (text(current.record, "terminal", "event", "state") !== (needed ? "cancelled" : "denied")) problems.push(["/terminal/event/state", "the control refusal does not match consumption"]);
+    const reasons = extensionValues(obj(current.record, "terminal"), OUTCOME_REASON).map((value) => at(value, "code"));
+    if (!newlySettledUnconsumedAdmit(current) && !sameJson(reasons, [cause[1]])) problems.push(["/terminal/extensions", "the terminal does not record the control refusal reason"]);
+  }
+  return problems;
+}
+
+function decisionValidation(current: View): Problem[] {
+  const duplicate = repeatedObligationIds(current.response).length > 0;
+  const unbound = current.request !== null && current.response !== null && !binds(current.request, current.response);
+  const problems: Problem[] = [];
+  if (unbound && current.status !== "invalid") problems.push(["/decision", "an unbound response must be recorded as an invalid decision"]);
+  if (duplicate && (current.status !== "invalid" || text(current.record, "decision", "error") !== "ecl.error.dependency-response-invalid.v1")) problems.push(["/decision", "duplicate obligation ids require decision-invalid before consumption"]);
+  if ((duplicate || unbound || current.status === "invalid") && (member(current.record, "terminal", "event", "decision") !== null || member(current.record, "prepared") !== null || current.released !== null || current.forwarded !== null || member(current.record, "terminal", "event", "authority") !== null || text(current.record, "terminal", "event", "state") === "cancelled")) problems.push(["/decision", "an invalid decision cannot consume authority or prepare a release"]);
+  return problems;
+}
+
+function suppliedEvents(current: View): Problem[] {
+  const problems: Problem[] = [];
+  let attempt: string | null = null;
+  for (const [name, kind, state] of [["prepared", "release_prepared", "prepared"], ["released", "execution_released", "released"], ["terminal", "execution_terminal", null]] as const) {
+    const event = obj(current.record, name);
+    if (event === null) continue;
+    if (text(event, "event_type") !== kind || text(event, "event", "kind") !== "execution" || (state !== null && text(event, "event", "state") !== state)) {
+      problems.push([`/${name}/event_type`, "not the event type and state declared for this field"]);
+      continue;
+    }
+    const heldAttempt = text(event, "event", "attempt_id");
+    if (heldAttempt === null || (attempt !== null && heldAttempt !== attempt)) problems.push([`/${name}/event/attempt_id`, "the supplied events name different attempts"]);
+    attempt = heldAttempt;
+    if (name === "terminal") continue;
+    if (current.request === null || !admitted(current)) {
+      problems.push([`/${name}`, "release evidence requires a verified admit and its request"]);
+      continue;
+    }
+    if (name === "released") {
+      problems.push(...callBindingProblems(current, event, "/released/extensions"));
+      try { checkEventBinding(event, current.request, current.response ?? undefined); }
+      catch (error) {
+        if (!(error instanceof BindingError)) throw error;
+        problems.push([`/${name}`, `the release event is not bound: ${error.code}`]);
+      }
+    } else {
+      for (const key of ["workflow_id", "root_trace_id", "attempt"]) if (!sameJson(member(event, "workflow", key), member(current.request, "workflow", key))) problems.push([`/${name}/workflow/${key}`, "not the request's workflow and attempt"]);
+      for (const key of ["operation", "parameters_digest", "target"]) {
+        const repeated = member(event, "event", key); const expected = member(current.request, "action", key);
+        const matches = key === "parameters_digest" ? sameDigest(repeated, expected) : key === "target" ? sameJson(member(repeated, "uri"), member(expected, "uri")) : sameJson(repeated, expected);
+        if (repeated !== null && !matches) problems.push([`/${name}/event/${key}`, "not the request action member"]);
+      }
+      if (!sameJson(member(event, "event", "action_id"), member(current.request, "action", "action_id"))) problems.push([`/${name}/event/action_id`, "not the request's action"]);
+      if (!sameJson(member(event, "event", "decision", "uri"), member(current.response, "message_id")) || !sameDigest(member(event, "event", "decision", "digest"), digestOf(current.response))) problems.push([`/${name}/event/decision`, "not the verified decision and its digest"]);
+    }
+    const authority = member(event, "event", "authority");
+    if (!sameJson(member(authority, "uri"), member(current.response, "authorization", "authorization_id")) || !sameDigest(member(authority, "digest"), digestOf(member(current.response, "authorization")))) problems.push([`/${name}/event/authority`, "not the consumed authorization and its digest"]);
+  }
+  const declared = integer(current.record, "release_guard_milliseconds");
+  if (current.released !== null && (declared === null || integer(current.released, "event", "release_guard_ms") !== declared)) problems.push(["/released/event/release_guard_ms", "not an explicit matching record release guard"]);
+  return problems;
+}
+
 function forward(current: View): Problem[] {
   const { forwarded } = current;
   if (forwarded === null) {
@@ -726,6 +903,9 @@ function forward(current: View): Problem[] {
     return [["/forwarded", "forwarded without an admit bound to the decision request"]];
   }
   const problems: Problem[] = [];
+  for (const name of ["prepared", "released", "release_guard_milliseconds"]) {
+    if (member(current.record, name) === null) problems.push([`/${name}`, "a forwarded exchange requires this release evidence"]);
+  }
   const forwardedAt = instant(member(forwarded, "forwarded_at"));
   if (unusable(current, forwardedAt) !== null) {
     problems.push(["/forwarded/forwarded_at", "forwarded when the authorization was unusable"]);
@@ -860,15 +1040,23 @@ function boundBy(current: View): Bound {
 }
 
 /**
- * MG1-013: a forward on an admit that leaves obligations to Enforcement before the release rests on
- * a release event that records the discharge of each of them.
+ * MG1-013: retained discharge is internally consistent even without a release;
+ * a recorded release additionally establishes final proof freshness.
  */
 function obligations(current: View): Problem[] {
-  if (current.forwarded === null || !admitted(current)) {
-    return [];
-  }
+  if (!admitted(current)) return [];
   const [required] = preReleaseObligations(current.response);
-  if (required.length === 0) {
+  const held = obj(current.record, "obligation_discharge");
+  if (current.forwarded === null && current.released === null) {
+    if (held === null) return [];
+    if (required.length === 0) return [["/obligation_discharge", "the admit carries no pre-release obligation to discharge"]];
+    const problems = dischargeProblems(held, current.response, "/obligation_discharge");
+    const at = member(current.record, "release_observations", "final", "clock_regressed") === true ? null : instant(member(current.record, "release_observations", "final", "observed_at"));
+    // Step 4 precedes a reliable Step 5. Freshness may fail and cause the refusal.
+    problems.push(...freshnessProblems(held, at, null, "/obligation_discharge"));
+    return problems;
+  }
+  if (required.length === 0 && extensionEntries(current.released, DISCHARGE_EXTENSION).length === 0 && obj(current.record, "obligation_discharge") === null) {
     return [];
   }
   if (current.released === null) {
@@ -876,7 +1064,7 @@ function obligations(current: View): Problem[] {
   }
   const entries: Array<readonly [number, JsonObject]> = [];
   array(current.released, "extensions").forEach((item, index) => {
-    if (isObject(item) && pythonEquals(at(item, "id"), DISCHARGE_EXTENSION)) {
+    if (isObject(item) && pythonEquals(at(item, "id"), DISCHARGE_EXTENSION) && interpretedExtension(current.released, item)) {
       entries.push([index, item]);
     }
   });
@@ -887,7 +1075,8 @@ function obligations(current: View): Problem[] {
   const [index, entry] = only;
   const value = at(entry, "value");
   const problems = dischargeProblems(value, current.response, `/released/extensions/${index}/value`);
-  const held = obj(current.record, "obligation_discharge");
+  problems.push(...freshnessProblems(value, instant(member(current.released, "observed_at")), guard(current), `/released/extensions/${index}/value`));
+  if (held === null) problems.push(["/obligation_discharge", "the record lacks the release discharge"]);
   if (held !== null && !sameJson(held, value)) {
     problems.push(["/obligation_discharge", "not the discharge that the release records"]);
   }
@@ -895,8 +1084,8 @@ function obligations(current: View): Problem[] {
 }
 
 function refusal(current: View): Problem[] {
-  if (current.forwarded !== null || current.recovery !== null) {
-    // A recovered record holds no response returned to the governed AI system (MG1-016).
+  if (current.forwarded !== null || (current.recovery !== null && !holds(current.record, "returned"))) {
+    // A retained recovered response is subject to the same checks.
     return [];
   }
   const returned = obj(current.record, "returned") ?? {};
@@ -910,6 +1099,7 @@ function refusal(current: View): Problem[] {
   }
   const cause = refusalCause(current.record);
   if (cause === null) {
+    problems.push(["/returned/error", "the retained observations do not establish a defined refusal cause"]);
     return problems;
   }
   const [name, reason, requestId] = cause;
@@ -921,11 +1111,7 @@ function refusal(current: View): Problem[] {
   if (requestId !== null) {
     expected["request_id"] = requestId;
   }
-  // MG1-014 step 5: a gateway refuses an authorization as unusable with
-  // `ecl.error.clock-regressed.v1` when its clock readings disagreed, which the record cannot show;
-  // a checker accepts that reason where the record shows the window as the cause.
-  const regressed: JsonObject | null = name === "authorization-unusable" ? { ...expected, reason: CLOCK_REGRESSED } : null;
-  if (!pythonEquals(member(returned, "error", "code"), ERRORS.get(name) as number) || !(pythonEquals(data, expected) || (regressed !== null && pythonEquals(data, regressed)))) {
+  if (!pythonEquals(member(returned, "error", "code"), ERRORS.get(name) as number) || !sameJson(data, expected)) {
     problems.push(["/returned/error", `the cause ${name} has another error`]);
   }
   return problems;
@@ -979,7 +1165,7 @@ function recovered(current: View, terminal: JsonObject | null): Problem[] {
     } else if (current.status === "answered" && outcome !== null && REFUSAL_FOR_OUTCOME.has(outcome)) {
       expected = new Set([REFUSAL_FOR_OUTCOME.get(outcome) as string]);
     }
-    if (current.forwarded !== null || state === null || !expected.has(state)) {
+    if (current.forwarded !== null || current.released !== null || state === null || !expected.has(state)) {
       problems.push(["/terminal/event/state", "a request that was not released is recorded as released"]);
     }
   }
@@ -994,19 +1180,37 @@ function recovered(current: View, terminal: JsonObject | null): Problem[] {
 function completionProblems(current: View, terminal: JsonObject): Problem[] {
   const values = extensionValues(terminal, BINDING_EXTENSION);
   const completed = member(current.forwarded, "forward_completed_at");
+  const problems: Problem[] = [];
+  if (current.recovery === null && obj(current.record, "server_response") !== null && completed === null) problems.push(["/forwarded/forward_completed_at", "an answered forward lacks its completion observation"]);
+  const unanswered = obj(current.record, "server_response") === null && text(current.recovery, "classification") !== "outcome-recorded";
+  if (unanswered && completed !== null) problems.push(["/forwarded/forward_completed_at", "an unanswered forward cannot record a server answer time"]);
+  const completedAt = instant(completed), terminalAt = instant(member(terminal, "observed_at"));
+  if (completedAt !== null && terminalAt !== null && completedAt > terminalAt) problems.push(["/forwarded/forward_completed_at", "the completion observation follows the terminal observation"]);
   if (values.length !== 1) {
-    return [];
+    return problems;
   }
   const value = values[0] as JsonObject;
+  if (unanswered && "response_digest" in value) problems.push(["/terminal/extensions", "an unanswered forward cannot record a server response digest"]);
   if (!pythonEquals(at(value, "forward_completed_at"), completed)) {
-    return [["/terminal/extensions", "the terminal does not record the forward's completion"]];
+    problems.push(["/terminal/extensions", "the terminal does not record the forward's completion"]);
   }
-  return [];
+  return problems;
+}
+
+/** EBMP2-075: any carried call binding retains every request member. */
+function callBindingProblems(current: View, event: JsonValue, path: string): Problem[] {
+  const requestValues = extensionValues(current.request, BINDING_EXTENSION);
+  if (requestValues.length !== 1) return []; // The request rule diagnoses absence or ambiguity.
+  const expected = requestValues[0] as JsonObject;
+  return extensionValues(event, BINDING_EXTENSION)
+    .filter((value) => Object.entries(expected).some(([name, content]) => !holds(value, name) || !sameJson(at(value, name), content)))
+    .map(() => [path, "the event does not retain the request's call binding"]);
 }
 
 function resultBound(current: View): Problem[] {
   const terminal = obj(current.record, "terminal");
   const problems: Problem[] = recovered(current, terminal);
+  problems.push(...callBindingProblems(current, terminal, "/terminal/extensions"));
   const authority = member(terminal, "event", "authority");
   if (authority !== null && admitted(current) && !sameDigest(member(authority, "digest"), digestOf(member(current.response, "authorization")))) {
     problems.push(["/terminal/event/authority/digest", "not the digest of the granted authorization"]);
@@ -1023,14 +1227,18 @@ function resultBound(current: View): Problem[] {
     // cancelled attempt records a committed use. The record does not expose the use store. A journal
     // that failed (MG1-017) may have recorded the consumed use and not the prepared release, which
     // the record then cannot show.
-    const consumed = member(current.record, "prepared") !== null || current.released !== null;
-    if (consumed && terminal === null) {
+    const consumed = member(current.record, "prepared") !== null || preparationRequired(current);
+    if (terminal === null && (consumed || (current.request !== null && current.recovery === null && !journalFailed(current.record)))) {
       problems.push(["/terminal", "a consumed attempt has no terminal evidence"]);
     }
     const unseen = current.recovery !== null || journalFailed(current.record);
     const allowed: ReadonlySet<string> = consumed ? new Set(["cancelled"]) : unseen ? new Set([...NON_RELEASE, "cancelled"]) : NON_RELEASE;
     if (terminal !== null && (state === null || !allowed.has(state))) {
       problems.push(["/terminal/event/state", "a refused request is recorded as released"]);
+    }
+    // MG1-005 and MG1-014: cancellation records a committed use even without prepared evidence.
+    if (state === "cancelled" && admitted(current) && (integer(current.record, "prior_uses") ?? 0) >= 1) {
+      problems.push(["/prior_uses", "a cancelled attempt consumes an authorization already used before this request"]);
     }
     // MG1-010, EBMP2-049, EBMP2-053: a cancelled attempt names the authorization it consumed,
     // bound to the admit that granted it; a terminal that consumed no use names none.
@@ -1040,6 +1248,25 @@ function resultBound(current: View): Problem[] {
     }
     if (authority !== null && ((state !== null && NON_RELEASE.has(state)) || !admitted(current))) {
       problems.push(["/terminal/event/authority", "a terminal that consumed no use names the authority"]);
+    }
+    const cause = current.recovery === null || holds(current.record, "returned") || text(current.recovery, "classification") === "outcome-recorded" ? refusalCause(current.record) : null;
+    const reasons = extensionValues(terminal, OUTCOME_REASON).map((value) => at(value, "code"));
+    // A newly settled not-released recovery need not know the original cause.
+    const causeRetained = current.recovery === null || holds(current.record, "returned") || text(current.recovery, "classification") === "outcome-recorded";
+    if (terminal !== null && state === "cancelled" && causeRetained && reasons.length !== 1) {
+      problems.push(["/terminal/extensions", "a cancelled refusal requires one outcome reason"]);
+    }
+    // MG1-016 supplies a newly settled unconsumed admit's recovery reason.
+    // Other retained non-decision refusals keep their original first cause.
+    const decisionOutcomeRefusal = cause !== null && [...REFUSAL_FOR_OUTCOME.values()].includes(cause[0]);
+    if (terminal !== null && cause !== null && cause[1] !== null && !newlySettledUnconsumedAdmit(current) &&
+        (state === "cancelled" || (state !== null && NON_RELEASE.has(state) && !decisionOutcomeRefusal))) {
+      if (!sameJson(reasons, [cause[1]])) problems.push(["/terminal/extensions", "the terminal does not record the retained refusal reason"]);
+    }
+    if (terminal !== null && admitted(current) && cause !== null && cause[0] === "evidence-unavailable" && state !== "cancelled") {
+      if (state !== "denied") problems.push(["/terminal/event/state", "an unconsumed evidence failure must end denied"]);
+      const reasons = extensionValues(terminal, OUTCOME_REASON).map((value) => at(value, "code"));
+      if (!sameJson(reasons, [EVIDENCE_UNAVAILABLE])) problems.push(["/terminal/extensions", "the unconsumed terminal does not record evidence-unavailable"]);
     }
     if (terminal !== null && current.request !== null) {
       try {
@@ -1053,39 +1280,47 @@ function resultBound(current: View): Problem[] {
     }
     return problems;
   }
-  if (current.recovery !== null) {
-    // The journal does not show what the governed AI system received (MG1-016).
-    if (terminal !== null && current.request !== null) {
-      try {
-        checkEventBinding(terminal, current.request, current.response ?? undefined);
-      } catch (error) {
-        if (!(error instanceof BindingError)) {
-          throw error;
-        }
-        problems.push(["/terminal", `the terminal event is not bound: ${error.code}`]);
-      }
-    }
-    return problems;
-  }
   const serverResponse = obj(current.record, "server_response");
+  if (serverResponse !== null && !sameJson(at(serverResponse, "id"), at(current.call, "id"))) {
+    problems.push(["/server_response/id", "the server response does not answer the forwarded call"]);
+  }
   const returned = obj(current.record, "returned");
   // MG1-010: the response returned is the one the evidence binds, as the same JSON values, so
   // `false` returned as `0` is another response.
-  if (serverResponse !== null && !sameJson(returned, returnedFor(serverResponse))) {
+  if (serverResponse !== null && (current.recovery === null || returned !== null) && !sameJson(returned, returnedFor(serverResponse))) {
     problems.push(["/returned", "not the response the evidence binds, as MG1-010 returns it"]);
   }
-  if (serverResponse === null && !pythonEquals(member(returned, "error", "code"), ERRORS.get("forward-failed") as number)) {
+  if (serverResponse === null && (current.recovery === null || returned !== null) && !pythonEquals(member(returned, "error", "code"), ERRORS.get("forward-failed") as number)) {
     problems.push(["/returned", "an unanswered forward is not reported as forward-failed"]);
   }
+  if (serverResponse === null && returned !== null && (!sameJson(member(returned, "error", "data", "ecl"), { code: "forward-failed", reason: UNAVAILABLE }) || member(returned, "jsonrpc") !== "2.0" || !sameJson(member(returned, "id"), member(current.call, "id")) || holds(returned, "result"))) problems.push(["/returned/error", "forward-failed lacks its defined error data or call binding"]);
   if (terminal === null) {
     return [...problems, ["/terminal", "a forwarded request has no terminal evidence"]];
   }
   const state = terminalState(serverResponse);
-  if (text(terminal, "event", "state") !== state) {
+  if ((serverResponse !== null || text(current.recovery, "classification") !== "outcome-recorded") && text(terminal, "event", "state") !== state) {
     problems.push(["/terminal/event/state", `the server's response reads as ${state}`]);
   }
+  // Recovery may lack both observations; it may not contradict a retained observation.
   problems.push(...completionProblems(current, terminal));
   const values = extensionValues(terminal, BINDING_EXTENSION);
+  if (serverResponse === null && text(current.recovery, "classification") === "outcome-recorded") {
+    const retainedState = text(terminal, "event", "state");
+    if (retainedState === null || !["succeeded", "failed", "unknown"].includes(retainedState)) problems.push(["/terminal/event/state", "the recorded outcome is outside the MCP response mapping"]);
+    if ((retainedState === "succeeded" || retainedState === "failed") && (values.length !== 1 || !isObject(at(values[0] as JsonObject, "response_digest")))) problems.push(["/terminal/extensions", "a completed recorded outcome requires its response digest"]);
+  }
+  const entries = extensionEntries(terminal, BINDING_EXTENSION);
+  const requestValues = extensionValues(current.request, BINDING_EXTENSION);
+  // MG1-010: an unanswered forward still retains the admitted call and mapping.
+  const bindingFields = ["mcp_revision", "method", "server_id", "server_name", "server_version", "tool", "tool_definition_digest", "mapping_id", "params_digest", "input_responses_digest", "request_state_digest"];
+  if (entries.length !== 1 || values.length !== 1) {
+    problems.push(["/terminal/extensions", "the forwarded terminal lacks one mcp-binding"]);
+  } else if (requestValues.length !== 1 || !sameJson(
+    Object.fromEntries(bindingFields.filter((name) => holds(values[0], name)).map((name) => [name, at(values[0] as JsonObject, name)])),
+    Object.fromEntries(bindingFields.filter((name) => holds(requestValues[0], name)).map((name) => [name, at(requestValues[0] as JsonObject, name)])),
+  )) {
+    problems.push(["/terminal/extensions", "the terminal does not retain the admitted call and mapping binding"]);
+  }
   let bound: JsonObject | null = null;
   if (serverResponse !== null) {
     try {
@@ -1117,10 +1352,10 @@ function resultBound(current: View): Problem[] {
  * registry for this profile is one function above and one row here.
  */
 export const RULES: ReadonlyArray<readonly [string, (current: View) => Problem[]]> = [
-  [FAILURE_RULE, failure],
+  [FAILURE_RULE, (current) => [...failure(current), ...decisionValidation(current)]],
   [REVIEW_RULE, review],
   [REQUEST_RULE, requestFromCall],
-  [FORWARD_RULE, forward],
+  [FORWARD_RULE, (current) => [...forward(current), ...releaseObservations(current), ...suppliedEvents(current)]],
   [OBLIGATION_RULE, obligations],
   [REFUSAL_RULE, refusal],
   [RESULT_RULE, resultBound],
@@ -1159,6 +1394,10 @@ export function check(record: JsonObject): Finding[] {
   }
   const current = view(decoded);
   const found = RULES.flatMap(([rule, check]) => findings(rule, check(current)));
+  const responseOutcome = current.status === "answered" && binds(current.request, current.response)
+    && repeatedObligationIds(current.response).length === 0 ? text(current.response, "outcome") : null;
+  found.push(...terminalReasonFindings(obj(decoded, "terminal"), responseOutcome, true)
+    .map(item => ({ ...item, path: "/terminal" + item.path })));
   if (current.status === "answered") {
     // MG1-007: a decision held as answered is a verified decision response, which carries exactly
     // one decision basis and satisfies DCMP2-053 as any decision response does.
@@ -1172,5 +1411,12 @@ export function check(record: JsonObject): Finding[] {
     held.push(["decision", "response"]);
   }
   found.push(...messageFindings(decoded, ...held));
+  // MG1-010: nesting an EBMP event does not bypass its object or critical-extension rules.
+  for (const name of ["prepared", "released", "terminal"] as const) {
+    const event = obj(decoded, name);
+    if (event !== null) {
+      found.push(...objectFindings(event).map((item) => ({ ...item, path: "/" + name + item.path })));
+    }
+  }
   return found;
 }

@@ -1,5 +1,10 @@
 # Start with ECL-1
 
+This is the local Version 1 public-review candidate, source `1.0.2-review.1`.
+Record the exact source digest with an implementation report or assessment.
+Historical release evidence, candidate checks, publication approval and any
+dated review window have separate records.
+
 ECL-1 specifies a control boundary for consequential AI actions and evidence
 that others can check. Choose the first task that matches what you need.
 
@@ -11,10 +16,12 @@ that others can check. Choose the first task that matches what you need.
 | Assess a claim | [Reviewer guide](reviewer-guide.md) and [decision examples](decision-examples.md) | Procedures for checking implementation evidence, including questions a wire-format test cannot settle |
 | Contribute a correction | [Contributing](../governance/CONTRIBUTING.md) | A public proposal with scope, evidence and recorded disposition |
 
-The public package contains the standard, profiles, schemas, evidence,
+The candidate source package contains the standard, profiles, schemas, evidence,
 conformance corpus, three verifiers and the teaching example. The tools can run
-without a G-14 account or product. Dependency installation may need network
-access; verification runs offline. The licenses and patent pledge are linked
+without a G-14 account or product. The [design guide](review-design-decisions.md)
+explains the request-expiry and continuation-history choices in this candidate.
+Dependency installation may need network access; verification runs offline.
+The licenses and patent pledge are linked
 from [LICENSING](../LICENSING.md).
 
 ## First implementation exercise
@@ -32,8 +39,11 @@ same caller-chosen trust policy and evaluation time.
 
 Record the environment, exact public version/digest, commands, elapsed time,
 errors, maintainer assistance and unsupported behavior. A failed or unsupported
-case remains visible. Do not call the exercise L1 conformance until all its
-applicable requirements and assessment obligations have been satisfied.
+case remains visible. An L1–L4 claim requires a full-system or bounded
+action-class mediation boundary and all applicable requirements and assessment
+obligations. A component or profile implementation report carries no overall
+ECL level; it states its applicable requirement results, capabilities, versions,
+evidence and limitations.
 
 An outside developer can report the result using the
 [implementation profile](../conformance/EXTERNAL_IMPLEMENTATION_PROFILE.md).
@@ -42,7 +52,16 @@ claims under the published rules; a listing supplies no certification.
 
 ## Check a contribution using public files
 
-After installing the Python verifier, use:
+From the public package root, use your development environment's Python
+executable to install the verifier and the repository-check dependencies:
+
+```sh
+python -m pip install ./packages/ecl-verify pytest==8.3.5 -r tools/requirements-render.txt
+```
+
+Pytest and the pinned Markdown rendering tools are needed for these repository
+checks. Installing the verifier for evidence verification requires only
+`./packages/ecl-verify`. Then run the checks:
 
 ```sh
 python scripts/check_public.py --language python
@@ -53,11 +72,14 @@ python scripts/check_public.py --language go
 Use the Python executable of the environment into which you installed the
 verifier. Omitting `--language` runs all three. The TypeScript checks install
 locked npm dependencies; all three commands retain their nonzero failures.
+A Git checkout records its actual `HEAD` revision automatically. For a source
+archive without Git metadata, add `--revision <source-commit>` using the exact
+source commit in that archive's manifest. Do not substitute an all-zero revision.
 The public CI uses the same command. This is the public verification and
 teaching-example suite; the release policy defines the additional release
 and assessment evidence.
 
-The editors regenerate derived normative artifacts when a contribution needs
-tooling outside the public package. Submit the source change and its proposed
-expected results; an editor attaches the regenerated diff and checks before
-merge. Do not hand-edit generated outputs to claim that regeneration passed.
+The source package includes the generators used for its derived normative
+artifacts. Submit the source change, its proposed expected results, and the
+regenerated diff with the check reports. Generated metadata records unavailable
+private assessment inputs separately; their absence is not a passing check.

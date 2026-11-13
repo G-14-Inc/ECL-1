@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import re
 from collections.abc import Mapping
 from types import MappingProxyType
 from typing import Any
@@ -37,6 +38,8 @@ from .common import (
     obj,
     one_way_response_problems,
     release_problems,
+    response_binding_findings,
+    same_digest,
     text,
 )
 
@@ -107,9 +110,17 @@ RULES = (
 
 
 def _pointer(path: str) -> list[str] | None:
-    if not path.startswith("/"):
+    if not path.startswith("/") or re.search(r"~(?![01])", path):
         return None
     return [part.replace("~1", "/").replace("~0", "~") for part in path.split("/")[1:]]
+
+
+def _array_index(token: str, length: int) -> int | None:
+    """RFC 6901 array index, bounded before integer conversion; '-' names no existing value."""
+    if not re.fullmatch(r"0|[1-9][0-9]*", token) or len(token) > len(str(length)):
+        return None
+    index = int(token)
+    return index if index < length else None
 
 
 def _overlaps(first: list[str], second: list[str]) -> bool:
@@ -123,8 +134,9 @@ def _expected_parameters(
     """The tool arguments after a `modify` decision's modifications, or None if there are none.
 
     None means the modifications object is one the pinned text forbids (a wholesale replacement
-    with edits, or edits whose targets overlap), cannot be applied (a redaction path that does not
-    resolve inside the arguments), or yields arguments outside the restricted canonical profile.
+    with edits, or a redaction whose target overlaps an override), cannot be applied (a redaction
+    path that does not resolve inside the arguments), or yields arguments outside the restricted
+    canonical profile.
     Each of these ends in a deny of the original with no new request (AC1-005).
     """
     if type(modifications) is not dict:
@@ -132,7 +144,7 @@ def _expected_parameters(
     wholesale = modifications.get("modified_content")
     redactions = modifications.get("redactions", [])
     overrides = modifications.get("parameter_overrides", {})
-    if wholesale is not None:
+    if "modified_content" in modifications:
         if "redactions" in modifications or "parameter_overrides" in modifications:
             return None
         try:
@@ -158,12 +170,26 @@ def _expected_parameters(
         result[name] = copy.deepcopy(value)
     for item, parts in zip(redactions, paths, strict=True):
         replacement = item.get("replacement", REDACTED)
+        if type(replacement) is not str:
+            return None
         container: Any = result
         for step in parts[:-1]:
-            container = container.get(step) if type(container) is dict else None
-        if type(container) is not dict or parts[-1] not in container:
+            if type(container) is dict:
+                container = container.get(step)
+            elif type(container) is list:
+                index = _array_index(step, len(container))
+                container = container[index] if index is not None else None
+            else:
+                return None
+        if type(container) is dict and parts[-1] in container:
+            container[parts[-1]] = replacement
+        elif type(container) is list:
+            index = _array_index(parts[-1], len(container))
+            if index is None:
+                return None
+            container[index] = replacement
+        else:
             return None
-        container[parts[-1]] = replacement
     return result if digest_of(result) is not None else None
 
 
@@ -183,10 +209,16 @@ def chain_problems(entries: list[Any]) -> list[tuple[str, str]]:
     """(path, message) for each entry whose hash or link the recomputation does not reproduce."""
     problems: list[tuple[str, str]] = []
     previous: str | None = None
+    entry_ids: set[str] = set()
     for index, entry in enumerate(entries):
         if type(entry) is not dict:
             problems.append((f"/chain/{index}", "a ContextEntry is not an object"))
             continue
+        entry_id = entry.get("entry_id")
+        if type(entry_id) is str:
+            if entry_id in entry_ids:
+                problems.append((f"/chain/{index}/entry_id", "a ContextEntry identifier is repeated within the session"))
+            entry_ids.add(entry_id)
         if entry.get("previous_hash") != previous:
             problems.append((f"/chain/{index}/previous_hash", "the link is not the prior head"))
         try:
@@ -211,16 +243,16 @@ def _modifications_digest(result: Mapping[str, Any]) -> dict[str, str] | None:
 def deadline(record: Mapping[str, Any], disposition: str) -> int | None:
     """When the Guardian's ask or defer stops waiting, in nanoseconds since the epoch: the time
     the adapter observed its decision plus `ask_details.timeout_seconds` or
-    `defer_details.resolution_timeout_ms`. None when the record lacks either."""
+    `defer_details.resolution_timeout_ms`. None when the record lacks either or its timeout violates the pinned native schema."""
     received = instant(member(record, "guardian", "observed_at"))
     if disposition == "ask":
         seconds = integer(record, "guardian", "result", "ask_details", "timeout_seconds")
-        span = None if seconds is None else seconds * _NANOSECONDS
+        span = None if seconds is None or seconds < 1 else seconds * _NANOSECONDS
     else:
         milliseconds = integer(
             record, "guardian", "result", "defer_details", "resolution_timeout_ms"
         )
-        span = None if milliseconds is None else milliseconds * _MILLISECOND
+        span = None if milliseconds is None or milliseconds < 0 else milliseconds * _MILLISECOND
     return None if received is None or span is None else received + span
 
 
@@ -243,7 +275,10 @@ def _expiry(
         return []
     problems: list[tuple[str, str]] = []
     if outcome in ("hold", "challenge"):
-        problems += deferral_problems(member(record, "response"), deadline(record, disposition))
+        bound = deadline(record, disposition)
+        if bound is None:
+            problems.append(("/guardian/result", "a waiting response requires a valid Guardian timeout"))
+        problems += deferral_problems(member(record, "response"), bound)
         expires = instant(member(record, "response", "expires_at"))
         released = instant(member(record, "release", "released_at"))
         if expires is not None and released is not None and released >= expires:
@@ -327,20 +362,10 @@ def _judgment(record: Mapping[str, Any], outcome: str | None) -> list[tuple[str,
         path = f"/inputs/{index}"
         derived = member(item, "derived_from")
         name = text(item, "input")
-        if evaluator != DETERMINISTIC_EVALUATOR or channel not in AUTHENTICATED_CHANNELS:
-            expected = guardian_class(evaluator, [], channel=channel)
-        elif type(derived) is not list:
-            if text(item, "class") == "verifiable":
-                problems.append(
-                    (
-                        path + "/derived_from",
-                        "a verifiable Guardian decision names the inputs its request carried",
-                    )
-                )
-            elif name is not None and (recorded := text(item, "class")) is not None:
-                required[input_key(name)] = recorded
+        if type(derived) is not list and text(record, "guardian", "status") == "decided":
+            problems.append((path + "/derived_from", "a Guardian decision explicitly names every input its request carried, or an empty list"))
             continue
-        else:
+        if type(derived) is list:
             unknown = [
                 offset
                 for offset, name in enumerate(derived)
@@ -355,6 +380,10 @@ def _judgment(record: Mapping[str, Any], outcome: str | None) -> list[tuple[str,
                 [classes.get(input_key(name)) for name in derived if isinstance(name, str)],
                 channel=channel,
             )
+        else:
+            # No Guardian decision exists after a failed exchange. Its unavailable
+            # input is recorded without inventing request contents or derivation.
+            expected = guardian_class(evaluator, [], channel=channel)
         if text(item, "class") != expected:
             problems.append((path + "/class", f"this input must be {expected}"))
         if name is not None:
@@ -372,15 +401,74 @@ def _judgment(record: Mapping[str, Any], outcome: str | None) -> list[tuple[str,
     return problems + input_problems(inputs, outcome)
 
 
+def _signed_request_binding(record: Mapping[str, Any]) -> list[tuple[str, str]]:
+    """Consistency of the adapter's recorded authenticated context, not signature proof."""
+    if text(record, "guardian", "channel") != "signed":
+        return []
+    params = obj(record, "guardian", "request_params")
+    if text(record, "guardian", "status") == "failed":
+        # A failed route asserts no verified decision. Retained submitted params still
+        # bind their local digest, without inventing an unavailable signed result.
+        guardian = obj(record, "guardian") or {}
+        if "request_params" not in guardian and "request_digest" not in guardian:
+            return []
+        if params is None or "request_digest" not in guardian:
+            return [("/guardian", "retained request params and their digest occur together")]
+        try:
+            expected = jcs.digest(params)
+        except jcs.JcsError:
+            return [("/guardian/request_params", "the request binding has no RFC 8785 canonical form")]
+        if not same_digest(guardian.get("request_digest"), expected):
+            return [("/guardian/request_digest", "the recorded digest does not bind this request")]
+        return []
+    context = obj(record, "guardian", "authenticated_context")
+    request = obj(record, "request")
+    if params is None or context is None or request is None:
+        return [("/guardian", "a signed channel records the evaluated params and authenticated context")]
+    problems: list[tuple[str, str]] = []
+    try:
+        params_digest, request_digest = jcs.digest(params), jcs.digest(request)
+    except jcs.JcsError:
+        return [("/guardian/request_params", "the request binding has no RFC 8785 canonical form")]
+    for path, actual, expected in (
+        ("/guardian/request_digest", member(record, "guardian", "request_digest"), params_digest),
+        ("/guardian/authenticated_context/request_digest", context.get("request_digest"), params_digest),
+        ("/guardian/authenticated_context/dcmp_request_digest", context.get("dcmp_request_digest"), request_digest),
+    ):
+        if not same_digest(actual, expected):
+            problems.append((path, "the recorded digest does not bind this request"))
+    for name, expected in (
+        ("session_id", record.get("session_id")),
+        ("request_id", member(record, "guardian", "result", "request_id")),
+        ("method", record.get("hook")),
+    ):
+        if context.get(name) != expected:
+            problems.append((f"/guardian/authenticated_context/{name}", "the authenticated context is not this session and step"))
+    chain = array(record, "chain")
+    if chain:
+        step = next((entry for entry in chain if isinstance(entry, dict) and entry.get("step_id") == context.get("request_id")), None)
+        if step is None or step.get("request_hash") != params_digest["value"]:
+            problems.append(("/chain", "the signed step must commit to the evaluated request params"))
+    return problems
+
+
 def _recorded(record: Mapping[str, Any]) -> list[tuple[str, str]]:
+    # A retained native chain remains evidence even when this step failed or
+    # its decision record is incomplete. Do not discard its integrity findings.
+    chain = array(record, "chain")
+    chain_errors = chain_problems(chain)
     result = obj(record, "guardian", "result")
     response = obj(record, "response")
-    if text(record, "guardian", "status") != "decided" or result is None or response is None:
-        return []
+    if text(record, "guardian", "status") != "decided":
+        return chain_errors
+    if result is None:
+        return [("/guardian/result", "a decided Guardian exchange retains its result")] + chain_errors
+    if response is None:
+        return chain_errors
     entries = extension_entries(response, DECISION_EXTENSION)
     values = extension_values(response, DECISION_EXTENSION)
     if len(entries) != 1 or len(values) != 1:
-        return [("/response/extensions", "the response records the Guardian decision once")]
+        return [("/response/extensions", "the response records the Guardian decision once")] + chain_errors
     value = values[0]
     problems: list[tuple[str, str]] = []
     for name, expected in (
@@ -394,12 +482,19 @@ def _recorded(record: Mapping[str, Any]) -> list[tuple[str, str]]:
             problems.append(
                 (f"/response/extensions/{name}", f"the recorded {name} is not the Guardian's")
             )
-    if member(record, "audit_profile") is True and type(value.get("request_hash")) is not str:
-        problems.append(("/response/extensions/request_hash", "ACS-Audit records the request hash"))
-    chain = array(record, "chain")
+    if (member(record, "audit_profile") is True or (text(record, "guardian", "channel") == "signed" and array(record, "chain"))) and type(value.get("request_hash")) is not str:
+        problems.append(("/response/extensions/request_hash", "ACS-Audit or a signed request chain records the request hash"))
+    params = obj(record, "guardian", "request_params")
+    if params is not None and "request_hash" in value:
+        try:
+            expected_hash = jcs.digest(params)["value"]
+        except jcs.JcsError:
+            expected_hash = None
+        if expected_hash is None or value.get("request_hash") != expected_hash:
+            problems.append(("/response/extensions/request_hash", "the recorded request hash does not match the evaluated request params"))
     if not chain:
         return problems
-    problems += chain_problems(chain)
+    problems += chain_errors
     step = next(
         (
             entry
@@ -412,7 +507,7 @@ def _recorded(record: Mapping[str, Any]) -> list[tuple[str, str]]:
         problems.append(
             ("/response/extensions/chain_hash", "the recorded head is not the step's chain head")
         )
-    elif "request_hash" in value and step.get("request_hash") != value.get("request_hash"):
+    if step is not None and "request_hash" in value and step.get("request_hash") != value.get("request_hash"):
         problems.append(
             ("/response/extensions/request_hash", "the recorded request hash is not the step's")
         )
@@ -438,6 +533,7 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
         )
     result += findings(RELEASE_RULE, release_problems(member(record, "release"), candidates))
     result += findings(RECORD_RULE, _recorded(record))
+    result += findings(RECORD_RULE, _signed_request_binding(record))
     result += findings(BASIS_RULE, basis_problems(record, "guardian"))
     result += findings(BASIS_RULE, modification_basis_problems(record))
     result += findings(
@@ -447,6 +543,9 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
             (("request",), ("response",)),
             (("modification_request",), ("modification_response",)),
         ),
+    )
+    result += response_binding_findings(
+        record, ("request", "response"), ("modification_request", "modification_response")
     )
     result += message_findings(
         record,

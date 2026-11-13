@@ -1,0 +1,524 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "public-review-design-decisions",
+  "vectors": [
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-admit-before",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-admit-before.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: admit evaluation before exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.request-binding-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "request-expiry-admit-equal",
+      "negates": [
+        "DCMP2-047"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-admit-equal.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: admit evaluation equal exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.request-binding-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "request-expiry-admit-after",
+      "negates": [
+        "DCMP2-047"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-admit-after.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: admit evaluation after exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-deny-before",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-deny-before.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: deny evaluation before exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-deny-equal",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-deny-equal.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: deny evaluation equal exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-deny-after",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-deny-after.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: deny evaluation after exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-hold-before",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-hold-before.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: hold evaluation before exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-hold-equal",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-hold-equal.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: hold evaluation equal exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-hold-after",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-hold-after.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: hold evaluation after exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-challenge-before",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-challenge-before.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: challenge evaluation before exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-challenge-equal",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-challenge-equal.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: challenge evaluation equal exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-challenge-after",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-challenge-after.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: challenge evaluation after exclusive request expiry; before/after differ by one nanosecond"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "request-expiry-evaluation-before-issue-after",
+      "path": "conformance/suites/public-review-design-decisions/request-expiry-evaluation-before-issue-after.json",
+      "requirement_ids": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-05: evaluation is one nanosecond before expiry, issue is one nanosecond after expiry and authorization outlives the request"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "continuation-admitted-then-deny",
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-deny.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: chronological admitted continuation followed by deny; all approval, request and challenge objects held"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "continuation-admitted-then-deny-approval-absent",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-deny-approval-absent.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078",
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: chronological admitted continuation followed by deny; named approval omitted"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "continuation-admitted-then-challenge",
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-challenge.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: chronological admitted continuation followed by challenge; all approval, request and challenge objects held"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "continuation-admitted-then-challenge-approval-absent",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-challenge-approval-absent.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078",
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: chronological admitted continuation followed by challenge; named approval omitted"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "continuation-admitted-then-admit",
+      "negates": [
+        "EBMP2-078"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-admit.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: chronological admitted continuation followed by admit; all approval, request and challenge objects held"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "continuation-admitted-then-admit-approval-absent",
+      "negates": [
+        "EBMP2-078"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-admit-approval-absent.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: chronological admitted continuation followed by admit; named approval omitted"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "continuation-admitted-then-deny-reversed-array",
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-deny-reversed-array.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: reverse envelope array without changing signed chronological reuse history"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "continuation-admitted-then-admit-reversed-array",
+      "negates": [
+        "EBMP2-078"
+      ],
+      "path": "conformance/suites/public-review-design-decisions/continuation-admitted-then-admit-reversed-array.json",
+      "requirement_ids": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "generator": "scripts/generate_design_decision_vectors.py",
+        "kind": "mutation",
+        "mutation": "DESIGN-08: reverse envelope array without changing signed chronological reuse history"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    }
+  ]
+}

@@ -1487,6 +1487,34 @@
     },
     {
       "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/allOf/0/if/properties/material_affiliate_or_reseller",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": true
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/0/then/properties/independence/allOf/0/if/properties/material_affiliate_or_reseller' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/ce8cc511013eeb9e69c6a0d9655ad457",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/properties/claim_approval_authority_within_24_months",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": false
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/0/then/properties/independence/properties/claim_approval_authority_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/c4552752a06e0d9a76ecc4a36c25d1a0",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_kind": "enum",
         "json_schema_pointer": "/allOf/0/then/properties/independence/properties/class",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
@@ -1510,6 +1538,34 @@
       "description": "Allowed enum wire value at '/allOf/0/then/properties/independence/properties/class' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
       "id": "https://externalcontrollayer.ai/ns/wire-value/41c9fe5afaac105ce9af396c3a43543d",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/properties/direct_implementation_within_24_months",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": false
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/0/then/properties/independence/properties/direct_implementation_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/383fa248766520e123b9a90a5300d215",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/properties/managed_operator_within_24_months",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": false
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/0/then/properties/independence/properties/managed_operator_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/ae436b0ef355d274033d24392ed17563",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -1557,15 +1613,225 @@
     },
     {
       "attributes": {
-        "constraint_kind": "enum",
-        "json_schema_pointer": "/properties/boundary_class",
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/2/if/properties/level",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
-        "wire_value": "bounded-action-class-mediation"
+        "wire_value": 1
       },
       "compatibility": "behavioral",
-      "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
-      "id": "https://externalcontrollayer.ai/ns/wire-value/4a5305734272796060247669e68ebb1f",
-      "introduced_in": "1.0-rc.3",
+      "description": "Allowed const wire value at '/allOf/2/if/properties/level' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/f59edf583148f767e9e013735302e6ee",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/2/then/properties/claim_decision/properties/status/not",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "conditional_conformance"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/2/then/properties/claim_decision/properties/status/not' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/e40252a716bd0ba8194ea297932d3214",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/3/if/properties/findings/contains/properties/disposition",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "accepted_condition"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/3/if/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/4ed1aa5a8f516065c9e15dc7057caf46",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/3/if/properties/findings/contains/properties/disposition",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "open"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/3/if/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/a95b9d521b884c8b74f9af9ef740418e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/3/if/properties/findings/contains/properties/severity",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "critical"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/3/if/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/7aeefff3459fcba67514c036291d4424",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/3/then/properties/claim_decision/properties/status",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "assessment_only"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/3/then/properties/claim_decision/properties/status' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/22bb8003725bbbf50864a93aa1c00aa5",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/4/if/properties/findings/contains/properties/disposition",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "accepted_condition"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/4/if/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/3480c330ae6afff5b449eb00e123be53",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/4/if/properties/findings/contains/properties/disposition",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "open"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/4/if/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/48b065a197309bba155d4d5e8fc593d8",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/4/if/properties/findings/contains/properties/severity",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "major"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/4/if/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/07b7ba095d84f597f0313a7505b6e12e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/4/then/properties/claim_decision/properties/status/not",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "full_conformance"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/4/then/properties/claim_decision/properties/status/not' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/fb644548a42be3e2be1050a5a26fbd06",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/5/if/properties/checklist/contains/properties/result",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "fail"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/5/if/properties/checklist/contains/properties/result' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/003f184c8a887872722586bdad07a2d2",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/disposition",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "accepted_condition"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/5/then/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/14311186dac5a78f06d45dd4e75ec36b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/disposition",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "open"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/5/then/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/3a7289178e0c4791840186176d1088e9",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/severity",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "critical"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/5/then/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/e8072acb3364d2810d071b6a196dfd81",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/severity",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "major"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/5/then/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/d3edff635635dc83e5144bc2b5a471a9",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/severity",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "wire_value": "minor"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/5/then/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/b136533c83da90ec9835838a58f97200",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -1574,11 +1840,11 @@
         "constraint_kind": "enum",
         "json_schema_pointer": "/properties/boundary_class",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
-        "wire_value": "component-or-profile-implementation"
+        "wire_value": "bounded-action-class-mediation"
       },
       "compatibility": "behavioral",
       "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
-      "id": "https://externalcontrollayer.ai/ns/wire-value/591a457f04d311f3d3e4fbcc550c8f0a",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/4a5305734272796060247669e68ebb1f",
       "introduced_in": "1.0-rc.3",
       "owner_class": "ecl-standard",
       "status": "active"
@@ -1650,6 +1916,90 @@
       "description": "Allowed enum wire value at '/$defs/obligation/properties/satisfaction' in https://externalcontrollayer.ai/ns/schema/common/1.",
       "id": "https://externalcontrollayer.ai/ns/wire-value/ecb4bc28287799fd73dfec886834b25b",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/applicable_requirements/items/allOf/0/if/properties/result",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "wire_value": "fail"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/applicable_requirements/items/allOf/0/if/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/1b9f5dd694dab872f7e6f48aeb96027e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/applicable_requirements/items/allOf/0/if/properties/result",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "wire_value": "pass"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/applicable_requirements/items/allOf/0/if/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/3e231544a21121d0878d1acf8299c4e4",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/result",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "wire_value": "fail"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/applicable_requirements/items/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/bca0784306586c236ee3eb1994d267d7",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/result",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "wire_value": "not_assessed"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/applicable_requirements/items/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/85a2c3d037e3d94f3a0d034f60bb1dcf",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/result",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "wire_value": "pass"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/applicable_requirements/items/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/0043e9f286a459fadc81e16998ff1afa",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/properties/schema_version",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "wire_value": "ecl_component_implementation_report_v1"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/properties/schema_version' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/9e9cd951039ff0111aedcf7e1b91c778",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -1893,15 +2243,43 @@
     },
     {
       "attributes": {
-        "constraint_kind": "enum",
-        "json_schema_pointer": "/properties/boundary_class",
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/4/if/properties/level",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
-        "wire_value": "bounded-action-class-mediation"
+        "wire_value": 1
       },
       "compatibility": "behavioral",
-      "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1.",
-      "id": "https://externalcontrollayer.ai/ns/wire-value/00c6de523d9d394c66928fe480592956",
-      "introduced_in": "1.0-rc.3",
+      "description": "Allowed const wire value at '/allOf/4/if/properties/level' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/703bb077b186c693f7705555291d9139",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/4/then/properties/status/not",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+        "wire_value": "conditional_conformance"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/4/then/properties/status/not' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/60f14fbfa2862df4af0c607704ded263",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/5/if/properties/status",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+        "wire_value": "full_conformance"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/5/if/properties/status' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/430b31e7c32f9c1b16f28ec4d3cba831",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -1910,11 +2288,11 @@
         "constraint_kind": "enum",
         "json_schema_pointer": "/properties/boundary_class",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
-        "wire_value": "component-or-profile-implementation"
+        "wire_value": "bounded-action-class-mediation"
       },
       "compatibility": "behavioral",
       "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1.",
-      "id": "https://externalcontrollayer.ai/ns/wire-value/77a951db8296e53f5b9f410a06b2e4ca",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/00c6de523d9d394c66928fe480592956",
       "introduced_in": "1.0-rc.3",
       "owner_class": "ecl-standard",
       "status": "active"
@@ -2257,15 +2635,15 @@
     },
     {
       "attributes": {
-        "constraint_kind": "enum",
-        "json_schema_pointer": "/$defs/authorization/properties/use_policy",
+        "constraint_kind": "const",
+        "json_schema_pointer": "/$defs/authorization/properties/max_uses",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
-        "wire_value": "bounded_multi_use"
+        "wire_value": 1
       },
       "compatibility": "behavioral",
-      "description": "Allowed enum wire value at '/$defs/authorization/properties/use_policy' in https://externalcontrollayer.ai/ns/schema/dcmp/2.",
-      "id": "https://externalcontrollayer.ai/ns/wire-value/528add8507ea756139223d38b11206f2",
-      "introduced_in": "1.0-rc.3",
+      "description": "Allowed const wire value at '/$defs/authorization/properties/max_uses' in https://externalcontrollayer.ai/ns/schema/dcmp/2.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/e250246b5eabcca44275a63ba2d2e73e",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -2523,15 +2901,15 @@
     },
     {
       "attributes": {
-        "constraint_kind": "enum",
-        "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy",
+        "constraint_kind": "const",
+        "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request/properties/max_uses",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
-        "wire_value": "bounded_multi_use"
+        "wire_value": 1
       },
       "compatibility": "behavioral",
-      "description": "Allowed enum wire value at '/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy' in https://externalcontrollayer.ai/ns/schema/dcmp/2.",
-      "id": "https://externalcontrollayer.ai/ns/wire-value/aa476e3844cb022079d18a972de16d70",
-      "introduced_in": "1.0-rc.3",
+      "description": "Allowed const wire value at '/$defs/decisionRequest/allOf/1/properties/authority_request/properties/max_uses' in https://externalcontrollayer.ai/ns/schema/dcmp/2.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/038c4cf70cb379411311b3166f137b9c",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -3363,6 +3741,34 @@
     },
     {
       "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/1/then/properties/delivery_surfaces/contains",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": "hosted_control_plane"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/1/then/properties/delivery_surfaces/contains' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/533c68d46d988a32638d4fd20fff478d",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/allOf/1/then/properties/delivery_surfaces/contains",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": "self_managed_control_plane"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/allOf/1/then/properties/delivery_surfaces/contains' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/5a81a6d8bc67459b5291aafdf7e33688",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_kind": "const",
         "json_schema_pointer": "/allOf/2/if/properties/model",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
@@ -3442,6 +3848,300 @@
       "description": "Allowed const wire value at '/allOf/4/then/properties/delivery_surfaces/contains' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
       "id": "https://externalcontrollayer.ai/ns/wire-value/10e2a7e64db6d99d61bd158e0b0333f7",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/5/then/properties/timing_case/properties/trusted_time_or_secure_monotonic",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": true
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/5/then/properties/timing_case/properties/trusted_time_or_secure_monotonic' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/a79d3eab404d8bd63e72ac157d74c5f5",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/6/if/properties/claim_level",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 1
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/6/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/ff43e41d119af1b81feafc4f8e2150fc",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": true
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/6/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/70896c0312c8605e6923e29ce2521566",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 86400
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/6/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/d17cfde0b58d8827ad893ccf1a3c2afd",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 259200
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/6/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/b00bb699846f424ce278a205f054db32",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 86400
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/6/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/abd8eaf21660ed37c116df87d3611bbc",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/7/if/properties/claim_level",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 2
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/7/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/c22c72324d13362ff7c4864f9e2e86ff",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": true
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/7/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/d98c2d72f4be88b658726f6d52b2cf51",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 900
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/7/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/fc2343d301ee8e575b91b47445106230",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 86400
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/7/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/215bdd56076c8161baa06d8e19bb1d80",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 14400
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/7/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/e079c142cc0408703669e536adb2e43b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/8/if/properties/claim_level",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 3
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/8/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/e45b5c5d546a0a18bb050fdad599507d",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": true
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/8/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/c4d4d6f4ee0a61ef7099813f998823ca",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 300
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/8/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/0e74c5a4eb117b7b218bc748495f5877",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 14400
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/8/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/f61e24ca1e1bbabed0198de7af08d10f",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 3600
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/8/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/8ecf7ff9debaf65bb652b816fb339782",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/9/if/properties/claim_level",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 4
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/9/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/964d5194f77854a5304325d454fbcf56",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": true
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/9/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/40a89355bc05fb9d3e7ddb07ab081ded",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 60
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/9/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/4a3ae18b760b8a9197324a55f6738c7b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 3600
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/9/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/af126326b7b4788269c6daa66e3d3ddb",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "wire_value": 900
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/allOf/9/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/d561b7aa893665effd42af127ea8211e",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -5001,6 +5701,20 @@
     },
     {
       "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/$defs/obligation/allOf/1/if/properties/support_class",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+        "wire_value": "supporting_evidence_only"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/$defs/obligation/allOf/1/if/properties/support_class' in https://externalcontrollayer.ai/ns/schema/mapping-packet/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/a6d33f4e8be98372708f09d07be56245",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_kind": "enum",
         "json_schema_pointer": "/$defs/obligation/properties/support_class",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
@@ -5206,6 +5920,20 @@
       "description": "Allowed enum wire value at '/properties/validation_state' in https://externalcontrollayer.ai/ns/schema/mapping-packet/1.",
       "id": "https://externalcontrollayer.ai/ns/wire-value/d0e1458717dafa3e086af4de1b6eaa46",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/$defs/sha256Digest/allOf/1/properties/algorithm",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/offline-verification-package/1",
+        "wire_value": "ecl.digest.sha-256.v1"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/$defs/sha256Digest/allOf/1/properties/algorithm' in https://externalcontrollayer.ai/ns/schema/offline-verification-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/e636c0860edccf3980029cbd9bd683f3",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -5729,6 +6457,34 @@
     },
     {
       "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/properties/dependencies/items/allOf/0/if/properties/class",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+        "wire_value": "advisory"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/properties/dependencies/items/allOf/0/if/properties/class' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/615efe79fc5ed83ed7a45dfdf1516c13",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "const",
+        "json_schema_pointer": "/properties/dependencies/items/allOf/0/then/properties/supplies_required_proof",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+        "wire_value": false
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed const wire value at '/properties/dependencies/items/allOf/0/then/properties/supplies_required_proof' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/a664e22b7cd6219407f8bf3499bd6985",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_kind": "enum",
         "json_schema_pointer": "/properties/dependencies/items/properties/class",
         "schema_id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
@@ -6200,6 +6956,74 @@
       "owner_class": "ecl-standard",
       "status": "superseded",
       "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/8fd8d924894b5f058cd54c82c73b0b00"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/boundary_class",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "superseded_in": "1.0.2-review.1",
+        "supersession_reason": "ROOT-007: component or profile implementations now use a separate component-implementation-report document without an ECL conformance level. This points to the replacement document discriminator, not an equivalent conformance-boundary value.",
+        "wire_value": "component-or-profile-implementation"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/assessment-package/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/591a457f04d311f3d3e4fbcc550c8f0a",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "superseded",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/9e9cd951039ff0111aedcf7e1b91c778"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/properties/boundary_class",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+        "superseded_in": "1.0.2-review.1",
+        "supersession_reason": "ROOT-007: component or profile implementations now use a separate component-implementation-report document without an ECL conformance level. This points to the replacement document discriminator, not an equivalent conformance-boundary value.",
+        "wire_value": "component-or-profile-implementation"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/77a951db8296e53f5b9f410a06b2e4ca",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "superseded",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/9e9cd951039ff0111aedcf7e1b91c778"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/$defs/authorization/properties/use_policy",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+        "superseded_in": "1.0.2-review.1",
+        "supersession_reason": "AC-006: the public-review candidate supports only single-use authorization. This points to the supported single_use value, not equivalent multi-use semantics. The historical operational allocation remains reserved and unsupported.",
+        "wire_value": "bounded_multi_use"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/$defs/authorization/properties/use_policy' in https://externalcontrollayer.ai/ns/schema/dcmp/2.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/528add8507ea756139223d38b11206f2",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "superseded",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/b88c468a8e6f25de0b58b17c28dbbfe9"
+    },
+    {
+      "attributes": {
+        "constraint_kind": "enum",
+        "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy",
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+        "superseded_in": "1.0.2-review.1",
+        "supersession_reason": "AC-006: the public-review candidate supports only single-use authorization. This points to the supported single_use value, not equivalent multi-use semantics. The historical operational allocation remains reserved and unsupported.",
+        "wire_value": "bounded_multi_use"
+      },
+      "compatibility": "behavioral",
+      "description": "Allowed enum wire value at '/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy' in https://externalcontrollayer.ai/ns/schema/dcmp/2.",
+      "id": "https://externalcontrollayer.ai/ns/wire-value/aa476e3844cb022079d18a972de16d70",
+      "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "superseded",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/f5a57898bc79673a7c632b7f06529f42"
     }
   ],
   "registry_id": "https://externalcontrollayer.ai/ns/registry/schema-wire-values",

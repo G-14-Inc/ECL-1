@@ -44,7 +44,7 @@ func VerifyBytes(archive, policy []byte, history [][]byte, options Options) (*ev
 	}
 	report, err := Verify(archive, current, options)
 	if err != nil {
-		if errors.Is(err, evidence.ErrInvalidNow) || errors.Is(err, evidence.ErrNegativeSkew) || errors.Is(err, ErrInvalidLimits) {
+		if errors.Is(err, evidence.ErrInvalidNow) || errors.Is(err, evidence.ErrNegativeSkew) || errors.Is(err, evidence.ErrReferenceSkew) || errors.Is(err, ErrInvalidLimits) {
 			return nil, nil, &evidence.InputError{Message: fmt.Sprintf("invalid evaluation time or option: %v", err)}
 		}
 		if errors.Is(err, evidence.ErrInvalidRegister) {

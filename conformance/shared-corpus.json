@@ -11,10 +11,12 @@
     "document-validation",
     "extension-version-rule",
     "document-extension-rules",
+    "deployment-timing-case",
     "key-role-separation",
     "binding-basis-agreement-rule",
     "otel-export-keyed-digests",
-    "offline-package-verification"
+    "offline-package-verification",
+    "work-intent-contract"
   ],
   "required_capabilities": [
     "strict-json",
@@ -24,6 +26,496 @@
   ],
   "schema_version": "ecl_shared_corpus_v1",
   "vectors": [
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-aarm-nonterminal-state",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-aarm-release-in-terminal-slot",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-aarm-terminal-control",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-context-derivation-control",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-context-missing-actor",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-context-missing-judgment",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-context-wrong-judgment",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-missing-derivation-actor-supplied",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-missing-derivation-judgment",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-missing-derivation-verifiable",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-bound",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-envelope-domain",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-no-chain-request-hash",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-no-context",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-substituted-params",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-wrong-dcmp-request-digest",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-wrong-method",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-wrong-request-digest",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-wrong-session",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-acs-signed-wrong-step",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-actor-supplied-supports",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-after-endpoint",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-corrupt-issuer-signature",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-future-iat-first-use",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-future-iat-retained",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-identity-new-jti",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-inclusive-endpoint-first-use",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-inclusive-endpoint-replay-refused",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-inclusive-endpoint-retained",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-judgment-supports",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-missing-basis",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-ordinary-key",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-ordinary-key-constant-signature",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-request-unknown-critical",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-00",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-01",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-02",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-03",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-04",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-05",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-06",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-07",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-08",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-09",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-10",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-11",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-12",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-small-order-13",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-oauth-unknown-critical",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-advisory-required-proof",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "repair-safe-state-all-frontiers",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-missing-buffered-evidence",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-missing-clock-discontinuities",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-missing-consumed-authorities",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-missing-policy-epochs",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-missing-revocations",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-safe-state-missing-unresolved-effects",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "repair-safe-state-required-asynchronous",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "repair-safe-state-required-cached",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "repair-safe-state-required-hot-path",
+      "suite": "ecl-1-public-review-repair-bindings"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-aarm-nonterminal-state",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-aarm-terminal-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-decided-result-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-decided-without-result",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-decided-without-result-and-dependencies",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-failed-signed-before-submission-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-failed-signed-paired-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-failed-signed-without-digest",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-acs-failed-signed-without-params",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "repair-coverage-acs-modify-digest-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "decision-basis-rule",
+      "id": "repair-coverage-acs-modify-without-digest",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "repair-coverage-advisory-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-coverage-advisory-required-proof",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-assessment-conditional-l1",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-assessment-l1-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-claim-conditional-l1",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-claim-l1-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-mapping-supporting-evidence-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-mapping-supporting-without-evidence",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "document-validation",
+      "id": "repair-coverage-mapping-supporting-without-surface",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-complete-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-control-status-enum",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-control-without-freshness",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-forward-without-preparation",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-prepared-control",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-prepared-without-guard",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-release-journal-shape",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-release-journal-without-final",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "repair-coverage-mcp-release-journal-without-guard",
+      "suite": "ecl-1-public-review-repair-coverage"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "single-use-admit-absent-maximum-control",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "single-use-admit-boolean-maximum-refused",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "single-use-admit-bounded-policy-unsupported",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "single-use-admit-maximum-two-refused",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "single-use-dpop-other-authorization-cache-control",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "semantic-rules",
+      "id": "single-use-request-absent-maximum-control",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "single-use-request-boolean-maximum-refused",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "single-use-request-bounded-policy-unsupported",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "single-use-request-maximum-two-refused",
+      "suite": "ecl-1-public-review-single-use-policy"
+    },
     {
       "capability": "binding-profile-rules",
       "id": "aarm-invalid-admit-without-verifiable-basis",
@@ -675,6 +1167,556 @@
       "suite": "ecl-1-v1.0-canonical"
     },
     {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-active-minor-with-historical-critical-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-conditional-critical-artifact-reference",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-conditional-major-artifact-reference",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-conditional-minor-artifact-reference",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-critical-assessment-only-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-no-finding",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-critical-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-critical-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-major-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-major-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-minor-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-minor-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-failed-item-only-observation",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-critical-accepted-condition",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-critical-open",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-critical-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-critical-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-major-accepted-condition",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-major-open",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-major-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-major-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-minor-accepted-condition",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-minor-open",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-minor-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-minor-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-observation-accepted-condition",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-observation-open",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-observation-rejected",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-full-observation-remediated",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l1-conflicts-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l1-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l1-history-omitted-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-affiliate-exception-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-claim-approval-authority-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-direct-implementation-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-history-omitted",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-managed-operator-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l2-material-affiliate-or-reseller",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-affiliate-exception-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-claim-approval-authority-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-direct-implementation-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-history-omitted",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-managed-operator-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l3-material-affiliate-or-reseller",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-affiliate-exception-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-claim-approval-authority-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-direct-implementation-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-history-omitted",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-managed-operator-within-24-months",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-assessment-l4-material-affiliate-or-reseller",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-claim-assessment-only-remediation-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-claim-full-conditional-remediation",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-claim-full-empty-limitations-expiry-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-approved-connected-revocation-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-approved-evidence-export-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-approved-offline-staleness-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-baseline-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-false-baseline-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-false-baseline-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-false-baseline-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-stricter-zero-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-unapproved-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-unapproved-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l1-unapproved-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-approved-connected-revocation-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-approved-evidence-export-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-approved-offline-staleness-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-baseline-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-false-baseline-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-false-baseline-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-false-baseline-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-stricter-zero-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-unapproved-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-unapproved-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l2-unapproved-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-approved-connected-revocation-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-approved-evidence-export-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-approved-offline-staleness-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-baseline-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-false-baseline-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-false-baseline-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-false-baseline-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-stricter-zero-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-unapproved-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-unapproved-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-unapproved-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l3-untrusted-order",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-approved-connected-revocation-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-approved-evidence-export-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-approved-offline-staleness-seconds-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-baseline-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-false-baseline-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-false-baseline-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-false-baseline-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-stricter-zero-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-unapproved-connected-revocation-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-unapproved-evidence-export-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-unapproved-offline-staleness-seconds",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-deployment-l4-untrusted-order",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-hosted-control-plane-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-invalid-interval--1",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-invalid-interval-1",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-invalid-interval-none",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-invalid-interval-true",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-no-control-plane",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-no-timing",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-deployment-contract-federated-self-managed-control-plane-control",
+      "suite": "ecl-1-v1.0-claim-deployment-contract"
+    },
+    {
       "capability": "control-extension-rules",
       "id": "approval-invalid-decided-too-soon",
       "suite": "ecl-1-v1.0-control-extensions"
@@ -1028,6 +2070,26 @@
       "capability": "control-extension-rules",
       "id": "runtime-configuration-valid-request",
       "suite": "ecl-1-v1.0-control-extensions"
+    },
+    {
+      "capability": "deployment-timing-case",
+      "id": "deployment-timing-case-exchange-boundary--1",
+      "suite": "ecl-1-v1.0-deployment-timing-case"
+    },
+    {
+      "capability": "deployment-timing-case",
+      "id": "deployment-timing-case-exchange-boundary-0",
+      "suite": "ecl-1-v1.0-deployment-timing-case"
+    },
+    {
+      "capability": "deployment-timing-case",
+      "id": "deployment-timing-case-exchange-boundary-1",
+      "suite": "ecl-1-v1.0-deployment-timing-case"
+    },
+    {
+      "capability": "deployment-timing-case",
+      "id": "deployment-timing-case-exchange-zero-control",
+      "suite": "ecl-1-v1.0-deployment-timing-case"
     },
     {
       "capability": "document-validation",
@@ -3355,6 +4417,381 @@
       "suite": "ecl-1-v1.0-key-roles"
     },
     {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-absent-map",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-array",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-boolean",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-null",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-number",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-object",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-unicode-whitespace",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-access-whitespace",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-array-map",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-complete-policy-control",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-arabic-digit",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-boolean",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-calendar-month",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-combined",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-day-seconds",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-empty-period",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-empty-string",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-empty-time",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-exponent",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-fractional-day",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-fractional-hour",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-fractional-minute",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-fractional-second",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-fractional-year",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-fullwidth-digit",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-hour",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-large-integer",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-leading-space",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-leading-zeros",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-lowercase",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-missing-fraction-seconds",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-missing-integer-seconds",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-month-minutes",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-negative-component",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-negative-sign",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-ninety-seconds",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-null",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-number",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-positive-sign",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-reordered-date",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-reordered-time",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-repeated-year",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-signed-seconds",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-sixty-minutes",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-thirty-days",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-crlf",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-line-separator",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-newline",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-paragraph-separator",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-space",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-time-day",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-trailing-time-year",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-weeks",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-word",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-year",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-year-days",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-year-hours",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-zero-days",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-zero-seconds",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-duration-zero-years",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-empty-access",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-empty-encryption",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-empty-map",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-empty-residency",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-empty-revocation",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-empty-supersession",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-missing-access",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-missing-encryption",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-missing-five-area-declarations",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-missing-residency",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-missing-revocation",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-missing-supersession",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-scoped-inapplicability-control",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-string-map",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
+      "capability": "document-validation",
+      "id": "lifecycle-policy-contract-unknown-policy-area",
+      "suite": "ecl-1-v1.0-lifecycle-policy-contract"
+    },
+    {
       "capability": "binding-profile-rules",
       "id": "mcp-binding-invalid-method-outside-enum",
       "suite": "ecl-1-v1.0-mcp-gateway"
@@ -3417,6 +4854,11 @@
     {
       "capability": "binding-profile-rules",
       "id": "mcp-invalid-encoded-content-within-profile",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-invalid-encoded-noncharacter-id-forwarded",
       "suite": "ecl-1-v1.0-mcp-gateway"
     },
     {
@@ -3941,11 +5383,6 @@
     },
     {
       "capability": "binding-profile-rules",
-      "id": "mcp-valid-noncharacter-id-forwarded",
-      "suite": "ecl-1-v1.0-mcp-gateway"
-    },
-    {
-      "capability": "binding-profile-rules",
       "id": "mcp-valid-null-arguments-refused",
       "suite": "ecl-1-v1.0-mcp-gateway"
     },
@@ -4022,6 +5459,11 @@
     {
       "capability": "binding-profile-rules",
       "id": "mcp-valid-stale-proof-cancelled",
+      "suite": "ecl-1-v1.0-mcp-gateway"
+    },
+    {
+      "capability": "binding-profile-rules",
+      "id": "mcp-valid-supplementary-id-forwarded",
       "suite": "ecl-1-v1.0-mcp-gateway"
     },
     {
@@ -4530,6 +5972,146 @@
       "suite": "ecl-1-v1.0-otel-export"
     },
     {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-array",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "repair-harness-envelope-budget-before-payload",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-extension-before-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-invalid-signature-control",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-invalid-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-media-before-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-missing-policy-and-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-missing-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-policy-before-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-policy-budget-before-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-scalar",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "envelope-signature-verification",
+      "id": "repair-harness-envelope-valid-control",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-incomplete-no-terminal",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-invalid-signer-revoked-before-own-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-valid-attestation-extra-signature-not-verifying",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-valid-observation-corroborates",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-valid-observation-signer-revoked-after-waiver",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-valid-succeeded-with-register",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "repair-harness-scope-valid-trusted-time",
+      "suite": "ecl-1-v1.0-repair-harness"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-distinct-classes-control",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-duplicate-conflicting",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-duplicate-conflicting-reversed",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-duplicate-dependency",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-declaration-contract-duplicate-identical",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "schema-validation",
+      "id": "safe-state-declaration-contract-duplicate-identical-reversed",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-empty-additional-prohibitions-control",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-empty-restricted-set-control",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
+      "capability": "safe-state-profile-rules",
+      "id": "safe-state-declaration-contract-single-class-control",
+      "suite": "ecl-1-v1.0-safe-state-declaration-contract"
+    },
+    {
       "capability": "schema-validation",
       "id": "adapter-invalid-authority-boundary-number-for-boolean",
       "suite": "ecl-1-v1.0-schema-coverage"
@@ -4671,7 +6253,7 @@
     },
     {
       "capability": "semantic-rules",
-      "id": "dcmp-valid-admit-bounded-multi-use",
+      "id": "dcmp-valid-admit-single-use-explicit-one",
       "suite": "ecl-1-v1.0-schema-coverage"
     },
     {
@@ -4691,7 +6273,7 @@
     },
     {
       "capability": "semantic-rules",
-      "id": "dcmp-valid-request-bounded-multi-use",
+      "id": "dcmp-valid-request-single-use-explicit-one",
       "suite": "ecl-1-v1.0-schema-coverage"
     },
     {
@@ -5078,6 +6660,451 @@
       "capability": "trust-policy-load",
       "id": "trust-policy-valid",
       "suite": "ecl-1-v1.0-trust-policy"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-aarm-receipt-critical",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-aarm-receipt-preserved",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-control-change-critical",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-control-change-preserved",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-decision-basis-critical",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-decision-basis-preserved",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-runtime-configuration-critical",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-inapplicable-runtime-configuration-preserved",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-independent-rule-findings",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-interval-equal",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-interval-positive-nanosecond",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-interval-reversed",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-interval-reversed-nanosecond",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-malformed-expires-at",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-malformed-issued-at",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-malformed-parent-workflow",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-malformed-workflow",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-optional-integrity-policy-control",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-optional-parent-digest-control",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-both-control",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-both-no-cause",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-both-self",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-context-control",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-context-no-cause",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-context-self",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-disagreement",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-reference-control",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-reference-no-cause",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-parent-reference-self",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-root-control",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "work-intent-contract",
+      "id": "work-intent-contract-self-causation",
+      "suite": "ecl-1-v1.0-work-intent-contract"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-absent-declaration",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-backward-attempt",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-backward-sequence",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-bad-digest-with-absent-branch",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-bad-origin-digest",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-bad-progress-digest",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-changed-parent",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-changed-parent-with-absent-branch",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-detached-correct-branch",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-direct-control",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-external-intermediate-unavailable",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-external-origin-unavailable",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-grandchild-route-cannot-supply-origin",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-held-origin-and-parent-conflict",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-held-origin-with-external-branch",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-increasing-attempt-control",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-indirect-control",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-indirect-reversed-control",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-missing-parent-declaration",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-named-intermediate-unavailable",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-named-origin-unavailable",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-nested-child-progression-control",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-one-orphan-among-two-joins",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-origin-wrong-parent",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-origin-wrong-root",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-sibling-cannot-supply-origin",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-two-children-control",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-unrelated-absence-cannot-excuse-orphan",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "child-origin-wrong-root-with-absent-branch",
+      "suite": "public-review-causal-origin"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-admit",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-admit-approval-absent",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-admit-reversed-array",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-challenge",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-challenge-approval-absent",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-deny",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-deny-approval-absent",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "continuation-admitted-then-deny-reversed-array",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-admit-after",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-admit-before",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-admit-equal",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-challenge-after",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-challenge-before",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-challenge-equal",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-deny-after",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-deny-before",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-deny-equal",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-evaluation-before-issue-after",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-hold-after",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-hold-before",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "evidence-bundle-verification",
+      "id": "request-expiry-hold-equal",
+      "suite": "public-review-design-decisions"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-component-level",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "claim-invalid-conditional-l1",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "component-invalid-level-claim",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "component-invalid-pass-without-evidence",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "component-invalid-result-enum",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "component-invalid-status-claim",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "component-valid-scoped-report",
+      "suite": "repair-contracts"
+    },
+    {
+      "capability": "document-validation",
+      "id": "component-valid-unassessed-requirement",
+      "suite": "repair-contracts"
     }
   ],
   "version": 1

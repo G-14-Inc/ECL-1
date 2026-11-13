@@ -1,7 +1,8 @@
 # ECL Distributed and Long-Running Workflow Semantics 1
 
 Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 ## 1. Scope
 
@@ -13,7 +14,17 @@ require a central coordinator or global consensus.
 trace identifier.
 
 **DW1-002** — A child workflow MUST identify its parent workflow and the exact
-causal object that created or delegated it.
+causal object that created or delegated it. For EBMP-2 evidence, the child
+record's causal ancestry identifies that object through the digest-bound path
+specified in EBMP2-077; the parent identifier alone is insufficient. In an
+`ECL-WI-1` work intent, either `parent_workflow.uri` or
+`workflow.parent_workflow_id` identifies the parent of a child workflow. If
+both are present, they MUST name the same logical identifier, and neither MAY name the child's own `workflow.workflow_id`. A
+child work intent MUST carry at least one digest-bound causal predecessor
+identifying its creation or delegation. A consumer MUST reject an inconsistent
+parent declaration or a child with no causal predecessor with
+`ecl.rule.work-intent-context-consistent.v1`. Checking this declaration alone
+does not establish the referenced object's contents or complete ancestry.
 
 **DW1-003** — Every retry MUST create a new attempt identity. Prior attempt
 state and side effects remain evidence.
@@ -26,7 +37,9 @@ MUST NOT be treated as proof that a duplicate effect did not occur.
 **DW1-005** — Causality MUST be represented by logical identifier plus
 canonical digest.
 
-**DW1-006** — The causal graph MUST be acyclic.
+**DW1-006** — The causal graph MUST be acyclic. A work intent MUST NOT
+name its own `intent_id` as a causal predecessor; a consumer MUST reject that
+self-reference with `ecl.rule.message-cannot-cause-itself.v1`.
 
 **DW1-007** — Sequence numbers provide ordering only within their declared
 sequence domain. A consumer MUST NOT infer global order from unrelated
@@ -58,6 +71,12 @@ profile explicitly defines and justifies it.
 
 **DW1-015** — An agent's declared intent is not execution authority. Intent,
 Decision, Authority, Enforcement, and observed effect MUST remain distinct.
+An `ECL-WI-1` work intent MUST state its advisory validity interval as
+`issued_at` and `expires_at`, with expiry strictly later than issue; a consumer
+MUST reject an empty or reversed interval with
+`ecl.rule.expiry-after-issue.v1`. Expiry ends the intent's applicability as a
+current coordination advisory, not the retention of its historical record.
+Neither a valid intent nor its validity interval grants execution authority.
 
 ## 4. Epochs and stale work
 

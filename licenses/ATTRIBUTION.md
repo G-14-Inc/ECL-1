@@ -16,8 +16,11 @@ A reuser can give attribution in this form:
 > Creative Commons Attribution 4.0 International license
 > (<https://creativecommons.org/licenses/by/4.0/>).
 
-A reuser who changes the material says so and says what was changed, for
-example "Changed from the original: Section 7.7 is abridged." A changed text
+A reuser who changes the material indicates that it was modified and retains
+indications of previous modifications, as CC BY 4.0 Section 3(a)(1)(B)
+requires. G-14 also requests a useful description, for example "Changed from
+the original: Section 7.7 is abridged"; that detail is a request, not an
+additional license condition. A changed text
 does not imply endorsement by G-14 or by the contributors, conformance or
 certification, and it is not presented as ECL-1 itself
 ([`../governance/TRADEMARKS_AND_MARKS.md`](../governance/TRADEMARKS_AND_MARKS.md)).
@@ -41,6 +44,6 @@ concerned, keeps each of these attributions where the list says it is carried.
 | --- | --- | --- | --- |
 | `@noble/curves` 2.3.0 and `@noble/hashes` 2.3.0, MIT License, Copyright (c) 2022 Paul Miller | Bundled in `web/verifier/verifier.js` | The copyright notice and the MIT permission notice | In full at the head of `web/verifier/verifier.js`, written by `packages/ecl-ts/scripts/build-verifier.mjs` from the packages' own `LICENSE` files |
 | A test case of NIST's ACVP-Server ML-DSA signature-verification data | `conformance/vectors/integrity/mldsa65-nist-acvp-sigver-tc123.json` | The source, its commit, paths and digests; the source's terms | [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md), "NIST ACVP ML-DSA-65 fixture" |
-| Entries of the Control Gap Record and the definitions of the Control Gap Classification, version 0.2, published by G-14, Inc. under CC BY 4.0 | `conformance/scenarios/record-*.json`, `registries/gap-coverage.json`, `docs/gap-coverage.md` | The credit that the Record's and the Classification's license asks for, and a statement of what was changed | Each scenario's `source.credit`, `abstraction` and steps marked `added`; the `classification` and `record` members of the gap registry, and the attribution lines of the annex generated from it |
+| Entries of the Control Gap Record and the definitions of the Control Gap Classification, version 0.2, published by G-14, Inc. under CC BY 4.0 | `conformance/scenarios/record-*.json`, `registries/gap-coverage.json`, `docs/gap-coverage.md` | The credit required by CC BY 4.0, an indication of modification and retained indications of earlier modifications; G-14 requests a description of changes | Each scenario's `source.credit`, `abstraction` and steps marked `added`; the `classification` and `record` members of the gap registry, and the attribution lines of the annex generated from it |
 | Identifiers, field names, values and short terms of the outside texts that the binding profiles bind to | `profiles/AARM-BINDING-1.md`, `profiles/ACS-BINDING-1.md`, `profiles/MCP-GATEWAY-1.md`, `profiles/OTEL-EVIDENCE-EXPORT-1.md`, `profiles/OAUTH-AUTHORITY-1.md` and their schemas and vectors | The citation of each source by revision and digest | Each profile's pinned-sources table and `conformance/binding-sources.json`; their terms are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md), "Binding profile sources" |
 | The license texts and the Developer Certificate of Origin | `LICENSE`, `LICENSE-CC-BY-4.0`, `packages/ecl-ts/LICENSE`, `packages/ecl-verify/LICENSE`, `go/crosscheck/LICENSE`, `governance/DCO.txt` | Each is reproduced verbatim, as its steward permits | The files themselves |

@@ -601,7 +601,7 @@
               "uniqueItems": true,
               "items": {
                 "type": "string",
-                "pattern": "^/"
+                "pattern": "^(?:/(?:[^~/]|~[01])*)+$"
               }
             },
             "note": {
@@ -654,7 +654,7 @@
           "properties": {
             "target_path": {
               "type": "string",
-              "pattern": "^/"
+              "pattern": "^(?:/(?:[^~/]|~[01])*)+$"
             },
             "derivation": {
               "type": "string",
@@ -886,8 +886,7 @@
       "boundary_class": {
         "enum": [
           "full-system-mediation",
-          "bounded-action-class-mediation",
-          "component-or-profile-implementation"
+          "bounded-action-class-mediation"
         ]
       },
       "evaluated_at": {
@@ -980,8 +979,39 @@
                     "B",
                     "C"
                   ]
+                },
+                "direct_implementation_within_24_months": {
+                  "const": false
+                },
+                "managed_operator_within_24_months": {
+                  "const": false
+                },
+                "claim_approval_authority_within_24_months": {
+                  "const": false
                 }
-              }
+              },
+              "required": [
+                "direct_implementation_within_24_months"
+              ],
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "material_affiliate_or_reseller": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "material_affiliate_or_reseller"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "published_sector_exception"
+                    ]
+                  }
+                }
+              ]
             }
           }
         }
@@ -1013,6 +1043,159 @@
                     "const": "conditional_conformance"
                   }
                 }
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "level": {
+              "const": 1
+            }
+          },
+          "required": [
+            "level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "claim_decision": {
+              "properties": {
+                "status": {
+                  "not": {
+                    "const": "conditional_conformance"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "findings": {
+              "contains": {
+                "properties": {
+                  "severity": {
+                    "const": "critical"
+                  },
+                  "disposition": {
+                    "enum": [
+                      "open",
+                      "accepted_condition"
+                    ]
+                  }
+                },
+                "required": [
+                  "severity",
+                  "disposition"
+                ]
+              }
+            }
+          },
+          "required": [
+            "findings"
+          ]
+        },
+        "then": {
+          "properties": {
+            "claim_decision": {
+              "properties": {
+                "status": {
+                  "const": "assessment_only"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "findings": {
+              "contains": {
+                "properties": {
+                  "severity": {
+                    "const": "major"
+                  },
+                  "disposition": {
+                    "enum": [
+                      "open",
+                      "accepted_condition"
+                    ]
+                  }
+                },
+                "required": [
+                  "severity",
+                  "disposition"
+                ]
+              }
+            }
+          },
+          "required": [
+            "findings"
+          ]
+        },
+        "then": {
+          "properties": {
+            "claim_decision": {
+              "properties": {
+                "status": {
+                  "not": {
+                    "const": "full_conformance"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "checklist": {
+              "contains": {
+                "properties": {
+                  "result": {
+                    "const": "fail"
+                  }
+                },
+                "required": [
+                  "result"
+                ]
+              }
+            }
+          },
+          "required": [
+            "checklist"
+          ]
+        },
+        "then": {
+          "properties": {
+            "findings": {
+              "contains": {
+                "properties": {
+                  "severity": {
+                    "enum": [
+                      "critical",
+                      "major",
+                      "minor"
+                    ]
+                  },
+                  "disposition": {
+                    "enum": [
+                      "open",
+                      "accepted_condition"
+                    ]
+                  }
+                },
+                "required": [
+                  "severity",
+                  "disposition"
+                ]
               }
             }
           }
@@ -1311,6 +1494,10 @@
           },
           "conflict_disclosure": {
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          },
+          "direct_implementation_within_24_months": {
+            "type": "boolean",
+            "description": "Direct implementation of the assessed system during the assessment period or preceding 24 months (ECL1N-0086)."
           }
         }
       },
@@ -1500,7 +1687,33 @@
       },
       "terminal": {
         "description": "The execution_terminal event that binds the receipt with ecl.ext.aarm-receipt.v1.",
-        "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord",
+        "properties": {
+          "event_type": {
+            "const": "execution_terminal"
+          },
+          "event": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/executionEvent",
+            "properties": {
+              "state": {
+                "enum": [
+                  "succeeded",
+                  "failed",
+                  "partially_succeeded",
+                  "cancelled",
+                  "timed_out",
+                  "rolled_back",
+                  "compensated",
+                  "unknown",
+                  "denied",
+                  "held",
+                  "challenged",
+                  "expired_before_release"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "$defs": {
@@ -1604,7 +1817,7 @@
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
           },
           "channel": {
-            "description": "AC1-004: how the ECL decision point obtained the Guardian's decision: from the Guardian directly (direct), by verifying the Guardian's signature over it under a key that the governed AI system cannot use (signed), or through a hook point (hook). Required when the Guardian decided.",
+            "description": "AC1-004: how the ECL decision point obtained the Guardian's decision: from the Guardian directly (direct), by verifying the Guardian's signature over it under a key that the governed AI system cannot use (signed), or through a hook point (hook). Required when the Guardian decided. On a failed exchange this names the attempted route and does not assert successful authentication.",
             "enum": [
               "direct",
               "signed",
@@ -1612,13 +1825,13 @@
             ]
           },
           "key_id": {
-            "description": "AC1-004: the identifier of the key under which the decision point verified the Guardian's signature over the decision. Required when the channel is signed; a checker of the record cannot verify the signature itself, so this names what an assessor checks against the deployment.",
+            "description": "AC1-004: the identifier of the key under which the decision point verified the Guardian's signature over the decision. Required when the channel is signed and the Guardian decided; on a failed exchange it is only attempted or unavailable evidence; a checker of the record cannot verify the signature itself, so this names what an assessor checks against the deployment.",
             "type": "string",
             "minLength": 1,
             "maxLength": 512
           },
           "request_digest": {
-            "description": "AC1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the request that the Guardian evaluated, from which the derived_from of the Guardian decision's input names the decision inputs: a SHA-256 value of 32 bytes in lowercase hexadecimal. Required when the channel is signed.",
+            "description": "AC1-004: ecl.digest.sha-256.v1 of the UTF-8 RFC 8785 canonical form of the exact ACS request envelope params, excluding the envelope and signature. Required for a decided signed channel; on a failed signed route it is optional but accompanies retained request_params; this is the same hashing domain as ACS ContextEntry.request_hash.",
             "allOf": [
               {
                 "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
@@ -1674,6 +1887,75 @@
                 }
               }
             }
+          },
+          "request_params": {
+            "description": "AC1-004: the exact ACS request envelope params evaluated by the Guardian. On a failed signed route these are optional submitted params retained together with their local digest. The adapter checks their mapping into the DCMP request; this record does not contain the Guardian signature.",
+            "type": "object",
+            "maxProperties": 128
+          },
+          "authenticated_context": {
+            "description": "AC1-004: the session, hooked step, method and params digest authenticated by the live adapter; dcmp_request_digest records the adapter-checked mapping to this DCMP request and is not claimed to be signed by the Guardian. These are retained assertions, not an offline signature proof. Required only for a decided signed exchange; retaining it on a failed route does not assert successful authentication.",
+            "type": "object",
+            "required": [
+              "session_id",
+              "request_id",
+              "method",
+              "request_digest",
+              "dcmp_request_digest"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "request_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "method": {
+                "description": "The ACS method of the hooked step.",
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "^(steps|protocols/MCP)/[A-Za-z][A-Za-z0-9/]*$"
+              },
+              "request_digest": {
+                "allOf": [
+                  {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                  },
+                  {
+                    "properties": {
+                      "algorithm": {
+                        "const": "ecl.digest.sha-256.v1"
+                      },
+                      "value": {
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dcmp_request_digest": {
+                "allOf": [
+                  {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                  },
+                  {
+                    "properties": {
+                      "algorithm": {
+                        "const": "ecl.digest.sha-256.v1"
+                      },
+                      "value": {
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
           }
         },
         "allOf": [
@@ -1687,7 +1969,8 @@
             },
             "then": {
               "required": [
-                "channel"
+                "channel",
+                "result"
               ]
             }
           },
@@ -1696,17 +1979,49 @@
               "properties": {
                 "channel": {
                   "const": "signed"
+                },
+                "status": {
+                  "const": "decided"
                 }
               },
               "required": [
-                "channel"
+                "channel",
+                "status"
               ]
             },
             "then": {
               "required": [
                 "key_id",
-                "request_digest"
+                "request_digest",
+                "request_params",
+                "authenticated_context"
               ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "channel": {
+                  "const": "signed"
+                },
+                "status": {
+                  "const": "failed"
+                }
+              },
+              "required": [
+                "channel",
+                "status"
+              ]
+            },
+            "then": {
+              "dependentRequired": {
+                "request_params": [
+                  "request_digest"
+                ],
+                "request_digest": [
+                  "request_params"
+                ]
+              }
             }
           }
         ]
@@ -1976,7 +2291,28 @@
       },
       "prepared": {
         "description": "MG1-014: the release_prepared event that the gateway recorded after it consumed the authorization and before it discharged the pre-release obligations.",
-        "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        "allOf": [
+          {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+          },
+          {
+            "properties": {
+              "event_type": {
+                "const": "release_prepared"
+              },
+              "event": {
+                "properties": {
+                  "kind": {
+                    "const": "execution"
+                  },
+                  "state": {
+                    "const": "prepared"
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "obligation_discharge": {
         "description": "MG1-013: the discharge of every pre-release obligation of the admit, as the value of ecl.ext.obligation-discharge.v1; present only when the admit carries such an obligation and the gateway discharged them all.",
@@ -1984,7 +2320,28 @@
       },
       "released": {
         "description": "MG1-014: the execution_released event, observed at the gateway's final observation before the send and carrying the discharge of the pre-release obligations.",
-        "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        "allOf": [
+          {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+          },
+          {
+            "properties": {
+              "event_type": {
+                "const": "execution_released"
+              },
+              "event": {
+                "properties": {
+                  "kind": {
+                    "const": "execution"
+                  },
+                  "state": {
+                    "const": "released"
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "forwarded": {
         "type": "object",
@@ -2002,7 +2359,7 @@
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
           },
           "forward_completed_at": {
-            "description": "MG1-015: the gateway's observation of its clock after the send returned, absent when the send did not return.",
+            "description": "MG1-015: the gateway's clock observation when the server's answer arrived, including a JSON-RPC error. A transport write return, timeout or broken stream is not that answer. Absent in an ordinary exchange with no server response; recovery may omit unavailable historical completion observations under MG1-010.",
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
           }
         }
@@ -2017,7 +2374,25 @@
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
       },
       "terminal": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        "allOf": [
+          {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+          },
+          {
+            "properties": {
+              "event_type": {
+                "const": "execution_terminal"
+              },
+              "event": {
+                "properties": {
+                  "kind": {
+                    "const": "execution"
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "recovery": {
         "description": "MG1-016: present only in a record that the gateway wrote when it recovered an exchange that it had not finished: when it recovered it, and what its journal showed. Such a record has no returned member unless the journal holds the response returned.",
@@ -2038,6 +2413,33 @@
               "outcome-unknown",
               "outcome-recorded"
             ]
+          }
+        }
+      },
+      "release_observations": {
+        "description": "MG1-014: retained initial and final release observations. These are gateway statements about the authenticated snapshot of every control state required by its mode definitions, not verification of that snapshot by the exchange checker. The final observation is recorded even when it fails; returned_at is never a substitute.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "initial"
+        ],
+        "properties": {
+          "initial": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/releaseObservation"
+              },
+              {
+                "not": {
+                  "required": [
+                    "clock_regressed"
+                  ]
+                }
+              }
+            ]
+          },
+          "final": {
+            "$ref": "#/$defs/releaseObservation"
           }
         }
       }
@@ -2196,8 +2598,146 @@
             "$ref": "#/$defs/encodedContent"
           }
         ]
+      },
+      "releaseObservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "observed_at",
+          "control_state"
+        ],
+        "properties": {
+          "observed_at": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+          },
+          "control_state": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "halt",
+              "quarantine",
+              "revoked"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "current",
+                  "stale",
+                  "unavailable"
+                ]
+              },
+              "reference": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "uri",
+                  "digest"
+                ],
+                "properties": {
+                  "uri": {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                  },
+                  "digest": {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                  }
+                }
+              },
+              "fresh_until": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+              },
+              "halt": {
+                "type": "boolean"
+              },
+              "quarantine": {
+                "type": "boolean"
+              },
+              "revoked": {
+                "type": "boolean"
+              }
+            },
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "current",
+                    "stale"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "reference",
+                "fresh_until"
+              ]
+            }
+          },
+          "clock_regressed": {
+            "description": "On final only: the gateway reports that its wall clock regressed or its elapsed wall and monotonic readings differed by more than the release guard. This records a failed clock comparison, not a fact inferred from returned_at.",
+            "type": "boolean"
+          }
+        }
       }
-    }
+    },
+    "allOf": [
+      {
+        "if": {
+          "required": [
+            "forwarded"
+          ]
+        },
+        "then": {
+          "required": [
+            "prepared",
+            "released",
+            "release_guard_milliseconds",
+            "release_observations"
+          ],
+          "properties": {
+            "release_observations": {
+              "required": [
+                "initial",
+                "final"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "required": [
+            "prepared"
+          ]
+        },
+        "then": {
+          "required": [
+            "release_guard_milliseconds",
+            "release_observations"
+          ]
+        }
+      },
+      {
+        "if": {
+          "required": [
+            "released"
+          ]
+        },
+        "then": {
+          "properties": {
+            "release_observations": {
+              "required": [
+                "initial",
+                "final"
+              ]
+            }
+          },
+          "required": [
+            "prepared"
+          ]
+        }
+      }
+    ]
   },
   "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2225,7 +2765,7 @@
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
       },
       "issuer_keys": {
-        "description": "OA1-007: the issuer's public keys from the verifier's own configuration.",
+        "description": "OA1-007: the issuer's public keys from the verifier's own configuration. The binding checker requires distinct kid values before selecting a key, including when repeated entries hold the same public key.",
         "type": "object",
         "required": [
           "keys"
@@ -2322,7 +2862,8 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 256
-            }
+            },
+            "description": "OA1-004: previously accepted identifiers whose replay-cache entries remain active at presented_at, scoped to the current proof-key thumbprint, HTTP method and normalized htu (or a broader replay-safe scope). Retain each accepted proof through iat + dpop_proof_window_seconds, including equality. This record declares cache state; it does not prove its completeness."
           }
         }
       },
@@ -2362,7 +2903,7 @@
         "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*$"
       },
       "publicJwk": {
-        "description": "A public JWK with its kid; private key members are refused.",
+        "description": "A public JWK with its kid. The private d member of EC and OKP keys is refused; additional members follow their key-type rules and unknown metadata is ignored (RFC 7517, Section 4).",
         "type": "object",
         "required": [
           "kid",
@@ -2416,7 +2957,8 @@
       "profile",
       "object",
       "log_record",
-      "export"
+      "export",
+      "evidence_after"
     ],
     "additionalProperties": false,
     "properties": {
@@ -2597,11 +3139,13 @@
           },
           "intValue": {
             "type": "string",
-            "pattern": "^-?(0|[1-9][0-9]{0,18})$"
+            "pattern": "^(?:-?0|-?(?:[1-9][0-9]{0,17}|[1-8][0-9]{18}|9[0-1][0-9]{17}|92[0-1][0-9]{16}|922[0-2][0-9]{15}|9223[0-2][0-9]{14}|92233[0-6][0-9]{13}|922337[0-1][0-9]{12}|92233720[0-2][0-9]{10}|922337203[0-5][0-9]{9}|9223372036[0-7][0-9]{8}|92233720368[0-4][0-9]{7}|922337203685[0-3][0-9]{6}|9223372036854[0-6][0-9]{5}|92233720368547[0-6][0-9]{4}|922337203685477[0-4][0-9]{3}|9223372036854775[0-7][0-9]{2}|922337203685477580[0-6]|9223372036854775807)|-9223372036854775808)$",
+            "description": "A decimal-string signed 64-bit integer in the pinned OTLP JSON encoding."
           },
           "bytesValue": {
             "type": "string",
-            "pattern": "^[A-Za-z0-9+/]*={0,2}$"
+            "pattern": "^(?:[A-Za-z0-9+/_-]{4})*(?:[A-Za-z0-9+/_-]{2}(?:==)?|[A-Za-z0-9+/_-]{3}=?)?$",
+            "description": "Protobuf JSON bytes: standard or URL-safe base64, with or without padding."
           },
           "arrayValue": {
             "type": "object",
@@ -2670,7 +3214,7 @@
           },
           {
             "not": {
-              "pattern": "^https?://externalcontrollayer\\.ai(?:[/:?#]|$)"
+              "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://(?:[^/?#]*@)?(?:[Ee]|%45|%65)(?:[Xx]|%58|%78)(?:[Tt]|%54|%74)(?:[Ee]|%45|%65)(?:[Rr]|%52|%72)(?:[Nn]|%4[eE]|%6[eE])(?:[Aa]|%41|%61)(?:[Ll]|%4[cC]|%6[cC])(?:[Cc]|%43|%63)(?:[Oo]|%4[fF]|%6[fF])(?:[Nn]|%4[eE]|%6[eE])(?:[Tt]|%54|%74)(?:[Rr]|%52|%72)(?:[Oo]|%4[fF]|%6[fF])(?:[Ll]|%4[cC]|%6[cC])(?:[Ll]|%4[cC]|%6[cC])(?:[Aa]|%41|%61)(?:[Yy]|%59|%79)(?:[Ee]|%45|%65)(?:[Rr]|%52|%72)(?:\\.|%2[eE])(?:[Aa]|%41|%61)(?:[Ii]|%49|%69)(?:\\.|%2[eE])?(?::[^/?#@]*)?(?:[/?#]|$)"
             }
           }
         ]
@@ -2999,6 +3543,161 @@
       }
     }
   },
+  "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+    "title": "ECL Component or Profile Implementation Report v1",
+    "description": "A scoped report about a component or profile implementation. It carries no ECL conformance level and does not establish runtime mediation or deployment conformance. Applicable requirements and unassessed work remain explicit.",
+    "type": "object",
+    "required": [
+      "schema_version",
+      "report_id",
+      "component",
+      "version_set",
+      "capabilities",
+      "applicable_requirements",
+      "evidence",
+      "limitations"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "ecl_component_implementation_report_v1"
+      },
+      "report_id": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+      },
+      "component": {
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "artifact"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "artifact": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          }
+        }
+      },
+      "version_set": {
+        "type": "object",
+        "required": [
+          "core_version",
+          "profile_versions"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "core_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profile_versions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "capabilities": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "applicable_requirements": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": [
+            "requirement_id",
+            "applicability",
+            "result",
+            "evidence_refs"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "requirement_id": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+            },
+            "applicability": {
+              "type": "string",
+              "minLength": 1
+            },
+            "result": {
+              "enum": [
+                "pass",
+                "fail",
+                "not_assessed"
+              ]
+            },
+            "evidence_refs": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "result": {
+                    "enum": [
+                      "pass",
+                      "fail"
+                    ]
+                  }
+                },
+                "required": [
+                  "result"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "evidence_refs": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "evidence": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      },
+      "limitations": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
   "https://externalcontrollayer.ai/ns/schema/conformance-claim/1": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
@@ -3051,8 +3750,7 @@
       "boundary_class": {
         "enum": [
           "full-system-mediation",
-          "bounded-action-class-mediation",
-          "component-or-profile-implementation"
+          "bounded-action-class-mediation"
         ]
       },
       "independence": {
@@ -3307,6 +4005,46 @@
                 "same_operator_disclosure"
               ]
             }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "level": {
+              "const": 1
+            }
+          },
+          "required": [
+            "level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "status": {
+              "not": {
+                "const": "conditional_conformance"
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "full_conformance"
+            }
+          },
+          "required": [
+            "status"
+          ]
+        },
+        "then": {
+          "not": {
+            "required": [
+              "conditions"
+            ]
           }
         }
       }
@@ -3657,14 +4395,12 @@
                   "use_policy": {
                     "type": "string",
                     "enum": [
-                      "single_use",
-                      "bounded_multi_use"
+                      "single_use"
                     ]
                   },
                   "max_uses": {
                     "type": "integer",
-                    "minimum": 1,
-                    "maximum": 1000000
+                    "const": 1
                   }
                 }
               },
@@ -3724,14 +4460,12 @@
           "use_policy": {
             "type": "string",
             "enum": [
-              "single_use",
-              "bounded_multi_use"
+              "single_use"
             ]
           },
           "max_uses": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 1000000
+            "const": 1
           },
           "token_reference": {
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
@@ -3778,7 +4512,10 @@
                 "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
               },
               "policy": {
-                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference"
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference",
+                "required": [
+                  "epoch"
+                ]
               },
               "reasons": {
                 "type": "array",
@@ -4217,6 +4954,19 @@
               "required": [
                 "federated"
               ]
+            },
+            "delivery_surfaces": {
+              "contains": {
+                "enum": [
+                  "hosted_control_plane",
+                  "self_managed_control_plane"
+                ]
+              }
+            },
+            "timing_case": {
+              "required": [
+                "federated_exchange_seconds"
+              ]
             }
           }
         }
@@ -4294,6 +5044,413 @@
             "topology_controls": {
               "required": [
                 "air_gapped"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "claim_level": {
+              "minimum": 3
+            }
+          },
+          "required": [
+            "claim_level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "timing_case": {
+              "properties": {
+                "trusted_time_or_secure_monotonic": {
+                  "const": true
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "claim_level": {
+              "const": 1
+            }
+          },
+          "required": [
+            "claim_level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "timing_case": {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "uses_default_baseline": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "uses_default_baseline"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "const": 86400
+                      },
+                      "offline_staleness_seconds": {
+                        "const": 86400
+                      },
+                      "evidence_export_seconds": {
+                        "const": 259200
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "exclusiveMinimum": 86400
+                      }
+                    },
+                    "required": [
+                      "connected_revocation_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "offline_staleness_seconds": {
+                        "exclusiveMinimum": 86400
+                      }
+                    },
+                    "required": [
+                      "offline_staleness_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "evidence_export_seconds": {
+                        "exclusiveMinimum": 259200
+                      }
+                    },
+                    "required": [
+                      "evidence_export_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "claim_level": {
+              "const": 2
+            }
+          },
+          "required": [
+            "claim_level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "timing_case": {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "uses_default_baseline": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "uses_default_baseline"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "const": 900
+                      },
+                      "offline_staleness_seconds": {
+                        "const": 14400
+                      },
+                      "evidence_export_seconds": {
+                        "const": 86400
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "exclusiveMinimum": 900
+                      }
+                    },
+                    "required": [
+                      "connected_revocation_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "offline_staleness_seconds": {
+                        "exclusiveMinimum": 14400
+                      }
+                    },
+                    "required": [
+                      "offline_staleness_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "evidence_export_seconds": {
+                        "exclusiveMinimum": 86400
+                      }
+                    },
+                    "required": [
+                      "evidence_export_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "claim_level": {
+              "const": 3
+            }
+          },
+          "required": [
+            "claim_level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "timing_case": {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "uses_default_baseline": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "uses_default_baseline"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "const": 300
+                      },
+                      "offline_staleness_seconds": {
+                        "const": 3600
+                      },
+                      "evidence_export_seconds": {
+                        "const": 14400
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "exclusiveMinimum": 300
+                      }
+                    },
+                    "required": [
+                      "connected_revocation_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "offline_staleness_seconds": {
+                        "exclusiveMinimum": 3600
+                      }
+                    },
+                    "required": [
+                      "offline_staleness_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "evidence_export_seconds": {
+                        "exclusiveMinimum": 14400
+                      }
+                    },
+                    "required": [
+                      "evidence_export_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "claim_level": {
+              "const": 4
+            }
+          },
+          "required": [
+            "claim_level"
+          ]
+        },
+        "then": {
+          "properties": {
+            "timing_case": {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "uses_default_baseline": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "uses_default_baseline"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "const": 60
+                      },
+                      "offline_staleness_seconds": {
+                        "const": 900
+                      },
+                      "evidence_export_seconds": {
+                        "const": 3600
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "connected_revocation_seconds": {
+                        "exclusiveMinimum": 60
+                      }
+                    },
+                    "required": [
+                      "connected_revocation_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "offline_staleness_seconds": {
+                        "exclusiveMinimum": 900
+                      }
+                    },
+                    "required": [
+                      "offline_staleness_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "evidence_export_seconds": {
+                        "exclusiveMinimum": 3600
+                      }
+                    },
+                    "required": [
+                      "evidence_export_seconds"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "assessor_deviation_approval"
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -5402,7 +6559,15 @@
         "maxLength": 256
       },
       "receipt_digest": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       },
       "decision": {
         "enum": [
@@ -5458,9 +6623,36 @@
         "pattern": "^[0-9a-f]{64}$"
       },
       "modifications_digest": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       }
-    }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "decision": {
+              "const": "modify"
+            }
+          },
+          "required": [
+            "decision"
+          ]
+        },
+        "then": {
+          "required": [
+            "modifications_digest"
+          ]
+        }
+      }
+    ]
   },
   "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5775,7 +6967,20 @@
         "required": [
           "uri",
           "digest"
-        ]
+        ],
+        "properties": {
+          "digest": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
       },
       "decisionInput": {
         "description": "One decision input of a decision: an entry of the decision basis. A record that embeds it closes it with unevaluatedProperties and may add members of its own.",
@@ -5901,8 +7106,7 @@
       },
       "method": {
         "enum": [
-          "tools/call",
-          "tasks/update"
+          "tools/call"
         ]
       },
       "server_id": {
@@ -5924,23 +7128,63 @@
         "maxLength": 128
       },
       "tool_definition_digest": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       },
       "mapping_id": {
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
       },
       "params_digest": {
         "description": "MG1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the call's complete params object, _meta included.",
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       },
       "input_responses_digest": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       },
       "request_state_digest": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       },
       "response_digest": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+        "properties": {
+          "algorithm": {
+            "const": "ecl.digest.sha-256.v1"
+          },
+          "value": {
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
       },
       "forward_completed_at": {
         "description": "EBMP2-071: on an execution_terminal event, the gateway's observation, by its own clock, of the moment the server's answer to the forwarded call arrived. A verifier does not compare it with the authorization's window: an answer that arrives after valid_until is reported as the informational member completion_after_window of the report, not as a finding (EBMP2-072).",
@@ -6098,7 +7342,15 @@
             "required": [
               "version",
               "digest"
-            ]
+            ],
+            "properties": {
+              "version": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+              },
+              "digest": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+              }
+            }
           }
         ]
       }
@@ -6287,7 +7539,8 @@
       "hold_precedence",
       "export",
       "redaction",
-      "destruction"
+      "destruction",
+      "policy_requirements"
     ],
     "additionalProperties": false,
     "properties": {
@@ -6328,7 +7581,8 @@
             },
             "duration": {
               "type": "string",
-              "pattern": "^P(?!$).+$"
+              "pattern": "^P(?:(?:[0-9]+Y(?:[0-9]+M)?(?:[0-9]+D)?|[0-9]+M(?:[0-9]+D)?|[0-9]+D)(?:T(?:[0-9]+H(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+M(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+(?:\\.[0-9]+)?S))?|T(?:[0-9]+H(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+M(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+(?:\\.[0-9]+)?S))$",
+              "description": "Unsigned XSD-duration lexical subset: ordered Y/M/D and optional T followed by H/M/S; at least one component, digits on both sides of a seconds decimal point, no weeks, signs or whitespace. Zero is valid syntax. Retention adequacy is assessed under ECL1N-0050 and ECL1N-0195 to ECL1N-0199."
             },
             "shortening_authority_class": {
               "type": "string",
@@ -6399,6 +7653,43 @@
             "const": true
           }
         }
+      },
+      "policy_requirements": {
+        "type": "object",
+        "description": "EL1-002 declarations for the five policy areas not carried by the other structured fields. Each declaration states its evidence-class scope and requirement or precise policy reference; inapplicability includes its basis.",
+        "required": [
+          "supersession",
+          "revocation",
+          "residency",
+          "encryption",
+          "access"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "supersession": {
+            "$ref": "#/$defs/policyRequirement"
+          },
+          "revocation": {
+            "$ref": "#/$defs/policyRequirement"
+          },
+          "residency": {
+            "$ref": "#/$defs/policyRequirement"
+          },
+          "encryption": {
+            "$ref": "#/$defs/policyRequirement"
+          },
+          "access": {
+            "$ref": "#/$defs/policyRequirement"
+          }
+        }
+      }
+    },
+    "$defs": {
+      "policyRequirement": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "[^\t-\r    -     　﻿]",
+        "description": "A nonblank declaration of applicability and the requirement or precise policy reference for this policy area."
       }
     }
   },
@@ -6457,7 +7748,8 @@
           "internally_reviewed",
           "independently_reviewed",
           "owner_validated"
-        ]
+        ],
+        "description": "Review state of this mapping artifact. Each obligation retains its own declared review state; the packet state does not upgrade its rows."
       },
       "obligations": {
         "type": "array",
@@ -6543,7 +7835,8 @@
             "items": {
               "type": "string",
               "pattern": "^(?:[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._/-]+)$"
-            }
+            },
+            "description": "ECL control or evidence surfaces cited for this obligation. Both support classes identify at least one relied-on surface; an out-of-scope row may identify boundary context without asserting support."
           },
           "evidence": {
             "type": "array",
@@ -6582,6 +7875,28 @@
               "properties": {
                 "support_class": {
                   "const": "direct_runtime_support"
+                }
+              },
+              "required": [
+                "support_class"
+              ]
+            },
+            "then": {
+              "properties": {
+                "ecl_surfaces": {
+                  "minItems": 1
+                },
+                "evidence": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "support_class": {
+                  "const": "supporting_evidence_only"
                 }
               },
               "required": [
@@ -6639,17 +7954,17 @@
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
       },
       "trust_policy": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        "$ref": "#/$defs/sha256ResourceReference"
       },
       "revocation_snapshot": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        "$ref": "#/$defs/sha256ResourceReference"
       },
       "registry_snapshots": {
         "type": "array",
         "minItems": 1,
         "uniqueItems": true,
         "items": {
-          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          "$ref": "#/$defs/sha256ResourceReference"
         }
       },
       "time_evidence": {
@@ -6657,7 +7972,7 @@
         "minItems": 1,
         "uniqueItems": true,
         "items": {
-          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          "$ref": "#/$defs/sha256ResourceReference"
         }
       },
       "artifacts": {
@@ -6706,7 +8021,7 @@
               "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
             },
             "digest": {
-              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+              "$ref": "#/$defs/sha256Digest"
             }
           }
         }
@@ -6742,6 +8057,43 @@
             "const": "ecl.zip.store.v1"
           }
         }
+      }
+    },
+    "$defs": {
+      "sha256Digest": {
+        "description": "IE1-022 check 3: each artifact and material reference carries a SHA-256 digest.",
+        "allOf": [
+          {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+          },
+          {
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        ]
+      },
+      "sha256ResourceReference": {
+        "allOf": [
+          {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+          },
+          {
+            "required": [
+              "digest"
+            ],
+            "properties": {
+              "digest": {
+                "$ref": "#/$defs/sha256Digest"
+              }
+            }
+          }
+        ]
       }
     }
   },
@@ -6821,7 +8173,8 @@
               "items": {
                 "type": "string",
                 "minLength": 1
-              }
+              },
+              "description": "TS1-020: the bounded set of permitted restricted operations; an empty set deliberately permits none."
             },
             "fail_open_prohibited_conditions": {
               "type": "array",
@@ -6838,7 +8191,8 @@
                   "critical_extension",
                   "critical_verification_failure"
                 ]
-              }
+              },
+              "description": "Additional declared fail-open prohibitions. TS1-018 required-proof failures always fail closed, including missing pre-release evidence, even when this list is empty; this list cannot waive those restrictions."
             },
             "fail_open_authorization": {
               "type": "object",
@@ -6846,7 +8200,8 @@
                 "owner",
                 "rationale",
                 "expires_at",
-                "evidence_profile"
+                "evidence_profile",
+                "covered_advisory_dependencies"
               ],
               "additionalProperties": false,
               "properties": {
@@ -6862,6 +8217,15 @@
                 },
                 "evidence_profile": {
                   "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+                },
+                "covered_advisory_dependencies": {
+                  "description": "TS1-033: declared advisory dependencies whose loss this authorization covers; none supplies required proof.",
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                  }
                 }
               }
             }
@@ -6907,7 +8271,8 @@
               }
             }
           ]
-        }
+        },
+        "description": "TS1-016: each action_class identifier has one policy declaration; semantic validation rejects repeated identifiers, including declarations that differ."
       },
       "dependencies": {
         "type": "array",
@@ -6933,7 +8298,8 @@
                 "cached",
                 "asynchronous",
                 "advisory"
-              ]
+              ],
+              "description": "The dependency delivery class; advisory means its loss leaves all required proof and locally validatable authority sufficient for the action (TS1-010, TS1-031)."
             },
             "staleness_budget_seconds": {
               "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
@@ -6944,7 +8310,28 @@
             "loss_disposition": {
               "$ref": "#/$defs/disposition"
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "class": {
+                    "const": "advisory"
+                  }
+                },
+                "required": [
+                  "class"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "supplies_required_proof": {
+                    "const": false
+                  }
+                }
+              }
+            }
+          ]
         }
       },
       "evidence_buffer": {
@@ -7039,7 +8426,7 @@
         "properties": {
           "required_frontiers": {
             "type": "array",
-            "minItems": 5,
+            "minItems": 6,
             "uniqueItems": true,
             "items": {
               "enum": [
@@ -7133,7 +8520,15 @@
                   "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
                 },
                 "signature_digest": {
-                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+                  "properties": {
+                    "algorithm": {
+                      "const": "ecl.digest.sha-256.v1"
+                    },
+                    "value": {
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
                 }
               }
             }
@@ -7319,13 +8714,15 @@
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/workflowContext"
       },
       "parent_workflow": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference",
+        "description": "The parent workflow logical identifier as uri (DW1-002); agrees with workflow.parent_workflow_id when both appear. Its digest is optional; the causal predecessor identifies the exact creating or delegating object."
       },
       "issued_at": {
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
       },
       "expires_at": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc",
+        "description": "DW1-015: strictly later than issued_at. Expiry ends current advisory applicability; historical retention is unaffected."
       },
       "exact_targets": {
         "type": "array",
@@ -7405,6 +8802,43 @@
       "integrity_policy": {
         "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/integrityPolicy"
       }
-    }
+    },
+    "description": "A coordination advisory, never execution authority (DW1-015). Registered rules additionally check its issue/expiry interval, self-causation and declared parent context.",
+    "allOf": [
+      {
+        "if": {
+          "anyOf": [
+            {
+              "required": [
+                "parent_workflow"
+              ]
+            },
+            {
+              "required": [
+                "workflow"
+              ],
+              "properties": {
+                "workflow": {
+                  "required": [
+                    "parent_workflow_id"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "then": {
+          "properties": {
+            "workflow": {
+              "properties": {
+                "causal_predecessors": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
   }
 }

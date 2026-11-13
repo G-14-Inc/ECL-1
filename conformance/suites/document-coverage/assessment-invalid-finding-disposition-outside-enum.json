@@ -84,7 +84,7 @@
   "evaluated_at": "2026-07-27T12:00:00Z",
   "findings": [
     {
-      "disposition": "waived",
+      "disposition": "open",
       "evidence": [
         "urn:example:ecl:evidence:provider-inventory"
       ],
@@ -94,6 +94,18 @@
       ],
       "severity": "major",
       "title": "No approved ML-DSA-65 provider and known-answer-test result"
+    },
+    {
+      "disposition": "waived",
+      "evidence": [
+        "urn:example:ecl:evidence:provider-inventory"
+      ],
+      "finding_id": "urn:example:ecl:finding:unregistered-disposition",
+      "requirement_ids": [
+        "IE1-018"
+      ],
+      "severity": "major",
+      "title": "A finding with an unregistered disposition"
     }
   ],
   "independence": {
@@ -109,6 +121,7 @@
       "uri": "urn:example:ecl:assessor:conflict-disclosure",
       "version": "1"
     },
+    "direct_implementation_within_24_months": false,
     "managed_operator_within_24_months": false,
     "material_affiliate_or_reseller": false,
     "primary_implementer": false

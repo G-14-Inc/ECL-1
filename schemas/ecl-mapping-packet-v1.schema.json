@@ -53,7 +53,8 @@
         "internally_reviewed",
         "independently_reviewed",
         "owner_validated"
-      ]
+      ],
+      "description": "Review state of this mapping artifact. Each obligation retains its own declared review state; the packet state does not upgrade its rows."
     },
     "obligations": {
       "type": "array",
@@ -139,7 +140,8 @@
           "items": {
             "type": "string",
             "pattern": "^(?:[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._/-]+)$"
-          }
+          },
+          "description": "ECL control or evidence surfaces cited for this obligation. Both support classes identify at least one relied-on surface; an out-of-scope row may identify boundary context without asserting support."
         },
         "evidence": {
           "type": "array",
@@ -178,6 +180,28 @@
             "properties": {
               "support_class": {
                 "const": "direct_runtime_support"
+              }
+            },
+            "required": [
+              "support_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ecl_surfaces": {
+                "minItems": 1
+              },
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "support_class": {
+                "const": "supporting_evidence_only"
               }
             },
             "required": [

@@ -345,7 +345,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "cd0d4d8e9a957725b7bf1e7112450d69a0d103af8216651e6f07ce28bcfccce9",
+        "constraint_sha256": "ea6f4e18b658e39c4f58bc47f0946dad8ceaa99741b4f7b42ac9ce36135d9d15",
         "field_name": "parameter",
         "json_schema_pointer": "/$defs/approvalThreshold/properties/parameter",
         "required_by_parent": false,
@@ -1299,7 +1299,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "5706aa3b2d80f8ce202d5cca6c7025c95811e1590c91024990b1cbc3345f2135",
+        "constraint_sha256": "e6e30df9a61bd1cf458e9f73f6f6a14384fdb69166771cdac71c812edb41d561",
         "field_name": "derived_fields",
         "json_schema_pointer": "/properties/derived_fields",
         "required_by_parent": true,
@@ -1353,7 +1353,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "ce43946511cfbbf8831067d579d16d80ec75f67f47ab8353a5ce996bfa373519",
+        "constraint_sha256": "2a27a4d947b636187dd86afcc8c2644b49a1a720e9fb2aa3f6883f89e680002c",
         "field_name": "target_path",
         "json_schema_pointer": "/properties/derived_fields/items/properties/target_path",
         "required_by_parent": true,
@@ -1497,7 +1497,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "9551cc2732bec3a4f074ee438ff17509dd9acefd2f2a51c3ef3bf2ab26b6e13f",
+        "constraint_sha256": "18e368411b8c1806cbc39e1759528c6799d143eee3a18f54e133803ac60ddf46",
         "field_name": "field_accounting",
         "json_schema_pointer": "/properties/field_accounting",
         "required_by_parent": true,
@@ -1623,7 +1623,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "e89989412f99b3108a8b52ba558fdf0074b8fd43339517ff8550fce5527c5811",
+        "constraint_sha256": "9423cef20aa1bccb5322222a94c2e95155dd2346c105be1971c69774728836e8",
         "field_name": "target_paths",
         "json_schema_pointer": "/properties/field_accounting/items/properties/target_paths",
         "required_by_parent": true,
@@ -2649,6 +2649,24 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "fdcd83dab11bac1b855e09e7b5c639d886d9ce5e364ce1c07b6bd910cd201f8c",
+        "field_name": "direct_implementation_within_24_months",
+        "json_schema_pointer": "/$defs/independence/properties/direct_implementation_within_24_months",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "boolean"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'direct_implementation_within_24_months' at '/$defs/independence/properties/direct_implementation_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/7e73ffe227ffa1503390f14222f9c4fd",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "7cb541e84f226754a46c21c79f131fa2898354e1242456e6fd1c162bce319553",
         "field_name": "managed_operator_within_24_months",
         "json_schema_pointer": "/$defs/independence/properties/managed_operator_within_24_months",
@@ -2901,19 +2919,55 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "8b79cb89b37bffc9fb14f7b3f5051f66594faa170221e2fadb4f41141f4514f6",
+        "constraint_sha256": "5be0b2ac7ceec34a625c916425dfd8e9bcdc6e2c17c7fbe31f236b8368d5d6f6",
         "field_name": "independence",
         "json_schema_pointer": "/allOf/0/then/properties/independence",
         "required_by_parent": false,
         "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
         "type_summary": [
-          "unspecified"
+          "composed"
         ]
       },
       "compatibility": "behavioral",
       "description": "Field 'independence' at '/allOf/0/then/properties/independence' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
       "id": "https://externalcontrollayer.ai/ns/field/c2212b04fcf6528f8e4c30a83cf55caa",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "02e70d99380d0cc184f95bd0d4c286c1c4d5e530ba725618c6321376ec9480b9",
+        "field_name": "material_affiliate_or_reseller",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/allOf/0/if/properties/material_affiliate_or_reseller",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'material_affiliate_or_reseller' at '/allOf/0/then/properties/independence/allOf/0/if/properties/material_affiliate_or_reseller' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/cbf0b260c6a699a082f0ddbf712e2e6f",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "41927c8e6cfb1da264d4a76efb477bb6137868a0a994ad5236bc714db40cdf5d",
+        "field_name": "claim_approval_authority_within_24_months",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/properties/claim_approval_authority_within_24_months",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_approval_authority_within_24_months' at '/allOf/0/then/properties/independence/properties/claim_approval_authority_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/527ae757341e90daa9f1b181550fb352",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -2932,6 +2986,42 @@
       "description": "Field 'class' at '/allOf/0/then/properties/independence/properties/class' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
       "id": "https://externalcontrollayer.ai/ns/field/f47db1855215c844f2249fca48b698f9",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "41927c8e6cfb1da264d4a76efb477bb6137868a0a994ad5236bc714db40cdf5d",
+        "field_name": "direct_implementation_within_24_months",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/properties/direct_implementation_within_24_months",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'direct_implementation_within_24_months' at '/allOf/0/then/properties/independence/properties/direct_implementation_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/333d15a6915ae706471d289e73cb56f9",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "41927c8e6cfb1da264d4a76efb477bb6137868a0a994ad5236bc714db40cdf5d",
+        "field_name": "managed_operator_within_24_months",
+        "json_schema_pointer": "/allOf/0/then/properties/independence/properties/managed_operator_within_24_months",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'managed_operator_within_24_months' at '/allOf/0/then/properties/independence/properties/managed_operator_within_24_months' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/bae68d00b8a0611effbf91a084eb59cf",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -3027,6 +3117,330 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "2b1ca15c563683f2de5ae5d2b8e1c8a1f89764ed476465f01edf20fd55454a12",
+        "field_name": "level",
+        "json_schema_pointer": "/allOf/2/if/properties/level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'level' at '/allOf/2/if/properties/level' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/99d85c96213787cee89f8546e95b216b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "e785e44d949bd267b3f7b352491e6514be87c9dea0229f561f33cf0b77d293c1",
+        "field_name": "claim_decision",
+        "json_schema_pointer": "/allOf/2/then/properties/claim_decision",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_decision' at '/allOf/2/then/properties/claim_decision' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/721e06c6a428e5321b55d432370fe972",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "09e52063c874cf81f2606268dff5d67b4e5d31286695221096dd7fdda821a3a9",
+        "field_name": "status",
+        "json_schema_pointer": "/allOf/2/then/properties/claim_decision/properties/status",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'status' at '/allOf/2/then/properties/claim_decision/properties/status' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/90bf7f531dcd6a1ccc19da682d41736f",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "aba447522328c7428fb854dee2650b37a3da9d46a0aa6d1d515a248616053284",
+        "field_name": "findings",
+        "json_schema_pointer": "/allOf/3/if/properties/findings",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'findings' at '/allOf/3/if/properties/findings' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/e19944be25e8d8d876bb23cb100e31bc",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f893b894943970709689d4c87f651c624e4e5982632fbeae1c4fb7aa5ecfcfe9",
+        "field_name": "disposition",
+        "json_schema_pointer": "/allOf/3/if/properties/findings/contains/properties/disposition",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'disposition' at '/allOf/3/if/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/d3bb05cbfd9ad10a74c6b494deeed7d0",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a3185d2c783c9db25b2eeeab6528833a11bf954f734cde02559131b8cbba7b1d",
+        "field_name": "severity",
+        "json_schema_pointer": "/allOf/3/if/properties/findings/contains/properties/severity",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'severity' at '/allOf/3/if/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/e16dc0f965352a2fb3266ccbbb4a550e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "143d26ce2e088e32efec739e62c17d90e9c1dee3ea5c4aab59a84f678ccdffff",
+        "field_name": "claim_decision",
+        "json_schema_pointer": "/allOf/3/then/properties/claim_decision",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_decision' at '/allOf/3/then/properties/claim_decision' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/96946cd483e30bec3cb0aaa29f75b70c",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "824624bbbfd50d2c647bfc12a19346002c14df34eb8dae98677e4be0fc91f028",
+        "field_name": "status",
+        "json_schema_pointer": "/allOf/3/then/properties/claim_decision/properties/status",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'status' at '/allOf/3/then/properties/claim_decision/properties/status' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/11067fb102ceb145cef8482b7985a856",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "12d4b04fd71b936503ebc568048dd9e01ffca60ad200f6bb339b44798aa1479b",
+        "field_name": "findings",
+        "json_schema_pointer": "/allOf/4/if/properties/findings",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'findings' at '/allOf/4/if/properties/findings' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2a3d7bc0b7490d6a4f7ed4386bd4e26e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f893b894943970709689d4c87f651c624e4e5982632fbeae1c4fb7aa5ecfcfe9",
+        "field_name": "disposition",
+        "json_schema_pointer": "/allOf/4/if/properties/findings/contains/properties/disposition",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'disposition' at '/allOf/4/if/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ad5c26e1882a5a7adf4f63beadea7396",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "4bd957e813c7a139e5ac40a04f2cc3cf823cb2cdf7c89a6d804690a690294397",
+        "field_name": "severity",
+        "json_schema_pointer": "/allOf/4/if/properties/findings/contains/properties/severity",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'severity' at '/allOf/4/if/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/35f95fb1fd13d38db3ba6b3a93aec2e2",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "9ded47b0e5bf47ab0d0d5b7305c38a0ad83b3c7db9284d906d97185cfc8ab8ea",
+        "field_name": "claim_decision",
+        "json_schema_pointer": "/allOf/4/then/properties/claim_decision",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_decision' at '/allOf/4/then/properties/claim_decision' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/4b173dcd9bf3a285450bc5f5922be7c2",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "3ebefe6843705785b6b8fad7f3a740ffadf5f7b3cdd2e8a95a4a685e5040ca5d",
+        "field_name": "status",
+        "json_schema_pointer": "/allOf/4/then/properties/claim_decision/properties/status",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'status' at '/allOf/4/then/properties/claim_decision/properties/status' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/1c64e678ad7c65e6e3178469562dce21",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "7811a9b455c75683688487e6bc1b3634aedd20ba63beefded7445d18e043f96e",
+        "field_name": "checklist",
+        "json_schema_pointer": "/allOf/5/if/properties/checklist",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'checklist' at '/allOf/5/if/properties/checklist' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2e574de7fe65eea03ae594afcc4b5286",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "44b099471df7191e99c6ec302c1fd3a0da1140521e9a535b8c184f28fd45ea57",
+        "field_name": "result",
+        "json_schema_pointer": "/allOf/5/if/properties/checklist/contains/properties/result",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'result' at '/allOf/5/if/properties/checklist/contains/properties/result' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/e058a12622ab3969e8a9ddf560b10c6e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "e2242546b2d3385af5c8bfa497eeb97ebbe6bbfb1e50dfb495fe75a2be07e68b",
+        "field_name": "findings",
+        "json_schema_pointer": "/allOf/5/then/properties/findings",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'findings' at '/allOf/5/then/properties/findings' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/af358bbee0fe20d8c43489d18da62d3e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f893b894943970709689d4c87f651c624e4e5982632fbeae1c4fb7aa5ecfcfe9",
+        "field_name": "disposition",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/disposition",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'disposition' at '/allOf/5/then/properties/findings/contains/properties/disposition' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/c276e2dc0c21d9d559d4e99dbb6a125d",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "50885cccf3be4a2f5b13f917eb8fbbda2e93e597deea14549aa7f0a106fbaca1",
+        "field_name": "severity",
+        "json_schema_pointer": "/allOf/5/then/properties/findings/contains/properties/severity",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'severity' at '/allOf/5/then/properties/findings/contains/properties/severity' in https://externalcontrollayer.ai/ns/schema/assessment-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2cf40541e352dcf1c90e65c3bde282fa",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "dfebb91b646d673e73e1de8ed135776da4f3d7b71f1af609ae6a23d3fede1ca3",
         "field_name": "artifact_manifest",
         "json_schema_pointer": "/properties/artifact_manifest",
@@ -3045,7 +3459,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "ba32d15cd02fe3e3434a6c1eb033f0856c7c91dfdcb7983bcd17f917f5a8c47d",
+        "constraint_sha256": "2b01c70e2078bf5889927258a8cf01a26f2e8c3a2d58f7ac8cc6a1059782da65",
         "field_name": "boundary_class",
         "json_schema_pointer": "/properties/boundary_class",
         "required_by_parent": true,
@@ -4197,6 +4611,348 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "a52ce28ab8eea33ad1bc1de61a942bdc6a2c1a267a631685b47e1933e63f1dba",
+        "field_name": "applicable_requirements",
+        "json_schema_pointer": "/properties/applicable_requirements",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'applicable_requirements' at '/properties/applicable_requirements' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ea6ad24182eeb518539df85af347db66",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "d541f5c57e917cfde4a1ac6f153a79fc5802bb83a8d1e5250f053390e5f05500",
+        "field_name": "result",
+        "json_schema_pointer": "/properties/applicable_requirements/items/allOf/0/if/properties/result",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'result' at '/properties/applicable_requirements/items/allOf/0/if/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/c11dbf16f5ae8cd1582332ac413b1b48",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a266681ad891d579e5dc01c7c6003450a8ee440cefd7763bcaa68c9d7cff111c",
+        "field_name": "evidence_refs",
+        "json_schema_pointer": "/properties/applicable_requirements/items/allOf/0/then/properties/evidence_refs",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_refs' at '/properties/applicable_requirements/items/allOf/0/then/properties/evidence_refs' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/8bc17639c1b31d4c6104565c322daded",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "9ac136edb99a2063b3091602181c8d2022fdccb5b514991319d58544c2e57e95",
+        "field_name": "applicability",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/applicability",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "string"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'applicability' at '/properties/applicable_requirements/items/properties/applicability' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/fe4ec036f75599fb268521cba4566317",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "514c928a96ec4921859704fe10817b8ab2337db9812179155fb8af410638502a",
+        "field_name": "evidence_refs",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/evidence_refs",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_refs' at '/properties/applicable_requirements/items/properties/evidence_refs' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/14497588ce1908aad2a6612edd1baf03",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "582efbe93b15ffa4dbfa33385fe204586f318ad579baba8b8a3f500f46f798e4",
+        "field_name": "requirement_id",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/requirement_id",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "string"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'requirement_id' at '/properties/applicable_requirements/items/properties/requirement_id' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/93e3d6d58d9369178adf2d715e8b753f",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "24925b473aed7e1579e0780ad727b24019324024c7131dc695eb9b24a772e5d2",
+        "field_name": "result",
+        "json_schema_pointer": "/properties/applicable_requirements/items/properties/result",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'result' at '/properties/applicable_requirements/items/properties/result' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/f5f93a56e107da6c52aea13db25f38dd",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f09e75ea0b97ad7473d5178b4b940b61f70ea99f1f9b6d6974ed004f655bcd72",
+        "field_name": "capabilities",
+        "json_schema_pointer": "/properties/capabilities",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'capabilities' at '/properties/capabilities' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/8a394ad107db0a176db64abdacbb9b99",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a7599f27ff800c516d54cba9890c98ecf5387851a8775904b8b83ce41cf274f8",
+        "field_name": "component",
+        "json_schema_pointer": "/properties/component",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "object"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'component' at '/properties/component' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/15f5a0f4c85c205f50acbf65f3ccd695",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "3b7776c04e2250a61eab63b3f2d5abc121c753d3c4525486f0e253fa8d77c6cc",
+        "field_name": "artifact",
+        "json_schema_pointer": "/properties/component/properties/artifact",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'artifact' at '/properties/component/properties/artifact' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/6e49253f701140d94b3b85985e8b3e00",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "9ac136edb99a2063b3091602181c8d2022fdccb5b514991319d58544c2e57e95",
+        "field_name": "name",
+        "json_schema_pointer": "/properties/component/properties/name",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "string"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'name' at '/properties/component/properties/name' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/6d83d5727356c57e4c8494d4fd1917d0",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "9ac136edb99a2063b3091602181c8d2022fdccb5b514991319d58544c2e57e95",
+        "field_name": "version",
+        "json_schema_pointer": "/properties/component/properties/version",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "string"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'version' at '/properties/component/properties/version' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/cc1fe1cfb6e4f74202b367cae06e14db",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "7404c6a41e0b7ba0372b45db7cfa1520ced57e409af466fd4366c6be4d619ee6",
+        "field_name": "evidence",
+        "json_schema_pointer": "/properties/evidence",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence' at '/properties/evidence' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/f675ee23db1cda1b29b295b0619f7458",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f09e75ea0b97ad7473d5178b4b940b61f70ea99f1f9b6d6974ed004f655bcd72",
+        "field_name": "limitations",
+        "json_schema_pointer": "/properties/limitations",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'limitations' at '/properties/limitations' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/9d106f8f264632ad6bf231b67bf39f94",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "6cf6602284a09b23b838e3fe638fdabb326104b421e2e5a76e317c7e6d60d33a",
+        "field_name": "report_id",
+        "json_schema_pointer": "/properties/report_id",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'report_id' at '/properties/report_id' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ff135182d472fbeef7f86bea073c00d7",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "93f9c584a64c063dab82d89d5f47354884d0658376cc6289d3db9521426d44b7",
+        "field_name": "schema_version",
+        "json_schema_pointer": "/properties/schema_version",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'schema_version' at '/properties/schema_version' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/e47b01ba1fcef86a58829f7125468b7a",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "1a814e08b16004757a2d4b3ef05966c621f80a0ef5afce94b4e78d91916a2aa0",
+        "field_name": "version_set",
+        "json_schema_pointer": "/properties/version_set",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "object"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'version_set' at '/properties/version_set' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/f087b42439e44910eaeab8d51e06da03",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "9ac136edb99a2063b3091602181c8d2022fdccb5b514991319d58544c2e57e95",
+        "field_name": "core_version",
+        "json_schema_pointer": "/properties/version_set/properties/core_version",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "string"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'core_version' at '/properties/version_set/properties/core_version' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/9293dbf6c37cb14e100ec1249df50fe3",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "c10d522fb1e53f783aec4e2ac4798956bbd751f7c60ff993a025218a0bd240a7",
+        "field_name": "profile_versions",
+        "json_schema_pointer": "/properties/version_set/properties/profile_versions",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'profile_versions' at '/properties/version_set/properties/profile_versions' in https://externalcontrollayer.ai/ns/schema/component-implementation-report/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/7854965f3c16be005196da3fdf215ead",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "6cf6602284a09b23b838e3fe638fdabb326104b421e2e5a76e317c7e6d60d33a",
         "field_name": "condition_id",
         "json_schema_pointer": "/$defs/condition/properties/condition_id",
@@ -4755,6 +5511,60 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "2b1ca15c563683f2de5ae5d2b8e1c8a1f89764ed476465f01edf20fd55454a12",
+        "field_name": "level",
+        "json_schema_pointer": "/allOf/4/if/properties/level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'level' at '/allOf/4/if/properties/level' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/88ffef329e6e4eb27abe20e37b432468",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "09e52063c874cf81f2606268dff5d67b4e5d31286695221096dd7fdda821a3a9",
+        "field_name": "status",
+        "json_schema_pointer": "/allOf/4/then/properties/status",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'status' at '/allOf/4/then/properties/status' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/0979c24f83c53da4d5c2ff506f111ff0",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "67e2fdf5938dee8f75d00c38e116aa6383a1667e135da216cc2f18916ee60341",
+        "field_name": "status",
+        "json_schema_pointer": "/allOf/5/if/properties/status",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'status' at '/allOf/5/if/properties/status' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/0ef4e92267539c567d7fd5fb9c45cee8",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "3b7776c04e2250a61eab63b3f2d5abc121c753d3c4525486f0e253fa8d77c6cc",
         "field_name": "assessment_package",
         "json_schema_pointer": "/properties/assessment_package",
@@ -4773,7 +5583,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "ba32d15cd02fe3e3434a6c1eb033f0856c7c91dfdcb7983bcd17f917f5a8c47d",
+        "constraint_sha256": "2b01c70e2078bf5889927258a8cf01a26f2e8c3a2d58f7ac8cc6a1059782da65",
         "field_name": "boundary_class",
         "json_schema_pointer": "/properties/boundary_class",
         "required_by_parent": true,
@@ -5601,7 +6411,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "700693241c848bce8b2a956d68e53847ce0207c8f99cd342731f1a8c9a690a87",
+        "constraint_sha256": "1b1343195e6a07d850e55d51f1479969c0ff712b3ecc7537086979ffe0c2b241",
         "field_name": "max_uses",
         "json_schema_pointer": "/$defs/authorization/properties/max_uses",
         "required_by_parent": false,
@@ -5655,7 +6465,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "1a06bed3f3a434ca8cd24d17dcbf27fddffa22c6002799fad7b30e4b7157d456",
+        "constraint_sha256": "ef59e1100036effa453d013cf118608e2ea95cfae8610f351a64deddc6dc934d",
         "field_name": "use_policy",
         "json_schema_pointer": "/$defs/authorization/properties/use_policy",
         "required_by_parent": true,
@@ -6321,7 +7131,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "2558e38aaa126d983693fa680a115817b85020c6c36985e8cacff0f9b85f1fb2",
+        "constraint_sha256": "363fb22e5a165919d0ff3d3c4e98b51d9133c9ea5c89e9ef0d0dea6c0846f066",
         "field_name": "authority_request",
         "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request",
         "required_by_parent": true,
@@ -6357,7 +7167,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "700693241c848bce8b2a956d68e53847ce0207c8f99cd342731f1a8c9a690a87",
+        "constraint_sha256": "1b1343195e6a07d850e55d51f1479969c0ff712b3ecc7537086979ffe0c2b241",
         "field_name": "max_uses",
         "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request/properties/max_uses",
         "required_by_parent": false,
@@ -6393,7 +7203,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "1a06bed3f3a434ca8cd24d17dcbf27fddffa22c6002799fad7b30e4b7157d456",
+        "constraint_sha256": "ef59e1100036effa453d013cf118608e2ea95cfae8610f351a64deddc6dc934d",
         "field_name": "use_policy",
         "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy",
         "required_by_parent": true,
@@ -6717,7 +7527,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "4cef2fc905bf04603542001b1b2a342b192a009222dbda2a86a215d05d3bde5b",
+        "constraint_sha256": "80540c59862003ebf067896b04ce96abf549754515dd1c71cff6067d3c7e28e4",
         "field_name": "policy",
         "json_schema_pointer": "/$defs/decisionResponse/allOf/1/properties/policy",
         "required_by_parent": true,
@@ -7941,6 +8751,42 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "58eaf68fc0aa71d924c18c0f800150a5e9861791a7042807807a2056b7f27b60",
+        "field_name": "delivery_surfaces",
+        "json_schema_pointer": "/allOf/1/then/properties/delivery_surfaces",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'delivery_surfaces' at '/allOf/1/then/properties/delivery_surfaces' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/fd722b24378cda160b57e693781d7bfe",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a870176bd89ed38b5c4648a98494dd754bbb516f78752ed5a7b14b6b55c725b8",
+        "field_name": "timing_case",
+        "json_schema_pointer": "/allOf/1/then/properties/timing_case",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'timing_case' at '/allOf/1/then/properties/timing_case' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/7ec9996245b56a00f730479b9a77f460",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "4a602e0551375f9bbcedaf49487f78b4b209e5282f6c49a3bc64c0ceb4f6e15e",
         "field_name": "topology_controls",
         "json_schema_pointer": "/allOf/1/then/properties/topology_controls",
@@ -8116,6 +8962,708 @@
       "description": "Field 'topology_controls' at '/allOf/4/then/properties/topology_controls' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
       "id": "https://externalcontrollayer.ai/ns/field/0bd20ca98d75f094e97696287717a414",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "30f9ddfa488e0ef0b114b1d8685b4c6c9d8a25e2679507c7e7c30ee4c8629b55",
+        "field_name": "claim_level",
+        "json_schema_pointer": "/allOf/5/if/properties/claim_level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_level' at '/allOf/5/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2890bd5cb85e38d8ec743633e087918f",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "477f3701fcceb2de768844111cb7d437af40ebfd4db8236c88e27df04c775715",
+        "field_name": "timing_case",
+        "json_schema_pointer": "/allOf/5/then/properties/timing_case",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'timing_case' at '/allOf/5/then/properties/timing_case' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/5f86074421d94fc51b545b18b02bf11d",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "02e70d99380d0cc184f95bd0d4c286c1c4d5e530ba725618c6321376ec9480b9",
+        "field_name": "trusted_time_or_secure_monotonic",
+        "json_schema_pointer": "/allOf/5/then/properties/timing_case/properties/trusted_time_or_secure_monotonic",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'trusted_time_or_secure_monotonic' at '/allOf/5/then/properties/timing_case/properties/trusted_time_or_secure_monotonic' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2d4aead2404eac1ec729b0bb5770b047",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "2b1ca15c563683f2de5ae5d2b8e1c8a1f89764ed476465f01edf20fd55454a12",
+        "field_name": "claim_level",
+        "json_schema_pointer": "/allOf/6/if/properties/claim_level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_level' at '/allOf/6/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/11a19e2cdf90cd9f826077dffd375849",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "80442e1edca911aed48e9fb50b2a17b5179fe40138901a674347cd3fc15ca6f8",
+        "field_name": "timing_case",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "composed"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'timing_case' at '/allOf/6/then/properties/timing_case' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/33cdfe4c9a4d8656e6ff25adf454e60c",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "02e70d99380d0cc184f95bd0d4c286c1c4d5e530ba725618c6321376ec9480b9",
+        "field_name": "uses_default_baseline",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'uses_default_baseline' at '/allOf/6/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/c186c78e31d0ea5fa9f8de1491ba3954",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "b83d31dd11bbca7c8c79c40239d502cfe69d835f0daec7fb0e4c7a08e6c74318",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/6/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/03d53fc6759e547f0fa6f23cb344f9a1",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f9316e660234937e7135cdc924f662d166d3b9dc933606fbc8a9b27df9e945e1",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/6/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/fe6b4745d56ebf7112201cbf7a908863",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "b83d31dd11bbca7c8c79c40239d502cfe69d835f0daec7fb0e4c7a08e6c74318",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/6/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/777e47a3e6e2d873e9e2acfda1a64f68",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "eab09e887d8dc4d8092df347f282cd82e6bf4906f8f7fa9e8e7477f9ca1289e0",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/6/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/d4d4fbd1c5ac6405a13a11a6a858f9a1",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "eab09e887d8dc4d8092df347f282cd82e6bf4906f8f7fa9e8e7477f9ca1289e0",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/6/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/0be8f3160c22dc9bca9032605bc9a9a1",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "9f157932c8aa855bf174ec164994cf7206033dd0d92f32ac260bdbbd2158fb76",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/6/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/6/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/285c58c4a65e4c17436834b17c94f54a",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "53596229a0c86548d06702e4f62f5922e7edf4a42e15f194ad05be5d37591b43",
+        "field_name": "claim_level",
+        "json_schema_pointer": "/allOf/7/if/properties/claim_level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_level' at '/allOf/7/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2638ca102611445a040d230635290a3b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "dacc1e155ae464f899e396ef754973e0832cd2c55ab89b8f781d46179ef8bf08",
+        "field_name": "timing_case",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "composed"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'timing_case' at '/allOf/7/then/properties/timing_case' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/a2fd89b8ed35ff858afbf2c75136a044",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "02e70d99380d0cc184f95bd0d4c286c1c4d5e530ba725618c6321376ec9480b9",
+        "field_name": "uses_default_baseline",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'uses_default_baseline' at '/allOf/7/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/bd9398feef6435eac676bf9c1a9c1032",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "8571ad580a3f8d82bbddc129973b1ee4c010ba41751f63d8b166deb7a73e843b",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/7/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/222df5076e553742eecc42d5d0bd15e6",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "b83d31dd11bbca7c8c79c40239d502cfe69d835f0daec7fb0e4c7a08e6c74318",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/7/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/f7364a4d2e36f2dc569d8b781d7f9265",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "0e4dd0823a2c93a4b912547b556906eebbde3d6f0bc602a915af40b70682a171",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/7/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/4bf6d46b6561e75b5fbb432fbb2b9972",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "98fbd812926e9a1cac37dceccc08f05284eaf4bf097f8e885e470002d706a67f",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/7/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/a1f01144aadae06e3f5245b98a7239a3",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "bffcbf65e3a7edae2a2f5a127e9493881c670400670e93800b0e09a0d68d7cc8",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/7/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/c7f65d1a863fc8dc3106aa524bdf7374",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "eab09e887d8dc4d8092df347f282cd82e6bf4906f8f7fa9e8e7477f9ca1289e0",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/7/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/7/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ec5d575ef9f88cde5763197bde3976a1",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f4f1b4ae70160a9e51d06d5fef769b27b8bc689c276e6d83c397e69f58582497",
+        "field_name": "claim_level",
+        "json_schema_pointer": "/allOf/8/if/properties/claim_level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_level' at '/allOf/8/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/b03f6c14fb7a514916bc9a424c07bbb2",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "1b899b3372e2ff5ae6c6babb7e4a627b39b632e0a6ac31d556ad41cb7e063a85",
+        "field_name": "timing_case",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "composed"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'timing_case' at '/allOf/8/then/properties/timing_case' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/a8620a60fbc79ac92ee6d0686d79634b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "02e70d99380d0cc184f95bd0d4c286c1c4d5e530ba725618c6321376ec9480b9",
+        "field_name": "uses_default_baseline",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'uses_default_baseline' at '/allOf/8/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/160377e35cf3d6f9686379cba2b269e4",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "f4c17f4d5c9af35e6e2f9365a3974dbfbf32942dbed3cfcd7741056472c820ce",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/8/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/8131a27ffebca637f259a36a62bb3ec9",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "0e4dd0823a2c93a4b912547b556906eebbde3d6f0bc602a915af40b70682a171",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/8/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/79675e07da96077e9479dcc035c79699",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a73c6ca101ad40d18ab835b1099612ff1f784d2e8213f17d05d28cd61ce41b89",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/8/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ecc122ec5440a6e5b01edfce08a81ee0",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "3c062d2861de9274950667cc6a1cbfa1ecc9aaf4767b5bd8d6b1e2104b115cf1",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/8/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/6cff0ee31990ac2580db0ef22d6f756a",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "56ed5d4438d53f92dbd65ba7a8a599fd868e864bed6d6b24867653a53872c757",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/8/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/44555aa02c0b757cdc370d30d9c91594",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "bffcbf65e3a7edae2a2f5a127e9493881c670400670e93800b0e09a0d68d7cc8",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/8/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/8/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/5ab32e4b91d35b6e209eaf48709e0883",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "85c133a002f12ea8b519e27382640ecd565f6edef4adb1839b671b0eb5a1eee1",
+        "field_name": "claim_level",
+        "json_schema_pointer": "/allOf/9/if/properties/claim_level",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'claim_level' at '/allOf/9/if/properties/claim_level' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/86721a6afbe56f3ce722c0c7a3754124",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "84458adc86b44155dc39d681e1eda6dcd45d64de15ea55448d294086b2d7b500",
+        "field_name": "timing_case",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "composed"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'timing_case' at '/allOf/9/then/properties/timing_case' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/de5aac9244546698ab5fd4466c1abcb9",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "02e70d99380d0cc184f95bd0d4c286c1c4d5e530ba725618c6321376ec9480b9",
+        "field_name": "uses_default_baseline",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'uses_default_baseline' at '/allOf/9/then/properties/timing_case/allOf/0/if/properties/uses_default_baseline' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/fb82a08ee035a5dc9e6f15397de60487",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a8bc1c915d6f8f48b987977a4f387eea878f956b32bf8c9967c07d46c3620ada",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/9/then/properties/timing_case/allOf/0/then/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/491ce61dfc714591dec1f2f5d2090324",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a73c6ca101ad40d18ab835b1099612ff1f784d2e8213f17d05d28cd61ce41b89",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/9/then/properties/timing_case/allOf/0/then/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/296f592ffb482aa4f739bd4f812b4796",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "8571ad580a3f8d82bbddc129973b1ee4c010ba41751f63d8b166deb7a73e843b",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "int"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/9/then/properties/timing_case/allOf/0/then/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/8ef3333178414aea69864421e5dfab53",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "348b50887483d24fd79aaef20a40ed82fa4f40cc279d9f852fcef7b1b6e7b149",
+        "field_name": "connected_revocation_seconds",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'connected_revocation_seconds' at '/allOf/9/then/properties/timing_case/allOf/1/if/properties/connected_revocation_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/24a62622ace31f5172d38c60e66c37d0",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "98fbd812926e9a1cac37dceccc08f05284eaf4bf097f8e885e470002d706a67f",
+        "field_name": "offline_staleness_seconds",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'offline_staleness_seconds' at '/allOf/9/then/properties/timing_case/allOf/2/if/properties/offline_staleness_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/5cb6d566363615845dd475f317ad352a",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "56ed5d4438d53f92dbd65ba7a8a599fd868e864bed6d6b24867653a53872c757",
+        "field_name": "evidence_export_seconds",
+        "json_schema_pointer": "/allOf/9/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence_export_seconds' at '/allOf/9/then/properties/timing_case/allOf/3/if/properties/evidence_export_seconds' in https://externalcontrollayer.ai/ns/schema/deployment-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/79f62c043561a37340e6c8c48b964fb4",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -10677,6 +12225,114 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "e90f63ededaa25af2d7144d0d7a44685800675014bff90c8f346b03f2bea5a9b",
+        "field_name": "policy_requirements",
+        "json_schema_pointer": "/properties/policy_requirements",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+        "type_summary": [
+          "object"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'policy_requirements' at '/properties/policy_requirements' in https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/53fbe909d8d158ed75c427ed92df863f",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "946d11920d95e29ad7190aa7adb972ac66de048970f397a52588c327df3941bf",
+        "field_name": "access",
+        "json_schema_pointer": "/properties/policy_requirements/properties/access",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'access' at '/properties/policy_requirements/properties/access' in https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/d62d73af40b2059dbdc38c622d085587",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "946d11920d95e29ad7190aa7adb972ac66de048970f397a52588c327df3941bf",
+        "field_name": "encryption",
+        "json_schema_pointer": "/properties/policy_requirements/properties/encryption",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'encryption' at '/properties/policy_requirements/properties/encryption' in https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/a4d8feaa6bb06a42f387b76cceda71e6",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "946d11920d95e29ad7190aa7adb972ac66de048970f397a52588c327df3941bf",
+        "field_name": "residency",
+        "json_schema_pointer": "/properties/policy_requirements/properties/residency",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'residency' at '/properties/policy_requirements/properties/residency' in https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/61ed9526277245b86a06aa5c50ae30fa",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "946d11920d95e29ad7190aa7adb972ac66de048970f397a52588c327df3941bf",
+        "field_name": "revocation",
+        "json_schema_pointer": "/properties/policy_requirements/properties/revocation",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'revocation' at '/properties/policy_requirements/properties/revocation' in https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/96d53afc64564fa1bdaf43318278982b",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "946d11920d95e29ad7190aa7adb972ac66de048970f397a52588c327df3941bf",
+        "field_name": "supersession",
+        "json_schema_pointer": "/properties/policy_requirements/properties/supersession",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'supersession' at '/properties/policy_requirements/properties/supersession' in https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ef284a085142bcb43dd0eb535b57c731",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "d10c37ca54146de209dfa41443387bda0ea47f773780cdd91a8dd508e39b399e",
         "field_name": "redaction",
         "json_schema_pointer": "/properties/redaction",
@@ -10749,7 +12405,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "d303e9dfa133a69eb46ebe80f68f287ebe41c9efd59919b6eb4b0d6188da63ef",
+        "constraint_sha256": "462aea9988fcc0313c0e7e0f24df7af4606bb7de093c05b328454a93ac814f02",
         "field_name": "retention_rules",
         "json_schema_pointer": "/properties/retention_rules",
         "required_by_parent": true,
@@ -10767,7 +12423,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "90193fe217813cc769795471ed355152732b93f471b4e4afd2034b7cb9816965",
+        "constraint_sha256": "7d449b66775a2b668c1ad6ca7b348e2827b914d49cc4013a638caebd7ac6aae8",
         "field_name": "duration",
         "json_schema_pointer": "/properties/retention_rules/items/properties/duration",
         "required_by_parent": true,
@@ -10911,6 +12567,60 @@
     },
     {
       "attributes": {
+        "constraint_sha256": "39e8667e562fb1552746d5aee71b39c858ca3e4dfe265a358b46f1c09f7121ff",
+        "field_name": "support_class",
+        "json_schema_pointer": "/$defs/obligation/allOf/1/if/properties/support_class",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'support_class' at '/$defs/obligation/allOf/1/if/properties/support_class' in https://externalcontrollayer.ai/ns/schema/mapping-packet/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/fd116354079f2f7d68d12abb8bcf08b7",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a266681ad891d579e5dc01c7c6003450a8ee440cefd7763bcaa68c9d7cff111c",
+        "field_name": "ecl_surfaces",
+        "json_schema_pointer": "/$defs/obligation/allOf/1/then/properties/ecl_surfaces",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'ecl_surfaces' at '/$defs/obligation/allOf/1/then/properties/ecl_surfaces' in https://externalcontrollayer.ai/ns/schema/mapping-packet/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/21a59c7241c8b7864195454256221a90",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a266681ad891d579e5dc01c7c6003450a8ee440cefd7763bcaa68c9d7cff111c",
+        "field_name": "evidence",
+        "json_schema_pointer": "/$defs/obligation/allOf/1/then/properties/evidence",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'evidence' at '/$defs/obligation/allOf/1/then/properties/evidence' in https://externalcontrollayer.ai/ns/schema/mapping-packet/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/618cc31b3eb97ce9fddf1bce56dfe050",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
         "constraint_sha256": "baf3f14c5ff42d64c507d09861ae5a99da2e9a79a9da03be3375389a8bc86599",
         "field_name": "assumptions",
         "json_schema_pointer": "/$defs/obligation/properties/assumptions",
@@ -10929,7 +12639,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "4474eb0edb3d55c3c4822ec530594be9ab0fe20df0f18d0bb7112e0599f0793e",
+        "constraint_sha256": "a949046a0a8ff02587ccebee91f25363d33bc47c1fbf56221c02029c7c0ad910",
         "field_name": "ecl_surfaces",
         "json_schema_pointer": "/$defs/obligation/properties/ecl_surfaces",
         "required_by_parent": true,
@@ -11343,7 +13053,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "ddd928388a6eec5525722ee460e947566f3acb3e0703c66191fa981bebd2d1e0",
+        "constraint_sha256": "3730267efcfc9958ba9e59fed01def9174944355b10f1096f67b12143b355369",
         "field_name": "validation_state",
         "json_schema_pointer": "/properties/validation_state",
         "required_by_parent": true,
@@ -11361,7 +13071,61 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "0f09055a64b24ed772f392a465d0cadc2110f73de2fbb84478b3c7dc8c8ee1d4",
+        "constraint_sha256": "e7352f244bf5f02bea79f007431430b40135425e405c969c30c89c89679fb689",
+        "field_name": "algorithm",
+        "json_schema_pointer": "/$defs/sha256Digest/allOf/1/properties/algorithm",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/offline-verification-package/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'algorithm' at '/$defs/sha256Digest/allOf/1/properties/algorithm' in https://externalcontrollayer.ai/ns/schema/offline-verification-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/ee909970e3859420bbb58624abab559e",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "8e696e6f1bc0107ee139269d55f0065f1cf7df813319dad93e4337420336b7db",
+        "field_name": "value",
+        "json_schema_pointer": "/$defs/sha256Digest/allOf/1/properties/value",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/offline-verification-package/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'value' at '/$defs/sha256Digest/allOf/1/properties/value' in https://externalcontrollayer.ai/ns/schema/offline-verification-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/623fb50e6153a648c9c97eab9fde0986",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "62e4034d286392c7ccb471c839cbb0f02aedffe2b1f3b31df28e05d2523c6d3d",
+        "field_name": "digest",
+        "json_schema_pointer": "/$defs/sha256ResourceReference/allOf/1/properties/digest",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/offline-verification-package/1",
+        "type_summary": [
+          "reference"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'digest' at '/$defs/sha256ResourceReference/allOf/1/properties/digest' in https://externalcontrollayer.ai/ns/schema/offline-verification-package/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/4a1ef1cff0afb5728d8cb6a83be112ee",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "bb1b5de30ec184477989fd64d18e409f5b9012f35211c0b6220c3021ac06536c",
         "field_name": "artifacts",
         "json_schema_pointer": "/properties/artifacts",
         "required_by_parent": true,
@@ -11379,7 +13143,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "87d7818a711a3f1d08cb0d57e5a3c68eb03660bfc2b4863be847c837a48e6eb5",
+        "constraint_sha256": "62e4034d286392c7ccb471c839cbb0f02aedffe2b1f3b31df28e05d2523c6d3d",
         "field_name": "digest",
         "json_schema_pointer": "/properties/artifacts/items/properties/digest",
         "required_by_parent": true,
@@ -11667,7 +13431,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "7016331494a9faa530f135444c73f2ce8495f86ebd749d743f3721c61fccf57c",
+        "constraint_sha256": "d9284756f2060e1c54b53c21da14bd2e138747e295a46262ca825e469904f17b",
         "field_name": "registry_snapshots",
         "json_schema_pointer": "/properties/registry_snapshots",
         "required_by_parent": true,
@@ -11685,7 +13449,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "3b7776c04e2250a61eab63b3f2d5abc121c753d3c4525486f0e253fa8d77c6cc",
+        "constraint_sha256": "c6b2ed9e818910ac3a1557313368fc4c9effa40563b6c0cb9f614a5ace4d64b6",
         "field_name": "revocation_snapshot",
         "json_schema_pointer": "/properties/revocation_snapshot",
         "required_by_parent": true,
@@ -11703,7 +13467,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "7016331494a9faa530f135444c73f2ce8495f86ebd749d743f3721c61fccf57c",
+        "constraint_sha256": "d9284756f2060e1c54b53c21da14bd2e138747e295a46262ca825e469904f17b",
         "field_name": "time_evidence",
         "json_schema_pointer": "/properties/time_evidence",
         "required_by_parent": true,
@@ -11721,7 +13485,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "3b7776c04e2250a61eab63b3f2d5abc121c753d3c4525486f0e253fa8d77c6cc",
+        "constraint_sha256": "c6b2ed9e818910ac3a1557313368fc4c9effa40563b6c0cb9f614a5ace4d64b6",
         "field_name": "trust_policy",
         "json_schema_pointer": "/properties/trust_policy",
         "required_by_parent": true,
@@ -11757,7 +13521,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "7375ddceeca92f8daf2b08b20ca9fe305c4ba3c6bd75af602adffdb0e5ec4c04",
+        "constraint_sha256": "a8313f2676e93c071977a8c8b0aa9a56d9e8cc8e957d3146bdafce992e7e3a90",
         "field_name": "action_classes",
         "json_schema_pointer": "/properties/action_classes",
         "required_by_parent": true,
@@ -11901,7 +13665,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "c88df83515eed30049bfc0adfa4900ddb6608ff6c3adea1b1fcd94dac5ae5789",
+        "constraint_sha256": "ed41510a8739f2a6641435f37d1431d148c7ff4e31b95ac1bdd2ec3ceb04ccc4",
         "field_name": "fail_open_authorization",
         "json_schema_pointer": "/properties/action_classes/items/properties/fail_open_authorization",
         "required_by_parent": false,
@@ -11914,6 +13678,24 @@
       "description": "Field 'fail_open_authorization' at '/properties/action_classes/items/properties/fail_open_authorization' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1; the referenced schema constraints are normative.",
       "id": "https://externalcontrollayer.ai/ns/field/6283e8eee859898b500d63b550d8811f",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "200b5f843585fef28fe85fa6c19df8a9c9e708a89b9bdd6fac0b09a7c2db7340",
+        "field_name": "covered_advisory_dependencies",
+        "json_schema_pointer": "/properties/action_classes/items/properties/fail_open_authorization/properties/covered_advisory_dependencies",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+        "type_summary": [
+          "array"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'covered_advisory_dependencies' at '/properties/action_classes/items/properties/fail_open_authorization/properties/covered_advisory_dependencies' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/94a399a77e910285f9f8beb600b0706b",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -11991,7 +13773,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "d74ec76117b1794587abc2b7111f387ff88314fd8e24178d566713a505856fb8",
+        "constraint_sha256": "7673d448bb6aa425990c8f3eac854952c13f0e4a6a552342d3437d341244d3ce",
         "field_name": "fail_open_prohibited_conditions",
         "json_schema_pointer": "/properties/action_classes/items/properties/fail_open_prohibited_conditions",
         "required_by_parent": true,
@@ -12009,7 +13791,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "c10d522fb1e53f783aec4e2ac4798956bbd751f7c60ff993a025218a0bd240a7",
+        "constraint_sha256": "4c3f6dbe3df96565868c351f4ff28914dc03067d21d04a33c4c52fff6e1a1c07",
         "field_name": "restricted_operations",
         "json_schema_pointer": "/properties/action_classes/items/properties/restricted_operations",
         "required_by_parent": true,
@@ -12081,7 +13863,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "b11acf8200413c040d7e236e695d6379224adfee6b4ec6001bbbf9a02dff68bf",
+        "constraint_sha256": "69dbc0dd12278e7246a50347928a395c9000388075af55ec3bcdd22d6090aaa6",
         "field_name": "dependencies",
         "json_schema_pointer": "/properties/dependencies",
         "required_by_parent": true,
@@ -12099,7 +13881,43 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "f63fab11e2a56e848ad245ffc101614bb799a4fb3ba9c17a7803020759a9594b",
+        "constraint_sha256": "20dfef5bf41fd478bd552968590c42391d34649a36f1d4cdeeeeced155d650b6",
+        "field_name": "class",
+        "json_schema_pointer": "/properties/dependencies/items/allOf/0/if/properties/class",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+        "type_summary": [
+          "str"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'class' at '/properties/dependencies/items/allOf/0/if/properties/class' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/74873eab9a61be638af870bb6227f4d5",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "41927c8e6cfb1da264d4a76efb477bb6137868a0a994ad5236bc714db40cdf5d",
+        "field_name": "supplies_required_proof",
+        "json_schema_pointer": "/properties/dependencies/items/allOf/0/then/properties/supplies_required_proof",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+        "type_summary": [
+          "bool"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'supplies_required_proof' at '/properties/dependencies/items/allOf/0/then/properties/supplies_required_proof' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/b98d4ce816a45f37089f78395ab16daf",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "732529696797c5bcf4b59e33fa001abfc132d0a46fdc57d29a44e7f01985338e",
         "field_name": "class",
         "json_schema_pointer": "/properties/dependencies/items/properties/class",
         "required_by_parent": true,
@@ -12459,7 +14277,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "e9c21bdfe24fa8d3178d0aba377be08c209876d470fc7020350be9637465f78f",
+        "constraint_sha256": "e3acbaf019b79bd81842cf5b46ffcbd6f34725d3bc4c899254570fd82e3c6468",
         "field_name": "recovery",
         "json_schema_pointer": "/properties/recovery",
         "required_by_parent": true,
@@ -12477,7 +14295,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "f722c118ca17bba42aa2b05e4d780425f7eaf2b8d987322497488a4b8fe4df38",
+        "constraint_sha256": "78a38b103e0777e1bc96536959d70fbedf42a1a70d5f86c152c5edeb66603654",
         "field_name": "required_frontiers",
         "json_schema_pointer": "/properties/recovery/properties/required_frontiers",
         "required_by_parent": true,
@@ -12508,6 +14326,60 @@
       "description": "Field 'version' at '/properties/version' in https://externalcontrollayer.ai/ns/schema/safe-state-profile/1; the referenced schema constraints are normative.",
       "id": "https://externalcontrollayer.ai/ns/field/0b6271f7b9b08ff46332e3b790a0e825",
       "introduced_in": "1.0-rc.3",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "1e03ddd89744ad67e82f4480d542f891eea6842826556ccade46ba33554b5b15",
+        "field_name": "workflow",
+        "json_schema_pointer": "/allOf/0/if/anyOf/1/properties/workflow",
+        "required_by_parent": true,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'workflow' at '/allOf/0/if/anyOf/1/properties/workflow' in https://externalcontrollayer.ai/ns/schema/work-intent/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/e5a9951ce5b912d7d3b236ca55080498",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "8de41c82db7249f60ba1295f20b97613d03eaa213310f5d6d9c447cc53547ed3",
+        "field_name": "workflow",
+        "json_schema_pointer": "/allOf/0/then/properties/workflow",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'workflow' at '/allOf/0/then/properties/workflow' in https://externalcontrollayer.ai/ns/schema/work-intent/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/2de5d1e1ad124a1732acfb3e12e97a34",
+      "introduced_in": "1.0.2-review.1",
+      "owner_class": "ecl-standard",
+      "status": "active"
+    },
+    {
+      "attributes": {
+        "constraint_sha256": "a266681ad891d579e5dc01c7c6003450a8ee440cefd7763bcaa68c9d7cff111c",
+        "field_name": "causal_predecessors",
+        "json_schema_pointer": "/allOf/0/then/properties/workflow/properties/causal_predecessors",
+        "required_by_parent": false,
+        "schema_id": "https://externalcontrollayer.ai/ns/schema/work-intent/1",
+        "type_summary": [
+          "unspecified"
+        ]
+      },
+      "compatibility": "behavioral",
+      "description": "Field 'causal_predecessors' at '/allOf/0/then/properties/workflow/properties/causal_predecessors' in https://externalcontrollayer.ai/ns/schema/work-intent/1; the referenced schema constraints are normative.",
+      "id": "https://externalcontrollayer.ai/ns/field/50df2d3106f654e3007763f6cb0b26e1",
+      "introduced_in": "1.0.2-review.1",
       "owner_class": "ecl-standard",
       "status": "active"
     },
@@ -12639,7 +14511,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "b242ffc14802d97dbde9b7e2faef02d161a216755f42c7175ee0bedb9149e21c",
+        "constraint_sha256": "de9f8be99fe5d04de0f7b87495b8bd86b94560e9de77d60154a8c17e2a6edf79",
         "field_name": "expires_at",
         "json_schema_pointer": "/properties/expires_at",
         "required_by_parent": true,
@@ -12729,7 +14601,7 @@
     },
     {
       "attributes": {
-        "constraint_sha256": "3b7776c04e2250a61eab63b3f2d5abc121c753d3c4525486f0e253fa8d77c6cc",
+        "constraint_sha256": "ca6cc874ce581334f65444fd6234f22e5c0302b5a2400b0c41dce68bddbcef94",
         "field_name": "parent_workflow",
         "json_schema_pointer": "/properties/parent_workflow",
         "required_by_parent": false,

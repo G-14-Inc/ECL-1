@@ -82,8 +82,9 @@ A normative proposal includes a problem statement, the exact text,
 alternatives, security and interoperability analysis, migration, conformance
 impact, and positive and negative vectors. Generated files are updated through
 their recorded generator, not hand-edited as a substitute for source changes.
-Use `python scripts/check_public.py` from the public package root, after the
-quickstart's installation, for the public verifier and teaching-example checks.
+Use `python scripts/check_public.py` from the public package root, after
+installing the [contribution-check dependencies](../docs/start-here.md#check-a-contribution-using-public-files),
+for the public verifier and teaching-example checks.
 It runs without the maintainer's private platform. If a recorded generator is
 not in the public package, submit the source change and expected results; an
 editor regenerates the artifacts and attaches the resulting diff and check

@@ -27,22 +27,25 @@ from jsonschema.protocols import Validator
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
-from .canonical import loads_json_strict
+from .canonical import (
+    MAX_JSON_DEPTH, MAX_JSON_NODES, CanonicalizationError, _check_limit, loads_json_strict,
+)
 from .schema import ecl_format_checker
 from .schema_patterns import schema_validator, validation_schema
 from .semantic import (
     Finding,
     SemanticValidator,
     active_extension_versions,
+    extension_applicability,
     allocated_extension_versions,
     composable_extensions,
 )
 
 SCHEMA_INVALID = "ecl.error.schema-invalid.v1"
-# Pilot contract, section 8 (parser limits, IE1-028): an object nests at most this deep.
-MAX_DEPTH = 32
-# Pilot contract, section 8 (parser limits, IE1-028): an object has at most this many JSON nodes.
-MAX_NODES = 10_000
+# The public object boundary uses the same declared profile as the strict parser (IE1-028).
+MAX_DEPTH = MAX_JSON_DEPTH
+MAX_NODES = MAX_JSON_NODES
+RESOURCE_LIMIT = "ecl.error.resource-limit-exceeded.v1"
 # A hostile value must not make a finding, or the list of findings, as large as the value is.
 MAX_FINDINGS_PER_RULE = 100
 MAX_TEXT = 200
@@ -230,6 +233,7 @@ def _semantics() -> SemanticValidator:
         allocated_versions=allocated_extension_versions(entries),
         composable=composable_extensions(entries),
         active_versions=active_extension_versions(entries),
+        applicability=extension_applicability(entries),
     )
 
 
@@ -328,25 +332,32 @@ def _semantic_findings(value: dict[str, Any]) -> list[Finding]:
     return _capped([_bounded(item.rule_id, item.path, item.message) for item in found])
 
 
-def _limit_exceeded(value: dict[str, Any]) -> str | None:
+def _limit_exceeded(
+    value: dict[str, Any], *, max_depth: int = MAX_DEPTH, max_nodes: int = MAX_NODES
+) -> str | None:
     """A message saying which parser limit `value` exceeds, or None if it keeps to both.
 
-    Depth counts the objects and arrays around a value, the top-level object being 1. Nodes are
+    Depth counts the objects and arrays around a value, the top-level object being 0. Nodes are
     every object, array and scalar value. The walk is iterative and stops at the first excess, so it
     takes about MAX_NODES steps at most and cannot reach Python's recursion limit. A value that
     holds itself is met again and again, and is refused for its depth.
     """
-    nodes = 1
-    pending: list[tuple[Any, int]] = [(value, 1)]
+    nodes = 0
+    pending: list[tuple[Iterator[Any], int]] = [(iter((value,)), 0)]
     while pending:
-        container, depth = pending.pop()
-        if depth > MAX_DEPTH:
-            return f"nesting depth exceeds {MAX_DEPTH}"
-        children = container.values() if isinstance(container, dict) else container
-        nodes += len(children)
-        if nodes > MAX_NODES:
-            return f"node count exceeds {MAX_NODES}"
-        pending.extend((child, depth + 1) for child in children if isinstance(child, dict | list))
+        children, depth = pending[-1]
+        try:
+            current = next(children)
+        except StopIteration:
+            pending.pop()
+            continue
+        nodes += 1
+        if nodes > max_nodes:
+            return f"node count exceeds {max_nodes}"
+        if depth > max_depth:
+            return f"nesting depth exceeds {max_depth}"
+        if isinstance(current, dict | list):
+            pending.append((iter(current.values() if isinstance(current, dict) else current), depth + 1))
     return None
 
 
@@ -358,12 +369,17 @@ def _guarded(step: str, check: Callable[[], list[Finding]]) -> list[Finding]:
         return [_invalid("/", f"{step} could not be completed: {type(error).__name__}")]
 
 
-def _validate(value: object) -> list[Finding]:
+def _validate(value: object, *, max_depth: int, max_nodes: int) -> list[Finding]:
+    try:
+        _check_limit("max_depth", max_depth)
+        _check_limit("max_nodes", max_nodes)
+    except CanonicalizationError as error:
+        return [_bounded(error.finding_id, "/", str(error))]
     if not isinstance(value, dict):
         return [_invalid("/", "an ECL object must be a JSON object")]
-    excess = _limit_exceeded(value)
+    excess = _limit_exceeded(value, max_depth=max_depth, max_nodes=max_nodes)
     if excess is not None:
-        return [_invalid("/", excess)]
+        return [_bounded(RESOURCE_LIMIT, "/", excess)]
     schema_id = _schema_id_for(value)
     if schema_id is None:
         return [_invalid("/", "not a DCMP-2 or EBMP-2 object, and not an ECL-IE-1 envelope")]
@@ -372,7 +388,9 @@ def _validate(value: object) -> list[Finding]:
     return sorted(findings, key=lambda item: (item.rule_id, item.path, item.message))
 
 
-def object_findings(value: Mapping[str, Any]) -> list[Finding]:
+def object_findings(
+    value: Mapping[str, Any], *, max_depth: int = MAX_DEPTH, max_nodes: int = MAX_NODES
+) -> list[Finding]:
     """The schema and semantic findings for a DCMP-2, EBMP-2 or ECL-IE-1 value.
 
     Total: it returns findings for any input and never raises. Something that is not a JSON
@@ -380,11 +398,11 @@ def object_findings(value: Mapping[str, Any]) -> list[Finding]:
     Only a `dict` is a JSON object: a `Mapping` of another kind is refused too, which fails closed
     and agrees with jsonschema, whose `object` type is `dict`.
 
-    First, before any other work, it enforces the parser limits of the pilot contract, section 8:
-    an object nested deeper than MAX_DEPTH (32) or with more than MAX_NODES (10 000) nodes gets one
-    such finding, and nothing is validated. Depth counts the objects and arrays around a value, the
-    top-level object being 1; nodes are all the objects, arrays and scalar values. The count is
-    iterative and stops at the first excess.
+    First it enforces the declared strict-parser profile: MAX_DEPTH (256) and MAX_NODES
+    (1 000 000), or the caller's explicit limits under the same configuration ceilings.
+    Excess returns `ecl.error.resource-limit-exceeded.v1` before validation. Depth starts at
+    zero and includes scalar leaves; nodes include every object, array and scalar. The count
+    is iterative and stops at the first excess.
 
     A schema finding names the keyword that failed and points at the member that is wrong. For a
     failed oneOf that is the error of the closest branch, not the whole value. Each of the two
@@ -392,4 +410,16 @@ def object_findings(value: Mapping[str, Any]) -> list[Finding]:
     that says more follow, so no rule is dropped. Paths and messages are cut to MAX_TEXT
     characters, and a cut ends in an ellipsis.
     """
-    return _guarded("object validation", lambda: _validate(value))
+    return _guarded("object validation", lambda: _validate(value, max_depth=max_depth, max_nodes=max_nodes))
+
+
+def extension_findings(value: dict[str, Any]) -> list[Finding]:
+    """Only the outer extension consumer rules, in registered diagnostic precedence."""
+    precedence = {
+        entry["id"]: entry["attributes"]["precedence"]
+        for entry in registry_document("semantic-rules")["entries"]
+        if entry.get("status") == "active"
+    }
+    return sorted(_semantics().extension_findings(value), key=lambda item: (
+        precedence.get(item.rule_id, -1), item.rule_id, item.path, item.message
+    ))

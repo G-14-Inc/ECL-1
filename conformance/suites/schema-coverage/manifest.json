@@ -434,10 +434,10 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
       "source": {
-        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-admit-bounded-multi-use.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-admit-single-use-explicit-one.json",
+        "generator": "scripts/generate_single_use_policy_vectors.py",
         "kind": "mutation",
-        "mutation": "set the authorization use policy to a value the schema does not define"
+        "mutation": "Set an unregistered use policy while retaining max_uses=1 to isolate its enum."
       },
       "stage": "protocol"
     },
@@ -467,7 +467,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
       "source": {
-        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-admit-bounded-multi-use.json",
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-admit-single-use-explicit-one.json",
         "generator": "scripts/generate_schema_coverage_vectors.py",
         "kind": "mutation",
         "mutation": "remove the authorization object of the admit"
@@ -695,7 +695,9 @@
       ],
       "expected": "fail",
       "expected_primary_id": "ecl.error.schema-invalid.v1",
-      "expected_secondary_ids": [],
+      "expected_secondary_ids": [
+        "ecl.rule.extension-namespace-allocated.v1"
+      ],
       "id": "dcmp-invalid-private-extension-uri-in-ecl-namespace",
       "negates": [
         "DCMP2-001",
@@ -760,10 +762,10 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
       "source": {
-        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-request-bounded-multi-use.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "base_vector": "conformance/suites/schema-coverage/dcmp-valid-request-single-use-explicit-one.json",
+        "generator": "scripts/generate_single_use_policy_vectors.py",
         "kind": "mutation",
-        "mutation": "set the requested use policy to a value the schema does not define"
+        "mutation": "Set an unregistered use policy while retaining max_uses=1 to isolate its enum."
       },
       "stage": "protocol"
     },
@@ -828,18 +830,19 @@
       ],
       "expected": "pass",
       "expected_secondary_ids": [],
-      "id": "dcmp-valid-admit-bounded-multi-use",
-      "path": "conformance/suites/schema-coverage/dcmp-valid-admit-bounded-multi-use.json",
+      "id": "dcmp-valid-admit-single-use-explicit-one",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-admit-single-use-explicit-one.json",
       "requirement_ids": [
         "DCMP2-001",
-        "DCMP2-013"
+        "DCMP2-013",
+        "DCMP2-050"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
       "source": {
         "base_vector": "conformance/vectors/dcmp-2/valid-decision-response-admit.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "generator": "scripts/generate_single_use_policy_vectors.py",
         "kind": "mutation",
-        "mutation": "issue bounded multi-use authority with three uses"
+        "mutation": "Set supported single_use policy and explicit max_uses=1."
       },
       "stage": "protocol"
     },
@@ -925,17 +928,18 @@
       ],
       "expected": "pass",
       "expected_secondary_ids": [],
-      "id": "dcmp-valid-request-bounded-multi-use",
-      "path": "conformance/suites/schema-coverage/dcmp-valid-request-bounded-multi-use.json",
+      "id": "dcmp-valid-request-single-use-explicit-one",
+      "path": "conformance/suites/schema-coverage/dcmp-valid-request-single-use-explicit-one.json",
       "requirement_ids": [
-        "DCMP2-001"
+        "DCMP2-001",
+        "DCMP2-050"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
       "source": {
         "base_vector": "conformance/vectors/dcmp-2/valid-decision-request.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "generator": "scripts/generate_single_use_policy_vectors.py",
         "kind": "mutation",
-        "mutation": "request bounded multi-use authority with three uses"
+        "mutation": "Set supported single_use policy and explicit max_uses=1."
       },
       "stage": "protocol"
     },
@@ -1978,14 +1982,15 @@
       "id": "safe-state-valid-buffer-exhaustion-fail-open-authorized",
       "path": "conformance/suites/schema-coverage/safe-state-valid-buffer-exhaustion-fail-open-authorized.json",
       "requirement_ids": [
-        "TS1-016"
+        "TS1-016",
+        "TS1-033"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
       "source": {
         "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "generator": "scripts/generate_safe_state_authorization_vectors.py",
         "kind": "mutation",
-        "mutation": "declare buffer_exhaustion_disposition fail_open with its fail-open authorization"
+        "mutation": "declare buffer_exhaustion_disposition fail_open with its fail-open authorization scoped to the declared advisory telemetry dependency"
       },
       "stage": "safe-state-profile"
     },
@@ -2006,14 +2011,15 @@
       "id": "safe-state-valid-dependency-fail-open-authorized",
       "path": "conformance/suites/schema-coverage/safe-state-valid-dependency-fail-open-authorized.json",
       "requirement_ids": [
-        "TS1-016"
+        "TS1-016",
+        "TS1-033"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
       "source": {
         "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "generator": "scripts/generate_safe_state_authorization_vectors.py",
         "kind": "mutation",
-        "mutation": "declare dependency_disposition fail_open with its fail-open authorization"
+        "mutation": "declare dependency_disposition fail_open with its fail-open authorization scoped to the declared advisory telemetry dependency"
       },
       "stage": "safe-state-profile"
     },
@@ -2034,14 +2040,15 @@
       "id": "safe-state-valid-stale-dependency-fail-open-authorized",
       "path": "conformance/suites/schema-coverage/safe-state-valid-stale-dependency-fail-open-authorized.json",
       "requirement_ids": [
-        "TS1-016"
+        "TS1-016",
+        "TS1-033"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
       "source": {
         "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "generator": "scripts/generate_safe_state_authorization_vectors.py",
         "kind": "mutation",
-        "mutation": "declare stale_dependency_disposition fail_open with its fail-open authorization"
+        "mutation": "declare stale_dependency_disposition fail_open with its fail-open authorization scoped to the declared advisory telemetry dependency"
       },
       "stage": "safe-state-profile"
     },
@@ -2062,14 +2069,15 @@
       "id": "safe-state-valid-timeout-fail-open-authorized",
       "path": "conformance/suites/schema-coverage/safe-state-valid-timeout-fail-open-authorized.json",
       "requirement_ids": [
-        "TS1-016"
+        "TS1-016",
+        "TS1-033"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
       "source": {
         "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
-        "generator": "scripts/generate_schema_coverage_vectors.py",
+        "generator": "scripts/generate_safe_state_authorization_vectors.py",
         "kind": "mutation",
-        "mutation": "declare timeout_disposition fail_open with its fail-open authorization"
+        "mutation": "declare timeout_disposition fail_open with its fail-open authorization scoped to the declared advisory telemetry dependency"
       },
       "stage": "safe-state-profile"
     }

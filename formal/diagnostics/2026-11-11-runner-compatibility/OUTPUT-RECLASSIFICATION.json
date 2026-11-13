@@ -1,0 +1,580 @@
+{
+  "baseline_runner_sha256": "a3500dbaa7719f1136d68688d615ef912c33c09083bf3f5dd188c45de779e536",
+  "checks": [
+    {
+      "name": "correct-binding",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "f844129a46601cf5efbb7155d43285472ffa75853732e2b7a221e1413cfb7217",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "correct-control",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "a39fb4afd01a7de292508b4c7828642352a5b1ecf192b30fb3902b0f07afe80b",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "correct-liveness",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "e87e3ce8b24ddd43e63cde8c187123766286cef41a9836ae8fb5d71874d15c01",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-outage-proceeds",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "609b9c2533dc64fcedfbd895dd7b5e2cb3bb7307360d3fb3e9044db999f09eb8",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-late-decision-used",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "cdea4ef8c9449eb194134377e1258f0c98a27a0be583d1b9d819e6960af35139",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-digest-binding",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "2be93c55f7503e896b8fd7e13000314929f1d1e916734d2f7bb94c9b27fbaab9",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-target-binding",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "d853518a113f604db498740494fa3c645c62215935a126048159a51fdd5d2a6a",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-audience-binding",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "666b4ebb7580a10259c5ac33960fc3bd547685571583b9ff5ebed42bfc46dcb0",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-window",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "4ebc49eb16d28b5243d4fd76c5ab3625520575f9c811376a6388ec70ae9015c7",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-single-use",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "182133718754093e8f5e837ceb5f61c769a6c5ee8b22f86f036520b33f2909fc",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-ignore-revocation",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "c1d17f68b18cd72c3bf1fe28f3fcf8c66637c8901c5636b87297dbdf4cb5625d",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-ignore-staleness",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "98177a3fbf70c5f46b0463609baa6115e7ed86138e7e91b7dc7373b36ab7e89c",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-propagation-deadline",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "be52ac878bf29e37134524f777b02a3f2c60b04d5e58ef2f8c593bc2928f7061",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-ignore-halt",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "bf001dc01fa8d64175da753f058569c90e07d16ac85463b3df1ad7df77aa8941",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-halt-unbounded",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "4fb48815a5089baff0344a14b6b8826307f0e58d7fa10fd3fd4818c41b5ae1e7",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-evidence-not-atomic",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "ead41fadfc248257721c0c96a1097f4c2f20e208ba9d0e37e24f78dd6689a034",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-bypass",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "31d517923cec71f8bf04867ecfdfc17212716b3ddfdf1a85ef293b1ed4f5af6a",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-actor-writes-authority",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "8a0dcc18263fbdcd32eb51c37fc4cdaf456382b55d757c044dda032eceb812cd",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-actor-writes-decision",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "112e37c43562a608a705a1ec2a58fb8bd42af7c2d2cdc67a53732ed79be389d6",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-actor-erases-evidence",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "bd80b0434b663c31061e7f81bbc3d5599c538a203432790a2f901457c2a0da24",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-judgment-admits",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "50fb6c9cb25bb8fbdee02b414581201dd85a58be27ffe5332ac72ff218d33f1f",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-self-report-admits",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "c50552329676a65ed71cb4a311ea7e46ef7154228eff054b3154588d8f80b56f",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-hold-never-times-out",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "86d34db1e6dab733d0eeec46c1e79f8ed1cb6572feba67bdf729547c28aa5941",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-no-decision-timeout",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "44be2ea02101a52a386818ff24bb1d5bdbca9a9d0fdd1ac523be057ec3212ffd",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-halt-ack-lost",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "d0755e5246ee4a91d27a5a028f6b34de503e390d2ca6b7e0ecde072afffb45df",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-effect",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "b17873a0d65d4c9978ae69ee59a0ea3d0609ddd8f692af32a7548b1e80b080f7",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-admit-after-challenge",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "3b3d1d22280eac1601b208ed592800822bc18653fe9eac47414bfaa1ad911704",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-collision-refusal",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "4d0cb0a47d65903929da1d8b17aa9913e41964e881ea8c0061176da10148b9c4",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-effect-during-outage",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "3f8298a9151346eb8e8446ad6333cb5eb8aaa90453a35ed3f6fc820295cc607f",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-effect-in-revocation-window",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "f5eeb0b0b92d3304522f48f78c354f7958d0fd22a045b446d6124f2179f5f8fe",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-effect-in-halt-window",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "0e2afe2223966852c8ea670dd3dbb74f9915b9a936b20f4d90071840715de705",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-timeout",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "3f3bfaf53ba11b3077192cfc257d1ac79d7b4eb11007aac858e01cbc23993fa8",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "correct-continuation",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "4774bd27774a878974d571bcd574b14363ad97d69c2530524e8c1f08fbf7ae48",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "correct-delayed-continuation",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "78064106dc6fa70679e41d8a41947edee835dd046b3d9e394c5b46f3f8bf102f",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-continuation-binding",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "c2b563424b9743e844277df08dbb5bc1c3406a1f9ec7bd47c425d073bed6422b",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-approval-reuse",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "f3bd6ad106077b42e468d2296755ee59c341685af191d86b40e688b7acdb8160",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-expired-approval",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "03b97ace5e2b0f11c60f1e1ab2df5d88ff9790c5cfd25dfb98b9c2658605e5c6",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-revoked-approval",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "58d048d76d430cf00e3ca1c080d806ef85d76ffa09aa219934b35e375dbd7a9f",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-approval-replay-refused",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "0027fd9516e214747506f18772ac08eeed48ebc57e96a98e19815fbff00b8365",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-later-continuation",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "bd549e43907d1fc1524dd87e46efb2dfd69c20941ca7ec68c776535b323103de",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-recovery-without-reconciliation",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "bea3a3e8511b952a6844915f86b5689c4fe194aab8f3dcf7fde4bf583a607c0b",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-recovered-trust-state",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "686bb4316b3b9662447d659b787c9923933b972c4b09dc3ad0b3a4e66e89b605",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-restriction-bypass",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "a96d770ceebff84a7453402f7a211225e38178a2c0213fc8367b240bbbca6df1",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-stale-recovery-proof",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "5227e153d80a6748a63753743915004d9186d25b4308a46b981cbea4dec82de4",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-unrecorded-restriction-lift",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "e95dc2a17e9b72d6b3c939526dbad577be927a96569081aa336587867581de75",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-effect-after-reconciliation",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "ab621371aacc0866f7f6dd4a4a0bd9575105533769c39c2ec161c09b8e292ed9",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-effect-after-short-outage",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "51ab8a1c6dcbb405fb114c755cc7a100fcc66e8efd60507cec6b53c62332e138",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-revalidated-authority-after-restriction",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "d4d3820a6e5fb308166b0fa540da1bc491191ab49fe0db380ac7a7c7122c380d",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-connected-stale-view",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "bc328507ce65746ba352cb665547add8c6b8d9b0d01c63cad9bc5421ee7d206f",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "correct-continuation-liveness",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "1a2a3eabe8454f7753dfc85cd68bc396fe144cbe7427125c22d5d5d44bc489bc",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "correct-repeated-staleness",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "2d1b7ccb0a545934174e24ac549b1401bb7ca5af2a618b5aab6f50efabbc7508",
+      "returncode": 0,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-continuation-attempt-collision",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "dae57b1df627c1279d8194725ab9ca669e308d6e5ab35d076fac1a6c3345c1bd",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-repeated-staleness-proof",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "24eba03b7f752e5f8209c1953c8fdd31f02ae214fa2ece94a6cc4e9c2ec83d50",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "broken-recovery-never-resumes",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "2cf9e7589ede120231985e534ce1155d44f85445b967998da285aec6328ae68f",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-live-continuation-admit",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "85c0ffa4c213629efff59b10a119bf7ebbc7c5a7a8afc227f9f32653bd1b7802",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-live-continuation-timeout",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "5252fc23eece7a994d9c7ce558411bdced3ce5db20e6b17cca5670e4b0dec940",
+      "returncode": 12,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-live-recovery-resumption",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "9d70612ae7c722b363fcbcf996848dec4b4392ce715ffffca642aa085e3f38d8",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "witness-revalidated-authority-after-repeated-staleness",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "0f1e0b60b7554b36a26d6154288f0a7ab76bc8222d67f87b0ff91e10a9724d37",
+      "returncode": 13,
+      "tool": "tlc"
+    },
+    {
+      "name": "protocol-correct",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "b60e34b8d310b227d0618ab3b3ffe72572af897bc51c7a49bb1b33c6c3a0b356",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-skip-context-signature",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "e5cdb64a147230218576ab1c8ed547ba4c6564d6be46bbb72ae5c3048c7f7d07",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-presentation-context-not-bound",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "8d57ddfa88cda5d2cd3856b1593e0b1616d8b372facc55dd567685a108692a10",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-skip-response-signature",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "1f4e2a345fba63233f61cd5b7b217130dfcbbc82f468987ed504c874048e7479",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-shared-role-key",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "d50f705934077a24207be3b0e6ba41080a4b9579060f0a1cb0e3050a233ac34f",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-response-not-bound",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "92038a651659b01138993b6708de5e9893866270918f245a14e2b48d2ccbab3a",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-presentation-not-bound",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "9cd1ee88610e4d09c56a4c5f37f72972a8f0bddf1efd539ad1a95460e7aafd0f",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-no-scope-check",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "5b1d41888f0834f580de8a9fd689d09bf3bba223809b0e90e19cdcb8ea05fc07",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-no-audience-check",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "70f9b142b954b0edbf9dcc7bde063ed4a29009568f8406400a02128520a71d15",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-no-single-use",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "314fba2c77a3e0ab16df1f47b32448efe1e45d9f2f1467f3002fd81a3d096fc2",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-dp-no-message-identity",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "9c049ddfb8e0b1d30e53e83888a7244e0195c0016bd5b2b0106d016f05fa4859",
+      "returncode": 0,
+      "tool": "tamarin"
+    },
+    {
+      "name": "protocol-dp-skips-request-signature",
+      "old_and_new_classification_matches_record": true,
+      "proof_invocation_rerun": false,
+      "retained_output_sha256": "38c66f68878cb59c42915d54be54143684fc11ebc1c83c6ba512c7d133df8fe0",
+      "returncode": 0,
+      "tool": "tamarin"
+    }
+  ],
+  "current_log_exit_counts": {
+    "tamarin": {
+      "0": 12
+    },
+    "tlc": {
+      "0": 7,
+      "12": 30,
+      "13": 21
+    }
+  },
+  "patched_runner_sha256": "3382cda931181f177cdbdbdb6af0d45fca034d09322e4228b490847ed1eec775",
+  "registered_checks_pins_lemmas_liveness_unchanged": true,
+  "scope": "Existing exact solver outputs reclassified by original and repaired parsers; no formal tools executed.",
+  "source_aggregate_sha256": "2193fd230e080070797fbc3b043c75789e7c273fb5c192b07864c4154c2a547b",
+  "source_packet": "formal/diagnostics/2026-11-11-provenance-refresh"
+}

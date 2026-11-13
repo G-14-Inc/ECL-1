@@ -1,0 +1,1206 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-repair-harness",
+  "trust_policy_path": "conformance/suites/envelope/trust-policy.json",
+  "vectors": [
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-array",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-array.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-array"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-budget-before-payload",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-budget-before-payload.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-budget-before-payload"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-extension-before-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-extension-before-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-extension-before-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-invalid-signature-control",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-invalid-signature-control.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-invalid-signature-control"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-invalid-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-invalid-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-invalid-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-media-before-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-media-before-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-media-before-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-missing-policy-and-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-missing-policy-and-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-missing-policy-and-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-missing-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-missing-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-missing-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-policy-before-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-policy-before-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-policy-before-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-policy-budget-before-time",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-policy-budget-before-time.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-policy-budget-before-time"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-scalar",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-scalar.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-scalar"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-harness-envelope-valid-control",
+      "path": "conformance/suites/repair-harness/repair-harness-envelope-valid-control.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/envelope/envelope-valid-ed25519-signed.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "envelope-valid-control"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_scope": {
+        "checks": {
+          "bindings": {
+            "checks": [
+              "pairing",
+              "continuation-history",
+              "response-binding",
+              "event-binding",
+              "outcome-reasons"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "current-trust": {
+            "checks": [
+              "current-status"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "decision-basis-recorded": {
+            "checks": [
+              "decision-basis-present"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "envelope-signatures": {
+            "checks": [
+              "envelope-integrity",
+              "time-not-after-evaluation",
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "object-rules": {
+            "checks": [
+              "object-schema",
+              "object-semantics",
+              "observation-kind",
+              "identifiers-unique",
+              "decision-basis-one-way"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "release-within-authority": {
+            "checks": [
+              "release-window"
+            ],
+            "objects": [
+              0,
+              1,
+              3
+            ]
+          }
+        },
+        "established": [
+          "envelope-signatures",
+          "current-trust",
+          "object-rules",
+          "decision-basis-recorded",
+          "bindings",
+          "release-within-authority"
+        ],
+        "not_established": [
+          "trusted-time",
+          "causal-completeness",
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {}
+      },
+      "expected_secondary_ids": [],
+      "expected_unresolved_predecessor_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "repair-harness-scope-incomplete-no-terminal",
+      "negates": [
+        "EBMP2-060"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-scope-incomplete-no-terminal.json",
+      "requirement_ids": [
+        "EBMP2-060",
+        "EBMP2-076"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-incomplete-no-terminal.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.revoked.v1",
+      "expected_scope": {
+        "checks": {},
+        "established": [],
+        "not_established": [
+          "envelope-signatures",
+          "current-trust",
+          "trusted-time",
+          "object-rules",
+          "decision-basis-recorded",
+          "bindings",
+          "release-within-authority",
+          "causal-completeness",
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {}
+      },
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "repair-harness-scope-invalid-signer-revoked-before-own-time",
+      "negates": [
+        "EBMP2-057",
+        "ECL1N-0159",
+        "TP1-006"
+      ],
+      "path": "conformance/suites/repair-harness/repair-harness-scope-invalid-signer-revoked-before-own-time.json",
+      "requirement_ids": [
+        "EBMP2-057",
+        "EBMP2-076",
+        "ECL1N-0159",
+        "TP1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-invalid-signer-revoked-before-own-time.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [
+        "conformance/suites/evidence-bundle/trust-policy.json"
+      ],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy-v2-ep-revoked-before-own-time.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_scope": {
+        "checks": {
+          "bindings": {
+            "checks": [
+              "pairing",
+              "continuation-history",
+              "response-binding",
+              "event-binding",
+              "outcome-reasons"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "causal-completeness": {
+            "checks": [
+              "identifiers-unique",
+              "predecessors-resolved",
+              "predecessor-digests",
+              "graph-acyclic",
+              "causal-context",
+              "sequence-monotonic",
+              "state-transitions",
+              "terminal-per-request",
+              "attempt-authority-consumed"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "current-trust": {
+            "checks": [
+              "current-status"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "decision-basis-recorded": {
+            "checks": [
+              "decision-basis-present"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "envelope-signatures": {
+            "checks": [
+              "envelope-integrity",
+              "time-not-after-evaluation",
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "object-rules": {
+            "checks": [
+              "object-schema",
+              "object-semantics",
+              "observation-kind",
+              "identifiers-unique",
+              "decision-basis-one-way"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "release-within-authority": {
+            "checks": [
+              "release-window"
+            ],
+            "objects": [
+              0,
+              1,
+              3,
+              4
+            ]
+          }
+        },
+        "established": [
+          "envelope-signatures",
+          "current-trust",
+          "object-rules",
+          "decision-basis-recorded",
+          "bindings",
+          "release-within-authority",
+          "causal-completeness"
+        ],
+        "not_established": [
+          "trusted-time",
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {}
+      },
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "repair-harness-scope-valid-attestation-extra-signature-not-verifying",
+      "path": "conformance/suites/repair-harness/repair-harness-scope-valid-attestation-extra-signature-not-verifying.json",
+      "requirement_ids": [
+        "EBMP2-076",
+        "IE1-015",
+        "IE1-034",
+        "TP1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-attestation-extra-signature-not-verifying.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy-time-authority-two-time-keys.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_effects": [
+        {
+          "action_id": "https://externalcontrollayer.ai/ns/action/sha256/a71319f67ab68b78388bfaed1a7eb03fadafe9c3139569947d4aa23bca97ac5d",
+          "level": "corroborated"
+        }
+      ],
+      "expected_scope": {
+        "checks": {
+          "bindings": {
+            "checks": [
+              "pairing",
+              "continuation-history",
+              "response-binding",
+              "event-binding",
+              "outcome-reasons"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "causal-completeness": {
+            "checks": [
+              "identifiers-unique",
+              "predecessors-resolved",
+              "predecessor-digests",
+              "graph-acyclic",
+              "causal-context",
+              "sequence-monotonic",
+              "state-transitions",
+              "terminal-per-request",
+              "attempt-authority-consumed"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "current-trust": {
+            "checks": [
+              "current-status"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "decision-basis-recorded": {
+            "checks": [
+              "decision-basis-present"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "envelope-signatures": {
+            "checks": [
+              "envelope-integrity",
+              "time-not-after-evaluation",
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "object-rules": {
+            "checks": [
+              "object-schema",
+              "object-semantics",
+              "observation-kind",
+              "identifiers-unique",
+              "decision-basis-one-way"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "release-within-authority": {
+            "checks": [
+              "release-window"
+            ],
+            "objects": [
+              0,
+              1,
+              3,
+              4
+            ]
+          }
+        },
+        "established": [
+          "envelope-signatures",
+          "current-trust",
+          "object-rules",
+          "decision-basis-recorded",
+          "bindings",
+          "release-within-authority",
+          "causal-completeness"
+        ],
+        "not_established": [
+          "trusted-time",
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {}
+      },
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "repair-harness-scope-valid-observation-corroborates",
+      "path": "conformance/suites/repair-harness/repair-harness-scope-valid-observation-corroborates.json",
+      "requirement_ids": [
+        "EBMP2-059",
+        "EBMP2-061",
+        "EBMP2-076"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-observation-corroborates.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "accept_current_trust_failure": true,
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_effects": [
+        {
+          "action_id": "https://externalcontrollayer.ai/ns/action/sha256/a71319f67ab68b78388bfaed1a7eb03fadafe9c3139569947d4aa23bca97ac5d",
+          "level": "corroborated"
+        }
+      ],
+      "expected_scope": {
+        "checks": {
+          "bindings": {
+            "checks": [
+              "pairing",
+              "continuation-history",
+              "response-binding",
+              "event-binding",
+              "outcome-reasons"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "causal-completeness": {
+            "checks": [
+              "identifiers-unique",
+              "predecessors-resolved",
+              "predecessor-digests",
+              "graph-acyclic",
+              "causal-context",
+              "sequence-monotonic",
+              "state-transitions",
+              "terminal-per-request",
+              "attempt-authority-consumed"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "decision-basis-recorded": {
+            "checks": [
+              "decision-basis-present"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "envelope-signatures": {
+            "checks": [
+              "envelope-integrity",
+              "time-not-after-evaluation",
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "object-rules": {
+            "checks": [
+              "object-schema",
+              "object-semantics",
+              "observation-kind",
+              "identifiers-unique",
+              "decision-basis-one-way"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "release-within-authority": {
+            "checks": [
+              "release-window"
+            ],
+            "objects": [
+              0,
+              1,
+              3,
+              4
+            ]
+          }
+        },
+        "established": [
+          "envelope-signatures",
+          "object-rules",
+          "decision-basis-recorded",
+          "bindings",
+          "release-within-authority",
+          "causal-completeness"
+        ],
+        "not_established": [
+          "current-trust",
+          "trusted-time",
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {}
+      },
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "repair-harness-scope-valid-observation-signer-revoked-after-waiver",
+      "path": "conformance/suites/repair-harness/repair-harness-scope-valid-observation-signer-revoked-after-waiver.json",
+      "requirement_ids": [
+        "EBMP2-060",
+        "EBMP2-076",
+        "TP1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-observation-signer-revoked-after-waiver.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [
+        "conformance/suites/evidence-bundle/trust-policy.json"
+      ],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy-v2-observer-revoked-after.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_scope": {
+        "checks": {
+          "bindings": {
+            "checks": [
+              "pairing",
+              "continuation-history",
+              "response-binding",
+              "event-binding",
+              "outcome-reasons"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "causal-completeness": {
+            "checks": [
+              "identifiers-unique",
+              "predecessors-resolved",
+              "predecessor-digests",
+              "graph-acyclic",
+              "causal-context",
+              "sequence-monotonic",
+              "state-transitions",
+              "terminal-per-request",
+              "attempt-authority-consumed"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "current-trust": {
+            "checks": [
+              "current-status"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "decision-basis-recorded": {
+            "checks": [
+              "decision-basis-present"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "decision-basis-register": {
+            "checks": [
+              "decision-basis-register"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "envelope-signatures": {
+            "checks": [
+              "envelope-integrity",
+              "time-not-after-evaluation",
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "object-rules": {
+            "checks": [
+              "object-schema",
+              "object-semantics",
+              "observation-kind",
+              "identifiers-unique",
+              "decision-basis-one-way"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "release-within-authority": {
+            "checks": [
+              "release-window"
+            ],
+            "objects": [
+              0,
+              1,
+              3,
+              4
+            ]
+          }
+        },
+        "established": [
+          "envelope-signatures",
+          "current-trust",
+          "object-rules",
+          "decision-basis-recorded",
+          "decision-basis-register",
+          "bindings",
+          "release-within-authority",
+          "causal-completeness"
+        ],
+        "not_established": [
+          "trusted-time",
+          "decision-input-timing",
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {
+          "decision-input-timing": "input-times-not-recorded"
+        }
+      },
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "repair-harness-scope-valid-succeeded-with-register",
+      "path": "conformance/suites/repair-harness/repair-harness-scope-valid-succeeded-with-register.json",
+      "register_path": "conformance/suites/evidence-bundle/register.json",
+      "requirement_ids": [
+        "DCMP2-053",
+        "EBMP2-076"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded-with-register.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_scope": {
+        "checks": {
+          "bindings": {
+            "checks": [
+              "pairing",
+              "continuation-history",
+              "response-binding",
+              "event-binding",
+              "outcome-reasons"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "causal-completeness": {
+            "checks": [
+              "identifiers-unique",
+              "predecessors-resolved",
+              "predecessor-digests",
+              "graph-acyclic",
+              "causal-context",
+              "sequence-monotonic",
+              "state-transitions",
+              "terminal-per-request",
+              "attempt-authority-consumed"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "current-trust": {
+            "checks": [
+              "current-status"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "decision-basis-recorded": {
+            "checks": [
+              "decision-basis-present"
+            ],
+            "objects": [
+              1
+            ]
+          },
+          "envelope-signatures": {
+            "checks": [
+              "envelope-integrity",
+              "time-not-after-evaluation",
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "object-rules": {
+            "checks": [
+              "object-schema",
+              "object-semantics",
+              "observation-kind",
+              "identifiers-unique",
+              "decision-basis-one-way"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "release-within-authority": {
+            "checks": [
+              "release-window"
+            ],
+            "objects": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          "trusted-time": {
+            "checks": [
+              "historical-signers",
+              "current-compromise-knowledge",
+              "trusted-time-countersignatures",
+              "trusted-time-coverage",
+              "attestation-signers"
+            ],
+            "objects": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        },
+        "established": [
+          "envelope-signatures",
+          "current-trust",
+          "trusted-time",
+          "object-rules",
+          "decision-basis-recorded",
+          "bindings",
+          "release-within-authority",
+          "causal-completeness"
+        ],
+        "not_established": [
+          "recorded-times-true",
+          "effects-occurred",
+          "deployment-assessed",
+          "statements-true"
+        ],
+        "reasons": {}
+      },
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "repair-harness-scope-valid-trusted-time",
+      "path": "conformance/suites/repair-harness/repair-harness-scope-valid-trusted-time.json",
+      "require_trusted_time": true,
+      "requirement_ids": [
+        "EBMP2-076",
+        "IE1-025",
+        "IE1-032",
+        "IE1-033",
+        "IE1-034",
+        "IE1-035"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-trusted-time.json",
+        "generator": "scripts/generate_repair_harness_vectors.py",
+        "kind": "mutation",
+        "mutation": "Preserve the signed input; add a fixed oracle for supporting checks and exact object indexes."
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy-time-authority.json"
+    }
+  ]
+}

@@ -112,10 +112,12 @@
               "document-validation",
               "extension-version-rule",
               "document-extension-rules",
+              "deployment-timing-case",
               "key-role-separation",
               "binding-basis-agreement-rule",
               "otel-export-keyed-digests",
-              "offline-package-verification"
+              "offline-package-verification",
+              "work-intent-contract"
             ]
           }
         }
@@ -155,7 +157,7 @@
       "type": "boolean"
     },
     "time_policies": {
-      "description": "The verification-time policies the implementation applied, stage by stage (INTEGRITY-ENVELOPE-1, IE1-023), as conformance/README.md fixes them for the corpus. A report states envelope when the implementation declares envelope-signature-verification, evidence-bundle when it declares evidence-bundle-verification, and package when it declares offline-package-verification.",
+      "description": "The verification-time policies actually applied, for exactly the envelope, evidence-bundle and package stages of supported corpus vectors (IE1-023). The vector stage determines the obligation even when its assigned capability is narrower, such as key-role-separation. Omit stages whose vectors are all unsupported. See conformance/EXTERNAL_IMPLEMENTATION_PROFILE.md.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -297,6 +299,35 @@
                       "type": "string",
                       "minLength": 1
                     }
+                  },
+                  "checks": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "required": [
+                        "checks",
+                        "objects"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "checks": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "uniqueItems": true
+                        },
+                        "objects": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "uniqueItems": true
+                        }
+                      }
+                    }
                   }
                 }
               },
@@ -304,7 +335,7 @@
                 "type": "null"
               }
             ],
-            "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare."
+            "description": "The actual observation when the vector declares the corresponding expectation; null when unavailable. Omitted for an unsupported vector or an expectation the vector does not declare. When checks is present, each established item names the exact check identifiers and zero-based envelope/observation indexes; duplicate entries are forbidden and indexes compare as sets. An empty map means no established item has supporting checks."
           },
           "observed_effects": {
             "anyOf": [

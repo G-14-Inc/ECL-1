@@ -1,0 +1,647 @@
+{
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "cases": [
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "ordinary-answer-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-answer-control.json",
+      "purpose": "Existing positive control",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-answer-completion-after-terminal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-answer-completion-after-terminal.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "ordinary-answer-completion-at-terminal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-answer-completion-at-terminal.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1"
+      ],
+      "id": "ordinary-answer-completion-before-forward",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-answer-completion-before-forward.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-answer-completion-absent",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-answer-completion-absent.json",
+      "purpose": "Live answer requirement versus explicit recovery uncertainty",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "ordinary-no-answer-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-control.json",
+      "purpose": "Existing positive control",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-no-answer-completion-after-terminal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-completion-after-terminal.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-no-answer-completion-at-terminal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-completion-at-terminal.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-no-answer-completion-before-forward",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-completion-before-forward.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "ordinary-no-answer-completion-absent",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-completion-absent.json",
+      "purpose": "Live answer requirement versus explicit recovery uncertainty",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recovered-answer-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-answer-control.json",
+      "purpose": "Existing positive control",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-answer-completion-after-terminal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-answer-completion-after-terminal.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recovered-answer-completion-at-terminal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-answer-completion-at-terminal.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1"
+      ],
+      "id": "recovered-answer-completion-before-forward",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-answer-completion-before-forward.json",
+      "purpose": "Retained completion chronology and missing-answer distinction",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recovered-answer-completion-absent",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-answer-completion-absent.json",
+      "purpose": "Live answer requirement versus explicit recovery uncertainty",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-succeeded-completion-retained",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-succeeded-completion-retained.json",
+      "purpose": "Known recovery outcome does not invent unavailable clock evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-succeeded-completion-absent",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-succeeded-completion-absent.json",
+      "purpose": "Known recovery outcome does not invent unavailable clock evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-failed-completion-retained",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-failed-completion-retained.json",
+      "purpose": "Known recovery outcome does not invent unavailable clock evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-failed-completion-absent",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-failed-completion-absent.json",
+      "purpose": "Known recovery outcome does not invent unavailable clock evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-unknown-completion-retained",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-unknown-completion-retained.json",
+      "purpose": "Known recovery outcome does not invent unavailable clock evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-unknown-completion-absent",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-unknown-completion-absent.json",
+      "purpose": "Known recovery outcome does not invent unavailable clock evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "discharged-step5-halt-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/discharged-step5-halt-control.json",
+      "purpose": "Valid post-discharge refusal, including stale-at-final proof",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "no-obligations-step5-halt-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/no-obligations-step5-halt-control.json",
+      "purpose": "Valid post-discharge refusal, including stale-at-final proof",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "discharged-step5-stale-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/discharged-step5-stale-control.json",
+      "purpose": "Valid post-discharge refusal, including stale-at-final proof",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "step5-halt-foreign-obligation",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/step5-halt-foreign-obligation.json",
+      "purpose": "Retained discharge intrinsic validity regardless of earlier refusal cause",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "step5-halt-duplicate-obligation",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/step5-halt-duplicate-obligation.json",
+      "purpose": "Retained discharge intrinsic validity regardless of earlier refusal cause",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "step5-halt-proof-after-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/step5-halt-proof-after-check.json",
+      "purpose": "Retained discharge intrinsic validity regardless of earlier refusal cause",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "id": "step5-halt-unsatisfied",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/step5-halt-unsatisfied.json",
+      "purpose": "Retained discharge intrinsic validity regardless of earlier refusal cause",
+      "schema_valid": false
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "step5-halt-missing-required",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/step5-halt-missing-required.json",
+      "purpose": "Retained discharge intrinsic validity regardless of earlier refusal cause",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "step5-halt-unrequested-discharge",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/step5-halt-unrequested-discharge.json",
+      "purpose": "A discharge claims obligations absent from the admitted decision",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "post-consumption-journal-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/post-consumption-journal-control.json",
+      "purpose": "Journal failure keeps its explicit refusal precedence",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "post-consumption-journal-foreign-discharge",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/post-consumption-journal-foreign-discharge.json",
+      "purpose": "Journal exception does not make a retained discharge truthful",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "transport-error-without-answer",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/transport-error-without-answer.json",
+      "purpose": "A transport error is a forward-failed unknown outcome, not a server answer",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "transport-error-cannot-claim-answer-time",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/transport-error-cannot-claim-answer-time.json",
+      "purpose": "Transport return alone does not establish MG1-015 answer arrival",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "jsonrpc-error-answer-with-completion",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/jsonrpc-error-answer-with-completion.json",
+      "purpose": "A complete error response differs from a transport failure",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "jsonrpc-error-answer-missing-completion",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/jsonrpc-error-answer-missing-completion.json",
+      "purpose": "An ordinary error answer also requires completion",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "answered-input-required-unknown",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/answered-input-required-unknown.json",
+      "purpose": "Existing accepted unknown-response, late-answer or uncertainty control",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "answer-after-window-is-informational",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/answer-after-window-is-informational.json",
+      "purpose": "Existing accepted unknown-response, late-answer or uncertainty control",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recovered-outcome-unknown-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-outcome-unknown-control.json",
+      "purpose": "Existing accepted unknown-response, late-answer or uncertainty control",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "discharged-journal-before-final-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/discharged-journal-before-final-control.json",
+      "purpose": "A failed journal before the final observation retains valid discharge",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "discharged-journal-before-final-intrinsic-error",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/discharged-journal-before-final-intrinsic-error.json",
+      "purpose": "An absent final observation does not hide intrinsic proof ordering",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "stale-refusal-retains-intrinsic-error",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/stale-refusal-retains-intrinsic-error.json",
+      "purpose": "A correct stale-proof refusal cannot erase another retained-record contradiction",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "halt-refusal-check-after-final",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-refusal-check-after-final.json",
+      "purpose": "Step 4 check must precede a reliable Step 5 observation even when halt prevents release",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "halt-refusal-unreliable-final-control",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-refusal-unreliable-final-control.json",
+      "purpose": "An explicitly failed clock comparison cannot establish check-to-final ordering",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "halt-refusal-unreliable-final-intrinsic-error",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-refusal-unreliable-final-intrinsic-error.json",
+      "purpose": "Failed final clock comparison does not excuse acquisition after check",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "halt-expired-before-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-expired-before-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "halt-expires-at-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-expires-at-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "halt-fresh-after-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-fresh-after-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "halt-no-expiry",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/halt-no-expiry.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "unreliable-final-expired-before-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/unreliable-final-expired-before-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "unreliable-final-expires-at-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/unreliable-final-expires-at-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "unreliable-final-fresh-after-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/unreliable-final-fresh-after-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "unreliable-final-no-expiry",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/unreliable-final-no-expiry.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "journal-before-final-expired-before-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/journal-before-final-expired-before-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "journal-before-final-expires-at-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/journal-before-final-expires-at-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "journal-before-final-fresh-after-check",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/journal-before-final-fresh-after-check.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "journal-before-final-no-expiry",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/journal-before-final-no-expiry.json",
+      "purpose": "A satisfied proof must be fresh when checked; an absent bound asserts no expiry",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-obligations-discharged.v1"
+      ],
+      "id": "intrinsic-failure-before-final-obligation-refusal",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/intrinsic-failure-before-final-obligation-refusal.json",
+      "purpose": "Intrinsic proof failure establishes refusal precedence without a final clock observation",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-no-answer-control-digest-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-control-digest-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-no-answer-control-time-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-control-time-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "ordinary-no-answer-control-digest-and-time",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/ordinary-no-answer-control-digest-and-time.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-outcome-unknown-control-digest-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-outcome-unknown-control-digest-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-outcome-unknown-control-time-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-outcome-unknown-control-time-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-outcome-unknown-control-digest-and-time",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recovered-outcome-unknown-control-digest-and-time.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-unknown-completion-absent-digest-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-unknown-completion-absent-digest-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-unknown-completion-absent-time-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-unknown-completion-absent-time-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-unknown-completion-absent-digest-and-time",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-unknown-completion-absent-digest-and-time.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-succeeded-completion-absent-digest-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-succeeded-completion-absent-digest-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-succeeded-completion-absent-time-only",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-succeeded-completion-absent-time-only.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "expected_rules": [],
+      "id": "recorded-succeeded-completion-absent-digest-and-time",
+      "path": "tests/fixtures/mcp-retained-evidence-regressions/recorded-succeeded-completion-absent-digest-and-time.json",
+      "purpose": "An unanswered exchange cannot invent answer evidence; recorded outcomes preserve historical evidence",
+      "schema_valid": true
+    }
+  ],
+  "requirements": [
+    "MG1-010",
+    "MG1-013",
+    "MG1-014",
+    "MG1-015",
+    "MG1-016",
+    "MG1-017"
+  ],
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "status": "Synthetic unsigned record regressions; no historical execution claim."
+}

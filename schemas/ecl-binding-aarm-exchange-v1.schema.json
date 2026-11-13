@@ -116,7 +116,33 @@
     },
     "terminal": {
       "description": "The execution_terminal event that binds the receipt with ecl.ext.aarm-receipt.v1.",
-      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord",
+      "properties": {
+        "event_type": {
+          "const": "execution_terminal"
+        },
+        "event": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/executionEvent",
+          "properties": {
+            "state": {
+              "enum": [
+                "succeeded",
+                "failed",
+                "partially_succeeded",
+                "cancelled",
+                "timed_out",
+                "rolled_back",
+                "compensated",
+                "unknown",
+                "denied",
+                "held",
+                "challenged",
+                "expired_before_release"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {

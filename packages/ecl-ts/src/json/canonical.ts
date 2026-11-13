@@ -98,7 +98,9 @@ function serialize(value: JsonValue, parts: string[]): void {
     // Every position, holes included: a hole or `undefined` is no JSON value, so the array is
     // refused rather than written with a missing element or shortened (`[,1]`, `[1]`).
     // An array carries its positions and nothing else: a named member would be dropped.
-    if (Object.keys(value).some((key) => !/^(?:0|[1-9][0-9]*)$/.test(key))) {
+    // Decimal-looking property names at or above 2**32 - 1 are ordinary named properties:
+    // they do not extend length and must not disappear from the signed representation.
+    if (Object.keys(value).some((key) => !/^(?:0|[1-9][0-9]*)$/.test(key) || Number(key) >= value.length)) {
       throw new CanonicalizationError("an array with a member that is not a position is not a JSON array");
     }
     parts.push("[");

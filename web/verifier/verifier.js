@@ -155,7 +155,7 @@
         length += 1;
       } else if (unit < 2048) {
         length += 2;
-      } else if (unit >= 55296 && unit <= 56319) {
+      } else if (unit >= 55296 && unit <= 56319 && text.charCodeAt(index + 1) >= 56320 && text.charCodeAt(index + 1) <= 57343) {
         length += 4;
         index += 1;
       } else {
@@ -4172,7 +4172,7 @@
     return void 0;
   }
   function verifyEd25519(publicKey, message, signature) {
-    if (publicKey.length !== 32 || signature.length !== 64) {
+    if (signature.length !== 64 || ed25519KeyProblem(publicKey) !== void 0) {
       return false;
     }
     const rBytes = signature.subarray(0, 32);
@@ -4376,7 +4376,7 @@
     } else if (typeof value === "string") {
       parts2.push(quote(value));
     } else if (Array.isArray(value)) {
-      if (Object.keys(value).some((key) => !/^(?:0|[1-9][0-9]*)$/.test(key))) {
+      if (Object.keys(value).some((key) => !/^(?:0|[1-9][0-9]*)$/.test(key) || Number(key) >= value.length)) {
         throw new CanonicalizationError("an array with a member that is not a position is not a JSON array");
       }
       parts2.push("[");
@@ -4450,9 +4450,6 @@
   }
   function isInteger(value) {
     return typeof value === "number" && Number.isInteger(value);
-  }
-  function isPythonInt(value) {
-    return isInteger(value) || typeof value === "boolean";
   }
   function has(object, key) {
     return hasOwnProperty.call(object, key);
@@ -4658,7 +4655,7 @@
   var ERROR_CODES = [
     { "id": "ecl.error.schema-invalid.v1", "status": "active", "description": "The object does not satisfy its declared structural schema." },
     { "id": "ecl.error.semantic-invalid.v1", "status": "active", "description": "The object is structurally valid but violates a semantic rule." },
-    { "id": "ecl.error.integrity-invalid.v1", "status": "active", "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). The codes for a policy, key, threshold or trusted-time failure are its children." },
+    { "id": "ecl.error.integrity-invalid.v1", "status": "active", "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). Child codes explicitly declare this identifier in parent_code; revoked and expired do not." },
     { "id": "ecl.error.unknown-critical-extension.v1", "status": "active", "description": "A critical extension cannot be interpreted by the consumer." },
     { "id": "ecl.error.expired.v1", "status": "active", "description": "The request, authority, approval, or evidence artifact expired under the active time policy, or a signing key is outside its validity interval at the evaluation time (IE1-040)." },
     { "id": "ecl.error.revoked.v1", "status": "active", "description": "The authority, key, policy, or artifact is revoked for the evaluated purpose and time." },
@@ -4674,7 +4671,7 @@
     { "id": "ecl.error.replay-detected.v1", "status": "active", "description": "A duplicate event, transition, identifier, attempt, or one-time control was detected at a replay boundary." },
     { "id": "ecl.error.scope-mismatch.v1", "status": "active", "description": "Requested or delegated resources, actions, or capabilities exceed the authorized scope." },
     { "id": "ecl.error.signature-policy-invalid.v1", "status": "active", "description": "The signature policy fails for a reason other than the number of signatures: the payload-bound policy is unusable or does not match the verification context, a signing key is unknown or not acceptable for the suite, eligible keys, purpose or principal, or a signature does not verify (IE1-040)." },
-    { "id": "ecl.error.threshold-not-met.v1", "status": "active", "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040)." },
+    { "id": "ecl.error.threshold-not-met.v1", "status": "active", "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold, or a required eligible signer is missing; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040)." },
     { "id": "ecl.error.unresolved-predecessor.v1", "status": "active", "description": "A required causal predecessor, dependency, child, effect, or state frontier is absent, open, unknown, or digest-invalid." },
     { "id": "ecl.error.request-binding-invalid.v1", "status": "active", "description": "A decision response does not bind the decision request it answers, or the authority it grants differs from the authority the request asked for." },
     { "id": "ecl.error.decision-binding-invalid.v1", "status": "active", "description": "An evidence event does not bind the action, decision, or authority it records, or its state disagrees with the outcome of the decision it names." },
@@ -4706,13 +4703,13 @@
     { "id": "ecl.rule.extension-identifiers-unique.v1", "status": "active", "precedence": 110, "applies_to": ["DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"], "description": "An object contains no duplicate extension identifier and version pair." },
     { "id": "ecl.rule.extension-single-version.v1", "status": "active", "precedence": 112, "applies_to": ["DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"], "description": "An object carries each extension identifier at one version only, unless the registry entry of that identifier sets composable_versions to true; a version the consumer does not know still counts." },
     { "id": "ecl.rule.unknown-critical-extension-rejected.v1", "status": "active", "precedence": 100, "applies_to": ["DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"], "description": "A consumer rejects every critical extension that is unknown to it: one without an active registry entry of its identifier and version that the consumer implements (XR1-006)." },
-    { "id": "ecl.rule.message-cannot-cause-itself.v1", "status": "active", "precedence": 140, "applies_to": ["DCMP-2", "EBMP-2"], "description": "A message or event does not reference itself as a causal predecessor." },
-    { "id": "ecl.rule.expiry-after-issue.v1", "status": "active", "precedence": 130, "applies_to": ["DCMP-2"], "description": "An expiry time is strictly later than the corresponding issue or validity start time." },
+    { "id": "ecl.rule.message-cannot-cause-itself.v1", "status": "active", "precedence": 140, "applies_to": ["DCMP-2", "EBMP-2", "ECL-WI-1"], "description": "A message, event or work intent does not reference its own logical identifier as a causal predecessor." },
+    { "id": "ecl.rule.expiry-after-issue.v1", "status": "active", "precedence": 130, "applies_to": ["DCMP-2", "ECL-WI-1"], "description": "An expiry time is strictly later than the corresponding issue or validity start time." },
     { "id": "ecl.rule.admit-requires-valid-authority.v1", "status": "active", "precedence": 150, "applies_to": ["DCMP-2"], "description": "An admit decision carries an authorization object with its identifier, audience, scope digest, validity interval and use policy, which DCMP2-044 to DCMP2-050 bind to the request." },
     { "id": "ecl.rule.non-admit-prohibits-authority.v1", "status": "active", "precedence": 160, "applies_to": ["DCMP-2"], "description": "Deny, hold, and challenge outcomes do not issue executable authority." },
     { "id": "ecl.rule.terminal-execution-state-consistent.v1", "status": "active", "precedence": 250, "applies_to": ["EBMP-2"], "description": "An execution_terminal event carries a terminal execution outcome or a non-execution terminal disposition, an event of another type carries neither, and an uncertain terminal outcome keeps its side effects and residual state." },
     { "id": "ecl.rule.lifecycle-derived-artifact-required.v1", "status": "active", "precedence": 260, "applies_to": ["EBMP-2"], "description": "Redaction and supersession reference the derived artifact, and redaction also its redaction manifest." },
-    { "id": "ecl.rule.integrity-threshold-consistent.v1", "status": "active", "precedence": 120, "applies_to": ["DCMP-2", "EBMP-2"], "description": "Integrity thresholds, required signers, accepted suites, and the required flag are mutually consistent." },
+    { "id": "ecl.rule.integrity-threshold-consistent.v1", "status": "active", "precedence": 120, "applies_to": ["DCMP-2", "EBMP-2", "ECL-WI-1"], "description": "The integrity threshold is consistent with the required flag and required-key count, and every required key is eligible when eligible keys are listed (IE1-013)." },
     { "id": "ecl.rule.bundle-object-identifiers-unique.v1", "status": "active", "precedence": 200, "stage": 3, "applies_to": ["EBMP-2 bundle"], "description": "A bundle does not contain multiple records with the same immutable object identity." },
     { "id": "ecl.rule.bundle-predecessor-digest-valid.v1", "status": "active", "precedence": 220, "stage": 8, "applies_to": ["EBMP-2 bundle"], "description": "Every local causal predecessor reference binds the predecessor's recomputed canonical digest." },
     { "id": "ecl.rule.bundle-causal-sequence-monotonic.v1", "status": "active", "precedence": 230, "stage": 8, "applies_to": ["EBMP-2 bundle"], "description": "Causal predecessors in one sequence domain, the workflow that workflow.workflow_id names, have lower authenticated sequence values than their successors." },
@@ -4727,11 +4724,11 @@
     { "id": "ecl.rule.budget-debit-non-negative.v1", "status": "active", "precedence": 147, "applies_to": ["DCMP-2"], "description": "A decision request's action.budget_debit.amount is written without a sign, so that no declared debit is negative." },
     { "id": "ecl.rule.emergency-control-plane-required.v1", "status": "active", "precedence": 165, "applies_to": ["DCMP-2"], "description": "A halt or quarantine control message declares the emergency control plane in its authority context." },
     { "id": "ecl.rule.event-type-kind-consistent.v1", "status": "active", "precedence": 245, "applies_to": ["EBMP-2"], "description": "An event record's event kind, and for authority and execution events its state, is the one its event_type requires." },
-    { "id": "ecl.rule.extension-value-valid.v1", "status": "active", "precedence": 115, "applies_to": ["DCMP-2", "EBMP-2"], "description": "The value of an extension whose registry entry names a value schema validates against that schema." },
+    { "id": "ecl.rule.extension-value-valid.v1", "status": "active", "precedence": 115, "applies_to": ["DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"], "description": "The value of an extension whose registry entry names a value schema validates against that schema." },
     { "id": "ecl.rule.coupling-results-permit-admit.v1", "status": "active", "precedence": 170, "applies_to": ["DCMP-2"], "description": "An admit response carries only permitting consequence-coupling results: budget authorized, witness satisfied, quorum met, and no blocker reason." },
     { "id": "ecl.rule.approval-review-time-respected.v1", "status": "active", "precedence": 265, "applies_to": ["EBMP-2"], "description": "A human approval or rejection that records its presentation is decided no sooner than the minimum review time after that presentation." },
     { "id": "ecl.rule.control-change-approved-and-bounded.v1", "status": "active", "precedence": 270, "applies_to": ["EBMP-2"], "description": "A recorded control change names approvers other than its requester, and a change that disables, bypasses or automates approval of a control expires after it takes effect." },
-    { "id": "ecl.rule.decision-basis-one-way.v1", "status": "active", "precedence": 175, "applies_to": ["DCMP-2"], "description": "A response that records its decision basis lists each input once, input names compared after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1; cites no actor_supplied or judgment input, and no input that was not available or was computed from one that was not, as supporting it; records no input computed from an input that is not verifiable as verifiable; and has no input computed from itself, directly or through other inputs. An admit cites at least one verifiable input as supporting it and no required input that was not available or was computed from one that was not. The outcome is no less strict than a recorded verifiable-only outcome; while that outcome is not admit, no input supports the outcome, and when it is admit, a verifiable input supports it and no required verifiable input was not available. No input obtained after the decision is recorded as available, and no value describes a time after the decision or after the input was obtained; a record that gives obtained_at gives received_at, no later than the decision, and a record that gives received_at gives both obtained_at and value_at for each available input. A verifier that holds the request rejects a response recording as verifiable an input whose source is the request's actor, or recording received_at earlier than the request's issued_at by more than the response clock-skew allowance of DCMP2-047. Each decision response that an AARM, ACS or MCP exchange record holds carries exactly one decision basis and is checked with the request the record holds." },
+    { "id": "ecl.rule.decision-basis-one-way.v1", "status": "active", "precedence": 175, "applies_to": ["DCMP-2"], "description": "A response that records its decision basis lists each input once, input names compared after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1; cites no actor_supplied or judgment input, and no input that was not available or was computed from one that was not, as supporting it; records no input computed from an input that is not verifiable as verifiable; and has no input computed from itself, directly or through other inputs. An admit cites at least one verifiable input as supporting it and no required input that was not available or was computed from one that was not. The outcome is no less strict than a recorded verifiable-only outcome; while that outcome is not admit, no input supports the outcome, and when it is admit, a verifiable input supports it and no required verifiable input was not available. No input obtained after the decision is recorded as available, and no value describes a time after the decision or after the input was obtained; a record that gives obtained_at gives received_at, no later than the decision, and a record that gives received_at gives both obtained_at and value_at for each available input. A verifier that holds the request rejects a response recording as verifiable an input whose source is the request's actor, or recording received_at earlier than the request's issued_at by more than the response clock-skew allowance of DCMP2-047. Each decision response that an AARM, ACS, MCP or OAuth exchange record holds carries exactly one decision basis and is checked with the request the record holds." },
     { "id": "ecl.rule.decision-basis-required.v1", "status": "active", "precedence": 176, "stage": 3, "applies_to": ["EBMP-2 bundle"], "description": "Each decision response in the evidence of a decision carries its decision basis in ecl.ext.decision-basis.v1." },
     { "id": "ecl.rule.decision-basis-matches-register.v1", "status": "active", "precedence": 177, "stage": 3, "applies_to": ["EBMP-2 bundle"], "description": "A decision basis that a verifier checks against a register it holds names that register version and lists exactly the inputs that the register declares for the request's action class, each once, with the declared class, required flag, derived_from and source, the source compared as input names are; and no input recorded as available was obtained more than its declared deadline after the request was received or has a value older than its declared maximum age at the time of the decision." },
     { "id": "ecl.rule.register-declarations-consistent.v1", "status": "active", "precedence": 178, "applies_to": ["https://externalcontrollayer.ai/ns/schema/action-register/1"], "description": "A Consequential Action Register declares each action class once and each decision input of a class once, input names compared as DCMP2-053 compares them; each name in a declaration's derived_from is another input declared for the same class; no input declared verifiable is computed from one that is not; and no input is computed from itself, directly or through other inputs." },
@@ -4748,37 +4745,41 @@
     { "id": "ecl.rule.acs-judgment-guardian.v1", "status": "active", "precedence": 826, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"], "description": "A Guardian decision from an agent or composite evaluator, or from an evaluator that is not stated, is a judgment input; a deterministic Guardian decision that a hook point carried to the decision point is actor_supplied; any other takes the least trusted class of the inputs its request carried and is verifiable only when the record names them; the Guardian decision has that class in every decision basis that the record holds, the modification response's included; a response that records the Guardian decision has exactly one input marked as it; and an admit rests on verifiable inputs only." },
     { "id": "ecl.rule.acs-outcome-no-weaker.v1", "status": "active", "precedence": 828, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"], "description": "The ECL outcome is no weaker than the outcome the Guardian's disposition maps to." },
     { "id": "ecl.rule.acs-release-requires-admit.v1", "status": "active", "precedence": 830, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"], "description": "An action released at an ACS hook point has a DCMP-2 admit bound to the exact request, and is released within the authorization's window with the admitted parameters." },
-    { "id": "ecl.rule.acs-decision-recorded.v1", "status": "active", "precedence": 832, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"], "description": "The ECL response records the Guardian decision it depends on in ecl.ext.acs-decision.v1, and each recorded chain head is the head of the recomputed ACS session chain after that step." },
+    { "id": "ecl.rule.acs-decision-recorded.v1", "status": "active", "precedence": 832, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"], "description": "A decided Guardian exchange retains its result; the ECL response records the decision it depends on in ecl.ext.acs-decision.v1, and each recorded chain head is the recomputed ACS session chain head after that step. A decided signed exchange retains consistent authenticated request context. A failed signed route asserts no verified decision; any retained submitted request params and local digest occur together and match." },
     { "id": "ecl.rule.acs-inputs-match-basis.v1", "status": "active", "precedence": 834, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"], "description": "The inputs of an ACS exchange record that holds a decision response are the entries of the decision basis that the response records in ecl.ext.decision-basis.v1, each once and equal to its entry apart from the Guardian marker; the decision basis of the modification response carries the same register reference, member for member, and records the same inputs with the same declarations." },
     { "id": "ecl.rule.mcp-decision-failure-not-forwarded.v1", "status": "active", "precedence": 840, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "An MCP gateway that asked for a decision forwards nothing when the decision service is unavailable or answers with no verified decision." },
     { "id": "ecl.rule.mcp-tool-mapped-and-reviewed.v1", "status": "active", "precedence": 842, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "An MCP gateway forwards only a request whose method is mapped, a call only to a mapped tool, and only when the tool's definition and server identity are those the mapping reviewed." },
     { "id": "ecl.rule.mcp-request-from-call.v1", "status": "active", "precedence": 844, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "An MCP gateway's decision request takes its action class, operation, target, risk class and evidence profile from the mapping, its parameters from the call's arguments read from their RFC 8785 form, and carries the critical ecl.ext.mcp-binding.v1 naming them and the digest of the call's complete params; a call with a member other than jsonrpc, id, method and params, or whose id or params holds a number of magnitude greater than 2^53 - 1, gets no decision request." },
-    { "id": "ecl.rule.mcp-forward-requires-admit.v1", "status": "active", "precedence": 846, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "An MCP gateway forwards a request only on a verified admit bound to its decision request, within the authorization's window and uses, at a final observation that the release guard places before the window's end and that the release event records, with a send that completed before the window's end, and forwards exactly the call that the admitted request binds: its method, tool, arguments, input responses and request state, a params object with the digest that the admitted request carries, and no member added or removed." },
-    { "id": "ecl.rule.mcp-obligations-discharged.v1", "status": "active", "precedence": 847, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "An MCP gateway forwards on an admit that leaves obligations to Enforcement before the release, each obligation whose satisfaction is before_release and each state witness that the admit defers, only on an execution_released event that records in ecl.ext.obligation-discharge.v1 a discharge of each of them as satisfied, with no entry that names an obligation the admit does not carry or that another entry names, and that the record's obligation_discharge repeats." },
+    { "id": "ecl.rule.mcp-forward-requires-admit.v1", "status": "active", "precedence": 846, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "An MCP gateway forwards a request only on a verified admit bound to its decision request, within the authorization's window and uses, at a final observation that the release guard places before the window's end and that the release event records, with no release marked released_after_valid_until, and forwards exactly the call that the admitted request binds: its method, tool, arguments, input responses and request state, a params object with the digest that the admitted request carries, and no member added or removed. A late completion is informational (EBMP2-072)." },
+    { "id": "ecl.rule.mcp-obligations-discharged.v1", "status": "active", "precedence": 847, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "Every retained MCP obligation discharge consistently names obligations carried by the admit and includes every pre-release obligation, including on a refused attempt: no unrequested, duplicate, unsatisfied or missing entry, acquisition no later than check, and check no later than a reliable retained final observation. A retained release additionally records that same discharge and establishes freshness through the final observation plus guard. An explicitly failed final clock comparison does not establish proof expiry or check-to-final order; intrinsic ordering still applies." },
     { "id": "ecl.rule.mcp-refusal-defined.v1", "status": "active", "precedence": 848, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "A request an MCP gateway does not forward gets the JSON-RPC error that the profile's error table gives for the first cause that holds, in the order of MG1-006, an unproven pre-release obligation and an evidence log that cannot record the release among them, and never a result." },
-    { "id": "ecl.rule.mcp-result-bound.v1", "status": "active", "precedence": 850, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "The evidence of a forwarded MCP request binds the server's response by RFC 8785 digest, records the state that response reads as and the forward's completion, and the governed AI system receives that response, with the code of a server error that uses one of the error table's codes replaced by -32603; a refused request is recorded in a non-release state, or as cancelled when its authorization was consumed, and a recovered exchange claims only the outcome that the gateway's journal shows." },
-    { "id": "ecl.rule.otel-export-after-evidence.v1", "status": "active", "precedence": 860, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"], "description": "An exporter reads an object no earlier than its time, and the evidence is the same after an export, failed or not." },
-    { "id": "ecl.rule.otel-record-matches-object.v1", "status": "active", "precedence": 862, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"], "description": "An exported log record's event name, time and table attributes are those of the object it copies, its observed time is not earlier than the object's time, it carries no digest that can be computed without the export key, and with an export key it names the key and carries the object's keyed digest." },
+    { "id": "ecl.rule.mcp-result-bound.v1", "status": "active", "precedence": 850, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"], "description": "The evidence of a forwarded MCP request binds the server's response by RFC 8785 digest, records the state that response reads as and any required completion observation, and the governed AI system receives that response, with the code of a server error that uses one of the error table's codes replaced by -32603. An ordinary unanswered forward carries no server-answer completion time; retained completion agrees across the record and is no later than the terminal observation. Recovery may omit unavailable completion observations without inventing a time. A refused request is recorded in a non-release state, or as cancelled when its authorization was consumed, and a recovered exchange claims only the outcome that the gateway's journal shows." },
+    { "id": "ecl.rule.otel-export-after-evidence.v1", "status": "active", "precedence": 860, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"], "description": "An exporter reads an object no earlier than its time, and each retained export record includes evidence_after equal in restricted canonical JSON to that object, after a successful or failed export." },
+    { "id": "ecl.rule.otel-record-matches-object.v1", "status": "active", "precedence": 862, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"], "description": "An exported log record's event name, time and table attributes are those of the object it copies, and its observed time is not earlier than the object's time. Recognizable unkeyed digests are refused under OE1-004, preserving its exact policy-digest slot and the exact table-identifier copies governed by OE1-003, OE1-004 and OE1-005. A record naming an export key uses a key identifier of 1 to 256 Unicode code points and carries the required keyed digests in their specified form." },
     { "id": "ecl.rule.otel-record-minimized.v1", "status": "active", "precedence": 864, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"], "description": "An exported log record carries no attribute outside the attribute table, no identifier of a person or record that the table exports only when declared, and no body, unless the export policy declares it." },
     { "id": "ecl.rule.otel-severity-mapped.v1", "status": "active", "precedence": 866, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"], "description": "An exported log record's SeverityNumber is the one the severity table gives for the object, and its SeverityText is that number's short name." },
     { "id": "ecl.rule.oauth-token-expresses-admit.v1", "status": "active", "precedence": 880, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "An access token is issued only for a verified admit, and its ECL authorization_details entry, audience, validity, subject, actor and confirmation key express that admit." },
-    { "id": "ecl.rule.oauth-token-signature-checked.v1", "status": "active", "precedence": 882, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server accepts a token only when every segment reads under the strict JSON profile, it verifies under a configured issuer key with an allowed asymmetric algorithm and no header key, unknown kid or crit member, and its iss is the configured issuer." },
+    { "id": "ecl.rule.oauth-token-signature-checked.v1", "status": "active", "precedence": 882, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server accepts a token only when the presentation record's configured issuer keys have distinct kid values, the decoded protected header and payload read under the strict JSON profile, the signature is decoded and verified as bytes under a configured issuer key with an allowed asymmetric algorithm and no header key, unknown kid or crit member, and its iss is the configured issuer." },
     { "id": "ecl.rule.oauth-presentation-checked.v1", "status": "active", "precedence": 884, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server accepts a presentation only for its own audience, within the token's validity with the declared clock-skew allowance and within its entry's window, with a valid proof of possession, for the entry's target, operation and parameter digest, and within its uses." },
     { "id": "ecl.rule.oauth-refusal-named.v1", "status": "active", "precedence": 886, "applies_to": ["https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"], "description": "A resource server that refuses a presentation names the code that the presentation table gives for the first check the presentation fails." },
-    { "id": "ecl.rule.prerelease-obligations-discharged.v1", "status": "active", "precedence": 280, "stage": 8, "applies_to": ["EBMP-2 bundle"], "description": "An execution_released event whose decision response carries an obligation to be met before release, or a witness result required before release, records in ecl.ext.obligation-discharge.v1 a discharge of each such obligation, recorded as satisfied with a proof reference and digest and checked no later than the release was observed. Missing discharge entries, unknown or duplicate obligations, invalid result or check ordering, and a carried proof digest mismatch use this rule. An unknown or duplicate obligation gates the remaining checks for that entry. A carried proof digest mismatch gates its envelope-validity, signer, type, binding and proof-freshness checks. Other proof failures, and an entry fresh_until that is not later than the release observation plus release_guard_ms, use ecl.error.obligation-unproven.v1. A carried ECL proof whose digest matches is checked for valid envelope, authorized signer and purpose, admitted type, exchange binding and freshness under EBMP2-070." }
+    { "id": "ecl.rule.prerelease-obligations-discharged.v1", "status": "active", "precedence": 280, "stage": 8, "applies_to": ["EBMP-2 bundle"], "description": "An execution_released event whose decision response carries an obligation to be met before release, or a witness result required before release, records in ecl.ext.obligation-discharge.v1 a discharge of each such obligation, recorded as satisfied with a proof reference and digest and checked no later than the release was observed. Missing discharge entries, unknown or duplicate obligations, invalid result or check ordering, and a carried proof digest mismatch use this rule. An unknown or duplicate obligation gates the remaining checks for that entry. A carried proof digest mismatch gates its envelope-validity, signer, type, binding and proof-freshness checks. Other proof failures, and an entry fresh_until that is not later than the release observation plus release_guard_ms, use ecl.error.obligation-unproven.v1. A carried ECL proof whose digest matches is checked for valid envelope, authorized signer and purpose, admitted type, exchange binding and freshness under EBMP2-070." },
+    { "id": "ecl.rule.dependency-classification-consistent.v1", "status": "active", "precedence": 399, "applies_to": ["SAFE-STATE-PROFILE"], "description": "A dependency identifier is declared once; an advisory dependency supplies no required proof; fail-open authorization names each covered declared advisory dependency once (TS1-031, TS1-033)." },
+    { "id": "ecl.rule.deployment-timing-case-consistent.v1", "status": "active", "precedence": 411, "applies_to": ["https://externalcontrollayer.ai/ns/schema/deployment-profile/1"], "description": "A federated deployment declares its trust-bundle and revocation exchange interval no longer than its connected revocation interval. This compares declared bounds; it does not establish runtime timing performance." },
+    { "id": "ecl.rule.action-class-policy-unambiguous.v1", "status": "active", "precedence": 398, "applies_to": ["SAFE-STATE-PROFILE"], "description": "Each action_class in a safe-state profile is declared once; ordering cannot select between conflicting policies." },
+    { "id": "ecl.rule.work-intent-context-consistent.v1", "status": "active", "precedence": 142, "applies_to": ["ECL-WI-1"], "description": "A child work intent identifies a distinct parent consistently in both supported representations and carries a digest-bound causal predecessor identifying creation or delegation." }
   ];
   var EXTENSIONS = [
-    { "id": "ecl.ext.trusted-time-evidence.v1", "status": "deprecated", "version": 1 },
-    { "id": "ecl.ext.consequence-coupling.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1" },
-    { "id": "ecl.ext.outcome-reason.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1" },
-    { "id": "ecl.ext.approval-record.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1" },
-    { "id": "ecl.ext.control-change.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/control-change/1" },
-    { "id": "ecl.ext.runtime-configuration.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1" },
-    { "id": "ecl.ext.decision-basis.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1" },
-    { "id": "ecl.ext.aarm-receipt.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1" },
-    { "id": "ecl.ext.acs-decision.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1" },
-    { "id": "ecl.ext.mcp-binding.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1" },
-    { "id": "ecl.ext.obligation-discharge.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1" }
+    { "id": "ecl.ext.trusted-time-evidence.v1", "status": "deprecated", "version": 1, "applies_to": ["DCMP-2", "EBMP-2", "ECL-IE-1"] },
+    { "id": "ecl.ext.consequence-coupling.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1", "applies_to": ["DCMP-2", "EBMP-2"] },
+    { "id": "ecl.ext.outcome-reason.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1", "applies_to": ["EBMP-2"] },
+    { "id": "ecl.ext.approval-record.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1", "applies_to": ["EBMP-2"] },
+    { "id": "ecl.ext.control-change.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/control-change/1", "applies_to": ["EBMP-2"] },
+    { "id": "ecl.ext.runtime-configuration.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1", "applies_to": ["DCMP-2"] },
+    { "id": "ecl.ext.decision-basis.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1", "applies_to": ["DCMP-2"] },
+    { "id": "ecl.ext.aarm-receipt.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1", "applies_to": ["EBMP-2"] },
+    { "id": "ecl.ext.acs-decision.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1", "applies_to": ["DCMP-2"] },
+    { "id": "ecl.ext.mcp-binding.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1", "applies_to": ["DCMP-2", "EBMP-2"] },
+    { "id": "ecl.ext.obligation-discharge.v1", "status": "active", "version": 1, "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1", "applies_to": ["EBMP-2"] }
   ];
   var VOCABULARY = [
     { "id": "ecl.principal.workload.v1", "status": "active", "category": "principal_type" },
@@ -4858,6 +4859,19 @@
   function activeExtensionVersions() {
     return extensionVersions(EXTENSIONS.filter((entry) => entry.status === "active"));
   }
+  function extensionApplicability() {
+    const result = /* @__PURE__ */ new Map();
+    for (const entry of EXTENSIONS) {
+      if (typeof entry.version !== "number" || !Number.isInteger(entry.version)) continue;
+      let versions = result.get(entry.id);
+      if (versions === void 0) {
+        versions = /* @__PURE__ */ new Map();
+        result.set(entry.id, versions);
+      }
+      versions.set(entry.version, new Set(entry.applies_to ?? []));
+    }
+    return result;
+  }
   function extensionVersions(entries) {
     const map = /* @__PURE__ */ new Map();
     for (const entry of entries) {
@@ -4905,6 +4919,20 @@
       map.set(entry.id, entry.precedence);
     }
     return map;
+  }
+  function extensionObjectType(value) {
+    if (!isObject(value)) return void 0;
+    const protocol = get(value, "protocol");
+    if (protocol === "DCMP-2" || protocol === "EBMP-2" || protocol === "ECL-WI-1") return protocol;
+    const envelopeKind = get(value, "envelope_version");
+    const kind = typeof envelopeKind === "string" ? envelopeKind : protocol;
+    return typeof kind === "string" ? kind : void 0;
+  }
+  function interpretedExtension(value, occurrence) {
+    if (!isObject(value) || !isObject(occurrence)) return false;
+    const kind = extensionObjectType(value);
+    const identifier = get(occurrence, "id"), version = get(occurrence, "version");
+    return typeof kind === "string" && typeof identifier === "string" && isInteger(version) && EXTENSIONS.some((entry) => entry.status === "active" && entry.id === identifier && entry.version === version && (entry.applies_to ?? []).includes(kind));
   }
 
   // src/generated/schemas.ts
@@ -5516,7 +5544,7 @@
                   "uniqueItems": true,
                   "items": {
                     "type": "string",
-                    "pattern": "^/"
+                    "pattern": "^(?:/(?:[^~/]|~[01])*)+$"
                   }
                 },
                 "note": {
@@ -5569,7 +5597,7 @@
               "properties": {
                 "target_path": {
                   "type": "string",
-                  "pattern": "^/"
+                  "pattern": "^(?:/(?:[^~/]|~[01])*)+$"
                 },
                 "derivation": {
                   "type": "string",
@@ -5787,7 +5815,7 @@
               },
               {
                 "not": {
-                  "pattern": "^https?://externalcontrollayer\\.ai(?:[/:?#]|$)"
+                  "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://(?:[^/?#]*@)?(?:[Ee]|%45|%65)(?:[Xx]|%58|%78)(?:[Tt]|%54|%74)(?:[Ee]|%45|%65)(?:[Rr]|%52|%72)(?:[Nn]|%4[eE]|%6[eE])(?:[Aa]|%41|%61)(?:[Ll]|%4[cC]|%6[cC])(?:[Cc]|%43|%63)(?:[Oo]|%4[fF]|%6[fF])(?:[Nn]|%4[eE]|%6[eE])(?:[Tt]|%54|%74)(?:[Rr]|%52|%72)(?:[Oo]|%4[fF]|%6[fF])(?:[Ll]|%4[cC]|%6[cC])(?:[Ll]|%4[cC]|%6[cC])(?:[Aa]|%41|%61)(?:[Yy]|%59|%79)(?:[Ee]|%45|%65)(?:[Rr]|%52|%72)(?:\\.|%2[eE])(?:[Aa]|%41|%61)(?:[Ii]|%49|%69)(?:\\.|%2[eE])?(?::[^/?#@]*)?(?:[/?#]|$)"
                 }
               }
             ]
@@ -6310,14 +6338,12 @@
                       "use_policy": {
                         "type": "string",
                         "enum": [
-                          "single_use",
-                          "bounded_multi_use"
+                          "single_use"
                         ]
                       },
                       "max_uses": {
                         "type": "integer",
-                        "minimum": 1,
-                        "maximum": 1e6
+                        "const": 1
                       }
                     }
                   },
@@ -6377,14 +6403,12 @@
               "use_policy": {
                 "type": "string",
                 "enum": [
-                  "single_use",
-                  "bounded_multi_use"
+                  "single_use"
                 ]
               },
               "max_uses": {
                 "type": "integer",
-                "minimum": 1,
-                "maximum": 1e6
+                "const": 1
               },
               "token_reference": {
                 "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
@@ -6431,7 +6455,10 @@
                     "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
                   },
                   "policy": {
-                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference"
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference",
+                    "required": [
+                      "epoch"
+                    ]
                   },
                   "reasons": {
                     "type": "array",
@@ -7368,7 +7395,15 @@
             "maxLength": 256
           },
           "receipt_digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           },
           "decision": {
             "enum": [
@@ -7427,9 +7462,36 @@
             "pattern": "^[0-9a-f]{64}$"
           },
           "modifications_digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "decision": {
+                  "const": "modify"
+                }
+              },
+              "required": [
+                "decision"
+              ]
+            },
+            "then": {
+              "required": [
+                "modifications_digest"
+              ]
+            }
+          }
+        ]
       }
     ],
     [
@@ -7756,7 +7818,20 @@
             "required": [
               "uri",
               "digest"
-            ]
+            ],
+            "properties": {
+              "digest": {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+                "properties": {
+                  "algorithm": {
+                    "const": "ecl.digest.sha-256.v1"
+                  },
+                  "value": {
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
           },
           "decisionInput": {
             "description": "One decision input of a decision: an entry of the decision basis. A record that embeds it closes it with unevaluatedProperties and may add members of its own.",
@@ -7885,8 +7960,7 @@
           },
           "method": {
             "enum": [
-              "tools/call",
-              "tasks/update"
+              "tools/call"
             ]
           },
           "server_id": {
@@ -7908,23 +7982,63 @@
             "maxLength": 128
           },
           "tool_definition_digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           },
           "mapping_id": {
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
           },
           "params_digest": {
             "description": "MG1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the call's complete params object, _meta included.",
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           },
           "input_responses_digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           },
           "request_state_digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           },
           "response_digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+            "properties": {
+              "algorithm": {
+                "const": "ecl.digest.sha-256.v1"
+              },
+              "value": {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
           },
           "forward_completed_at": {
             "description": "EBMP2-071: on an execution_terminal event, the gateway's observation, by its own clock, of the moment the server's answer to the forwarded call arrived. A verifier does not compare it with the authorization's window: an answer that arrives after valid_until is reported as the informational member completion_after_window of the report, not as a finding (EBMP2-072).",
@@ -8091,7 +8205,15 @@
                 "required": [
                   "version",
                   "digest"
-                ]
+                ],
+                "properties": {
+                  "version": {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+                  },
+                  "digest": {
+                    "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                  }
+                }
               }
             ]
           }
@@ -8308,17 +8430,17 @@
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
           },
           "trust_policy": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            "$ref": "#/$defs/sha256ResourceReference"
           },
           "revocation_snapshot": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+            "$ref": "#/$defs/sha256ResourceReference"
           },
           "registry_snapshots": {
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
             "items": {
-              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+              "$ref": "#/$defs/sha256ResourceReference"
             }
           },
           "time_evidence": {
@@ -8326,7 +8448,7 @@
             "minItems": 1,
             "uniqueItems": true,
             "items": {
-              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+              "$ref": "#/$defs/sha256ResourceReference"
             }
           },
           "artifacts": {
@@ -8375,7 +8497,7 @@
                   "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
                 },
                 "digest": {
-                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                  "$ref": "#/$defs/sha256Digest"
                 }
               }
             }
@@ -8411,6 +8533,43 @@
                 "const": "ecl.zip.store.v1"
               }
             }
+          }
+        },
+        "$defs": {
+          "sha256Digest": {
+            "description": "IE1-022 check 3: each artifact and material reference carries a SHA-256 digest.",
+            "allOf": [
+              {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+              },
+              {
+                "properties": {
+                  "algorithm": {
+                    "const": "ecl.digest.sha-256.v1"
+                  },
+                  "value": {
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                }
+              }
+            ]
+          },
+          "sha256ResourceReference": {
+            "allOf": [
+              {
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+              },
+              {
+                "required": [
+                  "digest"
+                ],
+                "properties": {
+                  "digest": {
+                    "$ref": "#/$defs/sha256Digest"
+                  }
+                }
+              }
+            ]
           }
         }
       }
@@ -8493,7 +8652,8 @@
                   "items": {
                     "type": "string",
                     "minLength": 1
-                  }
+                  },
+                  "description": "TS1-020: the bounded set of permitted restricted operations; an empty set deliberately permits none."
                 },
                 "fail_open_prohibited_conditions": {
                   "type": "array",
@@ -8510,7 +8670,8 @@
                       "critical_extension",
                       "critical_verification_failure"
                     ]
-                  }
+                  },
+                  "description": "Additional declared fail-open prohibitions. TS1-018 required-proof failures always fail closed, including missing pre-release evidence, even when this list is empty; this list cannot waive those restrictions."
                 },
                 "fail_open_authorization": {
                   "type": "object",
@@ -8518,7 +8679,8 @@
                     "owner",
                     "rationale",
                     "expires_at",
-                    "evidence_profile"
+                    "evidence_profile",
+                    "covered_advisory_dependencies"
                   ],
                   "additionalProperties": false,
                   "properties": {
@@ -8534,6 +8696,15 @@
                     },
                     "evidence_profile": {
                       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+                    },
+                    "covered_advisory_dependencies": {
+                      "description": "TS1-033: declared advisory dependencies whose loss this authorization covers; none supplies required proof.",
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                      }
                     }
                   }
                 }
@@ -8579,7 +8750,8 @@
                   }
                 }
               ]
-            }
+            },
+            "description": "TS1-016: each action_class identifier has one policy declaration; semantic validation rejects repeated identifiers, including declarations that differ."
           },
           "dependencies": {
             "type": "array",
@@ -8605,7 +8777,8 @@
                     "cached",
                     "asynchronous",
                     "advisory"
-                  ]
+                  ],
+                  "description": "The dependency delivery class; advisory means its loss leaves all required proof and locally validatable authority sufficient for the action (TS1-010, TS1-031)."
                 },
                 "staleness_budget_seconds": {
                   "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
@@ -8616,7 +8789,28 @@
                 "loss_disposition": {
                   "$ref": "#/$defs/disposition"
                 }
-              }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "class": {
+                        "const": "advisory"
+                      }
+                    },
+                    "required": [
+                      "class"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "supplies_required_proof": {
+                        "const": false
+                      }
+                    }
+                  }
+                }
+              ]
             }
           },
           "evidence_buffer": {
@@ -8711,7 +8905,7 @@
             "properties": {
               "required_frontiers": {
                 "type": "array",
-                "minItems": 5,
+                "minItems": 6,
                 "uniqueItems": true,
                 "items": {
                   "enum": [
@@ -8808,7 +9002,15 @@
                       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
                     },
                     "signature_digest": {
-                      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+                      "properties": {
+                        "algorithm": {
+                          "const": "ecl.digest.sha-256.v1"
+                        },
+                        "value": {
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
                     }
                   }
                 }
@@ -9000,7 +9202,7 @@
     const year = Number(yearText);
     const month = Number(monthText);
     const day = Number(dayText);
-    if (year < 1 || day > daysInMonth(year, month)) {
+    if (year < 1 || day < 1 || day > daysInMonth(year, month)) {
       throw new InstantError("timestamp is not a calendar date that exists");
     }
     const days = daysFromCivil(year, month, day);
@@ -9117,6 +9319,9 @@
   }
   function bracketedNetlocValid(netloc) {
     const at = netloc.lastIndexOf("@");
+    if (at >= 0 && /[\[\]]/.test(netloc.slice(0, at))) {
+      return false;
+    }
     const hostAndPort = at < 0 ? netloc : netloc.slice(at + 1);
     const [before, hasOpen, bracketed] = partition(hostAndPort, "[");
     let hostname;
@@ -9124,8 +9329,8 @@
       if (before !== "") {
         return false;
       }
-      const [host, , port] = partition(bracketed, "]");
-      if (port !== "" && !port.startsWith(":")) {
+      const [host, hasClose, port] = partition(bracketed, "]");
+      if (!hasClose || /[\[\]]/.test(host + port) || port !== "" && !port.startsWith(":")) {
         return false;
       }
       hostname = host;
@@ -9136,6 +9341,22 @@
       return /^v[a-fA-F0-9]+\..+$/.test(hostname);
     }
     return !isIpv4(hostname) && isIpv6(hostname);
+  }
+  function reservedExtensionNamespace(identifier) {
+    if (!isAbsoluteUri(identifier)) return false;
+    const parsed = urlsplit(identifier);
+    if (parsed === void 0 || !["http", "https"].includes(parsed.scheme)) {
+      return false;
+    }
+    const authority = parsed.netloc.slice(parsed.netloc.lastIndexOf("@") + 1);
+    const host = authority.startsWith("[") ? authority.slice(0, authority.indexOf("]") + 1) : authority.split(":", 1)[0];
+    if (host === void 0) return false;
+    let comparisonHost = host.replace(/%[0-9A-Fa-f]{2}/g, (escape) => {
+      const character = String.fromCharCode(Number.parseInt(escape.slice(1), 16));
+      return /^[A-Za-z0-9._~-]$/.test(character) ? character : escape;
+    });
+    if (comparisonHost.endsWith(".")) comparisonHost = comparisonHost.slice(0, -1);
+    return comparisonHost.toLowerCase() === "externalcontrollayer.ai";
   }
   function isIpv4(text) {
     if (text === "" || text.includes("/")) {
@@ -9277,6 +9498,42 @@
     "date-time": isDateTime,
     uri: isAbsoluteUri
   };
+  function keywordDomains(node, base, where, root) {
+    const bad = (key) => {
+      throw new Error(`${where}: invalid or unsupported value for schema keyword ${key}`);
+    };
+    const names = (value, nonempty = false) => Array.isArray(value) && (!nonempty || value.length > 0) && value.every((item2) => typeof item2 === "string") && new Set(value).size === value.length;
+    if (has(node, "$id") && (!root || node["$id"] !== base)) bad("$id");
+    for (const key of ["$ref", "pattern"]) {
+      if (has(node, key) && typeof node[key] !== "string") bad(key);
+    }
+    for (const key of ["minLength", "maxLength", "minItems", "maxItems", "minProperties", "maxProperties"]) {
+      const value = node[key];
+      if (has(node, key) && (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0)) bad(key);
+    }
+    for (const key of ["minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum"]) {
+      if (has(node, key) && (typeof node[key] !== "number" || !Number.isFinite(node[key]))) bad(key);
+    }
+    if (has(node, "uniqueItems") && typeof node["uniqueItems"] !== "boolean") bad("uniqueItems");
+    if (has(node, "required") && !names(node["required"])) bad("required");
+    if (has(node, "enum") && !isArray(node["enum"])) bad("enum");
+    if (has(node, "type")) {
+      const types = typeof node["type"] === "string" ? [node["type"]] : node["type"];
+      const supported = /* @__PURE__ */ new Set(["null", "boolean", "object", "array", "number", "integer", "string"]);
+      if (!names(types, true) || !types.every((type) => supported.has(type))) bad("type");
+    }
+    for (const key of ["properties", "patternProperties", "dependentSchemas", "$defs"]) {
+      if (has(node, key) && !isObject(node[key])) bad(key);
+    }
+    if (has(node, "dependentRequired")) {
+      const value = node["dependentRequired"];
+      if (!isObject(value) || Object.values(value).some((entry) => !names(entry))) bad("dependentRequired");
+    }
+    for (const key of ["allOf", "anyOf", "oneOf", "prefixItems"]) {
+      const value = node[key];
+      if (has(node, key) && (!isArray(value) || value.length === 0)) bad(key);
+    }
+  }
   var SchemaSet = class {
     documents = /* @__PURE__ */ new Map();
     patterns = /* @__PURE__ */ new Map();
@@ -9289,14 +9546,14 @@
         this.documents.set(identifier, document2);
       }
       for (const [identifier, document2] of this.documents) {
-        this.prepare(document2, identifier, identifier);
+        this.prepare(document2, identifier, identifier, true);
       }
     }
     /** The schema `$id`s of the set. */
     identifiers() {
       return [...this.documents.keys()];
     }
-    prepare(node, base, where) {
+    prepare(node, base, where, root = false) {
       if (typeof node === "boolean") {
         return;
       }
@@ -9308,8 +9565,9 @@
           throw new Error(`${where}: unsupported schema keyword ${keyword}`);
         }
       }
+      keywordDomains(node, base, where, root);
       const format = node["format"];
-      if (format !== void 0 && (typeof format !== "string" || !(format in FORMATS))) {
+      if (format !== void 0 && (typeof format !== "string" || !Object.hasOwn(FORMATS, format))) {
         throw new Error(`${where}: unsupported format ${String(format)}`);
       }
       const pattern = node["pattern"];
@@ -9789,10 +10047,15 @@
       out.push({ path: path === "" ? "/" : path, keyword, message });
     }
   }
+  function plainObject2(value) {
+    if (!isObject(value)) return false;
+    const prototype = Object.getPrototypeOf(value);
+    return prototype === Object.prototype || prototype === null;
+  }
   function hasType(instance, type) {
     switch (type) {
       case "object":
-        return isObject(instance);
+        return plainObject2(instance);
       case "array":
         return isArray(instance);
       case "string":
@@ -9800,7 +10063,7 @@
       case "integer":
         return typeof instance === "number" && Number.isInteger(instance);
       case "number":
-        return typeof instance === "number";
+        return typeof instance === "number" && Number.isFinite(instance);
       case "boolean":
         return typeof instance === "boolean";
       case "null":
@@ -9839,610 +10102,18 @@
     if (isArray(value)) {
       return "array";
     }
+    if (typeof value === "number" && !Number.isFinite(value)) return "non-finite number";
+    if (typeof value === "bigint" || typeof value === "symbol" || typeof value === "function" || value === void 0) {
+      return typeof value;
+    }
     const text = JSON.stringify(value);
-    return text.length > 60 ? text.slice(0, 59) + "…" : text;
+    const characters = Array.from(text);
+    return characters.length > 60 ? characters.slice(0, 59).join("") + "…" : text;
   }
   var defaultSet;
   function eclSchemas() {
     defaultSet ??= new SchemaSet(SCHEMA_DOCUMENTS);
     return defaultSet;
-  }
-
-  // src/integrity/envelope.ts
-  var INTEGRITY_INVALID = "ecl.error.integrity-invalid.v1";
-  var SIGNATURE_POLICY_INVALID = "ecl.error.signature-policy-invalid.v1";
-  var REVOKED = "ecl.error.revoked.v1";
-  var EXPIRED = "ecl.error.expired.v1";
-  var THRESHOLD_NOT_MET = "ecl.error.threshold-not-met.v1";
-  var RESOURCE_LIMIT2 = "ecl.error.resource-limit-exceeded.v1";
-  var MAX_INTEGRITY_PAYLOAD_BYTES = 64 * 1024 * 1024;
-  var MAX_SIGNATURE_BYTES = 16 * 1024;
-  var MAX_SIGNATURE_COUNT = 32;
-  var MAX_POLICY_LIST_ENTRIES = 64;
-  var MAX_ENCODED_PAYLOAD_CHARACTERS = Math.floor((MAX_INTEGRITY_PAYLOAD_BYTES + 2) / 3) * 4;
-  var MAX_ENCODED_SIGNATURE_CHARACTERS = Math.floor((MAX_SIGNATURE_BYTES + 2) / 3) * 4;
-  var REASON_CODES = [
-    ["unacceptable", SIGNATURE_POLICY_INVALID],
-    ["revoked", REVOKED],
-    ["expired", EXPIRED],
-    ["unverified", SIGNATURE_POLICY_INVALID]
-  ];
-  var TRUSTED_TIME_CLAIM = "ecl.claim.trusted-time.v1";
-  var TIME_ATTESTATION_TYPE = "application/vnd.ecl.time-attestation+json";
-  var PROTOCOL_MEDIA_TYPES = {
-    "DCMP-2": "application/vnd.ecl.dcmp+json",
-    "EBMP-2": "application/vnd.ecl.ebmp+json"
-  };
-  var IntegrityError = class extends Error {
-    code;
-    constructor(message, code2 = INTEGRITY_INVALID) {
-      super(message);
-      this.name = "IntegrityError";
-      this.code = code2;
-    }
-  };
-  var PayloadNodeBudgetError = class extends IntegrityError {
-    constructor(message) {
-      super(message, RESOURCE_LIMIT2);
-      this.name = "PayloadNodeBudgetError";
-    }
-  };
-  function policyError(message, code2 = SIGNATURE_POLICY_INVALID) {
-    return new IntegrityError(message, code2);
-  }
-  function limitError(message) {
-    return new IntegrityError(message, RESOURCE_LIMIT2);
-  }
-  var ROLE_PURPOSES = {
-    decision_request: "ecl.purpose.decision-request.v1",
-    challenge_response: "ecl.purpose.decision-request.v1",
-    decision_response: "ecl.purpose.decision-response.v1",
-    challenge: "ecl.purpose.decision-response.v1",
-    control: "ecl.purpose.control.v1"
-  };
-  function rolePurpose(payload) {
-    if (!isObject(payload) || get(payload, "protocol") !== "DCMP-2") {
-      return void 0;
-    }
-    const messageType = get(payload, "message_type");
-    return typeof messageType === "string" && Object.prototype.hasOwnProperty.call(ROLE_PURPOSES, messageType) ? ROLE_PURPOSES[messageType] : void 0;
-  }
-  function isAscii(text) {
-    return /^[\x00-\x7f]*$/.test(text);
-  }
-  function signingInput(payloadType, payload) {
-    if (typeof payloadType !== "string" || !(payload instanceof Uint8Array)) {
-      throw new IntegrityError("signing input requires a string type and byte payload");
-    }
-    if (!isAscii(payloadType)) {
-      throw new IntegrityError("payload_type must be ASCII");
-    }
-    const type = utf8(payloadType);
-    return concat(utf8(`DSSEv1 ${type.length} `), type, utf8(` ${payload.length} `), payload);
-  }
-  function decodePayload(envelope) {
-    if (!isObject(envelope)) {
-      throw new IntegrityError("integrity envelope must be an object");
-    }
-    const encoded = get(envelope, "payload");
-    if (typeof encoded !== "string" || !isAscii(encoded)) {
-      throw new IntegrityError("payload is not valid canonical base64");
-    }
-    if (encoded.length > MAX_ENCODED_PAYLOAD_CHARACTERS) {
-      throw limitError("payload exceeds the integrity byte budget");
-    }
-    const payload = fromCanonicalBase64(encoded);
-    if (payload === void 0) {
-      throw new IntegrityError("payload is not canonical base64");
-    }
-    const digest = sha256Hex(payload);
-    const rawDeclared = get(envelope, "payload_digest");
-    const declared = truthy(rawDeclared) ? rawDeclared : {};
-    if (!isObject(declared)) {
-      throw new IntegrityError("payload digest must be an object");
-    }
-    if (!pythonEquals(get(declared, "algorithm"), "ecl.digest.sha-256.v1")) {
-      throw new IntegrityError("unsupported or missing payload digest suite");
-    }
-    if (!pythonEquals(get(declared, "value"), digest)) {
-      throw new IntegrityError("payload digest mismatch");
-    }
-    return payload;
-  }
-  function decodeCanonicalJsonPayload(envelope, maxNodes = MAX_JSON_NODES) {
-    const payload = decodePayload(envelope);
-    let value;
-    try {
-      value = parseStrictJson(payload, { maxNodes });
-      if (!equalBytes(canonicalize(value), payload)) {
-        throw new IntegrityError("payload is not canonical ECL JSON");
-      }
-    } catch (error) {
-      if (error instanceof StrictJsonError) {
-        if (error.ruleId === RESOURCE_LIMIT2 && error.message === NODE_BUDGET_MESSAGE) {
-          throw new PayloadNodeBudgetError(error.message);
-        }
-        throw new IntegrityError(error.message, error.ruleId === RESOURCE_LIMIT2 ? RESOURCE_LIMIT2 : INTEGRITY_INVALID);
-      }
-      if (error instanceof CanonicalizationError) {
-        throw new IntegrityError(error.message);
-      }
-      throw error;
-    }
-    return value;
-  }
-  function decodeSignature(value) {
-    if (typeof value !== "string" || !isAscii(value)) {
-      throw new IntegrityError("signature is not valid canonical base64");
-    }
-    if (value.length > MAX_ENCODED_SIGNATURE_CHARACTERS) {
-      throw limitError("signature exceeds the integrity byte budget");
-    }
-    const decoded = fromCanonicalBase64(value);
-    if (decoded === void 0) {
-      throw new IntegrityError("signature is not canonical base64");
-    }
-    return decoded;
-  }
-  function micros(value) {
-    try {
-      return instantMicroseconds(value);
-    } catch (error) {
-      if (error instanceof InstantError) {
-        throw new IntegrityError(`invalid UTC timestamp: ${JSON.stringify(value)}`);
-      }
-      throw error;
-    }
-  }
-  function validateContext(policy, context) {
-    const trust = get(policy, "trust_policy");
-    if (!isObject(trust)) {
-      throw policyError("signed payload lacks a trust policy reference");
-    }
-    const declared = get(trust, "digest");
-    if (!isObject(declared)) {
-      throw policyError("trust policy digest suite is unsupported");
-    }
-    const observed = [get(trust, "id") ?? null, get(trust, "version") ?? null, get(declared, "value") ?? null, get(trust, "epoch") ?? null];
-    const expected = [context.trustPolicyId, context.trustPolicyVersion, context.trustPolicyDigest, context.trustPolicyEpoch];
-    if (!pythonEquals(get(declared, "algorithm"), "ecl.digest.sha-256.v1")) {
-      throw policyError("trust policy digest suite is unsupported");
-    }
-    if (!schemaEquals(observed, expected)) {
-      throw policyError("verification context does not match signed trust policy");
-    }
-    if (!pythonEquals(get(policy, "verification_time_policy"), context.verificationTimePolicy)) {
-      throw policyError("verification context does not match signed verification-time policy");
-    }
-    if (!pythonEquals(get(policy, "revocation_policy"), context.revocationPolicy)) {
-      throw policyError("verification context does not match signed revocation policy");
-    }
-    return micros(context.evaluatedAt);
-  }
-  function keyIneligibility(key, payloadType, context, evaluatedAt, role) {
-    if (key.trustPolicyIds.length > 0 && !key.trustPolicyIds.includes(context.trustPolicyId)) {
-      return "unacceptable";
-    }
-    if (key.purposes.length > 0 && !key.purposes.includes(payloadType)) {
-      return "unacceptable";
-    }
-    if (role !== void 0 && key.rolePurposes !== void 0 && key.rolePurposes.length > 0 && !key.rolePurposes.includes(role)) {
-      return "unacceptable";
-    }
-    for (const revocation of context.revocations) {
-      if (revocation.keyId === key.keyId && evaluatedAt >= micros(revocation.effectiveAt)) {
-        return "revoked";
-      }
-    }
-    if (key.validFrom !== void 0 && evaluatedAt < micros(key.validFrom)) {
-      return "expired";
-    }
-    if (key.validUntil !== void 0 && evaluatedAt >= micros(key.validUntil)) {
-      return "expired";
-    }
-    return void 0;
-  }
-  function policyStringSet(policy, name) {
-    const raw = get(policy, name);
-    if (!isArray(raw) || raw.some((entry) => typeof entry !== "string" || entry === "")) {
-      throw policyError(`${name} must be an array of identifiers`);
-    }
-    const set = new Set(raw);
-    if (set.size !== raw.length) {
-      throw policyError(`${name} contains duplicate identifiers`);
-    }
-    return set;
-  }
-  function verifyEnvelope(envelope, keyring, context, keyTimes) {
-    if (!isObject(envelope)) {
-      throw new IntegrityError("integrity envelope must be an object");
-    }
-    const encoded = get(envelope, "payload");
-    if (typeof encoded === "string" && encoded.length > MAX_ENCODED_PAYLOAD_CHARACTERS) {
-      throw limitError("payload exceeds the integrity byte budget");
-    }
-    const signatures = get(envelope, "signatures");
-    if (isArray(signatures)) {
-      if (signatures.length > MAX_SIGNATURE_COUNT) {
-        throw limitError("integrity signature set exceeds the verifier budget");
-      }
-      for (const item2 of signatures) {
-        const value = isObject(item2) ? get(item2, "signature") : void 0;
-        if (typeof value === "string" && value.length > MAX_ENCODED_SIGNATURE_CHARACTERS) {
-          throw limitError("signature exceeds the integrity byte budget");
-        }
-      }
-    }
-    const payloadBytes = decodePayload(envelope);
-    const payload = decodeCanonicalJsonPayload(envelope);
-    const payloadType = get(envelope, "payload_type");
-    if (typeof payloadType !== "string") {
-      throw new IntegrityError("integrity envelope lacks a valid payload_type");
-    }
-    if ([...payloadType].length > 255 || !isAscii(payloadType)) {
-      throw new IntegrityError("integrity envelope payload_type is invalid");
-    }
-    const rawProtocol = isObject(payload) ? get(payload, "protocol") : void 0;
-    const protocol = typeof rawProtocol === "string" ? rawProtocol : void 0;
-    const expectedType = protocol !== void 0 && Object.prototype.hasOwnProperty.call(PROTOCOL_MEDIA_TYPES, protocol) ? PROTOCOL_MEDIA_TYPES[protocol] : void 0;
-    if (expectedType !== void 0 && payloadType !== expectedType) {
-      throw new IntegrityError(`integrity envelope payload_type does not match the signed ${protocol} payload`);
-    }
-    const claimed = Object.keys(PROTOCOL_MEDIA_TYPES).find((identifier) => PROTOCOL_MEDIA_TYPES[identifier] === payloadType);
-    if (claimed !== void 0 && protocol !== claimed) {
-      throw new IntegrityError(`integrity envelope payload does not match the claimed ${claimed} media type`);
-    }
-    const policy = isObject(payload) ? get(payload, "integrity_policy") : void 0;
-    if (!isObject(policy)) {
-      throw new IntegrityError("signed payload lacks integrity_policy");
-    }
-    for (const name of ["accepted_suites", "eligible_key_ids", "required_key_ids"]) {
-      const raw = get(policy, name);
-      if (isArray(raw) && raw.length > MAX_POLICY_LIST_ENTRIES) {
-        throw limitError(`${name} exceeds the policy resource budget`);
-      }
-    }
-    if (get(policy, "required") !== true) {
-      throw policyError("an integrity envelope cannot elevate a payload that declares integrity optional");
-    }
-    const threshold = get(policy, "threshold");
-    if (!isInteger(threshold) || threshold < 1) {
-      throw policyError("integrity threshold must be at least one");
-    }
-    const acceptedSuites = policyStringSet(policy, "accepted_suites");
-    const eligibleKeys = policyStringSet(policy, "eligible_key_ids");
-    const requiredKeys = policyStringSet(policy, "required_key_ids");
-    if (acceptedSuites.size === 0) {
-      throw policyError("accepted_suites cannot be empty");
-    }
-    if (requiredKeys.size > 0 && threshold < requiredKeys.size) {
-      throw policyError("threshold cannot be lower than required key count");
-    }
-    const evaluatedAt = validateContext(policy, context);
-    const role = rolePurpose(payload);
-    const allowed = new Set(context.allowedSuites);
-    const prohibited = new Set(context.prohibitedSuites);
-    if (!isArray(signatures) || signatures.length === 0) {
-      throw new IntegrityError("integrity signature set is missing");
-    }
-    const entries = [];
-    const observed = /* @__PURE__ */ new Set();
-    for (const entry of signatures) {
-      if (!isObject(entry)) {
-        throw new IntegrityError("integrity signature entry must be an object");
-      }
-      const rawKeyId = get(entry, "key_id");
-      const rawSuiteId = get(entry, "suite_id");
-      const keyId = truthy(rawKeyId) ? pythonStr(rawKeyId) : "";
-      const suiteId = truthy(rawSuiteId) ? pythonStr(rawSuiteId) : "";
-      if (keyId === "" || suiteId === "") {
-        throw new IntegrityError("integrity signature identity is incomplete");
-      }
-      const identity = JSON.stringify([keyId, suiteId]);
-      if (observed.has(identity)) {
-        throw new IntegrityError("duplicate signature identity");
-      }
-      observed.add(identity);
-      entries.push([keyId, suiteId, entry]);
-    }
-    const message = signingInput(payloadType, payloadBytes);
-    const valid = /* @__PURE__ */ new Set();
-    const reasons = /* @__PURE__ */ new Set();
-    for (const [keyId, suiteId, entry] of entries) {
-      const key = keyring.get(keyId);
-      if (!acceptedSuites.has(suiteId) || !allowed.has(suiteId) || prohibited.has(suiteId) || eligibleKeys.size > 0 && !eligibleKeys.has(keyId) || key === void 0 || key.suiteId !== suiteId || key.keyId !== keyId) {
-        reasons.add("unacceptable");
-        continue;
-      }
-      const own = keyTimes?.get(keyId);
-      const reason = keyIneligibility(key, payloadType, context, own === void 0 ? evaluatedAt : micros(own), role);
-      if (reason !== void 0) {
-        reasons.add(reason);
-        continue;
-      }
-      if (!Object.prototype.hasOwnProperty.call(entry, "signature")) {
-        throw new IntegrityError("integrity signature bytes are missing");
-      }
-      const signature = decodeSignature(entry["signature"]);
-      let verified;
-      try {
-        verified = verifySignature(suiteId, key.publicKey, message, signature);
-      } catch (error) {
-        if (error instanceof SignatureEncodingError) {
-          throw new IntegrityError(error.message);
-        }
-        throw error;
-      }
-      if (!verified) {
-        reasons.add("unverified");
-        continue;
-      }
-      valid.add(keyId);
-    }
-    const missing = [...requiredKeys].filter((keyId) => !valid.has(keyId)).sort();
-    if (missing.length > 0 || valid.size < threshold) {
-      const code2 = REASON_CODES.find(([reason]) => reasons.has(reason))?.[1] ?? THRESHOLD_NOT_MET;
-      if (missing.length > 0) {
-        throw policyError(`required signatures are missing or invalid: ${JSON.stringify(missing)}`, code2);
-      }
-      throw policyError(`signature threshold not met: valid=${valid.size} required=${threshold}`, code2);
-    }
-    return {
-      payload,
-      validKeyIds: [...valid].sort(),
-      evaluatedAt: context.evaluatedAt,
-      trustPolicyId: context.trustPolicyId,
-      trustPolicyVersion: context.trustPolicyVersion,
-      trustPolicyEpoch: context.trustPolicyEpoch,
-      verificationTimePolicy: context.verificationTimePolicy,
-      revocationPolicy: context.revocationPolicy
-    };
-  }
-
-  // src/trust/policy.ts
-  var SCHEMA_INVALID = "ecl.error.schema-invalid.v1";
-  var SEMANTIC_INVALID = "ecl.error.semantic-invalid.v1";
-  var RESOURCE_LIMIT3 = "ecl.error.resource-limit-exceeded.v1";
-  var TRUST_POLICY_SCHEMA = "https://externalcontrollayer.ai/ns/schema/trust-policy/1";
-  var MAX_TRUST_POLICY_BYTES = 256 * 1024;
-  var PURPOSE_DECISION_REQUEST = "ecl.purpose.decision-request.v1";
-  var PURPOSE_DECISION_RESPONSE = "ecl.purpose.decision-response.v1";
-  var PURPOSE_EVIDENCE_EVENT = "ecl.purpose.evidence-event.v1";
-  var PURPOSE_OBSERVATION = "ecl.purpose.observation.v1";
-  var PURPOSE_TRUSTED_TIME = "ecl.purpose.trusted-time.v1";
-  var PURPOSE_CONTROL = "ecl.purpose.control.v1";
-  var PURPOSE_APPROVAL = "ecl.purpose.approval.v1";
-  var QUALIFYING_PURPOSES = [PURPOSE_APPROVAL];
-  var PURPOSE_PAYLOAD_TYPES = {
-    [PURPOSE_DECISION_REQUEST]: PROTOCOL_MEDIA_TYPES["DCMP-2"],
-    [PURPOSE_DECISION_RESPONSE]: PROTOCOL_MEDIA_TYPES["DCMP-2"],
-    [PURPOSE_CONTROL]: PROTOCOL_MEDIA_TYPES["DCMP-2"],
-    [PURPOSE_EVIDENCE_EVENT]: PROTOCOL_MEDIA_TYPES["EBMP-2"],
-    [PURPOSE_OBSERVATION]: PROTOCOL_MEDIA_TYPES["EBMP-2"],
-    [PURPOSE_TRUSTED_TIME]: TIME_ATTESTATION_TYPE
-  };
-  var ROLE_PURPOSES2 = [PURPOSE_DECISION_REQUEST, PURPOSE_DECISION_RESPONSE, PURPOSE_CONTROL, PURPOSE_OBSERVATION, PURPOSE_TRUSTED_TIME];
-  function roleConflict(purposes) {
-    const roles = ROLE_PURPOSES2.filter((purpose) => purposes.includes(purpose));
-    return roles.length > 1 ? roles : [];
-  }
-  var MAX_TEXT = 200;
-  function cut(text) {
-    return text.length <= MAX_TEXT ? text : text.slice(0, MAX_TEXT - 1) + "…";
-  }
-  var TrustPolicyError = class extends Error {
-    code;
-    constructor(message, code2) {
-      super(cut(message));
-      this.name = "TrustPolicyError";
-      this.code = code2;
-    }
-  };
-  function schemaError(message) {
-    return new TrustPolicyError(message, SCHEMA_INVALID);
-  }
-  function semanticError(message) {
-    return new TrustPolicyError(message, SEMANTIC_INVALID);
-  }
-  function parse(data) {
-    const size = typeof data === "string" ? new TextEncoder().encode(data).length : data.length;
-    if (size > MAX_TRUST_POLICY_BYTES) {
-      throw new TrustPolicyError(`a trust policy is at most ${MAX_TRUST_POLICY_BYTES} bytes`, RESOURCE_LIMIT3);
-    }
-    try {
-      return parseStrictJson(data, { maxBytes: MAX_TRUST_POLICY_BYTES });
-    } catch (error) {
-      if (error instanceof StrictJsonError && error.ruleId === RESOURCE_LIMIT3) {
-        throw new TrustPolicyError(error.message, RESOURCE_LIMIT3);
-      }
-      if (error instanceof StrictJsonError) {
-        throw schemaError(error.kind === "encoding" ? "a trust policy is UTF-8 JSON, without a byte order mark" : error.message);
-      }
-      throw error;
-    }
-  }
-  var TrustPolicy = class _TrustPolicy {
-    policyId;
-    version;
-    epoch;
-    revocationPolicy;
-    keys;
-    revocations;
-    /** The SHA-256 of the policy's canonical JSON: whitespace and member order aside, it covers every member. */
-    digest;
-    /** The document as loaded. */
-    document;
-    constructor(document2, keys, revocations) {
-      this.document = document2;
-      this.policyId = document2["policy_id"];
-      this.version = document2["version"];
-      this.epoch = document2["epoch"];
-      this.revocationPolicy = document2["revocation_policy"];
-      this.keys = Object.freeze(keys);
-      this.revocations = Object.freeze(revocations);
-      this.digest = objectDigest(document2);
-      Object.freeze(this);
-    }
-    /**
-     * The policy in `data` (UTF-8 bytes, or text): strict JSON, then the schema, then the semantic
-     * checks. Throws TrustPolicyError and never returns a partly checked policy.
-     */
-    static load(data) {
-      const document2 = parse(data);
-      const errors = eclSchemas().errors(TRUST_POLICY_SCHEMA, document2, 1);
-      const first = errors[0];
-      if (first !== void 0) {
-        throw schemaError(`the trust policy does not satisfy ${TRUST_POLICY_SCHEMA}: ${first.path}: ${first.keyword}: ${first.message}`);
-      }
-      const policy = document2;
-      const revocationPolicy = policy["revocation_policy"];
-      if (!activeIds("vocabulary", "category", "revocation_policy").has(revocationPolicy)) {
-        throw semanticError(`${revocationPolicy} is not an active revocation policy of the vocabulary registry`);
-      }
-      const keys = loadKeys(policy["keys"]);
-      const revocations = loadRevocations(policy["revocations"], new Set(keys.map((key) => key.keyId)));
-      return new _TrustPolicy(policy, keys, revocations);
-    }
-    /** The policy as an object embeds it: `{"id", "version", "digest", "epoch"}`. */
-    reference() {
-      return {
-        id: this.policyId,
-        version: this.version,
-        digest: { algorithm: "ecl.digest.sha-256.v1", value: this.digest },
-        epoch: this.epoch
-      };
-    }
-    /** The key with this id, or undefined. */
-    key(keyId) {
-      return this.keys.find((key) => key.keyId === keyId);
-    }
-    /**
-     * The keyring that `verifyEnvelope` reads: one verification key per key, whose purposes become
-     * the payload types it may sign and, as `rolePurposes`, the roles it holds. So `verifyEnvelope`
-     * keeps DCMP-2 and EBMP-2 keys apart and, within the DCMP-2 media type, counts a decision request
-     * only under a key that holds the decision-request purpose and a decision response only under one
-     * that holds the decision-response purpose (TP1-010). Separating an evidence event from an
-     * observation, both EBMP-2, is the bundle verifier's, which knows where each object sits.
-     */
-    keyring() {
-      const ring = /* @__PURE__ */ new Map();
-      for (const key of this.keys) {
-        const types = new Set(key.purposes.filter((purpose) => !QUALIFYING_PURPOSES.includes(purpose)).map((purpose) => PURPOSE_PAYLOAD_TYPES[purpose]));
-        ring.set(key.keyId, {
-          keyId: key.keyId,
-          suiteId: key.suiteId,
-          publicKey: key.publicKey,
-          trustPolicyIds: [this.policyId],
-          purposes: [...types].sort(),
-          validFrom: key.validFrom,
-          validUntil: key.validUntil,
-          rolePurposes: [...key.purposes].sort()
-        });
-      }
-      return ring;
-    }
-    /** The context for `verifyEnvelope` at `evaluatedAt`, under the object's own time policy. */
-    verificationContext(evaluatedAt, timePolicy) {
-      if (!activeIds("vocabulary", "category", "verification_time_policy").has(timePolicy)) {
-        throw semanticError(`${JSON.stringify(timePolicy)} is not a verification-time policy of the vocabulary registry`);
-      }
-      return {
-        trustPolicyId: this.policyId,
-        trustPolicyVersion: this.version,
-        trustPolicyDigest: this.digest,
-        trustPolicyEpoch: this.epoch,
-        evaluatedAt,
-        verificationTimePolicy: timePolicy,
-        revocationPolicy: this.revocationPolicy,
-        allowedSuites: [...new Set(this.keys.map((key) => key.suiteId))].sort(),
-        prohibitedSuites: [],
-        revocations: this.revocations
-      };
-    }
-  };
-  function loadKeys(items) {
-    const suites = activeIds("algorithm-suites", "kind", "signature");
-    const purposes = activeIds("vocabulary", "category", "key_purpose");
-    const ids = /* @__PURE__ */ new Set();
-    const holders = [];
-    const keys = [];
-    for (const item2 of items) {
-      const key = loadKey(item2, suites, purposes);
-      if (ids.has(key.keyId)) {
-        throw semanticError(`key_id ${key.keyId} appears twice in the trust policy`);
-      }
-      ids.add(key.keyId);
-      const holder = holders.find(([bytes]) => equalBytes(bytes, key.publicKey));
-      if (holder !== void 0) {
-        throw semanticError(`keys ${holder[1]} and ${key.keyId} have the same public key`);
-      }
-      holders.push([key.publicKey, key.keyId]);
-      keys.push(key);
-    }
-    return keys;
-  }
-  function loadKey(item2, suites, purposes) {
-    const keyId = item2["key_id"];
-    const suiteId = item2["suite_id"];
-    if (!suites.has(suiteId)) {
-      throw semanticError(`key ${keyId}: ${suiteId} is not an active signature suite of the algorithm-suites registry`);
-    }
-    const raw = fromCanonicalBase64(item2["public_key"]);
-    if (raw === void 0) {
-      throw semanticError(`key ${keyId}: public_key is not canonical standard base64`);
-    }
-    const problem = publicKeyProblem(suiteId, raw);
-    if (problem !== void 0) {
-      throw semanticError(`key ${keyId}: ${problem}`);
-    }
-    const listed = item2["purposes"];
-    for (const purpose of listed) {
-      if (!purposes.has(purpose)) {
-        throw semanticError(`key ${keyId}: ${purpose} is not an active key purpose of the vocabulary registry`);
-      }
-      if (!Object.prototype.hasOwnProperty.call(PURPOSE_PAYLOAD_TYPES, purpose) && !QUALIFYING_PURPOSES.includes(purpose)) {
-        throw semanticError(`key ${keyId}: ${purpose} has no payload type in this library`);
-      }
-    }
-    if (!listed.some((purpose) => Object.prototype.hasOwnProperty.call(PURPOSE_PAYLOAD_TYPES, purpose))) {
-      throw semanticError(`key ${keyId}: carries no purpose that signs a payload type, only a qualifying one`);
-    }
-    const roles = roleConflict(listed);
-    if (roles.length > 0) {
-      throw semanticError(`key ${keyId}: one key carries the purposes of more than one role: ${roles.join(", ")} (TP1-009)`);
-    }
-    const validFrom = item2["valid_from"];
-    const validUntil = get(item2, "valid_until");
-    if (validUntil !== void 0 && instantMicroseconds(validUntil) <= instantMicroseconds(validFrom)) {
-      throw semanticError(`key ${keyId}: valid_until must be later than valid_from`);
-    }
-    return {
-      keyId,
-      suiteId,
-      publicKey: raw,
-      principal: item2["principal"],
-      purposes: Object.freeze([...listed]),
-      validFrom,
-      validUntil
-    };
-  }
-  function loadRevocations(items, held) {
-    const revoked = /* @__PURE__ */ new Set();
-    for (const item2 of items) {
-      const keyId = item2["key_id"];
-      if (!held.has(keyId)) {
-        throw semanticError(`revocation names ${keyId}, which is not a key of this policy`);
-      }
-      if (revoked.has(keyId)) {
-        throw semanticError(`revocation of ${keyId} appears twice in the trust policy`);
-      }
-      revoked.add(keyId);
-    }
-    return items.map((item2) => ({
-      keyId: item2["key_id"],
-      effectiveAt: item2["effective_at"],
-      reason: item2["reason"]
-    }));
   }
 
   // src/semantic/python.ts
@@ -10473,27 +10144,12 @@
   function inSet(needle, set) {
     return inStringSet(needle, set);
   }
-  function hashKey(value) {
-    if (value === void 0 || value === null) {
-      return "none";
-    }
-    if (typeof value === "number" || typeof value === "boolean") {
-      return "n:" + String(Number(value));
-    }
-    if (typeof value === "string") {
-      return "s:" + value;
-    }
-    throw new PythonTypeError("unhashable type");
-  }
-  function pythonSet(items) {
-    return new Set(items.map(hashKey));
-  }
   function str(value) {
     return pythonStr(value);
   }
 
   // src/semantic/rules.ts
-  var SCHEMA_INVALID2 = "ecl.error.schema-invalid.v1";
+  var SCHEMA_INVALID = "ecl.error.schema-invalid.v1";
   var EVENT_KINDS = {
     request_received: ["request", null],
     decision_recorded: ["decision", null],
@@ -10544,7 +10200,7 @@
   var APPROVAL_OPERATIONS = /* @__PURE__ */ new Set(["approve", "reject"]);
   var DERIVED_OPERATIONS = /* @__PURE__ */ new Set(["redact", "supersede"]);
   var AUTHORITY_MEMBERS = ["authorization_id", "audience", "scope_digest", "valid_from", "valid_until", "use_policy"];
-  var PROTOCOLS = /* @__PURE__ */ new Set(["DCMP-2", "EBMP-2"]);
+  var PROTOCOLS = /* @__PURE__ */ new Set(["DCMP-2", "EBMP-2", "ECL-IE-1", "ECL-WI-1"]);
   var EXTENSION_VERSION_RULE = "ecl.rule.extension-single-version.v1";
   function finding(ruleId, path, message) {
     return { ruleId, path, message };
@@ -10555,7 +10211,12 @@
     );
   }
   function time(value) {
-    return instantNanoseconds(value);
+    try {
+      return instantNanoseconds(value);
+    } catch (error) {
+      if (!(error instanceof InstantError)) throw error;
+      return void 0;
+    }
   }
   function extensionValues(value, identifier) {
     const extensions = get(value, "extensions");
@@ -10579,12 +10240,7 @@
     if (!isArray(extensions)) {
       throw new PythonTypeError("extensions must be an array");
     }
-    return extensions.map((extension) => {
-      if (!isObject(extension)) {
-        throw new PythonTypeError("extension entries must be objects");
-      }
-      return extension;
-    });
+    return extensions;
   }
   var SemanticValidator = class _SemanticValidator {
     known;
@@ -10593,21 +10249,24 @@
     allocated;
     composable;
     active;
+    applicability;
     /**
      * `known` names the allocated identifiers, whatever their status (XR1-017). `allocated` gives
      * the versions the registry allocates for each identifier; `undefined` interprets every version
      * of a known identifier. `composable` names the identifiers
      * whose versions the registry declares composable (XR1-010). `active` gives the versions of the
      * active entries the consumer implements, the only occurrences it knows (XR1-006); `undefined`
-     * falls back to `known` and `allocated`.
+     * falls back to `known` and `allocated`. `applicability` defaults to the shipped registry;
+     * custom entries supply their identifier/version/object-type declarations explicitly.
      */
-    constructor(known = knownExtensions(), valueSchemas = extensionValueSchemas(), schemas = eclSchemas(), allocated = allocatedExtensionVersions(), composable = composableExtensions(), active = activeExtensionVersions()) {
+    constructor(known = knownExtensions(), valueSchemas = extensionValueSchemas(), schemas = eclSchemas(), allocated = allocatedExtensionVersions(), composable = composableExtensions(), active = activeExtensionVersions(), applicability = extensionApplicability()) {
       this.known = new Set(known);
       this.valueSchemas = valueSchemas;
       this.schemas = schemas;
       this.allocated = allocated;
       this.composable = new Set(composable);
       this.active = active;
+      this.applicability = applicability;
     }
     isKnown(identifier) {
       return typeof identifier === "string" && this.known.has(identifier);
@@ -10617,7 +10276,9 @@
      * and version that the consumer implements, or, without that snapshot, a known identifier at a
      * version that the registry allocated for it (XR1-003, XR1-009).
      */
-    interpretable(identifier, version) {
+    interpretable(identifier, version, value) {
+      const kind = extensionObjectType(value);
+      if (!(typeof identifier === "string" && isInteger(version) && typeof kind === "string" && (this.applicability.get(identifier)?.get(version)?.has(kind) ?? false))) return false;
       if (this.active !== void 0) {
         return typeof identifier === "string" && isInteger(version) && (this.active.get(identifier)?.has(version) ?? false);
       }
@@ -10629,6 +10290,12 @@
         return true;
       }
       return isInteger(version) && versions.has(version);
+    }
+    /** Keep source positions while hiding uninterpretable data from extension-specific checks. */
+    interpretedExtensions(value) {
+      const extensions = get(value, "extensions");
+      if (!isArray(extensions)) return value;
+      return { ...value, extensions: extensions.map((entry) => isObject(entry) && this.interpretable(get(entry, "id"), get(entry, "version"), value) ? entry : {}) };
     }
     /** XR1-023: a registered extension's value validates against its registered schema. */
     extensionValueSchemas(value) {
@@ -10642,6 +10309,7 @@
           return;
         }
         const identifier = get(extension, "id");
+        if (!this.interpretable(identifier, get(extension, "version"), value)) return;
         const schema = typeof identifier === "string" ? this.valueSchemas.get(identifier) : void 0;
         if (schema === void 0 || !has(extension, "value")) {
           return;
@@ -10669,13 +10337,16 @@
             continue;
           }
           const outcome = get(result, "outcome");
+          if (typeof outcome !== "string") {
+            continue;
+          }
           if (!inSet(outcome, permitting)) {
             findings.push(finding("ecl.rule.coupling-results-permit-admit.v1", `/extensions/${index}/value/${member}/outcome`, `an admit cannot carry ${member} outcome ${str(outcome)}`));
           } else if (pythonEquals(outcome, "required_before_release") && !deferred) {
             findings.push(finding("ecl.rule.coupling-results-permit-admit.v1", `/extensions/${index}/value/${member}/outcome`, "a deferred witness check needs a before_release obligation"));
           }
         }
-        if (has(coupling, "blocker_reason")) {
+        if (typeof get(coupling, "blocker_reason") === "string") {
           findings.push(finding("ecl.rule.coupling-results-permit-admit.v1", `/extensions/${index}/value/blocker_reason`, "an admit cannot carry a blocker reason"));
         }
       }
@@ -10727,7 +10398,10 @@
         if (!isString(presented) || !isInteger(minimum)) {
           continue;
         }
-        if (time(item(event, "issued_at")) < time(presented) + BigInt(minimum) * 1000000000n) {
+        const issuedTime = time(item(event, "issued_at"));
+        const presentedTime = time(presented);
+        if (issuedTime === void 0 || presentedTime === void 0) continue;
+        if (issuedTime < presentedTime + BigInt(minimum) * 1000000000n) {
           findings.push(finding("ecl.rule.approval-review-time-respected.v1", `/extensions/${index}/value/presented_at`, "the decision came sooner than the minimum review time after presentation"));
         }
       }
@@ -10745,7 +10419,9 @@
         const effective = get(change, "effective_at");
         const expires = get(change, "expires_at");
         if (inSet(get(change, "change"), DISABLING_CHANGES) && isString(effective)) {
-          if (!isString(expires) || time(expires) <= time(effective)) {
+          const effectiveTime = time(effective);
+          const expiresTime = isString(expires) ? time(expires) : void 0;
+          if (!isString(expires) || effectiveTime !== void 0 && expiresTime !== void 0 && expiresTime <= effectiveTime) {
             findings.push(finding("ecl.rule.control-change-approved-and-bounded.v1", `/extensions/${index}/value/expires_at`, `a ${str(get(change, "change"))} change must expire after it takes effect`));
           }
         }
@@ -10762,8 +10438,8 @@
       extensions.forEach((extension, index) => {
         const identifier = get(extension, "id");
         const version = get(extension, "version");
-        if (typeof identifier !== "string" || !isPythonInt(version)) {
-          throw new PythonTypeError("extension id and version have invalid types");
+        if (typeof identifier !== "string" || !isInteger(version)) {
+          return;
         }
         const key = identifier + "\0" + String(Number(version));
         if (seen.has(key)) {
@@ -10811,7 +10487,7 @@
       }
       extensions.forEach((extension, index) => {
         const identifier = get(extension, "id");
-        if (typeof identifier === "string" && identifier.startsWith("ecl.") && !this.known.has(identifier)) {
+        if (typeof identifier === "string" && (identifier.startsWith("ecl.") && !this.known.has(identifier) || reservedExtensionNamespace(identifier))) {
           findings.push(finding("ecl.rule.extension-namespace-allocated.v1", `/extensions/${index}/id`, `unallocated ECL extension identifier ${identifier}`));
         }
       });
@@ -10826,15 +10502,17 @@
       extensions.forEach((extension, index) => {
         const identifier = get(extension, "id");
         const version = get(extension, "version");
-        if (truthy(get(extension, "critical")) && !this.interpretable(identifier, version)) {
+        if (typeof identifier === "string" && isInteger(version) && get(extension, "critical") === true && !this.interpretable(identifier, version, value)) {
           findings.push(finding("ecl.rule.unknown-critical-extension-rejected.v1", `/extensions/${index}/id`, `unknown critical extension ${str(identifier)} version ${str(version)}`));
         }
       });
       return findings;
     }
     static selfCausation(value) {
+      const protocol = get(value, "protocol");
       const messageId = get(value, "message_id");
-      const objectId = truthy(messageId) ? messageId : get(value, "object_id");
+      const intentId = protocol === "ECL-WI-1" ? get(value, "intent_id") : void 0;
+      const objectId = protocol === "DCMP-2" ? messageId : protocol === "EBMP-2" ? get(value, "object_id") : truthy(intentId) ? intentId : truthy(messageId) ? messageId : get(value, "object_id");
       const workflow = get(value, "workflow");
       if (workflow === void 0 || workflow === null) {
         return [];
@@ -10847,45 +10525,61 @@
       if (!isArray(predecessors2)) {
         throw new PythonTypeError("causal_predecessors must be an array");
       }
+      if ((protocol === "DCMP-2" || protocol === "EBMP-2") && !isString(objectId)) {
+        return [];
+      }
       if (truthy(objectId) && predecessors2.some((entry) => isObject(entry) && pythonEquals(get(entry, "id"), objectId))) {
         return [finding("ecl.rule.message-cannot-cause-itself.v1", "/workflow/causal_predecessors", "an object cannot name itself as a causal predecessor")];
       }
       return [];
+    }
+    static workIntentContext(value) {
+      const workflow = get(value, "workflow");
+      if (!isObject(workflow)) return [];
+      const parent = get(get(value, "parent_workflow"), "uri"), contextParent = get(workflow, "parent_workflow_id");
+      const found = [], rule = "ecl.rule.work-intent-context-consistent.v1";
+      if (isString(parent) && isString(contextParent) && parent !== contextParent) {
+        found.push(finding(rule, "/parent_workflow/uri", "parent workflow identifiers disagree"));
+      }
+      for (const [path, identifier] of [["/parent_workflow/uri", parent], ["/workflow/parent_workflow_id", contextParent]]) {
+        if (isString(identifier) && identifier === get(workflow, "workflow_id")) {
+          found.push(finding(rule, path, "a workflow cannot identify itself as its parent"));
+        }
+      }
+      if (isString(parent) || isString(contextParent)) {
+        const predecessors2 = get(workflow, "causal_predecessors");
+        if (isArray(predecessors2) && predecessors2.length === 0) {
+          found.push(finding(rule, "/workflow/causal_predecessors", "a child work intent names its creating or delegating causal predecessor"));
+        }
+      }
+      return found;
     }
     static integrityPolicy(value) {
       const policy = get(value, "integrity_policy");
       if (!isObject(policy)) {
         return [];
       }
-      const required2 = truthy(get(policy, "required"));
+      const required2 = get(policy, "required");
       const threshold = get(policy, "threshold");
       const requiredKeysValue = get(policy, "required_key_ids");
       const eligibleKeysValue = get(policy, "eligible_key_ids");
-      const requiredKeys = truthy(requiredKeysValue) ? requiredKeysValue : [];
-      const eligibleKeys = truthy(eligibleKeysValue) ? eligibleKeysValue : [];
-      if (!isArray(requiredKeys) || !isArray(eligibleKeys)) {
-        throw new PythonTypeError("integrity key identifiers must be arrays");
-      }
-      let invalid2;
-      if (!isInteger(threshold)) {
-        invalid2 = true;
-      } else if (required2 && threshold < 1) {
-        invalid2 = true;
-      } else if (!required2 && threshold !== 0) {
-        invalid2 = true;
-      } else if (threshold < requiredKeys.length) {
-        invalid2 = true;
-      } else if (eligibleKeys.length > 0) {
-        const requiredSet = pythonSet(requiredKeys);
-        const eligibleSet = pythonSet(eligibleKeys);
-        invalid2 = [...requiredSet].some((key) => !eligibleSet.has(key));
-      } else {
-        invalid2 = false;
-      }
+      const requiredKeys = requiredKeysValue === void 0 ? [] : requiredKeysValue;
+      const eligibleKeys = eligibleKeysValue === void 0 ? [] : eligibleKeysValue;
+      const validRequired = isArray(requiredKeys) && requiredKeys.every(isString);
+      const validEligible = isArray(eligibleKeys) && eligibleKeys.every(isString);
+      const invalid2 = typeof required2 === "boolean" && isInteger(threshold) && (required2 && threshold < 1 || !required2 && threshold !== 0) || isInteger(threshold) && validRequired && threshold < requiredKeys.length || validRequired && validEligible && eligibleKeys.length > 0 && requiredKeys.some((key) => !eligibleKeys.includes(key));
       if (invalid2) {
         return [finding("ecl.rule.integrity-threshold-consistent.v1", "/integrity_policy", "integrity required flag, threshold, eligible keys, and required keys are inconsistent")];
       }
       return [];
+    }
+    /** Only extension consumer/value rules, without payload policy checks. */
+    extensionFindings(value) {
+      const extensions = get(value, "extensions");
+      if (extensions !== void 0 && extensions !== null && !isArray(extensions)) {
+        return [finding(SCHEMA_INVALID, "/extensions", "extensions must be an array")];
+      }
+      return [..._SemanticValidator.extensions(value), ...this.extensionVersions(value), ...this.extensionNamespace(value), ...this.criticalExtensions(value), ...this.extensionValueSchemas(value)];
     }
     // DCMP2-043: each DCMP-2 rule is checked on its own and only on input members of the types the
     // schema requires, so that a member one rule cannot read leaves the other rules' findings.
@@ -10896,7 +10590,8 @@
       if (!(isString(issuedAt) && issuedAt !== "" && isString(expiresAt) && expiresAt !== "")) {
         return [];
       }
-      if (time(expiresAt) <= time(issuedAt)) {
+      const expiry = time(expiresAt), issued = time(issuedAt);
+      if (expiry !== void 0 && issued !== void 0 && expiry <= issued) {
         return [finding("ecl.rule.expiry-after-issue.v1", "/expires_at", "expires_at must be later than issued_at")];
       }
       return [];
@@ -10949,11 +10644,12 @@
     }
     /** DCMP2-012: a response whose outcome is not admit carries no authorization object. */
     static nonAdmitAuthority(value) {
-      if (!pythonEquals(get(value, "message_type"), "decision_response") || pythonEquals(get(value, "outcome"), "admit")) {
+      const outcome = get(value, "outcome");
+      if (!pythonEquals(get(value, "message_type"), "decision_response") || !isString(outcome) || outcome === "admit") {
         return [];
       }
       const authorization = get(value, "authorization");
-      if (isObject(authorization) && truthy(authorization)) {
+      if (isObject(authorization)) {
         return [finding("ecl.rule.non-admit-prohibits-authority.v1", "/authorization", "a non-admit response cannot issue authority")];
       }
       return [];
@@ -10972,7 +10668,8 @@
       if (!(isString(start2) && isString(end))) {
         return [];
       }
-      if (time(end) <= time(start2)) {
+      const endTime = time(end), startTime = time(start2);
+      if (endTime !== void 0 && startTime !== void 0 && endTime <= startTime) {
         return [finding("ecl.rule.expiry-after-issue.v1", "/authorization/valid_until", "authority validity interval is empty or reversed")];
       }
       return [];
@@ -10983,8 +10680,13 @@
       if (!isObject(action) || !has(action, "parameters")) {
         return [];
       }
-      const expected = { algorithm: "ecl.digest.sha-256.v1", value: objectDigest(action["parameters"]) };
-      if (!pythonEquals(get(action, "parameters_digest"), expected)) {
+      let expected;
+      try {
+        expected = { algorithm: "ecl.digest.sha-256.v1", value: objectDigest(action["parameters"]) };
+      } catch (error) {
+        if (!(error instanceof CanonicalizationError)) throw error;
+      }
+      if (expected === void 0 || !pythonEquals(get(action, "parameters_digest"), expected)) {
         return [finding("ecl.rule.parameters-digest-matches.v1", "/action/parameters_digest", "parameters_digest is not the SHA-256 digest of the canonical in-band parameters")];
       }
       return [];
@@ -11035,7 +10737,7 @@
     /** The semantic findings for `value`, sorted. Raises only where the reference raises. */
     validate(value) {
       if (!isObject(value)) {
-        return [finding(SCHEMA_INVALID2, "/", "semantic validation requires an object")];
+        return [finding(SCHEMA_INVALID, "/", "semantic validation requires an object")];
       }
       const findings = [];
       const guarded = (name, check) => {
@@ -11045,7 +10747,7 @@
           if (!isMalformedInputError(error)) {
             throw error;
           }
-          findings.push(finding(SCHEMA_INVALID2, "/", `${name} semantic check rejected malformed input: ${error.message}`));
+          findings.push(finding(SCHEMA_INVALID, "/", `${name} semantic check rejected malformed input: ${error.message}`));
         }
       };
       const common = [
@@ -11064,25 +10766,29 @@
         ["admit authority", (target) => _SemanticValidator.admitAuthority(target)],
         ["non-admit authority", (target) => _SemanticValidator.nonAdmitAuthority(target)],
         ["authority interval", (target) => _SemanticValidator.authorityInterval(target)],
-        ["consequence coupling", (target) => _SemanticValidator.couplingResults(target)],
-        ["decision basis", (target) => _SemanticValidator.decisionBasis(target)]
+        ["consequence coupling", (target) => _SemanticValidator.couplingResults(this.interpretedExtensions(target))],
+        ["decision basis", (target) => _SemanticValidator.decisionBasis(this.interpretedExtensions(target))]
       ];
       const ebmp = [
         ["EBMP-2", (target) => _SemanticValidator.ebmp(target)],
-        ["approval record", (target) => _SemanticValidator.approvalRecords(target)],
-        ["control change", (target) => _SemanticValidator.controlChanges(target)]
+        ["approval record", (target) => _SemanticValidator.approvalRecords(this.interpretedExtensions(target))],
+        ["control change", (target) => _SemanticValidator.controlChanges(this.interpretedExtensions(target))]
       ];
       for (const [name, check] of common) {
         guarded(name, check);
       }
       const protocol = get(value, "protocol");
-      if (typeof protocol === "string" && inSet(protocol, PROTOCOLS)) {
+      const kind = extensionObjectType(value);
+      if (typeof kind === "string" && inSet(kind, PROTOCOLS)) {
         guarded("extension value", (target) => this.extensionValueSchemas(target));
       }
       if (pythonEquals(protocol, "DCMP-2")) {
         for (const [name, check] of dcmp) {
           guarded(name, check);
         }
+      } else if (protocol === "ECL-WI-1") {
+        guarded("intent expiry", (target) => _SemanticValidator.messageExpiry(target));
+        guarded("intent context", (target) => _SemanticValidator.workIntentContext(target));
       } else if (pythonEquals(protocol, "EBMP-2")) {
         for (const [name, check] of ebmp) {
           guarded(name, check);
@@ -11091,10 +10797,22 @@
         guarded("adapter binding", adapterBindingFindings);
       } else if (pythonEquals(get(value, "schema_version"), REGISTER_SCHEMA_VERSION)) {
         guarded("register declarations", (target) => _SemanticValidator.registerDeclarations(target));
+      } else if (get(value, "schema_version") === "ecl_deployment_profile_v1") {
+        guarded("deployment timing", deploymentTimingFindings);
       }
       return sortFindings(findings);
     }
   };
+  var DEPLOYMENT_TIMING_RULE = "ecl.rule.deployment-timing-case-consistent.v1";
+  function deploymentTimingFindings(value) {
+    const timing = get(value, "timing_case");
+    if (get(value, "model") !== "federated-multi-domain" || !isObject(timing)) return [];
+    const connected = get(timing, "connected_revocation_seconds"), exchange = get(timing, "federated_exchange_seconds");
+    if (typeof connected === "number" && Number.isSafeInteger(connected) && connected >= 0 && typeof exchange === "number" && Number.isSafeInteger(exchange) && exchange >= 0 && exchange > connected) {
+      return [finding(DEPLOYMENT_TIMING_RULE, "/timing_case/federated_exchange_seconds", "federated exchange exceeds the connected revocation interval")];
+    }
+    return [];
+  }
   var ADAPTER_RULE = "ecl.rule.adapter-source-binding-valid.v1";
   var RESPONSIBILITIES = ["Decision", "Authority", "Enforcement", "Provenance", "Verification", "Fleet"];
   var ADAPTER_MEDIA_TYPES = /* @__PURE__ */ new Map([
@@ -11128,7 +10846,7 @@
     return values.every((item2) => isArray(item2) && item2.every(isString)) ? values : void 0;
   }
   function namesDerivedObject(pointer, count) {
-    if (!pointer.startsWith("/")) {
+    if (!/^(?:\/(?:[^~/]|~[01])*)+$/u.test(pointer)) {
       return false;
     }
     const token = pointer.split("/")[1] ?? "";
@@ -11363,7 +11081,7 @@
       const inputClass = get(entry, "class") ?? null;
       const status2 = get(entry, "status") ?? null;
       const available = pythonEquals(status2, "available");
-      if (supports && inSet(inputClass, RESTRICTING_ONLY_CLASSES)) {
+      if (supports && typeof inputClass === "string" && inSet(inputClass, RESTRICTING_ONLY_CLASSES)) {
         problems.push([path + "/effect", `an input of class ${pythonRepr(inputClass)} can only make an outcome stricter`]);
       }
       if (supports && !available) {
@@ -11436,6 +11154,9 @@
       for (const [position, entry] of entries) {
         if (pythonEquals(get(entry, "effect"), "supports")) {
           problems.push([`/inputs/${position}/effect`, `no input supports an outcome whose verifiable-only outcome is ${pythonRepr(recorded)}`]);
+        }
+        if (recorded === "deny" && inList(get(entry, "class") ?? null, ["actor_supplied", "judgment"]) && pythonEquals(get(entry, "effect"), "restricts")) {
+          problems.push([`/inputs/${position}/effect`, "an actor_supplied or judgment input has no effect when the verifiable-only outcome is deny"]);
         }
       }
       return problems;
@@ -11525,6 +11246,616 @@
     return problems;
   }
 
+  // src/integrity/envelope.ts
+  var INTEGRITY_INVALID = "ecl.error.integrity-invalid.v1";
+  var SIGNATURE_POLICY_INVALID = "ecl.error.signature-policy-invalid.v1";
+  var REVOKED = "ecl.error.revoked.v1";
+  var EXPIRED = "ecl.error.expired.v1";
+  var THRESHOLD_NOT_MET = "ecl.error.threshold-not-met.v1";
+  var RESOURCE_LIMIT2 = "ecl.error.resource-limit-exceeded.v1";
+  var MAX_INTEGRITY_PAYLOAD_BYTES = 64 * 1024 * 1024;
+  var MAX_SIGNATURE_BYTES = 16 * 1024;
+  var MAX_SIGNATURE_COUNT = 32;
+  var MAX_POLICY_LIST_ENTRIES = 64;
+  var MAX_ENCODED_PAYLOAD_CHARACTERS = Math.floor((MAX_INTEGRITY_PAYLOAD_BYTES + 2) / 3) * 4;
+  var MAX_ENCODED_SIGNATURE_CHARACTERS = Math.floor((MAX_SIGNATURE_BYTES + 2) / 3) * 4;
+  var REASON_CODES = [
+    ["unacceptable", SIGNATURE_POLICY_INVALID],
+    ["revoked", REVOKED],
+    ["expired", EXPIRED],
+    ["unverified", SIGNATURE_POLICY_INVALID]
+  ];
+  var TRUSTED_TIME_CLAIM = "ecl.claim.trusted-time.v1";
+  var TIME_ATTESTATION_TYPE = "application/vnd.ecl.time-attestation+json";
+  var PROTOCOL_MEDIA_TYPES = {
+    "DCMP-2": "application/vnd.ecl.dcmp+json",
+    "EBMP-2": "application/vnd.ecl.ebmp+json"
+  };
+  var IntegrityError = class extends Error {
+    code;
+    constructor(message, code2 = INTEGRITY_INVALID) {
+      super(message);
+      this.name = "IntegrityError";
+      this.code = code2;
+    }
+  };
+  var PayloadNodeBudgetError = class extends IntegrityError {
+    constructor(message) {
+      super(message, RESOURCE_LIMIT2);
+      this.name = "PayloadNodeBudgetError";
+    }
+  };
+  function policyError(message, code2 = SIGNATURE_POLICY_INVALID) {
+    return new IntegrityError(message, code2);
+  }
+  function limitError(message) {
+    return new IntegrityError(message, RESOURCE_LIMIT2);
+  }
+  var ROLE_PURPOSES = {
+    decision_request: "ecl.purpose.decision-request.v1",
+    challenge_response: "ecl.purpose.decision-request.v1",
+    decision_response: "ecl.purpose.decision-response.v1",
+    challenge: "ecl.purpose.decision-response.v1",
+    control: "ecl.purpose.control.v1"
+  };
+  function rolePurpose(payload) {
+    if (!isObject(payload) || get(payload, "protocol") !== "DCMP-2") {
+      return void 0;
+    }
+    const messageType = get(payload, "message_type");
+    return typeof messageType === "string" && Object.prototype.hasOwnProperty.call(ROLE_PURPOSES, messageType) ? ROLE_PURPOSES[messageType] : void 0;
+  }
+  function isAscii(text) {
+    return /^[\x00-\x7f]*$/.test(text);
+  }
+  function signingInput(payloadType, payload) {
+    if (typeof payloadType !== "string" || !(payload instanceof Uint8Array)) {
+      throw new IntegrityError("signing input requires a string type and byte payload");
+    }
+    if (!isAscii(payloadType)) {
+      throw new IntegrityError("payload_type must be ASCII");
+    }
+    const type = utf8(payloadType);
+    return concat(utf8(`DSSEv1 ${type.length} `), type, utf8(` ${payload.length} `), payload);
+  }
+  function decodePayload(envelope) {
+    if (!isObject(envelope)) {
+      throw new IntegrityError("integrity envelope must be an object");
+    }
+    const encoded = get(envelope, "payload");
+    if (typeof encoded !== "string" || !isAscii(encoded)) {
+      throw new IntegrityError("payload is not valid canonical base64");
+    }
+    if (encoded.length > MAX_ENCODED_PAYLOAD_CHARACTERS) {
+      throw limitError("payload exceeds the integrity byte budget");
+    }
+    const payload = fromCanonicalBase64(encoded);
+    if (payload === void 0) {
+      throw new IntegrityError("payload is not canonical base64");
+    }
+    const digest = sha256Hex(payload);
+    const rawDeclared = get(envelope, "payload_digest");
+    const declared = truthy(rawDeclared) ? rawDeclared : {};
+    if (!isObject(declared)) {
+      throw new IntegrityError("payload digest must be an object");
+    }
+    if (!pythonEquals(get(declared, "algorithm"), "ecl.digest.sha-256.v1")) {
+      throw new IntegrityError("unsupported or missing payload digest suite");
+    }
+    if (!pythonEquals(get(declared, "value"), digest)) {
+      throw new IntegrityError("payload digest mismatch");
+    }
+    return payload;
+  }
+  function decodeCanonicalJsonPayload(envelope, maxNodes = MAX_JSON_NODES) {
+    const payload = decodePayload(envelope);
+    let value;
+    try {
+      value = parseStrictJson(payload, { maxNodes });
+      if (!equalBytes(canonicalize(value), payload)) {
+        throw new IntegrityError("payload is not canonical ECL JSON");
+      }
+    } catch (error) {
+      if (error instanceof StrictJsonError) {
+        if (error.ruleId === RESOURCE_LIMIT2 && error.message === NODE_BUDGET_MESSAGE) {
+          throw new PayloadNodeBudgetError(error.message);
+        }
+        throw new IntegrityError(error.message, error.ruleId === RESOURCE_LIMIT2 ? RESOURCE_LIMIT2 : INTEGRITY_INVALID);
+      }
+      if (error instanceof CanonicalizationError) {
+        throw new IntegrityError(error.message);
+      }
+      throw error;
+    }
+    return value;
+  }
+  function decodeSignature(value) {
+    if (typeof value !== "string" || !isAscii(value)) {
+      throw new IntegrityError("signature is not valid canonical base64");
+    }
+    if (value.length > MAX_ENCODED_SIGNATURE_CHARACTERS) {
+      throw limitError("signature exceeds the integrity byte budget");
+    }
+    const decoded = fromCanonicalBase64(value);
+    if (decoded === void 0) {
+      throw new IntegrityError("signature is not canonical base64");
+    }
+    return decoded;
+  }
+  function nanoseconds(value) {
+    try {
+      return instantNanoseconds(value);
+    } catch (error) {
+      if (error instanceof InstantError) {
+        throw new IntegrityError(`invalid UTC timestamp: ${JSON.stringify(value)}`);
+      }
+      throw error;
+    }
+  }
+  function validateContext(policy, context) {
+    const trust = get(policy, "trust_policy");
+    if (!isObject(trust)) {
+      throw policyError("signed payload lacks a trust policy reference");
+    }
+    const declared = get(trust, "digest");
+    if (!isObject(declared)) {
+      throw policyError("trust policy digest suite is unsupported");
+    }
+    const observed = [get(trust, "id") ?? null, get(trust, "version") ?? null, get(declared, "value") ?? null, get(trust, "epoch") ?? null];
+    const expected = [context.trustPolicyId, context.trustPolicyVersion, context.trustPolicyDigest, context.trustPolicyEpoch];
+    if (!pythonEquals(get(declared, "algorithm"), "ecl.digest.sha-256.v1")) {
+      throw policyError("trust policy digest suite is unsupported");
+    }
+    if (!schemaEquals(observed, expected)) {
+      throw policyError("verification context does not match signed trust policy");
+    }
+    if (!pythonEquals(get(policy, "verification_time_policy"), context.verificationTimePolicy)) {
+      throw policyError("verification context does not match signed verification-time policy");
+    }
+    if (!pythonEquals(get(policy, "revocation_policy"), context.revocationPolicy)) {
+      throw policyError("verification context does not match signed revocation policy");
+    }
+    return nanoseconds(context.evaluatedAt);
+  }
+  function keyIneligibility(key, payloadType, context, evaluatedAt, role) {
+    if (key.trustPolicyIds.length > 0 && !key.trustPolicyIds.includes(context.trustPolicyId)) {
+      return "unacceptable";
+    }
+    if (key.purposes.length > 0 && !key.purposes.includes(payloadType)) {
+      return "unacceptable";
+    }
+    if (role !== void 0 && key.rolePurposes !== void 0 && key.rolePurposes.length > 0 && !key.rolePurposes.includes(role)) {
+      return "unacceptable";
+    }
+    for (const revocation of context.revocations) {
+      if (revocation.keyId === key.keyId && evaluatedAt >= nanoseconds(revocation.effectiveAt)) {
+        return "revoked";
+      }
+    }
+    if (key.validFrom !== void 0 && evaluatedAt < nanoseconds(key.validFrom)) {
+      return "expired";
+    }
+    if (key.validUntil !== void 0 && evaluatedAt >= nanoseconds(key.validUntil)) {
+      return "expired";
+    }
+    return void 0;
+  }
+  function policyStringSet(policy, name) {
+    const present = get(policy, name);
+    const raw = present === void 0 && ["eligible_key_ids", "required_key_ids"].includes(name) ? [] : present;
+    if (!isArray(raw) || raw.some((entry) => typeof entry !== "string" || entry === "")) {
+      throw policyError(`${name} must be an array of identifiers`);
+    }
+    const set = new Set(raw);
+    if (set.size !== raw.length) {
+      throw policyError(`${name} contains duplicate identifiers`);
+    }
+    return set;
+  }
+  function verifyEnvelope(envelope, keyring, contextInput, keyTimes) {
+    if (!isObject(envelope)) {
+      throw new IntegrityError("integrity envelope must be an object");
+    }
+    const encoded = get(envelope, "payload");
+    if (typeof encoded === "string" && encoded.length > MAX_ENCODED_PAYLOAD_CHARACTERS) {
+      throw limitError("payload exceeds the integrity byte budget");
+    }
+    const signatures = get(envelope, "signatures");
+    if (isArray(signatures)) {
+      if (signatures.length > MAX_SIGNATURE_COUNT) {
+        throw limitError("integrity signature set exceeds the verifier budget");
+      }
+      for (const item2 of signatures) {
+        const value = isObject(item2) ? get(item2, "signature") : void 0;
+        if (typeof value === "string" && value.length > MAX_ENCODED_SIGNATURE_CHARACTERS) {
+          throw limitError("signature exceeds the integrity byte budget");
+        }
+      }
+    }
+    const payloadBytes = decodePayload(envelope);
+    const payload = decodeCanonicalJsonPayload(envelope);
+    const payloadType = get(envelope, "payload_type");
+    if (typeof payloadType !== "string") {
+      throw new IntegrityError("integrity envelope lacks a valid payload_type");
+    }
+    if ([...payloadType].length > 255 || !isAscii(payloadType)) {
+      throw new IntegrityError("integrity envelope payload_type is invalid");
+    }
+    const rawProtocol = isObject(payload) ? get(payload, "protocol") : void 0;
+    const protocol = typeof rawProtocol === "string" ? rawProtocol : void 0;
+    const expectedType = protocol !== void 0 && Object.prototype.hasOwnProperty.call(PROTOCOL_MEDIA_TYPES, protocol) ? PROTOCOL_MEDIA_TYPES[protocol] : void 0;
+    if (expectedType !== void 0 && payloadType !== expectedType) {
+      throw new IntegrityError(`integrity envelope payload_type does not match the signed ${protocol} payload`);
+    }
+    const claimed = Object.keys(PROTOCOL_MEDIA_TYPES).find((identifier) => PROTOCOL_MEDIA_TYPES[identifier] === payloadType);
+    if (claimed !== void 0 && protocol !== claimed) {
+      throw new IntegrityError(`integrity envelope payload does not match the claimed ${claimed} media type`);
+    }
+    const policy = isObject(payload) ? get(payload, "integrity_policy") : void 0;
+    if (!isObject(policy)) {
+      throw new IntegrityError("signed payload lacks integrity_policy");
+    }
+    const precedence = rulePrecedence();
+    const outerFindings = new SemanticValidator().extensionFindings(envelope).sort((left, right) => (precedence.get(left.ruleId) ?? -1) - (precedence.get(right.ruleId) ?? -1));
+    if (outerFindings.length > 0) {
+      const finding2 = outerFindings[0];
+      throw new IntegrityError(finding2.message, finding2.ruleId);
+    }
+    for (const name of ["accepted_suites", "eligible_key_ids", "required_key_ids"]) {
+      const raw = get(policy, name);
+      if (isArray(raw) && raw.length > MAX_POLICY_LIST_ENTRIES) {
+        throw limitError(`${name} exceeds the policy resource budget`);
+      }
+    }
+    if (get(policy, "required") !== true) {
+      throw policyError("an integrity envelope cannot elevate a payload that declares integrity optional");
+    }
+    const threshold = get(policy, "threshold");
+    if (!isInteger(threshold) || threshold < 1) {
+      throw policyError("integrity threshold must be at least one");
+    }
+    const acceptedSuites = policyStringSet(policy, "accepted_suites");
+    const eligibleKeys = policyStringSet(policy, "eligible_key_ids");
+    const requiredKeys = policyStringSet(policy, "required_key_ids");
+    if (acceptedSuites.size === 0) {
+      throw policyError("accepted_suites cannot be empty");
+    }
+    if (requiredKeys.size > 0 && threshold < requiredKeys.size) {
+      throw policyError("threshold cannot be lower than required key count");
+    }
+    let context;
+    try {
+      context = typeof contextInput === "function" ? contextInput(payload) : contextInput;
+      if (context === null || typeof context !== "object") throw new Error("no verification context");
+    } catch (error) {
+      throw policyError(`verification context provider refused the payload: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    const evaluatedAt = validateContext(policy, context);
+    const role = rolePurpose(payload);
+    const allowed = new Set(context.allowedSuites);
+    const prohibited = new Set(context.prohibitedSuites);
+    if (!isArray(signatures) || signatures.length === 0) {
+      throw new IntegrityError("integrity signature set is missing");
+    }
+    const entries = [];
+    const observed = /* @__PURE__ */ new Set();
+    for (const entry of signatures) {
+      if (!isObject(entry)) {
+        throw new IntegrityError("integrity signature entry must be an object");
+      }
+      const keyId = get(entry, "key_id");
+      const suiteId = get(entry, "suite_id");
+      if (typeof keyId !== "string" || keyId === "" || typeof suiteId !== "string" || suiteId === "") {
+        throw new IntegrityError("integrity signature identity is incomplete");
+      }
+      const identity = JSON.stringify([keyId, suiteId]);
+      if (observed.has(identity)) {
+        throw new IntegrityError("duplicate signature identity");
+      }
+      observed.add(identity);
+      entries.push([keyId, suiteId, entry]);
+    }
+    const message = signingInput(payloadType, payloadBytes);
+    const valid = /* @__PURE__ */ new Set();
+    const reasons = /* @__PURE__ */ new Set();
+    for (const [keyId, suiteId, entry] of entries) {
+      const key = keyring.get(keyId);
+      if (protocol === "DCMP-2" && role === void 0 || !acceptedSuites.has(suiteId) || !allowed.has(suiteId) || prohibited.has(suiteId) || eligibleKeys.size > 0 && !eligibleKeys.has(keyId) || key === void 0 || key.suiteId !== suiteId || key.keyId !== keyId) {
+        reasons.add("unacceptable");
+        continue;
+      }
+      const own = keyTimes?.get(keyId);
+      const reason = keyIneligibility(key, payloadType, context, own === void 0 ? evaluatedAt : nanoseconds(own), role);
+      if (reason !== void 0) {
+        reasons.add(reason);
+        continue;
+      }
+      if (!Object.prototype.hasOwnProperty.call(entry, "signature")) {
+        throw new IntegrityError("integrity signature bytes are missing");
+      }
+      const signature = decodeSignature(entry["signature"]);
+      let verified;
+      try {
+        verified = verifySignature(suiteId, key.publicKey, message, signature);
+      } catch (error) {
+        if (error instanceof SignatureEncodingError) {
+          throw new IntegrityError(error.message);
+        }
+        throw error;
+      }
+      if (!verified) {
+        reasons.add("unverified");
+        continue;
+      }
+      valid.add(keyId);
+    }
+    const missing = [...requiredKeys].filter((keyId) => !valid.has(keyId)).sort();
+    if (missing.length > 0 || valid.size < threshold) {
+      const code2 = REASON_CODES.find(([reason]) => reasons.has(reason))?.[1] ?? THRESHOLD_NOT_MET;
+      if (missing.length > 0) {
+        throw policyError(`required signatures are missing or invalid: ${JSON.stringify(missing)}`, code2);
+      }
+      throw policyError(`signature threshold not met: valid=${valid.size} required=${threshold}`, code2);
+    }
+    return {
+      payload,
+      validKeyIds: [...valid].sort(),
+      evaluatedAt: context.evaluatedAt,
+      trustPolicyId: context.trustPolicyId,
+      trustPolicyVersion: context.trustPolicyVersion,
+      trustPolicyEpoch: context.trustPolicyEpoch,
+      verificationTimePolicy: context.verificationTimePolicy,
+      revocationPolicy: context.revocationPolicy
+    };
+  }
+
+  // src/trust/policy.ts
+  var SCHEMA_INVALID2 = "ecl.error.schema-invalid.v1";
+  var SEMANTIC_INVALID = "ecl.error.semantic-invalid.v1";
+  var RESOURCE_LIMIT3 = "ecl.error.resource-limit-exceeded.v1";
+  var TRUST_POLICY_SCHEMA = "https://externalcontrollayer.ai/ns/schema/trust-policy/1";
+  var MAX_TRUST_POLICY_BYTES = 256 * 1024;
+  var PURPOSE_DECISION_REQUEST = "ecl.purpose.decision-request.v1";
+  var PURPOSE_DECISION_RESPONSE = "ecl.purpose.decision-response.v1";
+  var PURPOSE_EVIDENCE_EVENT = "ecl.purpose.evidence-event.v1";
+  var PURPOSE_OBSERVATION = "ecl.purpose.observation.v1";
+  var PURPOSE_TRUSTED_TIME = "ecl.purpose.trusted-time.v1";
+  var PURPOSE_CONTROL = "ecl.purpose.control.v1";
+  var PURPOSE_APPROVAL = "ecl.purpose.approval.v1";
+  var QUALIFYING_PURPOSES = [PURPOSE_APPROVAL];
+  var PURPOSE_PAYLOAD_TYPES = {
+    [PURPOSE_DECISION_REQUEST]: PROTOCOL_MEDIA_TYPES["DCMP-2"],
+    [PURPOSE_DECISION_RESPONSE]: PROTOCOL_MEDIA_TYPES["DCMP-2"],
+    [PURPOSE_CONTROL]: PROTOCOL_MEDIA_TYPES["DCMP-2"],
+    [PURPOSE_EVIDENCE_EVENT]: PROTOCOL_MEDIA_TYPES["EBMP-2"],
+    [PURPOSE_OBSERVATION]: PROTOCOL_MEDIA_TYPES["EBMP-2"],
+    [PURPOSE_TRUSTED_TIME]: TIME_ATTESTATION_TYPE
+  };
+  var ROLE_PURPOSES2 = [PURPOSE_DECISION_REQUEST, PURPOSE_DECISION_RESPONSE, PURPOSE_CONTROL, PURPOSE_OBSERVATION, PURPOSE_TRUSTED_TIME];
+  function roleConflict(purposes) {
+    const roles = ROLE_PURPOSES2.filter((purpose) => purposes.includes(purpose));
+    return roles.length > 1 ? roles : [];
+  }
+  var MAX_TEXT = 200;
+  function cut(text) {
+    const characters = Array.from(text);
+    return characters.length <= MAX_TEXT ? text : characters.slice(0, MAX_TEXT - 1).join("") + "…";
+  }
+  var TrustPolicyError = class extends Error {
+    code;
+    constructor(message, code2) {
+      super(cut(message));
+      this.name = "TrustPolicyError";
+      this.code = code2;
+    }
+  };
+  function schemaError(message) {
+    return new TrustPolicyError(message, SCHEMA_INVALID2);
+  }
+  function semanticError(message) {
+    return new TrustPolicyError(message, SEMANTIC_INVALID);
+  }
+  function parse(data) {
+    const size = typeof data === "string" ? new TextEncoder().encode(data).length : data.length;
+    if (size > MAX_TRUST_POLICY_BYTES) {
+      throw new TrustPolicyError(`a trust policy is at most ${MAX_TRUST_POLICY_BYTES} bytes`, RESOURCE_LIMIT3);
+    }
+    try {
+      return parseStrictJson(data, { maxBytes: MAX_TRUST_POLICY_BYTES });
+    } catch (error) {
+      if (error instanceof StrictJsonError && error.ruleId === RESOURCE_LIMIT3) {
+        throw new TrustPolicyError(error.message, RESOURCE_LIMIT3);
+      }
+      if (error instanceof StrictJsonError) {
+        throw schemaError(error.kind === "encoding" ? "a trust policy is UTF-8 JSON, without a byte order mark" : error.message);
+      }
+      throw error;
+    }
+  }
+  var TrustPolicy = class _TrustPolicy {
+    policyId;
+    version;
+    epoch;
+    revocationPolicy;
+    keys;
+    revocations;
+    /** The SHA-256 of the policy's canonical JSON: whitespace and member order aside, it covers every member. */
+    digest;
+    /** The document as loaded. */
+    document;
+    constructor(document2, keys, revocations) {
+      this.document = document2;
+      this.policyId = document2["policy_id"];
+      this.version = document2["version"];
+      this.epoch = document2["epoch"];
+      this.revocationPolicy = document2["revocation_policy"];
+      this.keys = Object.freeze(keys);
+      this.revocations = Object.freeze(revocations);
+      this.digest = objectDigest(document2);
+      Object.freeze(this);
+    }
+    /**
+     * The policy in `data` (UTF-8 bytes, or text): strict JSON, then the schema, then the semantic
+     * checks. Throws TrustPolicyError and never returns a partly checked policy.
+     */
+    static load(data) {
+      const document2 = parse(data);
+      const errors = eclSchemas().errors(TRUST_POLICY_SCHEMA, document2, 1);
+      const first = errors[0];
+      if (first !== void 0) {
+        throw schemaError(`the trust policy does not satisfy ${TRUST_POLICY_SCHEMA}: ${first.path}: ${first.keyword}: ${first.message}`);
+      }
+      const policy = document2;
+      const revocationPolicy = policy["revocation_policy"];
+      if (!activeIds("vocabulary", "category", "revocation_policy").has(revocationPolicy)) {
+        throw semanticError(`${revocationPolicy} is not an active revocation policy of the vocabulary registry`);
+      }
+      const keys = loadKeys(policy["keys"]);
+      const revocations = loadRevocations(policy["revocations"], new Set(keys.map((key) => key.keyId)));
+      return new _TrustPolicy(policy, keys, revocations);
+    }
+    /** The policy as an object embeds it: `{"id", "version", "digest", "epoch"}`. */
+    reference() {
+      return {
+        id: this.policyId,
+        version: this.version,
+        digest: { algorithm: "ecl.digest.sha-256.v1", value: this.digest },
+        epoch: this.epoch
+      };
+    }
+    /** The key with this id, or undefined. */
+    key(keyId) {
+      return this.keys.find((key) => key.keyId === keyId);
+    }
+    /**
+     * The keyring that `verifyEnvelope` reads: one verification key per key, whose purposes become
+     * the payload types it may sign and, as `rolePurposes`, the roles it holds. So `verifyEnvelope`
+     * keeps DCMP-2 and EBMP-2 keys apart and, within the DCMP-2 media type, counts a decision request
+     * only under a key that holds the decision-request purpose and a decision response only under one
+     * that holds the decision-response purpose (TP1-010). Separating an evidence event from an
+     * observation, both EBMP-2, is the bundle verifier's, which knows where each object sits.
+     */
+    keyring() {
+      const ring = /* @__PURE__ */ new Map();
+      for (const key of this.keys) {
+        const types = new Set(key.purposes.filter((purpose) => !QUALIFYING_PURPOSES.includes(purpose)).map((purpose) => PURPOSE_PAYLOAD_TYPES[purpose]));
+        ring.set(key.keyId, {
+          keyId: key.keyId,
+          suiteId: key.suiteId,
+          publicKey: key.publicKey,
+          trustPolicyIds: [this.policyId],
+          purposes: [...types].sort(),
+          validFrom: key.validFrom,
+          validUntil: key.validUntil,
+          rolePurposes: [...key.purposes].sort()
+        });
+      }
+      return ring;
+    }
+    /** The context for `verifyEnvelope` at `evaluatedAt`, under the object's own time policy. */
+    verificationContext(evaluatedAt, timePolicy) {
+      if (!activeIds("vocabulary", "category", "verification_time_policy").has(timePolicy)) {
+        throw semanticError(`${JSON.stringify(timePolicy)} is not a verification-time policy of the vocabulary registry`);
+      }
+      return {
+        trustPolicyId: this.policyId,
+        trustPolicyVersion: this.version,
+        trustPolicyDigest: this.digest,
+        trustPolicyEpoch: this.epoch,
+        evaluatedAt,
+        verificationTimePolicy: timePolicy,
+        revocationPolicy: this.revocationPolicy,
+        allowedSuites: [...new Set(this.keys.map((key) => key.suiteId))].sort(),
+        prohibitedSuites: [],
+        revocations: this.revocations
+      };
+    }
+  };
+  function loadKeys(items) {
+    const suites = activeIds("algorithm-suites", "kind", "signature");
+    const purposes = activeIds("vocabulary", "category", "key_purpose");
+    const ids = /* @__PURE__ */ new Set();
+    const holders = [];
+    const keys = [];
+    for (const item2 of items) {
+      const key = loadKey(item2, suites, purposes);
+      if (ids.has(key.keyId)) {
+        throw semanticError(`key_id ${key.keyId} appears twice in the trust policy`);
+      }
+      ids.add(key.keyId);
+      const holder = holders.find(([bytes]) => equalBytes(bytes, key.publicKey));
+      if (holder !== void 0) {
+        throw semanticError(`keys ${holder[1]} and ${key.keyId} have the same public key`);
+      }
+      holders.push([key.publicKey, key.keyId]);
+      keys.push(key);
+    }
+    return keys;
+  }
+  function loadKey(item2, suites, purposes) {
+    const keyId = item2["key_id"];
+    const suiteId = item2["suite_id"];
+    if (!suites.has(suiteId)) {
+      throw semanticError(`key ${keyId}: ${suiteId} is not an active signature suite of the algorithm-suites registry`);
+    }
+    const raw = fromCanonicalBase64(item2["public_key"]);
+    if (raw === void 0) {
+      throw semanticError(`key ${keyId}: public_key is not canonical standard base64`);
+    }
+    const problem = publicKeyProblem(suiteId, raw);
+    if (problem !== void 0) {
+      throw semanticError(`key ${keyId}: ${problem}`);
+    }
+    const listed = item2["purposes"];
+    for (const purpose of listed) {
+      if (!purposes.has(purpose)) {
+        throw semanticError(`key ${keyId}: ${purpose} is not an active key purpose of the vocabulary registry`);
+      }
+      if (!Object.prototype.hasOwnProperty.call(PURPOSE_PAYLOAD_TYPES, purpose) && !QUALIFYING_PURPOSES.includes(purpose)) {
+        throw semanticError(`key ${keyId}: ${purpose} has no payload type in this library`);
+      }
+    }
+    if (!listed.some((purpose) => Object.prototype.hasOwnProperty.call(PURPOSE_PAYLOAD_TYPES, purpose))) {
+      throw semanticError(`key ${keyId}: carries no purpose that signs a payload type, only a qualifying one`);
+    }
+    const roles = roleConflict(listed);
+    if (roles.length > 0) {
+      throw semanticError(`key ${keyId}: one key carries the purposes of more than one role: ${roles.join(", ")} (TP1-009)`);
+    }
+    const validFrom = item2["valid_from"];
+    const validUntil = get(item2, "valid_until");
+    if (validUntil !== void 0 && instantMicroseconds(validUntil) <= instantMicroseconds(validFrom)) {
+      throw semanticError(`key ${keyId}: valid_until must be later than valid_from`);
+    }
+    return {
+      keyId,
+      suiteId,
+      publicKey: raw,
+      principal: item2["principal"],
+      purposes: Object.freeze([...listed]),
+      validFrom,
+      validUntil
+    };
+  }
+  function loadRevocations(items, held) {
+    const revoked = /* @__PURE__ */ new Set();
+    for (const item2 of items) {
+      const keyId = item2["key_id"];
+      if (!held.has(keyId)) {
+        throw semanticError(`revocation names ${keyId}, which is not a key of this policy`);
+      }
+      if (revoked.has(keyId)) {
+        throw semanticError(`revocation of ${keyId} appears twice in the trust policy`);
+      }
+      revoked.add(keyId);
+    }
+    return items.map((item2) => ({
+      keyId: item2["key_id"],
+      effectiveAt: item2["effective_at"],
+      reason: item2["reason"]
+    }));
+  }
+
   // src/evidence/decision-basis.ts
   var DECISION_BASIS2 = "ecl.ext.decision-basis.v1";
   var REQUIRED_RULE = "ecl.rule.decision-basis-required.v1";
@@ -11600,7 +11931,7 @@
     if (!isObject(register)) {
       return ["the register is not a JSON object"];
     }
-    return eclSchemas().errors(REGISTER_SCHEMA, register).map((error) => `${error.path}: ${error.message}`.slice(0, 200));
+    return eclSchemas().errors(REGISTER_SCHEMA, register).map((error) => Array.from(`${error.path}: ${error.message}`).slice(0, 200).join(""));
   }
   function declaredInputs(register, actionClass) {
     const entries = get(register, "entries");
@@ -11621,7 +11952,7 @@
     }
     const found = [];
     extensions.forEach((item2, index) => {
-      if (isObject(item2) && pythonEquals(get(item2, "id"), DECISION_BASIS2)) {
+      if (isObject(item2) && pythonEquals(get(item2, "id"), DECISION_BASIS2) && interpretedExtension(message, item2)) {
         found.push([index, get(item2, "value")]);
       }
     });
@@ -11679,7 +12010,9 @@
       if (!pythonEquals(get(item2, "class"), get(declaration, "class"))) {
         problems.push([path + "/class", "the class is not the one the register declares"]);
       }
-      if (get(item2, "required") !== get(declaration, "required")) {
+      const recordedRequired = get(item2, "required");
+      const declaredRequired = get(declaration, "required");
+      if (typeof recordedRequired !== "boolean" || typeof declaredRequired !== "boolean" || recordedRequired !== declaredRequired) {
         problems.push([path + "/required", "the required flag is not the one the register declares"]);
       }
       const recordedSource = get(item2, "source");
@@ -11711,6 +12044,30 @@
     }
     return problems;
   }
+  function timingCoverage(value, register, actionClass, evaluatedAt) {
+    const declared = /* @__PURE__ */ new Map();
+    if (isString(actionClass)) for (const item2 of declaredInputs(register, actionClass)) {
+      const name = get(item2, "input");
+      if (isString(name)) declared.set(inputKey(name), item2);
+    }
+    let applicable = false, complete = true;
+    const inputs = get(value, "inputs");
+    if (isArray(inputs)) for (const item2 of inputs) {
+      if (!isObject(item2) || get(item2, "status") !== "available") continue;
+      const name = get(item2, "input"), declaration = isString(name) ? declared.get(inputKey(name)) : void 0;
+      if (declaration === void 0) continue;
+      const age = typeof get(declaration, "maximum_age_seconds") === "number" && Number.isInteger(get(declaration, "maximum_age_seconds"));
+      const deadline = typeof get(declaration, "deadline_milliseconds") === "number" && Number.isInteger(get(declaration, "deadline_milliseconds"));
+      applicable = applicable || age || deadline;
+      if (age) complete = complete && instantOrNull2(get(item2, "value_at")) !== null && instantOrNull2(evaluatedAt) !== null;
+      if (deadline) complete = complete && instantOrNull2(get(value, "received_at")) !== null && instantOrNull2(get(item2, "obtained_at")) !== null;
+    }
+    return [applicable, complete];
+  }
+
+  // src/version.ts
+  var SOFTWARE_VERSION = "1.0.2-review.1";
+  var SOURCE_BUILD = "1.0.2-review.1";
 
   // src/binding/binding.ts
   var REQUEST_BINDING_INVALID = "ecl.error.request-binding-invalid.v1";
@@ -11720,7 +12077,7 @@
   var SCOPE_MISMATCH = "ecl.error.scope-mismatch.v1";
   var RESPONDS_TO = "ecl.relation.responds-to.v1";
   var OUTCOMES2 = /* @__PURE__ */ new Set(["admit", "deny", "hold", "challenge"]);
-  var EXECUTION_EVENTS = /* @__PURE__ */ new Set(["execution_released", "execution_terminal"]);
+  var EXECUTION_EVENTS = /* @__PURE__ */ new Set(["release_prepared", "execution_released", "execution_observed", "execution_terminal"]);
   var AUTHORITY_EVENTS = /* @__PURE__ */ new Set(["authority_issued", "authority_consumed"]);
   var NANOSECONDS = 1000000000n;
   var INSTANT = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]{1,9}))?Z$/;
@@ -11896,6 +12253,14 @@
   function admits(response) {
     return response !== void 0 && response.text("outcome") === "admit";
   }
+  function requireSingleUse(authority) {
+    if (authority.text("use_policy") !== "single_use") {
+      throw authority.error("use_policy is unsupported; only single_use is defined");
+    }
+    if (authority.has("max_uses") && authority.integer("max_uses") !== 1) {
+      throw authority.error("max_uses must be absent or the integer 1");
+    }
+  }
   function checkResponseBinding(request, response, responseClockSkewSeconds = 0) {
     if (!Number.isInteger(responseClockSkewSeconds) || responseClockSkewSeconds < 0) {
       throw new RangeError("the response clock-skew allowance is a non-negative integer of seconds");
@@ -11904,6 +12269,7 @@
     const answer = read(response, "response", REQUEST_BINDING_INVALID);
     requireMessage(asked, "decision_request");
     requireMessage(answer, "decision_response");
+    requireSingleUse(asked.member("authority_request"));
     answersTheRequest(asked, answer);
     sameText(answer, asked, "workflow", "workflow_id");
     sameText(answer, asked, "workflow", "root_trace_id");
@@ -11929,6 +12295,10 @@
     if (outcome !== "admit") {
       return;
     }
+    requireSingleUse(answer.member("authorization"));
+    if (answer.instant("evaluated_at") >= asked.instant("expires_at")) {
+      throw answer.error("evaluated_at is at or after the request's expires_at");
+    }
     const audience = answer.text("authorization", "audience");
     if (audience !== asked.text("authority_request", "audience")) {
       throw answer.error("authorization.audience is not the audience requested", AUDIENCE_MISMATCH);
@@ -11947,12 +12317,6 @@
       throw answer.error("authorization window is empty, or longer than requested");
     }
     const grantedUses = () => answer.has("authorization", "max_uses") ? answer.integer("authorization", "max_uses") : void 0;
-    if (answer.text("authorization", "use_policy") === "single_use") {
-      const granted = grantedUses();
-      if (granted !== void 0 && granted !== 1) {
-        throw answer.error("a single_use authorization has a max_uses other than 1");
-      }
-    }
     if (asked.has("authority_request", "max_uses")) {
       const granted = grantedUses();
       if (granted === void 0 || granted > asked.integer("authority_request", "max_uses")) {
@@ -11977,8 +12341,10 @@
     const answer = response === void 0 ? void 0 : read(response, "response", DECISION_BINDING_INVALID);
     requireEvent(recorded, EXECUTION_EVENTS, "execution");
     requireMessage(asked, "decision_request");
+    requireSingleUse(asked.member("authority_request"));
     if (answer !== void 0) {
       requireMessage(answer, "decision_response");
+      if (admits(answer)) requireSingleUse(answer.member("authorization"));
     }
     if (recorded.text("event", "action_id") !== asked.text("action", "action_id")) {
       throw recorded.error("event.action_id is not the request's action");
@@ -12034,7 +12400,9 @@
       if (!admits(answer)) {
         throw recorded.error("releases, and there is no response that admits");
       }
-    } else {
+    } else if (recorded.text("event_type") === "execution_observed" && !admits(answer)) {
+      throw recorded.error("records running execution, and there is no response that admits");
+    } else if (recorded.text("event_type") === "execution_terminal") {
       const state = recorded.text("event", "state");
       const wanted = Object.prototype.hasOwnProperty.call(TERMINAL_STATE_OUTCOMES, state) ? TERMINAL_STATE_OUTCOMES[state] : void 0;
       if (wanted === void 0) {
@@ -12054,6 +12422,7 @@
     if (!admits(answer)) {
       throw recorded.error("records an authorization, and the response does not admit");
     }
+    requireSingleUse(answer.member("authorization"));
     const granted = answer.text("authorization", "authorization_id");
     if (recorded.text("event", "authorization_id") !== granted) {
       throw recorded.error("event.authorization_id is not the response's");
@@ -12088,7 +12457,7 @@
   ]);
   var ALLOWED_TRANSITIONS = {
     not_started: /* @__PURE__ */ new Set(["prepared", "denied", "held", "challenged", "expired_before_release"]),
-    prepared: /* @__PURE__ */ new Set(["released", "cancelled", "timed_out", "denied", "held", "expired_before_release"]),
+    prepared: /* @__PURE__ */ new Set(["released", "cancelled", "timed_out", "denied", "held", "challenged", "expired_before_release"]),
     released: /* @__PURE__ */ new Set(["running", "succeeded", "failed", "partially_succeeded", "cancelled", "timed_out", "unknown"]),
     running: /* @__PURE__ */ new Set(["succeeded", "failed", "partially_succeeded", "cancelled", "timed_out", "rolled_back", "compensated", "unknown"])
   };
@@ -12108,15 +12477,6 @@
       return 0;
     }
     return value;
-  }
-  function compareTuples(left, right) {
-    for (let index = 0; index < Math.min(left.length, right.length); index += 1) {
-      const order = compareCodePoints(left[index], right[index]);
-      if (order !== 0) {
-        return order;
-      }
-    }
-    return left.length - right.length;
   }
   function sortedIds(values) {
     return [...values].sort(compareCodePoints);
@@ -12160,13 +12520,11 @@
           continue;
         }
         const cycle = [...path.slice(positions.get(predecessor)), predecessor];
-        let canonical;
-        for (let index = 0; index < cycle.length - 1; index += 1) {
-          const rotated = [...cycle.slice(index, -1), ...cycle.slice(0, index), cycle[index]];
-          if (canonical === void 0 || compareTuples(rotated, canonical) < 0) {
-            canonical = rotated;
-          }
+        let first = 0;
+        for (let index = 1; index < cycle.length - 1; index += 1) {
+          if (compareCodePoints(cycle[index], cycle[first]) < 0) first = index;
         }
+        const canonical = [...cycle.slice(first, -1), ...cycle.slice(0, first), cycle[first]];
         const key = JSON.stringify(canonical);
         if (reported.has(key)) {
           continue;
@@ -12182,7 +12540,7 @@
     }
     return findings;
   }
-  function executionGroups(records, findings) {
+  function executionGroups(records, findings, identify) {
     const grouped = /* @__PURE__ */ new Map();
     records.forEach((record, index) => {
       const rawEvent = get(record, "event");
@@ -12212,7 +12570,7 @@
       const keyed = group.records.map((record) => ({
         record,
         sequence: sequenceOf(record, "/records", findings),
-        id: str(get(record, "object_id"))
+        id: identify(record)
       }));
       keyed.sort((a, b) => a.sequence - b.sequence || compareCodePoints(a.id, b.id));
       group.records = keyed.map((entry) => entry.record);
@@ -12230,8 +12588,9 @@
     }
     const sameWorkflow = pythonEquals(get(priorWorkflow, "workflow_id"), get(workflow, "workflow_id"));
     const parent = get(workflow, "parent_workflow_id");
-    if (!sameWorkflow && !(typeof parent === "string" && pythonEquals(get(priorWorkflow, "workflow_id"), parent))) {
-      return "is in a workflow that is neither its successor's nor its parent";
+    const childParent = get(priorWorkflow, "parent_workflow_id");
+    if (!sameWorkflow && !(typeof parent === "string" && pythonEquals(get(priorWorkflow, "workflow_id"), parent)) && !(typeof childParent === "string" && pythonEquals(childParent, get(workflow, "workflow_id")))) {
+      return "is in a workflow that is neither its successor's, its parent, nor its child";
     }
     const attempt = get(workflow, "attempt");
     const priorAttempt = get(priorWorkflow, "attempt");
@@ -12239,6 +12598,50 @@
       return "has a later attempt than its successor";
     }
     return void 0;
+  }
+  function childOriginFindings(childEdges, originSeeds, missing, parentConflicts, joins, unresolved) {
+    const successors = /* @__PURE__ */ new Map();
+    for (const [child, predecessors2] of childEdges) for (const prior of predecessors2) {
+      const values = successors.get(prior) ?? [];
+      values.push(child);
+      successors.set(prior, values);
+    }
+    const propagate = (seeds) => {
+      const reached = new Set(seeds), pending2 = [...reached];
+      for (let i = 0; i < pending2.length; i += 1) {
+        for (const child of successors.get(pending2[i]) ?? []) if (!reached.has(child)) {
+          reached.add(child);
+          pending2.push(child);
+        }
+      }
+      return reached;
+    };
+    const originated = propagate(originSeeds), uncertain = propagate(missing.keys());
+    const needed = /* @__PURE__ */ new Set(), findings = [];
+    for (const [parent, child] of joins) {
+      if (originated.has(child)) continue;
+      if (uncertain.has(child)) needed.add(child);
+      else findings.push({ ruleId: CAUSAL_CONTEXT_RULE, path: `/records/${parent}/workflow/causal_predecessors`, message: `child predecessor ${child} has no digest-bound origin in its declared parent workflow` });
+    }
+    const pending = [...needed];
+    for (let i = 0; i < pending.length; i += 1) {
+      const child = pending[i];
+      for (const missingId of missing.get(child) ?? []) unresolved.add(missingId);
+      for (const prior of childEdges.get(child) ?? []) if (uncertain.has(prior) && !needed.has(prior)) {
+        needed.add(prior);
+        pending.push(prior);
+      }
+    }
+    const ancestry = new Set(joins.map(([, child]) => child)), ancestors = [...ancestry];
+    for (let i = 0; i < ancestors.length; i += 1) {
+      const child = ancestors[i];
+      for (const prior of parentConflicts.get(child) ?? []) findings.push({ ruleId: CAUSAL_CONTEXT_RULE, path: `/records/${child}/workflow/causal_predecessors`, message: `child predecessor ${prior} changes the declared parent in joined child ancestry` });
+      for (const prior of childEdges.get(child) ?? []) if (!ancestry.has(prior)) {
+        ancestry.add(prior);
+        ancestors.push(prior);
+      }
+    }
+    return findings;
   }
   function analyzeBundle(records, allowedExternalPredecessors = [], maxRecords = MAX_BUNDLE_RECORDS, maxPredecessorsPerRecord = MAX_PREDECESSORS_PER_RECORD, options = {}) {
     const identify = options.identify ?? ((record) => get(record, "object_id"));
@@ -12251,8 +12654,7 @@
     const findings = [];
     for (let index = 0; index < records.length; index += 1) {
       if (index >= maxRecords) {
-        findings.push({ ruleId: RESOURCE_LIMIT4, path: "/records", message: "bundle record count exceeds the verifier budget" });
-        break;
+        return { status: "indeterminate", terminalActionIds: [], openActionIds: [], unresolvedPredecessorIds: [], findings: [{ ruleId: RESOURCE_LIMIT4, path: "/records", message: "bundle record count exceeds the verifier budget" }] };
       }
       const record = records[index];
       if (!isObject(record)) {
@@ -12262,25 +12664,35 @@
       values.push(record);
     }
     const byId = /* @__PURE__ */ new Map();
+    const collidingIds = /* @__PURE__ */ new Set();
     values.forEach((record, index) => {
       const objectId = identify(record);
       if (typeof objectId !== "string" || objectId === "") {
         findings.push({ ruleId: "ecl.rule.bundle-object-identifiers-unique.v1", path: `/records/${index}/object_id`, message: "bundle record is missing object_id" });
         return;
       }
+      if (collidingIds.has(objectId)) return;
       if (byId.has(objectId)) {
-        findings.push({ ruleId: "ecl.rule.bundle-object-identifiers-unique.v1", path: `/records/${index}/object_id`, message: `duplicate object_id ${objectId}` });
+        collidingIds.add(objectId);
+        byId.delete(objectId);
         return;
       }
       byId.set(objectId, record);
     });
+    for (const objectId of sortedIds(collidingIds)) findings.push({ ruleId: "ecl.rule.bundle-object-identifiers-unique.v1", path: `/records/${objectId}/object_id`, message: `duplicate object_id ${objectId}` });
     const external = new Set(allowedExternalPredecessors);
     const unresolved = /* @__PURE__ */ new Set();
     const edges = /* @__PURE__ */ new Map();
+    const childEdges = /* @__PURE__ */ new Map();
+    const originSeeds = /* @__PURE__ */ new Set();
+    const missingOrigins = /* @__PURE__ */ new Map();
+    const parentConflicts = /* @__PURE__ */ new Map();
+    const parentJoins = [];
     for (const identifier of byId.keys()) {
       edges.set(identifier, /* @__PURE__ */ new Set());
     }
-    for (const [objectId, record] of byId) {
+    for (const objectId of sortedIds(byId.keys())) {
+      const record = byId.get(objectId);
       const path = `/records/${objectId}`;
       const sequence = sequenceOf(record, path, findings);
       const workflow = get(record, "workflow");
@@ -12294,8 +12706,7 @@
         continue;
       }
       if (predecessors2.length > maxPredecessorsPerRecord) {
-        findings.push({ ruleId: RESOURCE_LIMIT4, path: path + "/workflow/causal_predecessors", message: "predecessor count exceeds the verifier budget" });
-        predecessors2 = predecessors2.slice(0, maxPredecessorsPerRecord);
+        return { status: "indeterminate", terminalActionIds: [], openActionIds: [], unresolvedPredecessorIds: [], findings: [{ ruleId: RESOURCE_LIMIT4, path: path + "/workflow/causal_predecessors", message: "predecessor count exceeds the verifier budget" }] };
       }
       for (const predecessor of predecessors2) {
         if (!isObject(predecessor)) {
@@ -12308,10 +12719,16 @@
           continue;
         }
         edges.get(objectId).add(predecessorId);
+        if (collidingIds.has(predecessorId)) continue;
         const prior = byId.get(predecessorId);
         if (prior === void 0) {
           if (!external.has(predecessorId)) {
             unresolved.add(predecessorId);
+          }
+          if (options.causalContext === true && typeof get(workflow, "parent_workflow_id") === "string") {
+            const missing = missingOrigins.get(objectId) ?? /* @__PURE__ */ new Set();
+            missing.add(predecessorId);
+            missingOrigins.set(objectId, missing);
           }
           continue;
         }
@@ -12329,37 +12746,57 @@
         if (!matches) {
           findings.push({ ruleId: "ecl.rule.bundle-predecessor-digest-valid.v1", path: `/records/${objectId}/workflow/causal_predecessors`, message: `predecessor digest mismatch for ${predecessorId}` });
         }
+        const contextValid = options.causalContext === true && contextProblem(workflow, prior) === void 0;
         if (options.causalContext === true) {
-          const problem = contextProblem(workflow, prior);
-          if (problem !== void 0) {
+          if (!contextValid) {
             findings.push({ ruleId: CAUSAL_CONTEXT_RULE, path: `/records/${objectId}/workflow/causal_predecessors`, message: `predecessor ${predecessorId} is outside the causal context of ${objectId}` });
           }
         }
         const priorSequence = sequenceOf(prior, `/records/${predecessorId}`, findings);
         const priorWorkflow = get(prior, "workflow");
         const sameWorkflow = isObject(priorWorkflow) && pythonEquals(get(priorWorkflow, "workflow_id"), get(workflow, "workflow_id"));
+        if (contextValid && isObject(priorWorkflow)) {
+          const parent = get(workflow, "parent_workflow_id"), priorParent = get(priorWorkflow, "parent_workflow_id");
+          if (!sameWorkflow && pythonEquals(priorParent, get(workflow, "workflow_id"))) parentJoins.push([objectId, predecessorId]);
+          if (matches && typeof parent === "string") {
+            if (!sameWorkflow && pythonEquals(get(priorWorkflow, "workflow_id"), parent)) originSeeds.add(objectId);
+            else if (sameWorkflow && pythonEquals(priorParent, parent) && priorSequence < sequence) {
+              const predecessors3 = childEdges.get(objectId) ?? /* @__PURE__ */ new Set();
+              predecessors3.add(predecessorId);
+              childEdges.set(objectId, predecessors3);
+            } else if (sameWorkflow && !pythonEquals(priorParent, parent)) {
+              const conflicts = parentConflicts.get(objectId) ?? /* @__PURE__ */ new Set();
+              conflicts.add(predecessorId);
+              parentConflicts.set(objectId, conflicts);
+            }
+          }
+        }
         if (sameWorkflow && priorSequence >= sequence) {
           findings.push({ ruleId: "ecl.rule.bundle-causal-sequence-monotonic.v1", path: `/records/${objectId}/workflow/sequence`, message: `predecessor ${predecessorId} does not precede ${objectId}` });
         }
       }
     }
+    if (options.causalContext === true) findings.push(...childOriginFindings(childEdges, originSeeds, missingOrigins, parentConflicts, parentJoins, unresolved));
     findings.push(...cycleFindings(edges));
     const terminalActions = /* @__PURE__ */ new Set();
     const openActions = /* @__PURE__ */ new Set();
-    for (const group of executionGroups(values, findings).values()) {
+    for (const group of executionGroups([...byId.values()], findings, identify).values()) {
       const states = group.records.map((record) => {
         const rawEvent = get(record, "event");
         const event = truthy(rawEvent) ? rawEvent : {};
         return str(get(event, "state"));
       });
+      let invalidTransition = false;
       for (let index = 0; index + 1 < states.length; index += 1) {
         const prior = states[index];
         const current = states[index + 1];
         const allowed = Object.prototype.hasOwnProperty.call(ALLOWED_TRANSITIONS, prior) ? ALLOWED_TRANSITIONS[prior] : void 0;
         if (TERMINAL_STATES2.has(prior) || allowed === void 0 || !allowed.has(current)) {
+          invalidTransition = true;
           findings.push({ ruleId: "ecl.rule.execution-state-transition-valid.v1", path: `/attempts/${group.attemptId}`, message: `invalid execution transition ${prior} -> ${current}` });
         }
       }
+      if (invalidTransition) continue;
       const last = states[states.length - 1];
       if (last !== void 0 && TERMINAL_STATES2.has(last)) {
         terminalActions.add(group.actionId);
@@ -12367,7 +12804,7 @@
         openActions.add(group.actionId);
       }
     }
-    const status2 = unresolved.size > 0 || openActions.size > 0 ? "incomplete" : findings.length > 0 ? "indeterminate" : "complete";
+    const status2 = collidingIds.size > 0 ? "indeterminate" : unresolved.size > 0 || openActions.size > 0 ? "incomplete" : findings.length > 0 ? "indeterminate" : "complete";
     return {
       status: status2,
       terminalActionIds: sortedIds(terminalActions),
@@ -12378,8 +12815,8 @@
   }
 
   // src/semantic/object.ts
-  var MAX_OBJECT_DEPTH = 32;
-  var MAX_OBJECT_NODES = 1e4;
+  var MAX_OBJECT_DEPTH = MAX_JSON_DEPTH;
+  var MAX_OBJECT_NODES = MAX_JSON_NODES;
   var MAX_FINDINGS_PER_RULE = 100;
   var MAX_TEXT2 = 200;
   var PROTOCOL_SCHEMAS = {
@@ -12388,23 +12825,27 @@
   };
   var ENVELOPE_SCHEMA = "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1";
   function cut2(text) {
-    return text.length <= MAX_TEXT2 ? text : text.slice(0, MAX_TEXT2 - 1) + "…";
+    const characters = Array.from(text);
+    return characters.length <= MAX_TEXT2 ? text : characters.slice(0, MAX_TEXT2 - 1).join("") + "…";
   }
   function invalid(path, message) {
-    return { ruleId: SCHEMA_INVALID2, path: cut2(path), message: cut2(message) };
+    return { ruleId: SCHEMA_INVALID, path: cut2(path), message: cut2(message) };
   }
-  function limitExceeded(value) {
+  function objectLimitExceeded(value, maxDepth = MAX_JSON_DEPTH, maxNodes = MAX_JSON_NODES) {
     let nodes2 = 1;
-    const pending = [[value, 1]];
+    const pending = [[value, 0]];
     while (pending.length > 0) {
       const [container, depth] = pending.pop();
-      if (depth > MAX_OBJECT_DEPTH) {
-        return `nesting depth exceeds ${MAX_OBJECT_DEPTH}`;
+      if (depth > maxDepth) {
+        return `nesting depth exceeds ${maxDepth}`;
       }
       const children = isArray(container) ? container : isObject(container) ? Object.values(container) : [];
       nodes2 += children.length;
-      if (nodes2 > MAX_OBJECT_NODES) {
-        return `node count exceeds ${MAX_OBJECT_NODES}`;
+      if (nodes2 > maxNodes) {
+        return `node count exceeds ${maxNodes}`;
+      }
+      if (children.length > 0 && depth + 1 > maxDepth) {
+        return `nesting depth exceeds ${maxDepth}`;
       }
       for (const child of children) {
         if (isArray(child) || isObject(child)) {
@@ -12442,19 +12883,34 @@
     return kept;
   }
   var defaultSemantics;
-  function objectFindings(value, schemas = eclSchemas(), semantics) {
+  function objectFindings(value, schemas = eclSchemas(), semantics, limits = {}) {
+    const maxDepth = limits.maxDepth === void 0 ? MAX_OBJECT_DEPTH : limits.maxDepth;
+    const maxNodes = limits.maxNodes === void 0 ? MAX_OBJECT_NODES : limits.maxNodes;
+    for (const [name, limit, ceiling] of [["maxDepth", maxDepth, MAX_JSON_DEPTH_CEILING], ["maxNodes", maxNodes, MAX_JSON_NODES_CEILING]]) {
+      if (typeof limit !== "number" || !Number.isSafeInteger(limit) || limit < 1 || limit > ceiling) {
+        return [{ ruleId: CONFIGURATION_INVALID, path: "/", message: `${name} must be an integer from 1 to ${ceiling}` }];
+      }
+    }
     if (!isObject(value)) {
       return [invalid("/", "an ECL object must be a JSON object")];
     }
-    const excess = limitExceeded(value);
+    const excess = objectLimitExceeded(value, maxDepth, maxNodes);
     if (excess !== void 0) {
-      return [invalid("/", excess)];
+      return [{ ruleId: RESOURCE_LIMIT, path: "/", message: excess }];
     }
     const schema = schemaFor(value);
     if (schema === void 0) {
       return [invalid("/", "not a DCMP-2 or EBMP-2 object, and not an ECL-IE-1 envelope")];
     }
-    const errors = schemas.errors(schema, value, MAX_FINDINGS_PER_RULE + 1);
+    let errors;
+    try {
+      errors = schemas.errors(schema, value, MAX_FINDINGS_PER_RULE + 1);
+    } catch (error) {
+      if (!isMalformedInputError(error)) {
+        throw error;
+      }
+      return [invalid("/", `schema validation could not be completed: ${error.name}`)];
+    }
     const findings = errors.slice(0, MAX_FINDINGS_PER_RULE).map((error) => invalid(error.path, `${error.keyword}: ${error.message}`));
     if (errors.length > MAX_FINDINGS_PER_RULE) {
       findings.push(invalid("/", "more schema errors follow, and are not listed"));
@@ -12516,6 +12972,7 @@
     "object-rules",
     "decision-basis-recorded",
     "decision-basis-register",
+    "decision-input-timing",
     "bindings",
     "release-within-authority",
     "causal-completeness",
@@ -12533,14 +12990,17 @@
   var SCOPE_DISCHARGE = ["prerelease-obligations-discharge-recorded", "prerelease-obligations-proofs-verified", "prerelease-obligations-met"];
   var SCOPE_POST_RELEASE = "post-release-obligations-met";
   var SCOPE_REGISTER = "decision-basis-register";
-  var CONDITIONAL_SCOPE = /* @__PURE__ */ new Set([...SCOPE_DISCHARGE, SCOPE_POST_RELEASE, SCOPE_REGISTER]);
+  var SCOPE_INPUT_TIMING = "decision-input-timing";
+  var REASON_INPUT_TIMES = "input-times-not-recorded";
+  var CONDITIONAL_SCOPE = /* @__PURE__ */ new Set([...SCOPE_DISCHARGE, SCOPE_POST_RELEASE, SCOPE_REGISTER, SCOPE_INPUT_TIMING]);
   var SCOPE_TEXT = {
     "envelope-signatures": "each envelope's and observation's payload digest and signatures verify under the trust-policy version its object names, at the object's own time or its trusted time, and the current trust policy revokes none of its trust dependencies at or before its time",
     "current-trust": "each trust dependency, each signing key of each envelope and observation and of each time attestation, is acceptable under the current trust policy at the evaluation time",
     "trusted-time": "a separate time authority attests a time for each signature of each envelope and observation, binding that signature, each signature was valid at that time, and each time authority's key was valid then and is not revoked by the current trust policy at or before it",
     "object-rules": "each signed object satisfies its schema and semantic rules, the one-way rule for a recorded decision basis among them",
     "decision-basis-recorded": "each decision response records its decision basis",
-    "decision-basis-register": "each decision basis agrees with the Consequential Action Register supplied",
+    "decision-basis-register": "each decision basis matches the supplied register version, inputs, classes, required flags, sources and derivations; recorded input timing is compared with declared bounds only when the needed fields are supplied",
+    "decision-input-timing": "all applicable recorded input ages and acquisition deadlines were checked against the supplied register; this does not establish that recorded times are true",
     bindings: "each response binds its request, each event binds its request, response and authority, with the digests and use counts they name, each continuation binds the request, challenge and approval it continues, and each terminal event carries the outcome reason its state and response require",
     "release-within-authority": "each recorded release time lies within the authorization's validity window",
     "causal-completeness": "over every object of the bundle, observations included, every causal predecessor is in the bundle with the digest that names it and in the workflow, trace and attempt that the rules allow, the graph is acyclic, identifiers are unique, and every request has a terminal event",
@@ -12555,7 +13015,7 @@
   };
   var NOW = /^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:[0-2][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\.[0-9]{3}|\.[0-9]{6})?Z$/;
   var NON_RELEASE = /* @__PURE__ */ new Set(["denied", "held", "challenged", "expired_before_release"]);
-  var PAIRED_KINDS = /* @__PURE__ */ new Set(["decision_request", "decision_response", "authority_issued", "authority_consumed", "execution_released", "execution_terminal"]);
+  var PAIRED_KINDS = /* @__PURE__ */ new Set(["decision_request", "decision_response", "authority_issued", "authority_consumed", "release_prepared", "execution_released", "execution_observed", "execution_terminal"]);
   function issue(code2, message) {
     return { code: code2, message };
   }
@@ -12643,6 +13103,7 @@
       effects: [],
       findings,
       verificationProfile: REFERENCE_PROFILE,
+      responseClockSkewSeconds: 0,
       acceptedCurrentTrustFailure: false,
       register: null,
       scope: { established: [], notEstablished: [], reasons: {}, checks: {} },
@@ -12809,7 +13270,7 @@
       return POLICY_INVALID;
     }
     const role = { purpose, principal: principalOf(payload) };
-    return combined(signatures.map((signature) => keyStatus(signature, policy, role, timeOf(signature["key_id"]), original, compromise)));
+    return combined(signatures.map((signature, position) => keyStatus(signature, policy, role, timeOf(position), original, compromise)));
   }
   function checkSignature(envelope, policy, payload, at, signedPolicy, keyTimes) {
     const timePolicy = textAt(payload, "integrity_policy", "verification_time_policy");
@@ -12879,26 +13340,22 @@
     }
     return positions;
   }
-  function evaluateCountersignature(entry, envelope, payload, versions, current, now) {
+  function evaluateCountersignature(entry, envelope, payload, versions, current, now, statement) {
     const counterId = isString(get(entry, "counter_id")) ? get(entry, "counter_id") : null;
     const attestation = get(entry, "attestation");
     const signatures = isObject(attestation) && isArray(get(attestation, "signatures")) ? get(attestation, "signatures") : [];
-    let statement = null;
-    if (isObject(attestation) && get(attestation, "payload_type") === TIME_ATTESTATION_TYPE) {
-      try {
-        statement = decodeCanonicalJsonPayload(attestation);
-      } catch (error) {
-        if (!(error instanceof IntegrityError)) {
-          throw error;
-        }
-      }
-    }
     const attestedText = isObject(statement) ? textAt(statement, "issued_at") : void 0;
     const attested = attestedText !== void 0 && isInstant(attestedText) ? attestedText : void 0;
     const issuer = isObject(statement) ? textAt(statement, "issuer", "id") : void 0;
     const reference = isObject(statement) ? objectAt(statement, "integrity_policy", "trust_policy") : void 0;
     const version = reference === void 0 ? void 0 : versions.find((item2) => referenceMatches(item2, reference));
     const role = { purpose: PURPOSE_TRUSTED_TIME, principal: issuer };
+    const payloadAllows = (signature) => {
+      const policy = isObject(statement) ? objectAt(statement, "integrity_policy") : void 0;
+      const suites = get(policy ?? null, "accepted_suites");
+      const keys = get(policy ?? null, "eligible_key_ids");
+      return isArray(suites) && suites.includes(signature["suite_id"]) && (!isArray(keys) || keys.length === 0 || keys.includes(signature["key_id"]));
+    };
     const statuses = [];
     const dependencies = signatures.filter(isObject).map((signature) => {
       const keyId = isString(get(signature, "key_id")) ? get(signature, "key_id") : "";
@@ -12914,12 +13371,12 @@
         historical: "valid",
         currentPolicyVersion: current.version,
         revokedEffectiveAt: revokedEffectiveAt(current, keyId, version?.key(keyId)?.publicKey),
-        current: version === void 0 ? POLICY_INVALID : keyStatus(signature, current, role, now, version)
+        current: version === void 0 || !payloadAllows(signature) ? POLICY_INVALID : keyStatus(signature, current, role, now, version)
       };
     });
     const invalid2 = () => ({
       counterId,
-      attested,
+      attested: get(entry, "claim") === TRUSTED_TIME_CLAIM ? attested : void 0,
       valid: false,
       covers: [],
       dependencies: dependencies.map((dependency) => ({ ...dependency, at: null, historical: TRUSTED_TIME_INVALID }))
@@ -12948,7 +13405,11 @@
       attested,
       valid: true,
       covers,
-      dependencies: dependencies.map((dependency, position) => signatureVerifies(signed[position], version, message) ? dependency : { ...dependency, historical: INTEGRITY_INVALID2 })
+      dependencies: dependencies.map((dependency, position) => {
+        const signature = signed[position];
+        if (!payloadAllows(signature)) return { ...dependency, historical: POLICY_INVALID, current: POLICY_INVALID };
+        return signatureVerifies(signature, version, message) ? dependency : { ...dependency, historical: INTEGRITY_INVALID2 };
+      })
     };
   }
   var Ledger = class {
@@ -12990,7 +13451,7 @@
     }
   };
   var TRUST_CHECKS = ["time-not-after-evaluation", "historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures"];
-  function evaluateEnvelope(envelope, payload, index, observation, currentPolicy, versions, now, findings, requireTrustedTime, ledger) {
+  function evaluateEnvelope(envelope, payload, index, observation, currentPolicy, versions, now, findings, requireTrustedTime, ledger, attestationStatements) {
     const identifier = identifierOf(payload);
     const kind = kindOf(payload);
     const signers = signatureIds(envelope);
@@ -13011,7 +13472,7 @@
         current: status2
       };
     });
-    const invalid2 = objectFindings(payload);
+    const invalid2 = [...objectFindings(payload), ...new SemanticValidator().extensionFindings(envelope)];
     ledger.ran("object-schema", index);
     ledger.ran("object-semantics", index);
     if (invalid2.length > 0) {
@@ -13037,7 +13498,7 @@
     let dependencies;
     try {
       const entries = get(envelope, "countersignatures");
-      const counters = (isArray(entries) ? entries : []).map((entry) => evaluateCountersignature(entry, envelope, payload, versions, currentPolicy, now));
+      const counters = (isArray(entries) ? entries : []).map((entry, position) => evaluateCountersignature(entry, envelope, payload, versions, currentPolicy, now, attestationStatements[position] ?? null));
       const times = signatures.map(() => at);
       const covered = signatures.map(() => false);
       for (const counter of counters) {
@@ -13054,9 +13515,9 @@
       const keyTimes = /* @__PURE__ */ new Map();
       signatures.forEach((signature, position) => {
         const keyId = signature["key_id"];
-        keyTimes.set(keyId, keyTimes.has(keyId) && keyTimes.get(keyId) !== times[position] ? at : times[position]);
+        keyTimes.set(keyId, times[position]);
       });
-      const timeOf = (keyId) => keyTimes.get(keyId) ?? at;
+      const timeOf = (position) => times[position] ?? at;
       const used = times.filter((_, position) => covered[position]);
       trusted = used.length === 0 ? void 0 : used.reduce((earliest, time2) => nanos(time2) < nanos(earliest) ? time2 : earliest);
       const allCovered = counters.length > 0 && covered.every((item2) => item2);
@@ -13086,9 +13547,9 @@
       const eligibleKeys = integrityPolicy["eligible_key_ids"] ?? [];
       const inPayloadPolicy = (signature) => acceptedSuites.includes(signature["suite_id"]) && (eligibleKeys.length === 0 || eligibleKeys.includes(signature["key_id"]));
       const message = signingInput(envelope["payload_type"], decodePayload(envelope));
-      dependencies = signatures.filter(isObject).map((signature) => {
+      dependencies = signatures.filter(isObject).map((signature, position) => {
         const keyId = signature["key_id"];
-        const own = timeOf(keyId);
+        const own = timeOf(position);
         const allowedByPayload = inPayloadPolicy(signature);
         let status2 = envelopeWide ? historical : !allowedByPayload ? POLICY_INVALID : keyStatus(signature, version, role, own, void 0, currentPolicy);
         if (status2 === "valid" && !signatureVerifies(signature, version, message)) {
@@ -13112,9 +13573,11 @@
       for (const counter of counters) {
         dependencies.push(...counter.dependencies.map((dependency) => ({ index, ...dependency })));
       }
+      const objectSignersValid = dependencies.filter((dependency) => dependency.role === "signer").every((dependency) => dependency.historical === "valid");
       for (const check of TRUST_CHECKS) {
-        ledger.ran(check, index);
+        ledger.ran(check, index, check === "historical-signers" || check === "current-compromise-knowledge" ? objectSignersValid : true);
       }
+      ledger.ran("attestation-signers", index, dependencies.filter((dependency) => dependency.role === "time-authority").every((dependency) => dependency.historical === "valid"));
       ledger.ran("trusted-time-coverage", index, allCovered);
       ledger.ran("current-status", index, dependencies.every((dependency) => dependency.current === "valid") && current === "valid");
     } catch (error) {
@@ -13270,7 +13733,7 @@
     const found = [];
     for (const extension of extensions) {
       const item2 = isObject(extension) ? get(extension, "value") : void 0;
-      if (isObject(extension) && get(extension, "id") === identifier && isObject(item2)) {
+      if (isObject(extension) && get(extension, "id") === identifier && interpretedExtension(value, extension) && isObject(item2)) {
         found.push(item2);
       }
     }
@@ -13281,11 +13744,8 @@
     if (authorization === void 0) {
       return null;
     }
-    if (get(authorization, "use_policy") === "single_use") {
-      return 1;
-    }
     const uses = get(authorization, "max_uses");
-    return isInteger(uses) ? uses : null;
+    return get(authorization, "use_policy") === "single_use" && (!Object.hasOwn(authorization, "max_uses") || isInteger(uses) && uses === 1) ? 1 : null;
   }
   function checkUseCounts(consumed, findings) {
     const byAuthorization = /* @__PURE__ */ new Map();
@@ -13299,13 +13759,17 @@
     }
     for (const events of byAuthorization.values()) {
       const limit = useLimit(events[0][1].payload);
+      if (limit === null) {
+        findings.push(issue(DECISION_BINDING_INVALID2, "the authorization uses an unsupported use policy or limit"));
+        continue;
+      }
       const counts = [];
       for (const [event] of events) {
         const count = get(objectAt(event.payload, "event") ?? {}, "use_count");
         if (!isInteger(count)) {
           continue;
         }
-        if (count < 1 || limit !== null && count > limit) {
+        if (count < 1 || count > limit) {
           findings.push(issue(DECISION_BINDING_INVALID2, `envelope ${event.index}: the use count is outside the authorization's use policy`));
         }
         counts.push(count);
@@ -13313,7 +13777,7 @@
       if (new Set(counts).size !== counts.length) {
         findings.push(issue(DECISION_BINDING_INVALID2, "two consumptions of one authorization record one use"));
       }
-      if (limit !== null && events.length > limit) {
+      if (events.length > limit) {
         findings.push(issue(DECISION_BINDING_INVALID2, "an authorization is consumed more often than its use policy allows"));
       }
     }
@@ -13395,9 +13859,11 @@
           }
         }
       }
-      if (responseId !== void 0) {
+      const own = textAt(request.payload, "message_id");
+      const answer = entries.find((entry) => !entry.observation && entry.check.kind === "decision_response" && own !== void 0 && textAt(entry.payload, "request_id") === own);
+      if (responseId !== void 0 && answer !== void 0 && textAt(answer.payload, "outcome") === "admit") {
         if (continued.has(responseId)) {
-          fail("continues a response that another request continues");
+          fail("admits a continuation of a response that another admitted request continues");
         }
         continued.add(responseId);
       }
@@ -13432,8 +13898,6 @@
         if (textAt(approval.payload, "protocol") !== "EBMP-2" || get(event, "kind") !== "intervention" || get(event, "operation") !== "approve" || requestId === void 0 || get(event, "target_id") !== requestId) {
           fail("names as its approval an object that is not an approval of the continued request");
         }
-        const own = textAt(request.payload, "message_id");
-        const answer = entries.find((entry) => !entry.observation && entry.check.kind === "decision_response" && own !== void 0 && textAt(entry.payload, "request_id") === own);
         if (answer !== void 0 && textAt(answer.payload, "outcome") === "admit") {
           const keys = signerKeys(approval, versions);
           if (keys.length === 0 || keys.some((key) => !key.purposes.includes(PURPOSE_APPROVAL))) {
@@ -13561,7 +14025,7 @@
         }
         continue;
       }
-      if (kind !== "execution_released" && kind !== "execution_terminal") {
+      if (kind !== "release_prepared" && kind !== "execution_released" && kind !== "execution_observed" && kind !== "execution_terminal") {
         continue;
       }
       releaseRecorded = releaseRecorded || kind === "execution_released";
@@ -13618,11 +14082,11 @@
         released.add(key);
         boundReleases.add(entry.index);
         const authorization = pairedResponse === void 0 ? void 0 : objectAt(pairedResponse.payload, "authorization");
-        const start2 = authorization === void 0 ? void 0 : textAt(authorization, "valid_from");
-        const end = authorization === void 0 ? void 0 : textAt(authorization, "valid_until");
-        const observed = textAt(payload, "observed_at");
+        const start2 = instantOrNull3(authorization === void 0 ? null : get(authorization, "valid_from"));
+        const end = instantOrNull3(authorization === void 0 ? null : get(authorization, "valid_until"));
+        const observed = instantOrNull3(get(payload, "observed_at"));
         const guard = releaseGuardNs(payload);
-        if (start2 === void 0 || end === void 0 || observed === void 0 || guard === null || !(nanos(start2) <= nanos(observed)) || !(nanos(observed) + guard < nanos(end))) {
+        if (start2 !== null && end !== null && observed !== null && guard !== null && (start2 > observed || observed + guard >= end)) {
           events.push(issue(EXPIRED2, "the release, with its declared release guard, lies outside the authorization's validity window"));
         }
       }
@@ -13657,6 +14121,7 @@
     const required2 = [];
     const carried = /* @__PURE__ */ new Set();
     const values = /* @__PURE__ */ new Map();
+    const otherValues = /* @__PURE__ */ new Map();
     let postRelease = false;
     const obligations = get(response, "obligations");
     for (const item2 of isArray(obligations) ? obligations : []) {
@@ -13670,11 +14135,10 @@
       }
       const key = obligationKey(identifier, kind);
       carried.add(key);
-      if (!values.has(key)) {
-        values.set(key, get(item2, "value"));
-      }
+      otherValues.set(key, [...otherValues.get(key) ?? [], get(item2, "value")]);
       const satisfaction = get(item2, "satisfaction");
       if (satisfaction === "before_release") {
+        values.set(key, [...values.get(key) ?? [], get(item2, "value")]);
         if (!required2.includes(key)) {
           required2.push(key);
         }
@@ -13689,14 +14153,13 @@
       if (isObject(witness) && get(witness, "outcome") === "required_before_release" && isString(uri)) {
         const key = obligationKey(uri, WITNESS_OBLIGATION_TYPE);
         carried.add(key);
-        if (!values.has(key)) {
-          values.set(key, uri);
-        }
+        values.set(key, [...values.get(key) ?? [], uri]);
         if (!required2.includes(key)) {
           required2.push(key);
         }
       }
     }
+    for (const [key, occurrences] of otherValues) if (!values.has(key)) values.set(key, occurrences);
     return [required2, carried, postRelease, values];
   }
   function witnessSource(response, witness) {
@@ -13719,7 +14182,7 @@
     let present = false;
     const found = [];
     (isArray(extensions) ? extensions : []).forEach((extension, index) => {
-      if (!isObject(extension) || get(extension, "id") !== OBLIGATION_DISCHARGE) {
+      if (!isObject(extension) || get(extension, "id") !== OBLIGATION_DISCHARGE || !interpretedExtension(event, extension)) {
         return;
       }
       present = true;
@@ -13770,7 +14233,7 @@
     if (version === void 0) {
       return keys;
     }
-    for (const keyId of signatureIds(entry.envelope)) {
+    for (const keyId of [...entry.verifiedSignerKeyIds].sort()) {
       const key = version.key(keyId);
       if (key !== void 0) {
         keys.push(key);
@@ -13820,6 +14283,9 @@
       return problems;
     }
     const eventType = textAt(payload, "event_type");
+    if (eventType === "verification" !== proof.observation) {
+      problems.push([OBLIGATION_UNPROVEN, path, "names a carried proof in the wrong bundle collection"]);
+    }
     const event = objectAt(payload, "event") ?? {};
     if (kind === WITNESS_OBLIGATION_TYPE) {
       if (eventType !== "verification") {
@@ -13943,10 +14409,10 @@
         } else if (isObject(digest) && !pythonEquals(digest, { algorithm: "ecl.digest.sha-256.v1", value: objectDigest(carriedProof.payload) })) {
           problems.push([DISCHARGE_RULE, "/proof/digest", "names an object of the bundle by another digest"]);
         } else {
-          if (!issuerNamed(key, values.get(key), release.response)) {
-            unnamed = true;
+          for (const value of values.get(key) ?? [void 0]) {
+            if (!issuerNamed(key, value, release.response)) unnamed = true;
+            problems.push(...proofProblems(item2, key, value, carriedProof, release, versions));
           }
-          problems.push(...proofProblems(item2, key, values.get(key), carriedProof, release, versions));
         }
         for (const [code2, suffix, message] of problems) {
           findings.push(issue(code2, `${path}${suffix}: ${message}`));
@@ -13963,7 +14429,7 @@
   function reasonOf(entry, response, findings) {
     const state = textAt(entry.payload, "event", "state");
     const extensions = get(entry.payload, "extensions");
-    const matching = isArray(extensions) ? extensions.filter((extension) => isObject(extension) && pythonEquals(get(extension, "id"), OUTCOME_REASON)) : [];
+    const matching = isArray(extensions) ? extensions.filter((extension) => isObject(extension) && pythonEquals(get(extension, "id"), OUTCOME_REASON) && interpretedExtension(entry.payload, extension)) : [];
     if (matching.length > 1) {
       findings.push(issue(SEMANTIC_INVALID2, "a terminal has multiple outcome reasons"));
     }
@@ -14069,6 +14535,7 @@
     return result;
   }
   function checkDecisionBases(entries, findings, register, skew, ledger) {
+    let timingApplied = false, timingComplete = true;
     for (const entry of entries) {
       ledger.ran("decision-basis-one-way", entry.index);
     }
@@ -14076,7 +14543,7 @@
     for (const entry of entries) {
       const identifier = textAt(entry.payload, "message_id");
       if (!entry.observation && textAt(entry.payload, "protocol") === "DCMP-2" && textAt(entry.payload, "message_type") === "decision_request" && identifier !== void 0) {
-        requests.set(identifier, entry.payload);
+        requests.set(identifier, requests.has(identifier) ? null : entry.payload);
       }
     }
     for (const entry of entries) {
@@ -14096,7 +14563,7 @@
       }
       const requestId = textAt(payload, "request_id");
       const request = requestId === void 0 ? void 0 : requests.get(requestId);
-      if (found.length !== 1 || request === void 0) {
+      if (found.length !== 1 || request === void 0 || request === null) {
         continue;
       }
       const [index, value] = found[0];
@@ -14111,10 +14578,15 @@
       }
       const action = get(request, "action");
       const actionClass = isObject(action) ? get(action, "action_class") : void 0;
+      const [applied, complete] = timingCoverage(value, register, actionClass, get(payload, "evaluated_at"));
+      timingApplied ||= applied;
+      timingComplete &&= complete;
+      ledger.ran("decision-input-timing", entry.index, complete);
       for (const [path, message] of registerProblems(value, register, actionClass, get(payload, "evaluated_at"))) {
         findings.push(issue(REGISTER_RULE, `object ${entry.index}: /extensions/${index}/value${path}: ${message}`));
       }
     }
+    return [timingApplied, timingComplete];
   }
   function verifyChecked(source, policy, now, history, skew, acceptCurrentTrustFailure, requireTrustedTime, register) {
     if (!(policy instanceof TrustPolicy)) {
@@ -14127,6 +14599,8 @@
     if (!isObject(source)) {
       return invalidReport(issue(SCHEMA_INVALID4, "the evidence bundle is not a JSON object"));
     }
+    const excess = objectLimitExceeded(source);
+    if (excess !== void 0) return invalidReport(issue(RESOURCE_LIMIT5, excess));
     const envelopes = get(source, "envelopes");
     const observations = Object.prototype.hasOwnProperty.call(source, "observations") ? source["observations"] : [];
     if (!isArray(envelopes) || !isArray(observations)) {
@@ -14156,6 +14630,7 @@
         effects: [],
         findings: findings.ordered(),
         verificationProfile: REFERENCE_PROFILE,
+        responseClockSkewSeconds: 0,
         acceptedCurrentTrustFailure: false,
         register: null,
         scope: { established: [], notEstablished: [], reasons: {}, checks: {} },
@@ -14171,6 +14646,7 @@
     for (let index = 0; index < all.length; index += 1) {
       const [isObservation, envelope] = all[index];
       let payload;
+      if (nodeCount >= MAX_TOTAL_PAYLOAD_NODES) return budgetExceeded();
       try {
         payload = decodeCanonicalJsonPayload(envelope, Math.max(MAX_TOTAL_PAYLOAD_NODES - nodeCount, 1));
         if (!isObject(payload)) {
@@ -14194,6 +14670,33 @@
       }
       decoded.push([index, isObservation, envelope, payload]);
     }
+    const attestationStatements = /* @__PURE__ */ new Map();
+    for (let index = 0; index < all.length; index += 1) {
+      const envelope = all[index][1];
+      const statements = [];
+      const counters = get(envelope, "countersignatures");
+      for (const entry of isArray(counters) ? counters : []) {
+        if (nodeCount >= MAX_TOTAL_PAYLOAD_NODES) return budgetExceeded();
+        const attestation = get(entry, "attestation");
+        let statement;
+        try {
+          statement = decodeCanonicalJsonPayload(attestation, MAX_TOTAL_PAYLOAD_NODES - nodeCount);
+        } catch (error) {
+          if (!(error instanceof IntegrityError)) throw error;
+          if (error.code === RESOURCE_LIMIT5) {
+            if (error instanceof PayloadNodeBudgetError) return budgetExceeded();
+            findings.add(STAGE_PAYLOADS, issue(RESOURCE_LIMIT5, `envelope ${index} has an attestation payload exceeding a declared limit`));
+            return { ...invalidReport(...findings.ordered()), envelopeChecks: [...checks] };
+          }
+          statements.push(null);
+          continue;
+        }
+        nodeCount += nodes(statement, MAX_TOTAL_PAYLOAD_NODES - nodeCount);
+        if (nodeCount > MAX_TOTAL_PAYLOAD_NODES) return budgetExceeded();
+        statements.push(get(attestation, "payload_type") === TIME_ATTESTATION_TYPE ? statement : null);
+      }
+      attestationStatements.set(index, statements);
+    }
     const ledger = new Ledger();
     const versions = [policy, ...history];
     const entries = [];
@@ -14201,13 +14704,14 @@
     const seenIds = /* @__PURE__ */ new Set();
     for (const [index, isObservation, envelope, payload] of decoded) {
       ledger.ran("envelope-integrity", index);
-      for (const set of ["bundle-objects", "trust-dependencies", "object-signatures"]) {
+      for (const set of ["bundle-objects", "trust-dependencies", "object-signatures", "object-signing-dependencies"]) {
         ledger.member(set, index);
       }
-      const [check, signingKeys, found] = evaluateEnvelope(envelope, payload, index, isObservation, policy, versions, now, findings.at(STAGE_OBJECTS), requireTrustedTime, ledger);
+      const [check, signingKeys, found] = evaluateEnvelope(envelope, payload, index, isObservation, policy, versions, now, findings.at(STAGE_OBJECTS), requireTrustedTime, ledger, attestationStatements.get(index) ?? []);
       dependencies.push(...found);
       checks.push(check);
-      entries.push({ index, observation: isObservation, envelope, payload, check, signingKeys });
+      const verifiedSignerKeyIds = new Set(found.filter((dependency) => dependency.role === "signer" && dependency.historical === "valid").map((dependency) => dependency.keyId));
+      entries.push({ index, observation: isObservation, envelope, payload, check, signingKeys, verifiedSignerKeyIds });
       if (check.historical === SCHEMA_INVALID4 || check.historical === SEMANTIC_INVALID2) {
         findings.add(STAGE_OBJECTS, issue(check.historical, `envelope ${index} holds an object that fails its schema or semantic rules`));
       } else if (check.historical !== "valid") {
@@ -14225,7 +14729,7 @@
       }
       ledger.ran("observation-kind", index);
     }
-    checkDecisionBases(entries, findings.at(STAGE_OBJECTS), register, skew, ledger);
+    const [timingApplied, timingComplete] = checkDecisionBases(entries, findings.at(STAGE_OBJECTS), register, skew, ledger);
     const pairs = pairMain(entries, bindings, findings, skew, ledger);
     const continuationMissing = checkContinuations(entries, findings.at(STAGE_PAIRING), ledger, versions);
     checkEventMessageReferences(entries, pairs, bindings, findings.at(STAGE_EVENTS), ledger);
@@ -14278,10 +14782,10 @@
       ledger.ran("attempt-authority-consumed", entry.index, !keys.some(silent));
     }
     for (const entry of entries) {
-      if (entry.observation || entry.check.kind !== "execution_terminal") {
+      if (entry.observation || entry.check.kind !== "execution_observed" && entry.check.kind !== "execution_terminal") {
         continue;
       }
-      if (textAt(entry.payload, "event", "state") !== "succeeded") {
+      if (entry.check.kind === "execution_terminal" && !["succeeded", "failed", "partially_succeeded", "unknown", "rolled_back", "compensated"].includes(textAt(entry.payload, "event", "state") ?? "")) {
         continue;
       }
       const key = attemptKey(entry.payload, true);
@@ -14289,7 +14793,8 @@
         continue;
       }
       if (key === void 0 || !pairs.consumed.has(key) || !pairs.released.has(key)) {
-        findings.add(STAGE_CAUSAL, issue(DECISION_BINDING_INVALID2, "a succeeded attempt lacks consumed authority or release evidence"));
+        const message = entry.check.kind === "execution_observed" ? "a running attempt lacks consumed authority or release evidence" : "a post-release terminal attempt lacks consumed authority or release evidence";
+        findings.add(STAGE_CAUSAL, issue(DECISION_BINDING_INVALID2, message));
       }
     }
     for (const entry of entries) {
@@ -14333,6 +14838,7 @@
       effects,
       findings: findings.ordered(),
       verificationProfile: REFERENCE_PROFILE,
+      responseClockSkewSeconds: 0,
       acceptedCurrentTrustFailure: accepted,
       register: null,
       // The conditional items of the scope that apply to this bundle, and the stated reasons that
@@ -14345,9 +14851,10 @@
       scope: {
         established: [],
         checks: {},
-        notEstablished: [...dischargeApplied ? SCOPE_DISCHARGE : [], ...postRelease ? [SCOPE_POST_RELEASE] : []],
+        notEstablished: [...dischargeApplied ? SCOPE_DISCHARGE : [], ...postRelease ? [SCOPE_POST_RELEASE] : [], ...timingApplied ? [SCOPE_INPUT_TIMING] : []],
         reasons: {
           ...pairs.releaseRecorded ? {} : { [SCOPE_RELEASE]: REASON_NO_RELEASE },
+          ...timingApplied && !timingComplete ? { [SCOPE_INPUT_TIMING]: REASON_INPUT_TIMES } : {},
           // Both reasons true, the report gives `proof-not-ecl-object`: a proof that is not carried
           // was not checked at all.
           ...dischargeApplied && uncarried ? { [SCOPE_PROOFS]: REASON_PROOF_NOT_ECL_OBJECT } : dischargeApplied && unnamed ? { [SCOPE_PROOFS]: REASON_ISSUER_NOT_NAMED } : {}
@@ -14357,12 +14864,13 @@
     };
   }
   var SCOPE_ITEM_CHECKS = {
-    "envelope-signatures": { objectSet: "trust-dependencies", checks: ["envelope-integrity", "time-not-after-evaluation", "historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures"] },
+    "envelope-signatures": { objectSet: "object-signing-dependencies", checks: ["envelope-integrity", "time-not-after-evaluation", "historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures"] },
     "current-trust": { objectSet: "trust-dependencies", checks: ["current-status"] },
-    "trusted-time": { objectSet: "object-signatures", checks: ["historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures", "trusted-time-coverage"] },
+    "trusted-time": { objectSet: "object-signatures", checks: ["historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures", "trusted-time-coverage", "attestation-signers"] },
     "object-rules": { objectSet: "bundle-objects", checks: ["object-schema", "object-semantics", "observation-kind", "identifiers-unique", "decision-basis-one-way"] },
     "decision-basis-recorded": { objectSet: "decision-responses", checks: ["decision-basis-present"] },
     "decision-basis-register": { objectSet: "decision-responses", checks: ["decision-basis-register"] },
+    "decision-input-timing": { objectSet: "decision-responses", checks: ["decision-basis-register", "decision-input-timing"] },
     bindings: { objectSet: "request-response-pairs", checks: ["pairing", "continuation-history", "response-binding", "event-binding", "outcome-reasons"] },
     "release-within-authority": { objectSet: "released-attempts", checks: ["release-window"] },
     "causal-completeness": {
@@ -14381,6 +14889,10 @@
       return void 0;
     }
     const objects = scopeObjects(report, required2.objectSet).sort((a, b) => a - b);
+    if (required2.objectSet === "trust-dependencies" || required2.objectSet === "object-signing-dependencies") {
+      const dependencies = new Set(report.trustDependencies.filter((dependency) => required2.objectSet === "trust-dependencies" || dependency.role === "signer").map((dependency) => dependency.index));
+      if (report.envelopeChecks.some((check) => !dependencies.has(check.index) || !objects.includes(check.index))) return void 0;
+    }
     for (const check of required2.checks) {
       const record = report.checksRun[check];
       if (objects.length === 0) {
@@ -14416,6 +14928,7 @@
       if (report.register !== null) {
         established.add("decision-basis-register");
       }
+      if (applies.has(SCOPE_INPUT_TIMING) && !(SCOPE_INPUT_TIMING in reasons) && report.register !== null) established.add(SCOPE_INPUT_TIMING);
       if (report.verdict !== "incomplete") {
         established.add("causal-completeness");
       }
@@ -14426,11 +14939,8 @@
         }
       }
     }
-    for (const [item2, role] of [
-      ["envelope-signatures", "signer"],
-      ["trusted-time", "time-authority"]
-    ]) {
-      if (report.trustDependencies.some((dependency) => dependency.role === role && dependency.historical !== "valid")) {
+    for (const item2 of ["envelope-signatures", "trusted-time"]) {
+      if (checks.some((check) => check.historical !== "valid") || report.trustDependencies.some((dependency) => (item2 === "trusted-time" || dependency.role === "signer") && dependency.historical !== "valid")) {
         established.delete(item2);
       }
     }
@@ -14444,7 +14954,7 @@
       }
     }
     const items = [...SCOPE_CHECKS, ...SCOPE_NEVER].filter(
-      (item2) => !CONDITIONAL_SCOPE.has(item2) || SCOPE_DISCHARGE.includes(item2) && discharge || item2 === SCOPE_POST_RELEASE && postRelease || item2 === SCOPE_REGISTER && report.register !== null
+      (item2) => !CONDITIONAL_SCOPE.has(item2) || SCOPE_DISCHARGE.includes(item2) && discharge || item2 === SCOPE_POST_RELEASE && postRelease || item2 === SCOPE_REGISTER && report.register !== null || item2 === SCOPE_INPUT_TIMING && applies.has(item2) && report.register !== null
     );
     const kept = {};
     for (const item2 of items) {
@@ -14480,12 +14990,15 @@
   function verifyBundle(bundle, policy, options) {
     const now = validNow(options.now);
     const skew = options.responseClockSkewSeconds ?? 0;
-    if (!Number.isInteger(skew) || skew < 0) {
-      throw new RangeError("the response clock-skew allowance is a non-negative integer of seconds");
+    if (!Number.isInteger(skew) || skew !== 0) {
+      throw new RangeError("the registered reference profiles require a response clock-skew allowance of zero");
     }
     const requireTrustedTime = options.requireTrustedTime ?? false;
     if (typeof requireTrustedTime !== "boolean") {
       throw new RangeError("requireTrustedTime is a boolean");
+    }
+    if (options.acceptCurrentTrustFailure !== void 0 && typeof options.acceptCurrentTrustFailure !== "boolean") {
+      throw new RangeError("acceptCurrentTrustFailure is a boolean");
     }
     const register = options.register ?? null;
     if (register !== null && (!isObject(register) || registerUsageProblems(register).length > 0)) {
@@ -14533,6 +15046,7 @@
   };
   function reportToJson(report) {
     return {
+      software: { name: "ecl-ts", version: SOFTWARE_VERSION, source_build: SOURCE_BUILD },
       verdict: report.verdict,
       primary: primaryFinding(report),
       envelope_checks: report.envelopeChecks.map((check) => ({
@@ -14556,6 +15070,7 @@
       })),
       findings: report.findings.map((finding2) => `${finding2.code}: ${finding2.message}`),
       verification_profile: report.verificationProfile,
+      response_clock_skew_seconds: report.responseClockSkewSeconds,
       accepted_current_trust_failure: report.acceptedCurrentTrustFailure,
       register: report.register,
       scope: {
@@ -14618,7 +15133,7 @@
     const inconsistent = registerDocumentProblems(value);
     if (inconsistent.length > 0) {
       const [path, message] = inconsistent[0];
-      throw new VerifierInputError(`malformed register: the register breaks ${REGISTER_DOCUMENT_RULE2}: ${path}: ${message}`);
+      throw new VerifierInputError(`malformed register: the register breaks ${REGISTER_DOCUMENT_RULE2}: ${path}: ${message}`, REGISTER_DOCUMENT_RULE2);
     }
     return value;
   }
@@ -14766,10 +15281,10 @@
     return [...ERROR_CODES, ...SEMANTIC_RULES].find((entry) => entry.id === code2)?.description;
   }
   function describeVerdict(verdict) {
-    return VERDICTS[verdict];
+    return Object.hasOwn(VERDICTS, verdict) ? VERDICTS[verdict] : { title: verdict, text: "An unrecognized verification verdict." };
   }
   function describeCode(code2) {
-    const known = CODES[code2];
+    const known = Object.hasOwn(CODES, code2) ? CODES[code2] : void 0;
     if (known !== void 0) {
       return known;
     }
@@ -14777,7 +15292,7 @@
     if (description !== void 0) {
       return { title: code2, text: description };
     }
-    return { title: code2, text: "A registered rule or error identifier." };
+    return { title: code2, text: "An unrecognized rule or error identifier." };
   }
 
   // src/offline/zip.ts
@@ -14790,6 +15305,7 @@
     maxPathBytes: 4096
   });
   var LIMIT_NAMES = ["maxArchiveBytes", "maxMemberCount", "maxEntryUncompressedBytes", "maxTotalUncompressedBytes", "maxCompressionRatio", "maxPathBytes"];
+  var MAX_ARCHIVE_BYTES_CEILING = 2147483647;
   function checkLimits2(limits) {
     if (typeof limits !== "object" || limits === null) {
       throw new RangeError("the offline resource limits are an object");
@@ -14798,6 +15314,9 @@
       const value = limits[name];
       if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 1) {
         throw new RangeError(`the offline resource limit ${name} is a positive integer`);
+      }
+      if (name === "maxArchiveBytes" && value > MAX_ARCHIVE_BYTES_CEILING) {
+        throw new RangeError(`the offline resource limit maxArchiveBytes is at most ${MAX_ARCHIVE_BYTES_CEILING}`);
       }
     }
     return limits;
@@ -15095,6 +15614,9 @@
     }
     return void 0;
   }
+  function quotedEntryName(name) {
+    return JSON.stringify(name).replace(/[^\x20-\x7e]/g, (unit) => `\\u${unit.charCodeAt(0).toString(16).padStart(4, "0")}`);
+  }
   function readStoredZip(data, limits) {
     checkLimits2(limits);
     if (data.length > limits.maxArchiveBytes) {
@@ -15107,17 +15629,17 @@
     let total = 0;
     for (const entry of entries) {
       if (entry.flags & 1) {
-        throw profileDeparture(`an encrypted member: ${entry.name}`);
+        throw profileDeparture(`an encrypted member: ${quotedEntryName(entry.name)}`);
       }
       if (entry.fileSize > limits.maxEntryUncompressedBytes) {
-        throw new ArchiveRefusal(`archive member exceeds the verifier budget: ${entry.name}`, true);
+        throw new ArchiveRefusal(`archive member exceeds the verifier budget: ${quotedEntryName(entry.name)}`, true);
       }
       total += entry.fileSize;
       if (total > limits.maxTotalUncompressedBytes) {
         throw new ArchiveRefusal("archive expansion exceeds the verifier budget", true);
       }
       if (entry.fileSize > 0 && BigInt(entry.fileSize) > BigInt(Math.max(entry.compressedSize, 1)) * BigInt(limits.maxCompressionRatio)) {
-        throw new ArchiveRefusal(`archive member compression ratio exceeds the verifier budget: ${entry.name}`, true);
+        throw new ArchiveRefusal(`archive member compression ratio exceeds the verifier budget: ${quotedEntryName(entry.name)}`, true);
       }
     }
     const seen = /* @__PURE__ */ new Set();
@@ -15125,20 +15647,20 @@
     let prior;
     for (const entry of entries) {
       if (entry.name.includes("\0")) {
-        throw profileDeparture(`a name with a NUL character: ${JSON.stringify(entry.name)}`);
+        throw profileDeparture(`a name with a NUL character: ${quotedEntryName(entry.name)}`);
       }
       if (entry.nameBytes.length > limits.maxPathBytes) {
         throw new ArchiveRefusal("archive member name exceeds the verifier budget", true);
       }
       if (!isEntryName(entry.name)) {
-        throw profileDeparture(`a name that is not an entry name: ${JSON.stringify(entry.name)}`);
+        throw profileDeparture(`a name that is not an entry name: ${quotedEntryName(entry.name)}`);
       }
       const alias = foldAscii(entry.name);
       if (seen.has(alias)) {
         throw profileDeparture(`a duplicate member: ${entry.name}`);
       }
       seen.add(alias);
-      if (entry.external !== PROFILE_EXTERNAL || entry.madeBy !== PROFILE_MADE_BY || entry.extractVersion !== PROFILE_VERSION || entry.disk !== 0 || entry.internal !== 0 || entry.date !== PROFILE_DOS_DATE || entry.time !== 0 || entry.method !== 0 || entry.flags !== 0 || entry.extraLength !== 0 || entry.commentLength !== 0) {
+      if (entry.external !== PROFILE_EXTERNAL || entry.madeBy !== PROFILE_MADE_BY || entry.extractVersion !== PROFILE_VERSION || entry.disk !== 0 || entry.internal !== 0 || entry.date !== PROFILE_DOS_DATE || entry.time !== 0 || entry.method !== 0 || entry.compressedSize !== entry.fileSize || entry.flags !== 0 || entry.extraLength !== 0 || entry.commentLength !== 0) {
         throw profileDeparture(`member metadata or encoding outside the profile: ${entry.name}`);
       }
       if (prior !== void 0 && compareBytes(entry.nameBytes, prior) < 0) {
@@ -15233,8 +15755,8 @@
       return `${MANIFEST_NAME} does not satisfy ${MANIFEST_SCHEMA}`;
     }
     try {
-      instantMicroseconds(manifest["created_at"]);
-      instantMicroseconds(manifest["expires_at"]);
+      instantNanoseconds(manifest["created_at"]);
+      instantNanoseconds(manifest["expires_at"]);
     } catch (error) {
       if (error instanceof InstantError) {
         return "created_at or expires_at is not a valid instant";
@@ -15323,12 +15845,12 @@
     if (unnamed.length > 0) {
       return failed("invalid", [issue2(SEMANTIC_INVALID3, `the archive holds a member the manifest does not name: ${unnamed[0]}`)]);
     }
-    const createdAt = instantMicroseconds(manifest["created_at"]);
-    const expiresAt = instantMicroseconds(manifest["expires_at"]);
+    const createdAt = instantNanoseconds(manifest["created_at"]);
+    const expiresAt = instantNanoseconds(manifest["expires_at"]);
     if (expiresAt <= createdAt) {
       return failed("invalid", [issue2(EXPIRED3, "the package expires no later than it was created")]);
     }
-    const expired = instantMicroseconds(options.now) >= expiresAt;
+    const expired = instantNanoseconds(options.now) >= expiresAt;
     const carried = /* @__PURE__ */ new Map();
     const absent = [];
     for (const item2 of artifacts) {
@@ -15444,6 +15966,20 @@
       }
       throw error;
     }
+  }
+
+  // web/package-limit.ts
+  function oversizedPackageReport(trustPolicy, options, bytes, limit) {
+    if (!Number.isSafeInteger(bytes) || bytes <= limit || !Number.isSafeInteger(limit) || limit < 1) {
+      throw new RangeError("an oversized package must exceed a positive byte limit");
+    }
+    const { report: base, policy } = verifyBundleBytes(new TextEncoder().encode("{}"), trustPolicy, options);
+    const report = withScope({
+      ...base,
+      verdict: "invalid",
+      findings: [{ code: RESOURCE_LIMIT5, message: `offline package size ${bytes} exceeds the browser archive limit ${limit}; refused before reading its contents` }]
+    });
+    return { report, policy };
   }
 
   // web/app.ts
@@ -15813,8 +16349,9 @@
       try {
         const head = new Uint8Array(await bundleFile.slice(0, 2).arrayBuffer());
         const kind = head[0] === 80 && head[1] === 75 ? "package" : "bundle";
-        const data = kind === "package" ? await read2(bundleFile, MAX_PACKAGE_BYTES, "offline package") : await read2(bundleFile, MAX_BUNDLE_BYTES, "evidence bundle");
-        evidence = { kind, bytes: data.length };
+        const oversizedPackage = kind === "package" && bundleFile.size > MAX_PACKAGE_BYTES;
+        const data = oversizedPackage ? void 0 : kind === "package" ? await read2(bundleFile, MAX_PACKAGE_BYTES, "offline package") : await read2(bundleFile, MAX_BUNDLE_BYTES, "evidence bundle");
+        evidence = { kind, bytes: bundleFile.size };
         const trustPolicy = await read2(policyFile, MAX_TRUST_POLICY_BYTES, "trust policy");
         const history = [];
         for (const file of Array.from(historyField.files ?? [])) {
@@ -15830,13 +16367,13 @@
           acceptCurrentTrustFailure: acceptField.checked,
           ...register === void 0 ? {} : { register }
         };
-        ({ report, policy } = kind === "package" ? verifyPackageBytes(data, trustPolicy, { ...options, limits: PACKAGE_LIMITS }) : verifyBundleBytes(data, trustPolicy, options));
+        ({ report, policy } = oversizedPackage ? oversizedPackageReport(trustPolicy, options, bundleFile.size, MAX_PACKAGE_BYTES) : kind === "package" ? verifyPackageBytes(data, trustPolicy, { ...options, limits: PACKAGE_LIMITS }) : verifyBundleBytes(data, trustPolicy, options));
       } catch (error) {
         if (error instanceof InputProblem) {
           showProblem(error.message, void 0, error.code);
         } else if (error instanceof VerifierInputError) {
           if (error.message.startsWith("invalid evaluation time")) {
-            showProblem("Write the evaluation time in UTC like 2026-10-01T00:00:00Z, with 0, 3 or 6 digits after the seconds, or leave it empty.", error.message);
+            showProblem("Write the evaluation time in UTC like 2026-10-01T00:00:00Z, with whole seconds or three or six fractional digits, or leave it empty.", error.message);
           } else {
             showProblem("The files could not be verified.", error.message, error.code);
           }

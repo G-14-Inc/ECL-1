@@ -1,7 +1,8 @@
 # ECL Evidence Lifecycle Protocol 1
 
 Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 ## 1. Principle
 
@@ -13,7 +14,13 @@ sealing.
 
 **EL1-002** — The policy MUST identify retention, legal hold, export, redaction,
 supersession, revocation, destruction, residency, encryption, and access
-requirements applicable to the evidence class.
+requirements applicable to the evidence class. In the `lifecycle-policy/1` JSON
+representation, the policy MUST include `policy_requirements` with nonblank
+`supersession`, `revocation`, `residency`, `encryption`, and `access` declarations.
+Each declaration MUST identify its evidence-class applicability and the
+requirement or a precise policy reference; a declaration of inapplicability
+MUST state its basis. The other structured policy fields carry retention,
+legal-hold precedence, export, redaction, and destruction declarations.
 
 **EL1-003** — A lifecycle transition MUST record actor, authority, policy,
 prior digest, operation, time, and resulting artifact or proof where
@@ -34,7 +41,21 @@ unless a higher legal or safety requirement prohibits retention.
 ## 3. Retention and hold
 
 **EL1-007** — Retention periods MUST be calculated from explicit events and
-policy, not filesystem modification time.
+policy, not filesystem modification time. In `lifecycle-policy/1`, `duration`
+MUST use the unsigned lexical subset of XSD `duration`: uppercase `P`, optional
+integer year/month/day components in that order, and an optional `T` followed
+by integer hour/minute and integer or decimal second components in that order.
+At least one component MUST occur, and `T` MUST have a time component. A decimal
+second value MUST have digits on both sides of the decimal point. Signs, weeks,
+fractions outside seconds, and whitespace MUST NOT occur.
+
+This syntax follows the component order in [XSD 1.1 Part 2, Section 3.3.6.2](https://www.w3.org/TR/xmlschema11-2/#duration).
+Zero, such as `P0D` or `PT0S`, is valid syntax. Retention adequacy remains subject
+to ECL1N-0050 and the recorded legal-conflict procedure in ECL1N-0195 to
+ECL1N-0199. Calendar months and years require the declared start event and
+policy for calculation; they have no universal conversion to a fixed number
+of days. Schema validation establishes the declaration's shape and syntax;
+the applicable assessment examines its content and implementation.
 
 **EL1-008** — Legal hold MUST suspend destruction for its scope unless the
 recorded legal determination under ECL1N-0195 to ECL1N-0199 requires otherwise.

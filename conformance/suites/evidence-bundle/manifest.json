@@ -2328,19 +2328,19 @@
     {
       "covers": [],
       "evaluated_at": "2026-10-01T00:00:00Z",
-      "expected": "fail",
-      "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+      "expected": "pass",
       "expected_scope": {
-        "established": [],
-        "not_established": [
+        "established": [
           "envelope-signatures",
           "current-trust",
-          "trusted-time",
           "object-rules",
           "decision-basis-recorded",
           "bindings",
           "release-within-authority",
-          "causal-completeness",
+          "causal-completeness"
+        ],
+        "not_established": [
+          "trusted-time",
           "recorded-times-true",
           "effects-occurred",
           "deployment-assessed",
@@ -2349,13 +2349,8 @@
         "reasons": {}
       },
       "expected_secondary_ids": [],
-      "expected_verdict": "invalid",
+      "expected_verdict": "verified",
       "id": "bundle-invalid-continuation-second-of-one-challenge",
-      "negates": [
-        "DCMP2-021",
-        "DCMP2-056",
-        "EBMP2-078"
-      ],
       "path": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
       "requirement_ids": [
         "DCMP2-021",
@@ -2367,7 +2362,7 @@
         "base_vector": "conformance/suites/evidence-bundle/bundle-valid-continuation-after-challenge.json",
         "generator": "scripts/generate_bundle_vectors.py",
         "kind": "mutation",
-        "mutation": "continue the same challenge a second time, with a request answered by a deny"
+        "mutation": "DESIGN-08 migration: preserve the released signed history containing one admitted continuation and a second denied continuation; only admitted continuations count toward uniqueness"
       },
       "stage": "evidence-bundle",
       "trust_policy_history_paths": [],
@@ -2377,17 +2372,18 @@
       "covers": [],
       "evaluated_at": "2026-10-01T00:00:00Z",
       "expected": "fail",
-      "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
       "expected_scope": {
-        "established": [],
-        "not_established": [
+        "established": [
           "envelope-signatures",
           "current-trust",
-          "trusted-time",
           "object-rules",
           "decision-basis-recorded",
+          "release-within-authority"
+        ],
+        "not_established": [
+          "trusted-time",
           "bindings",
-          "release-within-authority",
           "causal-completeness",
           "recorded-times-true",
           "effects-occurred",
@@ -2397,17 +2393,21 @@
         "reasons": {}
       },
       "expected_secondary_ids": [],
-      "expected_verdict": "invalid",
+      "expected_unresolved_predecessor_ids": [
+        "https://externalcontrollayer.ai/ns/receipt/sha256/479ca8ea736f923c797f7c8cc42011112ae1bed682996ba7d65e6ce7155afba6"
+      ],
+      "expected_verdict": "incomplete",
       "id": "bundle-invalid-continuation-second-of-one-challenge-approval-absent",
       "negates": [
-        "DCMP2-021",
-        "DCMP2-056",
-        "EBMP2-078"
+        "EBMP2-023",
+        "EBMP2-059"
       ],
       "path": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge-approval-absent.json",
       "requirement_ids": [
         "DCMP2-021",
         "DCMP2-056",
+        "EBMP2-023",
+        "EBMP2-059",
         "EBMP2-078"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
@@ -2415,7 +2415,7 @@
         "base_vector": "conformance/suites/evidence-bundle/bundle-valid-continuation-after-challenge.json",
         "generator": "scripts/generate_bundle_vectors.py",
         "kind": "mutation",
-        "mutation": "continue the same challenge twice and leave out the approval both name"
+        "mutation": "DESIGN-08 migration: preserve the released signed history containing one admitted continuation and a second denied continuation; approval absent leaves causal closure incomplete"
       },
       "stage": "evidence-bundle",
       "trust_policy_history_paths": [],
@@ -7943,7 +7943,7 @@
         "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
         "generator": "scripts/generate_bundle_vectors.py",
         "kind": "mutation",
-        "mutation": "observe the release at 10:00:14.849999, one microsecond less than the release guard of 250 milliseconds before the authorization's valid_until of 10:00:15.100"
+        "mutation": "observe the release at 10:00:14.849999 so that the 250-millisecond release guard ends one microsecond before the authorization's valid_until of 10:00:15.100"
       },
       "stage": "evidence-bundle",
       "trust_policy_history_paths": [],
@@ -8127,12 +8127,15 @@
         ],
         "not_established": [
           "trusted-time",
+          "decision-input-timing",
           "recorded-times-true",
           "effects-occurred",
           "deployment-assessed",
           "statements-true"
         ],
-        "reasons": {}
+        "reasons": {
+          "decision-input-timing": "input-times-not-recorded"
+        }
       },
       "expected_secondary_ids": [],
       "expected_verdict": "verified",

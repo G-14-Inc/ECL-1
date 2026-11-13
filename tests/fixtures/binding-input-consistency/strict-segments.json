@@ -1,0 +1,364 @@
+{
+  "cases": [
+    {
+      "id": "valid-integer",
+      "base64": "eyJhIjoxfQ==",
+      "expected": "accept"
+    },
+    {
+      "id": "valid-supplementary-scalar",
+      "base64": "eyJhIjoiXHVkODNkXHVkZDExIn0=",
+      "expected": "accept"
+    },
+    {
+      "id": "noncharacter-fdd0",
+      "base64": "eyJhIjogIlx1ZmRkMCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd1",
+      "base64": "eyJhIjogIlx1ZmRkMSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd2",
+      "base64": "eyJhIjogIlx1ZmRkMiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd3",
+      "base64": "eyJhIjogIlx1ZmRkMyJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd4",
+      "base64": "eyJhIjogIlx1ZmRkNCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd5",
+      "base64": "eyJhIjogIlx1ZmRkNSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd6",
+      "base64": "eyJhIjogIlx1ZmRkNiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd7",
+      "base64": "eyJhIjogIlx1ZmRkNyJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd8",
+      "base64": "eyJhIjogIlx1ZmRkOCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdd9",
+      "base64": "eyJhIjogIlx1ZmRkOSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdda",
+      "base64": "eyJhIjogIlx1ZmRkYSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fddb",
+      "base64": "eyJhIjogIlx1ZmRkYiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fddc",
+      "base64": "eyJhIjogIlx1ZmRkYyJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fddd",
+      "base64": "eyJhIjogIlx1ZmRkZCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdde",
+      "base64": "eyJhIjogIlx1ZmRkZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fddf",
+      "base64": "eyJhIjogIlx1ZmRkZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde0",
+      "base64": "eyJhIjogIlx1ZmRlMCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde1",
+      "base64": "eyJhIjogIlx1ZmRlMSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde2",
+      "base64": "eyJhIjogIlx1ZmRlMiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde3",
+      "base64": "eyJhIjogIlx1ZmRlMyJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde4",
+      "base64": "eyJhIjogIlx1ZmRlNCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde5",
+      "base64": "eyJhIjogIlx1ZmRlNSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde6",
+      "base64": "eyJhIjogIlx1ZmRlNiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde7",
+      "base64": "eyJhIjogIlx1ZmRlNyJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde8",
+      "base64": "eyJhIjogIlx1ZmRlOCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fde9",
+      "base64": "eyJhIjogIlx1ZmRlOSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdea",
+      "base64": "eyJhIjogIlx1ZmRlYSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdeb",
+      "base64": "eyJhIjogIlx1ZmRlYiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdec",
+      "base64": "eyJhIjogIlx1ZmRlYyJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fded",
+      "base64": "eyJhIjogIlx1ZmRlZCJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdee",
+      "base64": "eyJhIjogIlx1ZmRlZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fdef",
+      "base64": "eyJhIjogIlx1ZmRlZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fffe",
+      "base64": "eyJhIjogIlx1ZmZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-ffff",
+      "base64": "eyJhIjogIlx1ZmZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-1fffe",
+      "base64": "eyJhIjogIlx1ZDgzZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-1ffff",
+      "base64": "eyJhIjogIlx1ZDgzZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-2fffe",
+      "base64": "eyJhIjogIlx1ZDg3Zlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-2ffff",
+      "base64": "eyJhIjogIlx1ZDg3Zlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-3fffe",
+      "base64": "eyJhIjogIlx1ZDhiZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-3ffff",
+      "base64": "eyJhIjogIlx1ZDhiZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-4fffe",
+      "base64": "eyJhIjogIlx1ZDhmZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-4ffff",
+      "base64": "eyJhIjogIlx1ZDhmZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-5fffe",
+      "base64": "eyJhIjogIlx1ZDkzZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-5ffff",
+      "base64": "eyJhIjogIlx1ZDkzZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-6fffe",
+      "base64": "eyJhIjogIlx1ZDk3Zlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-6ffff",
+      "base64": "eyJhIjogIlx1ZDk3Zlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-7fffe",
+      "base64": "eyJhIjogIlx1ZDliZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-7ffff",
+      "base64": "eyJhIjogIlx1ZDliZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-8fffe",
+      "base64": "eyJhIjogIlx1ZDlmZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-8ffff",
+      "base64": "eyJhIjogIlx1ZDlmZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-9fffe",
+      "base64": "eyJhIjogIlx1ZGEzZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-9ffff",
+      "base64": "eyJhIjogIlx1ZGEzZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-afffe",
+      "base64": "eyJhIjogIlx1ZGE3Zlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-affff",
+      "base64": "eyJhIjogIlx1ZGE3Zlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-bfffe",
+      "base64": "eyJhIjogIlx1ZGFiZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-bffff",
+      "base64": "eyJhIjogIlx1ZGFiZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-cfffe",
+      "base64": "eyJhIjogIlx1ZGFmZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-cffff",
+      "base64": "eyJhIjogIlx1ZGFmZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-dfffe",
+      "base64": "eyJhIjogIlx1ZGIzZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-dffff",
+      "base64": "eyJhIjogIlx1ZGIzZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-efffe",
+      "base64": "eyJhIjogIlx1ZGI3Zlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-effff",
+      "base64": "eyJhIjogIlx1ZGI3Zlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-ffffe",
+      "base64": "eyJhIjogIlx1ZGJiZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-fffff",
+      "base64": "eyJhIjogIlx1ZGJiZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-10fffe",
+      "base64": "eyJhIjogIlx1ZGJmZlx1ZGZmZSJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "noncharacter-10ffff",
+      "base64": "eyJhIjogIlx1ZGJmZlx1ZGZmZiJ9",
+      "expected": "strict"
+    },
+    {
+      "id": "duplicate-before-number",
+      "base64": "eyJhIjoxLjUsImIiOjEsImIiOjJ9",
+      "expected": "duplicate"
+    },
+    {
+      "id": "scalar-before-duplicate",
+      "base64": "eyJhIjoxLCJhIjoyLCJiIjoiXHVkODAwIn0=",
+      "expected": "strict"
+    },
+    {
+      "id": "grammar-before-duplicate",
+      "base64": "eyJhIjoxLCJhIjoyLCJiIjp9",
+      "expected": "strict"
+    },
+    {
+      "id": "duplicate-after-number-same-key",
+      "base64": "eyJhIjoxLCJhIjoxLjV9",
+      "expected": "duplicate"
+    }
+  ]
+}

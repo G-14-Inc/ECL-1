@@ -30,9 +30,17 @@ func TestExtensionVersions(t *testing.T) {
 	if found, _ := ExtensionVersions(object, map[string]bool{"com.example.tag.v1": true}); len(found) != 0 {
 		t.Fatalf("a composable identifier: %v", found)
 	}
-	for _, malformed := range []any{"x", []any{"x"}, []any{map[string]any{}, 1}} {
+	for _, malformed := range []any{"x"} {
 		if _, problem := ExtensionVersions(map[string]any{"extensions": malformed}, nil); problem == "" {
 			t.Errorf("%v was read", malformed)
+		}
+	}
+	// ROOT-027: malformed entries do not hide correctly typed later version conflicts.
+	for _, malformed := range []any{"x", map[string]any{}, 1} {
+		found, problem := ExtensionVersions(map[string]any{"extensions": []any{malformed,
+			extension("com.example.tag.v1", "1", false), extension("com.example.tag.v1", "2", false)}}, nil)
+		if problem != "" || len(found) != 1 || found[0].RuleID != RuleExtensionVersion || found[0].Path != "/extensions/2" {
+			t.Fatalf("%v: %v %q", malformed, found, problem)
 		}
 	}
 	for _, absent := range []map[string]any{{}, {"extensions": nil}} {
@@ -66,7 +74,8 @@ func TestCommon(t *testing.T) {
 		RuleExtensionUnique:    {"/extensions/1"},
 		RuleExtensionVersion:   {"/extensions/2", "/extensions/5"},
 		RuleExtensionNamespace: {"/extensions/3/id"},
-		RuleUnknownCritical:    {"/extensions/4/id"},
+		// The active v1 is also uninterpretable on an ECL-WI-1 object.
+		RuleUnknownCritical: {"/extensions/4/id", "/extensions/5/id"},
 	}
 	if len(got) != len(want) {
 		t.Fatalf("%v", got)

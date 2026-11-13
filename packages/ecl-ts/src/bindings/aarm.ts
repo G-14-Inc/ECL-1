@@ -1,3 +1,4 @@
+import { terminalReasonFindings } from "./terminal-reason.js";
 /**
  * AARM-BINDING-1: an AARM control plane as the ECL Decision Layer or as a source of judgment.
  *
@@ -40,6 +41,7 @@
 import { pythonEquals } from "../json/value.js";
 import type { JsonObject } from "../json/value.js";
 import { inputKey } from "../semantic/rules.js";
+import { objectFindings } from "../semantic/object.js";
 import type { Finding } from "../semantic/rules.js";
 import {
   ONE_WAY_RULE,
@@ -57,6 +59,7 @@ import {
   instant,
   member,
   messageFindings,
+  responseBindingFindings,
   modificationBasisProblems,
   modificationProblems,
   modificationResponseProblems,
@@ -195,17 +198,21 @@ function receipt(view: View): Problem[] {
   const retained = obj(record, "receipt");
   const terminal = obj(record, "terminal");
   const values = extensionValues(terminal, RECEIPT_EXTENSION);
+  const actionProblems: Problem[] = [];
+  if (terminal !== null && !view.candidates.some((item) => text(item.request, "action", "action_id") === text(terminal, "event", "action_id"))) {
+    actionProblems.push(["/terminal/event/action_id", "the terminal event is bound to another action"]);
+  }
   if (retained === null && values.length === 0) {
-    return [];
+    return actionProblems;
   }
   if (retained === null) {
-    return [["/receipt", "the terminal event binds a receipt that the record does not retain"]];
+    return [...actionProblems, ["/receipt", "the terminal event binds a receipt that the record does not retain"]];
   }
   if (values.length !== 1) {
-    return [["/terminal/extensions", "the terminal event binds the receipt exactly once"]];
+    return [...actionProblems, ["/terminal/extensions", "the terminal event binds the receipt exactly once"]];
   }
   const value = values[0] as JsonObject;
-  const problems: Problem[] = [];
+  const problems: Problem[] = actionProblems;
   if (!pythonEquals(at(value, "receipt_id"), at(retained, "receipt_id"))) {
     problems.push(["/terminal/extensions", "the bound receipt_id is not the receipt's"]);
   }
@@ -228,10 +235,6 @@ function receipt(view: View): Problem[] {
   const original = obj(record, "request");
   if (!sameDigest(digestOf(member(retained, "action", "parameters")), member(original, "action", "parameters_digest"))) {
     problems.push(["/receipt/action/parameters", "the receipt's parameters are not the requested ones"]);
-  }
-  const actions = new Set(view.candidates.map((item) => text(item.request, "action", "action_id")));
-  if (!actions.has(text(terminal, "event", "action_id"))) {
-    problems.push(["/terminal/event/action_id", "the receipt is bound to another action"]);
   }
   return problems;
 }
@@ -258,9 +261,16 @@ export function check(record: JsonObject): Finding[] {
     outcome: text(record, "response", "outcome"),
     candidates: exchanges(record, ["request", "response"], ["modification_request", "modification_response"]),
   };
+  const terminal = obj(record, "terminal");
+  const terminalFindings: Finding[] = terminal === null ? [] : [...objectFindings(terminal), ...terminalReasonFindings(terminal)].map((item) => ({ ...item, path: "/terminal" + item.path }));
+  if (terminal !== null && text(terminal, "event_type") !== "execution_terminal") {
+    terminalFindings.push({ ruleId: RECEIPT_RULE, path: "/terminal/event_type", message: "the receipt requires an execution_terminal event" });
+  }
   return [
     ...RULES.flatMap(([rule, problems]) => findings(rule, problems(view))),
     ...findings(ONE_WAY_RULE, oneWayResponseProblems(record, [["request"], ["response"]], [["modification_request"], ["modification_response"]])),
     ...messageFindings(record, ["request"], ["response"], ["modification_request"], ["modification_response"]),
+    ...responseBindingFindings(record, ["request", "response"], ["modification_request", "modification_response"]),
+    ...terminalFindings,
   ];
 }

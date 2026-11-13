@@ -1,0 +1,282 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 117 and seed -1659179330842825070 with 1 worker on 32 cores with 1333MB heap and 64MB offheap memory [pid: 2611] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/ecl-1/work/ecl-1-validation-20261110-1/previews/formal-contract-001/source/formal/tla/MC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-validation-20261110-1/previews/formal-contract-001/source/formal/tla/ECLCore.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/TLC.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/Integers.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/FiniteSets.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/Sequences.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Starting... (2026-11-10 23:56:54)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-10 23:56:54.
+Error: Action property RestrictionLiftRequiresFreshProof is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 0
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 2: <Fail line 500, col 5 to line 506, col 45 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 0
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 1
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 3: <Tick line 608, col 5 to line 628, col 75 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 0
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 1
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 4: <Tick line 608, col 5 to line 628, col 75 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 0
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 1,
+        active |-> TRUE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> 2 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 1
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 5: <Recover line 509, col 5 to line 515, col 45 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "reconciling"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 2
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 1,
+        active |-> TRUE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> 2 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 1
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 6: <Sync line 466, col 5 to line 475, col 69 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "reconciling"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 2, revoked |-> {}, recovery |-> 1])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 2
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 1,
+        active |-> TRUE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> 2 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 1
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 7: <LiftRestriction line 573, col 5 to line 580, col 294 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "reconciling"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 2, revoked |-> {}, recovery |-> 1])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 2
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 1,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 1,
+        faultAt |-> 2 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 1
+/\ liftLog = <<[at |-> 2, ep |-> e1, generation |-> 1]>>
+/\ effects = {}
+
+446 states generated, 327 distinct states found, 154 states left on queue.
+The depth of the complete state graph search is 7.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 5 and the 95th percentile is 3).
+Finished in 00s at (2026-11-10 23:56:54)

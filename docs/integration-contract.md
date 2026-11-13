@@ -56,10 +56,12 @@ able to rewrite, disable or bypass a control responsibility
   [OA1-008](../render/oauth-authority-1.html#OA1-008)), or an enforcement point
   to which a hook carries the decision
   ([AC1-002](../render/acs-binding-1.html#AC1-002),
-  [AB1-010](../render/aarm-binding-1.html#AB1-010)). A path that reaches none of
-  them is excluded and listed in the Negative Boundary Annex, and an omitted
-  path makes the claim incomplete
-  ([ECL1N-0011](../render/ecl-1_standard.html#ECL1N-0011),
+  [AB1-010](../render/aarm-binding-1.html#AB1-010)). An effect path outside the
+  claim is listed in the Negative Boundary Annex; an omitted path makes the
+  claim incomplete and invalid. A Full-System Mediation Claim includes and
+  mediates every reachable consequential action path for its System of Interest
+  ([ECL1N-0009](../render/ecl-1_standard.html#ECL1N-0009),
+  [ECL1N-0011](../render/ecl-1_standard.html#ECL1N-0011),
   [ECL1N-0038](../render/ecl-1_standard.html#ECL1N-0038)).
 - **Its capability inventory.** The Consequential Action Register is validated
   against the tool manifests, API permissions, delegated authority paths,
@@ -220,11 +222,13 @@ adapter's records list exactly the basis's entries
   except safe-state or containment actions
   ([ECL1N-0103](../render/ecl-1_standard.html#ECL1N-0103)), within the scope
   that [ECL1N-0191](../render/ecl-1_standard.html#ECL1N-0191) gives a loss of
-  required proof, and lifts only after fresh proof and a recorded authorization
+  required proof, and lifts only after fresh proof and any lifting authorization required by the mode definitions
   ([ECL1N-0193](../render/ecl-1_standard.html#ECL1N-0193)). Emergency halt takes
   precedence ([ECL1N-0104](../render/ecl-1_standard.html#ECL1N-0104),
-  [TS1-025](../render/timing-safe-state-1.html#TS1-025)), comes only from the
-  emergency control plane ([DCMP2-025](../render/dcmp-2.html#DCMP2-025)), and no
+  [TS1-025](../render/timing-safe-state-1.html#TS1-025)). A halt or quarantine
+  control message comes from the
+  emergency control plane ([DCMP2-025](../render/dcmp-2.html#DCMP2-025)); the
+  Emergency Halt state also follows the triggers in ECL1N-0146, and no
   lower-precedence decision revives what it holds
   ([TS1-027](../render/timing-safe-state-1.html#TS1-027)). A declared detection
   holds, restricts or stops the affected classes
@@ -409,8 +413,9 @@ acceptance of the presented token releases the action at the point of effect
 - A proof-of-possession check, by DPoP or mutual TLS, refusing a replayed proof
   ([OA1-004](../render/oauth-authority-1.html#OA1-004)).
 - Signature checks under issuer keys from its own configuration, never from the
-  token's header, with `none` and symmetric algorithms refused and every segment
-  read as strict JSON ([OA1-007](../render/oauth-authority-1.html#OA1-007)).
+  token's header, with `none` and symmetric algorithms refused and the header
+  and payload segments read as strict JSON
+  ([OA1-007](../render/oauth-authority-1.html#OA1-007)).
 - For a delegated action, refusal of a token whose `act` claim does not name the
   actor ([OA1-006](../render/oauth-authority-1.html#OA1-006)).
 - The code of the first failing check, in the presentation table's order
@@ -447,7 +452,7 @@ From
 
 The token names this server and request, and this is its first use, but the DPoP
 proof, omitted here, carries the `jti` `dpop-0001`, already accepted within the
-proof window, so check 5 refuses it as a replay
+proof window, so the replay-cache check refuses it
 ([OA1-004](../render/oauth-authority-1.html#OA1-004),
 [OA1-011](../render/oauth-authority-1.html#OA1-011)).
 
@@ -466,10 +471,14 @@ requirements through its own enforcement profile
   runs in no process, container or account that the governed AI system can
   start, stop or configure, or in which it can execute code
   ([MG1-001](../render/mcp-gateway-1.html#MG1-001)).
-- **Requests that need a decision.** Every `tools/call` and its retries, every
+- **Governed requests.** Every `tools/call` and its retries, every
   `tasks/update` of a governed task, and every request the register maps to a
-  consequential class; unmapped methods and tools are refused with -31007, and
-  only the listed discovery requests and client notifications pass without one
+  consequential class remains governed. This profile supplies the complete
+  forwarding mapping for `tools/call` only. Consequential non-tool methods
+  require a separately identified complete enforcement profile or are refused
+  with -31007; they cannot be declared ungoverned to bypass mediation. Only
+  the listed non-consequential discovery requests and client notifications pass
+  without a decision
   ([MG1-002](../render/mcp-gateway-1.html#MG1-002)).
 - **The mapping and the request.** A reviewed mapping per tool gives the action
   class, operation, target rule and evidence profile
@@ -496,8 +505,10 @@ requirements through its own enforcement profile
 The gateway forwards only on a verified `admit` for exactly the request, within
 its use policy, after discharging every pre-release obligation, through the
 release order, at a final clock observation inside the window with the release
-guard added, and forwards exactly the bound call
-([MG1-005](../render/mcp-gateway-1.html#MG1-005)). These are the items of
+guard added, with current authenticated required control state, no applicable
+halt, quarantine or revocation, and sufficient evidence capacity, and forwards
+exactly the bound call
+([MG1-005](../render/mcp-gateway-1.html#MG1-005)). These checks implement the release duties of
 [ECL1N-0186](../render/ecl-1_standard.html#ECL1N-0186) at its release boundary.
 
 - **Obligations.** For each `before_release` obligation and deferred witness,
@@ -510,11 +521,24 @@ guard added, and forwards exactly the bound call
   each type with its verifier, issuers and freshness rule
   ([MG1-013](../render/mcp-gateway-1.html#MG1-013)).
 - **The order.** Under a lock covering every use of the authorization, it reads
-  its clock and consumes a use if the window and use policy allow, records
+  its clock, authenticates and checks every required control state, and checks
+  for applicable halt, quarantine and revocation before consuming a use if the
+  window and use policy allow, records
   `authority_consumed` and then `release_prepared`, discharges the obligations,
   reads its clock again under the lock and goes on only if that final
-  observation passes, and records `execution_released` before writing the
+  observation passes the time, control-state and obligation-freshness checks,
+  and records `execution_released` before writing the
   request ([MG1-014](../render/mcp-gateway-1.html#MG1-014)).
+
+The gateway orders received control changes against dispatch and checks again
+immediately before writing. Codes -31012 and -31013 report applicable controls
+and unusable required control state. Before consumption these end denied without
+authority; after consumption they end cancelled with the consumed authority and
+no effects. Retained initial/final observations identify the control snapshot by
+URI and digest; the offline checker validates the record's agreement, while the
+deployment and assessor establish snapshot authenticity and applicability. The
+[MCP deployment-test matrix](bindings.md#mcp-deployment-test-matrix-normative-annex)
+is a normative annex of MCP-GATEWAY-1 and requires the corresponding fault tests.
 
 ### Expiry at the release boundary
 
@@ -843,7 +867,7 @@ material is evidence, never a trust anchor
 
 ### Worked example
 
-From `conformance/fixtures/evidence/trust-policy.json`, two of its four keys:
+From `conformance/fixtures/evidence/trust-policy.json`, two selected keys:
 
 ```json
 {
@@ -885,7 +909,10 @@ A bundle's records make different claims, and verification does not merge them
   [EBMP2-076](../render/ebmp-2.html#EBMP2-076)).
 - **An enforcement record says what the control mechanism checked and
   released.** The consumption, preparation, release and discharge records are
-  the enforcement point's statements
+  authenticated producer statements about enforcement. The deployment and
+  assessor establish the producer's authority to report for the named enforcement
+  point; the verifier authenticates the declared producer but does not thereby
+  bind it to the authorization audience
   ([EBMP2-004](../render/ebmp-2.html#EBMP2-004),
   [EBMP2-071](../render/ebmp-2.html#EBMP2-071)); a verifier checks their
   completeness and agreement and a carried proof's signatures and digest, not

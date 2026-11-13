@@ -13,7 +13,8 @@
 <h1 id="ecl-oauth-authority-profile-1">ECL OAuth Authority Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile expresses ECL's transaction-bound authority as an OAuth 2.0 access
 token, so that a resource server that already accepts OAuth tokens can enforce
 an ECL <code>admit</code> without learning DCMP-2. One token expresses one <code>admit</code>. Its
@@ -22,7 +23,7 @@ the target, the parameter digest and the use limits of that admit; its <code>act
 claim (RFC 8693) keeps the actor and the subject of a delegated action apart; its
 lifetime lies inside the authorization's window; and it is sender-constrained
 with DPoP (RFC 9449) or mutual TLS (RFC 8705) to a key that the governed AI system
-does not hold, so a token copied from anywhere cannot be replayed elsewhere.</p>
+does not hold, so a copied token alone does not satisfy proof of possession.</p>
 <p>The profile adds requirements to a claim that declares it. It removes none of
 the core requirements, of DCMP-2 or of AUTHZEN-BINDING-1 where that profile is
 also claimed.</p>
@@ -113,6 +114,10 @@ Editor. The machine-readable record of these pins is
 </tbody>
 </table>
 <h2 id="version-10-capability-boundary">Version 1.0 capability boundary</h2>
+<p>Each token carries one <code>single_use</code> DCMP-2 authorization and permits at most
+one accepted presentation across all resource-server instances. The optional
+<code>max_uses</code> is the integer 1. The reserved <code>bounded_multi_use</code> value is not
+supported by issuance or presentation checking in this draft.</p>
 <p>The profile deliberately carries no obligations. An OAuth resource server can
 perform the presentation checks without a DCMP-2 processor, but that does not
 supply an interoperability contract for fresh state proofs, critical token
@@ -123,11 +128,13 @@ release-boundary, control-state, policy or revocation requirements. Offline
 record checking does not establish that a deployed revocation service works.</p>
 <h2 id="token-content">Token content</h2>
 <p><span id="OA1-001"><strong>OA1-001</strong></span><a class="requirement-link" href="#OA1-001" aria-label="Link to OA1-001">§</a> — An OAuth access token that expresses ECL authority MUST express
-exactly one <code>admit</code>, and MUST carry, as a JWT access token (RFC 9068) or in its
-introspection response, exactly one <code>authorization_details</code> entry of the type
+exactly one <code>admit</code>, and MUST carry, as a signed JWT access token (RFC 9068),
+exactly one <code>authorization_details</code> entry of the type
 <code>https://externalcontrollayer.ai/ns/authorization-details/action/1</code> whose
 members equal the admit's authorization and request as the entry table below
-gives.</p>
+gives. Its <code>use_policy</code> MUST be <code>single_use</code> and <code>max_uses</code> MUST be absent or the
+integer 1, consistent with <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>. Introspection-carried authority requires a separately defined binding;
+this profile does not define its authenticated representation or verification.</p>
 <p><span id="OA1-002"><strong>OA1-002</strong></span><a class="requirement-link" href="#OA1-002" aria-label="Link to OA1-002">§</a> — The token's <code>aud</code> MUST be exactly the authorization's <code>audience</code>, as
 a single value; a client MUST request the token with a resource indicator (RFC
 8707) equal to that audience, and a resource server MUST reject a token whose
@@ -138,7 +145,11 @@ its <code>nbf</code>, or its <code>iat</code> when it has no <code>nbf</code>, M
 from <code>iat</code> to <code>exp</code> MUST be greater than zero and MUST NOT exceed the declared
 maximum token lifetime, 300 seconds unless the claim declares a shorter one;
 each of <code>iat</code>, <code>nbf</code> and <code>exp</code> MUST be a NumericDate without a fraction, an
-integer number of seconds. A resource server MUST reject, with
+integer number of seconds. The token's <code>nbf</code> (or <code>iat</code> when <code>nbf</code> is absent)
+MUST be strictly earlier than <code>exp</code> before any clock-skew allowance is applied.
+A resource server MUST reject an empty or inverted token window with
+<code>ecl.error.expired.v1</code>; clock skew MUST NOT create validity for that window.
+A resource server MUST reject, with
 <code>ecl.error.expired.v1</code>, a token presented before its <code>nbf</code> (or its <code>iat</code> when it
 has no <code>nbf</code>) less the declared clock-skew allowance, or at or after its <code>exp</code>
 plus that allowance, and, when the token carries one ECL entry, a token
@@ -154,11 +165,15 @@ time has a fraction cannot be read under <a href="oauth-authority-1.html#OA1-007
 <h2 id="sender-constraint-and-presentation">Sender constraint and presentation</h2>
 <p><span id="OA1-004"><strong>OA1-004</strong></span><a class="requirement-link" href="#OA1-004" aria-label="Link to OA1-004">§</a> — The token MUST be sender-constrained, with <code>cnf.jkt</code> (RFC 9449) or
 the <code>cnf</code> member <code>x5t#S256</code> (RFC 8705), to a key held by the component that
-presents it and not readable by the governed AI system, and a resource server
+presents it and not readable by the governed AI system. The confirmation
+thumbprint MUST be canonical unpadded base64url encoding of exactly 32 bytes
+(SHA-256), and a resource server
 MUST reject a token presented without valid proof of possession. For DPoP the
 presentation MUST carry exactly one proof, a JWS whose header has <code>typ</code>
 <code>dpop+jwt</code>, an algorithm from the declared asymmetric set of <a href="oauth-authority-1.html#OA1-007">OA1-007</a> and a <code>jwk</code>
-that holds a public key only; whose signature verifies under that <code>jwk</code>; whose
+that holds a public key only and, for Ed25519, is neither the identity nor any
+other point of small order (order dividing 8), including alternative encodings
+that decode to such a point; whose signature verifies under that <code>jwk</code>; whose
 <code>jwk</code> has the RFC 7638 thumbprint <code>cnf.jkt</code>; whose <code>htm</code> equals the request
 method and whose <code>htu</code> equals the request URI with its scheme in lowercase,
 without its query and fragment and without other normalization (RFC 9449,
@@ -166,18 +181,32 @@ Section 4.3); whose <code>iat</code>, an integer number of seconds, lies no more
 declared proof window before or after the time of presentation, the window being
 60 seconds unless the claim declares another of at most 300 seconds; whose <code>ath</code>
 is the base64url SHA-256 of the access token; and whose <code>jti</code>, a string of 1 to
-256 characters, the resource server has not accepted within that window, a
-repeated <code>jti</code> being refused with <code>ecl.error.replay.v1</code>. For mutual TLS the
+256 characters, the resource server has not already accepted in the proof
+key and endpoint context. After acceptance, the resource server MUST retain the
+<code>jti</code> until after <code>iat + W</code>, where <code>W</code> is the declared proof window in seconds;
+the cache entry remains active at that inclusive endpoint. The cache key MUST
+include the presenter-key thumbprint, HTTP method and the normalized <code>htu</code>
+compared above, or use a broader scope that cannot allow replay in that context.
+A repeated <code>jti</code> in that active cache MUST be refused with
+<code>ecl.error.replay.v1</code>. For mutual TLS the
 client certificate's SHA-256 thumbprint MUST equal <code>x5t#S256</code>.</p>
 <p>This profile uses a stricter URI comparison than the normalization recommended
 by RFC 9449, Section 4.3. For a presentation to pass, the client and resource
 server need the same URI spelling apart from the transformations in <a href="oauth-authority-1.html#OA1-004">OA1-004</a>.
-Otherwise equivalent URI spellings can be refused.</p>
+Otherwise equivalent URI spellings can be refused. A future-dated proof can be
+accepted at <code>iat - W</code>, so a cache that remembers only the preceding <code>W</code> seconds
+is insufficient: the same proof remains acceptable through <code>iat + W</code>. The
+small-order exclusion above applies to the presenter key carried by an
+untrusted DPoP proof; configured issuer keys remain subject to <a href="oauth-authority-1.html#OA1-007">OA1-007</a> and the
+issuer-key provisioning policy.</p>
 <p><span id="OA1-005"><strong>OA1-005</strong></span><a class="requirement-link" href="#OA1-005" aria-label="Link to OA1-005">§</a> — A resource server or enforcement point MUST accept the token only
 for a request whose target, operation and parameter digest equal the
 <code>identifier</code>, the <code>actions</code> member and the <code>parameters_digest</code> of the token's
 ECL entry, refusing any other with <code>ecl.error.scope-mismatch.v1</code>, and only within
-the entry's use policy, refusing a further use with <code>ecl.error.replay.v1</code>. Every
+the entry's single-use policy, refusing a further accepted use of that
+authorization with <code>ecl.error.replay.v1</code>. It MUST reject an ECL entry whose
+<code>use_policy</code> is not <code>single_use</code> or whose <code>max_uses</code> is present and not the
+integer 1 with <code>ecl.error.binding-unsupported.v1</code>, in the order of <a href="oauth-authority-1.html#OA1-011">OA1-011</a>. Every
 instance of a resource server that accepts the token MUST count its uses, and
 remember the DPoP <code>jti</code> values it accepted, in one store that all of them
 share, so that a use or a proof that one instance accepted counts at every
@@ -190,7 +219,12 @@ claim (<code>act.sub</code>), with any earlier actors of the delegation as neste
 claims; a token for such an action that lacks <code>act</code>, or whose <code>act.sub</code> differs
 from the request's actor, MUST be rejected, and a token exchange MUST NOT widen
 the subject token&#x27;s authority and MUST preserve the members that <a href="ecl-1_standard.html#ECL1N-0067">ECL1N-0067</a>
-lists (<a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a>).</p>
+lists (<a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a>). Whenever <code>act</code> is present, including when the request has
+no distinct subject, its outer <code>sub</code> MUST identify the request's actor. Each
+<code>act</code> value, including nested history, MUST be a JSON object under RFC 8693
+Section 4.1. Nested actor history is informational and MUST NOT widen access
+control authority; an empty ECL <code>delegation_chain</code> does not establish that
+the issuer has no earlier actor history.</p>
 <h2 id="signatures-issuance-and-records">Signatures, issuance and records</h2>
 <p><span id="OA1-007"><strong>OA1-007</strong></span><a class="requirement-link" href="#OA1-007" aria-label="Link to OA1-007">§</a> — The token MUST be a JWS (RFC 7515) signed with an algorithm from
 the declared asymmetric set, with the header <code>typ</code> <code>at+jwt</code> (RFC 9068) and a
@@ -207,14 +241,25 @@ does not verify under that issuer's configured keys. A verifier MUST refuse as
 malformed a token or a DPoP proof with a segment that is not unpadded base64url
 (RFC 7515, Section 2) whose unused bits are zero, MUST read the JSON of the
 header and payload segments of each under the strict JSON profile of ECL objects
-(<a href="integrity-envelope-1.html#IE1-002">IE1-002</a>), and MUST refuse as malformed a segment outside that profile or one
-that is not a JSON object, such as a segment that repeats a member name or holds
+(<a href="integrity-envelope-1.html#IE1-002">IE1-002</a>), and MUST refuse as malformed a header or payload segment outside
+that profile or one that is not a JSON object, such as one that repeats a member name or holds
 a number with a fraction or an exponent, an integer beyond the exact
 interoperable range, <code>NaN</code>, an unpaired surrogate or a byte order mark.</p>
-<p>RFC 7515 and RFC 7519 require a segment to be a valid JSON object and let a
-verifier either refuse a repeated member name or keep the last one; this profile
-refuses it, and reads the rest of a segment as ECL objects are read, so that two
-verifiers cannot read one token or proof differently. Base64url text whose
+<p><strong><a href="oauth-authority-1.html#OA1-007">OA1-007</a> (continued)</strong> — In an <code>ecl_oauth_presentation_v1</code> record, the entries of <code>issuer_keys.keys</code>
+MUST have distinct <code>kid</code> values. A record verifier MUST check this before
+constructing a key map or selecting a verification key. A duplicate, including
+an identical repeated key or a key the token does not select, fails the key
+check at step 1 of the presentation table (<a href="oauth-authority-1.html#OA1-011">OA1-011</a>): an accepted record gives
+<code>ecl.rule.oauth-token-signature-checked.v1</code>, and a refused presentation MUST
+name <code>ecl.error.integrity-invalid.v1</code>. This is a restriction of this record
+format; RFC 7517, Section 4.5 permits applications to use some same-identifier
+alternatives. Other JWK members remain subject to their applicable key-type
+rules; an unknown additional member is ignored as RFC 7517, Section 4 specifies.</p>
+<p><strong><a href="oauth-authority-1.html#OA1-007">OA1-007</a> (continued)</strong> — RFC 7515 requires a JSON object for the JOSE header,
+and RFC 7519 for the JWT claims set. Both allow a verifier either to refuse a
+repeated member name or to keep the last one. This profile refuses repeated
+names and applies ECL's strict JSON rules to the header and payload objects so
+that verifiers read them consistently. Base64url text whose
 unused bits are not zero decodes to the same bytes as its canonical form, so a
 verifier that accepted it would accept two token strings for one signature, of
 which the <code>ath</code> of RFC 9449 and the digest of <a href="oauth-authority-1.html#OA1-008">OA1-008</a> name only one. The
@@ -228,7 +273,16 @@ RS256, which RFC 9068, Section 2.1 requires conforming authorization servers and
 resource servers to support; a claim may
 declare RS256, which the vectors do not exercise.</p>
 <p><span id="OA1-008"><strong>OA1-008</strong></span><a class="requirement-link" href="#OA1-008" aria-label="Link to OA1-008">§</a> — An authority issuer MUST issue a token only for a verified <code>admit</code>,
-never for <code>deny</code>, <code>hold</code> or <code>challenge</code> (<a href="dcmp-2.html#DCMP2-014">DCMP2-014</a>); when the admit&#x27;s
+never for <code>deny</code>, <code>hold</code> or <code>challenge</code> (<a href="dcmp-2.html#DCMP2-014">DCMP2-014</a>). The request and response
+MUST satisfy the DCMP-2 message semantic rules, including critical-extension
+handling, and the single-use request and authorization domains of <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>.
+An issuer MUST NOT issue a token for an unsupported use policy or maximum; a
+verifier of an <code>ecl_oauth_presentation_v1</code> record MUST reject that issuance with
+<code>ecl.rule.oauth-token-expresses-admit.v1</code>.
+The response MUST carry exactly one <code>ecl.ext.decision-basis.v1</code> and
+satisfy <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> with the request it answers; a record verifier MUST report
+violations under the same registered DCMP-2 predicates, including
+<code>ecl.rule.decision-basis-one-way.v1</code> for a missing or invalid basis. When the admit's
 <code>authorization.token_reference</code> names the token, its digest MUST be the SHA-256
 of the token's compact serialization; and when the ECL authorization is revoked,
 the token MUST become unusable within the declared revocation propagation bound,
@@ -257,7 +311,10 @@ the presentation table below with the code that the table gives for that check,
 and a presentation that fails more than one check with the code of the first of
 them in the table's order. A presentation record's <code>result</code> MUST be the
 resource server's decision: <code>accepted</code> true only for a presentation that passes
-every check, and otherwise <code>accepted</code> false with that code in <code>error</code>.</p>
+every check, and otherwise <code>accepted</code> false with that code in <code>error</code>. An
+accepted result MUST NOT carry <code>error</code>. Every refused result MUST name a
+registered entry in the error-code registry, including a refusal made when
+none of the table's checks fails.</p>
 <table tabindex="0">
 <thead>
 <tr>
@@ -288,25 +345,31 @@ every check, and otherwise <code>accepted</code> false with that code in <code>e
 </tr>
 <tr>
 <td>4</td>
+<td>The ECL entry's <code>use_policy</code> is <code>single_use</code> and <code>max_uses</code> is absent or the integer 1</td>
+<td><a href="oauth-authority-1.html#OA1-005">OA1-005</a></td>
+<td><code>ecl.error.binding-unsupported.v1</code></td>
+</tr>
+<tr>
+<td>5</td>
 <td>The proof of possession passes every check of <a href="oauth-authority-1.html#OA1-004">OA1-004</a> other than the check that its <code>jti</code> was not accepted before: a DPoP proof that carries a <code>jti</code> string of 1 to 256 characters and binds the request and the token, or the bound client certificate</td>
 <td><a href="oauth-authority-1.html#OA1-004">OA1-004</a></td>
 <td><code>ecl.error.integrity-invalid.v1</code></td>
 </tr>
 <tr>
-<td>5</td>
-<td>The DPoP proof's <code>jti</code> was not accepted before within the proof window</td>
+<td>6</td>
+<td>The DPoP proof's <code>jti</code> is absent from the unexpired cache for its proof key and endpoint context, retained through <code>iat + W</code></td>
 <td><a href="oauth-authority-1.html#OA1-004">OA1-004</a></td>
 <td><code>ecl.error.replay.v1</code></td>
 </tr>
 <tr>
-<td>6</td>
+<td>7</td>
 <td>The presented target, operation and parameter digest equal those of the token's one ECL entry</td>
 <td><a href="oauth-authority-1.html#OA1-005">OA1-005</a></td>
 <td><code>ecl.error.scope-mismatch.v1</code></td>
 </tr>
 <tr>
-<td>7</td>
-<td>The use lies within the entry's use policy</td>
+<td>8</td>
+<td>The authorization has no previously accepted presentation</td>
 <td><a href="oauth-authority-1.html#OA1-005">OA1-005</a></td>
 <td><code>ecl.error.replay.v1</code></td>
 </tr>
@@ -317,6 +380,7 @@ request and response, which a resource server need not hold, so they are not
 in the table; the profile's vectors check them on the record as the issuer's
 obligations.</p>
 <h2 id="entry-table">Entry table</h2>
+<p><strong><a href="oauth-authority-1.html#OA1-001">OA1-001</a> (continued)</strong> — The following table gives the ECL entry members.</p>
 <table tabindex="0">
 <thead>
 <tr>
@@ -451,12 +515,16 @@ absent); the DCMP-2 <code>request</code> and <code>response</code> the token exp
 the <code>presentation</code> with the HTTP method and URI, the target, operation and
 parameter digest presented, the time, the number of uses with this one, the DPoP
 proof or the client certificate thumbprint, and the DPoP <code>jti</code> values that the
-resource server accepted within the proof window before this presentation
-(<code>seen_dpop_jti</code>); and the <code>result</code>, which names the code of <a href="oauth-authority-1.html#OA1-011">OA1-011</a> for a
+resource server previously accepted whose retention interval has not ended
+at this presentation in the proof key and endpoint context (<code>seen_dpop_jti</code>,
+<a href="oauth-authority-1.html#OA1-004">OA1-004</a>); and the <code>result</code>, which names the code of <a href="oauth-authority-1.html#OA1-011">OA1-011</a> for a
 refusal. The rules registered for this profile, whose names begin
 <code>ecl.rule.oauth-</code>, check a record after its schema: the issuer's side always,
 the checks of the presentation table when the record accepts the presentation,
-and the code of the first check that fails when it refuses it.</p>
+and the code of the first check that fails when it refuses it. The DCMP-2
+message and decision-basis checks also apply to issuance in every record. The
+record states the replay-cache contents; checking it does not demonstrate that
+a deployed cache retained every entry across servers or restarts.</p>
 <h2 id="security-considerations">Security considerations</h2>
 <p>A bearer token in an agent's context is a credential that the agent can leak or
 misuse, which is the gap that <a href="ecl-1_standard.html#ECL1N-0033">ECL1N-0033</a> and the direct-access control gap (G2)
@@ -498,8 +566,8 @@ suite are signed with test keys that each presentation record names as the
 issuer's keys.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/OAUTH-AUTHORITY-1.md</code>, SHA-256 <code>abfa19199f5ccd6db3cd14ae570d7ce53485e3e5c44d1594174f88aedb64ede6</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/OAUTH-AUTHORITY-1.md</code>, SHA-256 <code>5d178c3498b98e898339b72489c48871093c043d354b1c5e27cacd764da91eb4</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

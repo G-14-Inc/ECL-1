@@ -1,0 +1,717 @@
+{
+  "schema_version": "ecl_synthetic_mcp_reconstruction_inputs_v1",
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "archive": {
+    "path": "mcp-reconstruction-baseline.zip",
+    "sha256": "3db76edb06f8b0fca976893fae6205cf42011552252517e808d344c9069b3d92",
+    "bytes": 444092
+  },
+  "status": "Synthetic conformance inputs retained from local preparation, not a published release or historical execution record.",
+  "provenance": "All 139 record payloads match the frozen preparation source; the retained manifest includes previously reviewed expectation changes. Of 140 members including manifest, 61 match the retained v1.0.1 archive and 79 differ. The exact baseline cannot be recovered from that published archive.",
+  "published_comparison_archive_sha256": "6929cfcd3d6333385e48d804f8e4ad2f558e190cb5b810a9d505bd999333d969",
+  "members": [
+    {
+      "path": "manifest.json",
+      "bytes": 124486,
+      "sha256": "37b9542f90d8bd45b56ec7396a4d5482e805c32c98af5945b88a246c72311866"
+    },
+    {
+      "path": "mcp-binding-invalid-method-outside-enum.json",
+      "bytes": 3273,
+      "sha256": "cdaab4d140f6dd4764cdad3f3c15d02887def4055a0e3174e2633f95251118ea"
+    },
+    {
+      "path": "mcp-binding-valid-request.json",
+      "bytes": 3273,
+      "sha256": "8ba5c976341a54f4ab65ee2d4ba7717d5c38e2558238f98defd82969f5aef656"
+    },
+    {
+      "path": "mcp-invalid-admit-on-judgment-forwarded.json",
+      "bytes": 20711,
+      "sha256": "a228215c30e0a5dc2b66812d691f1f284d9860152d2c0313de73350c2be8b207"
+    },
+    {
+      "path": "mcp-invalid-cancelled-refusal-as-expired-before-release.json",
+      "bytes": 16750,
+      "sha256": "c30e63258570ca9ecd564ec0f9531f035e19be90ed53f98a9759883171bc47ec"
+    },
+    {
+      "path": "mcp-invalid-decision-request-negative-debit.json",
+      "bytes": 20998,
+      "sha256": "e6e9acc7ccc3aa204a5f62616f31c57227ea610a889e9eb4de31d4a51f47f15d"
+    },
+    {
+      "path": "mcp-invalid-duplicated-obligation-forwarded.json",
+      "bytes": 24751,
+      "sha256": "38ce245d6bc87bddac1c3607b7e3bceaed79aeaed68d1f3ece0a3144b8757fd7"
+    },
+    {
+      "path": "mcp-invalid-early-refusal-as-cancelled.json",
+      "bytes": 14538,
+      "sha256": "63453b437243e186b847277e8288ea29d4c53f10a48fdf44b0de015d2501c586"
+    },
+    {
+      "path": "mcp-invalid-encoded-call-jsonrpc-1-0.json",
+      "bytes": 20752,
+      "sha256": "5f7256dc2499860420e13938b934b41864462ee2621f1acfef82fe92a49e8945"
+    },
+    {
+      "path": "mcp-invalid-encoded-call-not-base64.json",
+      "bytes": 11661,
+      "sha256": "5c5aad51684dd1fe070f0bd5504a24a8036461bafafbcbd9f0af2960f2ba1fc8"
+    },
+    {
+      "path": "mcp-invalid-encoded-call-null-id-forwarded.json",
+      "bytes": 20834,
+      "sha256": "5a80f0ac5d52a40236adc392834c05a5e7e8deb14d4e950bb21b018b6dac977d"
+    },
+    {
+      "path": "mcp-invalid-encoded-call-null-id-refused.json",
+      "bytes": 12265,
+      "sha256": "fd46c53737fad0a9fe7d6d00baaca71a7e48a254dda15fd8900ad9223e6ba7c2"
+    },
+    {
+      "path": "mcp-invalid-encoded-content-not-canonical.json",
+      "bytes": 2257,
+      "sha256": "cad4409a0f3b759737194e84ee5e1543dc0d3f80d8326114c590c70c79742d71"
+    },
+    {
+      "path": "mcp-invalid-encoded-content-within-profile.json",
+      "bytes": 12106,
+      "sha256": "a588b15b0a13397348d83dde71adda9f2493677ff750c3a80f880c7ac7801c6d"
+    },
+    {
+      "path": "mcp-invalid-final-check-cancelled-without-terminal.json",
+      "bytes": 14118,
+      "sha256": "b3e12333c2abad267358f2ca27b81ef74896b4e6f3a3c2ec010bc09b6ef9c0ba"
+    },
+    {
+      "path": "mcp-invalid-forwarded-admit-without-basis.json",
+      "bytes": 19709,
+      "sha256": "1a3527114dd71a352ce20ee45763b1cc0dc2ef533b48ab161306c89a6f4b8c9e"
+    },
+    {
+      "path": "mcp-invalid-forwarded-after-expiry.json",
+      "bytes": 20592,
+      "sha256": "87d72560c1be7302d3e9c37fe36c26a38a04caffc1ad7d2178bc1e25089497fe"
+    },
+    {
+      "path": "mcp-invalid-forwarded-approval-undischarged.json",
+      "bytes": 26637,
+      "sha256": "c4ca5ef5b84db95efca74d8d5509ea3418c8634719dcc5e81e2b28eca42fdbb9"
+    },
+    {
+      "path": "mcp-invalid-forwarded-at-earlier-sample.json",
+      "bytes": 21845,
+      "sha256": "8d11f76e023474c87b057cc726b74f472f42f4423045369c1316f953abd5baac"
+    },
+    {
+      "path": "mcp-invalid-forwarded-changed-arguments.json",
+      "bytes": 20591,
+      "sha256": "4fb9f89715b8e691d4bd3a8e8a5d66dbc90098dbe581f7986c76ea1ce948d7ec"
+    },
+    {
+      "path": "mcp-invalid-forwarded-id-boolean-for-number.json",
+      "bytes": 20896,
+      "sha256": "185a42f93c5653e4cb07a65f9dc54a3771f19731b71fef121ba44974140c2263"
+    },
+    {
+      "path": "mcp-invalid-forwarded-id-string-for-number.json",
+      "bytes": 20794,
+      "sha256": "e875e415d653a8f5014b8a3b8f272b62b4f706e64f183efeff7ea6807fa313ed"
+    },
+    {
+      "path": "mcp-invalid-forwarded-obligations-undischarged.json",
+      "bytes": 22951,
+      "sha256": "67e3a94c896a62118775769cc92d6b980fa329bd426a6a5e43658b5be666ef6c"
+    },
+    {
+      "path": "mcp-invalid-forwarded-terminal-authority-digest.json",
+      "bytes": 20592,
+      "sha256": "ccc1b2ce76daf0561f07bbd4e5d4cfb3438a6551c790f016c1c6664e3c14351a"
+    },
+    {
+      "path": "mcp-invalid-forwarded-twice.json",
+      "bytes": 20592,
+      "sha256": "50d72ab2cdc6dde6d664e78f70536aa3635f4741ea0aa131722b80e4af1496cf"
+    },
+    {
+      "path": "mcp-invalid-forwarded-unbound-member.json",
+      "bytes": 20694,
+      "sha256": "b4a1cd9457205840259042b559001ee5db153551014d55eb5f73f83d8e0a881b"
+    },
+    {
+      "path": "mcp-invalid-forwarded-unmapped-tool.json",
+      "bytes": 6402,
+      "sha256": "4eafb41529cce6cea1e60c52201003de22daf3587d132d12aa3e906f77c158f1"
+    },
+    {
+      "path": "mcp-invalid-forwarded-unreviewed-change.json",
+      "bytes": 20620,
+      "sha256": "0562c4f8b95181f65b8f195cede9e23b69d1a9e92847b9513314f8aaccde9f79"
+    },
+    {
+      "path": "mcp-invalid-forwarded-when-unavailable.json",
+      "bytes": 11319,
+      "sha256": "445c4f3c1a1a18742b771b6abaae21056f4592e0026666faa978f91c04126b9e"
+    },
+    {
+      "path": "mcp-invalid-forwarded-within-release-guard.json",
+      "bytes": 21825,
+      "sha256": "6b3a7f2c3e2be2b7ce9a5e7326a7cd9bb7651b081c5f676ee112173e618f58e1"
+    },
+    {
+      "path": "mcp-invalid-forwarded-without-admit.json",
+      "bytes": 18114,
+      "sha256": "b0977bd10087ade8fdb13366402b5dd6c46b176da733ace1f0a925b8872a66dd"
+    },
+    {
+      "path": "mcp-invalid-forwarded-witness-undischarged.json",
+      "bytes": 26619,
+      "sha256": "bd191ce695252944541c9f2bcd5a6e13faec0e3a3357cb64a67c1fd487208a4e"
+    },
+    {
+      "path": "mcp-invalid-input-required-succeeded.json",
+      "bytes": 21130,
+      "sha256": "90cbbef00ca373f2e9c7bd566d6fcda0dbdfe1697fdf69f46ef4b405f548a8b1"
+    },
+    {
+      "path": "mcp-invalid-live-cancelled-foreign-authority.json",
+      "bytes": 17979,
+      "sha256": "922a44d2fe6ec6faea17921d1aa70ebc8a757a56bba44f96f87f792e0fe3eea2"
+    },
+    {
+      "path": "mcp-invalid-live-cancelled-no-residual.json",
+      "bytes": 17899,
+      "sha256": "4f88a34b53900a857a7179a20472ef43b9e273a28a3c63606a00393b817594ab"
+    },
+    {
+      "path": "mcp-invalid-live-cancelled-side-effects.json",
+      "bytes": 18055,
+      "sha256": "682450659c2139ea95562532bf0116920b12554aa1d573eeb13601fafc4fe7fd"
+    },
+    {
+      "path": "mcp-invalid-live-cancelled-without-authority.json",
+      "bytes": 17650,
+      "sha256": "8231b753ccd4f6e6959293a7afc97a81e60a3c58bfb6e8685d4fcf7be24cedbc"
+    },
+    {
+      "path": "mcp-invalid-live-cancelled-wrong-authority-digest.json",
+      "bytes": 17979,
+      "sha256": "c5c0a9ee46ad84fb64b9a7fd5c78f5f869ab5091d81f51f58163fcfb9e1e9f68"
+    },
+    {
+      "path": "mcp-invalid-live-cancelled-wrong-decision-digest.json",
+      "bytes": 17979,
+      "sha256": "921a8420ff2ce6fcc59bbe9beb62fdfc17d5862bb3076db289c8470f66981bb0"
+    },
+    {
+      "path": "mcp-invalid-live-decision-unavailable-as-held.json",
+      "bytes": 7976,
+      "sha256": "682d69139ecad2c617e20767ea31bcb0460422c4fbc2e0b4817523d755cfac99"
+    },
+    {
+      "path": "mcp-invalid-live-denied-side-effects.json",
+      "bytes": 12190,
+      "sha256": "6078f61c0de98e5c300d994f64cd122abf67fa4c6cbcd4e0a3d169a06e75b398"
+    },
+    {
+      "path": "mcp-invalid-live-held-as-denied.json",
+      "bytes": 12084,
+      "sha256": "1d80a9d0c7f213d8f5b23cf8306c9ec77b974c6caf696fbdd77419e5062123d5"
+    },
+    {
+      "path": "mcp-invalid-record-without-returned.json",
+      "bytes": 21404,
+      "sha256": "a57e24a3f8eb8b536866a986de650896a843fca23c5e7f50dd0b924d400105cf"
+    },
+    {
+      "path": "mcp-invalid-recorded-cancelled-without-authority.json",
+      "bytes": 17350,
+      "sha256": "fb453ddc797b1547a7c55539e5403f218027f3f8a6afa11523bb8a5e172cd754"
+    },
+    {
+      "path": "mcp-invalid-recorded-denied-names-authority.json",
+      "bytes": 12134,
+      "sha256": "914c570e21426167436d8a79ca08dcdbd7cc037e201200d3a3115cca4107d4db"
+    },
+    {
+      "path": "mcp-invalid-recorded-denied-wrong-state.json",
+      "bytes": 11808,
+      "sha256": "7505cf6d98a38ce0672e967674f933a4525728e323d1c330af8ad1a9565368c6"
+    },
+    {
+      "path": "mcp-invalid-recorded-held-wrong-state.json",
+      "bytes": 11806,
+      "sha256": "b74d29c7cdfa888c1226e01ca5e6e058ebfc6eaf3bc657934da568f30fdf636f"
+    },
+    {
+      "path": "mcp-invalid-recovered-admit-denied-names-authority.json",
+      "bytes": 14602,
+      "sha256": "3c7620e26af71b363fb67c1b7434c2bb272918f6e4d6fa2859095f90aba8fcd2"
+    },
+    {
+      "path": "mcp-invalid-recovered-admit-denied-with-prepared.json",
+      "bytes": 17079,
+      "sha256": "7f9da0cc1379ddddeaedf869fbc82de2b8bbfa834a54333d4e2275a8dde87ca4"
+    },
+    {
+      "path": "mcp-invalid-recovered-admit-denied-without-reason.json",
+      "bytes": 14081,
+      "sha256": "886d39588e2a270efaa160aac271a7bdf7c6680ef43b72200f53105505c3c159"
+    },
+    {
+      "path": "mcp-invalid-recovered-admit-denied-wrong-reason.json",
+      "bytes": 14260,
+      "sha256": "cd5534d6a41bba60818a5edd5efc3d5f5c2b02d66ad6d45903c10834e49df74c"
+    },
+    {
+      "path": "mcp-invalid-recovered-cancelled-foreign-authority.json",
+      "bytes": 17198,
+      "sha256": "12c9d976286bdeb240d837548f3e8d77d2fc6d9fbc5d625bd3107b40c85f3fe9"
+    },
+    {
+      "path": "mcp-invalid-recovered-cancelled-without-authority.json",
+      "bytes": 16869,
+      "sha256": "d453d20c4801782c25adc22c5f99c7d48be35f36e659755e0535642ba0007c12"
+    },
+    {
+      "path": "mcp-invalid-recovered-cancelled-wrong-authority-digest.json",
+      "bytes": 17198,
+      "sha256": "6902637d63956379f20949e4635ca0e577e1615587626427957b96bce9cf66d4"
+    },
+    {
+      "path": "mcp-invalid-recovered-cancelled-wrong-decision-digest.json",
+      "bytes": 17198,
+      "sha256": "d1e78c01d27ffab396b545d871394a7e10eb5386125532516a739678a0f05bdf"
+    },
+    {
+      "path": "mcp-invalid-recovered-challenged-as-cancelled.json",
+      "bytes": 12880,
+      "sha256": "0be00267e9e026f008a726ade016a422125105b57cdc4759a160985dc971f27c"
+    },
+    {
+      "path": "mcp-invalid-recovered-challenged-as-denied.json",
+      "bytes": 12877,
+      "sha256": "2e2488bcd3bb53dcccc9acb96d77deecf1b0453762a31270b7524a129c4e7789"
+    },
+    {
+      "path": "mcp-invalid-recovered-challenged-as-held.json",
+      "bytes": 12875,
+      "sha256": "c6ea8071b09a83571d4e8762324bdba0ee7d6750bac08f54602939fca2fa5815"
+    },
+    {
+      "path": "mcp-invalid-recovered-denied-as-cancelled.json",
+      "bytes": 12672,
+      "sha256": "3e4bb488a95b0585a828ce2bef84ab063c25ccf7375a32f6db16a8caa31ac7d9"
+    },
+    {
+      "path": "mcp-invalid-recovered-denied-as-challenged.json",
+      "bytes": 12673,
+      "sha256": "06bafd95ee7b953e8ee1c48e6bbdfa294b31168d2212ea3d4b611a1c271ef2b1"
+    },
+    {
+      "path": "mcp-invalid-recovered-denied-as-held.json",
+      "bytes": 12667,
+      "sha256": "dd7c403cc496cc8a9ad0354efeac0ada6cb8b3b2758904ea2be362124f31b1d9"
+    },
+    {
+      "path": "mcp-invalid-recovered-held-as-cancelled.json",
+      "bytes": 12673,
+      "sha256": "6439db72679460c10457cd05cdb5fc4faa04460e72106db5555a37b243786d4e"
+    },
+    {
+      "path": "mcp-invalid-recovered-held-as-challenged.json",
+      "bytes": 12674,
+      "sha256": "43570b68eb92853fb6b96660b0d27092a4370154a8d9e63ee41bc72f63388e0f"
+    },
+    {
+      "path": "mcp-invalid-recovered-held-as-denied.json",
+      "bytes": 12670,
+      "sha256": "426bb11725a8e2746b1403824e70fbd8282f3a7c27aaf12bce156e902c4edf41"
+    },
+    {
+      "path": "mcp-invalid-recovered-unknown-as-succeeded.json",
+      "bytes": 20947,
+      "sha256": "e6f1099ed1f1e2288627e85508e0b2e15394c571d9147251d9fb2962e605a6a6"
+    },
+    {
+      "path": "mcp-invalid-recovered-unverified-as-cancelled.json",
+      "bytes": 13106,
+      "sha256": "f9159b8e30eeb92780eaed96ce90dc77b579a5c08e877dcf55abc3a4f552bfb9"
+    },
+    {
+      "path": "mcp-invalid-recovery-classification-outside-enum.json",
+      "bytes": 17193,
+      "sha256": "35a66cc373bdf5adf945c7be89f39905096159d9a97d53189dd1d1759dbecdcf"
+    },
+    {
+      "path": "mcp-invalid-refusal-as-result.json",
+      "bytes": 12133,
+      "sha256": "a31712ccf84d22f61f90b24a89113895a5e0a83aa7ea96ccbd747fec76f9db9b"
+    },
+    {
+      "path": "mcp-invalid-refusal-id-boolean-for-number.json",
+      "bytes": 12259,
+      "sha256": "dac72bc5a98ad44ab232b358cbb3e32152f322632b9401b108cfc40ae2c79820"
+    },
+    {
+      "path": "mcp-invalid-refusal-id-string-for-number.json",
+      "bytes": 12220,
+      "sha256": "a5dae90611c861c0c409aa5863c1944713d6bc0c9b8b0afc37c93f8f30434972"
+    },
+    {
+      "path": "mcp-invalid-refusal-not-first-cause.json",
+      "bytes": 7997,
+      "sha256": "2d13aa8a1c3b8ea8f6eb52d56285c2701b28d37de268dc42733c66c2b277d5f3"
+    },
+    {
+      "path": "mcp-invalid-refusal-obligation-as-evidence-unavailable.json",
+      "bytes": 13303,
+      "sha256": "716b86f93aea83665604b3a0212220e08e2f6b029ccf423763fe834525868ab7"
+    },
+    {
+      "path": "mcp-invalid-refusal-obligation-as-expired.json",
+      "bytes": 13281,
+      "sha256": "16511a7e461f0942fa281b3c3ecf210d1da5af7d2aeed06e01f1e5bea5b4bc66"
+    },
+    {
+      "path": "mcp-invalid-refusal-without-ecl-data.json",
+      "bytes": 7845,
+      "sha256": "7dcb9a49d8be8614b2d714c89436b9a5bb14a75a28405b02ada443ab4195eb8b"
+    },
+    {
+      "path": "mcp-invalid-refusal-wrong-code.json",
+      "bytes": 7978,
+      "sha256": "38aee309179e37b1b89e43aec66073b0f5ba128184bca4c790bedbb57f0cdd35"
+    },
+    {
+      "path": "mcp-invalid-release-guard-differs.json",
+      "bytes": 21805,
+      "sha256": "c337232fff0d0b7a64ec8865c3b227e19f9be053e7f1f958459ca03221df79d9"
+    },
+    {
+      "path": "mcp-invalid-release-guard-exceeded-cancelled-without-terminal.json",
+      "bytes": 17100,
+      "sha256": "c722f15e1d1cee8e66bde19fd4fb9c8970906a992c1cc5fd77f4132a62bc820a"
+    },
+    {
+      "path": "mcp-invalid-release-marked-late.json",
+      "bytes": 21850,
+      "sha256": "82d193416ff5bf290835c5877a258bfdd70fca54758ba8ea9660b8543dc3d206"
+    },
+    {
+      "path": "mcp-invalid-release-without-guard.json",
+      "bytes": 21814,
+      "sha256": "5ce3e97eef84316da2675a444ea3646de83655302542b893633fecdb456fb6e3"
+    },
+    {
+      "path": "mcp-invalid-request-class-not-mapped.json",
+      "bytes": 20669,
+      "sha256": "e5fb476543f9d7898a5f075294d649c5ea40128da35eee821e3fa3bd348f2b8f"
+    },
+    {
+      "path": "mcp-invalid-request-meta-unbound.json",
+      "bytes": 20700,
+      "sha256": "f1198e009f19b8ff2f0830e201286bf2a621ec2f0ee47c33b26cce7ca91e639c"
+    },
+    {
+      "path": "mcp-invalid-request-parameters-not-arguments.json",
+      "bytes": 20712,
+      "sha256": "9df238b00425f8b7a252be2d54c36e3aedef0f01d5e0bf6dcf72f5024fcdd939"
+    },
+    {
+      "path": "mcp-invalid-request-without-binding.json",
+      "bytes": 19842,
+      "sha256": "88fe9caf7094cd7f4e7cd603e6fdef270af3a74914881501f4fdb2c24eab4215"
+    },
+    {
+      "path": "mcp-invalid-response-neither-result-nor-error.json",
+      "bytes": 11795,
+      "sha256": "54432423bd0ca8408b909b33224616ad0c1f1a5699aa9d2f07704ac907098fd1"
+    },
+    {
+      "path": "mcp-invalid-result-not-bound.json",
+      "bytes": 20592,
+      "sha256": "db39ad6b57f38939596bccae3f9500f29f4fd7a1f86909101579d25cf2dd4d30"
+    },
+    {
+      "path": "mcp-invalid-result-substituted.json",
+      "bytes": 20614,
+      "sha256": "0f8cfc6182633db65cef0d999f76c5a9ad0234d6abeac59d6eebdae8cd1d433e"
+    },
+    {
+      "path": "mcp-invalid-returned-number-for-boolean.json",
+      "bytes": 20762,
+      "sha256": "b4bd5b724be8c7f8ebb6b08eae9efd12ca2ae96b8d0818104f30febc4d76053d"
+    },
+    {
+      "path": "mcp-invalid-server-error-table-code-returned.json",
+      "bytes": 20187,
+      "sha256": "01c35956e41f768a6ba6c7e76f8e53005242064988e451a3705f21c80c3c5eae"
+    },
+    {
+      "path": "mcp-invalid-status-outside-enum.json",
+      "bytes": 7974,
+      "sha256": "48afd2020edd08c048add2555bda0daa0a0b05c468edb12ec35581415bf3fb32"
+    },
+    {
+      "path": "mcp-invalid-tool-definition-without-name.json",
+      "bytes": 11592,
+      "sha256": "c6c9c0fc8bb43a435612817d6a4f67178e0ed6cd8528fae261caccfd479a3da7"
+    },
+    {
+      "path": "mcp-invalid-unanswered-forward-as-result.json",
+      "bytes": 20259,
+      "sha256": "64e58b7bc792d0273a461bf1b9efab9aa934a05275678ca87ab2968b6efe1f93"
+    },
+    {
+      "path": "mcp-invalid-unbound-member-decided-and-forwarded.json",
+      "bytes": 20688,
+      "sha256": "15c330b1be7b3a3754e512a2e84f70d6bbaf0b5cf8510060c108d0826d3a11ac"
+    },
+    {
+      "path": "mcp-invalid-unmapped-method-forwarded.json",
+      "bytes": 6298,
+      "sha256": "dd4582fd7c173c6a926330a388bb9d077ce727e29eba49eb0cf2a10c019a6977"
+    },
+    {
+      "path": "mcp-invalid-verifiable-input-from-actor.json",
+      "bytes": 20893,
+      "sha256": "01ea8d292d4dee54583d28471866c70221ef3d7db5429f794b499722f6c04127"
+    },
+    {
+      "path": "mcp-invalid-wide-number-decided-and-forwarded.json",
+      "bytes": 20944,
+      "sha256": "14c6433e7b74852e09d88090f79e1b8894a691308d0f33297e6ccba535cff942"
+    },
+    {
+      "path": "mcp-valid-authorization-expired-refused.json",
+      "bytes": 13389,
+      "sha256": "e0e2a1a8d7eb00c9878e5262aa3112fe57d28979c0fac11d8334dd91c184342d"
+    },
+    {
+      "path": "mcp-valid-challenged-refused.json",
+      "bytes": 12316,
+      "sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+    },
+    {
+      "path": "mcp-valid-changed-tool-refused.json",
+      "bytes": 2262,
+      "sha256": "69cf856664c15386f23c2924fbef924fbaa0cba6bd3392c05cb1fa81db72306d"
+    },
+    {
+      "path": "mcp-valid-clock-regressed-cancelled.json",
+      "bytes": 18094,
+      "sha256": "4b6fd456dbf57457b85d9f9694e76f95434cf5cb3caa74ff0cb494ab75c39a7c"
+    },
+    {
+      "path": "mcp-valid-decision-invalid-holds-refused-response.json",
+      "bytes": 12485,
+      "sha256": "f4d65c57e39cbf86228dbcfe6184d8363a9ca600fdf0a00fce49fdf472118c63"
+    },
+    {
+      "path": "mcp-valid-decision-invalid-refused.json",
+      "bytes": 7970,
+      "sha256": "b6e2b60df9363a3596a0f5b6b4a957e9c2b6a15030d8b06b2149e5875db6e579"
+    },
+    {
+      "path": "mcp-valid-decision-unavailable-refused.json",
+      "bytes": 7978,
+      "sha256": "8056cd6a8e345bcbb4d29abbd3738edf7376493a9608548995050e95b21bdeff"
+    },
+    {
+      "path": "mcp-valid-denied-refused.json",
+      "bytes": 12088,
+      "sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+    },
+    {
+      "path": "mcp-valid-duplicated-obligation-refused.json",
+      "bytes": 13042,
+      "sha256": "5933bc0fb2f38ed62348e652a41b17094f405e8cf4a149da733303473453e378"
+    },
+    {
+      "path": "mcp-valid-evidence-unavailable-cancelled.json",
+      "bytes": 17620,
+      "sha256": "5cd64eaf446b26d9714359a5fbb5c98f6fb9b2bce7d395f25d32bdd5153b2b3f"
+    },
+    {
+      "path": "mcp-valid-evidence-unavailable-pending-obligation-cancelled.json",
+      "bytes": 15231,
+      "sha256": "b4ac9ec5ba502dbcdcbef3893df6af53f51a3c15f3db5e1b57e752eaf470732f"
+    },
+    {
+      "path": "mcp-valid-evidence-unavailable-unprepared-cancelled.json",
+      "bytes": 14384,
+      "sha256": "592b59cac907ffdf0a7296284c1f7ac9adbfeb03349b763a0aaf666e066199cf"
+    },
+    {
+      "path": "mcp-valid-final-check-cancelled.json",
+      "bytes": 17979,
+      "sha256": "a529ab533e21a9187ca887586d65b4bc6ae2daa2044454f7d2c4375762446dbd"
+    },
+    {
+      "path": "mcp-valid-first-cause-refused.json",
+      "bytes": 8002,
+      "sha256": "5637480d4d6bd2ae11dd670b69463ed723d2c24b338bd549a2ed13867e04d687"
+    },
+    {
+      "path": "mcp-valid-float-arguments-refused.json",
+      "bytes": 2257,
+      "sha256": "30b3508d51b792aa3b8407e038c04d316dffdf64c44f85e701e6e6c217d1d528"
+    },
+    {
+      "path": "mcp-valid-float-content-forwarded.json",
+      "bytes": 20766,
+      "sha256": "5910ea5cf6c55adb466e9aa874514c7bc39abdff63902911ba56290cfb7a4708"
+    },
+    {
+      "path": "mcp-valid-forward-failed-unknown.json",
+      "bytes": 20180,
+      "sha256": "b43dc3744e341784ac6365e19701c87f8b60b2140bc58b9e88d37cec6f85a71e"
+    },
+    {
+      "path": "mcp-valid-forwarded-obligations-discharged.json",
+      "bytes": 28401,
+      "sha256": "6178ffbdecef5c3c9ec00694d704f35bf7abbbbc607438111c7935f583697f1f"
+    },
+    {
+      "path": "mcp-valid-forwarded-on-admit.json",
+      "bytes": 20592,
+      "sha256": "00bd65b65d757c46c033d8ee245e754da4f3aec724a62733687f05302fafbd65"
+    },
+    {
+      "path": "mcp-valid-forwarded-release-order.json",
+      "bytes": 21845,
+      "sha256": "0bc2383403c9c82b06260d056ae2405780421fe61adc8ef0441872932b58390f"
+    },
+    {
+      "path": "mcp-valid-held-refused.json",
+      "bytes": 12082,
+      "sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+    },
+    {
+      "path": "mcp-valid-input-required-unknown.json",
+      "bytes": 21236,
+      "sha256": "36977f05b0ec80782541891ffafba0b8f7de12fc14056c37258ec243b4b2c7d9"
+    },
+    {
+      "path": "mcp-valid-late-answer-inside-window.json",
+      "bytes": 21805,
+      "sha256": "95fbac9bfba7811b6b60c4bd30d8933a67fee2066845bdca8000a4322d423556"
+    },
+    {
+      "path": "mcp-valid-noncharacter-id-forwarded.json",
+      "bytes": 20660,
+      "sha256": "268daf005c2bcf907f280acec8c0621f90bafa62afe6bcf7e8f7b7439179e6e9"
+    },
+    {
+      "path": "mcp-valid-null-arguments-refused.json",
+      "bytes": 2068,
+      "sha256": "d1e87680438edb9fd06d35002bd71e554cbefcbe449e6610bc235b4decb8a186"
+    },
+    {
+      "path": "mcp-valid-obligation-unproven-cancelled.json",
+      "bytes": 18478,
+      "sha256": "93fe53e059a6dcfa2b1dce50544f21597f57a15bdbfced33504a796c389b391c"
+    },
+    {
+      "path": "mcp-valid-obligation-unsupported-refused.json",
+      "bytes": 13293,
+      "sha256": "950ec1d600074ac8b2bb61e2da248a9670f777b74b896919e61dcad8eed9cb5f"
+    },
+    {
+      "path": "mcp-valid-recorded-admit-denied.json",
+      "bytes": 12970,
+      "sha256": "1ed610a71f31ced296cabe307d7aab91c0235eb9ab450c7a66fc2d9d5004da8e"
+    },
+    {
+      "path": "mcp-valid-recorded-denied.json",
+      "bytes": 11805,
+      "sha256": "9a56a981b6e92ed27de8f07b357ca4193b4727980424cfeb83c0b74592544e99"
+    },
+    {
+      "path": "mcp-valid-recorded-held.json",
+      "bytes": 11804,
+      "sha256": "4e72d128c23ae575ac63cb3e0354f991cef7987a9576ed164f226b91d8c63cf5"
+    },
+    {
+      "path": "mcp-valid-recovered-challenged.json",
+      "bytes": 12881,
+      "sha256": "5c47078cb842541b8198197307526136d707e887035bca6877d454d415f2e348"
+    },
+    {
+      "path": "mcp-valid-recovered-denied.json",
+      "bytes": 12669,
+      "sha256": "fae6f9b6116c7a9738c502e018e82d0177717a287ad35c39767c9b777405f413"
+    },
+    {
+      "path": "mcp-valid-recovered-held.json",
+      "bytes": 12668,
+      "sha256": "7d99d33ff61aa0d498a048f2e15ccb5607f1ed6ee8a723c25160014f0782e089"
+    },
+    {
+      "path": "mcp-valid-recovered-not-released.json",
+      "bytes": 17198,
+      "sha256": "4d0a7c6e4add7580e20788baa325261a821ca3d9f8fd7048776723a5a493f68d"
+    },
+    {
+      "path": "mcp-valid-recovered-outcome-unknown.json",
+      "bytes": 21075,
+      "sha256": "6fa84ab38b0f1438716a8d702a590dddb815fa068ae39874d350628dbab9901b"
+    },
+    {
+      "path": "mcp-valid-recovered-unconsumed-admit-denied.json",
+      "bytes": 13692,
+      "sha256": "6771fbd9b78679df7accb5d8921591c4df86f1b155f5722a9b201b4cf253bb23"
+    },
+    {
+      "path": "mcp-valid-recovered-unverified-decision-denied.json",
+      "bytes": 13103,
+      "sha256": "1e5ca0bfd8873fb60459b3a89af65bafe82a6bf7cdd9f06ee393f5a0d01b4ab2"
+    },
+    {
+      "path": "mcp-valid-release-guard-exceeded-cancelled.json",
+      "bytes": 21094,
+      "sha256": "db032db79b6b7be0764706f19c3998d927b2c6e621075584ce8978779a6ab336"
+    },
+    {
+      "path": "mcp-valid-server-error-recoded.json",
+      "bytes": 20187,
+      "sha256": "6ac55d5a16818b56b4e65a3be7d13185fbf9f6534dcda9b795c2698250e3cd85"
+    },
+    {
+      "path": "mcp-valid-stale-proof-cancelled.json",
+      "bytes": 21418,
+      "sha256": "176a39cf9a0e6b7c84b033428306262c1b1dd2ddd23a5bab7514f5f4f44fbb08"
+    },
+    {
+      "path": "mcp-valid-unbound-member-refused.json",
+      "bytes": 2264,
+      "sha256": "a69c6d359fe43b98504a4bbea2cb909ca5bcecdee4a1f68c5c82832328013fce"
+    },
+    {
+      "path": "mcp-valid-underivable-target-refused.json",
+      "bytes": 2100,
+      "sha256": "bf96468a4725aaf758e26f3d20be732ca2ebd66103f3a9b140211527dc733632"
+    },
+    {
+      "path": "mcp-valid-unmapped-method-refused.json",
+      "bytes": 901,
+      "sha256": "33b5a7dce9d15817b4f673105788216a1e9a85883e134de3cbe5cd1f183c0320"
+    },
+    {
+      "path": "mcp-valid-unmapped-tool-refused.json",
+      "bytes": 962,
+      "sha256": "190b2a8bcaa42dd2931b55bf12d09bc9638aeb1671fc9e6a3592bc8c0f97badc"
+    },
+    {
+      "path": "mcp-valid-wide-number-refused.json",
+      "bytes": 2289,
+      "sha256": "e1f107013598caafb7f64c48c0a864328e476c463af3ac4082b3161f249b7ec0"
+    }
+  ]
+}

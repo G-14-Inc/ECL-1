@@ -9,6 +9,12 @@ import (
 	"testing"
 )
 
+// ExpectedChecks retains a scope item's exact supporting checks and object indexes.
+type ExpectedChecks struct {
+	Checks  []string `json:"checks"`
+	Objects []int    `json:"objects"`
+}
+
 // Vector is one vector of a suite manifest.
 type Vector struct {
 	ID                 string   `json:"id"`
@@ -31,9 +37,10 @@ type Vector struct {
 	// ExpectedScope, ExpectedEffects and ExpectedUnresolved are the scope, evidence levels and
 	// unresolved predecessors that the report must give, when the vector names them.
 	ExpectedScope *struct {
-		Established    []string          `json:"established"`
-		NotEstablished []string          `json:"not_established"`
-		Reasons        map[string]string `json:"reasons"`
+		Established    []string                   `json:"established"`
+		NotEstablished []string                   `json:"not_established"`
+		Reasons        map[string]string          `json:"reasons"`
+		Checks         *map[string]ExpectedChecks `json:"checks,omitempty"`
 	} `json:"expected_scope"`
 	ExpectedEffects []struct {
 		ActionID string `json:"action_id"`

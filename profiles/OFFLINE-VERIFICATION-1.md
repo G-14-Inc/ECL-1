@@ -1,7 +1,8 @@
 # ECL Offline Verification Profile 1
 
-Status: informative guide for ECL-1 Version 1.0, a published version. It states no
-requirement of its own: every obligation it describes is allocated, with an ID, in
+Status: informative guide for the ECL-1 Version 1 public-review local candidate.
+Source build: `1.0.2-review.1`; prepared `2026-11-10`.
+It states no requirement of its own: every obligation it describes is allocated, with an ID, in
 the core standard or a normative companion it cites.  
 Profile identifier: `https://externalcontrollayer.ai/ns/profile/offline-verification/1`  
 Manifest schema: `https://externalcontrollayer.ai/ns/schema/offline-verification-package/1`  
@@ -61,8 +62,8 @@ tests this.
 
 A package receives one of the four verdicts of EBMP2-060. IE1-022 lists the
 checks in their order, with the error code of each, so that every verifier
-gives the same verdict and code for the same package under the same declared
-limits (IE1-028). Verifiers with different limits can disagree on a package
+gives the same verdict and code for the same package with the same
+caller-supplied verification inputs and declared limits (IE1-028). Verifiers with different limits can disagree on a package
 that exceeds the limits of only one of them: the browser verifier, for example,
 reads an archive of at most 16 MiB, and the three verifier commands one of at
 most 1 GiB. In summary:
@@ -104,12 +105,12 @@ which the verifier checks under the caller's trust policy.
 The manifest's artifact paths are entry names of the archive under the same
 rules (IE1-022, check 4). Section 8 of `INTEGRITY-ENVELOPE-1` defines entry
 names. They need no Unicode table, so verifiers on different platforms, and
-under different Unicode versions, accept and refuse the same archives. The
+under different Unicode versions, reach the same path-validity result. The
 manifest's `path_encoding_policy` value `utf8-nfc-posix-relative` and
 `entry_order` value `utf8-bytewise-path` name these rules. A package held as a
 directory follows the same rules (IE1-030): its paths are entry names, compared
-after ASCII case folding, so its result does not depend on the verifier's
-platform either.
+after ASCII case folding, so its path-validity result does not depend on a
+platform-specific Unicode table either.
 
 An outer transport can compress or segment the complete package. The receiver
 first reconstructs and obtains, through a channel the receiver trusts, the

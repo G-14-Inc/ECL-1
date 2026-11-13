@@ -1,7 +1,7 @@
 # ECL-1 normative core
 
 `ECL-1_Standard.md` is the sole authoritative source of the ECL-1 core
-standard, Version 1.0. Its companion protocols are in [../protocols/](../protocols/)
+standard, Version 1. Its companion protocols are in [../protocols/](../protocols/)
 and its profiles in [../profiles/](../profiles/);
 [../release/VERSION_SET.json](../release/VERSION_SET.json) binds the version of
 each.
@@ -13,7 +13,9 @@ proof) are resolved in the text of Version 1.0.
 
 The requirement ledger ([../registries/requirement-ledger.json](../registries/requirement-ledger.json))
 records, for each requirement, the version that introduced it and each version
-that changed it, through the release candidates that preceded Version 1.0.
+that changed it, through the original Version 1.0 release. That historical ledger
+is preserved. The current requirement texts are compiled in
+[../registries/requirements-compiled.json](../registries/requirements-compiled.json).
 
 All rendered or excerpted forms must identify the items below. Each page of
 [../render/](../render/index.html) ends with a source record that gives them:

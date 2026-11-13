@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from .extension_selection import interpreted_extension
+from .semantic_numbers import schema_int
+
 from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
@@ -174,7 +177,7 @@ def values(response: Mapping[str, Any]) -> list[tuple[int, Any]]:
     return [
         (index, item.get("value"))
         for index, item in enumerate(extensions)
-        if isinstance(item, Mapping) and item.get("id") == DECISION_BASIS
+        if isinstance(item, Mapping) and item.get("id") == DECISION_BASIS and interpreted_extension(response, item)
     ]
 
 
@@ -216,7 +219,7 @@ def one_way_problems(
         path = f"/inputs/{position}"
         supports = item.get("effect") == "supports"
         available = item.get("status") == "available"
-        if supports and item.get("class") in RESTRICTING_ONLY_CLASSES:
+        if supports and isinstance(item.get("class"), str) and item["class"] in RESTRICTING_ONLY_CLASSES:
             problems.append(
                 (
                     path + "/effect",
@@ -369,6 +372,16 @@ def _verifiable_only_problems(
             for position, item in entries
             if item.get("effect") == "supports"
         )
+        if recorded == "deny":
+            problems.extend(
+                (
+                    f"/inputs/{position}/effect",
+                    "an actor_supplied or judgment input has no effect when the verifiable-only outcome is deny",
+                )
+                for position, item in entries
+                if item.get("class") in ("actor_supplied", "judgment")
+                and item.get("effect") == "restricts"
+            )
         return problems
     if not any(
         item.get("class") == "verifiable" and item.get("effect") == "supports"
@@ -535,7 +548,11 @@ def register_problems(
             continue
         if item.get("class") != declaration.get("class"):
             problems.append((path + "/class", "the class is not the one the register declares"))
-        if item.get("required") is not declaration.get("required"):
+        if not (
+            type(item.get("required")) is bool
+            and type(declaration.get("required")) is bool
+            and item["required"] is declaration["required"]
+        ):
             problems.append(
                 (path + "/required", "the required flag is not the one the register declares")
             )
@@ -557,7 +574,7 @@ def register_problems(
             )
         if item.get("status") != "available":
             continue
-        deadline = declaration.get("deadline_milliseconds")
+        deadline = schema_int(declaration.get("deadline_milliseconds"))
         obtained = _instant(item.get("obtained_at"))
         if (
             type(deadline) is int
@@ -568,7 +585,7 @@ def register_problems(
             problems.append(
                 (path + "/obtained_at", "the input was obtained after its declared deadline")
             )
-        maximum_age = declaration.get("maximum_age_seconds")
+        maximum_age = schema_int(declaration.get("maximum_age_seconds"))
         value_at = _instant(item.get("value_at"))
         if (
             type(maximum_age) is int
@@ -672,3 +689,36 @@ def register_document_problems(register: Mapping[str, Any]) -> list[tuple[str, s
         if isinstance(declared, list):
             problems.extend(_declaration_problems(declared, path + "/decision_inputs"))
     return problems
+
+
+def timing_coverage(
+    value: Mapping[str, Any], register: Mapping[str, Any], action_class: object,
+    *, evaluated_at: object = None,
+) -> tuple[bool, bool]:
+    """Whether any declared input-timing check applies, and whether its recorded times exist.
+
+    Only available inputs and constraints actually declared for the action count.
+    This does not establish that a timestamp is true, nor that a supplied time meets
+    its bound; register_problems performs those comparisons.
+    """
+    declared = {
+        input_key(item["input"]): item
+        for item in declared_inputs(register, action_class) if isinstance(item.get("input"), str)
+    } if isinstance(action_class, str) else {}
+    applicable, complete = False, True
+    inputs = value.get("inputs")
+    for item in inputs if isinstance(inputs, list) else []:
+        if not isinstance(item, Mapping) or item.get("status") != "available":
+            continue
+        name = item.get("input")
+        declaration = declared.get(input_key(name)) if isinstance(name, str) else None
+        if declaration is None:
+            continue
+        age = schema_int(declaration.get("maximum_age_seconds")) is not None
+        deadline = schema_int(declaration.get("deadline_milliseconds")) is not None
+        applicable = applicable or age or deadline
+        if age:
+            complete = complete and _instant(item.get("value_at")) is not None and _instant(evaluated_at) is not None
+        if deadline:
+            complete = complete and _instant(value.get("received_at")) is not None and _instant(item.get("obtained_at")) is not None
+    return applicable, complete

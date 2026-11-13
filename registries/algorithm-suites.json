@@ -25,14 +25,13 @@
       "owner_class": "ecl-registry",
       "introduced_in": "1.0-rc.3",
       "compatibility": "additive",
-      "description": "RFC 8032 Ed25519 signature suite for the general interoperability profile.",
+      "description": "RFC 8032 Ed25519 signature suite for the general interoperability profile. FIPS 186-5 includes EdDSA with Ed25519; algorithm inclusion does not establish that an ECL implementation or cryptographic module is FIPS validated.",
       "attributes": {
         "kind": "signature",
         "requirement_level": "required_general_profile",
         "specification": "https://www.rfc-editor.org/rfc/rfc8032",
         "key_type": "Ed25519",
-        "signature_encoding": "64-octet RFC 8032 Ed25519 signature",
-        "fips_approved": false
+        "signature_encoding": "64-octet RFC 8032 Ed25519 signature"
       }
     },
     {

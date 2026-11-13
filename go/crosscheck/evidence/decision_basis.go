@@ -29,6 +29,7 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/canon"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/instant"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/semantic"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
@@ -224,7 +225,7 @@ func basisValues(message map[string]any) []basisValue {
 	}
 	var found []basisValue
 	for index, candidate := range extensions {
-		if item, isObject := pyjson.Object(candidate); isObject && pyjson.Equal(item["id"], DecisionBasisExtension) {
+		if item, isObject := pyjson.Object(candidate); isObject && pyjson.Equal(item["id"], DecisionBasisExtension) && validatorx.InterpretedOccurrence(message, item) {
 			found = append(found, basisValue{index, item["value"]})
 		}
 	}
@@ -352,11 +353,11 @@ func RegisterProblemsAt(value, register map[string]any, actionClass, evaluatedAt
 			continue
 		}
 		obtained, hasObtained := instantOf(item["obtained_at"])
-		if deadline, isInt := pyjson.Int(declaration["deadline_milliseconds"]); isInt && deadline >= 0 && hasObtained && hasReceived && instant.Compare(obtained, received.AddNanoseconds(deadline*1_000_000)) > 0 {
+		if deadline, isInt := pyjson.SchemaInt(declaration["deadline_milliseconds"]); isInt && deadline >= 0 && hasObtained && hasReceived && instant.Compare(obtained, received.AddMilliseconds(deadline)) > 0 {
 			problems = append(problems, [2]string{path + "/obtained_at", "the input was obtained after its declared deadline"})
 		}
 		valueAt, hasValueAt := instantOf(item["value_at"])
-		if age, isInt := pyjson.Int(declaration["maximum_age_seconds"]); isInt && hasValueAt && hasDecided && instant.Compare(decided, valueAt.AddSeconds(age)) > 0 {
+		if age, isInt := pyjson.SchemaInt(declaration["maximum_age_seconds"]); isInt && hasValueAt && hasDecided && instant.Compare(decided, valueAt.AddSeconds(age)) > 0 {
 			problems = append(problems, [2]string{path + "/value_at", "the input's value is older than its declared maximum age"})
 		}
 	}
@@ -368,33 +369,32 @@ func RegisterProblemsAt(value, register map[string]any, actionClass, evaluatedAt
 	return problems, nil
 }
 
-// sameBoolean is Python's left is right for the values a required flag can take: true and false
-// are each only themselves, and None is itself.
+// sameBoolean matches only the two values admitted by a required flag's schema.
 func sameBoolean(left, right any) bool {
-	switch value := left.(type) {
-	case bool:
-		other, isBool := right.(bool)
-		return isBool && value == other
-	case nil:
-		return right == nil
-	default:
-		return false
-	}
+	value, leftIsBool := left.(bool)
+	other, rightIsBool := right.(bool)
+	return leftIsBool && rightIsBool && value == other
 }
 
 // checkDecisionBases is DCMP2-053 in the evidence: each decision response carries its decision
 // basis; no input whose source is the request's actor is recorded as verifiable, and the request
 // was not received before it was issued, less the response clock-skew allowance (DCMP2-047); and
 // a basis agrees with the register when the caller supplies one.
-func checkDecisionBases(entries []*entry, findings *[]BundleFinding, register map[string]any, skew int64) error {
+func checkDecisionBases(entries []*entry, findings *[]BundleFinding, register map[string]any, skew int64) (bool, bool, error) {
+	timingApplied, timingComplete := false, true
 	requests := map[string]map[string]any{}
 	for _, item := range entries {
 		protocol, _ := pyjson.Text(item.payload["protocol"])
 		messageType, _ := pyjson.Text(item.payload["message_type"])
 		identifier, isText := pyjson.Text(item.payload["message_id"])
-		// As the reference's dict comprehension: a later request with the same identifier wins.
+		// Duplicate identifiers already fail stage 3. Array position cannot select a
+		// first/last request for dependent checks (EBMP2-029, EBMP2-068).
 		if !item.observation && protocol == "DCMP-2" && messageType == "decision_request" && isText {
-			requests[identifier] = item.payload
+			if _, present := requests[identifier]; present {
+				requests[identifier] = nil
+			} else {
+				requests[identifier] = item.payload
+			}
 		}
 	}
 	for _, item := range entries {
@@ -429,13 +429,59 @@ func checkDecisionBases(entries []*entry, findings *[]BundleFinding, register ma
 		if action, isAction := pyjson.Object(request["action"]); isAction {
 			actionClass = action["action_class"]
 		}
+		applied, complete := TimingCoverage(value, register, actionClass, item.payload["evaluated_at"])
+		timingApplied = timingApplied || applied
+		timingComplete = timingComplete && complete
 		problems, err := RegisterProblemsAt(value, register, actionClass, item.payload["evaluated_at"])
 		if err != nil {
-			return err
+			return false, false, err
 		}
 		for _, problem := range problems {
 			*findings = append(*findings, issue(DecisionBasisMatchesRegister, fmt.Sprintf("object %d: /extensions/%d/value%s: %s", item.index, found[0].index, problem[0], problem[1])))
 		}
 	}
-	return nil
+	return timingApplied, timingComplete, nil
+}
+
+// TimingCoverage reports applicable input-timing comparisons and whether their recorded operands exist.
+// RegisterProblemsAt checks their bounds; no recorded timestamp is established as true.
+func TimingCoverage(value, register map[string]any, actionClass, evaluatedAt any) (bool, bool) {
+	declared := map[string]map[string]any{}
+	if class, ok := pyjson.Text(actionClass); ok {
+		for _, item := range DeclaredInputs(register, class) {
+			if name, ok := pyjson.Text(item["input"]); ok {
+				declared[semantic.InputKey(name)] = item
+			}
+		}
+	}
+	applicable, complete := false, true
+	inputs, _ := pyjson.Array(value["inputs"])
+	for _, raw := range inputs {
+		item, ok := pyjson.Object(raw)
+		if !ok || !pyjson.Equal(item["status"], "available") {
+			continue
+		}
+		name, ok := pyjson.Text(item["input"])
+		if !ok {
+			continue
+		}
+		declaration := declared[semantic.InputKey(name)]
+		if declaration == nil {
+			continue
+		}
+		_, age := pyjson.SchemaInt(declaration["maximum_age_seconds"])
+		_, deadline := pyjson.SchemaInt(declaration["deadline_milliseconds"])
+		applicable = applicable || age || deadline
+		if age {
+			_, a := instant.Parse(item["value_at"])
+			_, b := instant.Parse(evaluatedAt)
+			complete = complete && a == nil && b == nil
+		}
+		if deadline {
+			_, a := instant.Parse(value["received_at"])
+			_, b := instant.Parse(item["obtained_at"])
+			complete = complete && a == nil && b == nil
+		}
+	}
+	return applicable, complete
 }

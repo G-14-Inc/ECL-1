@@ -58,7 +58,7 @@ test("every shared vector of a supported capability meets its expected primary, 
       };
       // A signed bundle reports its findings in the order of EBMP2-068 and has no required
       // secondary findings; every other stage is ordered by precedence.
-      const select = vector.stage === "evidence-bundle" ? selectBundleFinding : selectFindings;
+      const select = vector.stage === "evidence-bundle" || vector.stage === "package" ? selectBundleFinding : selectFindings;
       const [primary, secondary] = select(observedForVector(vector, context), precedence, errors);
       if (vector.expected === "pass") {
         assert.equal(primary, null, vector.id);

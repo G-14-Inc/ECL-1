@@ -1,0 +1,203 @@
+{
+  "now": "2026-10-01T00:00:00Z",
+  "cases": [
+    {
+      "id": "f001-prepared-control",
+      "bundle": "f001-prepared-control.bundle.json",
+      "policy": "f001-prepared-control.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f001-prepared-forged-authority",
+      "bundle": "f001-prepared-forged-authority.bundle.json",
+      "policy": "f001-prepared-forged-authority.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f001-prepared-missing-decision",
+      "bundle": "f001-prepared-missing-decision.bundle.json",
+      "policy": "f001-prepared-missing-decision.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f001-prepared-wrong-decision-control",
+      "bundle": "f001-prepared-wrong-decision-control.bundle.json",
+      "policy": "f001-prepared-wrong-decision-control.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f001-observed-control",
+      "bundle": "f001-observed-control.bundle.json",
+      "policy": "f001-observed-control.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f001-observed-missing-decision-forged-authority",
+      "bundle": "f001-observed-missing-decision-forged-authority.bundle.json",
+      "policy": "f001-observed-missing-decision-forged-authority.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f001-requestless-prepared",
+      "bundle": "f001-requestless-prepared.bundle.json",
+      "policy": "f001-requestless-prepared.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f002-proof-carried-control",
+      "bundle": "f002-proof-carried-control.bundle.json",
+      "policy": "f002-proof-carried-control.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f002-shadow-approval-after_execution",
+      "bundle": "f002-shadow-approval-after_execution.bundle.json",
+      "policy": "f002-shadow-approval-after_execution.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f002-shadow-approval-before_release",
+      "bundle": "f002-shadow-approval-before_release.bundle.json",
+      "policy": "f002-shadow-approval-before_release.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f002-unshadowed-wrong-approver-control",
+      "bundle": "f002-unshadowed-wrong-approver-control.bundle.json",
+      "policy": "f002-unshadowed-wrong-approver-control.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f002-witness-wrong-source-control",
+      "bundle": "f002-witness-wrong-source-control.bundle.json",
+      "policy": "f002-witness-wrong-source-control.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f002-witness-collision",
+      "bundle": "f002-witness-collision.bundle.json",
+      "policy": "f002-witness-collision.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f003-evidence-only-key-observations-control",
+      "bundle": "f003-evidence-only-key-observations-control.bundle.json",
+      "policy": "f003-evidence-only-key-observations-control.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.signature-policy-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f003-evidence-only-key-envelopes",
+      "bundle": "f003-evidence-only-key-envelopes.bundle.json",
+      "policy": "f003-evidence-only-key-envelopes.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-proof-extra-approval-invalid-signature",
+      "bundle": "f007-proof-extra-approval-invalid-signature.bundle.json",
+      "policy": "f007-proof-extra-approval-invalid-signature.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": true,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-proof-extra-evidence-event-invalid-signature",
+      "bundle": "f007-proof-extra-evidence-event-invalid-signature.bundle.json",
+      "policy": "f007-proof-extra-evidence-event-invalid-signature.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": true,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-proof-extra-evidence-event-valid",
+      "bundle": "f007-proof-extra-evidence-event-valid.bundle.json",
+      "policy": "f007-proof-extra-evidence-event-valid.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.obligation-unproven.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-continuation-extra-approval-invalid-signature",
+      "bundle": "f007-continuation-extra-approval-invalid-signature.bundle.json",
+      "policy": "f007-continuation-extra-approval-invalid-signature.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": true,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-continuation-extra-evidence-event-invalid-signature",
+      "bundle": "f007-continuation-extra-evidence-event-invalid-signature.bundle.json",
+      "policy": "f007-continuation-extra-evidence-event-invalid-signature.policy.json",
+      "verdict": "verified",
+      "primary": null,
+      "invalid_extra_signature": true,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-continuation-extra-evidence-event-valid",
+      "bundle": "f007-continuation-extra-evidence-event-valid.bundle.json",
+      "policy": "f007-continuation-extra-evidence-event-valid.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": false
+    },
+    {
+      "id": "f007-unknown-approval-policy",
+      "bundle": "f007-unknown-approval-policy.bundle.json",
+      "policy": "f007-unknown-approval-policy.policy.json",
+      "verdict": "invalid",
+      "primary": "ecl.error.signature-policy-invalid.v1",
+      "invalid_extra_signature": false,
+      "continuation_empty_key_guard": true
+    }
+  ]
+}

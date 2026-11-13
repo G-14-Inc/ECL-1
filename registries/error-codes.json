@@ -31,7 +31,7 @@
         "retry_class": "never_same_object"
       },
       "compatibility": "additive",
-      "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). The codes for a policy, key, threshold or trusted-time failure are its children.",
+      "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). Child codes explicitly declare this identifier in parent_code; revoked and expired do not.",
       "id": "ecl.error.integrity-invalid.v1",
       "introduced_in": "1.0-rc.3",
       "owner_class": "ecl-registry",
@@ -227,7 +227,7 @@
         "retry_class": "after_additional_eligible_evidence"
       },
       "compatibility": "additive",
-      "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040).",
+      "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold, or a required eligible signer is missing; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040).",
       "id": "ecl.error.threshold-not-met.v1",
       "introduced_in": "1.0-rc.3",
       "owner_class": "ecl-registry",

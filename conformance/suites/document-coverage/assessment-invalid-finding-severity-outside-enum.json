@@ -92,8 +92,20 @@
       "requirement_ids": [
         "IE1-018"
       ],
-      "severity": "high",
+      "severity": "major",
       "title": "No approved ML-DSA-65 provider and known-answer-test result"
+    },
+    {
+      "disposition": "open",
+      "evidence": [
+        "urn:example:ecl:evidence:provider-inventory"
+      ],
+      "finding_id": "urn:example:ecl:finding:unregistered-severity",
+      "requirement_ids": [
+        "IE1-018"
+      ],
+      "severity": "high",
+      "title": "A finding with an unregistered severity"
     }
   ],
   "independence": {
@@ -109,6 +121,7 @@
       "uri": "urn:example:ecl:assessor:conflict-disclosure",
       "version": "1"
     },
+    "direct_implementation_within_24_months": false,
     "managed_operator_within_24_months": false,
     "material_affiliate_or_reseller": false,
     "primary_implementer": false

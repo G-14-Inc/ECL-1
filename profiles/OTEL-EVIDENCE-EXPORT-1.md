@@ -2,7 +2,8 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 This profile copies ECL decisions and evidence into OpenTelemetry log records so
 that observability tools and security information and event management (SIEM)
@@ -77,6 +78,18 @@ carries, other than the policy digest of the attribute table, which identifies
 the policy that decided as the policy's identifier and version do; a consumer
 that holds the export key MUST treat a record whose keyed digest differs from
 the one it computes over the bundle's object as not describing that object.
+The policy-digest exception applies only to the exact `ecl.policy.digest`
+attribute of the table; a declaration under OE1-005 does not authorize an
+unkeyed digest in another attribute or the body. An identifier copied exactly
+to its applicable attribute-table slot remains an identifier when it is a
+content-addressed URI. This identifier exception applies only to `ecl.object.id`,
+`ecl.workflow.id`, `ecl.workflow.root_trace_id`, `ecl.issuer.id`, `ecl.producer.id`,
+`ecl.evidence.bundle`, `ecl.action.id`, `ecl.request.id`, `ecl.decision.id`,
+`ecl.policy.id`, `ecl.authorization.id`, `ecl.event.decision_id`, and the
+OE1-005-declared slots `ecl.actor.id`, `ecl.subject.id` and `ecl.action.target`,
+each holding exactly the identifier its table row specifies. It does not permit
+copies in other attributes or the body, or an unkeyed digest in non-identifier
+table fields such as `ecl.policy.version`.
 
 **OE1-005** — A log record MUST NOT carry action parameters, tool arguments or
 results, constraints, credentials, tokens, signatures, key material, the free
@@ -107,7 +120,11 @@ from the presence or absence of a record.
 
 **OE1-009** — An exporter that retains export records MUST write each one as
 `ecl_otel_export_record_v1`, valid against
-`https://externalcontrollayer.ai/ns/schema/binding/otel-export/1`.
+`https://externalcontrollayer.ai/ns/schema/binding/otel-export/1`. Each retained
+record MUST include `evidence_after`, the object as held after the export
+attempt, and it MUST equal the recorded `object`. This is a completeness
+requirement for the retained audit record; it does not make telemetry export
+or retention a dependency of decision, release or evidence recording.
 
 ## Keyed digests
 
@@ -118,7 +135,8 @@ secure random source, generated for that deployment's telemetry export alone,
 held only by the exporter and by the consumers that match records to the bundle,
 never readable by the governed AI system, and never a key that signs or verifies
 ECL evidence. With an export key, every record MUST carry the key's identifier,
-a string, as the `stringValue` of `ecl.export.key_id`, which MUST NOT be derived
+a string of 1 to 256 Unicode code points, as the `stringValue` of
+`ecl.export.key_id`, which MUST NOT be derived
 from the key; in `ecl.object.digest`, the HMAC-SHA-256 (RFC 2104) under the key
 of the restricted canonical JSON of the object (IE1-001); and, where the object
 has a parameters digest, in `ecl.action.parameters_digest`, the HMAC-SHA-256
@@ -128,7 +146,7 @@ hold the key that a record names MUST still treat as not describing the object a
 record whose keyed digests are not in that form, or that lacks a keyed digest
 that the object has.
 
-An unkeyed digest of an object, or the parameters digest that a request or an
+**OE1-010 (continued)** — An unkeyed digest of an object, or the parameters digest that a request or an
 execution event carries, lets a reader of the telemetry who can list the
 possible values, such as an amount or a short list of accounts, compute the
 digest of each candidate and confirm which one was used. A digest keyed with a
@@ -138,14 +156,14 @@ a guessed object by recomputing the keyed digest. The digests inside the signed 
 keyed and do not change. When replacing an export key, give the new key an
 identifier that no earlier export key of the deployment has used, so that
 retained records continue to identify the key they require. Changing key
-material does not itself change the identifier. An exporter without an export key
-exports no object or parameter digest; the unkeyed policy digest required by
-OE1-004 remains. A consumer then matches records to the bundle by their
-identifiers.
+material does not itself change the identifier. An exporter without an export
+key omits `ecl.object.digest` and `ecl.action.parameters_digest`. The policy
+digest and exact identifiers permitted by OE1-004 remain; a consumer then
+matches records to the bundle by those identifiers.
 
 ## Attribute table
 
-Every attribute value is a string held as an OTLP `stringValue`, except
+**OE1-003 (continued)** — Every attribute value is a string held as an OTLP `stringValue`, except
 `ecl.workflow.attempt` and `ecl.workflow.sequence`, which are integers held as
 an `intValue` (OE1-003, OE1-007); an attribute held in another `AnyValue` kind,
 such as a `bytesValue` that holds the same text, does not hold the value that
@@ -204,6 +222,8 @@ that the row names and that holds the source member.
 
 ## Severity table
 
+**OE1-008 (continued)** — The following table gives the severity of each object.
+
 | Object | `SeverityNumber` |
 | --- | --- |
 | Decision response with outcome `admit` | 9 (INFO) |
@@ -239,26 +259,38 @@ carries, where the name `body` declares a log record body; the `export` outcome
 same object as the evidence held it after the attempt. The rules registered
 for this profile, whose names begin `ecl.rule.otel-`, check a record after its
 schema; a checker compares a keyed digest only under an export key that its
-caller supplies, and recognizes a digest that needs no key without one.
+caller supplies. Without that key, the reference checks recognize the
+object's SHA-256 digest, embedded SHA-256 digest values, and the SHA-256 of the
+canonical parameters-digest object in hexadecimal text or raw/hexadecimal
+`bytesValue` data, including nested `AnyValue` containers. This recognition
+is bounded to these representations; it does not establish that arbitrary
+encodings or other derived values disclose no protected data. The export
+policy and its assessment remain responsible for that broader obligation.
 
 ## Security considerations
 
 Telemetry pipelines are wider and less protected than the evidence store, and
 their contents reach people and systems outside the claim's trust boundary. The
 profile therefore exports identifiers, outcomes and, with an export key, keyed
-digests, and leaves parameters, results, reason text and every digest that needs
-no key in the bundle, apart from the policy digest, which identifies the policy
-as its identifier and version do. A digest of low-entropy content lets a reader
-confirm guessed values; this profile exports such digests only under an export
-key (OE1-010), and exports the identifiers of people and records only when the
-export policy declares them. A record can be forged, dropped or delayed anywhere
-along the pipeline, so its only authority is the keyed digest that a consumer
-that holds the export key compares with the signed bundle. A reader who obtains
-the export key can test guesses as an unkeyed digest would let them, which is
-why the key stays with the exporter and those consumers. The `object_id` of an
-EBMP-2 event is derived from the event's content (EBMP2-047) and is exported as
-its identifier; confirming a guess through it needs every member of the event,
-including the digests of the objects it references, which no record carries.
+digests. Other data are subject to the export policy under OE1-005. OE1-004
+permits the policy digest and exact identifier copies in designated table slots,
+including content-addressed URIs; it prohibits other digests computable without
+the export key. A digest of low-entropy content lets a reader confirm guessed
+values. The dedicated object and parameter digest attributes therefore use an
+export key (OE1-010), while identifiers of people and records require the
+declaration under OE1-005. A record can be forged, dropped or delayed anywhere
+along the pipeline. A consumer holding the export key can recompute the keyed digest from the
+corresponding object in the signed bundle and compare it with the record's
+digest. That comparison binds content and does not grant authority or replace
+bundle verification. A reader who obtains the export key can also test guesses against the keyed
+digests, which is why the key stays with the exporter and those consumers.
+EBMP-2 does not require an event's `object_id` to be derived from its content.
+Exported identifiers can still reveal information or allow records to be
+correlated. A content-derived identifier can confirm guesses when the input
+used to derive it is known or predictable.
+The deployment evaluates those risks in its export policy, including for the
+identifiers that this profile always exports; identifiers of people and
+records remain subject to the declaration rule of OE1-005.
 Making release wait for an export would let anyone who can disrupt the pipeline
 stop or slow governed actions, and a deny that depended on export would turn
 monitoring into a control path that the claim does not declare; both are

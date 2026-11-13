@@ -15,12 +15,13 @@
  *   (section 3.2.2.2);
  * - object members are ordered by the UTF-16 code units of their names (section 3.2.3).
  *
- * A lone surrogate, NaN, an infinity and nesting deeper than 256 levels have no canonical form.
+ * A lone surrogate, a Unicode noncharacter, NaN, an infinity and nesting deeper than 256 levels
+ * have no canonical form.
  * For values the strict parser produces, the result is the restricted canonical form.
  */
 
 import { sha256Hex, utf8 } from "../crypto/bytes.js";
-import { containsLoneSurrogate } from "../json/strict.js";
+import { containsInvalidScalar } from "../json/strict.js";
 import type { JsonValue } from "../json/value.js";
 
 /** A value with no RFC 8785 canonical form. */
@@ -44,8 +45,8 @@ const ESCAPES: Record<string, string> = {
 };
 
 function quote(value: string): string {
-  if (containsLoneSurrogate(value)) {
-    throw new JcsError("a lone surrogate has no canonical form");
+  if (containsInvalidScalar(value)) {
+    throw new JcsError("a lone surrogate or Unicode noncharacter is not I-JSON text");
   }
   let out = '"';
   let start = 0;
@@ -68,6 +69,22 @@ export function jcsNumber(value: number): string {
   return String(value);
 }
 
+/** A plain JSON object, including null-prototype objects and objects from another realm. */
+function plainObject(value: object): boolean {
+  if (Object.prototype.toString.call(value) !== "[object Object]") {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value) as Record<string, unknown> | null;
+  if (prototype === null || prototype === Object.prototype) {
+    return true;
+  }
+  if (Object.getPrototypeOf(prototype) !== null || !Object.prototype.hasOwnProperty.call(prototype, "constructor")) {
+    return false;
+  }
+  const constructor = prototype["constructor"];
+  return typeof constructor === "function" && constructor.prototype === prototype && constructor.name === "Object";
+}
+
 function serialize(value: JsonValue, depth: number, parts: string[]): void {
   if (depth > MAX_DEPTH) {
     throw new JcsError(`the value nests deeper than ${MAX_DEPTH} levels`);
@@ -83,19 +100,32 @@ function serialize(value: JsonValue, depth: number, parts: string[]): void {
   } else if (typeof value === "string") {
     parts.push(quote(value));
   } else if (Array.isArray(value)) {
+    if (Object.keys(value).some((key) => !/^(?:0|[1-9][0-9]*)$/.test(key) || Number(key) >= value.length)) {
+      throw new JcsError("an array with a member that is not a position is not a JSON array");
+    }
     parts.push("[");
-    value.forEach((item, index) => {
+    for (let index = 0; index < value.length; index += 1) {
+      if (!Object.prototype.hasOwnProperty.call(value, index)) {
+        throw new JcsError(`array position ${index} is a hole, which is not a JSON value`);
+      }
+      const item = value[index];
+      if (item === undefined) {
+        throw new JcsError(`array position ${index} is undefined, which is not a JSON value`);
+      }
       if (index > 0) {
         parts.push(",");
       }
       serialize(item, depth + 1, parts);
-    });
+    }
     parts.push("]");
   } else if (typeof value === "object") {
+    if (!plainObject(value)) {
+      throw new JcsError("only plain objects are JSON objects");
+    }
     const names = Object.keys(value);
     for (const name of names) {
-      if (containsLoneSurrogate(name)) {
-        throw new JcsError("a lone surrogate has no canonical form");
+      if (containsInvalidScalar(name)) {
+        throw new JcsError("a lone surrogate or Unicode noncharacter is not I-JSON text");
       }
     }
     names.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));

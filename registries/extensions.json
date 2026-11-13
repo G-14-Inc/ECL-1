@@ -210,7 +210,7 @@
           "DCMP-2 decision_request action of an MCP request",
           "EBMP-2 execution_terminal result of a forwarded MCP request"
         ],
-        "interpretation": "A decision request carries it as critical, so a decision point that does not understand it cannot admit the request, and its params digest binds the call that the gateway forwards exactly (MG1-004, MG1-005); an execution_terminal event carries the RFC 8785 digest of the response the gateway returned (MG1-010).",
+        "interpretation": "A decision request carries it as critical, so a decision point that does not understand it cannot admit the request, and its params digest binds the call that the gateway forwards exactly (MG1-004, MG1-005); an execution_terminal event carries the RFC 8785 digest of the server response received by the gateway, before any permitted reserved error-code remapping for return to the client (MG1-010).",
         "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1"
       }
     },

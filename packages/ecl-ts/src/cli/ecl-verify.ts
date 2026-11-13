@@ -5,13 +5,14 @@
  *
  *   ecl-verify-ts BUNDLE --trust-policy FILE [--trust-policy-history FILE]... [--now RFC3339]
  *                 [--accept-current-trust-failure] [--require-trusted-time] [--register FILE] [--json]
+ *                 [--input-format auto|bundle|package]
  *
  * A decision response without `ecl.ext.decision-basis.v1` makes the bundle invalid (DCMP2-053);
  * `--register` checks each decision basis against a Consequential Action Register.
  *
- * A file that begins with the bytes `PK` is verified as an offline package (OFFLINE-VERIFICATION-1,
- * IE1-022) of at most 1 GiB, the declared archive limit, under the same inputs; any other file is a
- * JSON evidence bundle of at most 1 MiB.
+ * With the default `auto` format, a file beginning with `PK` is an offline package; other files
+ * are JSON evidence bundles. `--input-format` selects either format explicitly, including for
+ * malformed files. Packages have a 1 GiB archive limit; JSON bundles have a 1 MiB limit.
  *
  * Exit status: 0 verified, 1 invalid, 2 usage error, 3 incomplete, 4 current trust failed
  * (EBMP2-060). An offline package above its archive-byte limit is invalid, with the registered
@@ -21,6 +22,7 @@
  * `ecl.error.resource-limit-exceeded.v1`, TP1-007), and `error: MESSAGE` otherwise.
  */
 
+import { SOFTWARE_VERSION, SOURCE_BUILD } from "../version.js";
 import { closeSync, fstatSync, openSync, readSync, statSync } from "node:fs";
 import { oversizedInput, verifyBundleBytes, VerifierInputError } from "../evidence/bytes.js";
 import { primaryFinding, reportToJson, SCOPE_TEXT, withScope } from "../evidence/verify.js";
@@ -40,7 +42,9 @@ const EXIT: Record<string, number> = { verified: 0, invalid: 1, incomplete: 3, "
 
 const USAGE =
   "usage: ecl-verify-ts BUNDLE --trust-policy FILE [--trust-policy-history FILE]... [--now RFC3339] " +
-  "[--accept-current-trust-failure] [--require-trusted-time] [--register FILE] [--json]\n";
+  "[--accept-current-trust-failure] [--require-trusted-time] [--register FILE] [--json] " +
+  "[--input-format auto|bundle|package]\n" +
+  "--accept-current-trust-failure accepts bundle trust-dependency failures; offline-package expiry is not waived.\n";
 
 /**
  * The first `count` bytes of a file, or the whole file when it is shorter. Nothing past them is read,
@@ -143,7 +147,7 @@ function verifyPackageFile(path: string, policyBytes: Uint8Array, options: Packa
 
 function human(report: BundleReport, currentVersion: string): string {
   // EBMP2-076: what the verdict does not establish comes with the verdict, then what it does.
-  const lines = [`verdict: ${report.verdict}`];
+  const lines = [`verdict: ${report.verdict}`, `software: ecl-ts ${SOFTWARE_VERSION}; source-build=${SOURCE_BUILD}`];
   // EBMP2-060: the primary finding of a verdict other than verified, the failing current status
   // of a trust dependency for current-trust-failed among them.
   const primary = primaryFinding(report);
@@ -165,7 +169,7 @@ function human(report: BundleReport, currentVersion: string): string {
   lines.push(`verification-profile: ${report.verificationProfile}`);
   lines.push(`evaluation-time: ${report.evaluationTime ?? "-"}`);
   if (report.acceptedCurrentTrustFailure) {
-    lines.push("accepted: current trust failure, by --accept-current-trust-failure");
+    lines.push("accepted: current trust failure of bundle dependencies, by --accept-current-trust-failure; offline-package expiry is not waived");
   }
   if (report.register !== null) {
     const digest = report.register["digest"] as { value: string };
@@ -216,15 +220,18 @@ function main(argv: string[]): number {
   let requireTrustedTime = false;
   let registerPath: string | undefined;
   let json = false;
+  let inputFormat: "auto" | "bundle" | "package" = "auto";
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index] as string;
+    if (["--trust-policy", "--trust-policy-history", "--now", "--register", "--input-format"].includes(arg) && index + 1 >= argv.length) {
+      process.stderr.write(USAGE);
+      return 2;
+    }
     if (arg === "--trust-policy") {
       policyPath = argv[++index];
     } else if (arg === "--trust-policy-history") {
       const path = argv[++index];
-      if (path !== undefined) {
-        historyPaths.push(path);
-      }
+      historyPaths.push(path as string);
     } else if (arg === "--now") {
       now = argv[++index];
     } else if (arg === "--accept-current-trust-failure") {
@@ -239,6 +246,12 @@ function main(argv: string[]): number {
       }
     } else if (arg === "--json") {
       json = true;
+    } else if (arg === "--input-format") {
+      const format = argv[++index];
+      if (format !== "auto" && format !== "bundle" && format !== "package") {
+        process.stderr.write(USAGE); return 2;
+      }
+      inputFormat = format;
     } else if (arg === "-h" || arg === "--help") {
       process.stdout.write(USAGE);
       return 0;
@@ -265,7 +278,8 @@ function main(argv: string[]): number {
       ...(registerBytes === undefined ? {} : { register: registerBytes }),
     };
     // An offline package (IE1-022) is verified under the same inputs as a bundle.
-    const { report, policy } = isPackage(bundlePath)
+    const packageInput = inputFormat === "package" || (inputFormat === "auto" && isPackage(bundlePath));
+    const { report, policy } = packageInput
       ? verifyPackageFile(bundlePath, policyBytes, options)
       : verifyBundleBytes(readLimited(bundlePath, MAX_BUNDLE_BYTES, "bundle", "1 MiB"), policyBytes, options);
     process.stdout.write(json ? canonicalText(reportToJson(report)) + "\n" : human(report, policy.version));

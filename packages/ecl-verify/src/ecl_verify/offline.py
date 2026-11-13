@@ -13,12 +13,11 @@ import warnings
 import zipfile
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import IO, Any
 
 from .canonical import CanonicalizationError, canonicalize, loads_json_strict
-from .schema import parse_rfc3339_utc
+from .schema import rfc3339_utc_nanoseconds
 
 SCHEMA_INVALID = "ecl.error.schema-invalid.v1"
 
@@ -111,6 +110,9 @@ class OfflineResourceLimits:
 
 DEFAULT_OFFLINE_RESOURCE_LIMITS = OfflineResourceLimits()
 
+# IE1-028 applies its encoded-input ceiling to archive bytes as well as JSON input.
+MAX_ARCHIVE_BYTES_CEILING = 2_147_483_647
+
 def _validate_limits(limits: OfflineResourceLimits) -> None:
     """The verifier's declared limits (IE1-028): each an `int` of at least 1, checked by type, so
     that a `bool`, a `float` (`NaN` and the infinities among them) or another number is refused
@@ -131,11 +133,16 @@ def _validate_limits(limits: OfflineResourceLimits) -> None:
                 f"offline resource limit must be an integer of at least 1: {name}",
                 CONFIGURATION_INVALID,
             )
+        if name == "max_archive_bytes" and value > MAX_ARCHIVE_BYTES_CEILING:
+            raise OfflinePackageError(
+                f"offline resource limit max_archive_bytes must be at most {MAX_ARCHIVE_BYTES_CEILING}",
+                CONFIGURATION_INVALID,
+            )
 
-def _time(value: str) -> datetime:
-    """An ECL RFC 3339 UTC instant, by the shared parser (one to nine fractional digits)."""
+def _time(value: str) -> int:
+    """An exact ECL UTC instant in nanoseconds (one to nine fractional digits)."""
     try:
-        return parse_rfc3339_utc(value)
+        return rfc3339_utc_nanoseconds(value)
     except ValueError as exc:
         raise OfflinePackageError(f"invalid UTC timestamp: {value!r}", "ecl.error.semantic-invalid.v1") from exc
 
@@ -153,7 +160,7 @@ def safe_relative_path(
     file), and Windows device names such as CON or nul.txt.
     """
     _validate_limits(limits)
-    if isinstance(value, str) and len(value.encode("utf-8")) > limits.max_path_bytes:
+    if isinstance(value, str) and len(value.encode("utf-8", "surrogatepass")) > limits.max_path_bytes:
         raise OfflinePackageError(
             "package path length exceeds the verifier budget",
             RESOURCE_LIMIT,
@@ -526,7 +533,13 @@ def _verify_artifacts(
                 f"manifest {role} references are not carried as artifacts: {missing}",
                 "ecl.error.causal-closure-incomplete.v1",
             )
-    manifest_bytes = canonicalize(manifest)
+    try:
+        manifest_bytes = canonicalize(manifest)
+    except CanonicalizationError as exc:
+        raise OfflinePackageError(
+            "offline package manifest cannot be canonicalized",
+            RESOURCE_LIMIT if exc.finding_id == RESOURCE_LIMIT else SCHEMA_INVALID,
+        ) from exc
     return OfflinePackageResult(
         package_id=manifest["package_id"],
         artifact_count=len(verified),
@@ -557,7 +570,10 @@ def verify_directory_package(
     _validate_limits(limits)
     artifacts = _checked_artifacts(manifest, limits)
     _check_validity(manifest, evaluated_at)
-    root = root.resolve()
+    try:
+        root = root.resolve()
+    except (OSError, RuntimeError) as exc:
+        raise OfflinePackageError("package root cannot be resolved", CLOSURE_INCOMPLETE) from exc
     return _verify_artifacts(
         manifest, artifacts, lambda relative: _directory_source(root, relative), limits
     )
@@ -573,6 +589,8 @@ def verify_zip_package(
     The archive must be in its exact profile encoding (verify_zip_members). A member that the
     manifest does not name is refused, and so is an artifact the archive lacks.
     """
+    _validate_limits(limits)
+    _time(evaluated_at)
     names = verify_zip_members(value, limits=limits)
     if MANIFEST_NAME not in names:
         raise OfflinePackageError(
@@ -584,7 +602,8 @@ def verify_zip_package(
                 manifest = loads_json_strict(archive.read(MANIFEST_NAME))
             except CanonicalizationError as exc:
                 raise OfflinePackageError(
-                    f"{MANIFEST_NAME} is not strict JSON", SCHEMA_INVALID
+                    f"{MANIFEST_NAME} is not strict JSON",
+                    RESOURCE_LIMIT if exc.finding_id == RESOURCE_LIMIT else SCHEMA_INVALID,
                 ) from exc
             artifacts = _checked_artifacts(manifest, limits, archive=True)
             listed = {item["path"] for item in artifacts}
@@ -645,16 +664,27 @@ def _departure(message: str) -> OfflinePackageError:
 
 _CENTRAL_HEADER = struct.Struct("<IHBxH10xIIHHH8xI")
 
-def _check_extra_fields(extra: bytes, sizes: list[int]) -> None:
+@dataclass(frozen=True)
+class _CentralMember:
+    name_length: int
+    flags: int
+    file_size: int
+    compressed_size: int
+    unicode_extra_range: tuple[int, int] | None = None
+
+def _check_extra_fields(extra: bytes, sizes: list[int]) -> bool:
     """The structure of an entry's extra fields, and the eight-byte value that a ZIP64 field gives,
     in order, for each of the file size, compressed size and local header offset that is
     saturated."""
     field = 0
+    has_unicode_path = False
     while len(extra) - field >= 4:
         kind = int.from_bytes(extra[field : field + 2], "little")
         field_length = int.from_bytes(extra[field + 2 : field + 4], "little")
         if field_length + 4 > len(extra) - field:
             raise _departure("a corrupt extra field")
+        if kind == 0x7075:
+            has_unicode_path = True
         if kind == 0x0001:
             data = extra[field + 4 : field + 4 + field_length]
             for index, size_value in enumerate(sizes):
@@ -664,14 +694,17 @@ def _check_extra_fields(extra: bytes, sizes: list[int]) -> None:
                     sizes[index] = int.from_bytes(data[:8], "little")
                     data = data[8:]
         field += field_length + 4
+    return has_unicode_path
 
-def _central_directory_count(value: bytes) -> int:
+def _central_directory_count(
+    value: bytes, *, members: list[_CentralMember] | None = None, keep: int = 0
+) -> int:
     """The number of entries in the archive's central directory, read as a ZIP reader reads them,
     before the archive library reads them (IE1-029).
 
     The archive library builds an entry object for every central directory entry before the
     member limit can be compared, so an archive within the byte limit could make it hold millions.
-    This count reads the same structure without keeping anything: the end record (the last 22
+    This count reads the same structure while keeping at most `keep` budget records: the end record (the last 22
     bytes, or the last end signature where a comment could lie), a ZIP64 locator before it, the
     archive comment, and each entry's fixed header, signature, name flagged as UTF-8, extraction
     version and extra fields. A structure that cannot be read, a ZIP64 record and a comment depart
@@ -729,12 +762,68 @@ def _central_directory_count(value: bytes) -> int:
         extra_end = min(stop, name_end + extra_length)
         if extract_version > _MAX_EXTRACT_VERSION:
             raise _departure("an unsupported extraction version")
+        sizes = [file_size, compressed_size, header_offset]
+        has_unicode_path = False
         if extra_end > name_end:
-            _check_extra_fields(value[name_end:extra_end], [file_size, compressed_size, header_offset])
+            has_unicode_path = _check_extra_fields(value[name_end:extra_end], sizes)
+        if members is not None and count < keep:
+            members.append(_CentralMember(
+                name_end - name_start, flags, sizes[0], sizes[1],
+                (name_end, extra_end) if has_unicode_path else None,
+            ))
         count += 1
         total += _CENTRAL_SIZE + name_length + extra_length + comment_length
         at = min(stop, extra_end + comment_length)
     return count
+
+
+class _ProfileArchiveReader(io.BytesIO):
+    """Keep forbidden Unicode Path extras opaque to the archive library.
+
+    Python versions that interpret 0x7075 fields can reject or rename every
+    central entry while opening the directory, before ordered profile checks.
+    Mask only those two-byte tags in this private read view. The nonempty extra
+    field is still refused at its original member's metadata check, and exact
+    profile-layout comparison always uses the unchanged input bytes.
+    """
+
+    def __init__(self, value: bytes, central: list[_CentralMember]):
+        super().__init__(value)
+        self._original = value
+        self._extra_ranges = tuple(
+            member.unicode_extra_range for member in central
+            if member.unicode_extra_range is not None
+        )
+
+    def read(self, size: int | None = -1) -> bytes:
+        if not self._extra_ranges:
+            return super().read(size)
+        start = self.tell()
+        end = len(self._original) if size is None or size < 0 else min(len(self._original), start + size)
+        if end <= self._extra_ranges[0][0] or start >= self._extra_ranges[-1][1]:
+            return super().read(size)
+        masked = None
+        for extra_start, extra_end in self._extra_ranges:
+            if extra_start >= end:
+                break
+            if extra_end <= start:
+                continue
+            field = extra_start
+            while extra_end - field >= 4:
+                kind, length = struct.unpack_from("<HH", self._original, field)
+                if kind == 0x7075 and field < end and field + 2 > start:
+                    if masked is None:
+                        masked = bytearray(memoryview(self._original)[start:end])
+                    # Preserve field length, content, offsets and all other tags.
+                    # The structural prepass has already validated these spans.
+                    for offset in range(max(field, start), min(field + 2, end)):
+                        masked[offset - start] = 0
+                field += 4 + length
+        if masked is None:
+            return super().read(size)
+        self.seek(end)
+        return bytes(masked)
+
 
 _ZIP_VERSION = 20
 
@@ -839,17 +928,32 @@ def verify_zip_members(
         )
     # The member limit, before the archive library builds an entry object for every member of the
     # central directory (IE1-029); the count refuses a structure it cannot read as the profile's.
-    if _central_directory_count(value) > limits.max_member_count:
+    central: list[_CentralMember] = []
+    if _central_directory_count(value, members=central, keep=limits.max_member_count) > limits.max_member_count:
         raise OfflinePackageError(
             "archive member count exceeds the verifier budget",
             RESOURCE_LIMIT,
         )
+    # Use the bounded structural pass's resolved sizes before a library can reinterpret
+    # duplicate ZIP64 fields or reject other non-profile metadata. Structure, member count,
+    # then encryption and size budgets have the same order as the other two readers.
+    total_uncompressed = 0
+    for entry in central:
+        if entry.flags & 0x1:
+            raise OfflinePackageError("encrypted archive members are unsupported", SEMANTIC_INVALID)
+        if entry.file_size > limits.max_entry_uncompressed_bytes:
+            raise OfflinePackageError("archive member exceeds the verifier budget", RESOURCE_LIMIT)
+        total_uncompressed += entry.file_size
+        if total_uncompressed > limits.max_total_uncompressed_bytes:
+            raise OfflinePackageError("archive expansion exceeds the verifier budget", RESOURCE_LIMIT)
+        if entry.file_size > max(entry.compressed_size, 1) * limits.max_compression_ratio:
+            raise OfflinePackageError("archive member compression ratio exceeds the verifier budget", RESOURCE_LIMIT)
     _silence_overlap_warning()
     names: list[str] = []
     seen: set[str] = set()
     layout: list[tuple[str, int, int]] = []
     try:
-        with zipfile.ZipFile(io.BytesIO(value), "r") as archive:
+        with zipfile.ZipFile(_ProfileArchiveReader(value, central), "r") as archive:
             if archive.comment:
                 raise OfflinePackageError(
                     "archive comment is not deterministic",
@@ -861,41 +965,24 @@ def verify_zip_members(
                     "archive member count exceeds the verifier budget",
                     RESOURCE_LIMIT,
                 )
-            total_uncompressed = 0
-            for info in members:
-                if info.flag_bits & 0x1:
-                    raise OfflinePackageError(
-                        "encrypted archive members are unsupported",
-                        "ecl.error.semantic-invalid.v1",
-                    )
-                if info.file_size > limits.max_entry_uncompressed_bytes:
-                    raise OfflinePackageError(
-                        f"archive member exceeds the verifier budget: {info.filename}",
-                        RESOURCE_LIMIT,
-                    )
-                total_uncompressed += info.file_size
-                if total_uncompressed > limits.max_total_uncompressed_bytes:
-                    raise OfflinePackageError(
-                        "archive expansion exceeds the verifier budget",
-                        RESOURCE_LIMIT,
-                    )
-                if (
-                    info.file_size
-                    and info.file_size
-                    > max(info.compress_size, 1) * limits.max_compression_ratio
-                ):
-                    raise OfflinePackageError(
-                        f"archive member compression ratio exceeds the verifier budget: "
-                        f"{info.filename}",
-                        RESOURCE_LIMIT,
-                    )
+            if len(members) != len(central):
+                raise _departure("the central directory readers disagree on the member count")
 
             prior_key: bytes | None = None
-            for info in members:
+            for info, entry in zip(members, central):
                 if info.orig_filename != info.filename:
                     raise OfflinePackageError(
                         f"unsafe package path: {info.orig_filename!r}",
                         "ecl.error.semantic-invalid.v1",
+                    )
+                # This archive limit counts stored name bytes, not a decoded CP437 name's
+                # later UTF-8 expansion. Accepted names are ASCII, so both counts then agree.
+                if entry.name_length > limits.max_path_bytes:
+                    raise OfflinePackageError("archive member name exceeds the verifier budget", RESOURCE_LIMIT)
+                if not info.orig_filename.isascii():
+                    raise OfflinePackageError(
+                        f"unsafe package path: {ascii(info.orig_filename)} is not an ecl.zip.store.v1 entry name",
+                        SEMANTIC_INVALID,
                     )
                 name = zip_entry_name(info.orig_filename, limits=limits)
                 if _zip_alias(name) in seen:
@@ -921,6 +1008,7 @@ def verify_zip_members(
                 if (
                     info.date_time != (1980, 1, 1, 0, 0, 0)
                     or info.compress_type != zipfile.ZIP_STORED
+                    or info.compress_size != info.file_size
                     or info.flag_bits != 0
                     or info.extra
                     or info.comment
@@ -951,7 +1039,7 @@ def verify_zip_members(
                 if observed != info.file_size:
                     raise OfflinePackageError(
                         f"archive member size is inconsistent: {name}",
-                        "ecl.error.integrity-invalid.v1",
+                        SEMANTIC_INVALID,
                     )
                 names.append(name)
                 layout.append((name, info.CRC, info.file_size))

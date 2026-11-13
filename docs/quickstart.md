@@ -1,21 +1,31 @@
 # Quickstart: verify ECL-1 evidence
 
 This guide takes you from the sample evidence in the ECL-1 package to a
-verified result with each of the three verifiers of ECL-1 Version 1.0: the
+verified result with each of the three verifiers in the Version 1 public-review
+candidate, source `1.0.2-review.1`: the
 Python package `ecl-verify`, the TypeScript package with `ecl-verify-ts`, and
 the Go module with `ecl-verify-go`. You then read a report, see a tampered
 bundle fail, verify an offline package and run the conformance corpus. You need
-only the ECL-1 package (the release archive, unpacked, or a clone of the public
-repository); no step needs an account, and the verifiers make no network
-request.
+only the matching source package (an unpacked archive or a checkout of the
+candidate's exact source); no step needs an account, and the verifiers make no network
+request. Keep the candidate source digest with the reports; historical v1.0.1
+tools and results describe a different source revision.
 
 Every command runs from the root of the ECL-1 package unless a step says
 otherwise. You need Python 3.10 or later for the Python verifier, Node.js 22
 or later with npm for the TypeScript verifier and Go 1.26.10 or later for the Go verifier; any one
-of the three is enough to follow the guide in that language. Installing the
-Python and TypeScript dependencies reads them from your package index and npm
+of the three is enough to verify the sample evidence in that language.
+The report-integrity check in Section 8 also needs the Python environment
+from Section 2. Installing the Python and TypeScript dependencies reads them
+from your package index and npm
 registry, or from your local caches; the Go module has no dependency outside
-the standard library. These minimum versions are compatibility floors. Use
+the standard library. Its `go.mod` requires at least Go 1.26.10 and suggests
+Go 1.27.3. With the default automatic toolchain selection, Go may download
+that toolchain when it is not available locally. For an offline build,
+preinstall or cache the selected toolchain, or set `GOTOOLCHAIN=local` and use
+an installed Go version that satisfies the minimum. These minimum versions
+are compatibility floors; the toolchain in a recorded qualification is a
+separate reproduction setting. Use
 maintained runtimes with current security patches for deployment. Qualification
 keeps fixed versions for reproduction; the public CI also checks a
 newer-runtime combination.
@@ -78,7 +88,10 @@ status and its trusted time), the bindings between requests, responses and
 events, the causal status, each effect with its evidence level, and the
 findings. A `verified` bundle is signed, bound and complete as its
 `established:` items say, and no more. Add `--json` for the same report as
-canonical JSON.
+canonical JSON. The [design guide](review-design-decisions.md) explains two
+public-review contract choices: an admit must be evaluated before request
+expiry, and continuation uniqueness counts admitted continuations while
+allowing refusal history. Missing approval alone remains incomplete.
 
 Compare the reports of the other two bundles:
 
@@ -125,7 +138,9 @@ that begins with the bytes `PK` as a package:
 Its verdict is `verified`. The same command on
 `package-invalid-artifact-digest.zip` of the same folder gives `invalid`, with
 the finding `ecl.error.integrity-invalid.v1`: an artifact's digest differs from
-its manifest entry.
+its manifest entry. `--accept-current-trust-failure` can accept current trust
+failure of the contained bundle; it does not waive the outer offline package's
+expiry. An expired package still returns `current-trust-failed` and exit 4.
 
 ## 6. Run the conformance corpus in Python
 
@@ -175,18 +190,27 @@ go run ./cmd/ecl-verify-go ../../conformance/fixtures/evidence/succeeded.json \
 ```
 
 The verdict is again `verified`, and `tampered.json` again gives `invalid` with
-the exit status 1. To run the whole shared corpus with the Go verifier:
+the exit status 1. The command above uses `go run`, which maps a nonzero
+verifier exit to its own status 1 and reports the verifier's code as
+`exit status N`. To distinguish statuses 2, 3 and 4 in automation, build the
+verifier with `go build -o <output-path> ./cmd/ecl-verify-go` and run that
+executable directly. To run the whole shared corpus with the Go verifier
+from a Git checkout, use its actual source commit:
 
-```
+```sh
+ECL_SOURCE_REVISION="$(git rev-parse HEAD)"
 go run ./cmd/ecl-corpus-check --repo-root ../.. --report ../../go-corpus.json \
-  --revision 0000000000000000000000000000000000000000
+  --revision "$ECL_SOURCE_REVISION"
 ```
 
 It prints a summary and exits 0 when every vector meets its expectation. The
 report file holds each result and names its raw evidence, which the command
-writes in the folder `go-corpus-evidence` beside the report. `--revision` names
-the source revision that the report records; the zeros stand for an unrecorded
-revision. `go test ./...` runs the module's tests.
+writes in the folder `go-corpus-evidence` beside the report. For an archive
+without Git metadata, set `ECL_SOURCE_REVISION` to the exact source commit in
+that archive's manifest before running the command. The revision must be a
+nonzero 40-character commit identifier; an all-zero placeholder is rejected.
+The report also binds the implementation files by digest. `go test ./...` runs
+the module's tests.
 
 The implementer report checker verifies such a report against the corpus, its
 evidence and the source it names, with no network use:

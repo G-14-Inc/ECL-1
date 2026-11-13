@@ -48,11 +48,13 @@ The package provides verification. ZIP and content fixture builders live under
   carries, its signatures, issuer, type, binding and freshness (EBMP2-070),
   the release with its declared guard against the window (EBMP2-050) and the
   release a terminal event records (EBMP2-072), and every report carries
-  `scope`, the checks that held and what the verdict does not establish
-  (EBMP2-076), with the reason of each item the table names one for and the
-  member `completionAfterWindow`, such as that the enforcement point checked
-  and released as its events record or that the effects happened: a verified
-  bundle's records are signed, bound and complete, and their statements remain
+  `scope`: the checks that held and what the verdict does not establish,
+  with the reasons required by EBMP2-076. Record verification does not
+  establish that the enforcement point checked and released as its events
+  say, or that the effects occurred. The separate `completionAfterWindow`
+  member is true when a terminal event records completion at or after the
+  authorization's `valid_until`; it does not change the verdict. A verified
+  bundle's records are signed, bound and complete; their statements remain
   their producers' statements.
 - Offline packages (OFFLINE-VERIFICATION-1): a strict reader of the
   `ecl.zip.store.v1` archive, over bytes and without decompression, and the
@@ -94,12 +96,22 @@ The command `ecl-verify-ts` (`dist/cli/ecl-verify.js`) takes a bundle or an
 offline package, `--trust-policy FILE`, and optionally earlier trust-policy
 versions (`--trust-policy-history FILE`, repeated), the evaluation time
 (`--now`), `--accept-current-trust-failure`, `--require-trusted-time`, a
-Consequential Action Register (`--register FILE`) and `--json`. Its exit
+Consequential Action Register (`--register FILE`), `--input-format auto|bundle|package`
+and `--json`. Its exit
 status is 0 for `verified`, 1 for `invalid`, 3 for `incomplete`, 4 for
 `current-trust-failed` and 2 for a usage error (EBMP2-060).
-It verifies a file that begins with the bytes `PK` as an offline package of at
-most 1 GiB, the declared archive limit, and any other file as a JSON evidence
-bundle of at most 1 MiB. A usage error is one line on standard error,
+
+`--accept-current-trust-failure` and the API's `acceptCurrentTrustFailure`
+option accept only current failures of the bundle's trust dependencies. They
+do not waive offline-package expiry. If that waiver was applied but the outer
+package is expired, `accepted_current_trust_failure` remains true in the JSON
+report (`acceptedCurrentTrustFailure` in the API), while the final verdict
+remains `current-trust-failed` and the CLI exits 4.
+The default `auto` format treats a file beginning with `PK` as an offline
+package and any other file as a JSON evidence bundle. Use `--input-format
+package` or `--input-format bundle` when the format is known, including for
+truncated or malformed inputs. Packages have a 1 GiB archive limit; JSON
+bundles have a 1 MiB limit. A usage error is one line on standard error,
 `error: CODE: MESSAGE` when the refusal has a registered code and
 `error: MESSAGE` otherwise, as the reference's `ecl-verify` writes it. A trust
 policy over 256 KiB or a bundle or register over 1 MiB is refused as a usage
@@ -245,10 +257,24 @@ After the build:
 - `node scripts/check-corpus.mjs` runs `ecl-verify-ts` on every vector of the
   `evidence-bundle` and `package` stages and on the sample evidence in
   `conformance/fixtures/evidence/`, and compares each verdict and exit status
-  with the expected one;
+  with the expected one, selecting the format from the manifest stage;
 - `node scripts/build-verifier.mjs --check` checks that the browser verifier's
   script, `web/verifier/verifier.js`, equals a fresh build from `web/app.ts`
   and `src/`; `npm run verifier:build` writes it.
+
+The exported `runCorpus` API evaluates all shared-corpus stages. Its report
+binding budget is 512 MiB per artifact, separate from the package verifier's
+1 GiB archive limit. It hashes each full artifact while retaining only the
+stage's input-byte limit plus one byte for evaluation, and refuses a changed
+artifact before writing the final report. The source export has limits of
+512 MiB per file, 4 GiB total and 100,000 files. The runner binds the exact
+shared-corpus bytes parsed at the start. Inputs must remain frozen for report
+integrity verification against the same export and corpus.
+
+A malformed JSON bundle is a usage error in the standalone CLI; the corpus
+API instead records the Parse finding with an `invalid` verdict; scope and
+effect observations are absent. The CLI comparison script does not
+substitute an invalid report for a usage error.
 
 The files in `src/generated/` are generated from the repository's schemas and
 registries; do not edit them by hand. The binding-record and document schemas

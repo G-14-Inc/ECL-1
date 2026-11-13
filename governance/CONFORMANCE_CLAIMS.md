@@ -19,12 +19,22 @@ holds at least what Section 7.7 requires (ECL1N-0078):
 - the claim boundary class;
 - the achieved independence class;
 - the ECL-1 core version and the companion version set;
+- the applied correction release and errata, and the immutable identity of the
+  source used (for example its source-archive SHA-256), as the
+  [errata policy](ERRATA.md) and release record require;
 - any deployment or sector profile invoked, with its version;
 - the date of the most recent assessment, affirmation or evidence refresh;
 - any material deployment or evidence limitation relevant to the claim;
 - any mapping packet and residual-gap statement, if the claim asserts support
   for an external framework, which it then names with the packet identifier
   and the bounded obligation slice (ECL1N-0079).
+
+A claim at L1 through L4 uses `full-system-mediation` or
+`bounded-action-class-mediation`. A component or profile implementation report
+has no overall ECL conformance level. It identifies the component and version,
+the applicable requirements and their results, the named capabilities and
+profile versions, the evidence, and explicit limitations. It cannot be used to
+omit runtime requirements from an L1–L4 claim.
 
 A `Class A` claim discloses that the control plane uses same-operator separated
 controls (ECL1N-0076). A `Class B` or `Class C` claim identifies the separately
@@ -33,11 +43,15 @@ and a `Class C` claim also the externally independent authority (ECL1N-0144).
 The wording below is an abbreviated example. Before use, replace "the declared
 SoI" with its identifier or bounded description and identify the applicable
 companion version set. The complete claim also supplies the trust-domain
-information required above.
+information required above. This example identifies the historical v1.0.1
+source; it is illustrative and reports no completed assessment.
 
 > ECL-1 Version 1.0, L2, assessment-only, bounded-action-class-mediation,
-> Class B independence, assessed 2027-01-15 for the declared SoI using DCMP-2
-> v2.0 / EBMP-2 v2.0, with production-equivalent=false explicitly disclosed.
+> Class B independence, evidence refreshed 2027-01-15 for the declared SoI;
+> assessment in progress. Uses DCMP-2 v2.0 / EBMP-2 v2.0, correction release
+> v1.0.1 and ERR-1.0-001; source archive ecl-1-1.0.1.zip, SHA-256
+> 6929cfcd3d6333385e48d804f8e4ad2f558e190cb5b810a9d505bd999333d969;
+> production-equivalent=false.
 
 An implementer may also publish the claim as a claim document that satisfies
 `schemas/ecl-conformance-claim-v1.schema.json`
@@ -80,7 +94,8 @@ SHA-256 digest of each file it links:
    - the entry has every required field and satisfies the registry's schema,
      `community/implementers.schema.json`;
    - the claim states each element of Section 7.7, and names the version, the
-     level and the claim boundary, and its level is the entry's `level`;
+     level and the claim boundary, identifies its applied correction release,
+     errata and immutable source, and its level is the entry's `level`;
    - the conformance report can be fetched and matches the digest that the
      pull request gives;
    - the report covers the version claimed, gives a result for every vector
@@ -170,10 +185,9 @@ implementers:
   - name: "Example Gateway 2.3.1"
     organization: "Example Corp."
     url: "https://example.com/gateway"
-    claim: "ECL-1 Version 1.0, L2, assessment-only, bounded-action-class-mediation, Class B independence, assessed 2027-01-15 for the declared SoI using DCMP-2 v2.0 / EBMP-2 v2.0, with production-equivalent=false explicitly disclosed."
+    claim: "ECL-1 Version 1.0, L2, assessment-only, bounded-action-class-mediation, Class B independence, evidence refreshed 2027-01-15 for the declared SoI; assessment in progress. Uses DCMP-2 v2.0 / EBMP-2 v2.0, correction release v1.0.1 and ERR-1.0-001; source archive ecl-1-1.0.1.zip, SHA-256 6929cfcd3d6333385e48d804f8e4ad2f558e190cb5b810a9d505bd999333d969; production-equivalent=false."
     level: "L2"
     status: "self-declared"
     listed: "2027-01-27"
     report: "https://example.com/gateway/ecl-1/conformance-report.json"
-    assessment: "https://example.org/assessments/example-gateway-2027-01.pdf"
 ```

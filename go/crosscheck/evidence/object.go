@@ -8,13 +8,14 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/semantic"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
 )
 
-// The parser limits of the reference for one signed object: an object nested deeper than 32
-// levels or holding more than 10 000 values gets one finding and nothing else is checked.
+// The restricted-JSON default limits also apply to already-decoded objects. The root is at
+// depth zero and every value, including scalar leaves, counts toward both bounds.
 const (
-	MaxObjectDepth = 32
-	MaxObjectNodes = 10_000
+	MaxObjectDepth = strict.MaxDepth
+	MaxObjectNodes = strict.MaxNodes
 	maxPerRule     = 100
 )
 
@@ -38,7 +39,7 @@ func limitExceeded(value any) string {
 		value any
 		depth int
 	}
-	stack := []pending{{value, 1}}
+	stack := []pending{{value, 0}}
 	for len(stack) > 0 {
 		current := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
@@ -59,10 +60,7 @@ func limitExceeded(value any) string {
 			return fmt.Sprintf("node count exceeds %d", MaxObjectNodes)
 		}
 		for _, child := range children {
-			switch child.(type) {
-			case []any, map[string]any:
-				stack = append(stack, pending{child, current.depth + 1})
-			}
+			stack = append(stack, pending{child, current.depth + 1})
 		}
 	}
 	return ""
@@ -88,7 +86,7 @@ func objectFindings(value any) ([]Finding, error) {
 		return []Finding{invalid("/", "an ECL object must be a JSON object")}, nil
 	}
 	if excess := limitExceeded(object); excess != "" {
-		return []Finding{invalid("/", excess)}, nil
+		return []Finding{{RuleID: strict.ResourceLimitExceeded, Path: "/", Detail: excess}}, nil
 	}
 	protocol, _ := pyjson.Text(object["protocol"])
 	reference, isProtocol := protocolSchemas[protocol]
@@ -110,29 +108,28 @@ func objectFindings(value any) ([]Finding, error) {
 		}
 		findings = append(findings, invalid(item.Path, item.Keyword+": "+item.Message))
 	}
-	if isProtocol {
-		found, err := semantic.Validate(object, semantic.Registered())
-		if err != nil {
-			findings = append(findings, invalid("/", "semantic validation could not be completed: "+err.Error()))
-		} else {
-			counts := map[string]int{}
-			for _, item := range found {
-				counts[item.RuleID]++
-				if counts[item.RuleID] <= maxPerRule {
-					findings = append(findings, Finding{RuleID: item.RuleID, Path: cutText(item.Path), Detail: cutText(item.Detail)})
-				}
+	found, err := semantic.Validate(object, semantic.Registered())
+	if err != nil {
+		findings = append(findings, invalid("/", "semantic validation could not be completed: "+err.Error()))
+	} else {
+		counts := map[string]int{}
+		for _, item := range found {
+			counts[item.RuleID]++
+			if counts[item.RuleID] <= maxPerRule {
+				findings = append(findings, Finding{RuleID: item.RuleID, Path: cutText(item.Path), Detail: cutText(item.Detail)})
 			}
-			rules := map[string]any{}
-			for rule := range counts {
-				rules[rule] = nil
-			}
-			for _, rule := range pyjson.Keys(rules) {
-				if counts[rule] > maxPerRule {
-					findings = append(findings, Finding{RuleID: rule, Path: "/", Detail: fmt.Sprintf("%d more follow, and are not listed", counts[rule]-maxPerRule)})
-				}
+		}
+		rules := map[string]any{}
+		for rule := range counts {
+			rules[rule] = nil
+		}
+		for _, rule := range pyjson.Keys(rules) {
+			if counts[rule] > maxPerRule {
+				findings = append(findings, Finding{RuleID: rule, Path: "/", Detail: fmt.Sprintf("%d more follow, and are not listed", counts[rule]-maxPerRule)})
 			}
 		}
 	}
+
 	sortFindings(findings)
 	return findings, nil
 }

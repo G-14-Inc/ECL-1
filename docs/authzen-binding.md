@@ -93,54 +93,18 @@ declared deviations from the bound protocol (AZB1-008).
 
 ## 5. Correlation
 
-Every request carries a fresh UUID in `X-Request-ID`. The identifier in the
-response is recorded but does not gate the decision: AuthZEN §10.1.3 asks a PDP
-to echo it, and not every engine does. Pairing therefore rests on the
-dedicated, unpooled connection, and the sent and received identifiers and the
-digests of the bytes exchanged remain diagnostic evidence.
+Every request carries a fresh UUID in `X-Request-ID`. AuthZEN §10.1.3 requires
+the PDP to return the same request identifier when one is supplied. This
+binding records the response identifier but does not use it to gate the
+decision. Pairing rests on the dedicated, unpooled connection; the sent and
+received identifiers and the digests of the bytes exchanged remain diagnostic
+evidence.
 
 ## 6. Capability and loss table
 
-`supported` means that the binding sends or consumes the capability. `native`
-means that the ECL protocol assigns the capability to ECL's own path, which the
-PDP cannot override; the disposition assigns that responsibility and does not
-claim that a deployment implements every native control operation.
-`unsupported` means that the binding neither sends the capability nor treats it
-as a release capability, so a request or response that depends on it is
-refused or not produced. A deployment publishes this table, with these
-dispositions, under AZB1-006.
-
-| Capability | Disposition | ECL behavior |
-|---|---|---|
-| evaluation | supported | One evaluation per decision attempt. |
-| decision-boolean | supported | Only unqualified boolean true contributes to admit. |
-| request-correlation | supported | Fresh request id and unpooled connection; echo recorded only. |
-| evaluations-batch | unsupported | No batch endpoint; an empty evaluations array could evaluate defaults under AuthZEN §7.1. |
-| metadata-discovery | unsupported | Evaluation URL is pinned configuration. |
-| search-subject | unsupported | No search endpoint. |
-| search-resource | unsupported | No search endpoint. |
-| search-action | unsupported | No search endpoint. |
-| decision-context | unsupported | A context-qualified permit denies; context is never interpreted as an obligation. |
-| signed-metadata | unsupported | No signed PDP metadata is accepted. |
-| policy-reference | unsupported | The PDP supplies no ECL policy identifier, version or digest. The DCMP-2 response binds the policy that the decision point applied (DCMP2-016); the digests of the PDP request and response and the PDP endpoint identify the exchange. |
-| outcome-hold | native | A boolean PDP cannot originate a DCMP-2 hold. |
-| outcome-challenge | native | A boolean PDP cannot originate a DCMP-2 challenge. |
-| obligations | native | ECL must handle obligations; PDP context never creates one. |
-| validity-window | native | ECL must set and check the authority window. |
-| use-policy | native | The ECL decision and enforcement path must own use charges and quota. |
-| safe-state | native | A dependency-failure deny must apply ECL's declared safe-state rule (DCMP2-041). |
-| control-cancel | native | ECL control path is specified separately; not an AuthZEN evaluation. |
-| control-revoke | native | ECL control path is specified separately; not an AuthZEN evaluation. |
-| control-supersede | native | ECL control path is specified separately; not an AuthZEN evaluation. |
-| control-quarantine | native | ECL control path is specified separately; not an AuthZEN evaluation. |
-| control-halt | native | ECL control path is specified separately; not an AuthZEN evaluation. |
-| action-parameters | unsupported | Parameters are not sent; the ECL decision path must check them. |
-| constraints | unsupported | Constraints are not sent; the ECL decision path must check them. |
-| delegation-chain | unsupported | Delegation is not sent; the ECL decision path must check it. |
-
-DCMP-2 control messages (`cancel`, `revoke`, `supersede`, `quarantine`, `halt`),
-`challenge` and `challenge_response` are refused by the binding; ECL processes
-the control and challenge flows it supports natively.
+The exact capability dispositions are the normative table in
+[AUTHZEN-BINDING-1](../profiles/AUTHZEN-BINDING-1.md#capability-and-loss-table-normative),
+under AZB1-006. A deployment publishes those dispositions with its evidence.
 
 ## 7. Policy changes and bounded staleness
 

@@ -388,20 +388,20 @@ test("EBMP2-078: a continuation names its continued request, the challenge and t
     ["another workflow", (p) => void (((p["continuation_request"] as JsonObject)["workflow"] as JsonObject)["workflow_id"] = "urn:example:workflow:other"), "is not in the continued request's workflow and root trace"],
     ["another subject", (p) => void (((p["continuation_request"] as JsonObject)["subject"] as JsonObject)["id"] = "urn:example:tenant:other"), "changes the continued request's subject"],
     ["another authority request", (p) => void (((p["continuation_request"] as JsonObject)["authority_request"] as JsonObject)["requested_validity_seconds"] = 30), "changes the continued request's authority_request"],
-    [
-      "two continuations",
-      (p) => {
-        const second = structuredClone(p["continuation_request"]) as JsonObject;
-        second["message_id"] = "https://externalcontrollayer.ai/ns/message/sha256/" + "e".repeat(64);
-        (second["workflow"] as JsonObject)["attempt"] = 3;
-        return [second];
-      },
-      "continues a response that another request continues",
-    ],
   ];
   for (const [name, change, message] of cases) {
     assert.ok(continuationFindings(verify(continuationBundle(change))).includes(`${BINDING}: ${message}`), `${name}: ${JSON.stringify(continuationFindings(verify(continuationBundle(change))))}`);
   }
+  // Two unanswered continuations do not violate admitted-only uniqueness.
+  // Complete two-admit and admitted-then-refused histories are tested in
+  // public-review-design-decisions.test.ts and the shared signed corpus.
+  const pending = continuationBundle((p) => {
+    const second = structuredClone(p["continuation_request"]) as JsonObject;
+    second["message_id"] = "https://externalcontrollayer.ai/ns/message/sha256/" + "e".repeat(64);
+    (second["workflow"] as JsonObject)["attempt"] = 3;
+    return [second];
+  });
+  assert.deepEqual(continuationFindings(verify(pending)), []);
   // A named object that the bundle does not hold is an unresolved predecessor, not a finding here.
   const without = continuationBundle();
   const missing = verify({ ...without, envelopes: (without["envelopes"] as JsonObject[]).filter((_, position) => position !== 2) });

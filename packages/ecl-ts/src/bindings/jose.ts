@@ -6,7 +6,7 @@
  *
  * A verifier takes keys only from the key set its caller configures: a header that carries or
  * points to a key (`jwk`, `jku`, `x5u`, `x5c`) is refused, as are `none`, every symmetric
- * algorithm, an unknown `kid` and any `crit` member. A DPoP proof (RFC 9449) is the exception: its
+ * algorithm, an unknown `kid` and any `crit` or `b64` member. A DPoP proof (RFC 9449) is the exception: its
  * header carries the public key that the proof is checked with, and the caller then compares that
  * key's thumbprint with the token's `cnf.jkt`.
  *
@@ -42,6 +42,12 @@ export const DPOP_TYPE = "dpop+jwt";
 export const KEY_HEADERS: readonly string[] = ["jwk", "jku", "x5u", "x5c"];
 export const MAX_TOKEN_BYTES = 16 * 1024;
 
+const ED25519_FIELD = 2n ** 255n - 19n;
+const SMALL_ORDER_Y = new Set([
+  0n, 1n, ED25519_FIELD - 1n,
+  2707385501144840649318225287225658788936804267575313519463743609750303402022n,
+  55188659117513257062467267217118295137698188065244968500265048394206261417927n,
+]);
 const L = 2n ** 252n + 27742317777372353535851937790883648493n;
 const P256_ORDER = 0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551n;
 const EdPoint = ed25519.Point;
@@ -190,6 +196,11 @@ function checkedHeader(header: PyObject, expectedType: string): string {
   if (own(header, "crit") !== undefined) {
     throw new JoseError("crit", "the header has a crit member this verifier does not understand");
   }
+  // RFC 7797 requires b64 in crit whenever used; this verifier supports no critical
+  // JOSE extensions. JWTs also forbid the unencoded-payload option b64=false.
+  if (own(header, "b64") !== undefined) {
+    throw new JoseError("b64", "the b64 header extension is not supported for these JWTs");
+  }
   return algorithm;
 }
 
@@ -323,6 +334,15 @@ export function verifyDpop(proof: unknown): [PyObject, PyObject, string] {
   const jwk = own(header, "jwk");
   if (!isPyObject(jwk) || ["jku", "x5u", "x5c"].some((name) => own(header, name) !== undefined)) {
     throw new JoseError("key-header", "a DPoP proof carries exactly its public key in jwk");
+  }
+  if (pyEquals(own(jwk, "kty"), "OKP") && pyEquals(own(jwk, "crv"), "Ed25519")) {
+    const raw = coordinate(jwk, "x", 32);
+    // The sign bit does not change point order. Reduction covers alternate encodings;
+    // off-curve keys proceed to the same algorithm/signature refusal as the other ports.
+    const y = (littleEndian(raw) & ((1n << 255n) - 1n)) % ED25519_FIELD;
+    if (SMALL_ORDER_Y.has(y)) {
+      throw new JoseError("key", "a DPoP Ed25519 presenter key must not have small order");
+    }
   }
   verifySignature(algorithm, jwk, signingInput, signature);
   return [header, claims, thumbprint(jwk)];

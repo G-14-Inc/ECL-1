@@ -50,7 +50,7 @@ function parts(value: unknown): Parts {
   const year = Number(yearText);
   const month = Number(monthText);
   const day = Number(dayText);
-  if (year < 1 || day > daysInMonth(year, month)) {
+  if (year < 1 || day < 1 || day > daysInMonth(year, month)) {
     throw new InstantError("timestamp is not a calendar date that exists");
   }
   const days = daysFromCivil(year, month, day);

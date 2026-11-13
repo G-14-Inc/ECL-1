@@ -9,6 +9,7 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/registry"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validator"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 )
 
 // The rules of every ECL object that carries extensions (EXTENSION-REGISTRY-1 section 2 and
@@ -34,12 +35,24 @@ type extensionRegistry struct {
 	known      map[string]bool
 	active     map[string]map[int64]bool
 	composable map[string]bool
+	applicable ExtensionApplicability
 }
 
+// ExtensionApplicability binds each identifier/version to its declared object types.
+type ExtensionApplicability map[string]map[int64]map[string]bool
+
 var snapshot = sync.OnceValue(func() extensionRegistry {
-	found := extensionRegistry{known: map[string]bool{}, active: map[string]map[int64]bool{}, composable: registry.ComposableExtensions()}
+	found := extensionRegistry{known: map[string]bool{}, active: map[string]map[int64]bool{}, composable: registry.ComposableExtensions(), applicable: ExtensionApplicability{}}
 	for _, entry := range registry.Entries("extensions") {
 		found.known[entry.ID] = true
+		if found.applicable[entry.ID] == nil {
+			found.applicable[entry.ID] = map[int64]map[string]bool{}
+		}
+		kinds := map[string]bool{}
+		for _, kind := range entry.AppliesTo {
+			kinds[kind] = true
+		}
+		found.applicable[entry.ID][entry.Version] = kinds
 		if entry.Status != "active" {
 			continue
 		}
@@ -51,14 +64,48 @@ var snapshot = sync.OnceValue(func() extensionRegistry {
 	return found
 })
 
+// ObjectType identifies the carrying object rather than an envelope's payload.
+func ObjectType(root map[string]any) string {
+	protocol, _ := root["protocol"].(string)
+	if protocol == "DCMP-2" || protocol == "EBMP-2" || protocol == "ECL-WI-1" {
+		return protocol
+	}
+	if kind, ok := root["envelope_version"].(string); ok {
+		return kind
+	}
+	return protocol
+}
+
+func configuredExtensions(active map[string]map[int]bool, applicability ExtensionApplicability) extensionRegistry {
+	ext := snapshot()
+	if applicability != nil {
+		ext.applicable = applicability
+	}
+	if active != nil {
+		ext.active = map[string]map[int64]bool{}
+		for identifier, versions := range active {
+			ext.active[identifier] = map[int64]bool{}
+			for version, implemented := range versions {
+				ext.active[identifier][int64(version)] = implemented
+			}
+		}
+	}
+	return ext
+}
+
+// Interpretable applies both implemented-version and carrying-object restrictions.
+func Interpretable(root map[string]any, identifier string, version int64, active map[string]map[int]bool, applicability ExtensionApplicability) bool {
+	ext := configuredExtensions(active, applicability)
+	return ext.active[identifier][version] && ext.applicable[identifier][version][ObjectType(root)]
+}
+
 // Allocated reports whether the embedded registry holds an identifier under any status (XR1-017).
 func Allocated(identifier string) bool {
 	return snapshot().known[identifier]
 }
 
-// extensionEntries returns the extensions member of root as the reference's extension checks
-// read it: absent or null is no extension, and a member that is not an array of objects is
-// malformed (the reference's check raises and reports the input as schema-invalid).
+// extensionEntries preserves array positions while leaving malformed entries to the schema.
+// Absent or null is no extension; a present member of another type is malformed.
 func extensionEntries(root map[string]any) ([]map[string]any, string) {
 	raw, present := root["extensions"]
 	if !present || raw == nil {
@@ -70,10 +117,8 @@ func extensionEntries(root map[string]any) ([]map[string]any, string) {
 	}
 	entries := make([]map[string]any, 0, len(list))
 	for _, item := range list {
-		entry, isObject := item.(map[string]any)
-		if !isObject {
-			return nil, malformedEntriesError
-		}
+		// Keep positions while leaving malformed entries to the schema.
+		entry, _ := item.(map[string]any)
 		entries = append(entries, entry)
 	}
 	return entries, ""
@@ -93,7 +138,7 @@ func ExtensionVersions(root map[string]any, composable map[string]bool) ([]valid
 	first := map[string]int64{}
 	for index, entry := range entries {
 		identifier, isText := entry["id"].(string)
-		version, isInteger := pyjson.Int(entry["version"])
+		version, isInteger := pyjson.SchemaInt(entry["version"])
 		if !isText || !isInteger || composable[identifier] {
 			continue
 		}
@@ -113,8 +158,7 @@ func ExtensionVersions(root map[string]any, composable map[string]bool) ([]valid
 	return findings, ""
 }
 
-// extensionsUnique is XR1-009: one object carries each pair of identifier and version once. A
-// version may be a boolean, as Python's isinstance(x, int) admits, and true is the version 1.
+// extensionsUnique is XR1-009 on correctly typed identifier/version pairs.
 func extensionsUnique(root map[string]any) ([]validator.Finding, string) {
 	entries, problem := extensionEntries(root)
 	if problem != "" {
@@ -124,9 +168,9 @@ func extensionsUnique(root map[string]any) ([]validator.Finding, string) {
 	seen := map[string]bool{}
 	for index, entry := range entries {
 		identifier, isText := entry["id"].(string)
-		version, isInteger := pyjson.PythonInt(entry["version"])
+		version, isInteger := pyjson.SchemaInt(entry["version"])
 		if !isText || !isInteger {
-			return nil, "extension id and version have invalid types"
+			continue
 		}
 		key := identifier + "\x00" + strconv.FormatInt(version, 10)
 		if seen[key] {
@@ -150,7 +194,7 @@ func extensionNamespace(root map[string]any, known map[string]bool) ([]validator
 	findings := []validator.Finding{}
 	for index, entry := range entries {
 		identifier, isText := entry["id"].(string)
-		if isText && strings.HasPrefix(identifier, "ecl.") && !known[identifier] {
+		if isText && ((strings.HasPrefix(identifier, "ecl.") && !known[identifier]) || reservedExtensionNamespace(identifier)) {
 			findings = append(findings, validator.Finding{
 				RuleID: RuleExtensionNamespace,
 				Path:   fmt.Sprintf("/extensions/%d/id", index),
@@ -159,6 +203,42 @@ func extensionNamespace(root map[string]any, known map[string]bool) ([]validator
 		}
 	}
 	return findings, ""
+}
+
+// Only the XR1-017 reservation comparison decodes ASCII unreserved host escapes once
+// and removes one terminal DNS dot. Identifier and principal bytes remain unchanged.
+func reservedExtensionNamespace(identifier string) bool {
+	// URI validation owns malformed inputs before the XR1-017 host comparison.
+	if !schema.IsURI(identifier) {
+		return false
+	}
+	parsed, ok := schema.SplitURI(identifier)
+	if !ok || (parsed.Scheme != "http" && parsed.Scheme != "https") {
+		return false
+	}
+	authority := parsed.Netloc
+	if at := strings.LastIndexByte(authority, '@'); at >= 0 {
+		authority = authority[at+1:]
+	}
+	if strings.HasPrefix(authority, "[") {
+		return false
+	}
+	host, _, _ := strings.Cut(authority, ":")
+	var comparison strings.Builder
+	for index := 0; index < len(host); index++ {
+		if host[index] == '%' && index+2 < len(host) {
+			decoded, err := strconv.ParseUint(host[index+1:index+3], 16, 8)
+			if err == nil && ((decoded >= 'a' && decoded <= 'z') ||
+				(decoded >= 'A' && decoded <= 'Z') || (decoded >= '0' && decoded <= '9') ||
+				decoded == '-' || decoded == '.' || decoded == '_' || decoded == '~') {
+				comparison.WriteByte(byte(decoded))
+				index += 2
+				continue
+			}
+		}
+		comparison.WriteByte(host[index])
+	}
+	return strings.EqualFold(strings.TrimSuffix(comparison.String(), "."), "externalcontrollayer.ai")
 }
 
 // criticalExtensions is XR1-006: a critical extension that is unknown to the consumer, one without
@@ -170,12 +250,15 @@ func criticalExtensions(root map[string]any, ext extensionRegistry) ([]validator
 	}
 	findings := []validator.Finding{}
 	for index, entry := range entries {
-		if !pyjson.Truthy(entry["critical"]) {
+		if entry["critical"] != true {
 			continue
 		}
 		identifier, isText := entry["id"].(string)
-		version, isInteger := pyjson.Int(entry["version"])
-		if !isText || !isInteger || !ext.active[identifier][version] {
+		version, isInteger := pyjson.SchemaInt(entry["version"])
+		if !isText || !isInteger {
+			continue
+		}
+		if !ext.active[identifier][version] || !ext.applicable[identifier][version][ObjectType(root)] {
 			findings = append(findings, validator.Finding{
 				RuleID: RuleUnknownCritical,
 				Path:   fmt.Sprintf("/extensions/%d/id", index),
@@ -193,6 +276,9 @@ func selfCausation(root map[string]any) ([]validator.Finding, string) {
 	if !pyjson.Truthy(objectID) {
 		objectID = root["object_id"]
 	}
+	if root["protocol"] == "ECL-WI-1" && pyjson.Truthy(root["intent_id"]) {
+		objectID = root["intent_id"]
+	}
 	raw, present := root["workflow"]
 	if !present || raw == nil {
 		return nil, ""
@@ -209,6 +295,29 @@ func selfCausation(root map[string]any) ([]validator.Finding, string) {
 	if !isList {
 		return nil, "causal_predecessors must be an array"
 	}
+	if root["protocol"] == "DCMP-2" || root["protocol"] == "EBMP-2" {
+		// Core identities are schema-required strings. Keep the imported core's
+		// typed identity domain while adding shared container diagnostics; a
+		// malformed numeric identity must not enter rational comparison here.
+		// Use the protocol's own identity even when unrelated fields are present.
+		identityMember := "message_id"
+		if root["protocol"] == "EBMP-2" {
+			identityMember = "object_id"
+		}
+		identifier, isText := root[identityMember].(string)
+		if !isText || identifier == "" {
+			return nil, ""
+		}
+		for _, item := range predecessors {
+			if entry, isEntry := item.(map[string]any); isEntry {
+				previous, isText := entry["id"].(string)
+				if isText && previous == identifier {
+					return []validator.Finding{{RuleID: RuleSelfCausation, Path: "/workflow/causal_predecessors", Detail: "an object cannot name itself as a causal predecessor"}}, ""
+				}
+			}
+		}
+		return nil, ""
+	}
 	if !pyjson.Truthy(objectID) {
 		return nil, ""
 	}
@@ -218,6 +327,16 @@ func selfCausation(root map[string]any) ([]validator.Finding, string) {
 		}
 	}
 	return nil, ""
+}
+
+// SelfCausation applies the shared check, retaining one schema finding when its
+// workflow or predecessor container is unreadable.
+func SelfCausation(root map[string]any) []validator.Finding {
+	found, problem := selfCausation(root)
+	if problem != "" {
+		return []validator.Finding{{RuleID: schemaInvalid, Path: "/", Detail: "self-causation semantic check rejected malformed input: " + problem}}
+	}
+	return found
 }
 
 // hashable reports whether Python could put value in a set: an object or an array cannot be.
@@ -232,42 +351,34 @@ func hashable(value any) bool {
 
 // integrityPolicy is the reference's check that an integrity policy's required flag, threshold
 // and key lists are consistent.
-// IntegrityPolicy returns the finding of the threshold rule (IE1-013) for one object: a threshold
-// that is not an integer, below one when integrity is required, not zero when it is optional, or
-// below the number of mandatory signers, or a mandatory signer outside a listed set of eligible
-// keys. These are the rule's only conditions. The second result is the reason the key lists
-// cannot be read, or "".
+// IntegrityPolicy checks each IE1-013 relation only when that relation's members have the
+// schema-required types. Malformed members are left to schema validation; independent,
+// correctly typed threshold and key-list relations remain checkable.
 func IntegrityPolicy(root map[string]any) ([]validator.Finding, string) {
 	policy, isObject := root["integrity_policy"].(map[string]any)
 	if !isObject {
 		return nil, ""
 	}
-	required := pyjson.Truthy(policy["required"])
+	required, requiredTyped := policy["required"].(bool)
 	keyList := func(name string) ([]any, bool) {
-		value := policy[name]
-		if !pyjson.Truthy(value) {
+		value, present := policy[name]
+		if !present {
 			return []any{}, true
 		}
 		list, isList := value.([]any)
+		for _, entry := range list {
+			if _, isText := entry.(string); !isText {
+				return nil, false
+			}
+		}
 		return list, isList
 	}
 	requiredKeys, requiredOK := keyList("required_key_ids")
 	eligibleKeys, eligibleOK := keyList("eligible_key_ids")
-	if !requiredOK || !eligibleOK {
-		return nil, "integrity key identifiers must be arrays"
-	}
-	threshold, isInteger := pyjson.Int(policy["threshold"])
-	invalid := !isInteger ||
-		(required && threshold < 1) ||
-		(!required && threshold != 0) ||
-		threshold < int64(len(requiredKeys))
-	if !invalid && len(eligibleKeys) > 0 {
-		// set(required).issubset(eligible): Python hashes the members of both lists.
-		for _, item := range append(append([]any{}, requiredKeys...), eligibleKeys...) {
-			if !hashable(item) {
-				return nil, "unhashable type in an integrity key list"
-			}
-		}
+	threshold, isInteger := pyjson.SchemaInt(policy["threshold"])
+	invalid := (requiredTyped && isInteger && ((required && threshold < 1) || (!required && threshold != 0))) ||
+		(isInteger && requiredOK && threshold < int64(len(requiredKeys)))
+	if !invalid && requiredOK && eligibleOK && len(eligibleKeys) > 0 {
 		for _, wanted := range requiredKeys {
 			if !pyjson.InList(wanted, eligibleKeys) {
 				invalid = true
@@ -281,13 +392,65 @@ func IntegrityPolicy(root map[string]any) ([]validator.Finding, string) {
 	return nil, ""
 }
 
+// ExtensionConsumers runs the extension consumer and value rules under the embedded registry.
+// A nil active map selects the embedded registry; an explicit map describes the caller's
+// implemented active versions without changing allocation or composability.
+func ExtensionConsumers(root map[string]any, active map[string]map[int]bool) []validator.Finding {
+	findings := ExtensionRules(root, active, nil)
+	entries, problem := extensionEntries(root)
+	if problem != "" {
+		return findings
+	}
+	refs := map[string]string{}
+	for _, entry := range registry.Entries("extensions") {
+		refs[entry.ID] = entry.ValueSchema
+	}
+	for index, entry := range entries {
+		identifier, isText := entry["id"].(string)
+		version, isInteger := pyjson.SchemaInt(entry["version"])
+		value, present := entry["value"]
+		if !isText || !isInteger || !present || refs[identifier] == "" || !Interpretable(root, identifier, version, active, nil) {
+			continue
+		}
+		if valid, err := schema.ECL().Valid(refs[identifier], value); err != nil || !valid {
+			findings = append(findings, validator.Finding{RuleID: "ecl.rule.extension-value-valid.v1", Path: fmt.Sprintf("/extensions/%d/value", index), Detail: "value of " + identifier + " does not match its registered schema"})
+		}
+	}
+	return findings
+}
+
+// ExtensionRules supplies allocation, version and critical-consumer checks to a configured consumer.
+func ExtensionRules(root map[string]any, active map[string]map[int]bool, applicability ExtensionApplicability) []validator.Finding {
+	ext := configuredExtensions(active, applicability)
+	findings := []validator.Finding{}
+	for _, check := range []func() ([]validator.Finding, string){
+		func() ([]validator.Finding, string) { return extensionsUnique(root) },
+		func() ([]validator.Finding, string) { return ExtensionVersions(root, ext.composable) },
+		func() ([]validator.Finding, string) { return extensionNamespace(root, ext.known) },
+		func() ([]validator.Finding, string) { return criticalExtensions(root, ext) },
+	} {
+		found, problem := check()
+		if problem != "" {
+			findings = append(findings, validator.Finding{RuleID: schemaInvalid, Path: "/", Detail: problem})
+		} else {
+			findings = append(findings, found...)
+		}
+	}
+	return findings
+}
+
 // Common returns the findings that the reference's semantic validator reports for an object of
 // no protocol it checks further, such as an ECL-IE-1 envelope or an ECL-WI-1 work intent: the
 // extension rules XR1-009, XR1-010, XR1-017 and XR1-006 under the embedded registry, self-
 // causation and integrity-policy consistency, in the reference's order. A check that cannot read
 // the value it needs reports one schema-invalid finding instead of its own, as the reference does.
 func Common(root map[string]any) []validator.Finding {
-	ext := snapshot()
+	return CommonFor(root, nil, nil)
+}
+
+// CommonFor applies the caller's implemented versions and object-type declarations.
+func CommonFor(root map[string]any, active map[string]map[int]bool, applicability ExtensionApplicability) []validator.Finding {
+	ext := configuredExtensions(active, applicability)
 	findings := []validator.Finding{}
 	guarded := func(name string, check func() ([]validator.Finding, string)) {
 		found, problem := check()
@@ -301,7 +464,7 @@ func Common(root map[string]any) []validator.Finding {
 	guarded("extension versions", func() ([]validator.Finding, string) { return ExtensionVersions(root, ext.composable) })
 	guarded("extension namespace", func() ([]validator.Finding, string) { return extensionNamespace(root, ext.known) })
 	guarded("critical extension", func() ([]validator.Finding, string) { return criticalExtensions(root, ext) })
-	guarded("self-causation", func() ([]validator.Finding, string) { return selfCausation(root) })
+	findings = append(findings, SelfCausation(root)...)
 	guarded("integrity policy", func() ([]validator.Finding, string) { return IntegrityPolicy(root) })
 	return findings
 }
@@ -310,4 +473,17 @@ func Common(root map[string]any) []validator.Finding {
 // composable (XR1-010).
 func Composable() map[string]bool {
 	return snapshot().composable
+}
+
+// InterpretedOccurrence selects only the embedded registry's active version on its object type.
+// It does not validate the extension value or remove unknown data from the carrying object.
+func InterpretedOccurrence(value, occurrence any) bool {
+	root, isRoot := pyjson.Object(value)
+	entry, isEntry := pyjson.Object(occurrence)
+	if !isRoot || !isEntry {
+		return false
+	}
+	identifier, isText := pyjson.Text(entry["id"])
+	version, isInteger := pyjson.SchemaInt(entry["version"])
+	return isText && isInteger && Interpretable(root, identifier, version, nil, nil)
 }

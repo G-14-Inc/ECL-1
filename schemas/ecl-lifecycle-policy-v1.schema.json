@@ -12,7 +12,8 @@
     "hold_precedence",
     "export",
     "redaction",
-    "destruction"
+    "destruction",
+    "policy_requirements"
   ],
   "additionalProperties": false,
   "properties": {
@@ -53,7 +54,8 @@
           },
           "duration": {
             "type": "string",
-            "pattern": "^P(?!$).+$"
+            "pattern": "^P(?:(?:[0-9]+Y(?:[0-9]+M)?(?:[0-9]+D)?|[0-9]+M(?:[0-9]+D)?|[0-9]+D)(?:T(?:[0-9]+H(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+M(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+(?:\\.[0-9]+)?S))?|T(?:[0-9]+H(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+M(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+(?:\\.[0-9]+)?S))$",
+            "description": "Unsigned XSD-duration lexical subset: ordered Y/M/D and optional T followed by H/M/S; at least one component, digits on both sides of a seconds decimal point, no weeks, signs or whitespace. Zero is valid syntax. Retention adequacy is assessed under ECL1N-0050 and ECL1N-0195 to ECL1N-0199."
           },
           "shortening_authority_class": {
             "type": "string",
@@ -124,6 +126,43 @@
           "const": true
         }
       }
+    },
+    "policy_requirements": {
+      "type": "object",
+      "description": "EL1-002 declarations for the five policy areas not carried by the other structured fields. Each declaration states its evidence-class scope and requirement or precise policy reference; inapplicability includes its basis.",
+      "required": [
+        "supersession",
+        "revocation",
+        "residency",
+        "encryption",
+        "access"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "supersession": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "revocation": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "residency": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "encryption": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "access": {
+          "$ref": "#/$defs/policyRequirement"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "policyRequirement": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "[^\t-\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]",
+      "description": "A nonblank declaration of applicability and the requirement or precise policy reference for this policy area."
     }
   }
 }

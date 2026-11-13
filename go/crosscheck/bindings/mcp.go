@@ -10,6 +10,7 @@ import (
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 )
 
@@ -47,14 +48,14 @@ const (
 )
 
 var (
-	// MG1-002: the requests a gateway always sends to the Decision Layer before forwarding.
-	mcpSideEffecting = map[string]bool{"tools/call": true, "tasks/update": true}
+	// MG1-002: complete forwarding mappings; other consequential methods remain governed.
+	mcpMapped = map[string]bool{"tools/call": true}
 	// MCPErrors is the error table of MG1-006, outside the range that JSON-RPC 2.0 reserves.
 	MCPErrors = map[string]int64{
 		"denied": -31001, "held": -31002, "challenged": -31003, "decision-unavailable": -31004,
 		"decision-invalid": -31005, "authorization-unusable": -31006, "not-mapped": -31007,
 		"unreviewed-change": -31008, "forward-failed": -31009, "obligation-unproven": -31010,
-		"evidence-unavailable": -31011,
+		"evidence-unavailable": -31011, "control-blocked": -31012, "control-state-unusable": -31013,
 	}
 	mcpRefusalForOutcome = map[string]string{"deny": "denied", "hold": "held", "challenge": "challenged"}
 	mcpNonRelease        = map[string]bool{"denied": true, "held": true, "challenged": true, "expired_before_release": true}
@@ -163,11 +164,11 @@ func MCPUnboundProblems(call map[string]any, prefix string) []problem {
 	return problems
 }
 
-// mcpSideEffectingMethod reports whether method names a request that MG1-002 sends to the
-// Decision Layer.
-func mcpSideEffectingMethod(method any) bool {
+// mcpMappedMethod reports whether this profile defines a complete forwarding mapping.
+// Other consequential methods remain governed and require a separate complete profile.
+func mcpMappedMethod(method any) bool {
 	name, isText := method.(string)
-	return isText && mcpSideEffecting[name]
+	return isText && mcpMapped[name]
 }
 
 // MCPReturnedFor is the response a gateway returns for a forwarded request whose server answered
@@ -253,7 +254,7 @@ func (m *toolMapping) changed(definition, server map[string]any) bool {
 		}
 		raise(err)
 	}
-	return !sameDigest(current, m.digest) || !pyjson.Equal(server["name"], m.get("server_name")) ||
+	return !sameDigest(current, m.digest) || !pyjson.Equal(server["id"], m.get("server_id")) || !pyjson.Equal(server["name"], m.get("server_name")) ||
 		!pyjson.Equal(server["version"], m.get("server_version")) || !pyjson.Equal(definition["name"], m.get("tool"))
 }
 
@@ -323,11 +324,11 @@ func newMCPView(record map[string]any) mcpView {
 	return view
 }
 
-// guard is the record's release guard in nanoseconds, zero when it gives none (MG1-014).
+// guard is the explicit release guard; absence is not zero (MG1-014).
 func (v mcpView) guard() *big.Int {
 	milliseconds, ok := integer(v.record, "release_guard_milliseconds")
-	if !ok || milliseconds < 0 {
-		return big.NewInt(0)
+	if !ok || milliseconds < 1 || milliseconds > 60000 {
+		return nil
 	}
 	return new(big.Int).Mul(big.NewInt(milliseconds), big.NewInt(1_000_000))
 }
@@ -336,8 +337,6 @@ func (v mcpView) admitted() bool {
 	return v.status == "answered" && text(v.response, "outcome") == "admit" && binds(v.request, v.response)
 }
 
-// unusable is EXPIRED or REPLAY when an admit cannot be used at the given time and until the
-// record's release guard after it (MG1-014), else "".
 // guardExceeded reports a cancelled terminal observed later than the recorded release plus the
 // record's release guard: the write could not begin within the guard (MG1-014), which the
 // record shows.
@@ -347,13 +346,23 @@ func (v mcpView) guardExceeded() bool {
 	}
 	releasedAt := nanos(member(v.released, "observed_at"))
 	endedAt := nanos(member(v.record, "terminal", "observed_at"))
-	if releasedAt == nil || endedAt == nil {
+	if releasedAt == nil || endedAt == nil || v.guard() == nil {
 		return false
 	}
 	return endedAt.Cmp(new(big.Int).Add(releasedAt, v.guard())) > 0
 }
 
+// unusable rejects unsupported authority, or returns EXPIRED or REPLAY when a supported
+// admit cannot be used through the release guard (MG1-014); otherwise it returns "".
 func (v mcpView) unusable(at any) string {
+	authorization := member(v.response, "authorization")
+	limit, hasLimit := integer(authorization, "max_uses")
+	if text(authorization, "use_policy") != "single_use" || (holds(authorization, "max_uses") && (!hasLimit || limit != 1)) {
+		return errUnsupported
+	}
+	if v.guard() == nil {
+		return ""
+	}
 	end := nanos(member(v.response, "authorization", "valid_until"))
 	if end != nil {
 		end = new(big.Int).Sub(end, v.guard())
@@ -361,12 +370,8 @@ func (v mcpView) unusable(at any) string {
 	if !inWindow(nanos(at), nanos(member(v.response, "authorization", "valid_from")), end) {
 		return errExpired
 	}
-	limit, limited := integer(v.response, "authorization", "max_uses")
-	if text(v.response, "authorization", "use_policy") == "single_use" {
-		limit, limited = 1, true
-	}
 	prior, _ := integer(v.record, "prior_uses")
-	if limited && prior+1 > limit {
+	if prior >= 1 {
 		return errReplay
 	}
 	return ""
@@ -482,8 +487,15 @@ func (v mcpView) discharged() bool {
 // mcpJournalFailed reports whether the gateway returned -31011: its journal could not record an
 // entry before the release (MG1-017), which the record itself cannot show.
 func mcpJournalFailed(record map[string]any) bool {
-	return pyjson.Equal(member(record, "returned", "error", "code"), json.Number(jsonInt(MCPErrors["evidence-unavailable"]))) &&
+	returnedFailure := pyjson.Equal(member(record, "returned", "error", "code"), json.Number(jsonInt(MCPErrors["evidence-unavailable"]))) &&
 		pyjson.Equal(member(record, "returned", "error", "data", "ecl", "code"), "evidence-unavailable")
+	// Recovery may retain the self-reported failure in its original terminal
+	// while lacking the returned RPC response. Neither proves the storage failure.
+	terminal, _ := object(record, "terminal")
+	values := extensionValues(terminal, mcpOutcomeReason)
+	recordedFailure := !holds(record, "returned") && text(record, "recovery", "classification") == "outcome-recorded" &&
+		len(values) == 1 && sameJSON(values[0]["code"], errEvidenceUnavailable)
+	return returnedFailure || recordedFailure
 }
 
 // MCPRefusal is the row of the error table for a request that the gateway refused.
@@ -504,7 +516,7 @@ func MCPRefusalCause(original map[string]any) (MCPRefusal, bool) {
 	view := newMCPView(record)
 	params := member(view.call, "params")
 	arguments := member(params, "arguments")
-	if view.mapping == nil || len(MCPUnboundProblems(view.call, "/call")) > 0 || !mcpSideEffectingMethod(view.call["method"]) || !pyjson.Equal(member(params, "name"), view.mapping.get("tool")) {
+	if view.mapping == nil || len(MCPUnboundProblems(view.call, "/call")) > 0 || !mcpMappedMethod(view.call["method"]) || !pyjson.Equal(member(params, "name"), view.mapping.get("tool")) {
 		return MCPRefusal{"not-mapped", errUnsupported, nil}, true
 	}
 	// An arguments member that is not an object, null included, is a cause of -31007: a null is
@@ -529,6 +541,9 @@ func MCPRefusalCause(original map[string]any) (MCPRefusal, bool) {
 	if view.status == "unavailable" || view.status == nil {
 		return MCPRefusal{"decision-unavailable", errUnavailable, nil}, true
 	}
+	if len(mcpRepeatedObligationIDs(view.response)) > 0 {
+		return MCPRefusal{"decision-invalid", "ecl.error.dependency-response-invalid.v1", nil}, true
+	}
 	if view.status == "invalid" {
 		return MCPRefusal{"decision-invalid", text(record, "decision", "error"), nil}, true
 	}
@@ -547,22 +562,32 @@ func MCPRefusalCause(original map[string]any) (MCPRefusal, bool) {
 	}
 	// MG1-017: once the use is consumed, a journal that fails cancels the attempt,
 	// and that failure is the refusal's cause, whatever the gateway had still to discharge.
-	if mcpJournalFailed(record) && text(record, "terminal", "event", "state") == "cancelled" {
+	if view.released == nil && mcpJournalFailed(record) && text(record, "terminal", "event", "state") == "cancelled" {
 		return MCPRefusal{"evidence-unavailable", errEvidenceUnavailable, requestID}, true
 	}
-	if !view.discharged() {
+	if cause, reason := mcpControlCause(view); cause != "" {
+		return MCPRefusal{cause, reason, requestID}, true
+	}
+	if !view.discharged() || mcpStaleDischarge(view) {
 		return MCPRefusal{"obligation-unproven", errObligationUnproven, requestID}, true
 	}
-	if mcpJournalFailed(record) {
+	if view.released == nil && mcpJournalFailed(record) {
 		return MCPRefusal{"evidence-unavailable", errEvidenceUnavailable, requestID}, true
 	}
 	// MG1-014 and MG1-015: the write begins within the declared release guard after
 	// the final observation, or not at all; a cancelled terminal observed later than the release
 	// event plus the guard shows a write that could not begin in time.
+	if member(record, "release_observations", "final", "clock_regressed") == true {
+		return MCPRefusal{"authorization-unusable", mcpClockRegressed, requestID}, true
+	}
 	if view.guardExceeded() {
 		return MCPRefusal{"authorization-unusable", errExpired, requestID}, true
 	}
-	if problem := view.unusable(member(record, "returned_at")); problem != "" {
+	observation := member(record, "release_observations", "final")
+	if observation == nil {
+		observation = member(record, "release_observations", "initial")
+	}
+	if problem := view.unusable(member(observation, "observed_at")); observation != nil && problem != "" {
 		return MCPRefusal{"authorization-unusable", problem, requestID}, true
 	}
 	return MCPRefusal{}, false
@@ -609,7 +634,7 @@ func mcpReview(view mcpView) []problem {
 	if view.forwarded == nil {
 		return nil
 	}
-	if !mcpSideEffectingMethod(view.call["method"]) {
+	if !mcpMappedMethod(view.call["method"]) {
 		return []problem{{"/forwarded", "forwarded a request whose method has no mapping"}}
 	}
 	if view.mapping == nil || !pyjson.Equal(member(view.call, "params", "name"), view.mapping.get("tool")) {
@@ -681,6 +706,259 @@ func mcpRequest(view mcpView) []problem {
 	return problems
 }
 
+func mcpFreshnessProblems(value any, at, guard *big.Int, path string) []problem {
+	var problems []problem
+	for index, entry := range array(value, "obligations") {
+		where := fmt.Sprintf("%s/obligations/%d", path, index)
+		checked := nanos(member(entry, "checked_at"))
+		obtained := nanos(member(entry, "proof", "obtained_at"))
+		until := nanos(member(entry, "fresh_until"))
+		if checked == nil || obtained == nil || obtained.Cmp(checked) > 0 || (at != nil && checked.Cmp(at) > 0) {
+			problems = append(problems, problem{where, "proof acquisition, check and final observation are out of order"})
+		}
+		if until != nil && checked != nil && checked.Cmp(until) >= 0 {
+			problems = append(problems, problem{where + "/fresh_until", "the proof is not fresh when checked"})
+		}
+		if until != nil && at != nil && guard != nil && new(big.Int).Add(at, guard).Cmp(until) >= 0 {
+			problems = append(problems, problem{where + "/fresh_until", "the proof is not fresh beyond the final observation plus guard"})
+		}
+	}
+	return problems
+}
+func mcpStaleDischarge(v mcpView) bool {
+	at := nanos(member(v.record, "release_observations", "final", "observed_at"))
+	if member(v.record, "release_observations", "final", "clock_regressed") == true {
+		// An unreliable final wall reading cannot establish proof expiry; intrinsic order still applies.
+		return len(mcpFreshnessProblems(member(v.record, "obligation_discharge"), nil, v.guard(), "")) > 0
+	}
+	return len(mcpFreshnessProblems(member(v.record, "obligation_discharge"), at, v.guard(), "")) > 0
+}
+func mcpControlCause(v mcpView) (string, string) {
+	for _, stage := range []string{"initial", "final"} {
+		observation := member(v.record, "release_observations", stage)
+		if observation == nil {
+			continue
+		}
+		control := member(observation, "control_state")
+		if member(control, "halt") == true || member(control, "quarantine") == true {
+			return "control-blocked", "ecl.error.safe-state-required.v1"
+		}
+		if member(control, "revoked") == true {
+			return "control-blocked", "ecl.error.revoked.v1"
+		}
+		at := nanos(member(observation, "observed_at"))
+		until := nanos(member(control, "fresh_until"))
+		guard := v.guard()
+		if text(control, "status") != "current" || at == nil || until == nil || (guard != nil && new(big.Int).Add(at, guard).Cmp(until) >= 0) {
+			return "control-state-unusable", "ecl.error.safe-state-required.v1"
+		}
+	}
+	return "", ""
+}
+
+// MG1-014 steps 4–6 follow preparation; an initial observation alone precedes consumption.
+func mcpPreparationRequired(v mcpView) bool {
+	return v.released != nil || v.forwarded != nil || member(v.record, "obligation_discharge") != nil || member(v.record, "release_observations", "final") != nil
+}
+
+// MG1-016 supplies this recovery terminal's reason; other checks retain state/use duties.
+func mcpNewlySettledUnconsumedAdmit(v mcpView) bool {
+	return text(v.recovery, "classification") == "not-released" && v.admitted() &&
+		text(v.record, "terminal", "event", "state") == "denied"
+}
+
+func mcpReleaseObservations(v mcpView) []problem {
+	var problems []problem
+	prepared := member(v.record, "prepared")
+	laterStep := mcpPreparationRequired(v)
+	if laterStep && prepared == nil {
+		problems = append(problems, problem{"/prepared", "later release steps require their preparation evidence"})
+	}
+	if v.released != nil {
+		if v.unusable(member(v.released, "observed_at")) != "" {
+			problems = append(problems, problem{"/released/observed_at", "released when the authorization was unusable"})
+		}
+	}
+	observations := member(v.record, "release_observations")
+	needed := prepared != nil || laterStep
+	if needed && observations == nil {
+		problems = append(problems, problem{"/release_observations", "the attempt lacks its initial and final control observations"})
+	}
+	if observations == nil {
+		return problems
+	}
+	if !v.admitted() {
+		problems = append(problems, problem{"/release_observations", "release observations require a verified admit"})
+	}
+	if v.guard() == nil {
+		problems = append(problems, problem{"/release_guard_milliseconds", "release observations require an explicit positive guard"})
+	}
+	initial := member(observations, "initial")
+	final := member(observations, "final")
+	if initial == nil {
+		problems = append(problems, problem{"/release_observations/initial", "the initial control observation is absent"})
+	}
+	if (v.released != nil || v.forwarded != nil) && final == nil {
+		problems = append(problems, problem{"/release_observations/final", "the release lacks its final control observation"})
+	}
+	type observationTime struct {
+		path string
+		at   *big.Int
+	}
+	var times []observationTime
+	if initial != nil {
+		times = append(times, observationTime{"/release_observations/initial/observed_at", nanos(member(initial, "observed_at"))})
+	}
+	if prepared != nil {
+		times = append(times, observationTime{"/prepared/observed_at", nanos(member(prepared, "observed_at"))})
+	}
+	if v.released != nil && v.forwarded == nil {
+		times = append(times, observationTime{"/released/observed_at", nanos(member(v.released, "observed_at"))})
+	}
+	if final != nil {
+		times = append(times, observationTime{"/release_observations/final/observed_at", nanos(member(final, "observed_at"))})
+		controlCause, _ := mcpControlCause(v)
+		if v.released != nil && !sameJSON(member(final, "observed_at"), member(v.released, "observed_at")) && !(v.forwarded == nil && controlCause != "") {
+			problems = append(problems, problem{"/release_observations/final/observed_at", "not the release event's final observation"})
+		}
+	}
+	if member(v.record, "terminal") != nil {
+		times = append(times, observationTime{"/terminal/observed_at", nanos(member(v.record, "terminal", "observed_at"))})
+	}
+	prior := nanos(member(v.response, "issued_at"))
+	clockRegressed := member(final, "clock_regressed") == true
+	if clockRegressed && v.released != nil {
+		problems = append(problems, problem{"/released", "released after the recorded clock comparison failed"})
+	}
+	if clockRegressed && v.forwarded != nil {
+		problems = append(problems, problem{"/forwarded", "forwarded after the recorded clock comparison failed"})
+	}
+	for _, t := range times {
+		if t.at == nil || (prior != nil && t.at.Cmp(prior) < 0 && !(clockRegressed && t.path == "/release_observations/final/observed_at")) {
+			problems = append(problems, problem{t.path, "release observations and retained events are out of order"})
+		}
+		prior = t.at
+	}
+	if needed && initial != nil && v.unusable(member(initial, "observed_at")) != "" {
+		problems = append(problems, problem{"/release_observations/initial", "authority was consumed outside its initial window or use policy"})
+	}
+	if needed && initial != nil {
+		initialRecord := map[string]any{}
+		for key, value := range v.record {
+			initialRecord[key] = value
+		}
+		initialRecord["release_observations"] = map[string]any{"initial": initial}
+		if cause, _ := mcpControlCause(newMCPView(initialRecord)); cause != "" {
+			problems = append(problems, problem{"/release_observations/initial", "authority was consumed despite blocked or unusable control state"})
+		}
+	}
+	cause, reason := mcpControlCause(v)
+	if cause != "" && v.forwarded != nil {
+		problems = append(problems, problem{"/forwarded", "forwarded despite blocked or unusable control state"})
+	}
+	journalCancellation := v.released == nil && mcpJournalFailed(v.record) && text(v.record, "terminal", "event", "state") == "cancelled"
+	if cause != "" && v.forwarded == nil && member(v.record, "terminal") != nil && !journalCancellation {
+		expected := "denied"
+		if needed {
+			expected = "cancelled"
+		}
+		if text(v.record, "terminal", "event", "state") != expected {
+			problems = append(problems, problem{"/terminal/event/state", "the control refusal does not match consumption"})
+		}
+		values := extensionValues(member(v.record, "terminal"), mcpOutcomeReason)
+		if !mcpNewlySettledUnconsumedAdmit(v) && (len(values) != 1 || text(values[0], "code") != reason) {
+			problems = append(problems, problem{"/terminal/extensions", "the terminal does not record the control refusal reason"})
+		}
+	}
+	return problems
+}
+func mcpDecisionValidation(v mcpView) []problem {
+	var problems []problem
+	duplicate := len(mcpRepeatedObligationIDs(v.response)) > 0
+	unbound := v.request != nil && v.response != nil && !binds(v.request, v.response)
+	if unbound && v.status != "invalid" {
+		problems = append(problems, problem{"/decision", "an unbound response must be recorded as an invalid decision"})
+	}
+	if duplicate && (v.status != "invalid" || text(v.record, "decision", "error") != "ecl.error.dependency-response-invalid.v1") {
+		problems = append(problems, problem{"/decision", "duplicate obligation ids require decision-invalid before consumption"})
+	}
+	if (duplicate || unbound || v.status == "invalid") && (member(v.record, "terminal", "event", "decision") != nil || member(v.record, "prepared") != nil || v.released != nil || v.forwarded != nil || member(v.record, "terminal", "event", "authority") != nil || text(v.record, "terminal", "event", "state") == "cancelled") {
+		problems = append(problems, problem{"/decision", "an invalid decision cannot consume authority or prepare a release"})
+	}
+	return problems
+}
+func mcpSuppliedEvents(v mcpView) []problem {
+	var problems []problem
+	attempt := ""
+	for _, field := range [][3]string{{"prepared", "release_prepared", "prepared"}, {"released", "execution_released", "released"}, {"terminal", "execution_terminal", ""}} {
+		name, kind, state := field[0], field[1], field[2]
+		event := member(v.record, name)
+		if event == nil {
+			continue
+		}
+		if text(event, "event_type") != kind || text(event, "event", "kind") != "execution" || (state != "" && text(event, "event", "state") != state) {
+			problems = append(problems, problem{"/" + name + "/event_type", "not the event type and state declared for this field"})
+			continue
+		}
+		heldAttempt, _ := textOf(event, "event", "attempt_id")
+		if heldAttempt == "" || (attempt != "" && heldAttempt != attempt) {
+			problems = append(problems, problem{"/" + name + "/event/attempt_id", "the supplied events name different attempts"})
+		}
+		attempt = heldAttempt
+		if name == "terminal" {
+			continue
+		}
+		if v.request == nil || !v.admitted() {
+			problems = append(problems, problem{"/" + name, "release evidence requires a verified admit and its request"})
+			continue
+		}
+		if name == "released" {
+			problems = append(problems, mcpCallBindingProblems(v, event, "/released/extensions")...)
+			err := evidence.CheckEventBinding(event, v.request, v.response)
+			var refusal *evidence.BindingError
+			if errors.As(err, &refusal) {
+				problems = append(problems, problem{"/" + name, "the release event is not bound: " + refusal.Code})
+			} else if err != nil {
+				raise(err)
+			}
+		} else {
+			for _, key := range []string{"workflow_id", "root_trace_id", "attempt"} {
+				if !sameJSON(member(event, "workflow", key), member(v.request, "workflow", key)) {
+					problems = append(problems, problem{"/" + name + "/workflow/" + key, "not the request's workflow and attempt"})
+				}
+			}
+			for _, key := range []string{"operation", "parameters_digest", "target"} {
+				repeated, expected := member(event, "event", key), member(v.request, "action", key)
+				matches := sameJSON(repeated, expected)
+				if key == "parameters_digest" {
+					matches = sameDigest(repeated, expected)
+				} else if key == "target" {
+					matches = sameJSON(member(repeated, "uri"), member(expected, "uri"))
+				}
+				if repeated != nil && !matches {
+					problems = append(problems, problem{"/" + name + "/event/" + key, "not the request action member"})
+				}
+			}
+			if !sameJSON(member(event, "event", "action_id"), member(v.request, "action", "action_id")) {
+				problems = append(problems, problem{"/" + name + "/event/action_id", "not the request's action"})
+			}
+			if !sameJSON(member(event, "event", "decision", "uri"), member(v.response, "message_id")) || !sameDigest(member(event, "event", "decision", "digest"), digestOf(v.response)) {
+				problems = append(problems, problem{"/" + name + "/event/decision", "not the verified decision and its digest"})
+			}
+		}
+		authority := member(event, "event", "authority")
+		if !sameJSON(member(authority, "uri"), member(v.response, "authorization", "authorization_id")) || !sameDigest(member(authority, "digest"), digestOf(member(v.response, "authorization"))) {
+			problems = append(problems, problem{"/" + name + "/event/authority", "not the consumed authorization and its digest"})
+		}
+	}
+	declared, has := integer(v.record, "release_guard_milliseconds")
+	held, hasHeld := integer(v.released, "event", "release_guard_ms")
+	if v.released != nil && (!has || !hasHeld || held != declared) {
+		problems = append(problems, problem{"/released/event/release_guard_ms", "not an explicit matching record release guard"})
+	}
+	return problems
+}
+
 func mcpForward(view mcpView) []problem {
 	if view.forwarded == nil {
 		return nil
@@ -695,6 +973,11 @@ func mcpForward(view mcpView) []problem {
 	// MG1-015: the forward's time is the final observation that the release event records.
 	if view.released != nil && !pyjson.Equal(member(view.forwarded, "forwarded_at"), member(view.released, "observed_at")) {
 		problems = append(problems, problem{"/forwarded/forwarded_at", "not the observation that the release event records"})
+	}
+	for _, name := range []string{"prepared", "released", "release_guard_milliseconds"} {
+		if member(view.record, name) == nil {
+			problems = append(problems, problem{"/" + name, "a forwarded exchange requires this release evidence"})
+		}
 	}
 	forwardedAt := nanos(member(view.forwarded, "forwarded_at"))
 	completed := nanos(member(view.forwarded, "forward_completed_at"))
@@ -837,14 +1120,30 @@ func (b mcpBound) matches(name string, value any, present bool) bool {
 	return sameDigest(b.extension[digestName], digest)
 }
 
-// mcpObligations is MG1-013: a forward on an admit that leaves obligations to Enforcement before
-// the release rests on a release event that records the discharge of each of them.
+// mcpObligations is MG1-013: retained discharge is internally consistent even without a
+// release; a recorded release additionally establishes final proof freshness.
 func mcpObligations(view mcpView) []problem {
-	if view.forwarded == nil || !view.admitted() {
+	if !view.admitted() {
 		return nil
 	}
 	required, _ := mcpPreReleaseObligations(view.response)
-	if len(required) == 0 {
+	held, hasHeld := object(view.record, "obligation_discharge")
+	if view.forwarded == nil && view.released == nil {
+		if !hasHeld {
+			return nil
+		}
+		if len(required) == 0 {
+			return []problem{{"/obligation_discharge", "the admit carries no pre-release obligation to discharge"}}
+		}
+		problems := mcpDischargeProblems(held, view.response, "/obligation_discharge")
+		at := nanos(member(view.record, "release_observations", "final", "observed_at"))
+		if member(view.record, "release_observations", "final", "clock_regressed") == true {
+			at = nil
+		}
+		// Step 4 precedes a reliable Step 5. Freshness may fail and cause the refusal.
+		return append(problems, mcpFreshnessProblems(held, at, nil, "/obligation_discharge")...)
+	}
+	if len(required) == 0 && len(extensionEntries(view.released, mcpDischarge)) == 0 && member(view.record, "obligation_discharge") == nil {
 		return nil
 	}
 	if view.released == nil {
@@ -853,7 +1152,7 @@ func mcpObligations(view mcpView) []problem {
 	var indexes []int
 	var entries []map[string]any
 	for index, item := range array(view.released, "extensions") {
-		if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["id"], mcpDischarge) {
+		if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["id"], mcpDischarge) && validatorx.InterpretedOccurrence(view.released, entry) {
 			indexes = append(indexes, index)
 			entries = append(entries, entry)
 		}
@@ -866,15 +1165,19 @@ func mcpObligations(view mcpView) []problem {
 		return []problem{{"/released/extensions", "the release records no single discharge"}}
 	}
 	problems := mcpDischargeProblems(value, view.response, fmt.Sprintf("/released/extensions/%d/value", indexes[0]))
-	if held, isObject := object(view.record, "obligation_discharge"); isObject && !sameJSON(held, value) {
+	problems = append(problems, mcpFreshnessProblems(value, nanos(member(view.released, "observed_at")), view.guard(), fmt.Sprintf("/released/extensions/%d/value", indexes[0]))...)
+	if member(view.record, "obligation_discharge") == nil {
+		problems = append(problems, problem{"/obligation_discharge", "the record lacks the release discharge"})
+	}
+	if hasHeld && !sameJSON(held, value) {
 		problems = append(problems, problem{"/obligation_discharge", "not the discharge that the release records"})
 	}
 	return problems
 }
 
 func mcpRefusal(view mcpView) []problem {
-	if view.forwarded != nil || view.recovery != nil {
-		// A recovered record holds no response returned to the governed AI system (MG1-016).
+	if view.forwarded != nil || (view.recovery != nil && !holds(view.record, "returned")) {
+		// A retained recovered response is subject to the same checks.
 		return nil
 	}
 	returned, isObject := object(view.record, "returned")
@@ -893,7 +1196,7 @@ func mcpRefusal(view mcpView) []problem {
 	}
 	cause, refused := MCPRefusalCause(view.record)
 	if !refused {
-		return problems
+		return append(problems, problem{"/returned/error", "the retained observations do not establish a defined refusal cause"})
 	}
 	expected := map[string]any{"code": cause.Cause}
 	if cause.Reason != nil {
@@ -903,19 +1206,8 @@ func mcpRefusal(view mcpView) []problem {
 		expected["request_id"] = cause.RequestID
 	}
 	code := json.Number(jsonInt(MCPErrors[cause.Cause]))
-	// MG1-014 step 5: a gateway refuses an authorization as unusable with
-	// ecl.error.clock-regressed.v1 when its clock readings disagreed, which the record cannot show;
-	// a checker accepts that reason where the record shows the window as the cause.
 	data := member(returned, "error", "data", "ecl")
-	accepted := pyjson.Equal(data, expected)
-	if !accepted && cause.Cause == "authorization-unusable" {
-		regressed := map[string]any{}
-		for key, value := range expected {
-			regressed[key] = value
-		}
-		regressed["reason"] = mcpClockRegressed
-		accepted = pyjson.Equal(data, regressed)
-	}
+	accepted := sameJSON(data, expected)
 	if !pyjson.Equal(member(returned, "error", "code"), code) || !accepted {
 		problems = append(problems, problem{"/returned/error", "the cause " + cause.Cause + " has another error"})
 	}
@@ -975,7 +1267,7 @@ func mcpRecovered(view mcpView, terminal map[string]any, hasTerminal bool) []pro
 				expected = map[string]bool{refused: true}
 			}
 		}
-		if view.forwarded != nil || !isText || !expected[state] {
+		if view.forwarded != nil || view.released != nil || !isText || !expected[state] {
 			problems = append(problems, problem{"/terminal/event/state", "a request that was not released is recorded as released"})
 		}
 	}
@@ -988,18 +1280,53 @@ func mcpRecovered(view mcpView, terminal map[string]any, hasTerminal bool) []pro
 func mcpCompletionProblems(view mcpView, terminal map[string]any) []problem {
 	values := extensionValues(terminal, mcpBinding)
 	completed := member(view.forwarded, "forward_completed_at")
+	var problems []problem
+	if view.recovery == nil && member(view.record, "server_response") != nil && completed == nil {
+		problems = append(problems, problem{"/forwarded/forward_completed_at", "an answered forward lacks its completion observation"})
+	}
+	unanswered := member(view.record, "server_response") == nil && text(view.recovery, "classification") != "outcome-recorded"
+	if unanswered && completed != nil {
+		problems = append(problems, problem{"/forwarded/forward_completed_at", "an unanswered forward cannot record a server answer time"})
+	}
+	completedAt, terminalAt := nanos(completed), nanos(member(terminal, "observed_at"))
+	if completedAt != nil && terminalAt != nil && completedAt.Cmp(terminalAt) > 0 {
+		problems = append(problems, problem{"/forwarded/forward_completed_at", "the completion observation follows the terminal observation"})
+	}
 	if len(values) != 1 {
-		return nil
+		return problems
+	}
+	if _, present := values[0]["response_digest"]; unanswered && present {
+		problems = append(problems, problem{"/terminal/extensions", "an unanswered forward cannot record a server response digest"})
 	}
 	if !pyjson.Equal(values[0]["forward_completed_at"], completed) {
-		return []problem{{"/terminal/extensions", "the terminal does not record the forward's completion"}}
+		problems = append(problems, problem{"/terminal/extensions", "the terminal does not record the forward's completion"})
 	}
-	return nil
+	return problems
+}
+
+// mcpCallBindingProblems applies EBMP2-075 to every carried call binding.
+func mcpCallBindingProblems(view mcpView, event any, path string) []problem {
+	expected := extensionValues(view.request, mcpBinding)
+	if len(expected) != 1 {
+		return nil
+	} // The request rule diagnoses absence or ambiguity.
+	var problems []problem
+	for _, value := range extensionValues(event, mcpBinding) {
+		for name, content := range expected[0] {
+			actual, present := value[name]
+			if !present || !sameJSON(actual, content) {
+				problems = append(problems, problem{path, "the event does not retain the request's call binding"})
+				break
+			}
+		}
+	}
+	return problems
 }
 
 func mcpResult(view mcpView) []problem {
 	terminal, hasTerminal := object(view.record, "terminal")
 	problems := mcpRecovered(view, terminal, hasTerminal)
+	problems = append(problems, mcpCallBindingProblems(view, terminal, "/terminal/extensions")...)
 	authority := member(terminal, "event", "authority")
 	if authority != nil && view.admitted() && !sameDigest(member(authority, "digest"), digestOf(member(view.response, "authorization"))) {
 		problems = append(problems, problem{"/terminal/event/authority/digest", "not the digest of the granted authorization"})
@@ -1017,8 +1344,8 @@ func mcpResult(view mcpView) []problem {
 		// cancelled attempt records a committed use. The record does not expose the use store. A
 		// journal that failed (MG1-017) may have recorded the consumed use and not the prepared
 		// release, which the record then cannot show.
-		consumed := member(view.record, "prepared") != nil || view.released != nil
-		if consumed && !hasTerminal {
+		consumed := member(view.record, "prepared") != nil || mcpPreparationRequired(view)
+		if !hasTerminal && (consumed || (view.request != nil && view.recovery == nil && !mcpJournalFailed(view.record))) {
 			problems = append(problems, problem{"/terminal", "a consumed attempt has no terminal evidence"})
 		}
 		allowed := mcpNonRelease
@@ -1033,6 +1360,11 @@ func mcpResult(view mcpView) []problem {
 		if hasTerminal && (!isText || !allowed[state]) {
 			problems = append(problems, problem{"/terminal/event/state", "a refused request is recorded as released"})
 		}
+		// MG1-005 and MG1-014: cancellation records a committed use even without prepared evidence.
+		prior, _ := integer(view.record, "prior_uses")
+		if state == "cancelled" && view.admitted() && prior >= 1 {
+			problems = append(problems, problem{"/prior_uses", "a cancelled attempt consumes an authorization already used before this request"})
+		}
 		// MG1-010, EBMP2-049, EBMP2-053: a cancelled attempt names the authorization it consumed,
 		// bound to the admit that granted it; a terminal that consumed no use names none.
 		authority := member(terminal, "event", "authority")
@@ -1041,6 +1373,34 @@ func mcpResult(view mcpView) []problem {
 		}
 		if authority != nil && (mcpNonRelease[state] || !view.admitted()) {
 			problems = append(problems, problem{"/terminal/event/authority", "a terminal that consumed no use names the authority"})
+		}
+		values := extensionValues(terminal, mcpOutcomeReason)
+		// A newly settled not-released recovery need not know the original cause.
+		canInferCause := view.recovery == nil || holds(view.record, "returned") || text(view.recovery, "classification") == "outcome-recorded"
+		if hasTerminal && state == "cancelled" && canInferCause && len(values) != 1 {
+			problems = append(problems, problem{"/terminal/extensions", "a cancelled refusal requires one outcome reason"})
+		}
+		if hasTerminal && canInferCause {
+			if cause, known := MCPRefusalCause(view.record); known && cause.Reason != nil {
+				// MG1-016 supplies a newly settled unconsumed admit's recovery reason.
+				// Other retained non-decision refusals keep their original first cause.
+				decisionOutcomeRefusal := cause.Cause == "denied" || cause.Cause == "held" || cause.Cause == "challenged"
+				if !mcpNewlySettledUnconsumedAdmit(view) && (state == "cancelled" || (mcpNonRelease[state] && !decisionOutcomeRefusal)) &&
+					(len(values) != 1 || !sameJSON(values[0]["code"], cause.Reason)) {
+					problems = append(problems, problem{"/terminal/extensions", "the terminal does not record the retained refusal reason"})
+				}
+			}
+		}
+		if hasTerminal && view.admitted() && state != "cancelled" && canInferCause {
+			if cause, known := MCPRefusalCause(view.record); known && cause.Cause == "evidence-unavailable" {
+				if state != "denied" {
+					problems = append(problems, problem{"/terminal/event/state", "an unconsumed evidence failure must end denied"})
+				}
+				values := extensionValues(terminal, mcpOutcomeReason)
+				if len(values) != 1 || !sameJSON(values[0]["code"], errEvidenceUnavailable) {
+					problems = append(problems, problem{"/terminal/extensions", "the unconsumed terminal does not record evidence-unavailable"})
+				}
+			}
 		}
 		if hasTerminal && view.request != nil {
 			response := view.response
@@ -1057,31 +1417,24 @@ func mcpResult(view mcpView) []problem {
 		}
 		return problems
 	}
-	if view.recovery != nil {
-		// The journal does not show what the governed AI system received (MG1-016).
-		if hasTerminal && view.request != nil {
-			err := evidence.CheckEventBinding(terminal, view.request, view.response)
-			var refusal *evidence.BindingError
-			if errors.As(err, &refusal) {
-				problems = append(problems, problem{"/terminal", "the terminal event is not bound: " + refusal.Code})
-			} else if err != nil {
-				raise(err)
-			}
-		}
-		return problems
-	}
 	serverResponse, answered := object(view.record, "server_response")
+	if answered && !sameJSON(member(serverResponse, "id"), member(view.call, "id")) {
+		problems = append(problems, problem{"/server_response/id", "the server response does not answer the forwarded call"})
+	}
 	returned := member(view.record, "returned")
 	if _, isObject := returned.(map[string]any); !isObject {
 		returned = nil
 	}
 	// MG1-010: the response returned is the one the evidence binds, as the same JSON values, so
 	// false returned as 0 is another response.
-	if answered && !sameJSON(returned, MCPReturnedFor(serverResponse)) {
+	if answered && (view.recovery == nil || returned != nil) && !sameJSON(returned, MCPReturnedFor(serverResponse)) {
 		problems = append(problems, problem{"/returned", "not the response the evidence binds, as MG1-010 returns it"})
 	}
-	if !answered && !pyjson.Equal(member(returned, "error", "code"), json.Number(jsonInt(MCPErrors["forward-failed"]))) {
+	if !answered && (view.recovery == nil || returned != nil) && !pyjson.Equal(member(returned, "error", "code"), json.Number(jsonInt(MCPErrors["forward-failed"]))) {
 		problems = append(problems, problem{"/returned", "an unanswered forward is not reported as forward-failed"})
+	}
+	if !answered && returned != nil && (!sameJSON(member(returned, "error", "data", "ecl"), map[string]any{"code": "forward-failed", "reason": errUnavailable}) || text(returned, "jsonrpc") != "2.0" || !sameJSON(member(returned, "id"), member(view.call, "id")) || holds(returned, "result")) {
+		problems = append(problems, problem{"/returned/error", "forward-failed lacks its defined error data or call binding"})
 	}
 	if !hasTerminal {
 		return append(problems, problem{"/terminal", "a forwarded request has no terminal evidence"})
@@ -1091,11 +1444,48 @@ func mcpResult(view mcpView) []problem {
 		response = serverResponse
 	}
 	state := MCPTerminalState(response)
-	if text(terminal, "event", "state") != state {
+	if (answered || text(view.recovery, "classification") != "outcome-recorded") && text(terminal, "event", "state") != state {
 		problems = append(problems, problem{"/terminal/event/state", "the server's response reads as " + state})
 	}
+	// Recovery may lack both observations; it may not contradict a retained observation.
 	problems = append(problems, mcpCompletionProblems(view, terminal)...)
 	values := extensionValues(terminal, mcpBinding)
+	if !answered && text(view.recovery, "classification") == "outcome-recorded" {
+		retainedState := text(terminal, "event", "state")
+		if retainedState != "succeeded" && retainedState != "failed" && retainedState != "unknown" {
+			problems = append(problems, problem{"/terminal/event/state", "the recorded outcome is outside the MCP response mapping"})
+		}
+		if retainedState == "succeeded" || retainedState == "failed" {
+			hasDigest := false
+			if len(values) == 1 {
+				_, hasDigest = values[0]["response_digest"].(map[string]any)
+			}
+			if !hasDigest {
+				problems = append(problems, problem{"/terminal/extensions", "a completed recorded outcome requires its response digest"})
+			}
+		}
+	}
+	entries := extensionEntries(terminal, mcpBinding)
+	requestValues := extensionValues(view.request, mcpBinding)
+	// MG1-010: an unanswered forward still retains the admitted call and mapping.
+	if len(entries) != 1 || len(values) != 1 {
+		problems = append(problems, problem{"/terminal/extensions", "the forwarded terminal lacks one mcp-binding"})
+	} else if len(requestValues) != 1 {
+		problems = append(problems, problem{"/terminal/extensions", "the terminal does not retain the admitted call and mapping binding"})
+	} else {
+		actualBinding, requestBinding := map[string]any{}, map[string]any{}
+		for _, name := range []string{"mcp_revision", "method", "server_id", "server_name", "server_version", "tool", "tool_definition_digest", "mapping_id", "params_digest", "input_responses_digest", "request_state_digest"} {
+			if value, present := values[0][name]; present {
+				actualBinding[name] = value
+			}
+			if value, present := requestValues[0][name]; present {
+				requestBinding[name] = value
+			}
+		}
+		if !sameJSON(actualBinding, requestBinding) {
+			problems = append(problems, problem{"/terminal/extensions", "the terminal does not retain the admitted call and mapping binding"})
+		}
+	}
 	if answered {
 		bound, err := JCSDigest(serverResponse)
 		if err != nil && !errors.Is(err, ErrJCS) {
@@ -1123,10 +1513,12 @@ var mcpRules = []struct {
 	rule  string
 	check func(mcpView) []problem
 }{
-	{RuleMCPFailure, mcpFailure},
+	{RuleMCPFailure, func(v mcpView) []problem { return append(mcpFailure(v), mcpDecisionValidation(v)...) }},
 	{RuleMCPReview, mcpReview},
 	{RuleMCPRequest, mcpRequest},
-	{RuleMCPForward, mcpForward},
+	{RuleMCPForward, func(v mcpView) []problem {
+		return append(append(mcpForward(v), mcpReleaseObservations(v)...), mcpSuppliedEvents(v)...)
+	}},
 	{RuleMCPObligation, mcpObligations},
 	{RuleMCPRefusal, mcpRefusal},
 	{RuleMCPResult, mcpResult},
@@ -1172,6 +1564,15 @@ func checkMCP(original map[string]any) []Finding {
 	for _, row := range mcpRules {
 		out = append(out, findings(row.rule, row.check(view))...)
 	}
+	terminal, _ := object(record, "terminal")
+	outcome := ""
+	if view.status == "answered" && binds(view.request, view.response) && len(mcpRepeatedObligationIDs(view.response)) == 0 {
+		outcome, _ = textOf(view.response, "outcome")
+	}
+	for _, item := range TerminalReasonFindings(terminal, outcome, true) {
+		item.Path = "/terminal" + item.Path
+		out = append(out, item)
+	}
 	if view.status == "answered" {
 		// MG1-007: a decision held as answered is a verified decision response, which carries
 		// exactly one decision basis and satisfies DCMP2-053 as any decision response does.
@@ -1184,5 +1585,19 @@ func checkMCP(original map[string]any) []Finding {
 	if view.status != "invalid" {
 		held = append(held, []string{"decision", "response"})
 	}
-	return append(out, messageFindings(record, held...)...)
+	out = append(out, messageFindings(record, held...)...)
+	// MG1-010: nesting an EBMP event does not bypass its object or critical-extension rules.
+	for _, name := range []string{"prepared", "released", "terminal"} {
+		if event, present := object(record, name); present {
+			found, err := evidence.ObjectFindings(event)
+			if err != nil {
+				out = append(out, Finding{RuleID: schemaInvalid, Path: "/" + name, Detail: err.Error()})
+			} else {
+				for _, item := range found {
+					out = append(out, Finding{RuleID: item.RuleID, Path: "/" + name + item.Path, Detail: item.Detail})
+				}
+			}
+		}
+	}
+	return out
 }

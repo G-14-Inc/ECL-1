@@ -70,7 +70,7 @@ func Parse(value any) (Instant, error) {
 		return parsed
 	}
 	year, month, day := number(1), number(2), number(3)
-	if year < 1 || day > daysInMonth(year, month) {
+	if year < 1 || day < 1 || day > daysInMonth(year, month) {
 		return Instant{}, ErrInvalid
 	}
 	seconds := daysFromCivil(year, month, day)*86400 + number(4)*3600 + number(5)*60 + number(6)
@@ -114,8 +114,20 @@ func (i Instant) AddSeconds(seconds int64) Instant {
 	return Instant{Seconds: i.Seconds + seconds, Nanos: i.Nanos}
 }
 
-// AddNanoseconds returns the instant moved forward by a non-negative number of nanoseconds.
+// AddNanoseconds returns the instant moved by a signed number of nanoseconds.
 func (i Instant) AddNanoseconds(nanoseconds int64) Instant {
 	total := i.Nanos + nanoseconds%1_000_000_000
-	return Instant{Seconds: i.Seconds + nanoseconds/1_000_000_000 + total/1_000_000_000, Nanos: total % 1_000_000_000}
+	seconds := i.Seconds + nanoseconds/1_000_000_000 + total/1_000_000_000
+	nanos := total % 1_000_000_000
+	if nanos < 0 {
+		seconds--
+		nanos += 1_000_000_000
+	}
+	return Instant{Seconds: seconds, Nanos: nanos}
+}
+
+// AddMilliseconds splits the duration before conversion so a JSON-safe integer number of
+// milliseconds cannot overflow an intermediate nanosecond count.
+func (i Instant) AddMilliseconds(milliseconds int64) Instant {
+	return i.AddSeconds(milliseconds / 1000).AddNanoseconds((milliseconds % 1000) * 1_000_000)
 }

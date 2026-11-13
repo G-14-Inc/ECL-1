@@ -5,9 +5,10 @@ offline package (OFFLINE-VERIFICATION-1) that carries one, against a trust polic
 that you choose. Open it from disk (a `file://` address) or serve the folder;
 `verifier.js` must stay next to it.
 
-The page reads the files you choose in the browser and makes no network
-request. Its content security policy allows only its own script and its own
-inline style, forbids every connection, form submission and embedded content,
+The page processes the files you choose locally, without uploading them or
+making network requests during verification. Loading a served page and its
+script may use the network. Its content security policy allows only its own
+script and its own inline style, forbids every connection, form submission and embedded content,
 and requires Trusted Types. In a browser that enforces those directives,
 protected HTML injection sinks reject strings.
 

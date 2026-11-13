@@ -79,7 +79,8 @@ export function roleConflict(purposes: readonly string[]): string[] {
 const MAX_TEXT = 200;
 
 function cut(text: string): string {
-  return text.length <= MAX_TEXT ? text : text.slice(0, MAX_TEXT - 1) + "…";
+  const characters = Array.from(text);
+  return characters.length <= MAX_TEXT ? text : characters.slice(0, MAX_TEXT - 1).join("") + "…";
 }
 
 /** A trust policy that cannot be used. `code` is the registered error. */

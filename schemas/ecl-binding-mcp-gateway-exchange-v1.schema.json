@@ -157,7 +157,28 @@
     },
     "prepared": {
       "description": "MG1-014: the release_prepared event that the gateway recorded after it consumed the authorization and before it discharged the pre-release obligations.",
-      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "release_prepared"
+            },
+            "event": {
+              "properties": {
+                "kind": {
+                  "const": "execution"
+                },
+                "state": {
+                  "const": "prepared"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "obligation_discharge": {
       "description": "MG1-013: the discharge of every pre-release obligation of the admit, as the value of ecl.ext.obligation-discharge.v1; present only when the admit carries such an obligation and the gateway discharged them all.",
@@ -165,7 +186,28 @@
     },
     "released": {
       "description": "MG1-014: the execution_released event, observed at the gateway's final observation before the send and carrying the discharge of the pre-release obligations.",
-      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "execution_released"
+            },
+            "event": {
+              "properties": {
+                "kind": {
+                  "const": "execution"
+                },
+                "state": {
+                  "const": "released"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "forwarded": {
       "type": "object",
@@ -183,7 +225,7 @@
           "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
         },
         "forward_completed_at": {
-          "description": "MG1-015: the gateway's observation of its clock after the send returned, absent when the send did not return.",
+          "description": "MG1-015: the gateway's clock observation when the server's answer arrived, including a JSON-RPC error. A transport write return, timeout or broken stream is not that answer. Absent in an ordinary exchange with no server response; recovery may omit unavailable historical completion observations under MG1-010.",
           "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
         }
       }
@@ -198,7 +240,25 @@
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
     },
     "terminal": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/ebmp/2#/$defs/eventRecord"
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "execution_terminal"
+            },
+            "event": {
+              "properties": {
+                "kind": {
+                  "const": "execution"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "recovery": {
       "description": "MG1-016: present only in a record that the gateway wrote when it recovered an exchange that it had not finished: when it recovered it, and what its journal showed. Such a record has no returned member unless the journal holds the response returned.",
@@ -219,6 +279,33 @@
             "outcome-unknown",
             "outcome-recorded"
           ]
+        }
+      }
+    },
+    "release_observations": {
+      "description": "MG1-014: retained initial and final release observations. These are gateway statements about the authenticated snapshot of every control state required by its mode definitions, not verification of that snapshot by the exchange checker. The final observation is recorded even when it fails; returned_at is never a substitute.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial"
+      ],
+      "properties": {
+        "initial": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/releaseObservation"
+            },
+            {
+              "not": {
+                "required": [
+                  "clock_regressed"
+                ]
+              }
+            }
+          ]
+        },
+        "final": {
+          "$ref": "#/$defs/releaseObservation"
         }
       }
     }
@@ -377,6 +464,144 @@
           "$ref": "#/$defs/encodedContent"
         }
       ]
+    },
+    "releaseObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observed_at",
+        "control_state"
+      ],
+      "properties": {
+        "observed_at": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "control_state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "halt",
+            "quarantine",
+            "revoked"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "current",
+                "stale",
+                "unavailable"
+              ]
+            },
+            "reference": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "uri",
+                "digest"
+              ],
+              "properties": {
+                "uri": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                },
+                "digest": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                }
+              }
+            },
+            "fresh_until": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+            },
+            "halt": {
+              "type": "boolean"
+            },
+            "quarantine": {
+              "type": "boolean"
+            },
+            "revoked": {
+              "type": "boolean"
+            }
+          },
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "current",
+                  "stale"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reference",
+              "fresh_until"
+            ]
+          }
+        },
+        "clock_regressed": {
+          "description": "On final only: the gateway reports that its wall clock regressed or its elapsed wall and monotonic readings differed by more than the release guard. This records a failed clock comparison, not a fact inferred from returned_at.",
+          "type": "boolean"
+        }
+      }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "forwarded"
+        ]
+      },
+      "then": {
+        "required": [
+          "prepared",
+          "released",
+          "release_guard_milliseconds",
+          "release_observations"
+        ],
+        "properties": {
+          "release_observations": {
+            "required": [
+              "initial",
+              "final"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "prepared"
+        ]
+      },
+      "then": {
+        "required": [
+          "release_guard_milliseconds",
+          "release_observations"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "released"
+        ]
+      },
+      "then": {
+        "properties": {
+          "release_observations": {
+            "required": [
+              "initial",
+              "final"
+            ]
+          }
+        },
+        "required": [
+          "prepared"
+        ]
+      }
+    }
+  ]
 }

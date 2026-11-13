@@ -1,0 +1,552 @@
+[
+  {
+    "name": "literal",
+    "identifier": "https://externalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "upper-scheme-host",
+    "identifier": "HTTPS://EXTERNALCONTROLLAYER.AI/audit",
+    "reserved": true
+  },
+  {
+    "name": "user-info",
+    "identifier": "https://reviewer@externalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "multiple-user-info",
+    "identifier": "https://first@reviewer@externalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "port-80",
+    "identifier": "https://externalcontrollayer.ai:80/audit",
+    "reserved": true
+  },
+  {
+    "name": "port-443",
+    "identifier": "https://externalcontrollayer.ai:443/audit",
+    "reserved": true
+  },
+  {
+    "name": "port-8443",
+    "identifier": "https://externalcontrollayer.ai:8443/audit",
+    "reserved": true
+  },
+  {
+    "name": "terminal-dot",
+    "identifier": "https://externalcontrollayer.ai./audit",
+    "reserved": true
+  },
+  {
+    "name": "encoded-domain-dot",
+    "identifier": "https://externalcontrollayer%2eai/audit",
+    "reserved": true
+  },
+  {
+    "name": "encoded-upper-domain-dot",
+    "identifier": "https://externalcontrollayer%2Eai/audit",
+    "reserved": true
+  },
+  {
+    "name": "encoded-terminal-dot",
+    "identifier": "https://externalcontrollayer.ai%2e/audit",
+    "reserved": true
+  },
+  {
+    "name": "encoded-both-dots",
+    "identifier": "https://externalcontrollayer%2Eai%2e/audit",
+    "reserved": true
+  },
+  {
+    "name": "user-port-encoded-dot",
+    "identifier": "https://reviewer@externalcontrollayer%2eai.:443/audit",
+    "reserved": true
+  },
+  {
+    "name": "all-host-encoded",
+    "identifier": "https://%65%78%74%65%72%6e%61%6c%63%6f%6e%74%72%6f%6c%6c%61%79%65%72%2e%61%69/audit",
+    "reserved": true
+  },
+  {
+    "name": "all-upper-host-encoded",
+    "identifier": "https://%45%58%54%45%52%4E%41%4C%43%4F%4E%54%52%4F%4C%4C%41%59%45%52%2E%41%49/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-00-lower",
+    "identifier": "https://%65xternalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-00-upper",
+    "identifier": "https://%45xternalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-01-lower",
+    "identifier": "https://e%78ternalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-01-upper",
+    "identifier": "https://e%58ternalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-02-lower",
+    "identifier": "https://ex%74ernalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-02-upper",
+    "identifier": "https://ex%54ernalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-03-lower",
+    "identifier": "https://ext%65rnalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-03-upper",
+    "identifier": "https://ext%45rnalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-04-lower",
+    "identifier": "https://exte%72nalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-04-upper",
+    "identifier": "https://exte%52nalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-05-lower",
+    "identifier": "https://exter%6Ealcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-05-upper",
+    "identifier": "https://exter%4Ealcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-06-lower",
+    "identifier": "https://extern%61lcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-06-upper",
+    "identifier": "https://extern%41lcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-07-lower",
+    "identifier": "https://externa%6Ccontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-07-upper",
+    "identifier": "https://externa%4Ccontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-08-lower",
+    "identifier": "https://external%63ontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-08-upper",
+    "identifier": "https://external%43ontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-09-lower",
+    "identifier": "https://externalc%6Fntrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-09-upper",
+    "identifier": "https://externalc%4Fntrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-10-lower",
+    "identifier": "https://externalco%6Etrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-10-upper",
+    "identifier": "https://externalco%4Etrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-11-lower",
+    "identifier": "https://externalcon%74rollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-11-upper",
+    "identifier": "https://externalcon%54rollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-12-lower",
+    "identifier": "https://externalcont%72ollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-12-upper",
+    "identifier": "https://externalcont%52ollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-13-lower",
+    "identifier": "https://externalcontr%6Fllayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-13-upper",
+    "identifier": "https://externalcontr%4Fllayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-14-lower",
+    "identifier": "https://externalcontro%6Clayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-14-upper",
+    "identifier": "https://externalcontro%4Clayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-15-lower",
+    "identifier": "https://externalcontrol%6Cayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-15-upper",
+    "identifier": "https://externalcontrol%4Cayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-16-lower",
+    "identifier": "https://externalcontroll%61yer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-16-upper",
+    "identifier": "https://externalcontroll%41yer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-17-lower",
+    "identifier": "https://externalcontrolla%79er.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-17-upper",
+    "identifier": "https://externalcontrolla%59er.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-18-lower",
+    "identifier": "https://externalcontrollay%65r.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-18-upper",
+    "identifier": "https://externalcontrollay%45r.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-19-lower",
+    "identifier": "https://externalcontrollaye%72.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-19-upper",
+    "identifier": "https://externalcontrollaye%52.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-21-lower",
+    "identifier": "https://externalcontrollayer.%61i/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-21-upper",
+    "identifier": "https://externalcontrollayer.%41i/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-22-lower",
+    "identifier": "https://externalcontrollayer.a%69/audit",
+    "reserved": true
+  },
+  {
+    "name": "escaped-22-upper",
+    "identifier": "https://externalcontrollayer.a%49/audit",
+    "reserved": true
+  },
+  {
+    "name": "private-https",
+    "identifier": "https://example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "private-http",
+    "identifier": "http://example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "private-token",
+    "identifier": "com.example.audit.v1",
+    "reserved": false
+  },
+  {
+    "name": "private-urn",
+    "identifier": "urn:example:audit:1",
+    "reserved": false
+  },
+  {
+    "name": "subdomain",
+    "identifier": "https://ns.externalcontrollayer.ai/audit",
+    "reserved": false
+  },
+  {
+    "name": "encoded-subdomain",
+    "identifier": "https://ns%2eexternalcontrollayer.ai/audit",
+    "reserved": false
+  },
+  {
+    "name": "reverse-domain",
+    "identifier": "ai.externalcontrollayer.audit.v1",
+    "reserved": false
+  },
+  {
+    "name": "reverse-domain-exact",
+    "identifier": "ai.externalcontrollayer.v1",
+    "reserved": false
+  },
+  {
+    "name": "host-suffix",
+    "identifier": "https://externalcontrollayer.ai.example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "host-prefix",
+    "identifier": "https://xexternalcontrollayer.ai/audit",
+    "reserved": false
+  },
+  {
+    "name": "host-in-user-info",
+    "identifier": "https://externalcontrollayer.ai@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "host-in-path",
+    "identifier": "https://example.com/externalcontrollayer.ai",
+    "reserved": false
+  },
+  {
+    "name": "host-in-query",
+    "identifier": "https://example.com/?host=externalcontrollayer.ai",
+    "reserved": false
+  },
+  {
+    "name": "host-in-fragment",
+    "identifier": "https://example.com/#externalcontrollayer.ai",
+    "reserved": false
+  },
+  {
+    "name": "other-scheme",
+    "identifier": "ftp://externalcontrollayer.ai/audit",
+    "reserved": false
+  },
+  {
+    "name": "double-encoded-dot",
+    "identifier": "https://externalcontrollayer%252eai/audit",
+    "reserved": false
+  },
+  {
+    "name": "double-encoded-letter",
+    "identifier": "https://%2565xternalcontrollayer.ai/audit",
+    "reserved": false
+  },
+  {
+    "name": "two-terminal-dots",
+    "identifier": "https://externalcontrollayer.ai../audit",
+    "reserved": false
+  },
+  {
+    "name": "two-encoded-terminal-dots",
+    "identifier": "https://externalcontrollayer.ai%2e%2E/audit",
+    "reserved": false
+  },
+  {
+    "name": "mixed-terminal-dots",
+    "identifier": "https://externalcontrollayer.ai.%2E/audit",
+    "reserved": false
+  },
+  {
+    "name": "reserved-escaped-slash",
+    "identifier": "https://externalcontrollayer.ai%2fexample.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "reserved-escaped-at",
+    "identifier": "https://externalcontrollayer.ai%40example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "reserved-escaped-colon",
+    "identifier": "https://externalcontrollayer.ai%3a443/audit",
+    "reserved": false
+  },
+  {
+    "name": "unreserved-extra-dash",
+    "identifier": "https://externalcontrollayer.ai%2d/audit",
+    "reserved": false
+  },
+  {
+    "name": "unreserved-extra-tilde",
+    "identifier": "https://externalcontrollayer.ai%7e/audit",
+    "reserved": false
+  },
+  {
+    "name": "unreserved-extra-underscore",
+    "identifier": "https://externalcontrollayer.ai%5f/audit",
+    "reserved": false
+  },
+  {
+    "name": "unreserved-extra-digit",
+    "identifier": "https://externalcontrollayer.ai%30/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-colon",
+    "identifier": "https://externalcontrollayer.ai:token@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-empty-password",
+    "identifier": "https://externalcontrollayer.ai:@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-multiple-colons",
+    "identifier": "https://externalcontrollayer.ai:one:two@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-terminal-dot",
+    "identifier": "https://externalcontrollayer.ai.:443@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-encoded-dot",
+    "identifier": "https://externalcontrollayer%2eai:token@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-encoded-terminal-dot",
+    "identifier": "https://externalcontrollayer.ai%2e:token@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-uppercase",
+    "identifier": "HTTPS://EXTERNALCONTROLLAYER.AI:token@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-http",
+    "identifier": "http://externalcontrollayer.ai:token@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-before-owner-port",
+    "identifier": "https://externalcontrollayer.ai:token@example.com:8443/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-no-path",
+    "identifier": "https://externalcontrollayer.ai:token@example.com",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-query-only",
+    "identifier": "https://externalcontrollayer.ai:token@example.com?q=a",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-reserved-fragment-only",
+    "identifier": "https://externalcontrollayer.ai:token@example.com#part",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-encoded-at",
+    "identifier": "https://user%40externalcontrollayer.ai:token@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "userinfo-colon-before-reserved-spelling",
+    "identifier": "https://user:externalcontrollayer.ai@example.com/audit",
+    "reserved": false
+  },
+  {
+    "name": "reserved-host-password",
+    "identifier": "https://user:token@externalcontrollayer.ai/audit",
+    "reserved": true
+  },
+  {
+    "name": "reserved-host-owner-password",
+    "identifier": "https://example.com:pw@externalcontrollayer.ai:8443/audit",
+    "reserved": true
+  },
+  {
+    "name": "reserved-host-empty-port",
+    "identifier": "https://user:token@externalcontrollayer.ai:/audit",
+    "reserved": true
+  },
+  {
+    "name": "reserved-host-port-query-only",
+    "identifier": "https://user:token@externalcontrollayer.ai:443?q=a",
+    "reserved": true
+  },
+  {
+    "name": "reserved-host-port-fragment-only",
+    "identifier": "https://user:token@externalcontrollayer.ai:443#part",
+    "reserved": true
+  },
+  {
+    "name": "reserved-host-port-no-path",
+    "identifier": "https://user:token@externalcontrollayer.ai:443",
+    "reserved": true
+  },
+  {
+    "name": "reserved-host-port-encoded-dot",
+    "identifier": "https://user:token@externalcontrollayer%2eai.:443/audit",
+    "reserved": true
+  },
+  {
+    "name": "owner-host-port-no-userinfo",
+    "identifier": "https://example.com:443/audit",
+    "reserved": false
+  },
+  {
+    "name": "owner-host-empty-port",
+    "identifier": "https://example.com:/audit",
+    "reserved": false
+  },
+  {
+    "name": "owner-host-userinfo-reserved-escaped-colon",
+    "identifier": "https://externalcontrollayer.ai%3atoken@example.com/audit",
+    "reserved": false
+  }
+]

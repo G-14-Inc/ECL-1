@@ -15,6 +15,7 @@
 //     in ^(?!/)(?!.*\\).+$ or ^P(?!$).+$: the pattern without the lookahead must match, and the
 //     lookahead's own pattern, anchored at the same place, must not.
 //
+// Nested $id scopes and root $id aliases are unsupported and refused.
 // Any other keyword, any other format and any pattern that this package cannot match as
 // ECMA-262 does are refused when a Set is built, so a schema that needs more than this validator
 // implements fails loudly instead of being half-checked.
@@ -123,7 +124,7 @@ func NewSet(documents map[string]any) (*Set, error) {
 		set.documents[identifier] = object
 	}
 	for _, identifier := range pyjson.Keys(documents) {
-		if err := set.prepare(set.documents[identifier], identifier, identifier); err != nil {
+		if err := set.prepare(set.documents[identifier], identifier, identifier, true); err != nil {
 			return nil, err
 		}
 	}
@@ -140,7 +141,117 @@ func (s *Set) Identifiers() []string {
 	return identifiers
 }
 
-func (s *Set) prepare(node any, base, where string) error {
+// keywordDomains prevents malformed constraints from becoming silent no-ops.
+// Counts are supported through the JSON-safe integer range and the host int range.
+func keywordDomains(node map[string]any, base, where string, root bool) error {
+	bad := func(key string) error {
+		return fmt.Errorf("%s: invalid or unsupported value for schema keyword %s", where, key)
+	}
+	names := func(value any, nonempty bool) bool {
+		items, ok := value.([]any)
+		if !ok || (nonempty && len(items) == 0) {
+			return false
+		}
+		seen := map[string]bool{}
+		for _, item := range items {
+			text, ok := item.(string)
+			if !ok || seen[text] {
+				return false
+			}
+			seen[text] = true
+		}
+		return true
+	}
+	if id, present := node["$id"]; present {
+		text, ok := id.(string)
+		if !ok || !root || text != base {
+			return bad("$id")
+		}
+	}
+	for _, key := range []string{"$ref", "pattern"} {
+		if value, has := node[key]; has {
+			if _, ok := value.(string); !ok {
+				return bad(key)
+			}
+		}
+	}
+	for _, key := range []string{"minLength", "maxLength", "minItems", "maxItems", "minProperties", "maxProperties"} {
+		if value, has := node[key]; has {
+			if _, ok := number(value); !ok {
+				return bad(key)
+			}
+		}
+	}
+	for _, key := range []string{"minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum"} {
+		if value, has := node[key]; has {
+			if _, ok := pyjson.Number(value); !ok {
+				return bad(key)
+			}
+		}
+	}
+	if value, has := node["uniqueItems"]; has {
+		if _, ok := value.(bool); !ok {
+			return bad("uniqueItems")
+		}
+	}
+	if value, has := node["required"]; has && !names(value, false) {
+		return bad("required")
+	}
+	if value, has := node["enum"]; has {
+		if _, ok := value.([]any); !ok {
+			return bad("enum")
+		}
+	}
+	if value, has := node["type"]; has {
+		types, ok := value.([]any)
+		if !ok {
+			if text, yes := value.(string); yes {
+				types = []any{text}
+			} else {
+				return bad("type")
+			}
+		}
+		if !names(types, true) {
+			return bad("type")
+		}
+		for _, kind := range types {
+			switch kind {
+			case "null", "boolean", "object", "array", "number", "integer", "string":
+			default:
+				return bad("type")
+			}
+		}
+	}
+	for _, key := range []string{"properties", "patternProperties", "dependentSchemas", "$defs"} {
+		if value, has := node[key]; has {
+			if _, ok := value.(map[string]any); !ok {
+				return bad(key)
+			}
+		}
+	}
+	if value, has := node["dependentRequired"]; has {
+		entries, ok := value.(map[string]any)
+		if !ok {
+			return bad("dependentRequired")
+		}
+		for _, entry := range entries {
+			if !names(entry, false) {
+				return bad("dependentRequired")
+			}
+		}
+	}
+	for _, key := range []string{"allOf", "anyOf", "oneOf", "prefixItems"} {
+		if value, has := node[key]; has {
+			items, ok := value.([]any)
+			if !ok || len(items) == 0 {
+				return bad(key)
+			}
+		}
+	}
+	return nil
+}
+
+func (s *Set) prepare(node any, base, where string, root bool) error {
 	if _, ok := node.(bool); ok {
 		return nil
 	}
@@ -152,6 +263,9 @@ func (s *Set) prepare(node any, base, where string) error {
 		if !validationKeywords[keyword] && !annotationKeywords[keyword] {
 			return fmt.Errorf("%s: unsupported schema keyword %s", where, keyword)
 		}
+	}
+	if err := keywordDomains(schema, base, where, root); err != nil {
+		return err
 	}
 	if format, present := schema["format"]; present {
 		name, ok := format.(string)
@@ -179,7 +293,7 @@ func (s *Set) prepare(node any, base, where string) error {
 						return fmt.Errorf("%s: %w", where, err)
 					}
 				}
-				if err := s.prepare(children[name], base, where); err != nil {
+				if err := s.prepare(children[name], base, where, false); err != nil {
 					return err
 				}
 			}
@@ -187,7 +301,7 @@ func (s *Set) prepare(node any, base, where string) error {
 	}
 	for _, keyword := range []string{"additionalProperties", "unevaluatedProperties", "propertyNames", "items", "contains", "not", "if", "then", "else"} {
 		if child, present := schema[keyword]; present {
-			if err := s.prepare(child, base, where); err != nil {
+			if err := s.prepare(child, base, where, false); err != nil {
 				return err
 			}
 		}
@@ -195,7 +309,7 @@ func (s *Set) prepare(node any, base, where string) error {
 	for _, keyword := range []string{"allOf", "anyOf", "oneOf", "prefixItems"} {
 		if list, ok := schema[keyword].([]any); ok {
 			for _, item := range list {
-				if err := s.prepare(item, base, where); err != nil {
+				if err := s.prepare(item, base, where, false); err != nil {
 					return err
 				}
 			}
@@ -211,6 +325,26 @@ func (s *Set) prepare(node any, base, where string) error {
 func ecmaPattern(pattern string) (string, error) {
 	var out strings.Builder
 	inClass := false
+	classStart := -1
+	// Class atoms can be single characters, escape-defined sets, or completed ranges.
+	// A class escape is never a range endpoint under ECMA-262 Unicode semantics.
+	classAtom, classRange := 0, false
+	recordClassAtom := func(set bool) error {
+		if !inClass {
+			return nil
+		}
+		if classRange {
+			if set {
+				return errors.New("a character-class escape cannot be a range endpoint")
+			}
+			classAtom, classRange = 3, false
+		} else if set {
+			classAtom = 2
+		} else {
+			classAtom = 1
+		}
+		return nil
+	}
 	for index := 0; index < len(pattern); index++ {
 		character := pattern[index]
 		switch {
@@ -219,21 +353,76 @@ func ecmaPattern(pattern string) (string, error) {
 				return "", errors.New("pattern ends with a backslash")
 			}
 			next := pattern[index+1]
-			if strings.IndexByte("sSwWbB", next) >= 0 {
-				return "", fmt.Errorf("pattern escape \\%c differs between ECMA-262 and Go", next)
+			allowed := strings.IndexByte(`^$\.*+?()[]{}|/dDfnrtv0x`, next) >= 0 || (inClass && next == '-')
+			if !allowed || (next == '0' && index+2 < len(pattern) && pattern[index+2] >= '0' && pattern[index+2] <= '9') || (next == 'x' && index+2 < len(pattern) && pattern[index+2] == '{') {
+				return "", fmt.Errorf("unsupported ECMA-262 Unicode escape \\%c", next)
+			}
+			if err := recordClassAtom(next == 'd' || next == 'D'); err != nil {
+				return "", err
+			}
+			if next == 'x' {
+				if index+3 >= len(pattern) || !strings.ContainsRune("0123456789abcdefABCDEF", rune(pattern[index+2])) || !strings.ContainsRune("0123456789abcdefABCDEF", rune(pattern[index+3])) {
+					return "", errors.New("invalid hexadecimal escape")
+				}
+				out.WriteString(pattern[index : index+4])
+				index += 3
+				continue
 			}
 			out.WriteByte(character)
 			out.WriteByte(next)
 			index++
+		case character == '(' && !inClass && strings.HasPrefix(pattern[index:], "(?") && !strings.HasPrefix(pattern[index:], "(?:"):
+			return "", errors.New("unsupported ECMA-262 group construct")
+		case !inClass && (character == '^' || character == '$') && index+1 < len(pattern) && strings.IndexByte("*+?{", pattern[index+1]) >= 0:
+			return "", errors.New("an anchor assertion cannot be quantified")
+		case !inClass && (character == ']' || character == '}'):
+			return "", errors.New("unescaped closing delimiter is not an ECMA-262 Unicode pattern")
+		case character == '{' && !inClass:
+			end := index + 1
+			for end < len(pattern) && pattern[end] >= '0' && pattern[end] <= '9' {
+				end++
+			}
+			if end == index+1 {
+				return "", errors.New("unescaped opening brace is not an ECMA-262 Unicode pattern")
+			}
+			if end < len(pattern) && pattern[end] == ',' {
+				end++
+				for end < len(pattern) && pattern[end] >= '0' && pattern[end] <= '9' {
+					end++
+				}
+			}
+			if end >= len(pattern) || pattern[end] != '}' {
+				return "", errors.New("invalid ECMA-262 quantifier")
+			}
+			out.WriteString(pattern[index : end+1])
+			index = end
+		case character == '[' && inClass:
+			return "", errors.New("nested character-class syntax is not supported")
 		case character == '[' && !inClass:
 			inClass = true
+			classStart = index
+			classAtom, classRange = 0, false
 			out.WriteByte(character)
 		case character == ']' && inClass:
+			if index == classStart+1 || (index == classStart+2 && pattern[classStart+1] == '^') {
+				return "", errors.New("empty character classes are not supported")
+			}
 			inClass = false
+			out.WriteByte(character)
+		case inClass && character == '-' && (classAtom == 1 || classAtom == 2) && index+1 < len(pattern) && pattern[index+1] != ']':
+			if classAtom == 2 {
+				return "", errors.New("a character-class escape cannot be a range endpoint")
+			}
+			classAtom, classRange = 0, true
 			out.WriteByte(character)
 		case character == '.' && !inClass:
 			out.WriteString(`[^\n\r\x{2028}\x{2029}]`)
 		default:
+			if !(inClass && index == classStart+1 && character == '^') {
+				if err := recordClassAtom(false); err != nil {
+					return "", err
+				}
+			}
 			out.WriteByte(character)
 		}
 	}
@@ -290,8 +479,14 @@ func compileLookahead(pattern string) (matcher, error) {
 		index = end + 1
 	}
 	rest := pattern[index:]
+	if len(rest) > 0 && strings.IndexByte("*+?{", rest[0]) >= 0 {
+		return nil, errors.New("a lookahead assertion cannot be quantified")
+	}
 	if len(negatives) == 0 || strings.Contains(rest, "(?") {
 		return nil, errors.New("a lookahead is matched only right after the start anchor and a literal prefix")
+	}
+	if topLevelAlternation(rest) {
+		return nil, errors.New("top-level alternation after a lookahead is not supported")
 	}
 	positive, err := compileECMA("^" + prefix + rest)
 	if err != nil {
@@ -309,6 +504,38 @@ func compileLookahead(pattern string) (matcher, error) {
 		result.negatives = append(result.negatives, negative)
 	}
 	return result, nil
+}
+
+// An alternation outside a group would escape the translated lookahead's guard.
+func topLevelAlternation(pattern string) bool {
+	depth := 0
+	inClass := false
+	for i := 0; i < len(pattern); i++ {
+		c := pattern[i]
+		if c == '\\' {
+			i++
+			continue
+		}
+		if inClass {
+			if c == ']' {
+				inClass = false
+			}
+			continue
+		}
+		switch c {
+		case '[':
+			inClass = true
+		case '(':
+			depth++
+		case ')':
+			depth--
+		case '|':
+			if depth == 0 {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // groupEnd returns the index of the parenthesis that closes the group opening at start, skipping
@@ -431,10 +658,15 @@ func push(out *[]Error, limit int, path, keyword, message string) {
 }
 
 func number(value any) (int, bool) {
-	if integer, ok := pyjson.Int(value); ok {
-		return int(integer), true
+	amount, ok := pyjson.Number(value)
+	if !ok || !amount.IsInt() || !amount.Num().IsInt64() {
+		return 0, false
 	}
-	return 0, false
+	integer := amount.Num().Int64()
+	if integer < 0 || int64(int(integer)) != integer || integer > 9007199254740991 {
+		return 0, false
+	}
+	return int(integer), true
 }
 
 // evaluate checks one schema node. With out nil it stops at the first failure and only answers

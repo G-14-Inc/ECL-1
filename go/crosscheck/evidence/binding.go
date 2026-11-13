@@ -25,7 +25,7 @@ const respondsTo = "ecl.relation.responds-to.v1"
 
 var (
 	outcomes        = map[string]bool{"admit": true, "deny": true, "hold": true, "challenge": true}
-	executionEvents = map[string]bool{"execution_released": true, "execution_terminal": true}
+	executionEvents = map[string]bool{"release_prepared": true, "execution_released": true, "execution_observed": true, "execution_terminal": true}
 	authorityEvents = map[string]bool{"authority_issued": true, "authority_consumed": true}
 	looseInstant    = regexp.MustCompile(`^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]{1,9}))?Z$`)
 	noResponse      = "<none>"
@@ -256,6 +256,15 @@ func catch(err *error) {
 // ErrNegativeSkew is a response clock-skew allowance below zero.
 var ErrNegativeSkew = errors.New("the response clock-skew allowance is a non-negative integer of seconds")
 
+func requireSingleUse(authority *bound) {
+	if authority.text("use_policy") != "single_use" {
+		authority.fail("use_policy is unsupported; only single_use is defined")
+	}
+	if authority.has("max_uses") && authority.integer("max_uses") != 1 {
+		authority.fail("max_uses must be absent or the integer 1")
+	}
+}
+
 // CheckResponseBinding returns a *BindingError unless response is the answer to request
 // (DCMP2-044 to DCMP2-050). skewSeconds is the verification profile's allowance (DCMP2-047); the
 // reference profile's is 0.
@@ -268,6 +277,7 @@ func CheckResponseBinding(request, response any, skewSeconds int64) (err error) 
 	answer := read(response, "response", RequestBindingInvalid)
 	requireMessage(asked, "decision_request")
 	requireMessage(answer, "decision_response")
+	requireSingleUse(asked.member("authority_request"))
 	answersTheRequest(asked, answer)
 	sameText(answer, asked, "workflow", "workflow_id")
 	sameText(answer, asked, "workflow", "root_trace_id")
@@ -300,6 +310,11 @@ func CheckResponseBinding(request, response any, skewSeconds int64) (err error) 
 	if outcome != "admit" {
 		return nil
 	}
+	requireSingleUse(answer.member("authorization"))
+	// 5a: request expiry is exclusive at the admitting evaluation, without skew.
+	if instant.Compare(answer.instant("evaluated_at"), asked.instant("expires_at")) >= 0 {
+		answer.fail("evaluated_at is at or after the request's expires_at")
+	}
 	// 6a: the audience requested.
 	if answer.text("authorization", "audience") != asked.text("authority_request", "audience") {
 		answer.fail("authorization.audience is not the audience requested", AudienceMismatch)
@@ -326,11 +341,6 @@ func CheckResponseBinding(request, response any, skewSeconds int64) (err error) 
 		}
 		return 0, false
 	}
-	if answer.text("authorization", "use_policy") == "single_use" {
-		if granted, present := grantedUses(); present && granted != 1 {
-			answer.fail("a single_use authorization has a max_uses other than 1")
-		}
-	}
 	if asked.has("authority_request", "max_uses") {
 		granted, present := grantedUses()
 		if !present || granted > asked.integer("authority_request", "max_uses") {
@@ -351,8 +361,8 @@ func CheckResponseBinding(request, response any, skewSeconds int64) (err error) 
 	return nil
 }
 
-// CheckEventBinding returns a *BindingError unless the execution event (execution_released or
-// execution_terminal) records request and response (EBMP2-047 to EBMP2-051). response is nil
+// CheckEventBinding returns a *BindingError unless the execution event records request and
+// response (EBMP2-047 to EBMP2-051). response is nil
 // when the decision point gave none.
 func CheckEventBinding(event, request, response any) (err error) {
 	defer catch(&err)
@@ -364,8 +374,12 @@ func CheckEventBinding(event, request, response any) (err error) {
 	}
 	requireEvent(recorded, executionEvents, "execution")
 	requireMessage(asked, "decision_request")
+	requireSingleUse(asked.member("authority_request"))
 	if answer != nil {
 		requireMessage(answer, "decision_response")
+		if admits(answer) {
+			requireSingleUse(answer.member("authorization"))
+		}
 	}
 	if recorded.text("event", "action_id") != asked.text("action", "action_id") {
 		recorded.fail("event.action_id is not the request's action")
@@ -416,7 +430,9 @@ func CheckEventBinding(event, request, response any) (err error) {
 		if !admits(answer) {
 			recorded.fail("releases, and there is no response that admits")
 		}
-	} else {
+	} else if recorded.text("event_type") == "execution_observed" && !admits(answer) {
+		recorded.fail("records running execution, and there is no response that admits")
+	} else if recorded.text("event_type") == "execution_terminal" {
 		state := recorded.text("event", "state")
 		wanted, known := TerminalStateOutcomes[state]
 		if !known {
@@ -444,6 +460,7 @@ func CheckAuthorityEventBinding(event, response any) (err error) {
 	if !admits(answer) {
 		recorded.fail("records an authorization, and the response does not admit")
 	}
+	requireSingleUse(answer.member("authorization"))
 	granted := answer.text("authorization", "authorization_id")
 	if recorded.text("event", "authorization_id") != granted {
 		recorded.fail("event.authorization_id is not the response's")

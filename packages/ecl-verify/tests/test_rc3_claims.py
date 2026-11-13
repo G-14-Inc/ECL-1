@@ -85,7 +85,7 @@ class Rc3ClaimTests(unittest.TestCase):
         self.assertEqual("consequential", classify_action(flags))
         self.assertEqual(
             "non_consequential",
-            classify_action({key: False for key in flags}),
+            classify_action({key: False for key in flags}, fully_confined_to_isolated_context=True),
         )
         self.assertEqual(
             "out_of_scope_candidate",
@@ -268,6 +268,7 @@ class Rc3ClaimTests(unittest.TestCase):
             claim_approval_authority_within_24_months=False,
             compensation_contingent_on_claim=False,
             material_affiliate_or_reseller=False,
+            direct_implementation_within_24_months=False,
         )
         package = AssessmentPackage(
             level=2,
@@ -327,6 +328,7 @@ class Rc3ClaimTests(unittest.TestCase):
                 finding_severities={"finding:1": "critical"},
                 claim_status="full_conformance",
                 procurement_decision="award",
+                checklist_findings={"check:enforcement": "finding:1"},
             ).validate()
         with self.assertRaisesRegex(ClaimError, "conditional award"):
             validate_procurement_gate(

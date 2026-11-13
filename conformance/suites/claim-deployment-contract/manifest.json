@@ -1,0 +1,2567 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-claim-deployment-contract",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-active-minor-with-historical-critical-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-active-minor-with-historical-critical-control.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-active-minor-with-historical-critical-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-conditional-critical-artifact-reference",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-conditional-critical-artifact-reference.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-conditional-critical-artifact-reference"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-conditional-major-artifact-reference",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-conditional-major-artifact-reference.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-conditional-major-artifact-reference"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-conditional-minor-artifact-reference",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-conditional-minor-artifact-reference.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-conditional-minor-artifact-reference"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-critical-assessment-only-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-critical-assessment-only-control.json",
+      "requirement_ids": [
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-critical-assessment-only-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-no-finding",
+      "negates": [
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-no-finding.json",
+      "requirement_ids": [
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-no-finding"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-critical-rejected",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-critical-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-critical-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-critical-remediated",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-critical-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-critical-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-major-rejected",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-major-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-major-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-major-remediated",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-major-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-major-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-minor-rejected",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-minor-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-minor-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-minor-remediated",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-minor-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-minor-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-failed-item-only-observation",
+      "negates": [
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-failed-item-only-observation.json",
+      "requirement_ids": [
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-failed-item-only-observation"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-critical-accepted-condition",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-critical-accepted-condition.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-critical-accepted_condition"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/3/if/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-critical-open",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-critical-open.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-critical-open"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-critical-rejected",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-critical-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-critical-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-critical-remediated",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-critical-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-critical-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-major-accepted-condition",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-major-accepted-condition.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-major-accepted_condition"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-major-open",
+      "negates": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-major-open.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-major-open"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-major-rejected",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-major-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-major-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-major-remediated",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-major-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-major-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-minor-accepted-condition",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-minor-accepted-condition.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-minor-accepted_condition"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-minor-open",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-minor-open.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-minor-open"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-minor-rejected",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-minor-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-minor-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-minor-remediated",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-minor-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-minor-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-observation-accepted-condition",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-observation-accepted-condition.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-observation-accepted_condition"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-observation-open",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-observation-open.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-observation-open"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-observation-rejected",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-observation-rejected.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-observation-rejected"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-full-observation-remediated",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-full-observation-remediated.json",
+      "requirement_ids": [
+        "ECL1N-0081",
+        "ECL1N-0147"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-full-observation-remediated"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l1-conflicts-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l1-conflicts-control.json",
+      "requirement_ids": [
+        "ECL1N-0148"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l1-conflicts-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l1-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l1-control.json",
+      "requirement_ids": [
+        "ECL1N-0086",
+        "ECL1N-0148"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l1-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l1-history-omitted-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l1-history-omitted-control.json",
+      "requirement_ids": [
+        "ECL1N-0148"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l1-history-omitted-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/0/then/properties/independence/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-affiliate-exception-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-affiliate-exception-control.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-affiliate-exception-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-claim-approval-authority-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-claim-approval-authority-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-claim_approval_authority_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-control.json",
+      "requirement_ids": [
+        "ECL1N-0086",
+        "ECL1N-0148"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-direct-implementation-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-direct-implementation-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-direct_implementation_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-history-omitted",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-history-omitted.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-history-omitted"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-managed-operator-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-managed-operator-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-managed_operator_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/0/then/properties/independence/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l2-material-affiliate-or-reseller",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l2-material-affiliate-or-reseller.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l2-material_affiliate_or_reseller"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/0/then/properties/independence/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-affiliate-exception-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-affiliate-exception-control.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-affiliate-exception-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-claim-approval-authority-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-claim-approval-authority-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-claim_approval_authority_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-control.json",
+      "requirement_ids": [
+        "ECL1N-0086",
+        "ECL1N-0148"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-direct-implementation-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-direct-implementation-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-direct_implementation_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-history-omitted",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-history-omitted.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-history-omitted"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-managed-operator-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-managed-operator-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-managed_operator_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/0/then/properties/independence/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l3-material-affiliate-or-reseller",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l3-material-affiliate-or-reseller.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l3-material_affiliate_or_reseller"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/0/then/properties/independence/allOf/0/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-affiliate-exception-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-affiliate-exception-control.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-affiliate-exception-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-claim-approval-authority-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-claim-approval-authority-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-claim_approval_authority_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/4/if/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/disposition/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/5/then/properties/findings/contains/properties/severity/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-control.json",
+      "requirement_ids": [
+        "ECL1N-0086",
+        "ECL1N-0148"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-direct-implementation-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-direct-implementation-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-direct_implementation_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-history-omitted",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-history-omitted.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-history-omitted"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-managed-operator-within-24-months",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-managed-operator-within-24-months.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-managed_operator_within_24_months"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/0/then/properties/independence/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-assessment-l4-material-affiliate-or-reseller",
+      "negates": [
+        "ECL1N-0086"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-assessment-l4-material-affiliate-or-reseller.json",
+      "requirement_ids": [
+        "ECL1N-0086"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/assessment-valid-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "assessment-l4-material_affiliate_or_reseller"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-claim-assessment-only-remediation-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-claim-assessment-only-remediation-control.json",
+      "requirement_ids": [
+        "ECL1N-0081"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/claim-valid-full-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "claim-assessment-only-remediation-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/conformance-claim/1#/allOf/5/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-claim-full-conditional-remediation",
+      "negates": [
+        "ECL1N-0077",
+        "ECL1N-0081"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-claim-full-conditional-remediation.json",
+      "requirement_ids": [
+        "ECL1N-0077",
+        "ECL1N-0081"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/claim-valid-full-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "claim-full-conditional-remediation"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/conformance-claim/1#/allOf/5/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-claim-full-empty-limitations-expiry-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-claim-full-empty-limitations-expiry-control.json",
+      "requirement_ids": [
+        "ECL1N-0078"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/claim-valid-full-l4-class-c.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "claim-full-empty-limitations-expiry-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-approved-connected-revocation-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-approved-connected-revocation-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-approved-connected_revocation_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-approved-evidence-export-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-approved-evidence-export-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-approved-evidence_export_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-approved-offline-staleness-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-approved-offline-staleness-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-approved-offline_staleness_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-baseline-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-baseline-control.json",
+      "requirement_ids": [
+        "ECL1N-0098",
+        "ECL1N-0100"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-baseline-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-false-baseline-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-false-baseline-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-false-baseline-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-false-baseline-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-false-baseline-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-false-baseline-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-false-baseline-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-false-baseline-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-false-baseline-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-stricter-zero-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-stricter-zero-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-stricter-zero-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-unapproved-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-unapproved-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-unapproved-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-unapproved-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-unapproved-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-unapproved-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/6/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l1-unapproved-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l1-unapproved-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l1-unapproved-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-approved-connected-revocation-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-approved-connected-revocation-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-approved-connected_revocation_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-approved-evidence-export-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-approved-evidence-export-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-approved-evidence_export_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-approved-offline-staleness-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-approved-offline-staleness-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-approved-offline_staleness_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-baseline-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-baseline-control.json",
+      "requirement_ids": [
+        "ECL1N-0098",
+        "ECL1N-0100"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-baseline-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-false-baseline-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-false-baseline-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-false-baseline-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-false-baseline-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-false-baseline-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-false-baseline-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-false-baseline-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-false-baseline-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-false-baseline-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-stricter-zero-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-stricter-zero-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-stricter-zero-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-unapproved-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-unapproved-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-unapproved-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-unapproved-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-unapproved-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-unapproved-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/7/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l2-unapproved-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l2-unapproved-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l2-unapproved-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-approved-connected-revocation-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-approved-connected-revocation-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-approved-connected_revocation_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-approved-evidence-export-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-approved-evidence-export-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-approved-evidence_export_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-approved-offline-staleness-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-approved-offline-staleness-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-approved-offline_staleness_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-baseline-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-baseline-control.json",
+      "requirement_ids": [
+        "ECL1N-0098",
+        "ECL1N-0100"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-baseline-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-false-baseline-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-false-baseline-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-false-baseline-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-false-baseline-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-false-baseline-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-false-baseline-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-false-baseline-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-false-baseline-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-false-baseline-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-stricter-zero-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-stricter-zero-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-stricter-zero-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-unapproved-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-unapproved-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-unapproved-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-unapproved-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-unapproved-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-unapproved-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-unapproved-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-unapproved-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-unapproved-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l3-untrusted-order",
+      "negates": [
+        "ECL1N-0100"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l3-untrusted-order.json",
+      "requirement_ids": [
+        "ECL1N-0100"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l3-untrusted-order"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-approved-connected-revocation-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-approved-connected-revocation-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-approved-connected_revocation_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-approved-evidence-export-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-approved-evidence-export-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-approved-evidence_export_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-approved-offline-staleness-seconds-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-approved-offline-staleness-seconds-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-approved-offline_staleness_seconds-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-baseline-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-baseline-control.json",
+      "requirement_ids": [
+        "ECL1N-0098",
+        "ECL1N-0100"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-baseline-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-false-baseline-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-false-baseline-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-false-baseline-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-false-baseline-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-false-baseline-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-false-baseline-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-false-baseline-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-false-baseline-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-false-baseline-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-stricter-zero-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-stricter-zero-control.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-stricter-zero-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-unapproved-connected-revocation-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-unapproved-connected-revocation-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-unapproved-connected_revocation_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/3/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-unapproved-evidence-export-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-unapproved-evidence-export-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-unapproved-evidence_export_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/9/then/properties/timing_case/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-unapproved-offline-staleness-seconds",
+      "negates": [
+        "ECL1N-0098"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-unapproved-offline-staleness-seconds.json",
+      "requirement_ids": [
+        "ECL1N-0098"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-unapproved-offline_staleness_seconds"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-deployment-l4-untrusted-order",
+      "negates": [
+        "ECL1N-0100"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-deployment-l4-untrusted-order.json",
+      "requirement_ids": [
+        "ECL1N-0100"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-centralized-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "deployment-l4-untrusted-order"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/1/then/properties/delivery_surfaces/contains/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-hosted-control-plane-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-hosted-control-plane-control.json",
+      "requirement_ids": [
+        "ECL1N-0092",
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-hosted_control_plane-control"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-invalid-interval--1",
+      "negates": [
+        "ECL1N-0099"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-invalid-interval--1.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-invalid-interval--1"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-invalid-interval-1",
+      "negates": [
+        "ECL1N-0099"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-invalid-interval-1.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-invalid-interval-1"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-invalid-interval-none",
+      "negates": [
+        "ECL1N-0099"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-invalid-interval-none.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-invalid-interval-none"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-invalid-interval-true",
+      "negates": [
+        "ECL1N-0099"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-invalid-interval-true.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-invalid-interval-true"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/1/then/properties/delivery_surfaces/contains/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-no-control-plane",
+      "negates": [
+        "ECL1N-0092"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-no-control-plane.json",
+      "requirement_ids": [
+        "ECL1N-0092"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-no-control-plane"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-no-timing",
+      "negates": [
+        "ECL1N-0099"
+      ],
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-no-timing.json",
+      "requirement_ids": [
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-no-timing"
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/1/then/properties/delivery_surfaces/contains/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/5/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1#/allOf/8/then/properties/timing_case/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "claim-deployment-contract-federated-self-managed-control-plane-control",
+      "path": "conformance/suites/claim-deployment-contract/claim-deployment-contract-federated-self-managed-control-plane-control.json",
+      "requirement_ids": [
+        "ECL1N-0092",
+        "ECL1N-0099"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/document-coverage/deployment-valid-federated-example.json",
+        "generator": "scripts/generate_claim_deployment_vectors.py",
+        "kind": "mutation",
+        "mutation": "federated-self_managed_control_plane-control"
+      },
+      "stage": "document"
+    }
+  ]
+}

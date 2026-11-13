@@ -58,7 +58,7 @@ export interface SplitResult {
   readonly fragment: string;
 }
 
-// The schemes that Python 3.12's urlunsplit writes with an empty authority (`uses_netloc`).
+// The uses_netloc schemes from the inspected CPython 3.12.10 urllib.parse source.
 const USES_NETLOC = new Set([
   "",
   "ftp",
@@ -89,7 +89,7 @@ const USES_NETLOC = new Set([
   "itms-services",
 ]);
 
-/** Python 3.12's urlunsplit: the URI that the five parts make. */
+/** Mirrors the inspected CPython 3.12.10 urlunsplit branches, including empty authorities. */
 export function urlunsplit(scheme: string, netloc: string, path: string, query: string, fragment: string): string {
   let url = path;
   if (netloc !== "") {
@@ -115,7 +115,7 @@ export function urlunsplit(scheme: string, netloc: string, path: string, query: 
 }
 
 /**
- * Python 3.12's urlsplit for printable ASCII input (which it neither strips nor filters);
+ * CPython 3.12.10's urlsplit for printable ASCII input (which it neither strips nor filters);
  * undefined where it raises ValueError.
  */
 export function urlsplit(input: string): SplitResult | undefined {
@@ -177,6 +177,9 @@ function partition(text: string, separator: string): [string, boolean, string] {
 
 function bracketedNetlocValid(netloc: string): boolean {
   const at = netloc.lastIndexOf("@");
+  if (at >= 0 && /[\[\]]/.test(netloc.slice(0, at))) {
+    return false;
+  }
   const hostAndPort = at < 0 ? netloc : netloc.slice(at + 1);
   const [before, hasOpen, bracketed] = partition(hostAndPort, "[");
   let hostname: string;
@@ -184,8 +187,8 @@ function bracketedNetlocValid(netloc: string): boolean {
     if (before !== "") {
       return false;
     }
-    const [host, , port] = partition(bracketed, "]");
-    if (port !== "" && !port.startsWith(":")) {
+    const [host, hasClose, port] = partition(bracketed, "]");
+    if (!hasClose || /[\[\]]/.test(host + port) || (port !== "" && !port.startsWith(":"))) {
       return false;
     }
     hostname = host;
@@ -197,6 +200,25 @@ function bracketedNetlocValid(netloc: string): boolean {
   }
   // ipaddress.ip_address: an IPv4 address is refused in brackets, so only IPv6 passes.
   return !isIpv4(hostname) && isIpv6(hostname);
+}
+
+/** XR1-017 reservation comparison only; identifier and principal bytes remain unchanged. */
+export function reservedExtensionNamespace(identifier: string): boolean {
+  // URI validation owns malformed inputs before the XR1-017 host comparison.
+  if (!isAbsoluteUri(identifier)) return false;
+  const parsed = urlsplit(identifier);
+  if (parsed === undefined || !["http", "https"].includes(parsed.scheme)) {
+    return false;
+  }
+  const authority = parsed.netloc.slice(parsed.netloc.lastIndexOf("@") + 1);
+  const host = authority.startsWith("[") ? authority.slice(0, authority.indexOf("]") + 1) : authority.split(":", 1)[0];
+  if (host === undefined) return false;
+  let comparisonHost = host.replace(/%[0-9A-Fa-f]{2}/g, (escape) => {
+    const character = String.fromCharCode(Number.parseInt(escape.slice(1), 16));
+    return /^[A-Za-z0-9._~-]$/.test(character) ? character : escape;
+  });
+  if (comparisonHost.endsWith(".")) comparisonHost = comparisonHost.slice(0, -1);
+  return comparisonHost.toLowerCase() === "externalcontrollayer.ai";
 }
 
 function isIpv4(text: string): boolean {

@@ -67,6 +67,7 @@ import {
   integer,
   member,
   messageFindings,
+  responseBindingFindings,
   modificationBasisProblems,
   modificationProblems,
   modificationResponseProblems,
@@ -74,6 +75,7 @@ import {
   obj,
   oneWayResponseProblems,
   releaseProblems,
+  sameDigest,
   text,
 } from "./common.js";
 import type { Exchange, Problem } from "./common.js";
@@ -173,13 +175,22 @@ function deepCopy(value: JsonValue): JsonValue {
 }
 
 function pointer(path: string): string[] | null {
-  if (!path.startsWith("/")) {
+  if (!path.startsWith("/") || /~(?:[^01]|$)/.test(path)) {
     return null;
   }
   return path
     .split("/")
     .slice(1)
     .map((part) => part.replace(/~1/g, "/").replace(/~0/g, "~"));
+}
+
+/** RFC 6901 array index; '-' names no existing value. */
+function arrayIndex(token: string, length: number): number | null {
+  if (!/^(0|[1-9][0-9]*)$/.test(token)) {
+    return null;
+  }
+  const index = Number(token);
+  return Number.isSafeInteger(index) && index < length ? index : null;
 }
 
 function overlaps(first: readonly string[], second: readonly string[]): boolean {
@@ -195,7 +206,7 @@ function overlaps(first: readonly string[], second: readonly string[]): boolean 
 /**
  * The tool arguments after a `modify` decision's modifications, or null if there are none: null
  * means the modifications object is one the pinned text forbids (a wholesale replacement with
- * edits, or edits whose targets overlap), cannot be applied (a redaction path that does not
+ * edits, or a redaction whose target overlaps an override), cannot be applied (a redaction path that does not
  * resolve inside the arguments), or yields arguments outside the restricted canonical profile.
  * Each of these ends in a deny of the original with no new request (AC1-005).
  */
@@ -206,7 +217,7 @@ export function effectiveParameters(argumentsValue: JsonObject, modifications: J
   const wholesale = at(modifications, "modified_content");
   const redactions = holds(modifications, "redactions") ? at(modifications, "redactions") : [];
   const overrides = holds(modifications, "parameter_overrides") ? at(modifications, "parameter_overrides") : {};
-  if (wholesale !== null) {
+  if (holds(modifications, "modified_content")) {
     if (holds(modifications, "redactions") || holds(modifications, "parameter_overrides")) {
       return null;
     }
@@ -251,15 +262,32 @@ export function effectiveParameters(argumentsValue: JsonObject, modifications: J
     const item = redactions[index] as JsonObject;
     const parts = paths[index] as string[];
     const replacement = holds(item, "replacement") ? at(item, "replacement") : REDACTED;
-    let container: JsonValue = result;
-    for (const step of parts.slice(0, -1)) {
-      container = isObject(container) ? at(container, step) : null;
-    }
-    const last = parts[parts.length - 1] as string;
-    if (!isObject(container) || !holds(container, last)) {
+    if (typeof replacement !== "string") {
       return null;
     }
-    defineMember(container, last, replacement);
+    let container: JsonValue = result;
+    for (const step of parts.slice(0, -1)) {
+      if (isObject(container)) {
+        container = at(container, step);
+      } else if (isArray(container)) {
+        const position = arrayIndex(step, container.length);
+        container = position === null ? null : container[position] as JsonValue;
+      } else {
+        return null;
+      }
+    }
+    const last = parts[parts.length - 1] as string;
+    if (isObject(container) && holds(container, last)) {
+      defineMember(container, last, replacement);
+    } else if (isArray(container)) {
+      const position = arrayIndex(last, container.length);
+      if (position === null) {
+        return null;
+      }
+      container[position] = replacement;
+    } else {
+      return null;
+    }
   }
   return digestOf(result) !== null ? result : null;
 }
@@ -315,10 +343,16 @@ export function entryHash(entry: JsonObject): string | null {
 export function chainProblems(entries: readonly JsonValue[]): Problem[] {
   const problems: Problem[] = [];
   let previous: string | null = null;
+  const entryIds = new Set<string>();
   entries.forEach((entry, index) => {
     if (!isObject(entry)) {
       problems.push([`/chain/${index}`, "a ContextEntry is not an object"]);
       return;
+    }
+    const entryId = at(entry, "entry_id");
+    if (typeof entryId === "string") {
+      if (entryIds.has(entryId)) problems.push([`/chain/${index}/entry_id`, "a ContextEntry identifier is repeated within the session"]);
+      entryIds.add(entryId);
     }
     if (!pythonEquals(at(entry, "previous_hash"), previous)) {
       problems.push([`/chain/${index}/previous_hash`, "the link is not the prior head"]);
@@ -335,17 +369,17 @@ export function chainProblems(entries: readonly JsonValue[]): Problem[] {
 /**
  * When the Guardian's ask or defer stops waiting, in nanoseconds since the epoch: the time the
  * adapter observed its decision plus `ask_details.timeout_seconds` or
- * `defer_details.resolution_timeout_ms`. Null when the record lacks either.
+ * `defer_details.resolution_timeout_ms`. Null when the record lacks either or its timeout violates the pinned native schema.
  */
 export function deadline(record: JsonObject, disposition: string): bigint | null {
   const received = instant(member(record, "guardian", "observed_at"));
   let span: bigint | null;
   if (disposition === "ask") {
     const seconds = integer(record, "guardian", "result", "ask_details", "timeout_seconds");
-    span = seconds === null ? null : BigInt(seconds) * NANOSECONDS;
+    span = seconds === null || seconds < 1 ? null : BigInt(seconds) * NANOSECONDS;
   } else {
     const milliseconds = integer(record, "guardian", "result", "defer_details", "resolution_timeout_ms");
-    span = milliseconds === null ? null : BigInt(milliseconds) * MILLISECOND;
+    span = milliseconds === null || milliseconds < 0 ? null : BigInt(milliseconds) * MILLISECOND;
   }
   return received === null || span === null ? null : received + span;
 }
@@ -396,7 +430,9 @@ function expiry(view: View): Problem[] {
   }
   const problems: Problem[] = [];
   if (outcome === "hold" || outcome === "challenge") {
-    problems.push(...deferralProblems(member(record, "response"), deadline(record, disposition)));
+    const bound = deadline(record, disposition);
+    if (bound === null) problems.push(["/guardian/result", "a waiting response requires a valid Guardian timeout"]);
+    problems.push(...deferralProblems(member(record, "response"), bound));
     const expires = instant(member(record, "response", "expires_at"));
     const released = instant(member(record, "release", "released_at"));
     if (expires !== null && released !== null && released >= expires) {
@@ -466,26 +502,20 @@ function judgment(view: View): Problem[] {
     const path = `/inputs/${index}`;
     const derived = member(item, "derived_from");
     const name = text(item, "input");
-    let expected: string;
-    if (evaluator !== DETERMINISTIC_EVALUATOR || !authenticated(channel)) {
-      expected = guardianClass(evaluator, [], channel);
-    } else if (!isArray(derived)) {
-      const recordedClass = text(item, "class");
-      if (recordedClass === "verifiable") {
-        problems.push([path + "/derived_from", "a verifiable Guardian decision names the inputs its request carried"]);
-      } else if (name !== null && recordedClass !== null) {
-        required.set(inputKey(name), recordedClass);
-      }
+    if (!isArray(derived) && text(view.record, "guardian", "status") === "decided") {
+      problems.push([path + "/derived_from", "a Guardian decision explicitly names every input its request carried, or an empty list"]);
       continue;
-    } else {
+    }
+    const carried: Array<string | null> = [];
+    if (isArray(derived)) {
       derived.forEach((name, offset) => {
         if (typeof name !== "string" || !classes.has(inputKey(name))) {
           problems.push([`${path}/derived_from/${offset}`, "the record lists no such input"]);
         }
+        if (typeof name === "string") carried.push(classes.get(inputKey(name)) ?? null);
       });
-      const carried = derived.filter((name): name is string => typeof name === "string").map((name) => classes.get(inputKey(name)) ?? null);
-      expected = guardianClass(evaluator, carried, channel);
     }
+    const expected = guardianClass(evaluator, carried, channel);
     if (text(item, "class") !== expected) {
       problems.push([path + "/class", `this input must be ${expected}`]);
     }
@@ -521,15 +551,18 @@ function release(view: View): Problem[] {
 
 function recorded(view: View): Problem[] {
   const { record } = view;
+  // Retained native evidence is checked even after failure or an incomplete decision.
+  const chain = array(record, "chain");
+  const chainErrors = chainProblems(chain);
   const result = obj(record, "guardian", "result");
   const response = obj(record, "response");
-  if (text(record, "guardian", "status") !== "decided" || result === null || response === null) {
-    return [];
-  }
+  if (text(record, "guardian", "status") !== "decided") return chainErrors;
+  if (result === null) return [["/guardian/result", "a decided Guardian exchange retains its result"], ...chainErrors];
+  if (response === null) return chainErrors;
   const entries = extensionEntries(response, DECISION_EXTENSION);
   const values = extensionValues(response, DECISION_EXTENSION);
   if (entries.length !== 1 || values.length !== 1) {
-    return [["/response/extensions", "the response records the Guardian decision once"]];
+    return [["/response/extensions", "the response records the Guardian decision once"], ...chainErrors];
   }
   const value = values[0] as JsonObject;
   const problems: Problem[] = [];
@@ -545,19 +578,89 @@ function recorded(view: View): Problem[] {
       problems.push([`/response/extensions/${name}`, `the recorded ${name} is not the Guardian's`]);
     }
   }
-  if (member(record, "audit_profile") === true && typeof at(value, "request_hash") !== "string") {
-    problems.push(["/response/extensions/request_hash", "ACS-Audit records the request hash"]);
+  if ((member(record, "audit_profile") === true || (text(record, "guardian", "channel") === "signed" && array(record, "chain").length > 0)) && typeof at(value, "request_hash") !== "string") {
+    problems.push(["/response/extensions/request_hash", "ACS-Audit or a signed request chain records the request hash"]);
   }
-  const chain = array(record, "chain");
+  const params = obj(record, "guardian", "request_params");
+  if (params !== null && holds(value, "request_hash")) {
+    let expectedHash: JsonValue = null;
+    try { expectedHash = jcsDigest(params)["value"] ?? null; }
+    catch (error) { if (!(error instanceof JcsError)) throw error; }
+    if (expectedHash === null || !pythonEquals(at(value, "request_hash"), expectedHash)) {
+      problems.push(["/response/extensions/request_hash", "the recorded request hash does not match the evaluated request params"]);
+    }
+  }
   if (chain.length === 0) {
     return problems;
   }
-  problems.push(...chainProblems(chain));
+  problems.push(...chainErrors);
   const step = chain.find((entry) => isObject(entry) && pythonEquals(at(entry, "step_id"), at(value, "request_id")));
   if (step === undefined || !pythonEquals(member(step, "entry_hash"), at(value, "chain_hash"))) {
     problems.push(["/response/extensions/chain_hash", "the recorded head is not the step's chain head"]);
-  } else if (holds(value, "request_hash") && !pythonEquals(member(step, "request_hash"), at(value, "request_hash"))) {
+  }
+  if (step !== undefined && holds(value, "request_hash") && !pythonEquals(member(step, "request_hash"), at(value, "request_hash"))) {
     problems.push(["/response/extensions/request_hash", "the recorded request hash is not the step's"]);
+  }
+  return problems;
+}
+
+/** Check the adapter's recorded authenticated context; the record contains no signature. */
+function signedRequestBinding(view: View): Problem[] {
+  const { record } = view;
+  if (text(record, "guardian", "channel") !== "signed") return [];
+  const params = obj(record, "guardian", "request_params");
+  if (text(record, "guardian", "status") === "failed") {
+    // A failed route asserts no verified decision; any retained submitted params
+    // still bind their local digest without inventing a signed result.
+    const guardian = obj(record, "guardian") ?? {};
+    if (!holds(guardian, "request_params") && !holds(guardian, "request_digest")) return [];
+    if (params === null || !holds(guardian, "request_digest")) {
+      return [["/guardian", "retained request params and their digest occur together"]];
+    }
+    let expected: JsonObject;
+    try { expected = jcsDigest(params); }
+    catch (error) {
+      if (!(error instanceof JcsError)) throw error;
+      return [["/guardian/request_params", "the request binding has no RFC 8785 canonical form"]];
+    }
+    return sameDigest(at(guardian, "request_digest"), expected) ? [] :
+      [["/guardian/request_digest", "the recorded digest does not bind this request"]];
+  }
+  const context = obj(record, "guardian", "authenticated_context");
+  const request = obj(record, "request");
+  if (params === null || context === null || request === null) {
+    return [["/guardian", "a signed channel records the evaluated params and authenticated context"]];
+  }
+  let paramsDigest: JsonObject;
+  let requestDigest: JsonObject;
+  try {
+    paramsDigest = jcsDigest(params);
+    requestDigest = jcsDigest(request);
+  } catch (error) {
+    if (!(error instanceof JcsError)) throw error;
+    return [["/guardian/request_params", "the request binding has no RFC 8785 canonical form"]];
+  }
+  const problems: Problem[] = [];
+  for (const [path, actual, expected] of [
+    ["/guardian/request_digest", member(record, "guardian", "request_digest"), paramsDigest],
+    ["/guardian/authenticated_context/request_digest", at(context, "request_digest"), paramsDigest],
+    ["/guardian/authenticated_context/dcmp_request_digest", at(context, "dcmp_request_digest"), requestDigest],
+  ] as const) {
+    if (!sameDigest(actual, expected)) problems.push([path, "the recorded digest does not bind this request"]);
+  }
+  for (const [name, expected] of [
+    ["session_id", at(record, "session_id")],
+    ["request_id", member(record, "guardian", "result", "request_id")],
+    ["method", at(record, "hook")],
+  ] as const) {
+    if (!pythonEquals(at(context, name), expected)) problems.push([`/guardian/authenticated_context/${name}`, "the authenticated context is not this session and step"]);
+  }
+  const chain = array(record, "chain");
+  if (chain.length > 0) {
+    const step = chain.find((entry) => isObject(entry) && pythonEquals(at(entry, "step_id"), at(context, "request_id")));
+    if (step === undefined || !pythonEquals(member(step, "request_hash"), at(paramsDigest, "value"))) {
+      problems.push(["/chain", "the signed step must commit to the evaluated request params"]);
+    }
   }
   return problems;
 }
@@ -573,7 +676,7 @@ export const RULES: ReadonlyArray<readonly [string, (view: View) => Problem[]]> 
   [JUDGMENT_RULE, judgment],
   [OUTCOME_RULE, outcomeNoWeaker],
   [RELEASE_RULE, release],
-  [RECORD_RULE, recorded],
+  [RECORD_RULE, (view) => [...recorded(view), ...signedRequestBinding(view)]],
   [BASIS_RULE, (view) => [...basisProblems(view.record, "guardian"), ...modificationBasisProblems(view.record)]],
 ];
 
@@ -590,5 +693,6 @@ export function check(record: JsonObject): Finding[] {
     ...RULES.flatMap(([rule, problems]) => findings(rule, problems(view))),
     ...findings(ONE_WAY_RULE, oneWayResponseProblems(record, [["request"], ["response"]], [["modification_request"], ["modification_response"]])),
     ...messageFindings(record, ["request"], ["response"], ["modification_request"], ["modification_response"]),
+    ...responseBindingFindings(record, ["request", "response"], ["modification_request", "modification_response"]),
   ];
 }

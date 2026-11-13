@@ -43,7 +43,10 @@ class FormalRunnerTests(unittest.TestCase):
         directory = self.directory / "directory"; directory.mkdir()
         for java in (str(self.directory / "absent"), str(self.directory / "not-executable"), str(directory)):
             if java.endswith("not-executable"):
-                Path(java).write_text("not a program")
+                if sys.platform == "win32":
+                    Path(java).mkdir()  # Windows has no POSIX execute-permission bit.
+                else:
+                    Path(java).write_text("not a program")
             error = io.StringIO()
             with self.subTest(java=java), patch.dict(runner.PINS["tla2tools"], {"sha256": runner.sha256(jar)}), patch.object(runner.subprocess, "run", side_effect=AssertionError("must not launch")), contextlib.redirect_stderr(error):
                 self.assertEqual(runner.main(["--java", java, "--tla2tools", str(jar), "--skip-tamarin", "--only", "witness-timeout", "--allow-unpinned"]), 2)
@@ -53,10 +56,11 @@ class FormalRunnerTests(unittest.TestCase):
     def test_relative_tool_paths_survive_model_cwd_change(self):
         import argparse
         import os
-        executable = self.directory / "java"
-        executable.write_text("#!/bin/sh\nexit 0\n")
+        import shutil
+        executable = self.directory / ("java.exe" if os.name == "nt" else "java")
+        shutil.copyfile(sys.executable, executable)
         executable.chmod(0o700)
-        arguments = argparse.Namespace(java="./java", tla2tools="./tlc.jar",
+        arguments = argparse.Namespace(java="./" + executable.name, tla2tools="./tlc.jar",
                                       tamarin="./tamarin", maude_dir="./maude-dir")
         old_cwd = Path.cwd()
         try:
@@ -64,10 +68,10 @@ class FormalRunnerTests(unittest.TestCase):
             selected = runner.find_tools(arguments)
         finally:
             os.chdir(old_cwd)
-        self.assertEqual(selected.java, str(executable))
-        self.assertEqual(selected.tla2tools, self.directory / "tlc.jar")
-        self.assertEqual(selected.tamarin, self.directory / "tamarin")
-        self.assertEqual(selected.maude_dir, self.directory / "maude-dir")
+        self.assertEqual(selected.java, str(executable.resolve()))
+        self.assertEqual(selected.tla2tools, (self.directory / "tlc.jar").resolve())
+        self.assertEqual(selected.tamarin, (self.directory / "tamarin").resolve())
+        self.assertEqual(selected.maude_dir, (self.directory / "maude-dir").resolve())
 
     def test_invalid_limits_and_empty_selection_rejected(self):
         for arguments in (["--timeout", "0"], ["--derivcheck-timeout", "-1"], ["--skip-tlc", "--skip-tamarin"]):
@@ -130,11 +134,11 @@ class FormalRunnerTests(unittest.TestCase):
         self.assertTrue(result.passed)
         self.assertEqual(result.observed, "WitnessNoTimeout")
 
-    def test_derivation_setting_preserves_default_and_positive_flag(self):
+    def test_derivation_diagnostics_default_and_explicit_historical_setting(self):
         default = runner.tamarin_command(self.tools, None, None)
-        diagnostic = runner.tamarin_command(self.tools, "no_scope_check", "authorization_scope_and_audience", 10)
-        self.assertIn("--derivcheck-timeout=0", default)
-        self.assertIn("--derivcheck-timeout=10", diagnostic)
+        diagnostic = runner.tamarin_command(self.tools, "no_scope_check", "authorization_scope_and_audience", 0)
+        self.assertIn("--derivcheck-timeout=10", default)
+        self.assertIn("--derivcheck-timeout=0", diagnostic)
         self.assertIn("-D=no_scope_check", diagnostic)
         self.assertIn("--prove=authorization_scope_and_audience", diagnostic)
 
@@ -161,14 +165,14 @@ class FormalRunnerTests(unittest.TestCase):
         self.assertEqual(record["checks"][0]["started_utc"], first.started_utc)
         self.assertEqual(record["checks"][0]["java"], "17.test")
         self.assertIsNone(record["checks"][1]["java"])
-        self.assertEqual(record["settings"]["derivcheck_timeout"], 0)
+        self.assertEqual(record["settings"]["derivcheck_timeout"], 10)
 
     def test_stale_retained_check_and_different_settings_are_refused(self):
         path = self.directory / "record.json"
         runner.write_record(path, [self.execute()], self.tools, 9)
         second = self.execute(name="protocol-correct")
         with self.assertRaisesRegex(ValueError, "other settings"):
-            runner.write_record(path, [second], self.tools, 9, 10)
+            runner.write_record(path, [second], self.tools, 9, 0)
         with patch.object(runner, "inputs", return_value={"changed": "model"}), self.assertRaisesRegex(ValueError, "stale retained"):
             runner.write_record(path, [second], self.tools, 9)
 

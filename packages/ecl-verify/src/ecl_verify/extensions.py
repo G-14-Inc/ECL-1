@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import copy
+import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
+
+from .schema import _valid_absolute_uri, reserved_extension_namespace
 
 
 class ExtensionError(ValueError):
@@ -15,7 +18,7 @@ STATUSES = frozenset(
     {"active", "deprecated", "prohibited", "superseded", "reserved"}
 )
 
-COMPATIBILITY_CLASSES = frozenset({"additive", "behavioral", "breaking"})
+COMPATIBILITY_CLASSES = frozenset({"additive", "additive-critical", "behavioral", "breaking"})
 
 @dataclass(frozen=True)
 class ExtensionDescriptor:
@@ -35,6 +38,7 @@ class ExtensionDescriptor:
         if (
             not self.identifier.startswith("ecl.")
             or not self.identifier.rsplit(".", 1)[-1].startswith("v")
+            or type(self.version) is not int
             or self.version < 1
             or not self.applicable_object_types
             or not self.affected_fields
@@ -64,8 +68,12 @@ def process_extensions(
     occurrences: Iterable[ExtensionOccurrence],
     *,
     registry: Mapping[tuple[str, int], ExtensionDescriptor],
+    object_type: str,
     profile_required_critical: Iterable[str] = (),
 ) -> ExtensionProcessingResult:
+    """Interpret occurrences only for the explicitly named carrying object type."""
+    if not isinstance(object_type, str) or not object_type:
+        raise ExtensionError("extension consumer object type must be nonempty text")
     values = tuple(occurrences)
     seen_pairs: set[tuple[str, int]] = set()
     versions: dict[str, set[int]] = {}
@@ -74,19 +82,24 @@ def process_extensions(
     reports: list[str] = []
     required_critical = set(profile_required_critical)
     for occurrence in values:
+        if type(occurrence.version) is not int or occurrence.version < 1:
+            raise ExtensionError("extension occurrence version must be a positive integer")
+        if type(occurrence.critical) is not bool:
+            raise ExtensionError("extension occurrence criticality must be a boolean")
         key = (occurrence.identifier, occurrence.version)
         if key in seen_pairs:
             raise ExtensionError("duplicate extension identifier/version pair")
         seen_pairs.add(key)
         versions.setdefault(occurrence.identifier, set()).add(occurrence.version)
         descriptor = registry.get(key)
-        if descriptor is None:
+        if descriptor is not None:
+            descriptor.validate()
+        if descriptor is None or descriptor.status != "active" or object_type not in descriptor.applicable_object_types:
             if occurrence.critical:
                 raise ExtensionError("unknown critical extension")
             preserved.append(copy.deepcopy(occurrence))
             reports.append(f"preserved-unknown:{occurrence.identifier}:{occurrence.version}")
             continue
-        descriptor.validate()
         must_be_critical = (
             descriptor.core_semantics_affected
             or descriptor.registry_requires_critical
@@ -139,9 +152,15 @@ class PrivateExtension:
     documented: bool
 
     def validate_namespace(self) -> None:
-        if self.identifier.startswith("ecl."):
-            raise ExtensionError("private extension cannot use unallocated ecl.* name")
-        if ":" not in self.identifier:
+        if not isinstance(self.identifier, str):
+            raise ExtensionError("private extension identifier must be a string")
+        if self.identifier.startswith("ecl.") or reserved_extension_namespace(self.identifier):
+            raise ExtensionError("private extension cannot use the reserved ECL namespace")
+        uri = 3 <= len(self.identifier) <= 512 and _valid_absolute_uri(self.identifier)
+        token = 7 <= len(self.identifier) <= 256 and re.fullmatch(
+            r"[a-z0-9-]+(?:\.[a-z0-9-]+)+\.v[1-9][0-9]*", self.identifier
+        ) is not None
+        if not uri and not token:
             raise ExtensionError("private extension lacks owner-controlled namespace")
 
 def validate_private_claim_extensions(

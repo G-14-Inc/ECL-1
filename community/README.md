@@ -19,9 +19,11 @@ of ECL-1:
 - `github/`: the files that the public repository keeps in its `.github/`
   folder, where GitHub reads them: the issue forms (`ISSUE_TEMPLATE/`), the
   pull request template and `CODEOWNERS`. `github/` is their one source: the
-  maintainer fills in the editors' team in `github/CODEOWNERS` with the other
-  settings before the release is built, and `.github/` is a copy of `github/`
-  made when the repository is staged.
+  configured editors' team in `github/CODEOWNERS` matches `settings.yaml`.
+  These issue forms, pull request template and `CODEOWNERS` are copied into
+  `.github/` when the repository is staged. Workflows under `.github/workflows/`
+  are maintained separately; the entire `.github/` directory is not a copy of
+  this kit.
 
 The issue forms are:
 

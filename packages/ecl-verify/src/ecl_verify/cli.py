@@ -88,7 +88,9 @@ def _utc_now() -> str:
 
 def _human(report: BundleReport, *, current_version: str) -> str:
     # EBMP2-076: what the verdict does not establish comes with the verdict, then what it does.
-    lines = [f"verdict: {report.verdict}"]
+    from . import __build__, __version__
+
+    lines = [f"verdict: {report.verdict}", f"software: ecl-verify {__version__}; source-build={__build__}"]
     # EBMP2-060: the primary finding of a verdict other than verified, the failing current status
     # of a trust dependency for current-trust-failed among them.
     primary = primary_finding(report)
@@ -110,7 +112,7 @@ def _human(report: BundleReport, *, current_version: str) -> str:
     lines.append(f"verification-profile: {report.verification_profile}")
     lines.append(f"evaluation-time: {report.evaluation_time or '-'}")
     if report.accepted_current_trust_failure:
-        lines.append("accepted: current trust failure, by --accept-current-trust-failure")
+        lines.append("accepted: current trust failure of bundle dependencies, by --accept-current-trust-failure; offline-package expiry is not waived")
     if report.register is not None:
         register = report.register
         lines.append(
@@ -190,7 +192,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--accept-current-trust-failure",
         action="store_true",
-        help="report verified, with the acceptance stated, when a signer is not acceptable now",
+        help="accept current trust-dependency failures in the bundle; does not waive offline-package expiry",
     )
     parser.add_argument(
         "--require-trusted-time",

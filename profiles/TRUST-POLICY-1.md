@@ -2,11 +2,15 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 This profile describes the caller-controlled trust-policy input to envelope
 verification (INTEGRITY-ENVELOPE-1 section 11) and to the offline bundle
-verifier. Standalone envelope verification binds each payload to the purpose of
+verifier. It is a normative companion under ECL-1 Section 3.4: its invoked
+requirements apply whenever envelope or bundle verification applies, at every
+conformance level. A claim cannot waive them by omitting a profile declaration.
+Standalone envelope verification binds each payload to the purpose of
 its role (TP1-010); the bundle verifier additionally binds every object role and
 principal within each media type.
 
@@ -89,7 +93,7 @@ observation, node and depth limits that it declares (EBMP-2 EBMP2-062). An
 embedded reference identifies a supplied policy version; it never supplies that
 policy's keys. The current policy and the history versions are caller inputs.
 
-The seven registered purposes are `ecl.purpose.decision-request.v1`,
+**TP1-003 (continued)** — The seven registered purposes are `ecl.purpose.decision-request.v1`,
 `ecl.purpose.decision-response.v1`, `ecl.purpose.control.v1`,
 `ecl.purpose.evidence-event.v1`, `ecl.purpose.observation.v1`,
 `ecl.purpose.trusted-time.v1`, which signs time attestations

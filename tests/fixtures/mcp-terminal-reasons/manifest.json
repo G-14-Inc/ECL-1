@@ -1,0 +1,368 @@
+{
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "cases": [
+    {
+      "id": "live-obligation-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/live-obligation-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Existing valid refusal with its recorded reason",
+      "sha256": "950ec1d600074ac8b2bb61e2da248a9670f777b74b896919e61dcad8eed9cb5f"
+    },
+    {
+      "id": "live-obligation-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/live-obligation-missing.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "5ea659f5264d677426fd20cdab6a203f270eb52d1f29e94c1d31816be12a6c0e"
+    },
+    {
+      "id": "live-obligation-non-error",
+      "path": "tests/fixtures/mcp-terminal-reasons/live-obligation-non-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "e9f64c137534eed11673f0d8d3762dd962d7b53d1159c5fba21cc16c970f2805"
+    },
+    {
+      "id": "live-obligation-wrong-active",
+      "path": "tests/fixtures/mcp-terminal-reasons/live-obligation-wrong-active.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "0fafe53fd961ee44eaf73a4832c8ae906d1261797664ae0c5550cc724e1e3f3f"
+    },
+    {
+      "id": "recorded-admit-denied-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-admit-denied-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Existing valid refusal with its recorded reason",
+      "sha256": "1ed610a71f31ced296cabe307d7aab91c0235eb9ab450c7a66fc2d9d5004da8e"
+    },
+    {
+      "id": "recorded-admit-denied-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-admit-denied-missing.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "dbd1614b6c9aad8d5758fdcd05190029e4b09f88110cba052f97f129a1ae4b73"
+    },
+    {
+      "id": "recorded-admit-denied-non-error",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-admit-denied-non-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "30f0a2edf789bec78aba559e69487b726f709057f8d0b754acad0c125c19b228"
+    },
+    {
+      "id": "recorded-admit-denied-wrong-active",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-admit-denied-wrong-active.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "2ba6e2718d881b0303ec863422cfbbf093eb9699217de2a4bff442477ef42b1f"
+    },
+    {
+      "id": "recorded-cancelled-expiry-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-cancelled-expiry-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Existing valid refusal with its recorded reason",
+      "sha256": "a5ac1bcbfc50b3c28188a83093ee324415f6d67994ae8172ea8c13143d158585"
+    },
+    {
+      "id": "recorded-cancelled-expiry-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-cancelled-expiry-missing.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "5ddab6615c11a6ae0288f573c6ee7ffc046d2deeb6af32644bdeb5e0845317c9"
+    },
+    {
+      "id": "recorded-cancelled-expiry-non-error",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-cancelled-expiry-non-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "9e673185295ba485dd9fd6352861c54a21a2a9e7a65f5dae6cdadd98c4bb78ab"
+    },
+    {
+      "id": "recorded-cancelled-expiry-wrong-active",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-cancelled-expiry-wrong-active.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "ddecde915ee98c71545b3cee9f3808e4ddc3b2899acf39c335526731006046cc"
+    },
+    {
+      "id": "decision-unavailable-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-unavailable-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Existing valid refusal with its recorded reason",
+      "sha256": "8056cd6a8e345bcbb4d29abbd3738edf7376493a9608548995050e95b21bdeff"
+    },
+    {
+      "id": "decision-unavailable-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-unavailable-missing.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "d6ba51a4178ce34bebde79082d2b1f6e88df6aa01ffd548633161ea7d02770a1"
+    },
+    {
+      "id": "decision-unavailable-non-error",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-unavailable-non-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "119d4e60d59d033990837b2ec63f3c51ac76b1ea3e7b7ca9acc778aec39984ed"
+    },
+    {
+      "id": "decision-unavailable-wrong-active",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-unavailable-wrong-active.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "8fdd9d90c7392986b25ce4c1c9765dfc21e6f3bd73879ffbaa45ffaaab5f452a"
+    },
+    {
+      "id": "decision-invalid-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-invalid-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Existing valid refusal with its recorded reason",
+      "sha256": "5933bc0fb2f38ed62348e652a41b17094f405e8cf4a149da733303473453e378"
+    },
+    {
+      "id": "decision-invalid-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-invalid-missing.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "b9db7a7937e6f1acac0c226e41d09e92835298cb7b3f662d0e26098968b48e72"
+    },
+    {
+      "id": "decision-invalid-non-error",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-invalid-non-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "a9766493b6532480c5b4f6016925a8364c076114ec8b1385a9a49d5857a44197"
+    },
+    {
+      "id": "decision-invalid-wrong-active",
+      "path": "tests/fixtures/mcp-terminal-reasons/decision-invalid-wrong-active.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "EBMP2-056 and the retained MCP refusal cause must agree",
+      "sha256": "acda72433684659a943d21722462e3e4cb6148facfc79e1d3b9a188340b6fc1e"
+    },
+    {
+      "id": "forwarded-succeeded-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/forwarded-succeeded-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Positive neighbor: original state and reason policy",
+      "sha256": "a1b3d27050226242eaba9133058161a028a1f22a371ac146e9c1ffe246286271"
+    },
+    {
+      "id": "forwarded-succeeded-reason-forbidden",
+      "path": "tests/fixtures/mcp-terminal-reasons/forwarded-succeeded-reason-forbidden.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "purpose": "Succeeded terminals never carry outcome reasons",
+      "sha256": "6881937145eadf75a21e0d0bc12b05867662c13f542a980dc7b8211afcb537a0"
+    },
+    {
+      "id": "forwarded-unknown-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/forwarded-unknown-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Positive neighbor: original state and reason policy",
+      "sha256": "b43dc3744e341784ac6365e19701c87f8b60b2140bc58b9e88d37cec6f85a71e"
+    },
+    {
+      "id": "forwarded-unknown-active-reason",
+      "path": "tests/fixtures/mcp-terminal-reasons/forwarded-unknown-active-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Unknown terminals may carry a registered error",
+      "sha256": "108e3dd05f11a3578feb96a704d07387e7eb3a69d0204e5da36b2a657ff60475"
+    },
+    {
+      "id": "forwarded-unknown-non-error",
+      "path": "tests/fixtures/mcp-terminal-reasons/forwarded-unknown-non-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "purpose": "Optional reasons are still active registered errors",
+      "sha256": "83722f06e5902ed122419abf4e7c13bb60f219184244b61f8009762ad763e621"
+    },
+    {
+      "id": "nonadmit-denied-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/nonadmit-denied-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Positive neighbor: original state and reason policy",
+      "sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+    },
+    {
+      "id": "recovered-unconsumed-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/recovered-unconsumed-control.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Positive neighbor: original state and reason policy",
+      "sha256": "6771fbd9b78679df7accb5d8921591c4df86f1b155f5722a9b201b4cf253bb23"
+    },
+    {
+      "id": "recorded-cancelled-journal-reason",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-cancelled-journal-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Recovery cannot rule out the recorded journal failure merely because the returned RPC response was lost",
+      "sha256": "b210b26090c1a1ed456a396a3082174484d15addd0b22ed2f0cf343a2e6fee65"
+    },
+    {
+      "id": "recorded-journal-preempts-final-halt",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-journal-preempts-final-halt.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "A retained journal-failure terminal remains consistent when the returned RPC is absent and a later control observation blocks dispatch.",
+      "sha256": "7f83efb731eb061185f3b4c186319cbd8ee8a2629537f6f8cfac650eaeb31509"
+    },
+    {
+      "id": "newly-recovered-cancelled-unknown-cause",
+      "path": "tests/fixtures/mcp-terminal-reasons/newly-recovered-cancelled-unknown-cause.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "purpose": "Recovery creates a terminal for a consumed but unreleased attempt without inventing an unrecorded original refusal cause.",
+      "sha256": "4d0a7c6e4add7580e20788baa325261a821ca3d9f8fd7048776723a5a493f68d"
+    },
+    {
+      "id": "answered-unbound-deny-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/answered-unbound-deny-missing.json",
+      "sha256": "c26d7d8e0ccf398d2ee70ec509cd18f556eff7b4132924d770239e45f858698b",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "A nonadmit response rejected for request binding or duplicate obligations does not waive the required terminal refusal reason; a supplied active reason removes only that extra finding."
+    },
+    {
+      "id": "answered-unbound-deny-reason",
+      "path": "tests/fixtures/mcp-terminal-reasons/answered-unbound-deny-reason.json",
+      "sha256": "e19c9382b227f3e11e033c7085cd5a9c03a2a7a871b7c22541cc1f071b4ea285",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "A nonadmit response rejected for request binding or duplicate obligations does not waive the required terminal refusal reason; a supplied active reason removes only that extra finding."
+    },
+    {
+      "id": "answered-duplicate-deny-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/answered-duplicate-deny-missing.json",
+      "sha256": "cabb000dc5d33a73ed55eb0697d8e5b2b95510418c07728ab0e9834f49603add",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "A nonadmit response rejected for request binding or duplicate obligations does not waive the required terminal refusal reason; a supplied active reason removes only that extra finding."
+    },
+    {
+      "id": "answered-duplicate-deny-reason",
+      "path": "tests/fixtures/mcp-terminal-reasons/answered-duplicate-deny-reason.json",
+      "sha256": "d990a3763e1951d2ce3f27dcba83fffc0a77a89a40faa723be1d2ab5cc86be75",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "purpose": "A nonadmit response rejected for request binding or duplicate obligations does not waive the required terminal refusal reason; a supplied active reason removes only that extra finding."
+    }
+  ]
+}

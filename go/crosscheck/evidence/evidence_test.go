@@ -54,8 +54,8 @@ func verify(t *testing.T, vector vectors.Vector, options evidence.Options) *evid
 	return report
 }
 
-// Every evidence-bundle vector gets the reference verdict, and the identifiers it reports hold
-// the expected primary and secondary ones.
+// Every evidence-bundle vector gets its exact expected verdict and primary finding; every
+// required secondary identifier is present.
 func TestEvidenceBundleSuite(t *testing.T) {
 	verdicts := map[string]int{}
 	for _, vector := range vectors.Suite(t, "evidence-bundle").Vectors {
@@ -63,16 +63,34 @@ func TestEvidenceBundleSuite(t *testing.T) {
 		if report.Verdict != vector.ExpectedVerdict {
 			t.Errorf("%s: %s, not %s", vector.ID, report.Verdict, vector.ExpectedVerdict)
 		}
-		reported := strings.Join(evidence.ReportedIdentifiers(report), " ")
-		for _, identifier := range append([]string{vector.Primary}, vector.Secondary...) {
-			if identifier != "" && !strings.Contains(reported, identifier) {
-				t.Errorf("%s: %s lacks %s", vector.ID, reported, identifier)
+		primary := evidence.PrimaryFinding(report)
+		if vector.Expected == "pass" {
+			if primary != nil {
+				t.Errorf("%s: passing vector has primary %s", vector.ID, *primary)
+			}
+		} else if primary == nil || *primary != vector.Primary {
+			t.Errorf("%s: primary %v differs from %s", vector.ID, primary, vector.Primary)
+		}
+		reported := map[string]bool{}
+		for _, identifier := range evidence.ReportedIdentifiers(report) {
+			reported[identifier] = true
+		}
+		for _, identifier := range vector.Secondary {
+			if !reported[identifier] {
+				t.Errorf("%s: reported identifiers lack %s", vector.ID, identifier)
 			}
 		}
 		// EBMP2-076 and EBMP2-061: the scope, levels and unresolved predecessors the row names.
 		var scope *corpus.ExpectedScope
 		if vector.ExpectedScope != nil {
 			scope = &corpus.ExpectedScope{Established: vector.ExpectedScope.Established, NotEstablished: vector.ExpectedScope.NotEstablished, Reasons: vector.ExpectedScope.Reasons}
+			if vector.ExpectedScope.Checks != nil {
+				checks := map[string]corpus.ExpectedChecks{}
+				for item, expected := range *vector.ExpectedScope.Checks {
+					checks[item] = corpus.ExpectedChecks{Checks: expected.Checks, Objects: expected.Objects}
+				}
+				scope.Checks = &checks
+			}
 		}
 		var effects []corpus.ExpectedEffect
 		for _, item := range vector.ExpectedEffects {
@@ -187,8 +205,12 @@ func TestReportJSONShape(t *testing.T) {
 			t.Errorf("missing %s", member)
 		}
 	}
-	if len(value) != 15 || value["primary"] != nil || value["register"] != nil || value["completion_after_window"] != false {
+	if len(value) != 17 || value["primary"] != nil || value["register"] != nil || value["completion_after_window"] != false {
 		t.Fatalf("%d members: %v %v", len(value), value["register"], value["completion_after_window"])
+	}
+	software, ok := value["software"].(map[string]any)
+	if !ok || software["name"] != "ecl-verify-go" || software["version"] != "1.0.2-review.1" || software["source_build"] != "1.0.2-review.1" || value["response_clock_skew_seconds"] != int64(0) {
+		t.Fatalf("software or response policy identity: %v", value)
 	}
 	scope, _ := value["scope"].(map[string]any)
 	if fmt.Sprint(scope["established"]) != "[envelope-signatures current-trust object-rules decision-basis-recorded bindings release-within-authority causal-completeness]" ||
@@ -304,21 +326,40 @@ func TestCarriedProofsAreVerified(t *testing.T) {
 	}
 }
 
+func TestPositiveReferenceSkewIsABytesInterfaceUsageError(t *testing.T) {
+	report, policy, err := evidence.VerifyBytes(
+		vectors.Read(t, "conformance/fixtures/evidence/succeeded.json"),
+		vectors.Read(t, "conformance/fixtures/evidence/trust-policy.json"),
+		nil, evidence.Options{Now: now, ResponseClockSkewSeconds: 1},
+	)
+	var inputError *evidence.InputError
+	if report != nil || policy != nil || !errors.As(err, &inputError) || !strings.Contains(err.Error(), "allowance of zero") {
+		t.Fatalf("positive reference skew: %v %v %v", report, policy, err)
+	}
+}
+
 // EBMP2-072 to EBMP2-075: recorded forwards, use counts, single-use releases and the MCP binding.
 func TestReleaseRecordsAndAuthorityUse(t *testing.T) {
 	for id, expected := range map[string]evidence.BundleFinding{
-		"bundle-invalid-mcp-released-after-valid-until":         {Code: evidence.Expired, Message: "envelope 4: the terminal event records that the release completed after the authorization's valid_until"},
-		"bundle-invalid-release-guard-reaches-valid-until":      {Code: evidence.Expired, Message: "the release, with its declared release guard, lies outside the authorization's validity window"},
-		"bundle-invalid-mcp-terminal-names-another-call":        {Code: evidence.DecisionBindingInvalid, Message: "envelope 4: the event's MCP binding names another call than its request"},
-		"bundle-invalid-mcp-success-without-response-digest":    {Code: evidence.DecisionBindingInvalid, Message: "envelope 4: the terminal event binds no server response"},
-		"bundle-invalid-use-count-beyond-policy":                {Code: evidence.DecisionBindingInvalid, Message: "envelope 2: the use count is outside the authorization's use policy"},
-		"bundle-invalid-single-use-consumed-twice":              {Code: evidence.DecisionBindingInvalid, Message: "two consumptions of one authorization record one use"},
-		"bundle-invalid-single-use-release-without-consumption": {Code: evidence.DecisionBindingInvalid, Message: "envelope 2: a release of single-use authority has no recorded consumption"},
+		"bundle-invalid-mcp-released-after-valid-until":      {Code: evidence.Expired, Message: "envelope 4: the terminal event records that the release completed after the authorization's valid_until"},
+		"bundle-invalid-release-guard-reaches-valid-until":   {Code: evidence.Expired, Message: "the release, with its declared release guard, lies outside the authorization's validity window"},
+		"bundle-invalid-mcp-terminal-names-another-call":     {Code: evidence.DecisionBindingInvalid, Message: "envelope 4: the event's MCP binding names another call than its request"},
+		"bundle-invalid-mcp-success-without-response-digest": {Code: evidence.DecisionBindingInvalid, Message: "envelope 4: the terminal event binds no server response"},
+		"bundle-invalid-use-count-beyond-policy":             {Code: evidence.DecisionBindingInvalid, Message: "envelope 2: the use count is outside the authorization's use policy"},
+		"bundle-invalid-single-use-consumed-twice":           {Code: evidence.DecisionBindingInvalid, Message: "two consumptions of one authorization record one use"},
 	} {
 		report := verify(t, vectorByID(t, id), evidence.Options{})
 		if report.Verdict != evidence.Invalid || len(report.Findings) == 0 || report.Findings[0] != expected {
 			t.Errorf("%s: %s %v", id, report.Verdict, report.Findings)
 		}
+	}
+	missingConsumption := verify(t, vectorByID(t, "bundle-invalid-single-use-release-without-consumption"), evidence.Options{})
+	expectedMissing := []evidence.BundleFinding{
+		{Code: evidence.DecisionBindingInvalid, Message: "a post-release terminal attempt lacks consumed authority or release evidence"},
+		{Code: evidence.DecisionBindingInvalid, Message: "envelope 2: a release of single-use authority has no recorded consumption"},
+	}
+	if missingConsumption.Verdict != evidence.Invalid || fmt.Sprint(missingConsumption.Findings) != fmt.Sprint(expectedMissing) {
+		t.Fatalf("missing consumption: %s %v", missingConsumption.Verdict, missingConsumption.Findings)
 	}
 	if report := verify(t, vectorByID(t, "bundle-valid-mcp-forward-within-authority"), evidence.Options{}); report.Verdict != evidence.Verified || report.CompletionAfterWindow {
 		t.Fatalf("%s %v", report.Verdict, report.Findings)
@@ -340,10 +381,10 @@ func TestReleaseRecordsAndAuthorityUse(t *testing.T) {
 // scope follows a verdict that another check changes.
 func TestReportScope(t *testing.T) {
 	invalid := verify(t, vectorByID(t, "bundle-invalid-prerelease-approval-unmet"), evidence.Options{})
-	// decision-basis-register applies only when the caller supplies a register.
+	// Register and input-timing scopes apply only with the caller's register and relevant inputs.
 	var applying []string
 	for _, item := range evidence.ScopeChecks {
-		if item != "decision-basis-register" {
+		if item != "decision-basis-register" && item != "decision-input-timing" {
 			applying = append(applying, item)
 		}
 	}

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from ..extension_selection import interpreted_extension
+from ..semantic_numbers import schema_int
+
 import base64
 import binascii
 from collections.abc import Iterable, Mapping
@@ -62,8 +65,7 @@ def text(value: object, *path: str) -> str | None:
 
 
 def integer(value: object, *path: str) -> int | None:
-    found = member(value, *path)
-    return found if type(found) is int else None
+    return schema_int(member(value, *path))
 
 
 def obj(value: object, *path: str) -> dict[str, Any] | None:
@@ -186,7 +188,7 @@ def extension_values(value: object, identifier: str) -> list[dict[str, Any]]:
     return [
         item["value"]
         for item in array(value, "extensions")
-        if type(item) is dict and item.get("id") == identifier and type(item.get("value")) is dict
+        if type(item) is dict and item.get("id") == identifier and interpreted_extension(value, item) and type(item.get("value")) is dict
     ]
 
 
@@ -195,7 +197,7 @@ def extension_entries(value: object, identifier: str) -> list[dict[str, Any]]:
     return [
         item
         for item in array(value, "extensions")
-        if type(item) is dict and item.get("id") == identifier
+        if type(item) is dict and item.get("id") == identifier and interpreted_extension(value, item)
     ]
 
 
@@ -226,6 +228,29 @@ def exchanges(record: Mapping[str, Any], *pairs: tuple[str, str]) -> list[Exchan
         if request is not None:
             found.append(Exchange(request, obj(record, response_name)))
     return found
+
+
+def response_binding_findings(
+    record: Mapping[str, Any], *pairs: tuple[str, str]
+) -> list[Finding]:
+    """Every retained response answers its own request, for every outcome.
+
+    AB1-002/AC1-003 use one record-level error; the underlying binding reason
+    remains in the message. The shared checker applies authority checks only
+    to admits and permits a non-admit evaluated after the request expired.
+    """
+    result: list[Finding] = []
+    for request_name, response_name in pairs:
+        if response_name not in record:
+            continue
+        try:
+            check_response_binding(obj(record, request_name), obj(record, response_name))
+        except BindingError as error:
+            result.append(Finding(
+                "ecl.error.request-binding-invalid.v1", "/" + response_name,
+                f"the retained response does not bind its request: {error.code}: {error}",
+            ))
+    return result
 
 
 def release_problems(release: object, candidates: Iterable[Exchange]) -> list[tuple[str, str]]:
@@ -432,7 +457,7 @@ def basis_problems(record: Mapping[str, Any], marker: str) -> list[tuple[str, st
     positions = [
         index
         for index, item in enumerate(extensions)
-        if type(item) is dict and item.get("id") == DECISION_BASIS
+        if type(item) is dict and item.get("id") == DECISION_BASIS and interpreted_extension(response, item)
     ]
     if len(positions) > 1:
         return [("/response/extensions", "the response records its decision basis more than once")]
@@ -522,7 +547,7 @@ def one_way_response_problems(
         carried = [
             (index, item)
             for index, item in enumerate(array(response, "extensions"))
-            if type(item) is dict and item.get("id") == DECISION_BASIS
+            if type(item) is dict and item.get("id") == DECISION_BASIS and interpreted_extension(response, item)
         ]
         if len(carried) != 1:
             problems.append(
@@ -561,7 +586,7 @@ def basis_class_problems(
         return problems
     prefix = "/" + "/".join(response_path) + "/extensions"
     for index, item in enumerate(array(response, "extensions")):
-        if type(item) is not dict or item.get("id") != DECISION_BASIS:
+        if type(item) is not dict or item.get("id") != DECISION_BASIS or not interpreted_extension(response, item):
             continue
         for position, entry in enumerate(array(item.get("value"), "inputs")):
             name = text(entry, "input")
@@ -596,7 +621,7 @@ def modification_basis_problems(record: Mapping[str, Any]) -> list[tuple[str, st
         found = [
             (index, item.get("value"))
             for index, item in enumerate(array(obj(record, path), "extensions"))
-            if type(item) is dict and item.get("id") == DECISION_BASIS
+            if type(item) is dict and item.get("id") == DECISION_BASIS and interpreted_extension(obj(record, path), item)
         ]
         if len(found) != 1:
             return None

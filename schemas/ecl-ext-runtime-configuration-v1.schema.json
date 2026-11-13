@@ -18,7 +18,15 @@
           "required": [
             "version",
             "digest"
-          ]
+          ],
+          "properties": {
+            "version": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+            },
+            "digest": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            }
+          }
         }
       ]
     }

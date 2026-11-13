@@ -20,10 +20,14 @@ files; the original and corrected source archives permit a complete comparison.
 
 This is a correction package for the existing Version 1.0 standard and its
 listed companion versions. All 628 requirement identifiers and the core and
-companion protocol version strings are retained. Corrected verifiers reject
-inputs that the affected requirements already exclude; use the corrected
-tools and reassess results that depended on the defects identified in the
-correction record. Cross-implementation report profile 3 has its own versioned
+companion protocol version strings are retained. Some implementation fixes
+enforce existing requirements; other entries repair normative defects,
+including conflicting requirements and changed diagnostics. The
+[November 10, 2026 clarification](governance/RELEASE-CLARIFICATION-2026-11-10.md)
+and [53-entry compatibility assessment](release/COMPATIBILITY-ASSESSMENT-1.0.1-2026-11-10.json)
+distinguish those effects without rewriting the historical correction label.
+Use the corrected tools and reassess results that depended on the identified
+defects. Cross-implementation report profile 3 has its own versioned
 schemas; older report formats retain their documented, narrower scope.
 A claim identifies ECL-1 Version 1.0, its companion version set and the
 applied correction release `v1.0.1` and erratum `ERR-1.0-001`.
@@ -433,8 +437,11 @@ are `1.0-rc.1`.
 ## Signing, and how the release is identified
 
 The original Version 1.0 was published without a maintainer signature.
-The maintainer, G-14, Inc., authorized its
-publication and release on 16 October 2026 and did not authorize signing. Under
+The original manifest records G-14, Inc.'s standing decision of 16 October
+2026 to publish and release without signing. That date is not a separate
+approval date for the final artifacts published on November 5. The
+[dated traceability clarification](governance/RELEASE-CLARIFICATION-2026-11-10.md#standing-decisions-and-final-artifacts)
+identifies the retained digests and the limits of the public approval record. Under
 [governance/RELEASE_POLICY.md](governance/RELEASE_POLICY.md) a release is signed
 only once the maintainer has approved a signing identity and production key
 custody, with a documented key identity, purpose, validity, revocation, custody,
@@ -491,6 +498,11 @@ Its `versions` object retains the core and companion version set, and its
 `corrects` object identifies the preserved original release. This manifest
 records file identity. The release policy separately requires the maintainer's
 recorded publication authorization for the exact artifacts.
+The [dated clarification](governance/RELEASE-CLARIFICATION-2026-11-10.md#standing-decisions-and-final-artifacts)
+separates this file identity from the earlier standing decision, the GitHub
+immutable-release attestation and a maintainer cryptographic signature. A
+distinct public final-artifact approval record is not established by the
+retained evidence; no approval date is inferred from the manifest.
 
 ## Official distribution channels
 
@@ -499,8 +511,10 @@ checksums and verifier SBOMs. The v1.0.1 GitHub release supplies the corrected
 archive and manifest, checksums, verifier SBOMs, Version 1 reference PDF,
 font notices and correction record. These are the release artifacts. The
 [ECL-1 release page](https://externalcontrollayer.ai/ecl-1) identifies the
-official distribution channels. A Python or TypeScript package-registry distribution is official
-only when both of those pages link to it and identify its exact version. A
+official distribution channels. A Python or TypeScript package-registry
+distribution is official only when both the corresponding version-specific
+GitHub release page and the ECL-1 website release page link to that distribution
+and identify its exact version. A
 namesake package on a registry is not an ECL-1 release artifact by name alone;
 compare its published digest and contents with the release record before
 installing it.
@@ -529,12 +543,20 @@ verifiers on each row.
 
 ## Review status
 
-G-14, Inc. maintains ECL-1 Version 1.0. The recorded release checks and
-artifact-bound authorization are described by
+G-14, Inc. maintains ECL-1 Version 1.0. The required release checks and
+artifact-bound authorization process are described by
 [governance/RELEASE_POLICY.md](governance/RELEASE_POLICY.md), including the
 Version 1.0 exception and the v1.0.1 correction-release exception below.
 Comments are open at any time ([governance/PUBLIC_REVIEW.md](governance/PUBLIC_REVIEW.md));
 report security problems privately ([SECURITY.md](SECURITY.md)).
+
+Completion, scope and reviewer identity for an outside technical security
+review are not established by the retained release evidence. This status is
+separate from the waived security-intake tests and from implementation
+assessment; the recorded exceptions do not waive that review. The
+[November 10 clarification](governance/RELEASE-CLARIFICATION-2026-11-10.md#review-and-role-evidence)
+records the evidence limits and the historical roles whose individual holder
+is not established.
 
 ### Version 1.0 release exception
 

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -19,6 +20,8 @@ import (
 var ErrJCS = errors.New("no RFC 8785 canonical form")
 
 const jcsMaxDepth = 256
+
+var jcsNumberSyntax = regexp.MustCompile(`^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?$`)
 
 // exactDouble is 2^53: every integer up to this magnitude is a double exactly.
 var exactDouble = new(big.Int).Lsh(big.NewInt(1), 53)
@@ -70,6 +73,9 @@ func JCSNumber(value float64) (string, error) {
 // number as the double that a parser reads it as.
 func jcsJSONNumber(number json.Number) (string, error) {
 	text := number.String()
+	if !jcsNumberSyntax.MatchString(text) {
+		return "", fmt.Errorf("%w: %q is not a JSON number", ErrJCS, text)
+	}
 	if integer, ok := new(big.Int).SetString(text, 10); ok {
 		if new(big.Int).Abs(integer).Cmp(exactDouble) <= 0 {
 			return integer.String(), nil
@@ -88,6 +94,9 @@ func jcsString(out *strings.Builder, value string) error {
 	}
 	out.WriteByte('"')
 	for _, character := range value {
+		if character >= 0xfdd0 && character <= 0xfdef || character&0xffff == 0xfffe || character&0xffff == 0xffff {
+			return fmt.Errorf("%w: a Unicode noncharacter is not I-JSON text", ErrJCS)
+		}
 		switch character {
 		case '"':
 			out.WriteString(`\"`)

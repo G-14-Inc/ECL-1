@@ -20,7 +20,7 @@ var TerminalStates = map[string]bool{
 
 var allowedTransitions = map[string]map[string]bool{
 	"not_started": {"prepared": true, "denied": true, "held": true, "challenged": true, "expired_before_release": true},
-	"prepared":    {"released": true, "cancelled": true, "timed_out": true, "denied": true, "held": true, "expired_before_release": true},
+	"prepared":    {"released": true, "cancelled": true, "timed_out": true, "denied": true, "held": true, "challenged": true, "expired_before_release": true},
 	"released":    {"running": true, "succeeded": true, "failed": true, "partially_succeeded": true, "cancelled": true, "timed_out": true, "unknown": true},
 	"running":     {"succeeded": true, "failed": true, "partially_succeeded": true, "cancelled": true, "timed_out": true, "rolled_back": true, "compensated": true, "unknown": true},
 }
@@ -78,15 +78,6 @@ func sortedKeys(set map[string]bool) []string {
 	return keys
 }
 
-func lessTuple(left, right []string) bool {
-	for index := 0; index < len(left) && index < len(right); index++ {
-		if left[index] != right[index] {
-			return left[index] < right[index]
-		}
-	}
-	return len(left) < len(right)
-}
-
 func cycleFindings(edges map[string]map[string]bool) []Finding {
 	var findings []Finding
 	state := map[string]int{}
@@ -134,13 +125,14 @@ func cycleFindings(edges map[string]map[string]bool) []Finding {
 				continue
 			}
 			cycle := append(append([]string{}, path[positions[predecessor]:]...), predecessor)
-			var canonical []string
-			for index := 0; index < len(cycle)-1; index++ {
-				rotated := append(append(append([]string{}, cycle[index:len(cycle)-1]...), cycle[:index]...), cycle[index])
-				if canonical == nil || lessTuple(rotated, canonical) {
-					canonical = rotated
+			// A simple DFS cycle has unique IDs: the least rotation starts at the least ID.
+			first := 0
+			for index := 1; index < len(cycle)-1; index++ {
+				if cycle[index] < cycle[first] {
+					first = index
 				}
 			}
+			canonical := append(append(append([]string{}, cycle[first:len(cycle)-1]...), cycle[:first]...), cycle[first])
 			key, _ := json.Marshal(canonical)
 			if reported[string(key)] {
 				continue
@@ -162,7 +154,7 @@ type group struct {
 	records   []map[string]any
 }
 
-func executionGroups(records []map[string]any, findings *[]Finding) []*group {
+func executionGroups(records []map[string]any, findings *[]Finding, identifierMembers []string) []*group {
 	grouped := map[string]*group{}
 	var order []string
 	for index, record := range records {
@@ -203,7 +195,8 @@ func executionGroups(records []map[string]any, findings *[]Finding) []*group {
 		}
 		entries := make([]keyed, len(current.records))
 		for index, record := range current.records {
-			entries[index] = keyed{record, sequenceOf(record, "/records", findings), pyjson.Str(record["object_id"])}
+			identifier, _ := pyjson.Text(identity(record, identifierMembers))
+			entries[index] = keyed{record, sequenceOf(record, "/records", findings), identifier}
 		}
 		sort.SliceStable(entries, func(i, j int) bool {
 			if entries[i].sequence != entries[j].sequence {
@@ -232,8 +225,7 @@ func Analyze(records []any, external map[string]bool, maxRecords, maxPredecessor
 }
 
 // ContextRule is EBMP2-077: a predecessor that the bundle holds has its successor's root trace
-// and is in its successor's workflow, with an attempt no greater, or in the workflow its
-// successor names as its parent.
+// and is in its successor's workflow, its named parent, or a child with a held origin path.
 const ContextRule = "ecl.rule.bundle-causal-context-consistent.v1"
 
 // identity returns the record's identifier: the first of members that it carries.
@@ -258,7 +250,92 @@ func contextConsistent(prior, workflow map[string]any) bool {
 		return beforeOK && afterOK && before <= after
 	}
 	parent, isText := pyjson.Text(workflow["parent_workflow_id"])
-	return isText && pyjson.Equal(priorWorkflow["workflow_id"], parent)
+	childParent, hasChildParent := pyjson.Text(priorWorkflow["parent_workflow_id"])
+	return (isText && pyjson.Equal(priorWorkflow["workflow_id"], parent)) || (hasChildParent && pyjson.Equal(childParent, workflow["workflow_id"]))
+}
+
+// childOriginFindings performs O(V+E) extra work with iterative multi-source propagation.
+// Child edges already satisfy digest, root, workflow, parent, attempt and sequence constraints.
+func childOriginFindings(childEdges map[string]map[string]bool, seeds map[string]bool, missing, parentConflicts map[string]map[string]bool, joins [][2]string, unresolved map[string]bool) []Finding {
+	successors := map[string][]string{}
+	for child, predecessors := range childEdges {
+		for prior := range predecessors {
+			successors[prior] = append(successors[prior], child)
+		}
+	}
+	propagate := func(seeds map[string]bool) map[string]bool {
+		reached := map[string]bool{}
+		pending := []string{}
+		for seed := range seeds {
+			reached[seed] = true
+			pending = append(pending, seed)
+		}
+		for i := 0; i < len(pending); i++ {
+			for _, child := range successors[pending[i]] {
+				if !reached[child] {
+					reached[child] = true
+					pending = append(pending, child)
+				}
+			}
+		}
+		return reached
+	}
+	originated := propagate(seeds)
+	missingSeeds := map[string]bool{}
+	for child := range missing {
+		missingSeeds[child] = true
+	}
+	uncertain := propagate(missingSeeds)
+	needed := map[string]bool{}
+	var findings []Finding
+	for _, join := range joins {
+		parent, child := join[0], join[1]
+		if originated[child] {
+			continue
+		}
+		if uncertain[child] {
+			needed[child] = true
+		} else {
+			findings = append(findings, Finding{ContextRule, "/records/" + parent + "/workflow/causal_predecessors", "child predecessor " + child + " has no digest-bound origin in its declared parent workflow"})
+		}
+	}
+	pending := []string{}
+	for child := range needed {
+		pending = append(pending, child)
+	}
+	for i := 0; i < len(pending); i++ {
+		child := pending[i]
+		for id := range missing[child] {
+			unresolved[id] = true
+		}
+		for prior := range childEdges[child] {
+			if uncertain[prior] && !needed[prior] {
+				needed[prior] = true
+				pending = append(pending, prior)
+			}
+		}
+	}
+	ancestry := map[string]bool{}
+	ancestors := []string{}
+	for _, join := range joins {
+		if !ancestry[join[1]] {
+			ancestry[join[1]] = true
+			ancestors = append(ancestors, join[1])
+		}
+	}
+	for i := 0; i < len(ancestors); i++ {
+		child := ancestors[i]
+		for prior := range parentConflicts[child] {
+			findings = append(findings, Finding{ContextRule, "/records/" + child + "/workflow/causal_predecessors", "child predecessor " + prior + " changes the declared parent in joined child ancestry"})
+		}
+		for prior := range childEdges[child] {
+			if !ancestry[prior] {
+				ancestry[prior] = true
+				ancestors = append(ancestors, prior)
+			}
+		}
+	}
+	return findings
 }
 
 // AnalyzeGraph is Analyze with a record's identifier taken from the first of identifierMembers
@@ -273,8 +350,7 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 	var findings []Finding
 	for index, item := range records {
 		if index >= maxRecords {
-			findings = append(findings, Finding{resourceLimitExceeded, "/records", "bundle record count exceeds the verifier budget"})
-			break
+			return &Analysis{Status: "indeterminate", TerminalActionIDs: []string{}, OpenActionIDs: []string{}, UnresolvedPredecessorIDs: []string{}, Findings: []Finding{{resourceLimitExceeded, "/records", "bundle record count exceeds the verifier budget"}}}, nil
 		}
 		record, ok := pyjson.Object(item)
 		if !ok {
@@ -284,6 +360,7 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 		values = append(values, record)
 	}
 	byID := map[string]map[string]any{}
+	collidingIDs := map[string]bool{}
 	var ids []string
 	for index, record := range values {
 		objectID, ok := pyjson.Text(identity(record, identifierMembers))
@@ -291,14 +368,29 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 			findings = append(findings, Finding{"ecl.rule.bundle-object-identifiers-unique.v1", "/records/" + strconv.Itoa(index) + "/object_id", "bundle record is missing object_id"})
 			continue
 		}
+		if collidingIDs[objectID] {
+			continue
+		}
 		if _, exists := byID[objectID]; exists {
-			findings = append(findings, Finding{"ecl.rule.bundle-object-identifiers-unique.v1", "/records/" + strconv.Itoa(index) + "/object_id", "duplicate object_id " + objectID})
+			collidingIDs[objectID] = true
+			delete(byID, objectID)
 			continue
 		}
 		byID[objectID] = record
+	}
+	for objectID := range byID {
 		ids = append(ids, objectID)
 	}
+	sort.Strings(ids)
+	for _, objectID := range sortedKeys(collidingIDs) {
+		findings = append(findings, Finding{"ecl.rule.bundle-object-identifiers-unique.v1", "/records/" + objectID + "/object_id", "duplicate object_id " + objectID})
+	}
 	unresolved := map[string]bool{}
+	childEdges := map[string]map[string]bool{}
+	originSeeds := map[string]bool{}
+	missingOrigins := map[string]map[string]bool{}
+	parentConflicts := map[string]map[string]bool{}
+	parentJoins := [][2]string{}
 	edges := map[string]map[string]bool{}
 	for _, objectID := range ids {
 		edges[objectID] = map[string]bool{}
@@ -321,8 +413,7 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 			continue
 		}
 		if len(predecessors) > maxPredecessors {
-			findings = append(findings, Finding{resourceLimitExceeded, path + "/workflow/causal_predecessors", "predecessor count exceeds the verifier budget"})
-			predecessors = predecessors[:maxPredecessors]
+			return &Analysis{Status: "indeterminate", TerminalActionIDs: []string{}, OpenActionIDs: []string{}, UnresolvedPredecessorIDs: []string{}, Findings: []Finding{{resourceLimitExceeded, path + "/workflow/causal_predecessors", "predecessor count exceeds the verifier budget"}}}, nil
 		}
 		for _, item := range predecessors {
 			predecessor, ok := pyjson.Object(item)
@@ -336,10 +427,19 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 				continue
 			}
 			edges[objectID][predecessorID] = true
+			if collidingIDs[predecessorID] {
+				continue
+			}
 			prior, known := byID[predecessorID]
 			if !known {
 				if !external[predecessorID] {
 					unresolved[predecessorID] = true
+				}
+				if _, hasParent := pyjson.Text(workflow["parent_workflow_id"]); checkContext && hasParent {
+					if missingOrigins[objectID] == nil {
+						missingOrigins[objectID] = map[string]bool{}
+					}
+					missingOrigins[objectID][predecessorID] = true
 				}
 				continue
 			}
@@ -356,20 +456,55 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 			if !matches {
 				findings = append(findings, Finding{"ecl.rule.bundle-predecessor-digest-valid.v1", "/records/" + objectID + "/workflow/causal_predecessors", "predecessor digest mismatch for " + predecessorID})
 			}
-			if checkContext && !contextConsistent(prior, workflow) {
+			contextValid := checkContext && contextConsistent(prior, workflow)
+			if checkContext && !contextValid {
 				findings = append(findings, Finding{ContextRule, "/records/" + objectID + "/workflow/causal_predecessors", "predecessor " + predecessorID + " is outside the causal context of " + objectID})
 			}
 			priorSequence := sequenceOf(prior, "/records/"+predecessorID, &findings)
 			priorWorkflow, priorOK := pyjson.Object(prior["workflow"])
-			if priorOK && pyjson.Equal(priorWorkflow["workflow_id"], workflow["workflow_id"]) && priorSequence >= sequence {
+			sameWorkflow := priorOK && pyjson.Equal(priorWorkflow["workflow_id"], workflow["workflow_id"])
+			if contextValid && priorOK {
+				parent, hasParent := pyjson.Text(workflow["parent_workflow_id"])
+				priorParent := priorWorkflow["parent_workflow_id"]
+				if !sameWorkflow && pyjson.Equal(priorParent, workflow["workflow_id"]) {
+					parentJoins = append(parentJoins, [2]string{objectID, predecessorID})
+				}
+				if matches && hasParent {
+					if !sameWorkflow && pyjson.Equal(priorWorkflow["workflow_id"], parent) {
+						originSeeds[objectID] = true
+					} else if sameWorkflow && pyjson.Equal(priorParent, parent) && priorSequence < sequence {
+						if childEdges[objectID] == nil {
+							childEdges[objectID] = map[string]bool{}
+						}
+						childEdges[objectID][predecessorID] = true
+					} else if sameWorkflow && !pyjson.Equal(priorParent, parent) {
+						if parentConflicts[objectID] == nil {
+							parentConflicts[objectID] = map[string]bool{}
+						}
+						parentConflicts[objectID][predecessorID] = true
+					}
+				}
+			}
+			if sameWorkflow && priorSequence >= sequence {
 				findings = append(findings, Finding{"ecl.rule.bundle-causal-sequence-monotonic.v1", "/records/" + objectID + "/workflow/sequence", "predecessor " + predecessorID + " does not precede " + objectID})
 			}
 		}
 	}
+	if checkContext {
+		findings = append(findings, childOriginFindings(childEdges, originSeeds, missingOrigins, parentConflicts, parentJoins, unresolved)...)
+	}
 	findings = append(findings, cycleFindings(edges)...)
 	terminal := map[string]bool{}
 	open := map[string]bool{}
-	for _, current := range executionGroups(values, &findings) {
+	uniqueValues := []map[string]any{}
+	for _, record := range values {
+		identifier, valid := pyjson.Text(identity(record, identifierMembers))
+		// Only records with a valid, unambiguous graph identifier may determine an attempt.
+		if valid && identifier != "" && !collidingIDs[identifier] {
+			uniqueValues = append(uniqueValues, record)
+		}
+	}
+	for _, current := range executionGroups(uniqueValues, &findings, identifierMembers) {
 		states := make([]string, len(current.records))
 		for index, record := range current.records {
 			event := record["event"]
@@ -378,12 +513,17 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 			}
 			states[index] = pyjson.Str(pyjson.Get(event, "state"))
 		}
+		invalidTransition := false
 		for index := 0; index+1 < len(states); index++ {
 			prior, next := states[index], states[index+1]
 			allowed, known := allowedTransitions[prior]
 			if TerminalStates[prior] || !known || !allowed[next] {
+				invalidTransition = true
 				findings = append(findings, Finding{"ecl.rule.execution-state-transition-valid.v1", "/attempts/" + current.attemptID, "invalid execution transition " + prior + " -> " + next})
 			}
+		}
+		if invalidTransition {
+			continue
 		}
 		if len(states) > 0 && TerminalStates[states[len(states)-1]] {
 			terminal[current.actionID] = true
@@ -393,6 +533,8 @@ func AnalyzeGraph(records []any, external map[string]bool, maxRecords, maxPredec
 	}
 	status := "complete"
 	switch {
+	case len(collidingIDs) > 0:
+		status = "indeterminate"
 	case len(unresolved) > 0 || len(open) > 0:
 		status = "incomplete"
 	case len(findings) > 0:

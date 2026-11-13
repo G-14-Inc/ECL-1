@@ -129,12 +129,12 @@ function registryDescription(code: string): string | undefined {
 
 /** The plain-language explanation of a verdict. */
 export function describeVerdict(verdict: Verdict): Explanation {
-  return VERDICTS[verdict];
+  return Object.hasOwn(VERDICTS, verdict) ? VERDICTS[verdict] : { title: verdict, text: "An unrecognized verification verdict." };
 }
 
 /** The plain-language explanation of a status or finding code. */
 export function describeCode(code: string): Explanation {
-  const known = CODES[code];
+  const known = Object.hasOwn(CODES, code) ? CODES[code] : undefined;
   if (known !== undefined) {
     return known;
   }
@@ -142,5 +142,5 @@ export function describeCode(code: string): Explanation {
   if (description !== undefined) {
     return { title: code, text: description };
   }
-  return { title: code, text: "A registered rule or error identifier." };
+  return { title: code, text: "An unrecognized rule or error identifier." };
 }

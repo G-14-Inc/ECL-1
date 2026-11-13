@@ -10,7 +10,8 @@
  * - `ecl.rule.otel-record-matches-object.v1` (OE1-003, OE1-004, OE1-010): an event name, time,
  *   observed time earlier than the object's time or outside the range of a `fixed64`, attribute or
  *   keyed digest that is not the object's, an attribute held in another AnyValue kind than the
- *   table gives, an attribute key that appears more than once, a digest that needs no key, a key
+ *   table gives, an attribute key that appears more than once, a digest that needs no key other
+ *   than the policy digest explicitly allowed by OE1-004, a key
  *   identifier that is not a string, or a record that names an export key without the keyed
  *   digests that the object has. A keyed digest is compared when the caller supplies the key that
  *   the record names; without it, the checker holds each keyed digest to its form, the
@@ -32,6 +33,7 @@
  * keys come from an `ecl_otel_export_keys_v1` file (`loadExportKeys`).
  */
 
+import { interpretedExtension } from "../registry/registries.js";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 as nobleSha256 } from "@noble/hashes/sha2.js";
 import { equalBytes, fromCanonicalBase64, toHex } from "../crypto/bytes.js";
@@ -67,6 +69,11 @@ export const SEVERITY_TEXT: ReadonlyMap<number, string> = new Map([
 ]);
 /** OE1-005: the attributes that identify people and records, exported only when declared. */
 export const DECLARED_ONLY: ReadonlySet<string> = new Set(["ecl.actor.id", "ecl.subject.id", "ecl.action.target"]);
+const TABLE_IDENTIFIERS: ReadonlySet<string> = new Set([
+  ...DECLARED_ONLY, "ecl.object.id", "ecl.workflow.id", "ecl.workflow.root_trace_id",
+  "ecl.issuer.id", "ecl.producer.id", "ecl.evidence.bundle", "ecl.action.id",
+  "ecl.request.id", "ecl.decision.id", "ecl.policy.id", "ecl.authorization.id", "ecl.event.decision_id",
+]);
 /** The EBMP-2 event kinds that the attribute table's rows name (K29). */
 const EXECUTION_KIND = "execution";
 const REQUEST_KIND = "request";
@@ -373,7 +380,7 @@ export function logAttributes(value: JsonObject, bundleId: string | null = null,
     }
     if (at(value, "event_type") === TERMINAL_EVENT) {
       for (const item of array(value, "extensions")) {
-        if (isObject(item) && at(item, "id") === OUTCOME_REASON) {
+        if (isObject(item) && at(item, "id") === OUTCOME_REASON && interpretedExtension(value, item)) {
           const code = text(item, "value", "code");
           if (code !== null) {
             result.set("ecl.event.reason_code", code);
@@ -467,6 +474,86 @@ function declaredNames(record: JsonObject): Set<string> {
   return names;
 }
 
+/** Recognizable SHA-256 values; arbitrary data encodings and derivations require policy review. */
+function knownUnkeyedDigests(value: JsonObject): Set<string> {
+  const known = new Set([objectDigest(value)]);
+  const parameters = parametersDigest(value);
+  if (isObject(parameters)) known.add(objectDigest(parameters));
+  const pending: JsonValue[] = [value];
+  while (pending.length > 0) {
+    const current = pending.pop() as JsonValue;
+    if (Array.isArray(current)) {
+      for (const item of current) pending.push(item);
+    }
+    else if (isObject(current)) {
+      const digest = current["value"];
+      if (current["algorithm"] === "ecl.digest.sha-256.v1" && typeof digest === "string" && KEYED_HEX.test(digest)) known.add(digest);
+      for (const item of Object.values(current) as JsonValue[]) pending.push(item);
+    }
+  }
+  return known;
+}
+
+function digestText(value: string, known: ReadonlySet<string>): boolean {
+  const lower = value.toLowerCase();
+  let run = 0;
+  for (let index = 0; index < lower.length; index += 1) {
+    run = "0123456789abcdef".includes(lower[index] as string) ? run + 1 : 0;
+    if (run >= 64 && known.has(lower.slice(index - 63, index + 1))) return true;
+  }
+  return false;
+}
+
+/** Iterative typed AnyValue traversal; hex strings, raw digest bytes and ASCII-hex bytes. */
+function anyValueDigest(value: JsonValue, known: ReadonlySet<string>): boolean {
+  const prefixes = new Set([...known].map(digest => digest.slice(0, 8)));
+  const pending: JsonValue[] = [value];
+  while (pending.length > 0) {
+    const current = pending.pop() as JsonValue;
+    if (!isObject(current)) continue;
+    const string = current["stringValue"];
+    if (typeof string === "string" && digestText(string, known)) return true;
+    const encoded = current["bytesValue"];
+    if (typeof encoded === "string") {
+      let raw: Uint8Array | undefined;
+      try { raw = Uint8Array.from(atob(encoded.replace(/-/g, "+").replace(/_/g, "/")), character => character.charCodeAt(0)); } catch { raw = undefined; }
+      if (raw !== undefined) {
+        if (digestText(new TextDecoder().decode(raw), known)) return true;
+        for (let index = 0; index + 32 <= raw.length; index += 1) {
+          if (prefixes.has(toHex(raw.subarray(index, index + 4))) && known.has(toHex(raw.subarray(index, index + 32)))) return true;
+        }
+      }
+    }
+    for (const item of array(current, "arrayValue", "values")) pending.push(item);
+    for (const entry of array(current, "kvlistValue", "values")) {
+      const name = text(entry, "key");
+      if (name !== null && digestText(name, known)) return true;
+      pending.push(member(entry, "value"));
+    }
+  }
+  return false;
+}
+
+function unkeyedExportProblems(log: JsonObject, value: JsonObject, unkeyed: ReadonlyMap<string, string>, expected: ReadonlyMap<string, string | number>): Problem[] {
+  const known = knownUnkeyedDigests(value);
+  const policy = value["protocol"] === "DCMP-2" && value["message_type"] === DECISION_RESPONSE ? text(value, "policy", "digest", "value") : null;
+  const problems: Problem[] = [];
+  for (const item of array(log, "attributes")) {
+    const name = text(item, "key"), held = member(item, "value");
+    if (name === null) continue;
+    if (name === "ecl.policy.digest" && policy !== null && isObject(held) && Object.keys(held).length === 1 && held["stringValue"] === policy) continue;
+    // OE1-003/004: only the exact identifier in its applicable table slot.
+    if (TABLE_IDENTIFIERS.has(name) && typeof expected.get(name) === "string" && isObject(held) && Object.keys(held).length === 1 && held["stringValue"] === expected.get(name)) continue;
+    if (name === OBJECT_DIGEST || name === PARAMETERS_DIGEST) {
+      if (!isObject(held) || Object.keys(held).length !== 1 || !holds(held, "stringValue")) continue;
+      if (held["stringValue"] === unkeyed.get(name)) continue;
+    }
+    if (digestText(name, known) || anyValueDigest(held, known)) problems.push(["/log_record/attributes", `${name} carries a digest that needs no export key`]);
+  }
+  if (anyValueDigest(at(log, "body"), known)) problems.push(["/log_record/body", "the body carries a digest that needs no export key"]);
+  return problems;
+}
+
 function exportAfterEvidence(record: JsonObject, value: JsonObject): Problem[] {
   const problems: Problem[] = [];
   const attempted = instant(member(record, "export", "attempted_at"));
@@ -475,7 +562,9 @@ function exportAfterEvidence(record: JsonObject, value: JsonObject): Problem[] {
     problems.push(["/export/attempted_at", "the exporter read the object before its time"]);
   }
   const after = obj(record, "evidence_after");
-  if (after !== null) {
+  if (after === null) {
+    problems.push(["/evidence_after", "the retained record lacks the evidence after the export"]);
+  } else {
     let same: boolean;
     try {
       same = equalBytes(canonicalize(after), canonicalize(value));
@@ -513,8 +602,8 @@ function matchesObject(record: JsonObject, value: JsonObject, keys: ReadonlyMap<
   const actual = attributeMap(log);
   const declared = declaredNames(record);
   const named = actual.get(KEY_ID) ?? null;
-  if (named !== null && typeof named !== "string") {
-    // OE1-010: the record carries the key's identifier, a string.
+  if (named !== null && (typeof named !== "string" || [...named].length < 1 || [...named].length > 256)) {
+    // OE1-010: the supported identifier has 1 to 256 Unicode code points.
     problems.push(["/log_record/attributes", `${KEY_ID} is not the identifier of a key`]);
   }
   const key = typeof named === "string" ? (keys.get(named) ?? null) : null;
@@ -589,6 +678,7 @@ function matchesObject(record: JsonObject, value: JsonObject, keys: ReadonlyMap<
       problems.push(["/log_record/attributes", `${name} is a digest that needs no export key`]);
     }
   }
+  problems.push(...unkeyedExportProblems(log, value, unkeyed, expected));
   return problems;
 }
 

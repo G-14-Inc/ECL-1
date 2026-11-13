@@ -9,7 +9,7 @@
 // repeated member names; numbers. Checks 3 to 6 read every value of the input, so the order of
 // the checks, not the position of a defect in the text, decides the finding. This order is
 // repository code, and so is the builder that makes the value once every check has passed; the
-// imported core (internal/strictjson, provenance/go/GO-IMPORT.json) supplies the error type and
+// internal/strictjson package in this repository supplies the error type and
 // the rule identifiers. The declared limits (IE1-028) are those of the reference: 256 levels of
 // nesting and 1,000,000 values by default, 16 MiB of input, and a configured limit is an exact
 // positive integer within its ceiling (2,147,483,647 bytes, 4,096 levels, 100,000,000 values);
@@ -128,7 +128,11 @@ func LimitFromJSON(name string, value any) (int, error) {
 	default:
 		return 0, refuse(ConfigurationInvalid, "/", fmt.Sprintf("the limit %s must be an integer, not %T", name, value))
 	}
-	if strings.ContainsAny(text, ".eE") {
+	positiveInteger := len(text) > 0 && text[0] >= '1' && text[0] <= '9'
+	for _, digit := range text {
+		positiveInteger = positiveInteger && digit >= '0' && digit <= '9'
+	}
+	if !positiveInteger {
 		return 0, refuse(ConfigurationInvalid, "/", fmt.Sprintf("the limit %s must be an integer, not %s", name, text))
 	}
 	parsed, err := strconv.ParseInt(text, 10, 64)

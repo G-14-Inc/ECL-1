@@ -130,6 +130,32 @@ incomplete when the system lacks a capability that a step needs; the replay
 stops at that step, and an incomplete scenario never passes.
 
 This package holds the scenarios and their schema; it does not hold a runner.
+
+Run `python scripts/check_repository_metadata.py` from a checkout with the
+reference verifier's Python dependencies installed to check these ten files
+and the public-review log template. Pass JSON file paths to check other local
+scenarios or logs. The check reads strict JSON, asserts the schema's calendar
+formats, and checks identifier uniqueness, declared configuration references,
+decision targets, repetition counts, the union of step requirements, and the
+source-entry and coded-gap references. It also requires an expectation of at
+least one admitted action with a committed effect. For each nonempty portion
+of a proposal or decision step, at least one allowed outcome must agree with
+the expected effect: `admit` commits an effect and every other outcome commits
+none. It checks metadata;
+observing a system's behavior and verifying its evidence require a replay.
+
+In a split `first`/`rest` expectation, `count` belongs only to `first` and
+cannot exceed the number of selected proposals. A `propose` step uses a split
+or `spacing_seconds` only with `repeat`. A `decide` step can split its
+expectations when it targets all proposals of an earlier repeated step; an
+`index` selects one proposal and cannot use a split. `rest` may be empty when
+`count` covers every proposal, and an expectation attached only to that empty
+rest cannot satisfy the committed-effect requirement. Deployment configuration
+references to controls, detections, inputs, budgets and action classes must
+resolve within their declaration collections; detection, lift and control
+steps name declared detections or controls. A proposed actor, operation or target can
+still be outside the declared authority or boundary to test refusal.
+
 A runner connects a system through an adapter that configures the system from
 the scenario's deployment facts, passes each step to it and reports what it
 did. An adapter translates and must not carry out a control that the system

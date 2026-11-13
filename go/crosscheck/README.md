@@ -6,7 +6,7 @@ objects against the embedded ECL schemas and the protocol rules, verifies
 ECL-IE-1 integrity envelopes and trust policies, verifies signed evidence
 bundles and the offline packages that carry them, checks the records of the five
 binding profiles and checks the claim and assessment documents against their
-schemas and, for a work intent, against the extension rules. It uses only the Go
+schemas and, for a work intent, against its registered declaration rules. It uses only the Go
 standard library and makes no network request.
 
 It is one of the three verifiers of ECL-1 Version 1.0, with the Python package
@@ -54,18 +54,30 @@ It takes `--trust-policy FILE`, `--trust-policy-history FILE` (repeated),
 `invalid`, 2 for a usage error, 3 for `incomplete` and 4 for
 `current-trust-failed` (EBMP2-060).
 
+These are the built executable's statuses. `go run` maps a nonzero verifier
+exit to its own status 1 and reports the verifier's code as `exit status N`.
+Build it with `go build -o <output-path> ./cmd/ecl-verify-go` and run that
+executable directly when automation needs to distinguish statuses 2, 3 and 4.
+
+`--accept-current-trust-failure` accepts only current failures of the bundle's
+trust dependencies and does not waive offline-package expiry. When the inner
+bundle waiver was applied but the package is expired, the JSON report keeps
+`accepted_current_trust_failure=true` (`AcceptedCurrentTrustFailure` in the
+Go API); the final verdict remains `current-trust-failed` and the CLI exits 4.
+
 `cmd/ecl-corpus-check` evaluates the shared conformance corpus
 (`conformance/shared-corpus.json`) and writes a cross-implementation report
 with the raw evidence of each result:
 
 ```
 go run ./cmd/ecl-corpus-check --repo-root ../.. --report /tmp/ecl-go-report.json \
-  --revision 0000000000000000000000000000000000000000
+  --revision REPLACE_WITH_SOURCE_REVISION
 ```
 
-`--repo-root` is the root of the ECL-1 package, `--report` a file that does not
-exist yet, and `--revision` the 40-character revision of the source the report
-names. Its exit status is 0 when every vector meets its expectation, 1 when one
+Replace `REPLACE_WITH_SOURCE_REVISION` with the nonzero, 40-character hexadecimal
+revision of the source being reported. `--repo-root` is the root of a clean
+ECL-1 export and `--report` a file that does not exist yet.
+Its exit status is 0 when every vector meets its expectation, 1 when one
 does not and 2 when the corpus cannot be evaluated.
 
 ## Packages
@@ -77,11 +89,20 @@ does not and 2 when the corpus cannot be evaluated.
 | `schema` | Validates values against the embedded ECL-1 schemas (JSON Schema Draft 2020-12, the keywords the schemas use). |
 | `semantic` | Checks the rules that schemas cannot express, for DCMP-2 messages, EBMP-2 objects, bundles of records, adapter bindings and safe-state profiles, the registered control-extension rules, the one-way rule for a recorded decision basis (DCMP2-053) among them, and the extension rules of every object that carries extensions (one version of an extension per object, XR1-010, among them). |
 | `bindings` | Checks the records of AARM-BINDING-1, ACS-BINDING-1, MCP-GATEWAY-1, OTEL-EVIDENCE-EXPORT-1 and OAUTH-AUTHORITY-1: the record's schema, then the applicable rules among the five profiles' 30 registered rules, among them the agreement of an AARM or ACS record's inputs with its response's decision basis and with that of a modification's response, which records them with their declarations (AB1-013, AC1-012), and OpenTelemetry digests keyed with HMAC-SHA-256 under an export key (OE1-004, OE1-010). It has RFC 8785 for the content the profiles bind and compact JWS for OAuth access tokens and DPoP proofs (ES256 and EdDSA, RFC 7638 thumbprints). |
-| `documents` | Checks the claim and assessment documents (the action register, conformance claim, assessment package, mapping packet, deployment profile, lifecycle policy, offline verification package and work intent) against their schemas, a work intent against the extension rules, and an action register against `ecl.rule.register-declarations-consistent.v1`. |
+| `documents` | Checks the claim and assessment documents (the action register, conformance claim, assessment package, mapping packet, deployment profile, lifecycle policy, offline verification package and work intent) against their schemas, a work intent against the extension, parent-context, self-causation and advisory-interval rules, and an action register against `ecl.rule.register-declarations-consistent.v1`. |
 | `envelope` | Verifies ECL-IE-1 envelopes: canonical base64, payload digest, DSSE pre-authentication encoding, Ed25519 and ECDSA P-256 signatures, and the integrity policy inside the payload; under a keyring from a trust policy, each DCMP-2 message counts only under a key of its role (TP1-010, IE1-039). A refusal carries the error code of the step of IE1-040 that fails. |
 | `trust` | Loads trust policies (TRUST-POLICY-1), refusing a key that holds two roles (TP1-009) and a document past a declared limit with the resource-limit error (TP1-007), and turns them into keyrings and verification contexts. |
 | `evidence` | Verifies signed evidence bundles: historical and current signer status, trusted time, bindings, causal closure, the recorded discharge of pre-release obligations and the proofs the bundle carries (EBMP2-070), the release with its declared guard (EBMP2-050), the release a terminal event records (EBMP2-072) and effect evidence levels, with the verdicts `verified`, `invalid`, `incomplete` and `current-trust-failed`. Each report carries `Scope`, the checks that held and what the verdict does not establish, with the reason of each item the table of EBMP2-076 names one for, and `CompletionAfterWindow` (EBMP2-076). |
 | `offline` | Verifies offline packages (OFFLINE-VERIFICATION-1): a strict reader of the `ecl.zip.store.v1` archive, over bytes and without decompression, and the checks of IE1-022 in order, which give a package the verdict of the evidence bundle it carries or the error of the first check it fails. Entry names are the POSIX portable filename characters, compared after ASCII case folding. |
+
+`semantic.Options{}` uses the embedded registry, including its extension value
+schemas. Each nil option component inherits that default. Explicit nonnil maps
+replace their component; for example, an empty `KnownExtensions` map implements
+no extensions, so an unknown critical occurrence is rejected and a noncritical
+one remains uninterpreted. A caller supplying custom maps must keep implemented
+versions, applicability, value-schema declarations and the schema resolver
+consistent. Those caller-defined options do not establish conformance to the
+embedded ECL registry. `semantic.Registered()` returns its complete configuration.
 
 ## Verifying a bundle
 

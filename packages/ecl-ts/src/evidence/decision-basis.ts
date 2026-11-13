@@ -20,6 +20,7 @@
  * Input names compare by `inputKey` (DCMP2-053).
  */
 
+import { interpretedExtension } from "../registry/registries.js";
 import { objectDigest } from "../json/canonical.js";
 import { get, isArray, isObject, isString, pythonEquals } from "../json/value.js";
 import type { JsonObject, JsonValue } from "../json/value.js";
@@ -134,7 +135,7 @@ export function registerSchemaProblems(register: JsonValue): string[] {
   }
   return eclSchemas()
     .errors(REGISTER_SCHEMA, register)
-    .map((error) => `${error.path}: ${error.message}`.slice(0, 200));
+    .map((error) => Array.from(`${error.path}: ${error.message}`).slice(0, 200).join(""));
 }
 
 /** The decision inputs that the register declares for `actionClass`; none without an entry. */
@@ -159,7 +160,7 @@ export function basisValues(message: JsonObject): Array<[number, JsonValue | und
   }
   const found: Array<[number, JsonValue | undefined]> = [];
   extensions.forEach((item, index) => {
-    if (isObject(item) && pythonEquals(get(item, "id"), DECISION_BASIS)) {
+    if (isObject(item) && pythonEquals(get(item, "id"), DECISION_BASIS) && interpretedExtension(message, item)) {
       found.push([index, get(item, "value")]);
     }
   });
@@ -229,7 +230,9 @@ export function registerProblems(value: JsonObject, register: JsonObject, action
     if (!pythonEquals(get(item, "class"), get(declaration, "class"))) {
       problems.push([path + "/class", "the class is not the one the register declares"]);
     }
-    if (get(item, "required") !== get(declaration, "required")) {
+    const recordedRequired = get(item, "required");
+    const declaredRequired = get(declaration, "required");
+    if (typeof recordedRequired !== "boolean" || typeof declaredRequired !== "boolean" || recordedRequired !== declaredRequired) {
       problems.push([path + "/required", "the required flag is not the one the register declares"]);
     }
     const recordedSource = get(item, "source");
@@ -260,4 +263,26 @@ export function registerProblems(value: JsonObject, register: JsonObject, action
     }
   }
   return problems;
+}
+
+
+/** Applicable declared timing comparisons and availability of their recorded operands. */
+export function timingCoverage(value: JsonObject, register: JsonObject, actionClass: JsonValue | undefined, evaluatedAt?: JsonValue): [boolean, boolean] {
+  const declared = new Map<string, JsonObject>();
+  if (isString(actionClass)) for (const item of declaredInputs(register, actionClass)) {
+    const name=get(item,"input"); if(isString(name)) declared.set(inputKey(name),item);
+  }
+  let applicable=false, complete=true;
+  const inputs=get(value,"inputs");
+  if(isArray(inputs)) for(const item of inputs) {
+    if(!isObject(item)||get(item,"status")!=="available") continue;
+    const name=get(item,"input"), declaration=isString(name)?declared.get(inputKey(name)):undefined;
+    if(declaration===undefined) continue;
+    const age=typeof get(declaration,"maximum_age_seconds")==="number" && Number.isInteger(get(declaration,"maximum_age_seconds"));
+    const deadline=typeof get(declaration,"deadline_milliseconds")==="number" && Number.isInteger(get(declaration,"deadline_milliseconds"));
+    applicable=applicable||age||deadline;
+    if(age) complete=complete&&instantOrNull(get(item,"value_at"))!==null&&instantOrNull(evaluatedAt)!==null;
+    if(deadline) complete=complete&&instantOrNull(get(value,"received_at"))!==null&&instantOrNull(get(item,"obtained_at"))!==null;
+  }
+  return [applicable,complete];
 }

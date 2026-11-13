@@ -1,0 +1,149 @@
+{
+  "retirements": [
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "const",
+          "json_schema_pointer": "/$defs/common/properties/schema_version",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+          "wire_value": "2.0-rc.1"
+        },
+        "description": "Allowed const wire value at '/$defs/common/properties/schema_version' in https://externalcontrollayer.ai/ns/schema/dcmp/2."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/ed7cce19b86c9284cc164a23d50c9f1c",
+      "reason": "DCMP-2 obligations changed in RC-4, so its schema_version moved from 2.0-rc.1 to 2.0-rc.2.",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0-rc.4",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/3306b620cfa281d42f9047b3c79cb0f1"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "const",
+          "json_schema_pointer": "/$defs/common/properties/schema_version",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+          "wire_value": "2.0-rc.1"
+        },
+        "description": "Allowed const wire value at '/$defs/common/properties/schema_version' in https://externalcontrollayer.ai/ns/schema/ebmp/2."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/94d2ce1d9b3d408eba866d45f240546e",
+      "reason": "EBMP-2 obligations changed in RC-4, so its schema_version moved from 2.0-rc.1 to 2.0-rc.2.",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0-rc.4",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/300609c4660e7e27d7116dfc42766464"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "const",
+          "json_schema_pointer": "/$defs/common/properties/schema_version",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+          "wire_value": "2.0-rc.2"
+        },
+        "description": "Allowed const wire value at '/$defs/common/properties/schema_version' in https://externalcontrollayer.ai/ns/schema/dcmp/2."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/3306b620cfa281d42f9047b3c79cb0f1",
+      "reason": "ECL-1 Version 1.0 publishes DCMP-2 at version 2.0, so its schema_version moved from 2.0-rc.2 to 2.0 (RELEASE-NOTES-1.0.md).",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/14bcc2d1c035de7a859b31affc1c8ea6"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "const",
+          "json_schema_pointer": "/$defs/common/properties/schema_version",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/ebmp/2",
+          "wire_value": "2.0-rc.2"
+        },
+        "description": "Allowed const wire value at '/$defs/common/properties/schema_version' in https://externalcontrollayer.ai/ns/schema/ebmp/2."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/300609c4660e7e27d7116dfc42766464",
+      "reason": "ECL-1 Version 1.0 publishes EBMP-2 at version 2.0, so its schema_version moved from 2.0-rc.2 to 2.0 (RELEASE-NOTES-1.0.md).",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/8fd8d924894b5f058cd54c82c73b0b00"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "enum",
+          "json_schema_pointer": "/properties/boundary_class",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+          "wire_value": "component-or-profile-implementation"
+        },
+        "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/assessment-package/1."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/591a457f04d311f3d3e4fbcc550c8f0a",
+      "reason": "ROOT-007: component or profile implementations now use a separate component-implementation-report document without an ECL conformance level. This points to the replacement document discriminator, not an equivalent conformance-boundary value.",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0.2-review.1",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/9e9cd951039ff0111aedcf7e1b91c778"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "enum",
+          "json_schema_pointer": "/properties/boundary_class",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+          "wire_value": "component-or-profile-implementation"
+        },
+        "description": "Allowed enum wire value at '/properties/boundary_class' in https://externalcontrollayer.ai/ns/schema/conformance-claim/1."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/77a951db8296e53f5b9f410a06b2e4ca",
+      "reason": "ROOT-007: component or profile implementations now use a separate component-implementation-report document without an ECL conformance level. This points to the replacement document discriminator, not an equivalent conformance-boundary value.",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0.2-review.1",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/9e9cd951039ff0111aedcf7e1b91c778"
+    },
+    {
+      "former": {
+        "attributes": {
+          "definition_sha256": "48555efe8d6829b716854702f52c718d365b2844e9ace54d4fcd47753591e803",
+          "source_line": 924,
+          "source_path": "standard/ECL-1_Standard.md",
+          "term": "Component or Profile Implementation Claim"
+        },
+        "description": "A claim about one control component or one interoperability profile without asserting end-to-end runtime mediation of a whole SoI."
+      },
+      "id": "ecl.term.component-or-profile-implementation-claim.v1",
+      "reason": "ROOT-007: a standalone component or profile publishes an implementation report without an ECL mediation level. The glossary name now follows that separate report boundary; the historical claim term remains resolvable and is not silently renamed.",
+      "registry": "terms",
+      "retired_in": "1.0.2-review.1",
+      "superseded_by": "ecl.term.component-or-profile-implementation-report.v1"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "enum",
+          "json_schema_pointer": "/$defs/authorization/properties/use_policy",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+          "wire_value": "bounded_multi_use"
+        },
+        "description": "Allowed enum wire value at '/$defs/authorization/properties/use_policy' in https://externalcontrollayer.ai/ns/schema/dcmp/2."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/528add8507ea756139223d38b11206f2",
+      "reason": "AC-006: the public-review candidate supports only single-use authorization. This points to the supported single_use value, not equivalent multi-use semantics. The historical operational allocation remains reserved and unsupported.",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0.2-review.1",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/b88c468a8e6f25de0b58b17c28dbbfe9"
+    },
+    {
+      "former": {
+        "attributes": {
+          "constraint_kind": "enum",
+          "json_schema_pointer": "/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy",
+          "schema_id": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+          "wire_value": "bounded_multi_use"
+        },
+        "description": "Allowed enum wire value at '/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy' in https://externalcontrollayer.ai/ns/schema/dcmp/2."
+      },
+      "id": "https://externalcontrollayer.ai/ns/wire-value/aa476e3844cb022079d18a972de16d70",
+      "reason": "AC-006: the public-review candidate supports only single-use authorization. This points to the supported single_use value, not equivalent multi-use semantics. The historical operational allocation remains reserved and unsupported.",
+      "registry": "schema-wire-values",
+      "retired_in": "1.0.2-review.1",
+      "superseded_by": "https://externalcontrollayer.ai/ns/wire-value/f5a57898bc79673a7c632b7f06529f42"
+    }
+  ],
+  "schema_version": "ecl_derived_id_retirements_v1"
+}

@@ -40,6 +40,16 @@ _ED25519_KEY = 32
 
 _ES256_SIGNATURE = 64
 
+# The five y-coordinates of the eight points in Ed25519's cofactor subgroup.
+# Sign does not change the order. Reduce y so non-canonical encodings that a
+# JOSE backend may decode to the same point cannot evade the possession check.
+_ED25519_FIELD = 2**255 - 19
+_SMALL_ORDER_Y = frozenset({
+    0, 1, _ED25519_FIELD - 1,
+    int.from_bytes(bytes.fromhex("26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05"), "little"),
+    int.from_bytes(bytes.fromhex("c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a"), "little"),
+})
+
 _BASE64URL = re.compile(r"^[A-Za-z0-9_-]*$")
 
 
@@ -163,6 +173,10 @@ def _checked_header(header: Mapping[str, Any], expected_type: str) -> str:
         raise JoseError("type", f"the header's typ is not {expected_type}")
     if "crit" in header:
         raise JoseError("crit", "the header has a crit member this verifier does not understand")
+    # RFC 7797 requires b64 in crit whenever the extension is used. This
+    # verifier supports no critical JOSE extensions; JWTs also forbid b64=false.
+    if "b64" in header:
+        raise JoseError("b64", "the b64 header extension is not supported for these JWTs")
     return str(algorithm)
 
 
@@ -188,6 +202,11 @@ def verify_dpop(proof: str) -> tuple[dict[str, Any], dict[str, Any], str]:
     jwk = header.get("jwk")
     if type(jwk) is not dict or {"jku", "x5u", "x5c"} & set(header):
         raise JoseError("key-header", "a DPoP proof carries exactly its public key in jwk")
+    if jwk.get("kty") == "OKP" and jwk.get("crv") == "Ed25519":
+        raw = _coordinate(jwk, "x", _ED25519_KEY)
+        y = (int.from_bytes(raw, "little") & (2**255 - 1)) % _ED25519_FIELD
+        if y in _SMALL_ORDER_Y:
+            raise JoseError("key", "a DPoP Ed25519 presenter key must not have small order")
     _verify_signature(algorithm, jwk, signing_input, signature)
     return header, claims, thumbprint(jwk)
 

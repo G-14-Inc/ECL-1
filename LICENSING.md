@@ -95,9 +95,9 @@ for its own. There is no contributor license agreement
 
 ## Names and marks
 
-Neither license grants rights in the name "ECL-1", in any logo, or in any
-conformance or certification mark. Descriptive use of the name is permitted
-as [`governance/TRADEMARKS_AND_MARKS.md`](governance/TRADEMARKS_AND_MARKS.md)
+Neither license grants general trademark rights in the name "ECL-1", in any
+logo, or in any conformance or certification mark. Descriptive use of the name
+is permitted as [`governance/TRADEMARKS_AND_MARKS.md`](governance/TRADEMARKS_AND_MARKS.md)
 describes.
 
 ## Material of others

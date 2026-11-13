@@ -3,27 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ECL-1 Version 1.0</title>
+<title>ECL-1 Version 1 public review</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <nav aria-label="Documents"><a href="index.html">Document index</a></nav>
 <main id="main">
-<h1 id="ecl-1-version-10">ECL-1 Version 1.0</h1>
+<h1 id="ecl-1-version-1-public-review">ECL-1 Version 1 public review</h1>
 <h2 id="external-control-layer-standard-for-autonomous-ai-systems">External Control Layer Standard for Autonomous AI Systems</h2>
 <ul>
-<li>Status: ECL-1 Version 1.0, corrected source release <code>v1.0.1</code>,
-maintained by G-14, Inc. Original publication: 5 November 2026;
-correction prepared: 9 November 2026 (<code>governance/RELEASE_POLICY.md</code>).</li>
-<li>Conformance corpus: every measured unit of the published coverage
-denominator, which holds each branch of the wire, extension-value, claim and
-assessment document schemas and each active semantic rule, has a positive and
-a negative vector (<code>conformance/coverage-denominator.json</code>). The denominator
-lists the three excluded units with their reasons; a document vector tests the
+<li>Status: ECL-1 Version 1 public-review local candidate; source build
+<code>1.0.2-review.1</code>, prepared <code>2026-11-10</code>; maintained by G-14, Inc.</li>
+<li>Historical lineage: Version 1.0 was published on 5 November 2026;
+corrected source release <code>v1.0.1</code> was prepared on 9 November 2026
+(<code>governance/RELEASE_POLICY.md</code>).</li>
+<li>Conformance corpus: the measured denominator consists of the schemas, schema
+branches and active semantic rules listed in
+<code>conformance/coverage-denominator.json</code>, subject to its separate schema and
+unit exclusions. Each included unit requires a positive and a negative
+witness. The denominator records each exclusion and its reason; a document vector tests the
 form of a claim or assessment document, not the properties of the deployment
 it describes.</li>
-<li>Version date: <code>October 2026</code></li>
+<li>Protocol baseline date: <code>October 2026</code> (historical Version 1.0)</li>
 <li>Predecessor: RC-6 (<code>1.0-rc.6</code>), the last release candidate of Version 1.0,
 retired, as are RC-5 (<code>1.0-rc.5</code>) and RC-4 (<code>1.0-rc.4</code>). RC-3 (<code>1.0-rc.3</code>)
 is the frozen predecessor of RC-4 to RC-6. <code>RELEASE-NOTES-1.0.md</code>
@@ -42,8 +44,16 @@ requirements that each version introduced, changed or retired.</li>
 </thead>
 <tbody>
 <tr>
+<td><code>1.0.2-review.1</code></td>
+<td>Current Version 1 public-review local candidate</td>
+</tr>
+<tr>
+<td><code>1.0.1</code></td>
+<td>Archived correction release of Version 1.0</td>
+</tr>
+<tr>
 <td><code>1.0</code></td>
-<td>Version 1.0; corrected source release <code>v1.0.1</code></td>
+<td>Archived original Version 1.0 release</td>
 </tr>
 <tr>
 <td><code>1.0-rc.6</code></td>
@@ -78,7 +88,7 @@ independence class and trust assumptions that the claim states, and only as far
 as the claim's assessment establishes it (Section 7.8): at <code>L1</code> the absence of
 bypass rests on the documented enumeration method and exercised interception
 points (<a href="ecl-1_standard.html#ECL1N-0039">ECL1N-0039</a>), and from <code>L2</code> also on the assessor's negative tests
-(<a href="ecl-1_standard.html#FR-101">FR-101</a>, <a href="ecl-1_standard.html#ECL1N-0151">ECL1N-0151</a>). A component or profile implementation claim does not
+(<a href="ecl-1_standard.html#FR-101">FR-101</a>, <a href="ecl-1_standard.html#ECL1N-0151">ECL1N-0151</a>). A component or profile implementation report does not
 provide the guarantee.</p>
 <p>This section adds no requirement; the normative rules are in Sections 2 to 11.
 Terms in this section are defined in Section 4. The guarantee has seven
@@ -200,19 +210,19 @@ Section 8 for deployment-specific timing and operating constraints.</p>
 <p>Assessors and auditors should start with Section 7 for the assessment model,
 independence baseline, and severity taxonomy, then use Section 11 as the
 scoring surface and Section 2 as the claim-boundary and scope test.</p>
-<h3 id="12-scope-and-limitations-of-version-10">1.2 Scope and Limitations of Version 1.0</h3>
-<p>Version 1.0 standardizes the runtime control boundary for consequential AI
+<h3 id="12-scope-and-limitations-of-version-1">1.2 Scope and Limitations of Version 1</h3>
+<p>Version 1 standardizes the runtime control boundary for consequential AI
 actions, including pre-action mediation, typed authority, tamper-evident
 provenance, verification-triggered response behavior, and bounded claim logic.</p>
-<p>Version 1.0 does not by itself constitute legal certification, sector-safety
+<p>Version 1 does not by itself constitute legal certification, sector-safety
 certification, model-quality assurance, or organization-wide AI governance. It
 is meant to be used alongside broader management, legal, safety, and
 sector-specific controls where those controls apply.</p>
-<p>Version 1.0 also assumes that concrete conformance claims will be made through
+<p>Version 1 also assumes that concrete conformance claims will be made through
 separate implementation, evidence, and assessment packages. Those packages may
 vary in maturity and independence; the core standard text is not itself a claim
 that any specific deployment has satisfied the required assessment posture.</p>
-<p>At every level, Version 1.0 is not complete without the version-locked
+<p>At every level, Version 1 is not complete without the version-locked
 <code>DCMP-2</code>, <code>EBMP-2</code>, ECL Integrity Envelope 1, extension registries, semantic
 rules, and conformance vectors published with the same release. <a href="ecl-1_standard.html#ECL1N-0057">ECL1N-0057</a>,
 <a href="ecl-1_standard.html#ECL1N-0117">ECL1N-0117</a>, <a href="ecl-1_standard.html#ECL1N-0118">ECL1N-0118</a>, and <a href="ecl-1_standard.html#ECL1N-0181">ECL1N-0181</a> apply those companions to every claim,
@@ -321,12 +331,15 @@ includes:</p>
 the SoI are in scope and mediated.</li>
 <li><strong>Bounded Action-Class Mediation Claim</strong>: only named consequential action
 classes are in scope and mediated.</li>
-<li><strong>Component or Profile Implementation Claim</strong>: one control component or one
-interoperability profile is implemented without asserting full mediation of a
-runtime SoI.</li>
 </ul>
-<p>Only a mediation claim, full-system or bounded, provides the ECL-1 guarantee,
-within the boundary it declares and as far as its assessment establishes it.</p>
+<p>The levels and assessment checklist in Sections 7 and 11 apply to these two
+mediation claim classes. A supplier of a standalone component or profile may
+instead publish a component implementation report conforming to
+<code>ecl-component-implementation-report-v1.schema.json</code>. That report identifies
+the exact component artifact, protocol and profile versions, capabilities,
+applicable requirements, evidence, results and limitations. It does not carry
+an <code>L1</code>–<code>L4</code> level or a mediation conformance status and does not establish
+conformance of a deployment that uses the component.</p>
 <p><span id="ECL1N-0010"><strong>ECL1N-0010</strong></span><a class="requirement-link" href="#ECL1N-0010" aria-label="Link to ECL1N-0010">§</a> — Every claim MUST include a Negative Boundary Annex listing:</p>
 <ul>
 <li>excluded effect channels;</li>
@@ -361,8 +374,8 @@ logic across these dimensions.</p>
 <tr>
 <td>Data sensitivity</td>
 <td>Public/non-sensitive</td>
-<td>Internal, CUI, or personal data</td>
-<td>Regulated sensitive data (for example PHI or financial records)</td>
+<td>Internal data, controlled unclassified information (CUI), or personal data</td>
+<td>Regulated sensitive data (for example protected health information (PHI) or financial records)</td>
 <td>National security, life-safety, or equivalent critical sensitivity</td>
 </tr>
 <tr>
@@ -527,9 +540,11 @@ that performs one of these functions and also mediates consequential actions is
 part of the claim's System of Interest for that mediation (Section 2.5).</p>
 <h2 id="3-normative-references">3. Normative References</h2>
 <p>This section lists the documents whose content forms part of the requirements
-of this document, and states when each applies: Sections 3.1 and 3.4 apply to
-every claim, and the documents of Sections 3.2, 3.3, 3.5 and 3.6 apply when a
-claim, profile, or requirement invokes them. Section 3.7 governs how references
+of this document, and states when each applies. Section 3.1 applies to every
+claim. Section 3.4 identifies the complete companion assessment package;
+<a href="ecl-1_standard.html#ECL1N-0022">ECL1N-0022</a> distinguishes package inclusion from requirement applicability.
+The documents of Sections 3.2, 3.3, 3.5 and 3.6 apply when a claim, profile, or
+requirement invokes them. Section 3.7 governs how references
 are used. For dated references, only the edition cited applies. For undated
 references, the latest published edition applies unless a conformance profile
 freezes a specific edition. Works cited for background, security lineage, or
@@ -564,6 +579,7 @@ determinative normative baselines.</p>
 <li>[ECL-TS1] <em>ECL Timing, Availability, and Safe-State Semantics 1</em>, version 1.0.</li>
 <li>[ECL-EL1] <em>ECL Evidence Lifecycle Protocol 1</em>, version 1.0.</li>
 <li>[ECL-XR1] <em>ECL Extension and Registry Protocol 1</em>, version 1.0.</li>
+<li>[ECL-TP1] <em>ECL Trust Policy Profile 1</em>, version 1.0.</li>
 <li>[ECL-SCHEMAS] <em>ECL-1 Version 1.0 Schema Set</em>, version-locked companion artifact.</li>
 <li>[ECL-REGISTRIES] <em>ECL-1 Version 1.0 Registry Set</em>, version-locked companion artifact.</li>
 <li>[ECL-VALIDATOR] <em>ECL-1 Network-Free Reference Validator</em>, companion artifact.</li>
@@ -571,9 +587,13 @@ determinative normative baselines.</p>
 </ul>
 <p><span id="ECL1N-0022"><strong>ECL1N-0022</strong></span><a class="requirement-link" href="#ECL1N-0022" aria-label="Link to ECL1N-0022">§</a> — The companion artifacts listed in this subsection are part of
 the normative assessment package at every level. <code>DCMP-2</code>, <code>EBMP-2</code>, and ECL
-Integrity Envelope 1 apply to a claim at every level, as <a href="ecl-1_standard.html#ECL1N-0057">ECL1N-0057</a>,
-<a href="ecl-1_standard.html#ECL1N-0117">ECL1N-0117</a>, and <a href="ecl-1_standard.html#ECL1N-0118">ECL1N-0118</a> require, and each requirement of those documents
-applies at the levels that Section 6.1 gives it. Any release that permits
+Integrity Envelope 1 and the trust-policy requirements they invoke apply to a
+claim at every level, as <a href="ecl-1_standard.html#ECL1N-0057">ECL1N-0057</a>, <a href="ecl-1_standard.html#ECL1N-0117">ECL1N-0117</a>, <a href="ecl-1_standard.html#ECL1N-0118">ECL1N-0118</a> and <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>
+require. Each requirement applies at the levels that Section 6.1 gives it and
+under its stated conditions. Inclusion of another companion in the assessment
+package does not itself make every requirement in that companion apply to
+every claim: its invoked requirements and their normative dependencies apply,
+including dependencies stated outside numbered paragraphs. Any release that permits
 conformance claims MUST publish the version-locked protocol, schema, registry,
 error, version-policy, validator, expected-result, vector-coverage, and
 offline-verification surfaces together with the core standard or through stable
@@ -582,7 +602,6 @@ omits those artifacts MUST NOT be used as the sole basis for a conformance claim
 at any level.</p>
 <h3 id="35-ecl-companion-profiles-normative-when-claimed">3.5 ECL Companion Profiles (Normative When Claimed)</h3>
 <ul>
-<li>[ECL-TP1] <em>ECL Trust Policy Profile 1</em>, version 1.0.</li>
 <li>[ECL-DHB1] <em>ECL DCMP-2 HTTP Binding Profile 1</em>, version 1.0.</li>
 <li>[ECL-TE1] <em>ECL Transactional Effect Profile 1</em>, version 1.0.</li>
 <li>[ECL-AZB1] <em>ECL AuthZEN Binding Profile 1</em>, version 1.0.</li>
@@ -593,7 +612,9 @@ at any level.</p>
 <li>[ECL-OE1] <em>ECL OpenTelemetry Evidence Export Profile 1</em>, version 1.0.</li>
 <li>[ECL-OA1] <em>ECL OAuth Authority Profile 1</em>, version 1.0.</li>
 </ul>
-<p>A profile applies to a claim that declares it. The release manifest binds the
+<p>A profile in this subsection applies to a claim that declares it or invokes
+its requirements. Omitting a profile declaration does not waive a requirement
+that another applicable requirement invokes. The release manifest binds the
 version of the core, of every companion in Sections 3.4 and 3.5, and of the
 reference package, the public Python verifier <code>ecl-verify</code>.</p>
 <h3 id="36-sector-and-safety-extensions-normative-when-invoked-by-deployment-profile">3.6 Sector and Safety Extensions (Normative When Invoked by Deployment Profile)</h3>
@@ -606,16 +627,17 @@ IEC 62443 or ISO 26262, the applicable sector standard controls MUST be
 treated as co-normative for that profile.</p>
 <h3 id="37-editorial-and-conformance-rules-for-reference-usage">3.7 Editorial and Conformance Rules for Reference Usage</h3>
 <ul>
-<li><span id="ECL1N-0024"><strong>ECL1N-0024</strong></span><a class="requirement-link" href="#ECL1N-0024" aria-label="Link to ECL1N-0024">§</a> — For each control that an ECL-1 conformance claim asserts from
-Sections 6, 7, 10, or 11, the claim MUST cite the control's requirement or
+<li><span id="ECL1N-0024"><strong>ECL1N-0024</strong></span><a class="requirement-link" href="#ECL1N-0024" aria-label="Link to ECL1N-0024">§</a> — For each control that an ECL-1 conformance claim or component
+implementation report asserts from Sections 6, 7, 10, or 11, the claim or
+report MUST cite the control's requirement or
 checklist identifier, or its section when no such identifier is assigned, and
 each normative or bibliographic reference on which the assertion relies. A
 reference in Section 3 or the Bibliography MUST be cited by its bracketed
 reference identifier in this standard, such as <code>[ECL-DCMP2]</code> or <code>[NIST-RMF]</code>,
 with the edition or immutable reference required by <a href="ecl-1_standard.html#ECL1N-0021">ECL1N-0021</a> and
-<a href="ecl-1_standard.html#ECL1N-0025">ECL1N-0025</a>. This applies within the stated boundary of a full-system
-mediation, bounded action-class mediation, or component or profile
-implementation claim.</li>
+<a href="ecl-1_standard.html#ECL1N-0025">ECL1N-0025</a>. This applies within the stated boundary of a full-system mediation
+claim, bounded action-class mediation claim, or component implementation
+report covering a component or profile.</li>
 <li><span id="ECL1N-0025"><strong>ECL1N-0025</strong></span><a class="requirement-link" href="#ECL1N-0025" aria-label="Link to ECL1N-0025">§</a> — Any living-specification reference used normatively in a claim or profile
 MUST be frozen by version, date, or immutable hash in the relevant package.</li>
 <li><span id="ECL1N-0026"><strong>ECL1N-0026</strong></span><a class="requirement-link" href="#ECL1N-0026" aria-label="Link to ECL1N-0026">§</a> — A mapping claim to an external framework MUST distinguish direct runtime
@@ -783,7 +805,8 @@ because the requester's principal can end it by supplying the evidence it names
 (<a href="dcmp-2.html#DCMP2-019">DCMP2-019</a> to <a href="dcmp-2.html#DCMP2-021">DCMP2-021</a>), while a <code>hold</code> permits no release until a separately
 defined condition changes that the requester cannot bring about by answering
 (<a href="dcmp-2.html#DCMP2-018">DCMP2-018</a>). One outcome is at least as strict as another when it comes later in
-this order, or when both are <code>deny</code>. One <code>hold</code> is at least as strict as another
+this order, or when both are <code>deny</code>.</p>
+<p>One <code>hold</code> is at least as strict as another
 <code>hold</code>, and one <code>challenge</code> as another <code>challenge</code>, when, and only when, its
 condition for progress implies the other's, its deadline is no later, and its
 timeout disposition is at least as strict (<a href="dcmp-2.html#DCMP2-018">DCMP2-018</a>). An absent deadline
@@ -796,8 +819,10 @@ allowlist does not authorize release of that held action: release requires a
 new <code>admit</code> from a new evaluation (<a href="dcmp-2.html#DCMP2-014">DCMP2-014</a>, <a href="dcmp-2.html#DCMP2-021">DCMP2-021</a>, <a href="dcmp-2.html#DCMP2-057">DCMP2-057</a>). Any
 separately allowed containment action needs its own applicable admission.
 Two <code>hold</code> or two <code>challenge</code> outcomes are equally strict only when their
-conditions for progress, deadlines, and timeout
-dispositions are the same. One <code>admit</code> is at least as strict as another when,
+conditions for progress imply each other, their deadlines are equal, and their
+timeout dispositions are equally strict for the held action under the rule
+above. Different timeout-state names can therefore be equally strict.</p>
+<p>One <code>admit</code> is at least as strict as another when,
 and only when, its authorization is contained in the other's on every dimension of
 <a href="ecl-1_standard.html#ECL1N-0031">ECL1N-0031</a>, in its validity interval, and in its use policy and maximum uses; it
 carries every obligation of the other; it debits each consequence budget by at
@@ -809,7 +834,8 @@ unit is not comparable, and the <code>admit</code> is then not at least as stric
 conditions are jointly sufficient for the comparison; satisfying them does
 not waive another requirement governing a response. Its safe state remains
 the declared action-class rule (<a href="dcmp-2.html#DCMP2-041">DCMP2-041</a>), not a condition that an input can
-relax. For the prohibition in <a href="ecl-1_standard.html#ECL1N-0179">ECL1N-0179</a>, an outcome that is not at least as
+relax.</p>
+<p>For the prohibition in <a href="ecl-1_standard.html#ECL1N-0179">ECL1N-0179</a>, an outcome that is not at least as
 strict as its verifiable-only outcome is treated as less strict, including
 when the compared values are incomparable.</p>
 <p><strong>Typed Authority</strong>: Transaction-bound authority scoped by principal context,
@@ -833,7 +859,7 @@ changes invalidate prior authority and require re-attestation or re-approval.</p
 service layers that the governed AI system cannot modify, disable, or bypass,
 but that shares the host platform's trust root.</p>
 <p><strong>Hard Enforcement</strong>: Enforcement implemented through an independent trust
-boundary such as a TEE, hardened hypervisor path, hardware security boundary,
+boundary such as a trusted execution environment (TEE), hardened hypervisor path, hardware security boundary,
 out-of-band gateway, or equivalent mechanism whose compromise is materially
 harder than compromise of the governed AI system.</p>
 <p><strong>Release Boundary</strong>: The point at which an enforcement point lets an admitted
@@ -854,9 +880,11 @@ differences, and assessor-controlled equivalence rationale.</p>
 subject to the same authorization and audit rigor as human principals.</p>
 <p><strong>Workload Identity</strong>: Cryptographically attested identity for service or
 agent workloads.</p>
-<p><strong>Evidence Bundle</strong>: A signed record of one mediated action including
-principal context, policy context, decision, execution outcome, integrity
-metadata, and timing metadata.</p>
+<p><strong>Evidence Bundle</strong>: A collection of integrity-protected records for one or
+more mediated actions, including principal context, policy context, decisions,
+execution outcomes, integrity metadata, and timing metadata. Signatures
+authenticate the enclosed ECL-IE-1 objects; the bundle container is not
+required to have a separate signature.</p>
 <p><strong>Consequential Action Trace</strong>: The ordered, reconstructable record of one
 approved action chain from decision and authorization through all resulting
 external effects, including root trace identifier, per-action identifiers, and
@@ -886,9 +914,10 @@ evidence expectations.</p>
 action paths for the SoI are in scope and mediated.</p>
 <p><strong>Bounded Action-Class Mediation Claim</strong>: A claim that only named
 consequential action classes are in scope and mediated.</p>
-<p><strong>Component or Profile Implementation Claim</strong>: A claim about one control
-component or one interoperability profile without asserting end-to-end runtime
-mediation of a whole SoI.</p>
+<p><strong>Component or Profile Implementation Report</strong>: A report identifying a control
+component or interoperability profile's capabilities, applicable requirements,
+evidence, results and limitations. It carries no <code>L1</code>–<code>L4</code> level or mediation
+conformance status and does not establish a deployment's conformance.</p>
 <p><strong>Negative Boundary Annex</strong>: The disclosure artifact listing excluded effect
 channels, excluded tools/resources, shared surfaces, and other out-of-scope
 paths that a reader might otherwise over-read as covered.</p>
@@ -973,8 +1002,7 @@ implicit exclusions.</p>
 <p><span id="ECL1N-0039"><strong>ECL1N-0039</strong></span><a class="requirement-link" href="#ECL1N-0039" aria-label="Link to ECL1N-0039">§</a> — Evidence of complete mediation is always bounded by the declared path-enumeration method, exercised negative tests, and the reachable capability
 inventory available at assessment time. A conformant claim MUST therefore
 document the enumeration method, exercised interception points, and any
-residual untested path classes rather than presenting no-bypass as a mere
-assertion or as a metaphysically complete proof.</p>
+residual untested path classes, and limit its no-bypass claim to that evidence.</p>
 <h3 id="52-decision-layer">5.2 Decision Layer</h3>
 <p>The Decision Layer computes admit, deny, hold, or challenge outcomes from
 policy and context.</p>
@@ -1026,8 +1054,8 @@ the authority, its validation rules and the controls on freshness, selection
 and completeness on which an admit relies. An admitted action that causes an
 independently validated transition MUST NOT by that fact alone make the
 resulting authoritative observation <code>actor_supplied</code>. An actor's selection or
-omission of authentic observations MUST NOT establish completeness that the
-authority does not attest or the Decision Layer independently establish. An input that reaches the Decision Layer through the request, or
+omission of authentic observations MUST NOT establish completeness that
+neither the authority attests nor the Decision Layer independently establishes. An input that reaches the Decision Layer through the request, or
 through any channel that the governed AI system can write, MUST be declared
 <code>actor_supplied</code> unless the Decision Layer authenticates its origin as Section
 4.3 requires. The Decision Layer MUST NOT consult a decision input that the
@@ -1205,10 +1233,10 @@ binds, and that it is the enforcement point that the authorization names as
 its audience (<a href="ecl-1_standard.html#ECL1N-0036">ECL1N-0036</a>, <a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-051">DCMP2-051</a>);</li>
 <li>that the authorization is valid at the release boundary, shown as
 <a href="ecl-1_standard.html#ECL1N-0188">ECL1N-0188</a> requires (<a href="ecl-1_standard.html#ECL1N-0042">ECL1N-0042</a>, <a href="dcmp-2.html#DCMP2-049">DCMP2-049</a>);</li>
-<li>that the authorization's use policy permits this use, counted atomically
-with every other use of the same authorization by any instance or attempt,
-so that concurrent, repeated or recovered attempts cannot together exceed
-it (<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, <a href="ebmp-2.html#EBMP2-008">EBMP2-008</a>);</li>
+<li>that the authorization permits its one use under DCMP-2's <code>single_use</code>
+policy, counted atomically across every instance and attempt, so that
+concurrent, repeated or recovered attempts cannot produce more than one release
+under the same authorization (<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, <a href="ebmp-2.html#EBMP2-008">EBMP2-008</a>);</li>
 <li>that the control state that the claim's mode definitions require for the
 release, such as the policy and trust epoch, is current within its declared
 staleness limit (<a href="ecl-1_standard.html#ECL1N-0101">ECL1N-0101</a>, <a href="ecl-1_standard.html#ECL1N-0102">ECL1N-0102</a>, <a href="ecl-1_standard.html#FR-110">FR-110</a>);</li>
@@ -1228,9 +1256,10 @@ included (<a href="ecl-1_standard.html#ECL1N-0047">ECL1N-0047</a>, <a href="ecl-
 </ol>
 <p>A profile can establish an item in its own terms. TRANSACTIONAL-EFFECT-1
 evaluates authority, time, control state and preconditions at one admission
-instant while mutual exclusion holds (<a href="transactional-effect-1.html#TE1-002">TE1-002</a>), and counts each charged use
-once (<a href="transactional-effect-1.html#TE1-003">TE1-003</a>, <a href="transactional-effect-1.html#TE1-010">TE1-010</a>). OAUTH-AUTHORITY-1 has the resource server check a
-presented token and count its uses in one store that every instance shares
+instant while mutual exclusion holds (<a href="transactional-effect-1.html#TE1-002">TE1-002</a>), and counts each policy or grant
+quota charge once, separately from per-action release authority (<a href="transactional-effect-1.html#TE1-003">TE1-003</a>,
+<a href="transactional-effect-1.html#TE1-010">TE1-010</a>). OAUTH-AUTHORITY-1 has the resource server check a
+presented token and count its single accepted use in one store that every instance shares
 (<a href="oauth-authority-1.html#OA1-005">OA1-005</a>, <a href="oauth-authority-1.html#OA1-011">OA1-011</a>). TIMING-SAFE-STATE-1 gives the control-state and evidence
 items their detail: separately declared staleness budgets (<a href="timing-safe-state-1.html#TS1-012">TS1-012</a>, <a href="timing-safe-state-1.html#TS1-013">TS1-013</a>),
 the precedence of a halt over ordinary admission (<a href="timing-safe-state-1.html#TS1-025">TS1-025</a>), and buffered
@@ -1329,7 +1358,7 @@ cannot read, such as a journal that does not parse or holds more than one
 attempt, leaves its attempt unresolved, kept and reported, with no authority
 restored from it (MCP-GATEWAY-1, <a href="mcp-gateway-1.html#MG1-016">MG1-016</a>).</p>
 <h3 id="55-provenance-layer">5.5 Provenance Layer</h3>
-<p>The Provenance Layer is the governance memory for mediated actions.</p>
+<p>The Provenance Layer records the evidence used to reconstruct mediated actions.</p>
 <p><span id="ECL1N-0047"><strong>ECL1N-0047</strong></span><a class="requirement-link" href="#ECL1N-0047" aria-label="Link to ECL1N-0047">§</a> — The Provenance Layer MUST create tamper-evident evidence bundles containing at
 minimum:</p>
 <ul>
@@ -1387,8 +1416,8 @@ and a bundle's verification verdict.</p>
 <p><span id="ECL1N-0051"><strong>ECL1N-0051</strong></span><a class="requirement-link" href="#ECL1N-0051" aria-label="Link to ECL1N-0051">§</a> — Sector profiles MAY extend but MUST NOT shorten this minimum
 except under the documented legal-conflict procedure of <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to <a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a>.</p>
 <h3 id="56-verification-layer">5.6 Verification Layer</h3>
-<p>The Verification Layer provides continuous assurance that ECL controls still
-operate as designed.</p>
+<p>The Verification Layer checks whether ECL controls continue to operate as
+designed.</p>
 <p><span id="ECL1N-0052"><strong>ECL1N-0052</strong></span><a class="requirement-link" href="#ECL1N-0052" aria-label="Link to ECL1N-0052">§</a> — The Verification Layer MUST:</p>
 <ul>
 <li>monitor enforcement and policy integrity;</li>
@@ -1574,7 +1603,7 @@ actions of every session, workflow, and instance of the SoI, and MUST cause a
 <code>deny</code> or <code>hold</code> decision for any action that would exceed it.</p>
 <h3 id="511-human-approval-normative">5.11 Human Approval (Normative)</h3>
 <p><span id="ECL1N-0174"><strong>ECL1N-0174</strong></span><a class="requirement-link" href="#ECL1N-0174" aria-label="Link to ECL1N-0174">§</a> — When a person approves or rejects a consequential action, the
-approval MUST be made on a human-readable presentation of its operation,
+approval or rejection MUST be made on a human-readable presentation of its operation,
 target, every parameter material to its consequences, the policy outcome and
 reasons, and the <code>verifiable</code> inputs on which the decision rested. A digest
 MUST NOT substitute for those fields. The presentation MUST show applicable
@@ -1604,7 +1633,7 @@ the approvals of as many distinct authorized persons as the threshold requires
 are recorded; until then it MUST return <code>hold</code> or <code>challenge</code>, or <code>deny</code> where
 its verifiable-only outcome or another requirement of this standard requires a
 <code>deny</code>.</p>
-<p>The register declares the thresholds of an action class in the
+<p><strong><a href="ecl-1_standard.html#ECL1N-0177">ECL1N-0177</a> (continued)</strong> — The register declares the thresholds of an action class in the
 <code>human_approval_threshold</code> member of its entry, a list of one or more thresholds
 (<code>schemas/ecl-action-register-v1.schema.json</code>). Each threshold names what it
 compares in one of two ways: <code>parameter</code>, an RFC 6901 JSON Pointer to a value in
@@ -1730,7 +1759,7 @@ equivalence dossier and independent validation of the preserved property.</li>
 <td><span id="FR-104"><strong>FR-104</strong></span><a class="requirement-link" href="#FR-104" aria-label="Link to FR-104">§</a></td>
 <td>L2</td>
 <td>In addition to <a href="ecl-1_standard.html#ECL1N-0042">ECL1N-0042</a>, which requires transaction-bound, time-bounded typed authority at every level, authority artifacts MUST be scope-limited, replay-resistant, and audience or resource bound.</td>
-<td>Token profile, TTL settings, binding checks, replay test results.</td>
+<td>Token profile, time-to-live (TTL) settings, binding checks, replay test results.</td>
 </tr>
 <tr>
 <td><span id="FR-105"><strong>FR-105</strong></span><a class="requirement-link" href="#FR-105" aria-label="Link to FR-105">§</a></td>
@@ -1913,46 +1942,13 @@ that baseline, capped at <code>L4</code>. A baseline of <code>L4</code> therefor
 <code>L4</code>. The result MUST remain identified as provisional until the missing
 information is provided and all dimensions can be scored under <a href="ecl-1_standard.html#ECL1N-0071">ECL1N-0071</a>.</p>
 <h3 id="73-risk-dimension-guidance">7.3 Risk Dimension Guidance</h3>
-<table tabindex="0">
-<thead>
-<tr>
-<th scope="col">Dimension</th>
-<th scope="col">L1</th>
-<th scope="col">L2</th>
-<th scope="col">L3</th>
-<th scope="col">L4</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Autonomy</td>
-<td>Advisory assistive behavior</td>
-<td>Limited autonomous execution in bounded tasks</td>
-<td>Multi-step autonomous tool use across systems</td>
-<td>Full autonomous behavior in safety-critical or mission-critical context</td>
-</tr>
-<tr>
-<td>Data sensitivity</td>
-<td>Public/non-sensitive</td>
-<td>Internal/CUI/PII</td>
-<td>Regulated high-sensitivity domains</td>
-<td>National security, life-safety, or equivalent critical domain</td>
-</tr>
-<tr>
-<td>Consequence</td>
-<td>Informational impact only</td>
-<td>Operational impact</td>
-<td>Financial, legal, or major reputational impact</td>
-<td>Irreversible physical or critical infrastructure impact</td>
-</tr>
-</tbody>
-</table>
+<p>Use the risk-dimension descriptions in Section 2.6 when scoring the three
+dimensions under Section 7.2.</p>
 <h3 id="74-claim-boundary-classes">7.4 Claim Boundary Classes</h3>
 <p><span id="ECL1N-0073"><strong>ECL1N-0073</strong></span><a class="requirement-link" href="#ECL1N-0073" aria-label="Link to ECL1N-0073">§</a> — Every claim MUST declare one of the following boundary classes:</p>
 <ul>
 <li><code>full-system-mediation</code></li>
 <li><code>bounded-action-class-mediation</code></li>
-<li><code>component-or-profile-implementation</code></li>
 </ul>
 <p><span id="ECL1N-0074"><strong>ECL1N-0074</strong></span><a class="requirement-link" href="#ECL1N-0074" aria-label="Link to ECL1N-0074">§</a> — Boundary class MUST be stated alongside the claimed level. A level statement
 without a boundary class is incomplete.</p>
@@ -2030,7 +2026,7 @@ required at higher levels.</p>
 </tr>
 </tbody>
 </table>
-<p><span id="ECL1N-0077"><strong>ECL1N-0077</strong></span><a class="requirement-link" href="#ECL1N-0077" aria-label="Link to ECL1N-0077">§</a> — Conditional conformance is not permitted for <code>L4</code>.
+<p><span id="ECL1N-0077"><strong>ECL1N-0077</strong></span><a class="requirement-link" href="#ECL1N-0077" aria-label="Link to ECL1N-0077">§</a> — Conditional conformance is permitted only for <code>L2</code> and <code>L3</code>.
 Conditional conformance for the same unresolved finding MUST NOT be renewed
 without published evidence of material closure progress. An SoI MUST NOT remain in
 conditional conformance for the same unresolved finding beyond two consecutive
@@ -2059,12 +2055,12 @@ an immediately adjacent claim surface that is inseparable from the claim in the
 published artifact.</p>
 <p>Informative examples (non-normative):</p>
 <ul>
-<li>Valid: <code>ECL-1 Version 1.0, L2, assessment-only, bounded-action-class-mediation, Class B independence, assessed 2026-11-16 for the declared SoI using DCMP-2 v2.0 / EBMP-2 v2.0, with production-equivalent=false explicitly disclosed.</code></li>
+<li>Claim-statement template (replace every bracketed field): <code>ECL-1 [core version], L2, assessment-only, bounded-action-class-mediation, Class B control independence, assessed [date] for [SoI identifier or bounded description]; companion artifact version set: [immutable version-set reference]; invoked deployment or sector profiles: [identifiers and versions, or none]; production-equivalent: [true or false]; material limitations: [limitations, or none].</code></li>
 <li>Invalid: <code>ECL-1 compliant.</code> This is incomplete because it omits the SoI,
 level, claim status, boundary class, version set, and limitations.</li>
 </ul>
-<p>The valid example is a minimum public claim statement; the claim that it
-summarizes still meets the other claim requirements, including, for a <code>Class B</code>
+<p>A completed statement supplies every field of Section 7.7. The claim it
+summarizes also meets the other claim requirements, including, for a <code>Class B</code>
 claim, <a href="ecl-1_standard.html#ECL1N-0143">ECL1N-0143</a>&#x27;s identification of the separately administered trust domain,
 its administrators, and its controls.</p>
 <h3 id="78-assessment-expectations-by-level">7.8 Assessment Expectations by Level</h3>
@@ -2237,7 +2233,8 @@ inputs may rely on cached bounded state.</p>
 <li>transition behavior when stale-state thresholds are exceeded;</li>
 <li>post-reconnect reconciliation of policy and provenance state.</li>
 </ul>
-<p>Key caveat: stale local policy can preserve safety while degrading
+<p>Key caveat: cached policy remains usable only within its declared staleness
+budget; expiry requires the declared restricted mode or halt and can reduce
 availability.</p>
 <p><span id="ECL1N-0095"><strong>ECL1N-0095</strong></span><a class="requirement-link" href="#ECL1N-0095" aria-label="Link to ECL1N-0095">§</a> — The claim MUST state which actions stop and which continue when
 cached state goes stale.</p>
@@ -2304,7 +2301,7 @@ that approval.</p>
 </tr>
 </tbody>
 </table>
-<p>The connected revocation propagation defaults are deadlines distinct from
+<p><strong><a href="ecl-1_standard.html#ECL1N-0098">ECL1N-0098</a> (continued)</strong> — The connected revocation propagation defaults are deadlines distinct from
 halt bounds under <a href="timing-safe-state-1.html#TS1-035">TS1-035</a>. A claim declares its halt acknowledgment bound
 separately (<a href="timing-safe-state-1.html#TS1-036">TS1-036</a>).</p>
 <p><span id="ECL1N-0099"><strong>ECL1N-0099</strong></span><a class="requirement-link" href="#ECL1N-0099" aria-label="Link to ECL1N-0099">§</a> — For federated deployments, trust-bundle updates and revocation exchange across
@@ -2331,8 +2328,11 @@ safe-state or containment actions;</li>
 <li><span id="ECL1N-0104"><strong>ECL1N-0104</strong></span><a class="requirement-link" href="#ECL1N-0104" aria-label="Link to ECL1N-0104">§</a> — Emergency Halt MUST take precedence when integrity failure or operator safety
 requires cessation of consequential action execution.</li>
 </ul>
-<p><span id="ECL1N-0029"><strong>ECL1N-0029</strong></span><a class="requirement-link" href="#ECL1N-0029" aria-label="Link to ECL1N-0029">§</a> — When the degraded-mode window expires or a critical integrity failure occurs, a
-system in Degraded Mode MUST transition to Restricted Mode or Emergency Halt.</p>
+<p><span id="ECL1N-0029"><strong>ECL1N-0029</strong></span><a class="requirement-link" href="#ECL1N-0029" aria-label="Link to ECL1N-0029">§</a> — When the degraded-mode window expires, a system in Degraded
+Mode MUST transition to at least Restricted Mode. When a critical integrity
+failure occurs, it MUST transition to Emergency Halt, under the trigger table
+and precedence of <a href="ecl-1_standard.html#ECL1N-0146">ECL1N-0146</a> and <a href="ecl-1_standard.html#ECL1N-0104">ECL1N-0104</a>. <a href="ecl-1_standard.html#ECL1N-0105">ECL1N-0105</a> permits a stricter state
+earlier.</p>
 <p><span id="ECL1N-0146"><strong>ECL1N-0146</strong></span><a class="requirement-link" href="#ECL1N-0146" aria-label="Link to ECL1N-0146">§</a> — Fallback states MUST take precedence in the order
 <code>Emergency Halt</code> &gt; <code>Restricted Mode</code> &gt; <code>Degraded Mode</code> &gt; ordinary operation, and
 each trigger condition in the following table MUST bring at least the state
@@ -2772,10 +2772,11 @@ includes all of the following:</p>
 </ul>
 <p>Informative example (non-normative):</p>
 <ul>
-<li><code>ECL-1 Version 1.0, L2, assessment-only, bounded-action-class-mediation, Class B independence, assessed 2026-11-16 for the declared SoI using DCMP-2 v2.0 / EBMP-2 v2.0, with production-equivalent=false disclosed; NIST AI RMF support asserted only through mapping packet urn:example:mapping-packet:nist-ai-rmf:1 for the bounded runtime monitoring and disengagement slices mapped here, with residual governance and legal duties explicitly disclosed; mapping status: internally reviewed.</code></li>
+<li>Mapping-backed claim template (replace every bracketed field): <code>ECL-1 [core version], L2, assessment-only, bounded-action-class-mediation, Class B control independence, assessed [date] for [SoI identifier or bounded description]; companion artifact version set: [immutable version-set reference]; invoked deployment or sector profiles: [identifiers and versions, or none]; production-equivalent: [true or false]; material limitations: [limitations, or none]; [framework name] support asserted through [mapping packet identifier and immutable reference] for [bounded obligation slice], with [residual obligations] disclosed; mapping status: [validation state].</code></li>
 </ul>
-<p>The example is a minimum mapping-backed claim statement; the claim that it
-summarizes still meets the other claim requirements, including, for a <code>Class B</code>
+<p>A completed mapping-backed statement supplies the fields of Sections 7.7
+and 10.4. The claim it summarizes also meets the other claim requirements,
+including, for a <code>Class B</code>
 claim, <a href="ecl-1_standard.html#ECL1N-0143">ECL1N-0143</a>&#x27;s identification of the separately administered trust domain,
 its administrators, and its controls.</p>
 <p>Disallowed shorthand (non-normative):</p>
@@ -2864,7 +2865,9 @@ evidence links for all applicable items.</li>
 <li><span id="ECL1N-0130"><strong>ECL1N-0130</strong></span><a class="requirement-link" href="#ECL1N-0130" aria-label="Link to ECL1N-0130">§</a> — Each checklist item MUST be marked <code>Pass</code>, <code>Fail</code>, or <code>Not Applicable</code>.</li>
 <li><span id="ECL1N-0153"><strong>ECL1N-0153</strong></span><a class="requirement-link" href="#ECL1N-0153" aria-label="Link to ECL1N-0153">§</a> — An item MUST NOT be marked <code>Not Applicable</code> unless its
 applicability predicate is false for the SoI or the claimed level is below
-the item's minimum level.</li>
+the item's minimum level. A component implementation report is not a
+mediation claim and does not use this checklist to claim a level; each
+requirement it reports instead states its own applicability and evidence.</li>
 <li><span id="ECL1N-0131"><strong>ECL1N-0131</strong></span><a class="requirement-link" href="#ECL1N-0131" aria-label="Link to ECL1N-0131">§</a> — <code>Not Applicable</code> classifications for delegation, emergency-control,
 boundary-challenge, or public-claim items MUST be supported by evidence that
 the applicability predicate is actually false for the declared SoI.</li>
@@ -3202,7 +3205,7 @@ the full package.</p>
 <td>L2</td>
 <td><a href="ecl-1_standard.html#FR-109">FR-109</a></td>
 <td>Risk thresholds defined</td>
-<td>Are HITL thresholds implemented for high-risk actions?</td>
+<td>Are human-in-the-loop thresholds implemented for high-risk actions?</td>
 <td>Threshold configuration and approval records</td>
 <td>Workflow review</td>
 <td>High-risk actions trigger the configured approval flow</td>
@@ -3348,7 +3351,7 @@ the full package.</p>
 <td>Does the register declare, for each decision input of each in-scope class, its class (<code>verifiable</code>, <code>actor_supplied</code>, or <code>judgment</code>), whether the class requires it, its source, its maximum age, any deadline, and the inputs it is computed from, and does the Decision Layer consult no input that the register does not declare (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>)?</td>
 <td>Consequential Action Register, data-flow description, write-access configuration of the input sources, the channel through which each input reaches the Decision Layer, decision service configuration</td>
 <td>Register review against the data flow, the write access of each source, and the channel of each input; review of the decision service configuration for inputs the register does not declare</td>
-<td>Every input has a class, a required or optional declaration, a source, and a maximum age, and every input that the Decision Layer obtains from a source within a set time has a deadline; no actor-controlled assertion or bypassable authenticity or transition check is declared <code>verifiable</code>; an independently validated transition is distinguished from an actor assertion; selection, completeness and freshness are evidenced; no model or detector output about meaning or risk is declared <code>verifiable</code>; each action class and each input of a class is declared once; an input computed from others is declared with the inputs it is computed from and has the least trusted class among them; and the Decision Layer consults no undeclared input</td>
+<td>Every input has a class, a required or optional declaration, a source, and a maximum age, and every input that the Decision Layer obtains from a source within a set time has a deadline; no actor-controlled assertion or bypassable authenticity or transition check is declared <code>verifiable</code>; an independently validated transition is distinguished from an actor assertion; selection, completeness and freshness are evidenced; no model or detector output about meaning or risk is declared <code>verifiable</code>; each action class and each input of a class is declared once; an input computed from others is declared with the inputs it is computed from, is <code>judgment</code> when it is a model or detector output about meaning or risk, and otherwise has the least trusted class among them; and the Decision Layer consults no undeclared input</td>
 <td>[ ] Pass [ ] Fail [ ] N/A</td>
 </tr>
 <tr>
@@ -3539,10 +3542,10 @@ the full package.</p>
 <td>L1</td>
 <td>Section 9.8</td>
 <td>Signed evidence produced</td>
-<td>Is every evidence-signing key inventoried, held out of the governed AI system&#x27;s reach, and bound to one component role (<a href="ecl-1_standard.html#ECL1N-0155">ECL1N-0155</a> to <a href="ecl-1_standard.html#ECL1N-0157">ECL1N-0157</a>)?</td>
-<td>Key inventory, every trust-policy version in force during the assessment period, key-store access configuration</td>
-<td>Reconciliation of the inventory with the trust policy, and a negative test in which the governed AI system attempts to read, export, and directly invoke each key</td>
-<td>Every accepted key is inventoried with all required fields, every attempt by the governed AI system fails, and no key signs for two of the decision point, enforcement point, observer, and time authority</td>
+<td>Is every accepted evidence-signing key inventoried, and are keys operated within the claim boundary isolated and role-bound as <a href="ecl-1_standard.html#ECL1N-0156">ECL1N-0156</a> and <a href="ecl-1_standard.html#ECL1N-0157">ECL1N-0157</a> require?</td>
+<td>Key inventory, every trust-policy version in force during the assessment period, key-store access configuration and component-role assignments</td>
+<td>Reconcile the inventory with the trust policy; acting as the governed AI system, attempt to read or export each in-boundary key that signs decision responses, evidence events, observations or time attestations, and to sign outside the component to which the key is bound; review each in-boundary key's component-role assignment</td>
+<td>Every accepted key is inventoried with all required fields; for those keys, the governed AI system's read and export attempts are refused, as are its signing attempts that bypass the bound component; no in-boundary key signs for two of the decision point, enforcement point, observer and time authority; request-only keys follow the requester-role rules of TRUST-POLICY-1</td>
 <td>[ ] Pass [ ] Fail [ ] N/A</td>
 </tr>
 <tr>
@@ -3561,10 +3564,10 @@ the full package.</p>
 <td>L2</td>
 <td>Section 9.8</td>
 <td>L2 or higher claim with signed evidence</td>
-<td>Are evidence-signing keys non-exportable, and is every signing operation recorded (<a href="ecl-1_standard.html#ECL1N-0160">ECL1N-0160</a>)?</td>
+<td>Are evidence-signing private keys operated within the claim boundary non-exportable in plaintext, and is every signing operation recorded (<a href="ecl-1_standard.html#ECL1N-0160">ECL1N-0160</a>)?</td>
 <td>Key-store export policy and configuration, signing-operation records</td>
-<td>Configuration review, an export attempt, and reconciliation of sampled evidence signatures with signing records</td>
-<td>Export fails, each sampled signature matches a record attributed to the requesting component, and the governed AI system cannot modify the records</td>
+<td>Configuration review, a plaintext-export attempt, and reconciliation of sampled evidence signatures with signing records</td>
+<td>Plaintext export fails, each sampled signature matches a record attributed to the requesting component, and the governed AI system cannot modify the records</td>
 <td>[ ] Pass [ ] Fail [ ] N/A</td>
 </tr>
 <tr>
@@ -3772,7 +3775,7 @@ the full package.</p>
 <td>PR-02</td>
 <td>L2</td>
 <td><a href="ecl-1_standard.html#FR-007">FR-007</a></td>
-<td>Boundary class not <code>component-or-profile-implementation</code></td>
+<td>Always</td>
 <td>Has the Negative Boundary Annex been challenged by negative testing?</td>
 <td>Negative-boundary test notes and findings</td>
 <td>Boundary challenge review</td>
@@ -3924,8 +3927,8 @@ mapping. None of them states a requirement of this document.</p>
 </ul>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>standard/ECL-1_Standard.md</code>, SHA-256 <code>6452a45b5a06885775128fe5c5d0d2c8c473c9b0782abb0c18568808d2c95bd3</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>standard/ECL-1_Standard.md</code>, SHA-256 <code>e5f2375234962ecb9b2225184d651c3eb657dc736d2715d79c3b393b1681ad7d</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

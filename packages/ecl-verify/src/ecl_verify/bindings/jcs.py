@@ -13,7 +13,7 @@ implements all of RFC 8785 for that content:
 - object members are sorted by the UTF-16 code units of their names (section 3.2.3).
 
 `loads` parses I-JSON (RFC 7493) for this purpose: duplicate member names, a lone surrogate,
-NaN, an infinity and a number that overflows a double are refused, and a number with a fraction or
+a Unicode noncharacter, NaN, an infinity and a number that overflows a double are refused, and a number with a fraction or
 an exponent becomes a float. `digest` is the `ecl.digest.sha-256.v1` digest object of the
 canonical bytes. packages/ecl-verify/tests/test_bindings_jcs.py pins the number samples of RFC 8785 Appendix B.
 """
@@ -53,6 +53,8 @@ def _string(value: str) -> str:
         code = ord(character)
         if 0xD800 <= code <= 0xDFFF:
             raise JcsError("a lone surrogate has no canonical form")
+        if 0xFDD0 <= code <= 0xFDEF or code & 0xFFFF in (0xFFFE, 0xFFFF):
+            raise JcsError("a Unicode noncharacter is not I-JSON text")
         escaped = _ESCAPES.get(character)
         if escaped is not None:
             parts.append(escaped)
@@ -140,8 +142,11 @@ def _serialize(value: Any, depth: int) -> str:
 
 def _utf16(name: str) -> bytes:
     for character in name:
-        if 0xD800 <= ord(character) <= 0xDFFF:
+        code = ord(character)
+        if 0xD800 <= code <= 0xDFFF:
             raise JcsError("a lone surrogate has no canonical form")
+        if 0xFDD0 <= code <= 0xFDEF or code & 0xFFFF in (0xFFFE, 0xFFFF):
+            raise JcsError("a Unicode noncharacter is not I-JSON text")
     return name.encode("utf-16-be")
 
 

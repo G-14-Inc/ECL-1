@@ -28,13 +28,15 @@
  * response carries an obligation to be met before release, or a witness result required before
  * release, records in `ecl.ext.obligation-discharge.v1` a discharge of each one, the obligations
  * taken from the response as the bundle holds it (`ecl.rule.prerelease-obligations-discharged.v1`).
- * A terminal event that records, in `ecl.ext.mcp-binding.v1`, a forward completed outside the
- * authorization's window or a release after `valid_until` is `ecl.error.expired.v1` (EBMP2-072); use
+ * A terminal event that records `released_after_valid_until` in `ecl.ext.mcp-binding.v1` gives
+ * `ecl.error.expired.v1`; a completion after the window is informational (EBMP2-072). Use
  * counts stay within the use policy (EBMP2-073); a release of single-use authority has its
  * consumption recorded (EBMP2-074); and an event that carries the MCP binding names the call its
  * request bound (EBMP2-075). Every report carries its scope (EBMP2-076), computed by `reportScope`.
  */
 
+import { interpretedExtension } from "../registry/registries.js";
+import { SOFTWARE_VERSION, SOURCE_BUILD } from "../version.js";
 import { AUDIENCE_MISMATCH, checkAuthorityEventBinding, checkEventBinding, checkResponseBinding, BindingError, REQUEST_BINDING_INVALID, SCOPE_MISMATCH } from "../binding/binding.js";
 import { analyzeBundle } from "../bundle/causal.js";
 import { fromCanonicalBase64, sha256Hex, toHex } from "../crypto/bytes.js";
@@ -46,8 +48,8 @@ import { decodeCanonicalJsonPayload, decodePayload, IntegrityError, PayloadNodeB
 import type { VerificationContext } from "../integrity/envelope.js";
 import { activeErrorCodes, rulePrecedence, ruleStage } from "../registry/registries.js";
 import { eclSchemas } from "../schema/validator.js";
-import { objectFindings } from "../semantic/object.js";
-import { DECISION_BASIS_RULE, inputKey } from "../semantic/rules.js";
+import { objectFindings, objectLimitExceeded } from "../semantic/object.js";
+import { DECISION_BASIS_RULE, inputKey, SemanticValidator } from "../semantic/rules.js";
 import { InstantError, instantNanoseconds, isInstant } from "../time.js";
 import {
   PURPOSE_APPROVAL,
@@ -60,7 +62,7 @@ import {
   TrustPolicyError,
 } from "../trust/policy.js";
 import type { TrustedKey } from "../trust/policy.js";
-import { basisValues, REGISTER_RULE, registerProblems, registerReference, registerUsageProblems, requestProblems, REQUIRED_RULE } from "./decision-basis.js";
+import { basisValues, timingCoverage, REGISTER_RULE, registerProblems, registerReference, registerUsageProblems, requestProblems, REQUIRED_RULE } from "./decision-basis.js";
 
 export const BUNDLE_SCHEMA = "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1";
 export const TIME_ATTESTATION_SCHEMA = "https://externalcontrollayer.ai/ns/schema/time-attestation/1";
@@ -84,7 +86,7 @@ export const EXPIRED = "ecl.error.expired.v1";
 export const RESOURCE_LIMIT = "ecl.error.resource-limit-exceeded.v1";
 export const THRESHOLD_NOT_MET = "ecl.error.threshold-not-met.v1";
 export const CAUSAL_CLOSURE_INCOMPLETE = "ecl.error.causal-closure-incomplete.v1";
-/** EBMP2-057 (F08): an object time or an attested time later than the evaluation time. */
+/** EBMP2-057: an object time or an attested time later than the evaluation time. */
 export const CLOCK_REGRESSED = "ecl.error.clock-regressed.v1";
 const OUTCOME_REASON = "ecl.ext.outcome-reason.v1";
 /** EBMP2-070: the record of the obligations Enforcement proved before the release, and its rule. */
@@ -108,10 +110,9 @@ const MCP_RESPONSE_STATES = new Set(["succeeded", "failed"]);
 
 /**
  * EBMP2-076: the scope of a verdict. The checks a verifier makes, in the order of the table of
- * EBMP2-076, then the statements that no verification establishes. Three checks and one
- * statement apply only to some bundles (`decision-basis-register` when the caller supplied a
- * register, as `registries/scope-checks.json` gives its condition); the others apply to every
- * report.
+ * EBMP2-076, then the statements that no verification establishes. Conditional items apply as
+ * `registries/scope-checks.json` declares, including `decision-basis-register` when the caller
+ * supplied a register; the other items apply to every report.
  */
 export const SCOPE_CHECKS: readonly string[] = [
   "envelope-signatures",
@@ -120,6 +121,7 @@ export const SCOPE_CHECKS: readonly string[] = [
   "object-rules",
   "decision-basis-recorded",
   "decision-basis-register",
+  "decision-input-timing",
   "bindings",
   "release-within-authority",
   "causal-completeness",
@@ -138,7 +140,9 @@ const SCOPE_DISCHARGE: readonly string[] = ["prerelease-obligations-discharge-re
 const SCOPE_POST_RELEASE = "post-release-obligations-met";
 /** EBMP2-076 and `registries/scope-checks.json`: the register item applies when the caller supplied one. */
 const SCOPE_REGISTER = "decision-basis-register";
-const CONDITIONAL_SCOPE = new Set([...SCOPE_DISCHARGE, SCOPE_POST_RELEASE, SCOPE_REGISTER]);
+const SCOPE_INPUT_TIMING = "decision-input-timing";
+const REASON_INPUT_TIMES = "input-times-not-recorded";
+const CONDITIONAL_SCOPE = new Set([...SCOPE_DISCHARGE, SCOPE_POST_RELEASE, SCOPE_REGISTER, SCOPE_INPUT_TIMING]);
 /** The sentence for people that each item of the scope stands for (the table of EBMP2-076). */
 export const SCOPE_TEXT: Readonly<Record<string, string>> = {
   "envelope-signatures":
@@ -149,7 +153,8 @@ export const SCOPE_TEXT: Readonly<Record<string, string>> = {
     "a separate time authority attests a time for each signature of each envelope and observation, binding that signature, each signature was valid at that time, and each time authority's key was valid then and is not revoked by the current trust policy at or before it",
   "object-rules": "each signed object satisfies its schema and semantic rules, the one-way rule for a recorded decision basis among them",
   "decision-basis-recorded": "each decision response records its decision basis",
-  "decision-basis-register": "each decision basis agrees with the Consequential Action Register supplied",
+  "decision-basis-register": "each decision basis matches the supplied register version, inputs, classes, required flags, sources and derivations; recorded input timing is compared with declared bounds only when the needed fields are supplied",
+  "decision-input-timing": "all applicable recorded input ages and acquisition deadlines were checked against the supplied register; this does not establish that recorded times are true",
   bindings:
     "each response binds its request, each event binds its request, response and authority, with the digests and use counts they name, each continuation binds the request, challenge and approval it continues, and each terminal event carries the outcome reason its state and response require",
   "release-within-authority": "each recorded release time lies within the authorization's validity window",
@@ -274,6 +279,7 @@ export interface BundleReport {
   readonly effects: readonly EffectEvidence[];
   readonly findings: readonly BundleFinding[];
   readonly verificationProfile: string;
+  readonly responseClockSkewSeconds: number;
   readonly acceptedCurrentTrustFailure: boolean;
   /** The register version the decision bases were checked against, if the caller gave one. */
   readonly register: JsonObject | null;
@@ -323,6 +329,7 @@ interface Entry {
   readonly payload: JsonObject;
   readonly check: EnvelopeCheck;
   readonly signingKeys: ReadonlySet<string>;
+  readonly verifiedSignerKeyIds: ReadonlySet<string>;
 }
 
 type AttemptKey = string;
@@ -344,7 +351,7 @@ interface Pairs {
 }
 
 /** The objects that pairing and binding consider (EBMP2-058): the `request-response-pairs` set. */
-const PAIRED_KINDS: ReadonlySet<string> = new Set(["decision_request", "decision_response", "authority_issued", "authority_consumed", "execution_released", "execution_terminal"]);
+const PAIRED_KINDS: ReadonlySet<string> = new Set(["decision_request", "decision_response", "authority_issued", "authority_consumed", "release_prepared", "execution_released", "execution_observed", "execution_terminal"]);
 
 function issue(code: string, message: string): BundleFinding {
   return { code, message };
@@ -449,6 +456,7 @@ function invalidReport(...findings: BundleFinding[]): BundleReport {
     effects: [],
     findings,
     verificationProfile: REFERENCE_PROFILE,
+    responseClockSkewSeconds: 0,
     acceptedCurrentTrustFailure: false,
     register: null,
     scope: { established: [], notEstablished: [], reasons: {}, checks: {} },
@@ -649,10 +657,10 @@ function combined(statuses: readonly string[]): string {
  * Check every signer, counted or not (TP1-004, TP1-005), in the order of IE1-040, step 6: every key
  * acceptable for the object's suite, purpose and principal, and for current status the same public
  * key as at signing; then no key revoked at its time; then every key within its validity interval.
- * `timeOf` gives each key's time (IE1-034); `compromise` is the current policy, whose revocations
+ * `timeOf` gives each signature entry's time by position (IE1-034); `compromise` is the current policy, whose revocations
  * reach historical validity (TP1-006).
  */
-function signerStatus(envelope: JsonObject, payload: JsonObject, policy: TrustPolicy, purpose: string, timeOf: (keyId: string) => string, original?: TrustPolicy, compromise?: TrustPolicy): string {
+function signerStatus(envelope: JsonObject, payload: JsonObject, policy: TrustPolicy, purpose: string, timeOf: (position: number) => string, original?: TrustPolicy, compromise?: TrustPolicy): string {
   const signatures = envelope["signatures"] as JsonObject[];
   const integrityPolicy = payload["integrity_policy"] as JsonObject;
   const acceptedSuites = integrityPolicy["accepted_suites"] as string[];
@@ -664,7 +672,7 @@ function signerStatus(envelope: JsonObject, payload: JsonObject, policy: TrustPo
     return POLICY_INVALID;
   }
   const role = { purpose, principal: principalOf(payload) };
-  return combined(signatures.map((signature) => keyStatus(signature, policy, role, timeOf(signature["key_id"] as string), original, compromise)));
+  return combined(signatures.map((signature, position) => keyStatus(signature, policy, role, timeOf(position), original, compromise)));
 }
 
 function checkSignature(envelope: JsonObject, policy: TrustPolicy, payload: JsonObject, at: string, signedPolicy?: TrustPolicy, keyTimes?: ReadonlyMap<string, string>): [string, ReadonlySet<string>] {
@@ -754,7 +762,7 @@ function coveredSignatures(covered: JsonValue | undefined, envelope: JsonObject)
 /** One trusted-time countersignature of an envelope, as IE1-032 to IE1-034 and TP1-006 judge it. */
 interface Countersignature {
   readonly counterId: string | null;
-  /** The attested time, when the attestation's payload states one (also for F08). */
+  /** The attested time, when stated, also used for the future-evidence check of EBMP2-057. */
   readonly attested: string | undefined;
   readonly valid: boolean;
   /** The positions of the envelope signatures that it covers, when it is valid. */
@@ -770,26 +778,23 @@ interface Countersignature {
  * Each signature entry of the attestation is a trust dependency, whose current status is its key's
  * at `now` under the current policy (TP1-006).
  */
-function evaluateCountersignature(entry: JsonValue, envelope: JsonObject, payload: JsonObject, versions: readonly TrustPolicy[], current: TrustPolicy, now: string): Countersignature {
+function evaluateCountersignature(entry: JsonValue, envelope: JsonObject, payload: JsonObject, versions: readonly TrustPolicy[], current: TrustPolicy, now: string, statement: JsonValue): Countersignature {
   const counterId = isString(get(entry, "counter_id")) ? (get(entry, "counter_id") as string) : null;
   const attestation = get(entry, "attestation");
   const signatures = isObject(attestation) && isArray(get(attestation, "signatures")) ? (get(attestation, "signatures") as JsonValue[]) : [];
-  let statement: JsonValue = null;
-  if (isObject(attestation) && get(attestation, "payload_type") === TIME_ATTESTATION_TYPE) {
-    try {
-      statement = decodeCanonicalJsonPayload(attestation);
-    } catch (error) {
-      if (!(error instanceof IntegrityError)) {
-        throw error;
-      }
-    }
-  }
   const attestedText = isObject(statement) ? textAt(statement, "issued_at") : undefined;
   const attested = attestedText !== undefined && isInstant(attestedText) ? attestedText : undefined;
   const issuer = isObject(statement) ? textAt(statement, "issuer", "id") : undefined;
   const reference = isObject(statement) ? objectAt(statement, "integrity_policy", "trust_policy") : undefined;
   const version = reference === undefined ? undefined : versions.find((item) => referenceMatches(item, reference));
   const role = { purpose: PURPOSE_TRUSTED_TIME, principal: issuer };
+  const payloadAllows = (signature: JsonObject): boolean => {
+    const policy = isObject(statement) ? objectAt(statement, "integrity_policy") : undefined;
+    const suites = get(policy ?? null, "accepted_suites");
+    const keys = get(policy ?? null, "eligible_key_ids");
+    return isArray(suites) && suites.includes(signature["suite_id"] as JsonValue)
+      && (!isArray(keys) || keys.length === 0 || keys.includes(signature["key_id"] as JsonValue));
+  };
   // Each signature entry of the attestation: historically valid with the countersignature (at its
   // attested time), or trusted-time-invalid with it; now, under the current policy, with the
   // public key of the version that the attestation names.
@@ -808,12 +813,12 @@ function evaluateCountersignature(entry: JsonValue, envelope: JsonObject, payloa
       historical: "valid",
       currentPolicyVersion: current.version,
       revokedEffectiveAt: revokedEffectiveAt(current, keyId, version?.key(keyId)?.publicKey),
-      current: version === undefined ? POLICY_INVALID : keyStatus(signature, current, role, now, version),
+      current: version === undefined || !payloadAllows(signature) ? POLICY_INVALID : keyStatus(signature, current, role, now, version),
     };
   });
   const invalid = (): Countersignature => ({
     counterId,
-    attested,
+    attested: get(entry, "claim") === TRUSTED_TIME_CLAIM ? attested : undefined,
     valid: false,
     covers: [],
     dependencies: dependencies.map((dependency) => ({ ...dependency, at: null, historical: TRUSTED_TIME_INVALID })),
@@ -859,7 +864,11 @@ function evaluateCountersignature(entry: JsonValue, envelope: JsonObject, payloa
     attested,
     valid: true,
     covers,
-    dependencies: dependencies.map((dependency, position) => (signatureVerifies(signed[position] as JsonObject, version, message) ? dependency : { ...dependency, historical: INTEGRITY_INVALID })),
+    dependencies: dependencies.map((dependency, position) => {
+      const signature = signed[position] as JsonObject;
+      if (!payloadAllows(signature)) return { ...dependency, historical: POLICY_INVALID, current: POLICY_INVALID };
+      return signatureVerifies(signature, version, message) ? dependency : { ...dependency, historical: INTEGRITY_INVALID };
+    }),
   };
 }
 
@@ -922,6 +931,7 @@ function evaluateEnvelope(
   findings: Sink,
   requireTrustedTime: boolean,
   ledger: Ledger,
+  attestationStatements: readonly JsonValue[],
 ): [EnvelopeCheck, ReadonlySet<string>, TrustDependency[]] {
   const identifier = identifierOf(payload);
   const kind = kindOf(payload);
@@ -945,7 +955,7 @@ function evaluateEnvelope(
         current: status,
       };
     });
-  const invalid = objectFindings(payload);
+  const invalid = [...objectFindings(payload), ...new SemanticValidator().extensionFindings(envelope)];
   ledger.ran("object-schema", index);
   ledger.ran("object-semantics", index);
   if (invalid.length > 0) {
@@ -974,7 +984,7 @@ function evaluateEnvelope(
   let dependencies: TrustDependency[];
   try {
     const entries = get(envelope, "countersignatures");
-    const counters = (isArray(entries) ? entries : []).map((entry) => evaluateCountersignature(entry, envelope, payload, versions, currentPolicy, now));
+    const counters = (isArray(entries) ? entries : []).map((entry, position) => evaluateCountersignature(entry, envelope, payload, versions, currentPolicy, now, attestationStatements[position] ?? null));
     // IE1-034: each covered signature at the earliest attested time of the countersignatures that
     // cover it, every other signature at the object's own time.
     const times: string[] = signatures.map(() => at);
@@ -993,10 +1003,11 @@ function evaluateEnvelope(
     const keyTimes = new Map<string, string>();
     signatures.forEach((signature, position) => {
       const keyId = signature["key_id"] as string;
-      // A key that signs twice (under two suites) at two times is taken at the object's own time.
-      keyTimes.set(keyId, keyTimes.has(keyId) && keyTimes.get(keyId) !== times[position] ? at : (times[position] as string));
+      // Only the standalone API uses this map: it rejects duplicate (key, suite) entries
+      // before reading it, and signerStatus rejects one key appearing under another suite.
+      keyTimes.set(keyId, times[position] as string);
     });
-    const timeOf = (keyId: string): string => keyTimes.get(keyId) ?? at;
+    const timeOf = (position: number): string => times[position] ?? at;
     const used = times.filter((_, position) => covered[position]);
     trusted = used.length === 0 ? undefined : used.reduce((earliest, time) => (nanos(time) < nanos(earliest) ? time : earliest));
     const allCovered = counters.length > 0 && covered.every((item) => item);
@@ -1005,7 +1016,7 @@ function evaluateEnvelope(
       trusted = undefined;
     }
     if (nanos(at) > nanos(now) || counters.some((counter) => counter.attested !== undefined && nanos(counter.attested) > nanos(now))) {
-      // EBMP2-057 (F08): evidence cannot be later than the instant at which it is verified.
+      // EBMP2-057: evidence cannot be later than the instant at which it is verified.
       historical = CLOCK_REGRESSED;
     } else if (counters.some((counter) => !counter.valid)) {
       historical = TRUSTED_TIME_INVALID;
@@ -1034,9 +1045,9 @@ function evaluateEnvelope(
       acceptedSuites.includes(signature["suite_id"] as string)
       && (eligibleKeys.length === 0 || eligibleKeys.includes(signature["key_id"] as string));
     const message = signingInput(envelope["payload_type"] as string, decodePayload(envelope));
-    dependencies = signatures.filter(isObject).map((signature) => {
+    dependencies = signatures.filter(isObject).map((signature, position) => {
       const keyId = signature["key_id"] as string;
-      const own = timeOf(keyId);
+      const own = timeOf(position);
       const allowedByPayload = inPayloadPolicy(signature);
       let status = envelopeWide
         ? historical
@@ -1064,9 +1075,11 @@ function evaluateEnvelope(
     for (const counter of counters) {
       dependencies.push(...counter.dependencies.map((dependency) => ({ index, ...dependency })));
     }
+    const objectSignersValid = dependencies.filter((dependency) => dependency.role === "signer").every((dependency) => dependency.historical === "valid");
     for (const check of TRUST_CHECKS) {
-      ledger.ran(check, index);
+      ledger.ran(check, index, check === "historical-signers" || check === "current-compromise-knowledge" ? objectSignersValid : true);
     }
+    ledger.ran("attestation-signers", index, dependencies.filter((dependency) => dependency.role === "time-authority").every((dependency) => dependency.historical === "valid"));
     ledger.ran("trusted-time-coverage", index, allCovered);
     ledger.ran("current-status", index, dependencies.every((dependency) => dependency.current === "valid") && current === "valid");
   } catch (error) {
@@ -1238,24 +1251,22 @@ function extensionValues(value: JsonObject, identifier: string): JsonObject[] {
   const found: JsonObject[] = [];
   for (const extension of extensions) {
     const item = isObject(extension) ? get(extension, "value") : undefined;
-    if (isObject(extension) && get(extension, "id") === identifier && isObject(item)) {
+    if (isObject(extension) && get(extension, "id") === identifier && interpretedExtension(value, extension) && isObject(item)) {
       found.push(item);
     }
   }
   return found;
 }
 
-/** EBMP2-073: the uses an authorization allows: 1 for `single_use`, else `max_uses` when it has one. */
+/** EBMP2-073: one use for supported single-use authority; null means unsupported. */
 function useLimit(response: JsonObject): number | null {
   const authorization = objectAt(response, "authorization");
   if (authorization === undefined) {
     return null;
   }
-  if (get(authorization, "use_policy") === "single_use") {
-    return 1;
-  }
   const uses = get(authorization, "max_uses");
-  return isInteger(uses) ? uses : null;
+  return get(authorization, "use_policy") === "single_use" &&
+    (!Object.hasOwn(authorization, "max_uses") || (isInteger(uses) && uses === 1)) ? 1 : null;
 }
 
 /**
@@ -1275,13 +1286,17 @@ function checkUseCounts(consumed: ReadonlyArray<readonly [Entry, Entry]>, findin
   }
   for (const events of byAuthorization.values()) {
     const limit = useLimit((events[0] as readonly [Entry, Entry])[1].payload);
+    if (limit === null) {
+      findings.push(issue(DECISION_BINDING_INVALID, "the authorization uses an unsupported use policy or limit"));
+      continue;
+    }
     const counts: number[] = [];
     for (const [event] of events) {
       const count = get(objectAt(event.payload, "event") ?? {}, "use_count");
       if (!isInteger(count)) {
         continue;
       }
-      if (count < 1 || (limit !== null && count > limit)) {
+      if (count < 1 || count > limit) {
         findings.push(issue(DECISION_BINDING_INVALID, `envelope ${event.index}: the use count is outside the authorization's use policy`));
       }
       counts.push(count);
@@ -1289,7 +1304,7 @@ function checkUseCounts(consumed: ReadonlyArray<readonly [Entry, Entry]>, findin
     if (new Set(counts).size !== counts.length) {
       findings.push(issue(DECISION_BINDING_INVALID, "two consumptions of one authorization record one use"));
     }
-    if (limit !== null && events.length > limit) {
+    if (events.length > limit) {
       findings.push(issue(DECISION_BINDING_INVALID, "an authorization is consumed more often than its use policy allows"));
     }
   }
@@ -1362,8 +1377,8 @@ function mcpBindingProblem(event: JsonObject, request: JsonObject): string | und
  * and root trace, has a greater attempt and the same action, actor, subject and requested
  * authority; it lists the response and the approval among its causal predecessors by identifier
  * and digest; when the continuation's own response is an `admit`, the approval is signed only by
- * keys with the approval purpose, none bound to the request's actor, and, when it states
- * `expires_at`, expires after that response was evaluated; and no two requests
+ * keys with the approval purpose, none bound to the request's actor, and its required
+ * `expires_at` is after that response was evaluated; and no two admitted requests
  * continue one response. Findings of stage 5,
  * `ecl.error.decision-binding-invalid.v1`. Every check whose objects the bundle holds is made: a
  * named object that the bundle does not hold exempts no other check, leaves the causal closure
@@ -1416,9 +1431,11 @@ function checkContinuations(entries: readonly Entry[], findings: Sink, ledger: L
         }
       }
     }
-    if (responseId !== undefined) {
+    const own = textAt(request.payload, "message_id");
+    const answer = entries.find((entry) => !entry.observation && entry.check.kind === "decision_response" && own !== undefined && textAt(entry.payload, "request_id") === own);
+    if (responseId !== undefined && answer !== undefined && textAt(answer.payload, "outcome") === "admit") {
       if (continued.has(responseId)) {
-        fail("continues a response that another request continues");
+        fail("admits a continuation of a response that another admitted request continues");
       }
       continued.add(responseId);
     }
@@ -1463,8 +1480,6 @@ function checkContinuations(entries: readonly Entry[], findings: Sink, ledger: L
       // the correct answer to an approval that is not acceptable), the approval rests on the
       // approval service's keys, none of them the requesting actor's, as EBMP2-070 condition 5 asks
       // of an approval record, and is still in force when that response is evaluated.
-      const own = textAt(request.payload, "message_id");
-      const answer = entries.find((entry) => !entry.observation && entry.check.kind === "decision_response" && own !== undefined && textAt(entry.payload, "request_id") === own);
       if (answer !== undefined && textAt(answer.payload, "outcome") === "admit") {
         const keys = signerKeys(approval, versions);
         if (keys.length === 0 || keys.some((key) => !key.purposes.includes(PURPOSE_APPROVAL))) {
@@ -1603,7 +1618,7 @@ function pairMain(entries: readonly Entry[], checks: BindingCheck[], found: Find
       }
       continue;
     }
-    if (kind !== "execution_released" && kind !== "execution_terminal") {
+    if (kind !== "release_prepared" && kind !== "execution_released" && kind !== "execution_observed" && kind !== "execution_terminal") {
       continue;
     }
     releaseRecorded = releaseRecorded || kind === "execution_released";
@@ -1664,13 +1679,14 @@ function pairMain(entries: readonly Entry[], checks: BindingCheck[], found: Find
       released.add(key);
       boundReleases.add(entry.index);
       const authorization = pairedResponse === undefined ? undefined : objectAt(pairedResponse.payload, "authorization");
-      const start = authorization === undefined ? undefined : textAt(authorization, "valid_from");
-      const end = authorization === undefined ? undefined : textAt(authorization, "valid_until");
-      const observed = textAt(payload, "observed_at");
+      const start = instantOrNull(authorization === undefined ? null : get(authorization, "valid_from"));
+      const end = instantOrNull(authorization === undefined ? null : get(authorization, "valid_until"));
+      const observed = instantOrNull(get(payload, "observed_at"));
       const guard = releaseGuardNs(payload);
       // EBMP2-050 and EBMP2-071: the release is observed no earlier than valid_from, and the
       // observation plus the declared release guard is earlier than valid_until.
-      if (start === undefined || end === undefined || observed === undefined || guard === null || !(nanos(start) <= nanos(observed)) || !(nanos(observed) + guard < nanos(end))) {
+      // Invalid operands already have stage-3 schema findings; preserve those diagnostics.
+      if (start !== null && end !== null && observed !== null && guard !== null && (start > observed || observed + guard >= end)) {
         events.push(issue(EXPIRED, "the release, with its declared release guard, lies outside the authorization's validity window"));
       }
     }
@@ -1717,10 +1733,11 @@ function obligationKey(identifier: string, kind: string): ObligationKey {
  * after execution (EBMP2-076); and the value of each obligation it carries, the witness's URI for
  * the witness result.
  */
-function obligationKeys(response: JsonObject): [ObligationKey[], Set<ObligationKey>, boolean, Map<ObligationKey, JsonValue | undefined>] {
+function obligationKeys(response: JsonObject): [ObligationKey[], Set<ObligationKey>, boolean, Map<ObligationKey, Array<JsonValue | undefined>>] {
   const required: ObligationKey[] = [];
   const carried = new Set<ObligationKey>();
-  const values = new Map<ObligationKey, JsonValue | undefined>();
+  const values = new Map<ObligationKey, Array<JsonValue | undefined>>();
+  const otherValues = new Map<ObligationKey, Array<JsonValue | undefined>>();
   let postRelease = false;
   const obligations = get(response, "obligations");
   for (const item of isArray(obligations) ? obligations : []) {
@@ -1734,11 +1751,10 @@ function obligationKeys(response: JsonObject): [ObligationKey[], Set<ObligationK
     }
     const key = obligationKey(identifier, kind);
     carried.add(key);
-    if (!values.has(key)) {
-      values.set(key, get(item, "value"));
-    }
+    otherValues.set(key, [...(otherValues.get(key) ?? []), get(item, "value")]);
     const satisfaction = get(item, "satisfaction");
     if (satisfaction === "before_release") {
+      values.set(key, [...(values.get(key) ?? []), get(item, "value")]);
       if (!required.includes(key)) {
         required.push(key);
       }
@@ -1753,14 +1769,13 @@ function obligationKeys(response: JsonObject): [ObligationKey[], Set<ObligationK
     if (isObject(witness) && get(witness, "outcome") === "required_before_release" && isString(uri)) {
       const key = obligationKey(uri, WITNESS_OBLIGATION_TYPE);
       carried.add(key);
-      if (!values.has(key)) {
-        values.set(key, uri);
-      }
+      values.set(key, [...(values.get(key) ?? []), uri]);
       if (!required.includes(key)) {
         required.push(key);
       }
     }
   }
+  for (const [key, occurrences] of otherValues) if (!values.has(key)) values.set(key, occurrences);
   return [required, carried, postRelease, values];
 }
 
@@ -1793,7 +1808,7 @@ function discharges(event: JsonObject): [boolean, Array<[number, number, JsonObj
   let present = false;
   const found: Array<[number, number, JsonObject]> = [];
   (isArray(extensions) ? extensions : []).forEach((extension, index) => {
-    if (!isObject(extension) || get(extension, "id") !== OBLIGATION_DISCHARGE) {
+    if (!isObject(extension) || get(extension, "id") !== OBLIGATION_DISCHARGE || !interpretedExtension(event, extension)) {
       return;
     }
     present = true;
@@ -1876,7 +1891,7 @@ function signerKeys(entry: Entry, versions: readonly TrustPolicy[]): TrustedKey[
   if (version === undefined) {
     return keys;
   }
-  for (const keyId of signatureIds(entry.envelope)) {
+  for (const keyId of [...entry.verifiedSignerKeyIds].sort()) {
     const key = version.key(keyId);
     if (key !== undefined) {
       keys.push(key);
@@ -1956,6 +1971,9 @@ function proofProblems(item: JsonObject, key: ObligationKey, value: JsonValue | 
     return problems;
   }
   const eventType = textAt(payload, "event_type");
+  if ((eventType === "verification") !== proof.observation) {
+    problems.push([OBLIGATION_UNPROVEN, path, "names a carried proof in the wrong bundle collection"]);
+  }
   const event = objectAt(payload, "event") ?? {};
   if (kind === WITNESS_OBLIGATION_TYPE) {
     if (eventType !== "verification") {
@@ -2098,12 +2116,10 @@ function checkObligationDischarge(entries: readonly Entry[], pairs: Pairs, findi
       } else if (isObject(digest) && !pythonEquals(digest, { algorithm: "ecl.digest.sha-256.v1", value: objectDigest(carriedProof.payload) })) {
         problems.push([DISCHARGE_RULE, "/proof/digest", "names an object of the bundle by another digest"]);
       } else {
-        if (!issuerNamed(key, values.get(key), release.response)) {
-          // The decision names no issuer, so the issuer test of condition b is not made and the
-          // proofs are not reported verified (EBMP2-076, `issuer-not-named`).
-          unnamed = true;
+        for (const value of values.get(key) ?? [undefined]) {
+          if (!issuerNamed(key, value, release.response)) unnamed = true;
+          problems.push(...proofProblems(item, key, value, carriedProof, release, versions));
         }
-        problems.push(...proofProblems(item, key, values.get(key), carriedProof, release, versions));
       }
       for (const [code, suffix, message] of problems) {
         findings.push(issue(code, `${path}${suffix}: ${message}`));
@@ -2121,7 +2137,7 @@ function checkObligationDischarge(entries: readonly Entry[], pairs: Pairs, findi
 function reasonOf(entry: Entry, response: Entry | undefined, findings: Sink): string | null {
   const state = textAt(entry.payload, "event", "state");
   const extensions = get(entry.payload, "extensions");
-  const matching = isArray(extensions) ? extensions.filter((extension) => isObject(extension) && pythonEquals(get(extension, "id"), OUTCOME_REASON)) : [];
+  const matching = isArray(extensions) ? extensions.filter((extension) => isObject(extension) && pythonEquals(get(extension, "id"), OUTCOME_REASON) && interpretedExtension(entry.payload, extension)) : [];
   if (matching.length > 1) {
     findings.push(issue(SEMANTIC_INVALID, "a terminal has multiple outcome reasons"));
   }
@@ -2264,17 +2280,19 @@ function effectsOf(entries: readonly Entry[], pairs: Pairs, findings: Sink, clos
  * with the register when the caller supplies one. These are findings of stage 3 of EBMP2-068,
  * ranked by their precedence.
  */
-function checkDecisionBases(entries: readonly Entry[], findings: Sink, register: JsonObject | null, skew: number, ledger: Ledger): void {
+function checkDecisionBases(entries: readonly Entry[], findings: Sink, register: JsonObject | null, skew: number, ledger: Ledger): [boolean, boolean] {
+  let timingApplied = false, timingComplete = true;
   // The one-way rule has something to check only in a decision response; it holds for the others.
   for (const entry of entries) {
     ledger.ran("decision-basis-one-way", entry.index);
   }
-  const requests = new Map<string, JsonObject>();
+  const requests = new Map<string, JsonObject | null>();
   for (const entry of entries) {
     const identifier = textAt(entry.payload, "message_id");
-    // As the reference's dict comprehension: a later request with the same identifier wins.
+    // Duplicate identifiers already fail stage 3; no first/last request is selected
+    // for dependent checks by array position (EBMP2-029, EBMP2-068).
     if (!entry.observation && textAt(entry.payload, "protocol") === "DCMP-2" && textAt(entry.payload, "message_type") === "decision_request" && identifier !== undefined) {
-      requests.set(identifier, entry.payload);
+      requests.set(identifier, requests.has(identifier) ? null : entry.payload);
     }
   }
   for (const entry of entries) {
@@ -2294,7 +2312,7 @@ function checkDecisionBases(entries: readonly Entry[], findings: Sink, register:
     }
     const requestId = textAt(payload, "request_id");
     const request = requestId === undefined ? undefined : requests.get(requestId);
-    if (found.length !== 1 || request === undefined) {
+    if (found.length !== 1 || request === undefined || request === null) {
       continue;
     }
     const [index, value] = found[0] as [number, JsonValue | undefined];
@@ -2309,10 +2327,15 @@ function checkDecisionBases(entries: readonly Entry[], findings: Sink, register:
     }
     const action = get(request, "action");
     const actionClass = isObject(action) ? get(action, "action_class") : undefined;
+    const [applied, complete] = timingCoverage(value, register, actionClass, get(payload, "evaluated_at"));
+    timingApplied ||= applied;
+    timingComplete &&= complete;
+    ledger.ran("decision-input-timing", entry.index, complete);
     for (const [path, message] of registerProblems(value, register, actionClass, get(payload, "evaluated_at"))) {
       findings.push(issue(REGISTER_RULE, `object ${entry.index}: /extensions/${index}/value${path}: ${message}`));
     }
   }
+  return [timingApplied, timingComplete];
 }
 
 function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, history: readonly TrustPolicy[], skew: number, acceptCurrentTrustFailure: boolean, requireTrustedTime: boolean, register: JsonObject | null): BundleReport {
@@ -2326,6 +2349,8 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
   if (!isObject(source)) {
     return invalidReport(issue(SCHEMA_INVALID, "the evidence bundle is not a JSON object"));
   }
+  const excess = objectLimitExceeded(source);
+  if (excess !== undefined) return invalidReport(issue(RESOURCE_LIMIT, excess));
   const envelopes = get(source, "envelopes");
   const observations = Object.prototype.hasOwnProperty.call(source, "observations") ? source["observations"] : [];
   if (!isArray(envelopes) || !isArray(observations)) {
@@ -2355,6 +2380,7 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
       effects: [],
       findings: findings.ordered(),
       verificationProfile: REFERENCE_PROFILE,
+    responseClockSkewSeconds: 0,
       acceptedCurrentTrustFailure: false,
       register: null,
       scope: { established: [], notEstablished: [], reasons: {}, checks: {} },
@@ -2370,6 +2396,7 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
   for (let index = 0; index < all.length; index += 1) {
     const [isObservation, envelope] = all[index] as [boolean, JsonValue];
     let payload: JsonValue;
+    if (nodeCount >= MAX_TOTAL_PAYLOAD_NODES) return budgetExceeded();
     // EBMP2-062: each payload is parsed with the nodes that remain of the bundle's budget as its
     // value budget, so that no payload is built beyond the budget (IE1-029; EBMP2-068, stage 2).
     try {
@@ -2397,6 +2424,35 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
     }
     decoded.push([index, isObservation, envelope as JsonObject, payload]);
   }
+  // EBMP2-062 counts each immediate attestation payload before signature work. IE1-032
+  // forbids nested countersignatures; reuse these bounded statements without recursion.
+  const attestationStatements = new Map<number, JsonValue[]>();
+  for (let index = 0; index < all.length; index += 1) {
+    const envelope = (all[index] as [boolean, JsonValue])[1] as JsonObject;
+    const statements: JsonValue[] = [];
+    const counters = get(envelope, "countersignatures");
+    for (const entry of isArray(counters) ? counters : []) {
+      if (nodeCount >= MAX_TOTAL_PAYLOAD_NODES) return budgetExceeded();
+      const attestation = get(entry, "attestation") as JsonObject;
+      let statement: JsonValue;
+      try {
+        statement = decodeCanonicalJsonPayload(attestation, MAX_TOTAL_PAYLOAD_NODES - nodeCount);
+      } catch (error) {
+        if (!(error instanceof IntegrityError)) throw error;
+        if (error.code === RESOURCE_LIMIT) {
+          if (error instanceof PayloadNodeBudgetError) return budgetExceeded();
+          findings.add(STAGE_PAYLOADS, issue(RESOURCE_LIMIT, `envelope ${index} has an attestation payload exceeding a declared limit`));
+          return { ...invalidReport(...findings.ordered()), envelopeChecks: [...checks] };
+        }
+        statements.push(null);
+        continue;
+      }
+      nodeCount += nodes(statement, MAX_TOTAL_PAYLOAD_NODES - nodeCount);
+      if (nodeCount > MAX_TOTAL_PAYLOAD_NODES) return budgetExceeded();
+      statements.push(get(attestation, "payload_type") === TIME_ATTESTATION_TYPE ? statement : null);
+    }
+    attestationStatements.set(index, statements);
+  }
   const ledger = new Ledger();
   const versions = [policy, ...history];
   const entries: Entry[] = [];
@@ -2404,13 +2460,14 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
   const seenIds = new Set<string>();
   for (const [index, isObservation, envelope, payload] of decoded) {
     ledger.ran("envelope-integrity", index);
-    for (const set of ["bundle-objects", "trust-dependencies", "object-signatures"]) {
+    for (const set of ["bundle-objects", "trust-dependencies", "object-signatures", "object-signing-dependencies"]) {
       ledger.member(set, index);
     }
-    const [check, signingKeys, found] = evaluateEnvelope(envelope, payload, index, isObservation, policy, versions, now, findings.at(STAGE_OBJECTS), requireTrustedTime, ledger);
+    const [check, signingKeys, found] = evaluateEnvelope(envelope, payload, index, isObservation, policy, versions, now, findings.at(STAGE_OBJECTS), requireTrustedTime, ledger, attestationStatements.get(index) ?? []);
     dependencies.push(...found);
     checks.push(check);
-    entries.push({ index, observation: isObservation, envelope, payload, check, signingKeys });
+    const verifiedSignerKeyIds = new Set(found.filter((dependency) => dependency.role === "signer" && dependency.historical === "valid").map((dependency) => dependency.keyId));
+    entries.push({ index, observation: isObservation, envelope, payload, check, signingKeys, verifiedSignerKeyIds });
     if (check.historical === SCHEMA_INVALID || check.historical === SEMANTIC_INVALID) {
       // The object's own schema or semantic rules refuse it, and their findings are listed; its
       // signatures were not evaluated, so this is a finding of stage 3, not one about the signers.
@@ -2431,7 +2488,7 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
     }
     ledger.ran("observation-kind", index);
   }
-  checkDecisionBases(entries, findings.at(STAGE_OBJECTS), register, skew, ledger);
+  const [timingApplied, timingComplete] = checkDecisionBases(entries, findings.at(STAGE_OBJECTS), register, skew, ledger);
   const pairs = pairMain(entries, bindings, findings, skew, ledger);
   const continuationMissing = checkContinuations(entries, findings.at(STAGE_PAIRING), ledger, versions);
   checkEventMessageReferences(entries, pairs, bindings, findings.at(STAGE_EVENTS), ledger);
@@ -2492,10 +2549,10 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
     ledger.ran("attempt-authority-consumed", entry.index, !keys.some(silent));
   }
   for (const entry of entries) {
-    if (entry.observation || entry.check.kind !== "execution_terminal") {
+    if (entry.observation || (entry.check.kind !== "execution_observed" && entry.check.kind !== "execution_terminal")) {
       continue;
     }
-    if (textAt(entry.payload, "event", "state") !== "succeeded") {
+    if (entry.check.kind === "execution_terminal" && !["succeeded", "failed", "partially_succeeded", "unknown", "rolled_back", "compensated"].includes(textAt(entry.payload, "event", "state") ?? "")) {
       continue;
     }
     const key = attemptKey(entry.payload, true);
@@ -2503,7 +2560,10 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
       continue;
     }
     if (key === undefined || !pairs.consumed.has(key) || !pairs.released.has(key)) {
-      findings.add(STAGE_CAUSAL, issue(DECISION_BINDING_INVALID, "a succeeded attempt lacks consumed authority or release evidence"));
+      const message = entry.check.kind === "execution_observed"
+        ? "a running attempt lacks consumed authority or release evidence"
+        : "a post-release terminal attempt lacks consumed authority or release evidence";
+      findings.add(STAGE_CAUSAL, issue(DECISION_BINDING_INVALID, message));
     }
   }
   // EBMP2-074: a release of single-use authority has its consumption recorded, whatever the
@@ -2551,6 +2611,7 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
     effects,
     findings: findings.ordered(),
     verificationProfile: REFERENCE_PROFILE,
+    responseClockSkewSeconds: 0,
     acceptedCurrentTrustFailure: accepted,
     register: null,
     // The conditional items of the scope that apply to this bundle, and the stated reasons that
@@ -2563,9 +2624,10 @@ function verifyChecked(source: JsonValue, policy: TrustPolicy, now: string, hist
     scope: {
       established: [],
       checks: {},
-      notEstablished: [...(dischargeApplied ? SCOPE_DISCHARGE : []), ...(postRelease ? [SCOPE_POST_RELEASE] : [])],
+      notEstablished: [...(dischargeApplied ? SCOPE_DISCHARGE : []), ...(postRelease ? [SCOPE_POST_RELEASE] : []), ...(timingApplied ? [SCOPE_INPUT_TIMING] : [])],
       reasons: {
         ...(pairs.releaseRecorded ? {} : { [SCOPE_RELEASE]: REASON_NO_RELEASE }),
+        ...(timingApplied && !timingComplete ? { [SCOPE_INPUT_TIMING]: REASON_INPUT_TIMES } : {}),
         // Both reasons true, the report gives `proof-not-ecl-object`: a proof that is not carried
         // was not checked at all.
         ...(dischargeApplied && uncarried ? { [SCOPE_PROOFS]: REASON_PROOF_NOT_ECL_OBJECT } : dischargeApplied && unnamed ? { [SCOPE_PROOFS]: REASON_ISSUER_NOT_NAMED } : {}),
@@ -2586,6 +2648,7 @@ export const SCOPE_CHECK_ORDER: readonly string[] = [
   "current-compromise-knowledge",
   "trusted-time-countersignatures",
   "trusted-time-coverage",
+  "attestation-signers",
   "current-status",
   "object-schema",
   "object-semantics",
@@ -2594,6 +2657,7 @@ export const SCOPE_CHECK_ORDER: readonly string[] = [
   "decision-basis-present",
   "decision-basis-one-way",
   "decision-basis-register",
+  "decision-input-timing",
   "pairing",
   "continuation-history",
   "response-binding",
@@ -2618,12 +2682,13 @@ export const SCOPE_CHECK_ORDER: readonly string[] = [
  * establish and the checks that must hold over it, in the order of SCOPE_CHECK_ORDER.
  */
 export const SCOPE_ITEM_CHECKS: Readonly<Record<string, { readonly objectSet: string; readonly checks: readonly string[] }>> = {
-  "envelope-signatures": { objectSet: "trust-dependencies", checks: ["envelope-integrity", "time-not-after-evaluation", "historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures"] },
+  "envelope-signatures": { objectSet: "object-signing-dependencies", checks: ["envelope-integrity", "time-not-after-evaluation", "historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures"] },
   "current-trust": { objectSet: "trust-dependencies", checks: ["current-status"] },
-  "trusted-time": { objectSet: "object-signatures", checks: ["historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures", "trusted-time-coverage"] },
+  "trusted-time": { objectSet: "object-signatures", checks: ["historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures", "trusted-time-coverage", "attestation-signers"] },
   "object-rules": { objectSet: "bundle-objects", checks: ["object-schema", "object-semantics", "observation-kind", "identifiers-unique", "decision-basis-one-way"] },
   "decision-basis-recorded": { objectSet: "decision-responses", checks: ["decision-basis-present"] },
   "decision-basis-register": { objectSet: "decision-responses", checks: ["decision-basis-register"] },
+  "decision-input-timing": { objectSet: "decision-responses", checks: ["decision-basis-register", "decision-input-timing"] },
   bindings: { objectSet: "request-response-pairs", checks: ["pairing", "continuation-history", "response-binding", "event-binding", "outcome-reasons"] },
   "release-within-authority": { objectSet: "released-attempts", checks: ["release-window"] },
   "causal-completeness": {
@@ -2657,6 +2722,14 @@ function itemChecks(report: BundleReport, item: string): ScopeChecks | undefined
     return undefined;
   }
   const objects = scopeObjects(report, required.objectSet).sort((a, b) => a - b);
+  if (required.objectSet === "trust-dependencies" || required.objectSet === "object-signing-dependencies") {
+    // A reconstructed report must retain the dependencies behind its recorded checks.
+    // An attestation signer cannot stand in for the signer of an object.
+    const dependencies = new Set(report.trustDependencies
+      .filter((dependency) => required.objectSet === "trust-dependencies" || dependency.role === "signer")
+      .map((dependency) => dependency.index));
+    if (report.envelopeChecks.some((check) => !dependencies.has(check.index) || !objects.includes(check.index))) return undefined;
+  }
   for (const check of required.checks) {
     const record = report.checksRun[check];
     if (objects.length === 0) {
@@ -2708,6 +2781,7 @@ export function reportScope(report: BundleReport): ReportScope {
     if (report.register !== null) {
       established.add("decision-basis-register");
     }
+    if (applies.has(SCOPE_INPUT_TIMING) && !(SCOPE_INPUT_TIMING in reasons) && report.register !== null) established.add(SCOPE_INPUT_TIMING);
     if (report.verdict !== "incomplete") {
       established.add("causal-completeness");
     }
@@ -2722,11 +2796,9 @@ export function reportScope(report: BundleReport): ReportScope {
   // historically valid, a counted or uncounted signature that does not verify among the reasons:
   // envelope-signatures over the signers of envelopes and observations, trusted-time over the
   // signers of the attestations.
-  for (const [item, role] of [
-    ["envelope-signatures", "signer"],
-    ["trusted-time", "time-authority"],
-  ] as const) {
-    if (report.trustDependencies.some((dependency) => dependency.role === role && dependency.historical !== "valid")) {
+  for (const item of ["envelope-signatures", "trusted-time"] as const) {
+    if (checks.some((check) => check.historical !== "valid") ||
+        report.trustDependencies.some((dependency) => (item === "trusted-time" || dependency.role === "signer") && dependency.historical !== "valid")) {
       established.delete(item);
     }
   }
@@ -2745,7 +2817,8 @@ export function reportScope(report: BundleReport): ReportScope {
       !CONDITIONAL_SCOPE.has(item) ||
       (SCOPE_DISCHARGE.includes(item) && discharge) ||
       (item === SCOPE_POST_RELEASE && postRelease) ||
-      (item === SCOPE_REGISTER && report.register !== null),
+      (item === SCOPE_REGISTER && report.register !== null) ||
+      (item === SCOPE_INPUT_TIMING && applies.has(item) && report.register !== null),
   );
   const kept: Record<string, string> = {};
   for (const item of items) {
@@ -2802,12 +2875,15 @@ function validNow(now: unknown): string {
 export function verifyBundle(bundle: JsonValue, policy: TrustPolicy, options: VerifyBundleOptions): BundleReport {
   const now = validNow(options.now);
   const skew = options.responseClockSkewSeconds ?? 0;
-  if (!Number.isInteger(skew) || skew < 0) {
-    throw new RangeError("the response clock-skew allowance is a non-negative integer of seconds");
+  if (!Number.isInteger(skew) || skew !== 0) {
+    throw new RangeError("the registered reference profiles require a response clock-skew allowance of zero");
   }
   const requireTrustedTime = options.requireTrustedTime ?? false;
   if (typeof requireTrustedTime !== "boolean") {
     throw new RangeError("requireTrustedTime is a boolean");
+  }
+  if (options.acceptCurrentTrustFailure !== undefined && typeof options.acceptCurrentTrustFailure !== "boolean") {
+    throw new RangeError("acceptCurrentTrustFailure is a boolean");
   }
   const register = options.register ?? null;
   if (register !== null && (!isObject(register) || registerUsageProblems(register).length > 0)) {
@@ -2867,8 +2943,8 @@ export function primaryFinding(report: BundleReport): string | null {
 }
 
 /**
- * The JSON names of the report members that this round adds and whose names area A's text gives
- * (EBMP2-057 evaluation time, EBMP-2 section 4 unresolved predecessors): kept in one place.
+ * JSON report member names for the evaluation time (EBMP2-057) and unresolved predecessors
+ * (EBMP-2 section 4), kept in one place.
  */
 export const REPORT_MEMBER_NAMES = {
   evaluationTime: "evaluation_time",
@@ -2878,6 +2954,7 @@ export const REPORT_MEMBER_NAMES = {
 /** The report in the JSON shape of the reference's `ecl-verify --json`. */
 export function reportToJson(report: BundleReport): JsonObject {
   return {
+    software: { name: "ecl-ts", version: SOFTWARE_VERSION, source_build: SOURCE_BUILD },
     verdict: report.verdict,
     primary: primaryFinding(report),
     envelope_checks: report.envelopeChecks.map((check) => ({
@@ -2901,6 +2978,7 @@ export function reportToJson(report: BundleReport): JsonObject {
     })),
     findings: report.findings.map((finding) => `${finding.code}: ${finding.message}`),
     verification_profile: report.verificationProfile,
+    response_clock_skew_seconds: report.responseClockSkewSeconds,
     accepted_current_trust_failure: report.acceptedCurrentTrustFailure,
     register: report.register,
     scope: {

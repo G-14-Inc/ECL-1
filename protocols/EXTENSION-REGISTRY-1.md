@@ -1,7 +1,8 @@
 # ECL Extension and Registry Protocol 1
 
 Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 ## 1. Extension descriptor
 
@@ -45,7 +46,8 @@ ECL-WI-1 work intents. Their registered rules name each of these object types in
 **XR1-006** — Unknown critical extensions MUST be rejected. An extension
 occurrence is unknown to a consumer unless the registry snapshot that the
 consumer applies holds an active entry with the occurrence's identifier and
-version and the consumer implements that entry; a deprecated, prohibited,
+version, the entry applies to the carrying object type, and the consumer implements
+that entry; a deprecated, prohibited,
 superseded or reserved entry does not make an occurrence known. A consumer MUST
 reject an unknown critical extension with
 `ecl.rule.unknown-critical-extension-rejected.v1`.
@@ -56,6 +58,9 @@ holds under any status is allocated for XR1-017 all the same.
 
 **XR1-007** — Unknown non-critical extensions MUST be preserved intact and
 reported when the object is forwarded, transformed, or re-emitted.
+An occurrence outside its entry's `applies_to` types, or at a version the
+consumer does not implement, remains uninterpreted: the consumer MUST NOT
+apply another object type's or version's value schema or semantics to it.
 
 **XR1-008** — A non-critical extension MUST NOT alter core semantics.
 
@@ -98,6 +103,19 @@ An extension identifier in the `ecl.*` namespace MUST be allocated in the
 registry snapshot the consumer applies; a consumer MUST reject an unallocated
 `ecl.*` identifier, critical or not, with
 `ecl.rule.extension-namespace-allocated.v1`.
+
+**XR1-017 (continued)** — An HTTP(S) extension URI whose authority host compares
+as `externalcontrollayer.ai` MUST be rejected with
+`ecl.rule.extension-namespace-allocated.v1`. For this reservation check alone,
+the consumer compares the scheme and host without case distinctions, decodes
+percent-encoded ASCII unreserved host characters (`A-Z`, `a-z`, `0-9`, `-`, `.`,
+`_`, `~`) in one pass, and removes one terminal DNS dot if present. It parses
+the authority before decoding; userinfo and a port do not change the host.
+This comparison does not rewrite the extension identifier or any signed or
+principal identity, decode reserved characters or repeated encodings, remove
+additional terminal dots, or reserve other domains, subdomains or reverse-domain
+tokens. Namespace ownership remains a producer responsibility; this syntax
+check does not establish it.
 
 **XR1-018** — A conformance claim MUST disclose critical private extensions
 needed to interpret the claim package.

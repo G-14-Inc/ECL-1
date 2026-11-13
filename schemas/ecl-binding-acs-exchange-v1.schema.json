@@ -75,7 +75,7 @@
           "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
         },
         "channel": {
-          "description": "AC1-004: how the ECL decision point obtained the Guardian's decision: from the Guardian directly (direct), by verifying the Guardian's signature over it under a key that the governed AI system cannot use (signed), or through a hook point (hook). Required when the Guardian decided.",
+          "description": "AC1-004: how the ECL decision point obtained the Guardian's decision: from the Guardian directly (direct), by verifying the Guardian's signature over it under a key that the governed AI system cannot use (signed), or through a hook point (hook). Required when the Guardian decided. On a failed exchange this names the attempted route and does not assert successful authentication.",
           "enum": [
             "direct",
             "signed",
@@ -83,13 +83,13 @@
           ]
         },
         "key_id": {
-          "description": "AC1-004: the identifier of the key under which the decision point verified the Guardian's signature over the decision. Required when the channel is signed; a checker of the record cannot verify the signature itself, so this names what an assessor checks against the deployment.",
+          "description": "AC1-004: the identifier of the key under which the decision point verified the Guardian's signature over the decision. Required when the channel is signed and the Guardian decided; on a failed exchange it is only attempted or unavailable evidence; a checker of the record cannot verify the signature itself, so this names what an assessor checks against the deployment.",
           "type": "string",
           "minLength": 1,
           "maxLength": 512
         },
         "request_digest": {
-          "description": "AC1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the request that the Guardian evaluated, from which the derived_from of the Guardian decision's input names the decision inputs: a SHA-256 value of 32 bytes in lowercase hexadecimal. Required when the channel is signed.",
+          "description": "AC1-004: ecl.digest.sha-256.v1 of the UTF-8 RFC 8785 canonical form of the exact ACS request envelope params, excluding the envelope and signature. Required for a decided signed channel; on a failed signed route it is optional but accompanies retained request_params; this is the same hashing domain as ACS ContextEntry.request_hash.",
           "allOf": [
             {
               "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
@@ -145,6 +145,75 @@
               }
             }
           }
+        },
+        "request_params": {
+          "description": "AC1-004: the exact ACS request envelope params evaluated by the Guardian. On a failed signed route these are optional submitted params retained together with their local digest. The adapter checks their mapping into the DCMP request; this record does not contain the Guardian signature.",
+          "type": "object",
+          "maxProperties": 128
+        },
+        "authenticated_context": {
+          "description": "AC1-004: the session, hooked step, method and params digest authenticated by the live adapter; dcmp_request_digest records the adapter-checked mapping to this DCMP request and is not claimed to be signed by the Guardian. These are retained assertions, not an offline signature proof. Required only for a decided signed exchange; retaining it on a failed route does not assert successful authentication.",
+          "type": "object",
+          "required": [
+            "session_id",
+            "request_id",
+            "method",
+            "request_digest",
+            "dcmp_request_digest"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "request_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "method": {
+              "description": "The ACS method of the hooked step.",
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^(steps|protocols/MCP)/[A-Za-z][A-Za-z0-9/]*$"
+            },
+            "request_digest": {
+              "allOf": [
+                {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                },
+                {
+                  "properties": {
+                    "algorithm": {
+                      "const": "ecl.digest.sha-256.v1"
+                    },
+                    "value": {
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              ]
+            },
+            "dcmp_request_digest": {
+              "allOf": [
+                {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                },
+                {
+                  "properties": {
+                    "algorithm": {
+                      "const": "ecl.digest.sha-256.v1"
+                    },
+                    "value": {
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              ]
+            }
+          }
         }
       },
       "allOf": [
@@ -158,7 +227,8 @@
           },
           "then": {
             "required": [
-              "channel"
+              "channel",
+              "result"
             ]
           }
         },
@@ -167,17 +237,49 @@
             "properties": {
               "channel": {
                 "const": "signed"
+              },
+              "status": {
+                "const": "decided"
               }
             },
             "required": [
-              "channel"
+              "channel",
+              "status"
             ]
           },
           "then": {
             "required": [
               "key_id",
-              "request_digest"
+              "request_digest",
+              "request_params",
+              "authenticated_context"
             ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "channel": {
+                "const": "signed"
+              },
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "channel",
+              "status"
+            ]
+          },
+          "then": {
+            "dependentRequired": {
+              "request_params": [
+                "request_digest"
+              ],
+              "request_digest": [
+                "request_params"
+              ]
+            }
           }
         }
       ]

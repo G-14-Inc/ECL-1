@@ -146,9 +146,9 @@ func canonical(t *testing.T, value map[string]any) string {
 	return string(encoded)
 }
 
-// F01 to F04, F08 and the claim-to-check map: the Go lane gives each case the JSON report that
-// the reference gives it, member for member, findings compared by code (tests/verifier_cases.py
-// writes the cases with the reference's reports).
+// F01 to F04, F08 and the claim-to-check map: compare every semantic report member, with findings
+// compared by code. Each implementation's software identity is checked separately because the
+// Python reference and Go implementation have distinct package names and version conventions.
 func TestTheSecondRoundCasesGiveTheReferenceReports(t *testing.T) {
 	cases := loadCases(t)
 	if len(cases) < 40 {
@@ -164,7 +164,18 @@ func TestTheSecondRoundCasesGiveTheReferenceReports(t *testing.T) {
 			t.Fatal(err)
 		}
 		expectedObject, _ := expected.(map[string]any)
-		if got, want := canonical(t, report.JSON()), canonical(t, expectedObject); got != want {
+		actualObject := report.JSON()
+		for _, identity := range []struct {
+			value         map[string]any
+			name, version string
+		}{{actualObject, "ecl-verify-go", "1.0.2-review.1"}, {expectedObject, "ecl-verify", "1.0.2a1"}} {
+			software, ok := identity.value["software"].(map[string]any)
+			if !ok || len(software) != 3 || software["name"] != identity.name || software["version"] != identity.version || software["source_build"] != "1.0.2-review.1" {
+				t.Fatalf("%s: software identity %v", item.Name, software)
+			}
+			delete(identity.value, "software")
+		}
+		if got, want := canonical(t, actualObject), canonical(t, expectedObject); got != want {
 			t.Errorf("%s: report differs\n got %s\nwant %s", item.Name, got, want)
 		}
 	}

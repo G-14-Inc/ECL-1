@@ -13,7 +13,8 @@
 <h1 id="ecl-acs-binding-profile-1">ECL ACS Binding Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile states how a deployment of the OWASP Agent Control Standard (ACS)
 connects to an ECL-1 deployment. An ACS Guardian becomes a decision source for
 an ECL Decision Layer. An ACS hook point can become an ECL enforcement point
@@ -133,7 +134,15 @@ through a DCMP-2 decision response that an ECL decision point issues and signs
 for the exact request (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-051">DCMP2-051</a>); an enforcement point MUST
 release an action only on that response's <code>admit</code>, and a Guardian <code>allow</code> MUST
 NOT create, widen or extend ECL authority, so the decision point still applies
-its native authority, scope, validity, budget and human-approval checks.</p>
+its native authority, scope, validity, budget and human-approval checks. A
+retained exchange record's <code>response</code> and each retained <code>modification_response</code>
+MUST bind the record's corresponding <code>request</code> or <code>modification_request</code> under
+<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, with the reference profile&#x27;s response clock-skew
+allowance of zero, whether or not the action was released and for every outcome.
+The authority checks that those requirements restrict to <code>admit</code> apply only to
+<code>admit</code>. A record verifier MUST report a missing corresponding request or a
+failed response binding with <code>ecl.error.request-binding-invalid.v1</code>, retaining
+the underlying binding failure's code in the diagnostic message.</p>
 <h2 id="dispositions">Dispositions</h2>
 <p><span id="AC1-004"><strong>AC1-004</strong></span><a class="requirement-link" href="#AC1-004" aria-label="Link to AC1-004">§</a> — The ECL outcome for an action that a Guardian decision governs
 MUST be at least as strict, in the strictness order of the core standard
@@ -150,9 +159,18 @@ evaluator, is a <code>judgment</code> input. Any other Guardian decision is
 <code>actor_supplied</code> when it reaches the ECL decision point through a hook point or
 any other channel that the governed AI system can write, unless the decision
 point verifies the Guardian's signature over the decision under a key that the
-governed AI system cannot use; an ACS-Core HMAC under a key that the Observed
+governed AI system cannot use, authenticates a commitment to the exact evaluated
+ACS request params, and checks the authenticated session, hooked-step identifier
+and method against the current request; an ACS-Core HMAC under a key that the Observed
 Agent holds does not qualify, and an ACS-Crypto asymmetric signature under a
-key held only by the Guardian does (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>, <a href="acs-binding-1.html#AC1-009">AC1-009</a>). Otherwise it takes
+key held only by the Guardian qualifies only with that request-content and
+context binding (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>, <a href="acs-binding-1.html#AC1-009">AC1-009</a>). The request commitment MUST be obtained
+from a verified ACS chain whose signed head commits to a step <code>request_hash</code>,
+or from a directly authenticated request digest under a declared signed
+representation. Matching a <code>request_id</code> alone is insufficient. The decision
+point MUST compare the commitment with the exact request it submitted for the
+current step and check the mapping of those params to the actual DCMP request.
+Otherwise it takes
 the least trusted class of the inputs it evaluated, so one that evaluated
 SessionContext, Intent or other content the governed AI system wrote is
 <code>actor_supplied</code>. A Guardian decision that is a <code>judgment</code> or <code>actor_supplied</code>
@@ -162,21 +180,49 @@ obtained the decision from the Guardian directly (<code>direct</code>), verified
 Guardian signature under a key that the governed AI system cannot use
 (<code>signed</code>), or received it through a hook point (<code>hook</code>), and MUST name, in the
 <code>derived_from</code> of the Guardian decision's input, each decision input that the
-Guardian's request carried other than the action itself. A Guardian decision
-whose input has no <code>derived_from</code>, or whose channel is <code>hook</code>, MUST NOT be
-declared <code>verifiable</code>. When the response carries <code>ecl.ext.acs-decision.v1</code>,
+Guardian's request carried other than the action itself. Every decided Guardian
+input MUST explicitly carry <code>derived_from</code>, including an empty list when there
+were no other decision inputs, independently of its class. A missing list MUST
+be rejected with <code>ecl.rule.acs-judgment-guardian.v1</code>; it MUST NOT be inferred
+from a declared class. An unavailable Guardian decision after a failed exchange
+is recorded as unavailable, without inventing its evaluated inputs. A Guardian
+decision whose channel is <code>hook</code> MUST NOT be declared <code>verifiable</code>. When the response carries <code>ecl.ext.acs-decision.v1</code>,
 exactly one input MUST carry <code>guardian: true</code>. The class that this requirement
 gives a Guardian decision holds in every decision basis that the exchange
 record holds: an entry of the <code>ecl.ext.decision-basis.v1</code> of the record's
 <code>modification_response</code> whose <code>input</code> is the input that the record marks
 <code>guardian</code> MUST have the class of the marked input. When <code>guardian.channel</code> is
-<code>signed</code>, the record MUST also give, in <code>guardian.key_id</code>, the identifier of
+<code>signed</code> and <code>guardian.status</code> is <code>decided</code>, the record MUST also give, in
+<code>guardian.key_id</code>, the identifier of
 the key under which the decision point verified the Guardian's signature and,
-in <code>guardian.request_digest</code>, the <code>ecl.digest.sha-256.v1</code> digest of the RFC
-8785 canonical form of the request that the Guardian evaluated. A verifier of
-the record cannot itself verify the Guardian's signature, which the record does
-not hold: the channel, the key and the digest are the adapter's statements,
-which an assessor checks against the deployment.</p>
+in <code>guardian.request_params</code>, the exact ACS request envelope <code>params</code>. The
+<code>guardian.request_digest</code> MUST be the <code>ecl.digest.sha-256.v1</code> digest of the
+UTF-8 RFC 8785 canonical form of those params, excluding the outer envelope and
+signature. This is the hashing domain of ACS <code>ContextEntry.request_hash</code>, not
+the entire ACS envelope or DCMP message. The record MUST carry
+<code>guardian.authenticated_context</code> with the authenticated <code>session_id</code>,
+<code>request_id</code>, <code>method</code> and <code>request_digest</code>, matching the record's session,
+Guardian result's step identifier, hook and params digest. Its
+<code>dcmp_request_digest</code> MUST equal the SHA-256 digest of the RFC 8785 form of the
+record's DCMP <code>request</code>; it records the adapter's checked mapping to that request
+and is not itself claimed to be a field signed by the Guardian. A supplied
+chain for a decided signed exchange MUST include the step's <code>request_hash</code> equal to the
+params digest. A record verifier MUST reject a mismatch with
+<code>ecl.rule.acs-decision-recorded.v1</code>. On a failed exchange, <code>guardian.channel</code>
+names the attempted route, not a verified decision. For a failed signed route,
+<code>guardian.request_params</code> and <code>guardian.request_digest</code> MAY be omitted together;
+if either is retained, both MUST be retained and the digest MUST match the
+RFC 8785 form of those submitted params. Any retained <code>guardian.key_id</code> or
+<code>guardian.authenticated_context</code> is attempted or unavailable evidence, not a
+claim of successful authentication, and the record verifier MUST NOT require
+it to bind an unavailable Guardian result. These failed records remain subject
+to the deny and non-release requirements of <a href="acs-binding-1.html#AC1-006">AC1-006</a>.</p>
+<p>A verifier of the record cannot verify the Guardian's signature, which the
+record does not hold. The authenticated context, key and checked mapping are
+adapter assertions. The assessor checks the actual signed representation,
+request-content comparison, session and step binding, and mapping into DCMP
+against the deployment. A consistent offline record alone does not establish
+those live checks.</p>
 <p><span id="AC1-005"><strong>AC1-005</strong></span><a class="requirement-link" href="#AC1-005" aria-label="Link to AC1-005">§</a> — A <code>modify</code> decision MUST NOT release the original action. The
 action that the modification produces, if it is to go ahead, MUST be submitted
 as a new DCMP-2 decision request that carries the effective parameters after
@@ -189,8 +235,9 @@ by identifier and digest with the relation <code>ecl.relation.modification-of.v1
 and is evaluated and admitted on its own; an enforcement point MUST release only
 the parameters that the new request's <code>admit</code> binds, and a <code>modifications</code>
 object that the pinned text forbids (a wholesale replacement combined with
-edits, or edits with overlapping targets), or one that cannot be applied under
-the next section, MUST end in <code>deny</code> of the original with no new request. An
+edits, or a redaction whose target overlaps a parameter override), or one that
+cannot be applied under the next section, MUST end in <code>deny</code> of the original
+with no new request. An
 exchange record of a <code>modify</code> that holds neither a <code>modification_request</code> nor a
 <code>release</code> records a <code>deny</code> of the original with no new request and MUST NOT be
 reported for the missing new request, since the record does not show why the
@@ -233,7 +280,8 @@ any of these: no usable Guardian decision within the negotiated timeout; a
 transport failure; an error response without a decision; a decision whose
 disposition the mapping of <a href="acs-binding-1.html#AC1-004">AC1-004</a> does not name; a decision for a <code>request_id</code>
 other than the hooked step's; a response whose ACS signature, where the session
-requires one, does not verify; and a decision that arrives after the
+requires one, does not verify; a signed-channel response whose request-content
+commitment, session, method or step does not match under <a href="acs-binding-1.html#AC1-004">AC1-004</a>; and a decision that arrives after the
 enforcement point applied the safe state for the step. A deployment that claims
 this profile MUST negotiate <code>on_decision_failure</code> as <code>deny</code>, and MUST configure
 the startup posture that the pinned text sets out of band as <code>refuse</code>, so that
@@ -267,19 +315,26 @@ ECL decision response MUST carry the registered extension <code>ecl.ext.acs-deci
 with the Guardian's decision, its evaluator, the ACS <code>request_id</code>, the
 <code>chain_hash</code> that the Guardian published for the step, and for a <code>modify</code> the
 <code>ecl.digest.sha-256.v1</code> digest of the RFC 8785 form of its <code>modifications</code>
-object; when the deployment claims the ACS-Audit profile it MUST also carry the
-step's <code>request_hash</code>. A verifier that recomputes the ACS session chain under
+object; when the deployment claims the ACS-Audit profile, or supplies an ACS
+chain as the request-content commitment for a signed channel, it MUST also
+carry the step's <code>request_hash</code>, computed from the exact ACS request params as
+<a href="acs-binding-1.html#AC1-004">AC1-004</a> specifies. A verifier that recomputes the ACS session chain under
 the chain-hashing rule below MUST find each recorded <code>chain_hash</code> as the head
 after that step's ContextEntry, which is the entry whose <code>step_id</code> is the
 recorded <code>request_id</code>.</p>
-<p>The chain-hashing rule restates section 8.2 of the pinned Instrument
+<p><strong><a href="acs-binding-1.html#AC1-008">AC1-008</a> (continued)</strong> — The chain-hashing rule restates section 8.2 of the pinned Instrument
 specification. A ContextEntry's <code>entry_hash</code> is the lowercase hexadecimal
 SHA-256 of the UTF-8 bytes of the RFC 8785 canonical form of the entry with its
 <code>entry_hash</code> and <code>previous_hash</code> members removed, followed by the 32 bytes that
 the entry's <code>previous_hash</code> encodes in hexadecimal, or by no bytes for the
 first entry of a session, whose <code>previous_hash</code> is null or absent. Each later
 entry's <code>previous_hash</code> is the <code>entry_hash</code> of the entry before it, and the
-chain head after an entry is that entry's <code>entry_hash</code>.</p>
+chain head after an entry is that entry's <code>entry_hash</code>. A retained chain MUST
+give each ContextEntry a distinct <code>entry_id</code> within the session, as the pinned
+ContextEntry schema specifies. A repeated identifier maps to
+<code>ecl.rule.acs-decision-recorded.v1</code>. This does not require distinct <code>step_id</code>
+values: the pinned Instrument specification's section 9.1 assigns an
+<code>intent_extension</code> the originating ASK's <code>step_id</code>.</p>
 <p><span id="AC1-009"><strong>AC1-009</strong></span><a class="requirement-link" href="#AC1-009" aria-label="Link to AC1-009">§</a> — The ACS session chain MUST be treated as a native record that
 coexists with EBMP-2 evidence under <a href="ebmp-2.html#EBMP2-045">EBMP2-045</a>: the signed ECL evidence bundle is
 the record of release, an ACS chain or chain head that disagrees with the ECL
@@ -290,7 +345,11 @@ key) MUST NOT be presented as satisfying <a href="ecl-1_standard.html#FR-108">FR
 write each one as <code>ecl_acs_exchange_v1</code>, valid against
 <code>https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1</code>, and every
 value of <code>ecl.ext.acs-decision.v1</code> it emits MUST validate against
-<code>https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1</code>.</p>
+<code>https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1</code>. An exchange
+with <code>guardian.status</code> equal to <code>decided</code> MUST retain its <code>guardian.result</code>;
+the record verifier MUST report an absent result with
+<code>ecl.rule.acs-decision-recorded.v1</code>. A schema-gated verifier rejects that
+incomplete record with <code>ecl.error.schema-invalid.v1</code> before semantic checks.</p>
 <p><span id="AC1-011"><strong>AC1-011</strong></span><a class="requirement-link" href="#AC1-011" aria-label="Link to AC1-011">§</a> — When the Observed Agent wraps MCP traffic in the ACS
 <code>protocols/MCP/*</code> namespace, a request that reaches an in-scope MCP server MUST
 also satisfy MCP-GATEWAY-1 at the point where it leaves for that server.</p>
@@ -429,7 +488,9 @@ posture and whether the deployment claims ACS-Audit (<code>audit_profile</code>)
 <code>unmapped_disposition</code>, <code>request_mismatch</code>, <code>signature_invalid</code> or <code>late</code>, the
 decision failures of <a href="acs-binding-1.html#AC1-006">AC1-006</a>), the time the adapter observed it, the <code>channel</code>
 through which the decision point obtained a decision (<code>direct</code>, <code>signed</code> or
-<code>hook</code>, <a href="acs-binding-1.html#AC1-004">AC1-004</a>) and the Guardian&#x27;s <code>result</code>; the <code>inputs</code> of the ECL decision,
+<code>hook</code>, <a href="acs-binding-1.html#AC1-004">AC1-004</a>), the Guardian&#x27;s <code>result</code>, and for a decided signed exchange the exact
+<code>request_params</code>, their <code>request_digest</code>, the <code>key_id</code> and the
+<code>authenticated_context</code> of <a href="acs-binding-1.html#AC1-004">AC1-004</a>; the <code>inputs</code> of the ECL decision,
 which are the entries of the decision basis that the response records in
 <code>ecl.ext.decision-basis.v1</code> (<a href="acs-binding-1.html#AC1-012">AC1-012</a>), with the Guardian&#x27;s decision marked by
 <code>guardian</code> and the inputs its request carried named in that entry's
@@ -437,7 +498,11 @@ which are the entries of the decision basis that the response records in
 modified action went ahead the <code>modification_request</code> and
 <code>modification_response</code>; the session <code>chain</code> up to the step; and a <code>release</code>
 member only when the action was released. The rules registered for this
-profile, whose names begin <code>ecl.rule.acs-</code>, check a record after its schema.</p>
+profile, whose names begin <code>ecl.rule.acs-</code>, check a record after its schema.
+On a failed exchange, an optional channel names the attempted route. Submitted
+request params and their local digest can be retained together; absent params
+are not fabricated, and a retained key or context does not assert a verified
+Guardian decision.</p>
 <h2 id="security-considerations">Security considerations</h2>
 <p>ACS-Core assures that the channel between the Observed Agent and the Guardian
 is authenticated and that the agent honors the Guardian's decisions; it does
@@ -467,7 +532,7 @@ the Guardian&#x27;s own signature can be (<a href="acs-binding-1.html#AC1-004">A
 <tbody>
 <tr>
 <td>Vectors</td>
-<td>The <code>acs-binding</code> suite accepts a deny for a Guardian decision that arrived after the safe state was applied, and a <code>modify</code> that ends in <code>deny</code> with no new request and no release, and refuses a fail-open proceed after a Guardian decision failure, a negotiated <code>proceed</code> posture, an admit after a decision failure, a release when an <code>ask</code> expires even with <code>timeout_disposition</code> <code>allow</code>, an expiry into a fail-open state or after the Guardian's deadline, an outcome weaker than the mapped disposition, a modification released under the original request or with other parameters, a new request that carries a number where the effective parameters hold a boolean, a modification response without its new request, a new request recorded, and released, after a Guardian decision other than <code>modify</code>, a Guardian <code>allow</code> from an <code>agent</code> or <code>composite</code> evaluator, or from one that states no evaluator, used as <code>verifiable</code> or as the basis of an <code>admit</code>, a deterministic Guardian decision carried by a hook point used as <code>verifiable</code>, a modification admitted on a Guardian decision that a hook point carried or that an <code>agent</code> evaluator made, a <code>signed</code> channel without the identifier of the key that signed the decision or the digest of the Guardian's request, a released request that declares a negative budget debit, a response that records a Guardian decision that no input marks, a record without the channel of a decision, a release without an <code>admit</code>, a response that does not record the Guardian decision, and a recorded chain head that the recomputed ACS chain does not contain; the <code>binding-basis</code> suite refuses a record whose inputs disagree with the decision basis of its response, a record whose response or modification response carries no decision basis, and a record whose response&#x27;s decision basis breaks <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>, alone or with the request it answers</td>
+<td>The <code>acs-binding</code> suite accepts a deny for a Guardian decision that arrived after the safe state was applied, and a <code>modify</code> that ends in <code>deny</code> with no new request and no release, and refuses a fail-open proceed after a Guardian decision failure, a negotiated <code>proceed</code> posture, an admit after a decision failure, a release when an <code>ask</code> expires even with <code>timeout_disposition</code> <code>allow</code>, an expiry into a fail-open state or after the Guardian's deadline, an outcome weaker than the mapped disposition, a modification released under the original request or with other parameters, a new request that carries a number where the effective parameters hold a boolean, a modification response without its new request, a new request recorded, and released, after a Guardian decision other than <code>modify</code>, a Guardian <code>allow</code> from an <code>agent</code> or <code>composite</code> evaluator, or from one that states no evaluator, used as <code>verifiable</code> or as the basis of an <code>admit</code>, a deterministic Guardian decision carried by a hook point used as <code>verifiable</code>, a modification admitted on a Guardian decision that a hook point carried or that an <code>agent</code> evaluator made, a decided <code>signed</code> exchange without the identifier of the key that signed the decision or the digest of the Guardian's request, a released request that declares a negative budget debit, a response that records a Guardian decision that no input marks, a record without the channel of a decision, a release without an <code>admit</code>, a response that does not record the Guardian decision, and a recorded chain head that the recomputed ACS chain does not contain; the <code>binding-basis</code> suite refuses a record whose inputs disagree with the decision basis of its response, a record whose response or modification response carries no decision basis, and a record whose response&#x27;s decision basis breaks <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>, alone or with the request it answers</td>
 </tr>
 <tr>
 <td>Assessor procedure</td>
@@ -480,8 +545,8 @@ an ACS product, and this profile claims no ACS conformance and no OWASP
 endorsement.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/ACS-BINDING-1.md</code>, SHA-256 <code>a4f9f4a1c5fc6e9b22fac279115ecf71cb1bee393bf8048f7edf1e5b9fa3fbf7</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/ACS-BINDING-1.md</code>, SHA-256 <code>886fb9772a18c709cfc13f8349d598bbe584f3c4c3a71929f8f06e616c380627</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

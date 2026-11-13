@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/corpus"
 )
@@ -24,7 +25,7 @@ func main() {
 	report := flag.String("report", "", "fresh report output path")
 	revision := flag.String("revision", "", "source revision (40 lowercase hexadecimal characters)")
 	flag.Parse()
-	if *root == "" || *report == "" || !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(*revision) {
+	if *root == "" || *report == "" || !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(*revision) || *revision == strings.Repeat("0", 40) {
 		fmt.Fprintln(os.Stderr, "repo-root, report and a source revision are required")
 		os.Exit(2)
 	}

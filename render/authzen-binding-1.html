@@ -13,9 +13,11 @@
 <h1 id="ecl-authzen-binding-profile-1">ECL AuthZEN Binding Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile specifies a policy-engine contribution to an ECL decision. The
-guide <code>docs/authzen-binding.md</code> explains it and gives the exact capability table.
+guide <code>docs/authzen-binding.md</code> explains it. The normative capability table
+below fixes the dispositions required by <a href="authzen-binding-1.html#AZB1-006">AZB1-006</a>.
 A native capability belongs to ECL's own path; its disposition assigns that
 responsibility and does not assert that a deployment implements every operation.</p>
 <p>An AuthZEN evaluation is a decision input and has no release boundary in the
@@ -59,6 +61,156 @@ responsibilities preserve cancel, revoke, supersede, quarantine, halt, hold and
 challenge as ECL semantics; this binding supports neither batch evaluation nor
 endpoint discovery. Outstanding authority staleness is bounded by its existing
 window, not by polling the policy engine.</p>
+<h2 id="capability-and-loss-table-normative">Capability and loss table (normative)</h2>
+<p><strong><a href="authzen-binding-1.html#AZB1-006">AZB1-006</a> (continued)</strong> — The following capability dispositions form part of
+the binding. A deployment publishes this table with its implementation evidence.</p>
+<p><strong><a href="authzen-binding-1.html#AZB1-006">AZB1-006</a> (continued)</strong> — <code>supported</code> means that the binding sends or consumes the capability. <code>native</code>
+means that the ECL protocol assigns the capability to ECL's own path, which the
+PDP cannot override; the disposition assigns that responsibility and does not
+claim that a deployment implements every native control operation.
+<code>unsupported</code> means that the binding neither sends the capability nor treats it
+as a release capability, so a request or response that depends on it is
+refused or not produced. A deployment publishes this table, with these
+dispositions, under <a href="authzen-binding-1.html#AZB1-006">AZB1-006</a>.</p>
+<table tabindex="0">
+<thead>
+<tr>
+<th scope="col">Capability</th>
+<th scope="col">Disposition</th>
+<th scope="col">ECL behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>evaluation</td>
+<td>supported</td>
+<td>One evaluation per decision attempt.</td>
+</tr>
+<tr>
+<td>decision-boolean</td>
+<td>supported</td>
+<td>Only unqualified boolean true contributes to admit.</td>
+</tr>
+<tr>
+<td>request-correlation</td>
+<td>supported</td>
+<td>Fresh request id and unpooled connection; echo recorded only.</td>
+</tr>
+<tr>
+<td>evaluations-batch</td>
+<td>unsupported</td>
+<td>No batch endpoint; an empty evaluations array could evaluate defaults under AuthZEN §7.1.</td>
+</tr>
+<tr>
+<td>metadata-discovery</td>
+<td>unsupported</td>
+<td>Evaluation URL is pinned configuration.</td>
+</tr>
+<tr>
+<td>search-subject</td>
+<td>unsupported</td>
+<td>No search endpoint.</td>
+</tr>
+<tr>
+<td>search-resource</td>
+<td>unsupported</td>
+<td>No search endpoint.</td>
+</tr>
+<tr>
+<td>search-action</td>
+<td>unsupported</td>
+<td>No search endpoint.</td>
+</tr>
+<tr>
+<td>decision-context</td>
+<td>unsupported</td>
+<td>A context-qualified permit denies; context is never interpreted as an obligation.</td>
+</tr>
+<tr>
+<td>signed-metadata</td>
+<td>unsupported</td>
+<td>No signed PDP metadata is accepted.</td>
+</tr>
+<tr>
+<td>policy-reference</td>
+<td>unsupported</td>
+<td>The PDP supplies no ECL policy identifier, version or digest. The DCMP-2 response binds the policy that the decision point applied (<a href="dcmp-2.html#DCMP2-016">DCMP2-016</a>); the digests of the PDP request and response and the PDP endpoint identify the exchange.</td>
+</tr>
+<tr>
+<td>outcome-hold</td>
+<td>native</td>
+<td>A boolean PDP cannot originate a DCMP-2 hold.</td>
+</tr>
+<tr>
+<td>outcome-challenge</td>
+<td>native</td>
+<td>A boolean PDP cannot originate a DCMP-2 challenge.</td>
+</tr>
+<tr>
+<td>obligations</td>
+<td>native</td>
+<td>ECL must handle obligations; PDP context never creates one.</td>
+</tr>
+<tr>
+<td>validity-window</td>
+<td>native</td>
+<td>ECL must set and check the authority window.</td>
+</tr>
+<tr>
+<td>use-policy</td>
+<td>native</td>
+<td>The ECL decision and enforcement path must own use charges and quota.</td>
+</tr>
+<tr>
+<td>safe-state</td>
+<td>native</td>
+<td>A dependency-failure deny must apply ECL&#x27;s declared safe-state rule (<a href="dcmp-2.html#DCMP2-041">DCMP2-041</a>).</td>
+</tr>
+<tr>
+<td>control-cancel</td>
+<td>native</td>
+<td>ECL control path is specified separately; not an AuthZEN evaluation.</td>
+</tr>
+<tr>
+<td>control-revoke</td>
+<td>native</td>
+<td>ECL control path is specified separately; not an AuthZEN evaluation.</td>
+</tr>
+<tr>
+<td>control-supersede</td>
+<td>native</td>
+<td>ECL control path is specified separately; not an AuthZEN evaluation.</td>
+</tr>
+<tr>
+<td>control-quarantine</td>
+<td>native</td>
+<td>ECL control path is specified separately; not an AuthZEN evaluation.</td>
+</tr>
+<tr>
+<td>control-halt</td>
+<td>native</td>
+<td>ECL control path is specified separately; not an AuthZEN evaluation.</td>
+</tr>
+<tr>
+<td>action-parameters</td>
+<td>unsupported</td>
+<td>Parameters are not sent; the ECL decision path must check them.</td>
+</tr>
+<tr>
+<td>constraints</td>
+<td>unsupported</td>
+<td>Constraints are not sent; the ECL decision path must check them.</td>
+</tr>
+<tr>
+<td>delegation-chain</td>
+<td>unsupported</td>
+<td>Delegation is not sent; the ECL decision path must check it.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><a href="authzen-binding-1.html#AZB1-006">AZB1-006</a> (continued)</strong> — DCMP-2 control messages (<code>cancel</code>, <code>revoke</code>, <code>supersede</code>, <code>quarantine</code>, <code>halt</code>),
+<code>challenge</code> and <code>challenge_response</code> are refused by the binding; ECL processes
+the control and challenge flows it supports natively.</p>
 <h2 id="evidence">Evidence</h2>
 <table tabindex="0">
 <thead>
@@ -83,13 +235,13 @@ this profile shows the client's behavior with tests of its own deployment: the
 strict acceptance of <a href="authzen-binding-1.html#AZB1-002">AZB1-002</a> and <a href="authzen-binding-1.html#AZB1-003">AZB1-003</a>, an injective mapping that refuses
 what it cannot map (<a href="authzen-binding-1.html#AZB1-004">AZB1-004</a>), the transport rules of <a href="authzen-binding-1.html#AZB1-005">AZB1-005</a>, and the boundary
 of <a href="authzen-binding-1.html#AZB1-001">AZB1-001</a>, under which a permit never replaces a native check such as
-revocation. The guide gives the exact capability table and the declared
-deviations (<a href="authzen-binding-1.html#AZB1-006">AZB1-006</a>, <a href="authzen-binding-1.html#AZB1-008">AZB1-008</a>). These tests do not establish assessor
+revocation. The normative table above gives the capability dispositions (<a href="authzen-binding-1.html#AZB1-006">AZB1-006</a>);
+the guide describes the declared deviations (<a href="authzen-binding-1.html#AZB1-008">AZB1-008</a>). These tests do not establish assessor
 independence or a production deployment claim.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/AUTHZEN-BINDING-1.md</code>, SHA-256 <code>5949c7e58236b0faed86a534ef451c193a967499114cc30ba58582dc0fd8e801</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/AUTHZEN-BINDING-1.md</code>, SHA-256 <code>65a532308799b6aa8d074b49b8ac5550e3ba49e527a6d54c344f67e5f0bfe70b</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

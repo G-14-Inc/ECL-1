@@ -27,6 +27,8 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/canon"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/instant"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/registry"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
 )
 
@@ -337,14 +339,13 @@ func decodeSignature(value any) ([]byte, error) {
 	return decoded, nil
 }
 
-// micros reads an instant with digits after the microsecond dropped, as the reference's
-// datetime comparisons floor them.
-func micros(value string) (instant.Instant, error) {
+// exactInstant preserves all one to nine fractional digits of an ECL instant.
+func exactInstant(value string) (instant.Instant, error) {
 	parsed, err := instant.Parse(value)
 	if err != nil {
 		return instant.Instant{}, integrity("invalid UTC timestamp: " + strconv.Quote(value))
 	}
-	return parsed.Micro(), nil
+	return parsed, nil
 }
 
 func validateContext(policy map[string]any, context Context) (instant.Instant, error) {
@@ -375,7 +376,7 @@ func validateContext(policy map[string]any, context Context) (instant.Instant, e
 	if !pyjson.Equal(policy["revocation_policy"], context.RevocationPolicy) {
 		return instant.Instant{}, policyError("verification context does not match signed revocation policy")
 	}
-	return micros(context.EvaluatedAt)
+	return exactInstant(context.EvaluatedAt)
 }
 
 func contains(values []string, value string) bool {
@@ -404,7 +405,7 @@ func keyIneligibility(key Key, payloadType string, context Context, evaluatedAt 
 		if revocation.KeyID != key.KeyID {
 			continue
 		}
-		effective, err := micros(revocation.EffectiveAt)
+		effective, err := exactInstant(revocation.EffectiveAt)
 		if err != nil {
 			return "", err
 		}
@@ -413,7 +414,7 @@ func keyIneligibility(key Key, payloadType string, context Context, evaluatedAt 
 		}
 	}
 	if key.ValidFrom != "" {
-		from, err := micros(key.ValidFrom)
+		from, err := exactInstant(key.ValidFrom)
 		if err != nil {
 			return "", err
 		}
@@ -422,7 +423,7 @@ func keyIneligibility(key Key, payloadType string, context Context, evaluatedAt 
 		}
 	}
 	if key.ValidUntil != "" {
-		until, err := micros(key.ValidUntil)
+		until, err := exactInstant(key.ValidUntil)
 		if err != nil {
 			return "", err
 		}
@@ -434,6 +435,9 @@ func keyIneligibility(key Key, payloadType string, context Context, evaluatedAt 
 }
 
 func policyStringSet(policy map[string]any, name string) (map[string]bool, error) {
+	if _, present := policy[name]; !present && (name == "eligible_key_ids" || name == "required_key_ids") {
+		return map[string]bool{}, nil
+	}
 	raw, ok := pyjson.Array(policy[name])
 	if !ok {
 		return nil, policyError(name + " must be an array of identifiers")
@@ -461,6 +465,19 @@ func policyStringSet(policy map[string]any, name string) (map[string]bool, error
 // Expired), or ThresholdNotMet. ErrUnsupportedSuite is returned as it is. Step 1, the envelope
 // schema, is the caller's.
 func Verify(envelope any, keyring map[string]Key, context Context) (*Result, error) {
+	return verify(envelope, keyring, context, nil)
+}
+
+// VerifyWithContext obtains payload-derived context after the ordered resource,
+// payload/media and policy checks. A provider refusal is a policy error.
+func VerifyWithContext(envelope any, keyring map[string]Key, provider func(any) (Context, error)) (*Result, error) {
+	if provider == nil {
+		return nil, policyError("verification context provider is nil")
+	}
+	return verify(envelope, keyring, Context{}, provider)
+}
+
+func verify(envelope any, keyring map[string]Key, context Context, provider func(any) (Context, error)) (*Result, error) {
 	object, ok := pyjson.Object(envelope)
 	if !ok {
 		return nil, integrity("integrity envelope must be an object")
@@ -513,6 +530,15 @@ func Verify(envelope any, keyring map[string]Key, context Context) (*Result, err
 	if !ok {
 		return nil, integrity("signed payload lacks integrity_policy")
 	}
+	outerFindings := validatorx.ExtensionConsumers(object, nil)
+	precedence := registry.Precedence()
+	sort.SliceStable(outerFindings, func(i, j int) bool {
+		return precedence[outerFindings[i].RuleID] < precedence[outerFindings[j].RuleID]
+	})
+	if len(outerFindings) > 0 {
+		first := outerFindings[0]
+		return nil, &Error{Code: first.RuleID, Message: first.Detail}
+	}
 	// Step 4: the payload-bound policy, its lists' declared limit first.
 	for _, name := range []string{"accepted_suites", "eligible_key_ids", "required_key_ids"} {
 		if raw, isArray := pyjson.Array(policy[name]); isArray && len(raw) > MaxPolicyListEntries {
@@ -545,6 +571,12 @@ func Verify(envelope any, keyring map[string]Key, context Context) (*Result, err
 	if len(requiredKeys) > 0 && threshold < int64(len(requiredKeys)) {
 		return nil, policyError("threshold cannot be lower than required key count")
 	}
+	if provider != nil {
+		context, err = provider(payload)
+		if err != nil {
+			return nil, policyError("verification context provider refused the payload: " + err.Error())
+		}
+	}
 	evaluatedAt, err := validateContext(policy, context)
 	if err != nil {
 		return nil, err
@@ -565,14 +597,9 @@ func Verify(envelope any, keyring map[string]Key, context Context) (*Result, err
 		if !isObject {
 			return nil, integrity("integrity signature entry must be an object")
 		}
-		keyID, suiteID := "", ""
-		if pyjson.Truthy(entry["key_id"]) {
-			keyID = pyjson.Str(entry["key_id"])
-		}
-		if pyjson.Truthy(entry["suite_id"]) {
-			suiteID = pyjson.Str(entry["suite_id"])
-		}
-		if keyID == "" || suiteID == "" {
+		keyID, keyOK := pyjson.Text(entry["key_id"])
+		suiteID, suiteOK := pyjson.Text(entry["suite_id"])
+		if !keyOK || keyID == "" || !suiteOK || suiteID == "" {
 			return nil, integrity("integrity signature identity is incomplete")
 		}
 		identity, _ := json.Marshal([]string{keyID, suiteID})
@@ -593,7 +620,7 @@ func Verify(envelope any, keyring map[string]Key, context Context) (*Result, err
 		keyID, suiteID, entry := item.keyID, item.suiteID, item.entry
 		// (a) an acceptable key for this suite, payload and policy.
 		key, known := keyring[keyID]
-		if !acceptedSuites[suiteID] || !contains(context.AllowedSuites, suiteID) || contains(context.ProhibitedSuites, suiteID) ||
+		if (protocol == "DCMP-2" && role == "") || !acceptedSuites[suiteID] || !contains(context.AllowedSuites, suiteID) || contains(context.ProhibitedSuites, suiteID) ||
 			(len(eligibleKeys) > 0 && !eligibleKeys[keyID]) || !known || key.SuiteID != suiteID || key.KeyID != keyID {
 			reasons[reasonUnacceptable] = true
 			continue
@@ -601,7 +628,7 @@ func Verify(envelope any, keyring map[string]Key, context Context) (*Result, err
 		// (a) to (c): the key's trust policy, payload type, role, revocation and validity.
 		keyTime := evaluatedAt
 		if own, present := context.KeyTimes[keyID]; present {
-			if keyTime, err = micros(own); err != nil {
+			if keyTime, err = exactInstant(own); err != nil {
 				return nil, err
 			}
 		}

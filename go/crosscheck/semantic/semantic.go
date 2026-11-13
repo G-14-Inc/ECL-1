@@ -1,11 +1,10 @@
 // Package semantic checks the cross-member rules of ECL-1 objects that JSON Schema cannot
-// express: DCMP-2 messages, EBMP-2 objects, bare bundles of EBMP-2 records, adapter bindings and
+// express: DCMP-2 messages, EBMP-2 objects, adapter bindings and
 // safe-state profiles.
 //
-// The foundation rules come from the imported, separately maintained Go core
-// (internal/validator, see provenance/go/GO-IMPORT.json); the RC-4 protocol rules, the safe-state
-// rules and the registered control-extension rules are fresh code in this repository. Both are
-// maintained by the maintainers of the Python reference, so agreement with it is implementation
+// The foundation rules live in internal/validator; additional protocol, safe-state and
+// registered control-extension rules live in this repository's validatorx and semantic packages.
+// These packages are maintained by the maintainers of the Python reference, so agreement is implementation
 // diversity, not independent assessment. The core reports the first failure of a bare bundle,
 // which the corpus runner therefore analyzes with evidence.Analyze. Where the core checks other
 // conditions of a rule than the requirement states (the threshold rule, the admit authority rule
@@ -19,7 +18,6 @@ import (
 	"sort"
 	"strings"
 
-	"externalcontrollayer.ai/ecl-1/go/crosscheck/canon"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/instant"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/registry"
@@ -67,7 +65,12 @@ type Finding struct {
 	Detail string
 }
 
-// Options is the registry state the rules read.
+// Options is the registry state the rules read. Each nil field uses its embedded-registry
+// default, so the zero value has the behavior of Registered(). A nonnil map replaces that
+// component, even when empty; an empty KnownExtensions map implements no extensions.
+// Callers supplying custom maps are responsible for a coherent registry: implemented entries,
+// applicability and every declared value schema must agree. Custom options do not by themselves
+// establish conformance to the embedded ECL registry.
 type Options struct {
 	// KnownExtensions maps each active registered extension to its active versions.
 	KnownExtensions map[string]map[int]bool
@@ -75,12 +78,22 @@ type Options struct {
 	ValueSchemas map[string]string
 	// Schemas resolves the value schemas.
 	Schemas *schema.Set
+	// Applicability binds identifier/version interpretations to their declared object types.
+	Applicability validatorx.ExtensionApplicability
 }
 
 // Registered returns the options of the registries embedded in this module.
 func Registered() Options {
-	options := Options{KnownExtensions: map[string]map[int]bool{}, ValueSchemas: map[string]string{}, Schemas: schema.ECL()}
+	options := Options{KnownExtensions: map[string]map[int]bool{}, ValueSchemas: map[string]string{}, Schemas: schema.ECL(), Applicability: validatorx.ExtensionApplicability{}}
 	for _, entry := range registry.Entries("extensions") {
+		if options.Applicability[entry.ID] == nil {
+			options.Applicability[entry.ID] = map[int64]map[string]bool{}
+		}
+		kinds := map[string]bool{}
+		for _, kind := range entry.AppliesTo {
+			kinds[kind] = true
+		}
+		options.Applicability[entry.ID][entry.Version] = kinds
 		if entry.Status == "active" {
 			if options.KnownExtensions[entry.ID] == nil {
 				options.KnownExtensions[entry.ID] = map[int]bool{}
@@ -90,6 +103,26 @@ func Registered() Options {
 		if entry.ValueSchema != "" {
 			options.ValueSchemas[entry.ID] = entry.ValueSchema
 		}
+	}
+	return options
+}
+
+func optionDefaults(options Options) Options {
+	if options.KnownExtensions != nil && options.ValueSchemas != nil && options.Schemas != nil && options.Applicability != nil {
+		return options
+	}
+	defaults := Registered()
+	if options.KnownExtensions == nil {
+		options.KnownExtensions = defaults.KnownExtensions
+	}
+	if options.ValueSchemas == nil {
+		options.ValueSchemas = defaults.ValueSchemas
+	}
+	if options.Schemas == nil {
+		options.Schemas = defaults.Schemas
+	}
+	if options.Applicability == nil {
+		options.Applicability = defaults.Applicability
 	}
 	return options
 }
@@ -127,57 +160,104 @@ func ValidateBytes(data []byte, options Options) ([]Finding, error) {
 		}
 		return nil, err
 	}
-	return check(data, value, options)
+	return check(value, optionDefaults(options))
 }
 
-// Validate checks a parsed value: a DCMP-2 message, an EBMP-2 object, a bare bundle
-// ({"records": [...]}), an adapter binding, or another object, such as an ECL-IE-1 envelope or an
+// Validate checks a parsed value: a DCMP-2 message, an EBMP-2 object,
+// an adapter binding, a bare bundle, or another object, such as an ECL-IE-1 envelope or an
 // ECL-WI-1 work intent, which gets the checks of every object (validatorx.Common).
+// A records member cannot override an object's protocol or schema_version.
+// Use evidence.Analyze for complete causal analysis of a set of records.
 func Validate(value any, options Options) ([]Finding, error) {
+	options = optionDefaults(options)
 	if root, isObject := value.(map[string]any); isObject && !coreClassifies(root) {
-		return common(root), nil
+		return common(root, options), nil
 	}
-	data, err := canon.Marshal(value)
-	if err != nil {
-		return nil, err
-	}
-	return check(data, value, options)
+	return check(value, options)
 }
 
-// coreClassifies reports whether the imported core checks this object itself: an adapter
-// binding, a DCMP-2 or EBMP-2 object, or a bare bundle. It reports every other object as an
-// unrecognized artifact, a finding that no registry holds, where the reference applies the
-// checks of every object.
+// coreClassifies selects the imported DCMP-2, EBMP-2 and bare-bundle paths.
+// Native adapter bindings use the repository's EBMP2-069 checks in common, together
+// with object-independent rules. A foreign schema_version cannot suppress a known
+// work-intent protocol or an envelope's generic checks.
 func coreClassifies(root map[string]any) bool {
-	version, _ := root["schema_version"].(string)
 	protocol, _ := root["protocol"].(string)
-	return version == "ecl_adapter_binding_v1" || protocol == "DCMP-2" || protocol == "EBMP-2" || root["records"] != nil
+	_, hasVersion := root["schema_version"]
+	_, hasProtocol := root["protocol"]
+	_, hasEnvelopeVersion := root["envelope_version"]
+	bareBundle := !hasVersion && !hasProtocol && !hasEnvelopeVersion && root["records"] != nil
+	return bareBundle || protocol == "DCMP-2" || protocol == "EBMP-2"
 }
 
 // common returns the findings of the checks of every object, sorted, and for a Consequential
 // Action Register those of the register declarations rule (ECL1N-0178).
-func common(root map[string]any) []Finding {
-	findings := convert(validatorx.Common(root))
-	if pyjson.Equal(root["schema_version"], RegisterSchemaVersion) {
+func common(root map[string]any, options Options) []Finding {
+	findings := convert(validatorx.CommonFor(root, options.KnownExtensions, options.Applicability))
+	if kind := validatorx.ObjectType(root); kind == "ECL-IE-1" || kind == "ECL-WI-1" {
+		findings = append(findings, guard("extension value", func() []Finding { return valueSchemas(root, options) })...)
+	}
+	switch {
+	case root["protocol"] == "ECL-WI-1":
+		findings = append(findings, workIntentFindings(root)...)
+	case root["schema_version"] == "ecl_adapter_binding_v1":
+		findings = append(findings, guard("adapter binding", func() []Finding { return convert(validatorx.AdapterBinding(root)) })...)
+	case pyjson.Equal(root["schema_version"], RegisterSchemaVersion):
 		for _, problem := range RegisterDocumentProblems(root) {
 			findings = append(findings, Finding{RuleID: RuleRegisterDeclarations, Path: problem[0], Detail: problem[1]})
 		}
+	case root["schema_version"] == "ecl_deployment_profile_v1":
+		findings = append(findings, DeploymentTimingFindings(root)...)
 	}
 	Sort(findings)
 	return findings
 }
 
-func check(data []byte, value any, options Options) ([]Finding, error) {
-	if root, isObject := value.(map[string]any); isObject && !coreClassifies(root) {
-		return common(root), nil
+// DeploymentTimingFindings compares declared bounds; schema checks reject unreadable operands.
+func DeploymentTimingFindings(root map[string]any) []Finding {
+	if root["model"] != "federated-multi-domain" {
+		return nil
 	}
-	found, err := validator.Validate(data, validator.Options{KnownExtensions: options.KnownExtensions})
+	timing, ok := root["timing_case"].(map[string]any)
+	if !ok {
+		return nil
+	}
+	connected, connectedOK := pyjson.SchemaInt(timing["connected_revocation_seconds"])
+	exchange, exchangeOK := pyjson.SchemaInt(timing["federated_exchange_seconds"])
+	if connectedOK && exchangeOK && connected >= 0 && connected <= 9007199254740991 && exchange >= 0 && exchange <= 9007199254740991 && exchange > connected {
+		return []Finding{{RuleID: "ecl.rule.deployment-timing-case-consistent.v1", Path: "/timing_case/federated_exchange_seconds", Detail: "federated exchange exceeds the connected revocation interval"}}
+	}
+	return nil
+}
+
+func check(value any, options Options) ([]Finding, error) {
+	if _, isObject := value.(map[string]any); !isObject {
+		return []Finding{{RuleID: SchemaInvalid, Path: "/", Detail: "semantic validation requires an object"}}, nil
+	}
+	if root, isObject := value.(map[string]any); isObject && !coreClassifies(root) {
+		return common(root, options), nil
+	}
+	found, err := validator.ValidateValue(value, validator.Options{KnownExtensions: options.KnownExtensions})
 	if err != nil {
 		return nil, err
 	}
 	findings := make([]Finding, 0, len(found))
+	root := value.(map[string]any)
+	protocol, _ := root["protocol"].(string)
+	directProtocol := protocol == "DCMP-2" || protocol == "EBMP-2"
+	eventRulesApply := root["object_type"] == "event_record" && !validatorx.MalformedEBMPEvent(root)
 	for _, item := range convert(found) {
-		if item.RuleID != validator.RuleIntegrityThreshold && item.RuleID != validator.RuleAdmitAuthority && item.RuleID != validator.RuleAdapterBinding {
+		// Replace only direct-object self checks. Bare bundles retain the imported
+		// foundation's nested findings and its first-failure behavior.
+		if directProtocol && item.RuleID == validator.RuleNoSelfCausation {
+			continue
+		}
+		if protocol == "EBMP-2" && !eventRulesApply && (item.RuleID == validator.RuleTerminalState || item.RuleID == validator.RuleLifecycleDerivative) {
+			continue
+		}
+		if item.RuleID == validator.RuleArtifactRecognized {
+			item.RuleID = SchemaInvalid
+		}
+		if item.RuleID != validator.RuleIntegrityThreshold && item.RuleID != validator.RuleAdmitAuthority && item.RuleID != validator.RuleAdapterBinding && item.RuleID != validator.RuleExtensionUnique && item.RuleID != validator.RuleUnknownCritical {
 			findings = append(findings, item)
 		}
 	}
@@ -189,18 +269,22 @@ func check(data []byte, value any, options Options) ([]Finding, error) {
 	// its findings give way to repository checks of exactly the stated conditions. Unreadable key
 	// lists fail the schema, which reports them.
 	if root, isObject := value.(map[string]any); isObject {
+		findings = append(findings, convert(validatorx.ExtensionRules(root, options.KnownExtensions, options.Applicability))...)
 		integrity, _ := validatorx.IntegrityPolicy(root)
 		findings = append(findings, convert(integrity)...)
 		protocol, _ := root["protocol"].(string)
-		version, _ := root["schema_version"].(string)
-		switch {
-		case protocol == "DCMP-2":
+		if protocol == "DCMP-2" {
 			findings = append(findings, convert(validatorx.AdmitAuthority(root))...)
-		case protocol != "EBMP-2" && version == "ecl_adapter_binding_v1":
-			findings = append(findings, convert(validatorx.AdapterBinding(root))...)
 		}
 	}
-	findings = append(findings, convert(validatorx.Protocol(value, validator.Options{KnownExtensions: options.KnownExtensions}))...)
+	if directProtocol {
+		findings = append(findings, convert(validatorx.SelfCausation(root))...)
+	}
+	for _, item := range convert(validatorx.Protocol(value, validator.Options{KnownExtensions: options.KnownExtensions})) {
+		if item.RuleID != validatorx.RuleExtensionNamespace && item.RuleID != validatorx.RuleExtensionVersion {
+			findings = append(findings, item)
+		}
+	}
 	if protocol, _ := pyjson.Text(pyjson.Get(value, "protocol")); protocol == "DCMP-2" || protocol == "EBMP-2" {
 		findings = append(findings, Extensions(value, options)...)
 	}
@@ -292,17 +376,49 @@ var extensionChecks = map[string][]struct {
 // decision basis of a decision response (DCMP2-053), the minimum review time of an approval
 // record (EBMP2-063) and the approvers and expiry of a control change (EBMP2-064).
 func Extensions(value any, options Options) []Finding {
+	options = optionDefaults(options)
 	findings := guard("extension value", func() []Finding { return valueSchemas(value, options) })
 	protocol, _ := pyjson.Text(pyjson.Get(value, "protocol"))
+	interpreted := interpretedExtensions(value, options)
 	for _, row := range extensionChecks[protocol] {
 		check := row.check
-		findings = append(findings, guard(row.name, func() []Finding { return check(value) })...)
+		findings = append(findings, guard(row.name, func() []Finding { return check(interpreted) })...)
 	}
 	return findings
 }
 
+// interpretedExtensions retains source positions without interpreting unknown occurrence data.
+func interpretedExtensions(value any, options Options) any {
+	root, isObject := pyjson.Object(value)
+	list, isList := pyjson.Array(pyjson.Get(value, "extensions"))
+	if !isObject || !isList {
+		return value
+	}
+	copyRoot := map[string]any{}
+	for key, item := range root {
+		copyRoot[key] = item
+	}
+	entries := make([]any, len(list))
+	for index, item := range list {
+		entry, _ := pyjson.Object(item)
+		identifier, isText := pyjson.Text(entry["id"])
+		version, isInteger := pyjson.SchemaInt(entry["version"])
+		if isText && isInteger && validatorx.Interpretable(root, identifier, version, options.KnownExtensions, options.Applicability) {
+			entries[index] = item
+		} else {
+			entries[index] = map[string]any{}
+		}
+	}
+	copyRoot["extensions"] = entries
+	return copyRoot
+}
+
 func valueSchemas(value any, options Options) []Finding {
 	var findings []Finding
+	root, isRoot := pyjson.Object(value)
+	if !isRoot {
+		return findings
+	}
 	list, _ := pyjson.Array(pyjson.Get(value, "extensions"))
 	for index, item := range list {
 		extension, isObject := pyjson.Object(item)
@@ -310,6 +426,10 @@ func valueSchemas(value any, options Options) []Finding {
 			continue
 		}
 		identifier, _ := pyjson.Text(extension["id"])
+		version, isInteger := pyjson.SchemaInt(extension["version"])
+		if !isInteger || !validatorx.Interpretable(root, identifier, version, options.KnownExtensions, options.Applicability) {
+			continue
+		}
 		reference, registered := options.ValueSchemas[identifier]
 		content, present := extension["value"]
 		if !registered || !present || options.Schemas == nil {
@@ -343,7 +463,10 @@ func couplingResults(value any) []Finding {
 			if !isObject {
 				continue
 			}
-			outcome := result["outcome"]
+			outcome, typed := result["outcome"].(string)
+			if !typed {
+				continue
+			}
 			path := fmt.Sprintf("/extensions/%d/value/%s/outcome", index, rule.member)
 			if !pyjson.InSet(outcome, rule.results) {
 				findings = append(findings, Finding{RuleID: RuleCoupling, Path: path, Detail: "an admit cannot carry " + rule.member + " outcome " + pyjson.Str(outcome)})
@@ -351,7 +474,7 @@ func couplingResults(value any) []Finding {
 				findings = append(findings, Finding{RuleID: RuleCoupling, Path: path, Detail: "a deferred witness check needs a before_release obligation"})
 			}
 		}
-		if _, present := coupling["blocker_reason"]; present {
+		if _, present := coupling["blocker_reason"].(string); present {
 			findings = append(findings, Finding{RuleID: RuleCoupling, Path: fmt.Sprintf("/extensions/%d/value/blocker_reason", index), Detail: "an admit cannot carry a blocker reason"})
 		}
 	}
@@ -551,7 +674,8 @@ func OneWayProblemsAt(basis map[string]any, admit bool, outcome, evaluatedAt any
 		supports := pyjson.Equal(current.item["effect"], "supports")
 		class, status := current.item["class"], current.item["status"]
 		available := pyjson.Equal(status, "available")
-		if supports && pyjson.InSet(class, restrictingOnlyClasses) {
+		_, classIsString := class.(string)
+		if supports && classIsString && pyjson.InSet(class, restrictingOnlyClasses) {
 			problems = append(problems, [2]string{path + "/effect", "an input of class " + pyjson.Repr(class) + " can only make an outcome stricter"})
 		}
 		if supports && !available {
@@ -650,6 +774,9 @@ func verifiableOnlyProblems(recorded string, entries []basisEntry, byKey map[str
 		for _, current := range entries {
 			if pyjson.Equal(current.item["effect"], "supports") {
 				problems = append(problems, [2]string{fmt.Sprintf("/inputs/%d/effect", current.position), "no input supports an outcome whose verifiable-only outcome is " + pyjson.Repr(recorded)})
+			}
+			if recorded == "deny" && (pyjson.Equal(current.item["class"], "actor_supplied") || pyjson.Equal(current.item["class"], "judgment")) && pyjson.Equal(current.item["effect"], "restricts") {
+				problems = append(problems, [2]string{fmt.Sprintf("/inputs/%d/effect", current.position), "an actor_supplied or judgment input has no effect when the verifiable-only outcome is deny"})
 			}
 		}
 		return problems
@@ -790,11 +917,16 @@ func approvalRecords(value any) []Finding {
 	indexes, values := extensionValues(value, approvalExtension)
 	for position, record := range values {
 		presented, presentedIsText := pyjson.Text(record["presented_at"])
-		minimum, isInt := pyjson.Int(record["minimum_review_seconds"])
+		minimum, isInt := pyjson.SchemaInt(record["minimum_review_seconds"])
 		if !presentedIsText || !isInt {
 			continue
 		}
-		if instant.Compare(timeOf(issued), timeOf(presented).AddSeconds(minimum)) < 0 {
+		issuedTime, issuedErr := instant.Parse(issued)
+		presentedTime, presentedErr := instant.Parse(presented)
+		if issuedErr != nil || presentedErr != nil {
+			continue
+		}
+		if instant.Compare(issuedTime, presentedTime.AddSeconds(minimum)) < 0 {
 			findings = append(findings, Finding{RuleID: RuleReviewTime, Path: fmt.Sprintf("/extensions/%d/value/presented_at", indexes[position]), Detail: "the decision came sooner than the minimum review time after presentation"})
 		}
 	}
@@ -812,7 +944,9 @@ func controlChanges(value any) []Finding {
 		effective, effectiveIsText := pyjson.Text(change["effective_at"])
 		if pyjson.InSet(change["change"], disablingChanges) && effectiveIsText {
 			expires, expiresIsText := pyjson.Text(change["expires_at"])
-			if !expiresIsText || instant.Compare(timeOf(expires), timeOf(effective)) <= 0 {
+			effectiveTime, effectiveErr := instant.Parse(effective)
+			expiresTime, expiresErr := instant.Parse(expires)
+			if !expiresIsText || (effectiveErr == nil && expiresErr == nil && instant.Compare(expiresTime, effectiveTime) <= 0) {
 				findings = append(findings, Finding{RuleID: RuleControlChange, Path: fmt.Sprintf("/extensions/%d/value/expires_at", index), Detail: "a " + pyjson.Str(change["change"]) + " change must expire after it takes effect"})
 			}
 		}

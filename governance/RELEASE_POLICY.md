@@ -45,6 +45,14 @@ The general review and release rules continue to apply to later releases.
 The final release manifest identifies the exact corrected files; publication
 still requires the maintainer's authorization of those artifacts.
 
+The [November 10, 2026 clarification](RELEASE-CLARIFICATION-2026-11-10.md)
+preserves this exception and the historical correction ledger. Its per-entry
+compatibility assessment identifies normative defect repairs that require
+behavioral treatment under the clarified change-control policy; this exception
+did not waive those compatibility obligations or retroactively approve a
+classification. The clarification also records missing review and role
+evidence without treating a waived step as completed.
+
 ## Versions and release states
 
 - A version is numbered as [CHANGE_CONTROL](CHANGE_CONTROL.md) says. Version
@@ -118,22 +126,27 @@ notes, its change log, its errata index and the public verifier SBOMs generated
 from the release's exact locks, and, for a minor or major version, the
 disposition log of its public review. Publication also requires:
 
-- the maintainer's recorded authorization for that version;
+- the maintainer's recorded authorization for that version and its exact final
+  artifacts, identifying the decision date, publication scope and artifact
+  digests; an earlier standing decision, process exception, file manifest or
+  hosting-platform attestation does not by itself supply that record;
 - every finding of the outside security review fixed, or disclosed in the
   release notes with its reason;
 - no unresolved release-blocking finding;
 - completed assessment only for claims that require it.
 
-Version 1.0 is published by the maintainer's authorization without a public
-review window. The windows of [PUBLIC_REVIEW](PUBLIC_REVIEW.md) apply to every
-later minor and major version, and comments on Version 1.0 are open at any
-time.
+The original Version 1.0 release was published under the maintainer's
+authorization without a public review window. The Version 1 public-review
+draft and later minor and major versions follow
+[PUBLIC_REVIEW](PUBLIC_REVIEW.md). Comments on published versions may be
+submitted at any time.
 
 ## Errata and patch versions
 
 An erratum is published in the errata index of its version
 ([ERRATA](ERRATA.md)). A patch version collects corrective and editorial
-changes and is published under this policy without a public review window.
+changes and is published under this policy without an additional version-wide
+review window; its proposal comment and review periods still apply.
 
 ## Withdrawal and supersession
 

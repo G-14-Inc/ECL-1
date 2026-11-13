@@ -64,13 +64,13 @@ func TestExplicitEmptyEvaluationTimeIsAUsageError(t *testing.T) {
 	}
 }
 
-// EBMP2-076: the text form puts the items the verdict does not establish right after the verdict,
+// EBMP2-076: the text form puts the items the verdict does not establish after the verdict and software identity,
 // then the items the verifier checked, then the rest of the report.
 func TestScopeComesWithTheVerdict(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 	status := run([]string{path("conformance/fixtures/evidence/succeeded.json"), "--trust-policy", path("conformance/fixtures/evidence/trust-policy.json"), "--now", "2026-10-01T00:00:00Z"}, &stdout, &stderr)
 	output := stdout.String()
-	if status != 0 || !strings.HasPrefix(output, "verdict: verified\nnot-established: trusted-time: ") {
+	if status != 0 || !strings.HasPrefix(output, "verdict: verified\nsoftware: ecl-verify-go 1.0.2-review.1; source-build=1.0.2-review.1\nnot-established: trusted-time: ") {
 		t.Fatalf("%d %q %q", status, output, stderr.String())
 	}
 	notEstablished := strings.Index(output, "\nnot-established: recorded-times-true: ")
@@ -81,7 +81,7 @@ func TestScopeComesWithTheVerdict(t *testing.T) {
 	}
 	stdout.Reset()
 	status = run([]string{path("conformance/fixtures/evidence/tampered.json"), "--trust-policy", path("conformance/fixtures/evidence/trust-policy.json"), "--now", "2026-10-01T00:00:00Z"}, &stdout, &stderr)
-	if status != 1 || !strings.HasPrefix(stdout.String(), "verdict: invalid\nprimary: ecl.error.signature-policy-invalid.v1\nnot-established: envelope-signatures: ") || strings.Contains(stdout.String(), "\nestablished: ") {
+	if status != 1 || !strings.HasPrefix(stdout.String(), "verdict: invalid\nsoftware: ecl-verify-go 1.0.2-review.1; source-build=1.0.2-review.1\nprimary: ecl.error.signature-policy-invalid.v1\nnot-established: envelope-signatures: ") || strings.Contains(stdout.String(), "\nestablished: ") {
 		t.Fatal(stdout.String())
 	}
 }

@@ -74,7 +74,8 @@
             "items": {
               "type": "string",
               "minLength": 1
-            }
+            },
+            "description": "TS1-020: the bounded set of permitted restricted operations; an empty set deliberately permits none."
           },
           "fail_open_prohibited_conditions": {
             "type": "array",
@@ -91,7 +92,8 @@
                 "critical_extension",
                 "critical_verification_failure"
               ]
-            }
+            },
+            "description": "Additional declared fail-open prohibitions. TS1-018 required-proof failures always fail closed, including missing pre-release evidence, even when this list is empty; this list cannot waive those restrictions."
           },
           "fail_open_authorization": {
             "type": "object",
@@ -99,7 +101,8 @@
               "owner",
               "rationale",
               "expires_at",
-              "evidence_profile"
+              "evidence_profile",
+              "covered_advisory_dependencies"
             ],
             "additionalProperties": false,
             "properties": {
@@ -115,6 +118,15 @@
               },
               "evidence_profile": {
                 "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+              },
+              "covered_advisory_dependencies": {
+                "description": "TS1-033: declared advisory dependencies whose loss this authorization covers; none supplies required proof.",
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+                }
               }
             }
           }
@@ -160,7 +172,8 @@
             }
           }
         ]
-      }
+      },
+      "description": "TS1-016: each action_class identifier has one policy declaration; semantic validation rejects repeated identifiers, including declarations that differ."
     },
     "dependencies": {
       "type": "array",
@@ -186,7 +199,8 @@
               "cached",
               "asynchronous",
               "advisory"
-            ]
+            ],
+            "description": "The dependency delivery class; advisory means its loss leaves all required proof and locally validatable authority sufficient for the action (TS1-010, TS1-031)."
           },
           "staleness_budget_seconds": {
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
@@ -197,7 +211,28 @@
           "loss_disposition": {
             "$ref": "#/$defs/disposition"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "class": {
+                  "const": "advisory"
+                }
+              },
+              "required": [
+                "class"
+              ]
+            },
+            "then": {
+              "properties": {
+                "supplies_required_proof": {
+                  "const": false
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "evidence_buffer": {
@@ -292,7 +327,7 @@
       "properties": {
         "required_frontiers": {
           "type": "array",
-          "minItems": 5,
+          "minItems": 6,
           "uniqueItems": true,
           "items": {
             "enum": [
