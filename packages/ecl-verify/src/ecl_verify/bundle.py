@@ -33,6 +33,7 @@ ALLOWED_EXECUTION_TRANSITIONS = {
         "timed_out",
         "denied",
         "held",
+        "challenged",
         "expired_before_release",
     },
     "released": {
@@ -59,8 +60,7 @@ ALLOWED_EXECUTION_TRANSITIONS = {
 MAX_BUNDLE_RECORDS = 1_000_000
 MAX_PREDECESSORS_PER_RECORD = 128
 # EBMP2-077: a predecessor that the bundle holds has its successor's root trace and is in its
-# successor's workflow, with an attempt no greater, or in the workflow its successor names as
-# its parent.
+# successor's workflow, its declared parent, or a child with an authenticated origin path.
 CONTEXT_RULE = "ecl.rule.bundle-causal-context-consistent.v1"
 
 
@@ -88,7 +88,77 @@ def _context_consistent(prior: dict[str, Any], workflow: dict[str, Any]) -> bool
         before, after = _attempt(prior_workflow), _attempt(workflow)
         return before is not None and after is not None and before <= after
     parent = workflow.get("parent_workflow_id")
-    return isinstance(parent, str) and prior_workflow.get("workflow_id") == parent
+    child_parent = prior_workflow.get("parent_workflow_id")
+    return (isinstance(parent, str) and prior_workflow.get("workflow_id") == parent) or (
+        isinstance(child_parent, str) and child_parent == workflow.get("workflow_id")
+    )
+
+
+def _child_origin_findings(
+    child_edges: dict[str, set[str]],
+    origin_seeds: set[str],
+    missing: dict[str, set[str]],
+    parent_conflicts: dict[str, set[str]],
+    joins: list[tuple[str, str]],
+    unresolved: set[str],
+) -> list[Finding]:
+    """Resolve child origins in O(V+E) extra time/space, without recursive ancestor searches.
+
+    Edges already satisfy digest, root, workflow, parent, attempt and sequence constraints.
+    Two multi-source propagations distinguish a held origin from an absent frontier. Shared
+    backward walks retain missing IDs and held parent conflicts, including beside absent edges.
+    """
+    successors: dict[str, list[str]] = {}
+    for child, predecessors in child_edges.items():
+        for prior in predecessors:
+            successors.setdefault(prior, []).append(child)
+
+    def propagate(seeds: Iterable[str]) -> set[str]:
+        reached = set(seeds)
+        pending = list(reached)
+        for prior in pending:
+            for child in successors.get(prior, ()):
+                if child not in reached:
+                    reached.add(child)
+                    pending.append(child)
+        return reached
+
+    originated = propagate(origin_seeds)
+    uncertain = propagate(missing)
+    needed: set[str] = set()
+    findings: list[Finding] = []
+    for parent, child in joins:
+        if child in originated:
+            continue
+        if child in uncertain:
+            needed.add(child)
+        else:
+            findings.append(Finding(
+                CONTEXT_RULE,
+                f"/records/{parent}/workflow/causal_predecessors",
+                f"child predecessor {child} has no digest-bound origin in its declared parent workflow",
+            ))
+    pending = list(needed)
+    for child in pending:
+        unresolved.update(missing.get(child, ()))
+        for prior in child_edges.get(child, ()):
+            if prior in uncertain and prior not in needed:
+                needed.add(prior)
+                pending.append(prior)
+    ancestry = {child for _, child in joins}
+    pending = list(ancestry)
+    for child in pending:
+        for prior in parent_conflicts.get(child, ()):
+            findings.append(Finding(
+                CONTEXT_RULE,
+                f"/records/{child}/workflow/causal_predecessors",
+                f"child predecessor {prior} changes the declared parent in joined child ancestry",
+            ))
+        for prior in child_edges.get(child, ()):
+            if prior not in ancestry:
+                ancestry.add(prior)
+                pending.append(prior)
+    return findings
 
 
 # A declared limit of the analysis (IE1-028, EBMP2-062).
@@ -136,6 +206,7 @@ def _sequence(
 def _execution(
     records: Iterable[dict[str, Any]],
     findings: list[Finding],
+    identifier_members: tuple[str, ...],
 ) -> dict[tuple[str, str], list[dict]]:
     grouped: dict[tuple[str, str], list[dict]] = {}
     for index, record in enumerate(records):
@@ -172,7 +243,7 @@ def _execution(
                     path="/records",
                     findings=findings,
                 ),
-                str(item.get("object_id")),
+                _identity(item, identifier_members),
             )
         )
     return grouped
@@ -216,10 +287,9 @@ def _cycle_findings(edges: dict[str, set[str]]) -> list[Finding]:
             if predecessor_state != 1:
                 continue
             cycle = tuple(path[positions[predecessor] :] + [predecessor])
-            canonical = min(
-                tuple(cycle[index:-1] + cycle[:index] + (cycle[index],))
-                for index in range(len(cycle) - 1)
-            )
+            # A simple DFS cycle has unique IDs: its least rotation starts at the least ID.
+            first = min(range(len(cycle) - 1), key=cycle.__getitem__)
+            canonical = cycle[first:-1] + cycle[:first] + (cycle[first],)
             if canonical in reported:
                 continue
             reported.add(canonical)
@@ -258,14 +328,10 @@ def analyze_bundle(
     findings: list[Finding] = []
     for index, record in enumerate(records):
         if index >= max_records:
-            findings.append(
-                Finding(
-                    RESOURCE_LIMIT,
-                    "/records",
-                    "bundle record count exceeds the verifier budget",
-                )
-            )
-            break
+            # Refusing a truncated input cannot establish that a held predecessor is missing.
+            return BundleAnalysis("indeterminate", (), (), (), (Finding(
+                RESOURCE_LIMIT, "/records", "bundle record count exceeds the verifier budget",
+            ),))
         if not isinstance(record, dict):
             findings.append(
                 Finding(
@@ -277,6 +343,7 @@ def analyze_bundle(
             continue
         values.append(record)
     by_id: dict[str, dict[str, Any]] = {}
+    colliding_ids: set[str] = set()
     for index, record in enumerate(values):
         object_id = _identity(record, identifier_members)
         if not isinstance(object_id, str) or not object_id:
@@ -288,21 +355,28 @@ def analyze_bundle(
                 )
             )
             continue
+        if object_id in colliding_ids:
+            continue
         if object_id in by_id:
-            findings.append(
-                Finding(
-                    "ecl.rule.bundle-object-identifiers-unique.v1",
-                    f"/records/{index}/object_id",
-                    f"duplicate object_id {object_id}",
-                )
-            )
+            colliding_ids.add(object_id)
+            del by_id[object_id]
             continue
         by_id[object_id] = record
+    findings.extend(Finding(
+        "ecl.rule.bundle-object-identifiers-unique.v1", f"/records/{object_id}/object_id",
+        f"duplicate object_id {object_id}",
+    ) for object_id in sorted(colliding_ids))
 
     external = set(allowed_external_predecessors)
     unresolved: set[str] = set()
     edges: dict[str, set[str]] = {identifier: set() for identifier in by_id}
-    for object_id, record in by_id.items():
+    child_edges: dict[str, set[str]] = {}
+    origin_seeds: set[str] = set()
+    missing_origins: dict[str, set[str]] = {}
+    parent_conflicts: dict[str, set[str]] = {}
+    parent_joins: list[tuple[str, str]] = []
+    for object_id in sorted(by_id):
+        record = by_id[object_id]
         path = f"/records/{object_id}"
         sequence = _sequence(record, path=path, findings=findings)
         workflow = record.get("workflow")
@@ -319,14 +393,10 @@ def analyze_bundle(
             )
             continue
         if len(predecessors) > max_predecessors_per_record:
-            findings.append(
-                Finding(
-                    RESOURCE_LIMIT,
-                    path + "/workflow/causal_predecessors",
-                    "predecessor count exceeds the verifier budget",
-                )
-            )
-            predecessors = predecessors[:max_predecessors_per_record]
+            return BundleAnalysis("indeterminate", (), (), (), (Finding(
+                RESOURCE_LIMIT, path + "/workflow/causal_predecessors",
+                "predecessor count exceeds the verifier budget",
+            ),))
         for predecessor in predecessors:
             if not isinstance(predecessor, dict):
                 findings.append(
@@ -348,10 +418,15 @@ def analyze_bundle(
                 )
                 continue
             edges[object_id].add(predecessor_id)
+            if predecessor_id in colliding_ids:
+                # Present but ambiguous is neither an absent predecessor nor a selected version.
+                continue
             prior = by_id.get(predecessor_id)
             if prior is None:
                 if predecessor_id not in external:
                     unresolved.add(predecessor_id)
+                if check_context and isinstance(workflow.get("parent_workflow_id"), str):
+                    missing_origins.setdefault(object_id, set()).add(predecessor_id)
                 continue
             expected_digest = predecessor.get("digest") or {}
             try:
@@ -379,7 +454,8 @@ def analyze_bundle(
             same_workflow = isinstance(prior_workflow, dict) and prior_workflow.get(
                 "workflow_id"
             ) == workflow.get("workflow_id")
-            if check_context and not _context_consistent(prior, workflow):
+            context_valid = _context_consistent(prior, workflow) if check_context else False
+            if check_context and not context_valid:
                 findings.append(
                     Finding(
                         CONTEXT_RULE,
@@ -387,6 +463,18 @@ def analyze_bundle(
                         f"predecessor {predecessor_id} is outside the causal context of {object_id}",
                     )
                 )
+            if check_context and context_valid and isinstance(prior_workflow, dict):
+                parent = workflow.get("parent_workflow_id")
+                prior_parent = prior_workflow.get("parent_workflow_id")
+                if not same_workflow and prior_parent == workflow.get("workflow_id"):
+                    parent_joins.append((object_id, predecessor_id))
+                if digest_matches and isinstance(parent, str):
+                    if not same_workflow and prior_workflow.get("workflow_id") == parent:
+                        origin_seeds.add(object_id)
+                    elif same_workflow and prior_parent == parent and prior_sequence < sequence:
+                        child_edges.setdefault(object_id, set()).add(predecessor_id)
+                    elif same_workflow and prior_parent != parent:
+                        parent_conflicts.setdefault(object_id, set()).add(predecessor_id)
             if same_workflow and prior_sequence >= sequence:
                 findings.append(
                     Finding(
@@ -395,15 +483,20 @@ def analyze_bundle(
                         f"predecessor {predecessor_id} does not precede {object_id}",
                     )
                 )
+    if check_context:
+        findings.extend(_child_origin_findings(child_edges, origin_seeds, missing_origins, parent_conflicts, parent_joins, unresolved))
     findings.extend(_cycle_findings(edges))
 
     terminal_actions: set[str] = set()
     open_actions: set[str] = set()
     for (action_id, attempt_id), attempt_records in _execution(
-        values,
+        # Only records with a valid, unambiguous graph identifier may determine an attempt.
+        by_id.values(),
         findings,
+        identifier_members,
     ).items():
         states = [str((item.get("event") or {}).get("state")) for item in attempt_records]
+        invalid_transition = False
         for prior_state, current_state in zip(states, states[1:]):
             if (
                 prior_state in TERMINAL_STATES
@@ -413,6 +506,7 @@ def analyze_bundle(
                     set(),
                 )
             ):
+                invalid_transition = True
                 findings.append(
                     Finding(
                         "ecl.rule.execution-state-transition-valid.v1",
@@ -420,12 +514,16 @@ def analyze_bundle(
                         f"invalid execution transition {prior_state} -> {current_state}",
                     )
                 )
+        if invalid_transition:
+            continue
         if states and states[-1] in TERMINAL_STATES:
             terminal_actions.add(action_id)
         else:
             open_actions.add(action_id)
 
-    if unresolved or open_actions:
+    if colliding_ids:
+        status = "indeterminate"
+    elif unresolved or open_actions:
         status = "incomplete"
     elif findings:
         status = "indeterminate"

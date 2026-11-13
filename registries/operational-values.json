@@ -1,7 +1,7 @@
 {
   "schema_version": "ecl_registry_v2",
   "registry_id": "https://externalcontrollayer.ai/ns/registry/operational-values",
-  "registry_version": 1,
+  "registry_version": 2,
   "status": "active",
   "change_control": "governance/REGISTRY_POLICY.md",
   "entries": [
@@ -16,12 +16,12 @@
     },
     {
       "id": "ecl.authority-use.bounded-multi-use.v1",
-      "status": "active",
+      "status": "reserved",
       "owner_class": "ecl-registry",
       "introduced_in": "1.0-rc.3",
-      "compatibility": "behavioral",
-      "description": "Authority permits no more than its declared positive maximum use count.",
-      "attributes": {"domain": "authority_use_policy", "wire_value": "bounded_multi_use"}
+      "compatibility": "breaking",
+      "description": "Historical allocation retained to prevent reassignment. Multi-use authorization is unsupported; DCMP-2 accepts only single_use.",
+      "attributes": {"domain": "authority_use_policy", "wire_value": "bounded_multi_use", "supported": false, "historical_status": "active"}
     },
     {
       "id": "ecl.control.cancel.v1",

@@ -6,6 +6,8 @@
 import { ALGORITHM_SUITES, ERROR_CODES, EXTENSIONS, SEMANTIC_RULES, VOCABULARY } from "../generated/registries.js";
 import type { RegistryEntry } from "../generated/registries.js";
 
+import { get, isObject, isInteger } from "../json/value.js";
+
 const REGISTRIES: Record<string, readonly RegistryEntry[]> = {
   "algorithm-suites": ALGORITHM_SUITES,
   "error-codes": ERROR_CODES,
@@ -64,6 +66,20 @@ export function allocatedExtensionVersions(): ReadonlyMap<string, ReadonlySet<nu
  */
 export function activeExtensionVersions(): ReadonlyMap<string, ReadonlySet<number>> {
   return extensionVersions(EXTENSIONS.filter((entry) => entry.status === "active"));
+}
+
+export type ExtensionApplicability = ReadonlyMap<string, ReadonlyMap<number, ReadonlySet<string>>>;
+
+/** The object types on which each allocated identifier/version has an interpretation. */
+export function extensionApplicability(): ExtensionApplicability {
+  const result = new Map<string, Map<number, ReadonlySet<string>>>();
+  for (const entry of EXTENSIONS) {
+    if (typeof entry.version !== "number" || !Number.isInteger(entry.version)) continue;
+    let versions = result.get(entry.id);
+    if (versions === undefined) { versions = new Map(); result.set(entry.id, versions); }
+    versions.set(entry.version, new Set(entry.applies_to ?? []));
+  }
+  return result;
 }
 
 function extensionVersions(entries: readonly RegistryEntry[]): ReadonlyMap<string, ReadonlySet<number>> {
@@ -137,4 +153,24 @@ export function rulePrecedence(): ReadonlyMap<string, number> {
     map.set(entry.id, entry.precedence);
   }
   return map;
+}
+
+/** Preserve readable protocol rules after an unrelated envelope-field schema error. */
+export function extensionObjectType(value: unknown): string | undefined {
+  if (!isObject(value)) return undefined;
+  const protocol = get(value, "protocol");
+  if (protocol === "DCMP-2" || protocol === "EBMP-2" || protocol === "ECL-WI-1") return protocol;
+  const envelopeKind = get(value, "envelope_version");
+  const kind = typeof envelopeKind === "string" ? envelopeKind : protocol;
+  return typeof kind === "string" ? kind : undefined;
+}
+
+/** Whether this library interprets an occurrence on its carrying object; no input is changed. */
+export function interpretedExtension(value: unknown, occurrence: unknown): boolean {
+  if (!isObject(value) || !isObject(occurrence)) return false;
+  const kind = extensionObjectType(value);
+  const identifier = get(occurrence, "id"), version = get(occurrence, "version");
+  return typeof kind === "string" && typeof identifier === "string" && isInteger(version)
+    && EXTENSIONS.some((entry) => entry.status === "active" && entry.id === identifier
+      && entry.version === version && (entry.applies_to ?? []).includes(kind));
 }

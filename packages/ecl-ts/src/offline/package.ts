@@ -37,7 +37,7 @@
  *
  * Otherwise the package has its bundle's verdict, except that a package whose `expires_at` is not
  * later than the evaluation time is `current-trust-failed`, with the expired code, where its bundle
- * is `verified`. Times are compared to the microsecond, as the reference compares them. A package
+ * is `verified`. Times are compared exactly to the nanosecond, including package validity endpoints. A package
  * that exceeds a declared limit of the verifier (IE1-028) is `invalid` with
  * `ecl.error.resource-limit-exceeded.v1` at the check that meets the limit: the archive's limits at
  * check 1, the strict JSON parser's limits at checks 3 and 7, and the artifact count and path bytes
@@ -54,7 +54,7 @@ import { parseStrictJson, StrictJsonError } from "../json/strict.js";
 import { get, isArray, isObject } from "../json/value.js";
 import type { JsonObject, JsonValue } from "../json/value.js";
 import { eclSchemas } from "../schema/validator.js";
-import { InstantError, instantMicroseconds } from "../time.js";
+import { InstantError, instantNanoseconds } from "../time.js";
 import { TrustPolicy } from "../trust/policy.js";
 import { ArchiveRefusal, checkLimits, DEFAULT_OFFLINE_RESOURCE_LIMITS, fileAndDirectory, foldAscii, isEntryName, readStoredZip } from "./zip.js";
 import type { OfflineResourceLimits } from "./zip.js";
@@ -123,8 +123,8 @@ function manifestProblem(manifest: JsonValue): string | undefined {
     return `${MANIFEST_NAME} does not satisfy ${MANIFEST_SCHEMA}`;
   }
   try {
-    instantMicroseconds(manifest["created_at"]);
-    instantMicroseconds(manifest["expires_at"]);
+    instantNanoseconds(manifest["created_at"]);
+    instantNanoseconds(manifest["expires_at"]);
   } catch (error) {
     if (error instanceof InstantError) {
       return "created_at or expires_at is not a valid instant";
@@ -235,13 +235,13 @@ export function verifyOfflinePackage(archive: Uint8Array, policy: TrustPolicy, o
   if (unnamed.length > 0) {
     return failed("invalid", [issue(SEMANTIC_INVALID, `the archive holds a member the manifest does not name: ${unnamed[0] as string}`)]);
   }
-  // 5. The package's validity interval, to the microsecond.
-  const createdAt = instantMicroseconds(manifest["created_at"]);
-  const expiresAt = instantMicroseconds(manifest["expires_at"]);
+  // 5. The package's validity interval, to the nanosecond.
+  const createdAt = instantNanoseconds(manifest["created_at"]);
+  const expiresAt = instantNanoseconds(manifest["expires_at"]);
   if (expiresAt <= createdAt) {
     return failed("invalid", [issue(EXPIRED, "the package expires no later than it was created")]);
   }
-  const expired = instantMicroseconds(options.now) >= expiresAt;
+  const expired = instantNanoseconds(options.now) >= expiresAt;
   // 6. Size and digest of every artifact the archive holds; check 1 bounded them by the limits.
   const carried = new Map<string, Uint8Array>();
   const absent: string[] = [];
@@ -347,10 +347,10 @@ export function verifyOfflinePackage(archive: Uint8Array, policy: TrustPolicy, o
 /**
  * A package report's identifiers in order, each once, the primary first, as the runner's `package`
  * stage reports them (IE1-022, EBMP2-068; the reference's `reported_package_identifiers`): the
- * codes of its findings in the order of the checks that gave them; for a `current-trust-failed`
- * package, after the expired code of a package that has expired, the current status of each
- * envelope that is not valid, in the order of stage 4 of EBMP2-068; and for an `incomplete`
- * package without findings the causal-closure code.
+ * codes of its findings in the order of the checks that gave them. For a `current-trust-failed`
+ * package, existing findings come first, then current-status codes in EBMP2-068 order.
+ * IE1-022 step 12 adds a package-expiry finding only when the inner bundle verdict is verified.
+ * An `incomplete` package without findings reports the causal-closure code.
  */
 export function packageIdentifiers(report: BundleReport): string[] {
   const codes = [...new Set(report.findings.map((finding) => finding.code))];

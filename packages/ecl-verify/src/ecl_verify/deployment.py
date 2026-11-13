@@ -3,11 +3,31 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from typing import Mapping
 
 
 class DeploymentError(ValueError):
     """Raised when a deployment or security profile is incomplete."""
+
+
+def _flags(*values: object) -> None:
+    if any(type(value) is not bool for value in values):
+        raise DeploymentError("declaration flags must be booleans")
+
+
+def _text(value: object, *, optional: bool = False) -> None:
+    if optional and value is None:
+        return
+    if not isinstance(value, str) or not value:
+        raise DeploymentError("declaration references and names must be nonempty strings")
+
+
+def _strings(value: object) -> None:
+    if not isinstance(value, (tuple, list, set, frozenset)) or any(
+        not isinstance(item, str) or not item for item in value
+    ):
+        raise DeploymentError("declaration collections must contain nonempty strings")
 
 
 @dataclass(frozen=True)
@@ -32,6 +52,19 @@ class DeploymentProfile:
     disconnected_incident_workflow_id: str | None = None
 
     def validate(self) -> None:
+        _text(self.model)
+        _flags(self.centralized_low_latency_updates, self.centralized_audit_and_rapid_revocation,
+               self.residency_or_mission_local_control, self.local_policy_key_evidence_control)
+        for value in (self.policy_cache_staleness_seconds, self.trust_cache_staleness_seconds):
+            if value is not None and (type(value) is not int or value < 0):
+                raise DeploymentError("cache intervals must be nonnegative integers when supplied")
+        for value in (self.trust_bundle_exchange_id, self.cross_domain_delegation_id,
+                      self.cross_domain_verification_id, self.federated_timing_case_id,
+                      self.stale_transition, self.reconnect_reconciliation_id,
+                      self.airgap_update_media_integrity_id, self.airgap_export_integrity_id,
+                      self.emergency_policy_dual_control_id, self.disconnected_revocation_workflow_id,
+                      self.disconnected_incident_workflow_id):
+            _text(value, optional=True)
         if self.model not in {
             "centralized-distributed-enforcement",
             "federated-multi-domain",
@@ -110,15 +143,22 @@ class DeclaredTimingCase:
     assessor_deviation_approval: str | None = None
 
     def validate(self) -> None:
-        if self.level not in DEFAULT_TIMING:
+        _text(self.rationale, optional=True)
+        _text(self.residual_risk, optional=True)
+        _text(self.assessor_deviation_approval, optional=True)
+        _strings(self.control_assumptions)
+        if type(self.level) is not int or self.level not in DEFAULT_TIMING:
             raise DeploymentError("timing case level is invalid")
+        if type(self.trusted_time_or_secure_monotonic) is not bool:
+            raise DeploymentError("trusted ordering declaration must be boolean")
         values = (
             self.connected_revocation_seconds,
             self.offline_staleness_seconds,
             self.evidence_export_seconds,
         )
-        if any(value < 0 for value in values):
-            raise DeploymentError("timing case cannot use a negative interval")
+        intervals = values + (() if self.federated_exchange_seconds is None else (self.federated_exchange_seconds,))
+        if any(type(value) is not int or value < 0 for value in intervals):
+            raise DeploymentError("timing case intervals must be nonnegative integers")
         default = DEFAULT_TIMING[self.level]
         if values != default and (
             not self.rationale or not self.control_assumptions or not self.residual_risk
@@ -152,6 +192,13 @@ class FallbackProfile:
     weaker_transition_after_trigger_allowed: bool
 
     def validate(self) -> None:
+        _flags(self.degraded_signed_cached_state, self.stricter_transition_allowed,
+               self.weaker_transition_after_trigger_allowed)
+        for value in (self.degraded_entry_conditions, self.degraded_bounded_actions,
+                      self.restricted_entry_conditions, self.restricted_allowed_actions,
+                      self.emergency_entry_conditions, self.precedence):
+            _strings(value)
+        _text(self.degraded_expires_to)
         if (
             not self.degraded_entry_conditions
             or not self.degraded_signed_cached_state
@@ -202,6 +249,12 @@ class FederatedAuthorityContext:
     semantically_lossless_or_narrower: bool
 
     def validate(self) -> None:
+        _flags(self.semantically_lossless_or_narrower)
+        if not isinstance(self.values, Mapping) or any(
+            not isinstance(key, str) or not isinstance(value, str) or not value
+            for key, value in self.values.items()
+        ):
+            raise DeploymentError("federated authority context requires named string values")
         if set(self.values) != FEDERATED_FIELDS or any(
             not value for value in self.values.values()
         ):
@@ -244,6 +297,14 @@ class SecurityPosture:
     heartbeat_safe_state_test_id: str
 
     def validate(self) -> None:
+        _strings(self.adversaries)
+        _strings(self.untrusted_content_classes)
+        _flags(self.fail_closed_on_policy_proof_integrity, self.architecture_independence,
+               self.human_is_sole_control)
+        for value in (self.privileged_change_control_id, self.evidence_retention_profile_id,
+                      self.red_team_exercise_id, self.incident_forensic_preservation_id,
+                      self.staged_recovery_id, self.heartbeat_safe_state_test_id):
+            _text(value)
         if not BASELINE_ADVERSARIES.issubset(self.adversaries):
             raise DeploymentError("baseline adversary model is incomplete")
         if not UNTRUSTED_CONTENT_CLASSES.issubset(
@@ -274,6 +335,11 @@ class PrivacyPosture:
     sealed_review_or_escrow_path_id: str | None
 
     def validate(self) -> None:
+        _flags(self.materially_hidden_context)
+        for value in (self.secret_reference_mechanism_id, self.redaction_or_partition_profile_id,
+                      self.least_necessary_disclosure_test_id):
+            _text(value)
+        _text(self.sealed_review_or_escrow_path_id, optional=True)
         if not all(
             (
                 self.secret_reference_mechanism_id,
@@ -316,12 +382,14 @@ class RedactedProvenanceExport:
     resulting_claim_status: str
 
     def validate(self) -> None:
+        _strings(self.preserved_fields)
+        _flags(self.removed_required_evidence)
+        _text(self.resulting_claim_status)
         if not REDACTED_PROVENANCE_FIELDS.issubset(self.preserved_fields):
             raise DeploymentError("redacted export omits verifier-critical fields")
         if (
-            len(self.source_digest) != 64
-            or len(self.derivative_digest) != 64
-            or len(self.redaction_manifest_digest) != 64
+            any(not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None
+                for value in (self.source_digest, self.derivative_digest, self.redaction_manifest_digest))
             or self.source_digest == self.derivative_digest
         ):
             raise DeploymentError("redacted export derivative binding is invalid")

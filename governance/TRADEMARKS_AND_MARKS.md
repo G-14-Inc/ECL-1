@@ -62,7 +62,8 @@ lists self-declared claims, and a listing is not a mark.
 ## The licenses and marks
 
 Neither the Creative Commons Attribution 4.0 International license nor the
-Apache License, Version 2.0 grants rights in the name "ECL-1" or in any mark
-([LICENSING](../LICENSING.md)). Apache-2.0 Section 6 provides no general
-trademark permission. Its exception concerns reasonable and customary
-identification of the work's origin and reproduction of the `NOTICE` file.
+Apache License, Version 2.0 grants general trademark rights in the name
+"ECL-1" or in any mark ([LICENSING](../LICENSING.md)). Apache-2.0 Section 6
+provides no general trademark permission. Its exception concerns reasonable
+and customary identification of the work's origin and reproduction of the
+`NOTICE` file.

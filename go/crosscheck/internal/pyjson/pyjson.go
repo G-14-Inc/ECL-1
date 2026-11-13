@@ -10,7 +10,9 @@ package pyjson
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"math/big"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -90,10 +92,16 @@ func ObjectAt(value any, path ...string) (map[string]any, bool) {
 	return object, ok
 }
 
+var integerGrammar = regexp.MustCompile(`^-?(?:0|[1-9][0-9]*)$`)
+var numberGrammar = regexp.MustCompile(`^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?$`)
+
 // Int returns value as an integer when it is one, never a boolean (Python's type(x) is int).
 func Int(value any) (int64, bool) {
 	switch number := value.(type) {
 	case json.Number:
+		if !integerGrammar.MatchString(number.String()) {
+			return 0, false
+		}
 		parsed, err := strconv.ParseInt(number.String(), 10, 64)
 		return parsed, err == nil
 	case int:
@@ -103,6 +111,33 @@ func Int(value any) (int64, bool) {
 	default:
 		return 0, false
 	}
+}
+
+// SchemaInt reads an integer operand of a schema-backed semantic rule.
+// Int retains exact Python host-type behavior for bindings. Finite whole float64
+// operands are additionally readable within the interoperable integer range.
+// A bounded exact json.Number ratio may also represent a mathematical integer.
+// The caller's value is never changed; wire parsing and canonicalization stay separate.
+func SchemaInt(value any) (int64, bool) {
+	if integer, ok := Int(value); ok {
+		return integer, true
+	}
+	if number, ok := value.(float64); ok {
+		if math.IsNaN(number) || math.IsInf(number, 0) || math.Trunc(number) != number || math.Abs(number) > 9007199254740991 {
+			return 0, false
+		}
+		return int64(number), true
+	}
+	if literal, ok := value.(json.Number); ok {
+		if !boundedNumberLiteral(literal.String()) {
+			return 0, false
+		}
+		number, valid := Number(value)
+		if valid && number.IsInt() && number.Num().IsInt64() {
+			return number.Num().Int64(), true
+		}
+	}
+	return 0, false
 }
 
 // PythonInt returns value as Python's isinstance(x, int) reads it: an integer, or a boolean as
@@ -117,10 +152,40 @@ func PythonInt(value any) (int64, bool) {
 	return Int(value)
 }
 
+// SchemaInt bounds its new exact-rational fallback before math/big allocates it.
+// Repository external JSON emits at most 4300 integer digits; fraction/exponent
+// literals use float64. Existing Number comparison semantics remain separate.
+const maxHostNumberDigits = 4300
+const maxHostNumberExponent = 4300
+
+func boundedNumberLiteral(raw string) bool {
+	if len(raw) > maxHostNumberDigits+16 || !numberGrammar.MatchString(raw) {
+		return false
+	}
+	mantissa := raw
+	if index := strings.IndexAny(raw, "eE"); index >= 0 {
+		exponent, err := strconv.Atoi(raw[index+1:])
+		if err != nil || exponent < -maxHostNumberExponent || exponent > maxHostNumberExponent {
+			return false
+		}
+		mantissa = raw[:index]
+	}
+	digits := 0
+	for _, character := range mantissa {
+		if character >= '0' && character <= '9' {
+			digits++
+		}
+	}
+	return digits <= maxHostNumberDigits
+}
+
 // Number returns a numeric value (not a boolean) as an exact rational.
 func Number(value any) (*big.Rat, bool) {
 	switch number := value.(type) {
 	case json.Number:
+		if !numberGrammar.MatchString(number.String()) {
+			return nil, false
+		}
 		return new(big.Rat).SetString(number.String())
 	case int:
 		return new(big.Rat).SetInt64(int64(number)), true
@@ -150,6 +215,17 @@ func Truthy(value any) bool {
 		return len(current) > 0
 	case map[string]any:
 		return len(current) > 0
+	case json.Number:
+		// Zero is determined by the mantissa; expanding its exponent is unnecessary.
+		// Invalid host tokens keep the existing truthy fallback for unreadable values.
+		raw := current.String()
+		if !numberGrammar.MatchString(raw) {
+			return true
+		}
+		if index := strings.IndexAny(raw, "eE"); index >= 0 {
+			raw = raw[:index]
+		}
+		return strings.ContainsAny(raw, "123456789")
 	default:
 		if number, ok := Number(value); ok {
 			return number.Sign() != 0

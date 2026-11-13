@@ -449,12 +449,22 @@ def _validate_value_limits(
             # The base-class views: a subclass cannot show one content here and another to
             # _serialize.
             if isinstance(current, dict):
+                names: set[str] = set()
                 for key, item in dict.items(current):
                     if not isinstance(key, str):
                         raise CanonicalizationError(
                             "JSON object member names must be strings"
                         )
                     _validate_string(key)
+                    # Distinct str subclasses can override equality/hash while carrying the
+                    # same base text. Serialization uses that base text, so refuse a collision.
+                    name = str.__str__(key)
+                    if name in names:
+                        raise CanonicalizationError(
+                            f"duplicate canonical JSON object member: {name!r}",
+                            DUPLICATE_MEMBERS,
+                        )
+                    names.add(name)
                     stack.append((item, depth + 1, False))
             else:
                 for item in list.__iter__(current):

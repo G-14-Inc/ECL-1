@@ -1,7 +1,8 @@
 # ECL Integrity Envelope 1
 
 Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 Schemas: `schemas/ecl-integrity-envelope-v1.schema.json`,
 `schemas/ecl-time-attestation-v1.schema.json`
 
@@ -34,9 +35,12 @@ duplicate members are prohibited. The noncharacters are U+FDD0 to U+FDEF and
 the last two code points of each of the 17 Unicode planes (U+FFFE, U+FFFF,
 U+1FFFE, U+1FFFF and so on to U+10FFFF).
 
-**IE1-003** — Decimal quantities, currency, durations, integers outside the
-exact range, and other precision-sensitive values MUST use registered string
-representations.
+**IE1-003** — Decimal quantities, currency, integers outside the exact range,
+and other precision-sensitive values MUST use registered string
+representations. Durations MUST use their schema-defined representation and
+unit: exact-integer fields such as `requested_validity_seconds` and
+`release_guard_ms` remain integers within their declared ranges; other duration
+representations are registered strings.
 
 **IE1-004** — A consumer MUST apply the verified RFC 8785 erratum relevant to
 negative zero (Errata ID 7920) and MUST reject rather than normalize ambiguous
@@ -61,12 +65,12 @@ a trust-policy document):
 5. no object repeats a member name, after escapes are decoded, or the finding is `ecl.rule.json-no-duplicate-members.v1`;
 6. every number is an integer within the exact interoperable range, written without a fraction, an exponent or a negative zero, or the finding is `ecl.rule.json-restricted-numbers.v1`.
 
-Checks 3 to 6 read every value of the input, including each value of a repeated
+**IE1-037 (continued)** — Checks 3 to 6 read every value of the input, including each value of a repeated
 member name. The limits are each consumer's own (IE1-028), so whether an input
 near a limit passes check 1 or check 3 can differ between consumers; the order
 of the other checks does not.
 
-Check 2 comes before check 3 wherever each defect lies in the text: an input
+**IE1-037 (continued)** — Check 2 comes before check 3 wherever each defect lies in the text: an input
 that goes beyond a nesting or value limit and departs from the grammar only
 later in the text has the finding of check 2. A consumer keeps this order
 without building an oversized value (IE1-029): it counts values and nesting as
@@ -83,8 +87,8 @@ need a convention that every validator shares.
 as an ECMA-262 regular expression that may match anywhere in the string unless
 the pattern anchors it, so that `$` matches only at the end of the string, never
 before a final line terminator, and `.` matches no line terminator. It MUST
-treat the `format` keyword as an assertion for the two formats that the ECL
-schemas use, and a string satisfies them as follows:
+treat the `date-time` and `uri` formats as assertions under this protocol,
+with the following string conditions:
 
 1. `date-time`: the string matches the pattern of `rfc3339Utc` in the common schema (`schemas/ecl-common-v1.schema.json`) and names a date from 0001-01-01 to 9999-12-31 that exists in the Gregorian calendar;
 2. `uri`: every character is an ASCII letter or digit or one of ``-._~:/?#[]@!$&'()*+,;=%``; every `%` is followed by two hexadecimal digits; the string begins with a scheme (a letter followed by letters, digits, `+`, `-` and `.`) and `:`; the characters after that `:` up to the first `?` or `#` are neither empty nor exactly `//`; and when those characters begin with `//`, the authority that follows, up to the next `/`, holds `[` or `]` only around an IP literal: after its last `@` the authority begins with `[` and holds a `]`, the characters between that `[` and the first `]` are an IPv6 address in the text form of RFC 4291 section 2.2 (with no leading zero in an octet of an embedded IPv4 address), optionally followed by `%` and one or more characters other than `%`, or are a lowercase `v`, one or more hexadecimal digits, `.` and one or more characters, and any characters after that `]` begin with `:`.
@@ -125,9 +129,9 @@ over the exact payload type and decoded payload bytes.
 **IE1-010** — A signature valid for one payload type MUST NOT validate for
 another payload type.
 
-**IE1-011** — A verifier MUST NOT re-serialize a parsed payload before
-signature verification. The verifier MUST verify the transported canonical
-bytes and then separately prove that those bytes are canonical.
+**IE1-011** — A verifier MUST verify signatures over the transported payload
+bytes, not a replacement serialization. It MUST separately check that those
+bytes are canonical, in the order specified by IE1-040.
 
 ## 4. Payload-bound policy
 
@@ -151,7 +155,7 @@ eligible keys, every mandatory signer MUST be one of them. A consumer MUST
 reject a payload-bound policy that fails any of these conditions with
 `ecl.rule.integrity-threshold-consistent.v1`.
 
-These are the only conditions of that rule. An empty list of eligible keys
+**IE1-013 (continued)** — These are the only conditions of that rule. An empty list of eligible keys
 leaves the eligible keys unbounded, so mandatory signers need no eligible list.
 Payload object validation applies IE1-013, including its required-key subset
 check, with `ecl.rule.integrity-threshold-consistent.v1`; bundle verification
@@ -163,7 +167,7 @@ signer outside a non-empty eligible-key list cannot count in step 6, and step
 order of step 6's sub-steps, that some signature has, or
 `ecl.error.threshold-not-met.v1` when no signature has any of those reasons.
 
-A threshold higher than the number of keys in a non-empty eligible-key list
+**IE1-013 (continued)** — A threshold higher than the number of keys in a non-empty eligible-key list
 is not an IE1-013 consistency failure, but no envelope can meet that threshold.
 A signature using a suite the policy does not accept cannot count under
 IE1-040 step 6(a). In standalone verification, other acceptable signatures can
@@ -255,6 +259,12 @@ at the check that meets the limit:
 **IE1-023** — The policies for verification at issue time, observation time,
 trusted timestamp time, current time, and other declared times are distinct. A verifier
 MUST state which policy it applied.
+A corpus replay report MUST state the verification-time policy for every
+evaluated envelope, evidence-bundle or package stage, determined from the
+stages of vectors supported by its declared capabilities. A narrower
+capability, including key-role-separation, does not waive the policy of a stage
+it evaluates. The report MUST NOT state a stage policy when every vector of
+that stage is unsupported.
 
 **IE1-024** — A signature MUST NOT count, even when its cryptographic check
 passes, if its key is not acceptable under the trust policy, suite, purpose or
@@ -500,6 +510,7 @@ an envelope at the first step it fails, with that step's error code:
 1. the envelope satisfies its schema, or `ecl.error.schema-invalid.v1`;
 2. its encoded payload, its number of signature entries and each encoded signature value are within the verifier's declared limits (IE1-028), or `ecl.error.resource-limit-exceeded.v1`;
 3. the payload is canonical base64, its digest is the `ecl.digest.sha-256.v1` digest of the decoded bytes, the bytes are canonical strict JSON (IE1-001, IE1-011, IE1-037) whose value is an object with an `integrity_policy` object, and the payload media type and the payload's `protocol` name the same protocol (IE1-010), or `ecl.error.integrity-invalid.v1`; a declared limit that the strict parse reaches (IE1-037, checks 1 and 3) gives `ecl.error.resource-limit-exceeded.v1` instead;
+   after these checks and before step 4, the verifier MUST apply the extension-consumer rules of EXTENSION-REGISTRY-1 to the envelope's own `extensions`, reporting their registered rule codes in registry precedence order. This narrow check does not apply the payload's full object schema or its other semantic rules during standalone envelope verification;
 4. the lists of the payload-bound policy are within the verifier's declared limits, or `ecl.error.resource-limit-exceeded.v1`; then the policy requires integrity, its threshold is at least one and not lower than the number of required keys, its key and suite lists are lists of distinct identifiers with at least one accepted suite, and its trust-policy reference, verification-time policy and revocation policy are those of the trust policy and evaluation the verifier applies, or `ecl.error.signature-policy-invalid.v1`;
 5. every signature entry names a key and a suite, and no two entries name the same key and suite, or `ecl.error.integrity-invalid.v1`;
 6. each signature entry is examined in turn: (a) the payload's policy accepts its suite, the trust policy allows the suite, the key is eligible when the policy lists eligible keys, the trust policy holds the key with that suite, and the key holds the purpose of the payload (IE1-039), or the signature does not count because its key is not acceptable; (b) the key is not revoked at the evaluation time, or the signature does not count because its key is revoked; (c) the evaluation time is within the key's validity interval, or the signature does not count because its key is expired or not yet valid; (d) the signature value is canonical base64, a P-256 signature is minimally encoded DER with a low S value (IE1-017) and an ML-DSA-65 signature is 3309 bytes long (IE1-018), or the verifier refuses the envelope with `ecl.error.integrity-invalid.v1`; (e) the signature verifies, for Ed25519 with S below the group order under the cofactorless equation (TP1-008), or it does not count because it does not verify;

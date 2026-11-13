@@ -33,3 +33,10 @@ If a required role, contact, reviewer, legal decision, assessor, signing key,
 or authorization of the maintainer is absent, the affected action is not
 authorized. Silence, repository access, tool output, or authorship does not
 substitute for the missing authority.
+
+The recorded [Version 1.0](RELEASE_POLICY.md#version-10-release-exception) and
+[v1.0.1](RELEASE_POLICY.md#correction-release-exception-v101) exceptions apply
+only to their named releases and steps. A waived step remains waived, not
+completed. The [dated clarification](RELEASE-CLARIFICATION-2026-11-10.md)
+separates the retained role and review evidence from missing records and
+explains the historical correction classification.

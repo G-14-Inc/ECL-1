@@ -13,7 +13,8 @@
 <h1 id="ecl-aarm-binding-profile-1">ECL AARM Binding Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile states how a control plane that implements AARM (Autonomous Action
 Runtime Management) connects to an ECL-1 deployment without weakening the
 guarantee: every in-scope action crosses an enforcement boundary that the
@@ -86,7 +87,15 @@ the exact request (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcm
 policy with a key that the policy accepts for the decision-response purpose
 (TRUST-POLICY-1), and an enforcement point MUST release an action only on such a
 response; an AARM decision, receipt or other AARM artifact MUST NOT release an
-action by itself.</p>
+action by itself. A retained exchange record's <code>response</code> and each retained
+<code>modification_response</code> MUST bind the record's corresponding <code>request</code> or
+<code>modification_request</code> under <a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, with the reference
+profile's response clock-skew allowance of zero, whether or not the action was
+released and for every outcome. The authority checks that those requirements
+restrict to <code>admit</code> apply only to <code>admit</code>. A record verifier MUST report a
+missing corresponding request or a failed response binding with
+<code>ecl.error.request-binding-invalid.v1</code>, retaining the underlying binding
+failure's code in the diagnostic message.</p>
 <h2 id="decisions">Decisions</h2>
 <p><span id="AB1-003"><strong>AB1-003</strong></span><a class="requirement-link" href="#AB1-003" aria-label="Link to AB1-003">§</a> — The ECL outcome for an action that an AARM decision governs MUST be
 at least as strict, in the strictness order of the core standard (Section 4.3),
@@ -176,7 +185,14 @@ form of the receipt as retained, signature included, and the AARM decision that
 the receipt records in <code>decision.result</code>; that decision MUST be the decision the
 exchange record holds and consistent with the ECL outcome under <a href="aarm-binding-1.html#AB1-003">AB1-003</a>, and the
 receipt's <code>action.parameters</code> MUST have, under <a href="dcmp-2.html#DCMP2-007">DCMP2-007</a>, the digest that the
-decision request carries in <code>action.parameters_digest</code>.</p>
+decision request carries in <code>action.parameters_digest</code>. The record's <code>terminal</code>
+member MUST be an <code>execution_terminal</code> event with an execution payload and a
+terminal execution state, and MUST satisfy the applicable EBMP-2 object semantic
+rules. A record verifier MUST reject a nonterminal event in this member. The
+record API checks the action identifier, receipt binding and response-independent
+terminal outcome-reason clauses of <a href="ebmp-2.html#EBMP2-056">EBMP2-056</a>;
+terminal-to-response decision references, causal closure and signatures remain
+checks of signed-bundle verification under EBMP-2.</p>
 <p><span id="AB1-008"><strong>AB1-008</strong></span><a class="requirement-link" href="#AB1-008" aria-label="Link to AB1-008">§</a> — The signed ECL evidence bundle MUST be treated as the record of
 whether an action was authorized and released (<a href="ebmp-2.html#EBMP2-045">EBMP2-045</a>): an AARM receipt
 supports claims about the AARM evaluation, such as the context it accumulated,
@@ -391,8 +407,8 @@ inventory (<a href="ecl-1_standard.html#ECL1N-0008">ECL1N-0008</a>) decides whic
 an AARM product, and this profile claims no AARM conformance or endorsement.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/AARM-BINDING-1.md</code>, SHA-256 <code>3f68ece7fc0749556fb039ef69e291d283f124f9132f271f9420667d863d99aa</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/AARM-BINDING-1.md</code>, SHA-256 <code>660c9783aec2a7761bc467edcd4188159549ac9c552c7175022e6582660e209a</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

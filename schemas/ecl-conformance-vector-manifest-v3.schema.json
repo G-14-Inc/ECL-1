@@ -357,7 +357,8 @@
           "evaluated_at": {
             "description": "The evaluation time of an evidence-bundle or package vector: RFC 3339 UTC with 0, 3 or 6 fractional digits.",
             "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{3}|\\.[0-9]{6})?Z$",
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "expected": {
             "enum": [
@@ -401,7 +402,7 @@
             "type": "string"
           },
           "expected_scope": {
-            "description": "For an evidence-bundle vector, the scope that EBMP2-076 requires with its verdict: the items established and the items not established, each in the order of the scope table, and the reason that the table names for an item not established. An item is in at most one list. A runner compares both lists, in order, and the reasons exactly; the order within a list is checked only by that comparison.",
+            "description": "For an evidence-bundle vector, the scope that EBMP2-076 requires with its verdict: the items established and the items not established, each in the order of the scope table, and the reason that the table names for an item not established. An item is in at most one list. A runner compares both lists, in order, and the reasons exactly; the order within a list is checked only by that comparison. When checks is present, each established item names the exact check identifiers and zero-based envelope/observation indexes; duplicate entries are forbidden and indexes compare as sets. An empty map means no established item has supporting checks.",
             "type": "object",
             "required": [
               "established",
@@ -421,6 +422,7 @@
                     "object-rules",
                     "decision-basis-recorded",
                     "decision-basis-register",
+                    "decision-input-timing",
                     "bindings",
                     "release-within-authority",
                     "causal-completeness",
@@ -446,6 +448,7 @@
                     "object-rules",
                     "decision-basis-recorded",
                     "decision-basis-register",
+                    "decision-input-timing",
                     "bindings",
                     "release-within-authority",
                     "causal-completeness",
@@ -470,6 +473,7 @@
                     "object-rules",
                     "decision-basis-recorded",
                     "decision-basis-register",
+                    "decision-input-timing",
                     "bindings",
                     "release-within-authority",
                     "causal-completeness",
@@ -487,7 +491,59 @@
                   "enum": [
                     "no-release-recorded",
                     "proof-not-ecl-object",
-                    "issuer-not-named"
+                    "issuer-not-named",
+                    "input-times-not-recorded"
+                  ]
+                }
+              },
+              "checks": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "checks",
+                    "objects"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "checks": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "uniqueItems": true
+                    },
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "uniqueItems": true
+                    }
+                  }
+                },
+                "propertyNames": {
+                  "enum": [
+                    "envelope-signatures",
+                    "current-trust",
+                    "trusted-time",
+                    "object-rules",
+                    "decision-basis-recorded",
+                    "decision-basis-register",
+                    "decision-input-timing",
+                    "bindings",
+                    "release-within-authority",
+                    "causal-completeness",
+                    "prerelease-obligations-discharge-recorded",
+                    "prerelease-obligations-proofs-verified",
+                    "prerelease-obligations-met",
+                    "post-release-obligations-met",
+                    "recorded-times-true",
+                    "effects-occurred",
+                    "deployment-assessed",
+                    "statements-true"
                   ]
                 }
               }
@@ -608,6 +664,26 @@
                     "not_established": {
                       "contains": {
                         "const": "decision-basis-register"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "established",
+                    "not_established"
+                  ],
+                  "properties": {
+                    "established": {
+                      "contains": {
+                        "const": "decision-input-timing"
+                      }
+                    },
+                    "not_established": {
+                      "contains": {
+                        "const": "decision-input-timing"
                       }
                     }
                   }

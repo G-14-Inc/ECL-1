@@ -24,7 +24,8 @@ seeds = {'bundle-agent':0,'bundle-decision':1,'bundle-ep':2,'bundle-observer':3,
 keys = {'urn:example:key:'+name:Ed25519PrivateKey.from_private_bytes(bytes(range(start,start+32))) for name,start in seeds.items()}
 for entry in policy_document['keys']:
     if entry['key_id'] in keys:
-        assert base64.b64encode(keys[entry['key_id']].public_key().public_bytes(Encoding.Raw,PublicFormat.Raw)).decode()==entry['public_key']
+        if base64.b64encode(keys[entry['key_id']].public_key().public_bytes(Encoding.Raw,PublicFormat.Raw)).decode() != entry['public_key']:
+            raise ValueError('Public fixture key differs from the trust policy: ' + entry['key_id'])
 
 def load(name):
     bundle = json.loads((suite/(name+'.json')).read_text())
@@ -51,7 +52,8 @@ def signed(bundle, payloads):
         envelope['payload'] = base64.b64encode(raw).decode()
         envelope['payload_digest']['value'] = hashlib.sha256(raw).hexdigest()
         for entry in envelope['signatures']:
-            assert entry['suite_id']=='ecl.sig.ed25519.v1'
+            if entry['suite_id'] != 'ecl.sig.ed25519.v1':
+                raise ValueError('Unsupported fixture signature suite: ' + entry['suite_id'])
             entry['signature']=base64.b64encode(keys[entry['key_id']].sign(signing_input(envelope['payload_type'],raw))).decode()
     return bundle
 
@@ -65,8 +67,10 @@ def add(name,base,mutate,rationale):
     content=(json.dumps(fixture,indent=2,sort_keys=True)+'\n').encode()
     if args.check:
         base_digest = hashlib.sha256((suite/(base+'.json')).read_bytes()).hexdigest()
-        assert expected[name]['base']==base and expected[name]['base_sha256']==base_digest, 'Base suite fixture drifted: '+base
-        assert path.read_bytes()==content, 'Stale full-finding fixture: '+name
+        if expected[name]['base'] != base or expected[name]['base_sha256'] != base_digest:
+            raise ValueError('Base suite fixture drifted: ' + base)
+        if path.read_bytes() != content:
+            raise ValueError('Stale full-finding fixture: ' + name)
     else:
         path.write_bytes(content)
     cases.append(name)

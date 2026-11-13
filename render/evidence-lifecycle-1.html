@@ -12,7 +12,8 @@
 <main id="main">
 <h1 id="ecl-evidence-lifecycle-protocol-1">ECL Evidence Lifecycle Protocol 1</h1>
 <p>Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version</p>
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <h2 id="1-principle">1. Principle</h2>
 <p>Evidence lifecycle actions are new, authenticated facts. They do not mutate
 history in place.</p>
@@ -20,7 +21,13 @@ history in place.</p>
 sealing.</p>
 <p><span id="EL1-002"><strong>EL1-002</strong></span><a class="requirement-link" href="#EL1-002" aria-label="Link to EL1-002">§</a> — The policy MUST identify retention, legal hold, export, redaction,
 supersession, revocation, destruction, residency, encryption, and access
-requirements applicable to the evidence class.</p>
+requirements applicable to the evidence class. In the <code>lifecycle-policy/1</code> JSON
+representation, the policy MUST include <code>policy_requirements</code> with nonblank
+<code>supersession</code>, <code>revocation</code>, <code>residency</code>, <code>encryption</code>, and <code>access</code> declarations.
+Each declaration MUST identify its evidence-class applicability and the
+requirement or a precise policy reference; a declaration of inapplicability
+MUST state its basis. The other structured policy fields carry retention,
+legal-hold precedence, export, redaction, and destruction declarations.</p>
 <p><span id="EL1-003"><strong>EL1-003</strong></span><a class="requirement-link" href="#EL1-003" aria-label="Link to EL1-003">§</a> — A lifecycle transition MUST record actor, authority, policy,
 prior digest, operation, time, and resulting artifact or proof where
 applicable.</p>
@@ -34,7 +41,20 @@ source.</p>
 unless a higher legal or safety requirement prohibits retention.</p>
 <h2 id="3-retention-and-hold">3. Retention and hold</h2>
 <p><span id="EL1-007"><strong>EL1-007</strong></span><a class="requirement-link" href="#EL1-007" aria-label="Link to EL1-007">§</a> — Retention periods MUST be calculated from explicit events and
-policy, not filesystem modification time.</p>
+policy, not filesystem modification time. In <code>lifecycle-policy/1</code>, <code>duration</code>
+MUST use the unsigned lexical subset of XSD <code>duration</code>: uppercase <code>P</code>, optional
+integer year/month/day components in that order, and an optional <code>T</code> followed
+by integer hour/minute and integer or decimal second components in that order.
+At least one component MUST occur, and <code>T</code> MUST have a time component. A decimal
+second value MUST have digits on both sides of the decimal point. Signs, weeks,
+fractions outside seconds, and whitespace MUST NOT occur.</p>
+<p>This syntax follows the component order in <a href="https://www.w3.org/TR/xmlschema11-2/#duration">XSD 1.1 Part 2, Section 3.3.6.2</a>.
+Zero, such as <code>P0D</code> or <code>PT0S</code>, is valid syntax. Retention adequacy remains subject
+to <a href="ecl-1_standard.html#ECL1N-0050">ECL1N-0050</a> and the recorded legal-conflict procedure in <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to
+<a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a>. Calendar months and years require the declared start event and
+policy for calculation; they have no universal conversion to a fixed number
+of days. Schema validation establishes the declaration's shape and syntax;
+the applicable assessment examines its content and implementation.</p>
 <p><span id="EL1-008"><strong>EL1-008</strong></span><a class="requirement-link" href="#EL1-008" aria-label="Link to EL1-008">§</a> — Legal hold MUST suspend destruction for its scope unless the
 recorded legal determination under <a href="ecl-1_standard.html#ECL1N-0195">ECL1N-0195</a> to <a href="ecl-1_standard.html#ECL1N-0199">ECL1N-0199</a> requires otherwise.</p>
 <p><span id="EL1-009"><strong>EL1-009</strong></span><a class="requirement-link" href="#EL1-009" aria-label="Link to EL1-009">§</a> — Releasing a hold MUST require separate authority and MUST NOT
@@ -94,8 +114,8 @@ that the legal determination prohibits. Unavailable evidence MUST remain
 disclosed, with verification and assessment limited to the evidence retained.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/EVIDENCE-LIFECYCLE-1.md</code>, SHA-256 <code>7657d21cd675c8cd931eab472f12914103402df5a577121bbcdf1480af368895</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>protocols/EVIDENCE-LIFECYCLE-1.md</code>, SHA-256 <code>d368fbab77078e0110c5a46b78e32912b7a032311a12f465be59d655eb03c2c1</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

@@ -136,9 +136,9 @@ func TestJWSSegmentsAreStrictJSON(t *testing.T) {
 	if _, err := ParseStrictSegment([]byte(`{"a":1,"a":1}`)); !errors.Is(err, errRepeatedMember) {
 		t.Errorf("repeated member: %v", err)
 	}
-	// A number is refused when it is read, before its object closes with a repeated name.
-	if _, err := ParseStrictSegment([]byte(`{"a":1,"a":1.5}`)); !errors.Is(err, errNotStrict) {
-		t.Errorf("number before repeated member: %v", err)
+	// IE1-037 checks duplicate members before restricted numbers, regardless of position.
+	if _, err := ParseStrictSegment([]byte(`{"a":1,"a":1.5}`)); !errors.Is(err, errRepeatedMember) {
+		t.Errorf("duplicate member before restricted number: %v", err)
 	}
 	if value, err := ParseStrictSegment([]byte(`{"a":"\ud83d\ude00","b":-9007199254740991}`)); err != nil || member(value, "a") != "\U0001f600" || member(value, "b") != json.Number("-9007199254740991") {
 		t.Fatalf("%v %v", value, err)
@@ -361,12 +361,13 @@ func TestOAuthJTIBoundsAndTokenStringClaims(t *testing.T) {
 	}
 }
 
-func TestHTUIsPythonsURLUnsplitWithoutQueryAndFragment(t *testing.T) {
+func TestHTUPreservesOA1004URISpelling(t *testing.T) {
 	for uri, expected := range map[string]string{
 		"https://rs.example.com/payments/transfers?x=1#y": "https://rs.example.com/payments/transfers",
 		"HTTPS://RS.example.com":                          "https://RS.example.com",
 		"urn:example:a?b":                                 "urn:example:a",
-		"https:/path":                                     "https:///path",
+		"https:/path":                                     "https:/path",
+		"custom:///path?query#fragment":                    "custom:///path",
 		"file:relative":                                   "file:relative",
 	} {
 		if got, ok := htu(uri); !ok || got != expected {
@@ -684,8 +685,11 @@ func TestEveryBindingVector(t *testing.T) {
 	if len(rules) != 30 || len(Rules()) != 30 {
 		t.Fatalf("%d rules", len(rules))
 	}
-	// Each DCMP-2 message that a record holds is held to the semantic rules of DCMP-2 as well.
+	// Embedded messages and evidence events retain their own semantic rules; retained
+	// request/response pairs also retain the common binding diagnostic.
 	messageRules := registry.RulesApplyingTo("DCMP-2")
+	messageRules["ecl.rule.terminal-execution-state-consistent.v1"] = true
+	messageRules["ecl.error.request-binding-invalid.v1"] = true
 	checked := 0
 	for _, name := range []string{"aarm-binding", "acs-binding", "binding-basis", "mcp-gateway", "otel-export", "oauth-authority"} {
 		manifest := vectors.Suite(t, name)
@@ -730,7 +734,8 @@ func TestEveryBindingVector(t *testing.T) {
 					// A record's embedded decision response is held to DCMP2-053 under the
 					// response's own rule, which is not one of the profiles' (AB1-013, AC1-012,
 					// MG1-007), and each DCMP-2 message it holds to the rules of DCMP-2.
-					if !rules[rule] && rule != ruleOneWay && !messageRules[rule] {
+					// EBMP2-056 retains its protocol error code in binding records.
+					if !rules[rule] && rule != ruleOneWay && !messageRules[rule] && rule != "ecl.error.semantic-invalid.v1" {
 						t.Errorf("%s: %s is not a binding rule", vector.ID, rule)
 					}
 				}
@@ -801,7 +806,7 @@ func TestBasisProblems(t *testing.T) {
 			extensions = append(extensions, map[string]any{"id": decisionBasis, "version": json.Number("1"), "critical": true,
 				"value": map[string]any{"register": map[string]any{"uri": "urn:example:register:bindings", "digest": digest("9")}, "inputs": inputsOfBasis}})
 		}
-		return map[string]any{"inputs": inputs, "response": map[string]any{"extensions": extensions}}
+		return map[string]any{"inputs": inputs, "response": map[string]any{"protocol": "DCMP-2", "extensions": extensions}}
 	}
 	text := func(found []problem) string {
 		var out []string
@@ -929,7 +934,11 @@ func TestACSHookCarriedGuardianDecisionIsNeverVerifiable(t *testing.T) {
 	}
 	signed := reparsed(t, valid)
 	signed["guardian"].(map[string]any)["channel"] = "signed"
-	if found := checkACS(signed); len(found) != 0 {
+	if found := checkACS(signed); len(found) == 0 {
+		t.Fatal("a signed channel without authenticated request context was accepted")
+	}
+	bound := bindingVector(t, "acs-binding", "acs-valid-signed-guardian-names-key-and-request")
+	if found := checkACS(bound); len(found) != 0 {
 		t.Fatalf("%v", found)
 	}
 	hooked := reparsed(t, valid)
@@ -1351,7 +1360,7 @@ func TestMCPRefusedResponseKeptAsEvidence(t *testing.T) {
 	}
 	answered := bindingVector(t, "mcp-gateway", "mcp-valid-forwarded-on-admit")
 	response := answered["decision"].(map[string]any)["response"].(map[string]any)
-	extensions := append(response["extensions"].([]any), map[string]any{"id": "ecl.ext.outcome-reason.v1", "version": json.Number("1"), "critical": false, "value": map[string]any{"unexpected": true}})
+	extensions := append(response["extensions"].([]any), map[string]any{"id": "ecl.ext.consequence-coupling.v1", "version": json.Number("1"), "critical": false, "value": map[string]any{"unexpected": true}})
 	sort.Slice(extensions, func(i, j int) bool {
 		return extensions[i].(map[string]any)["id"].(string) < extensions[j].(map[string]any)["id"].(string)
 	})
@@ -1819,10 +1828,9 @@ func TestMCPDecodedContentSatisfiesItsDefinition(t *testing.T) {
 	}
 }
 
-// TestNoncharacterContentIsHeldEncoded: content whose strings or member
-// names hold a Unicode noncharacter lies outside the restricted profile (IE1-002), so it is held in
-// the encoded form of MG1-012 and decodes from it, as the reference gateway writes it.
-func TestNoncharacterContentIsHeldEncoded(t *testing.T) {
+// TestNoncharacterContentIsRefusedByIJSON: MG1-012 uses RFC 8785, whose input
+// must satisfy RFC 7493. Encoding cannot admit a Unicode noncharacter.
+func TestNoncharacterContentIsRefusedByIJSON(t *testing.T) {
 	for _, content := range []map[string]any{
 		{"jsonrpc": "2.0", "id": "\uffff", "method": "tools/call", "params": map[string]any{}},
 		{"jsonrpc": "2.0", "id": json.Number("7"), "method": "tools/call", "params": map[string]any{"_meta": map[string]any{"\ufdd0": "x"}}},
@@ -1831,16 +1839,17 @@ func TestNoncharacterContentIsHeldEncoded(t *testing.T) {
 		if digestOf(content) != nil {
 			t.Errorf("%v has a restricted canonical digest", content)
 		}
-		held, err := EncodeContent(content)
-		if err != nil {
-			t.Fatal(err)
+		if _, err := EncodeContent(content); !errors.Is(err, ErrJCS) {
+			t.Fatalf("got %v, want ErrJCS", err)
 		}
-		if _, encoded := isEncoded(held); !encoded {
-			t.Fatalf("%v is held as itself", content)
-		}
-		if decoded, err := DecodeContent(held); err != nil || !pyjson.Equal(decoded, content) {
-			t.Errorf("%v: %v %v", content, decoded, err)
-		}
+	}
+	content := map[string]any{"jsonrpc": "2.0", "id": "\U0001f511", "result": map[string]any{}}
+	held, err := EncodeContent(content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if decoded, err := DecodeContent(held); err != nil || !pyjson.Equal(decoded, content) {
+		t.Errorf("valid supplementary content: %v %v", decoded, err)
 	}
 }
 

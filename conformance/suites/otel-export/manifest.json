@@ -51,14 +51,18 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.otel-record-minimized.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.otel-record-matches-object.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.otel-record-minimized.v1"
+      ],
       "id": "otel-invalid-body-undeclared",
       "negates": [
+        "OE1-004",
         "OE1-005"
       ],
       "path": "conformance/suites/otel-export/otel-invalid-body-undeclared.json",
       "requirement_ids": [
+        "OE1-004",
         "OE1-005"
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
@@ -336,9 +340,9 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
       "source": {
         "base_vector": "conformance/suites/otel-export/otel-valid-admit-response-exported.json",
-        "generator": "scripts/generate_otel_export_vectors.py",
+        "generator": "scripts/generate_otel_schema_witness.py",
         "kind": "mutation",
-        "mutation": "export an object that is neither a DCMP-2 message nor an EBMP-2 event"
+        "mutation": "Replace the before and after snapshots with the same incomplete DCMP object, isolating the supported ECL-object alternatives."
       },
       "stage": "binding"
     },

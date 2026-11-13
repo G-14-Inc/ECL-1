@@ -36,7 +36,7 @@ class, as CHANGE_CONTROL requires.
 | Change class | How it is published | Version effect |
 |---|---|---|
 | Editorial: typing, formatting, a wrong cross-reference; no change in meaning or tests | Errata index | None; the next version folds it in |
-| Corrective: restores behavior the text already intended | Errata index, with a regression vector or test where one can show the error | Folded into the next patch version or the next version, which the version set records |
+| Corrective: restores implementation or generated-artifact behavior to unchanged, unambiguous published requirements, or clarifies text without changing normative behavior; see CHANGE_CONTROL | Errata index, with a regression vector or test where one can show the error | Folded into the next patch version or the next version, which the version set records |
 | Additive, behavioral or breaking | Not an erratum | A new version under the change-control and versioning rules; a breaking change keeps the old behavior for at least 12 months (ECL1N-0088) |
 
 The only exception to the 12-month window is the one ECL1N-0088 allows: an
@@ -93,3 +93,9 @@ records their requirement text and affected paths; the release notes summarize
 their behavior. The [correction-release exception](RELEASE_POLICY.md#correction-release-exception-v101)
 records the procedures waived for this release. The original Version 1.0
 archive remains preserved for comparison.
+
+The [November 10, 2026 clarification](RELEASE-CLARIFICATION-2026-11-10.md)
+and its per-entry compatibility assessment distinguish editorial changes,
+existing-rule clarifications and normative defect repairs within that
+historical record. Its original `corrective and editorial` label is preserved;
+the clarification does not infer a retroactive compatibility waiver.

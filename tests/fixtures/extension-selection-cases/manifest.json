@@ -1,0 +1,208 @@
+{
+  "evaluated_at": "2026-10-01T00:00:00Z",
+  "cases": [
+    {
+      "id": "aarm-control",
+      "file": "aarm-control.json",
+      "kind": "binding",
+      "accepted": true,
+      "rationale": "Unmodified applicable version-1 positive control.",
+      "sha256": "12f66977e5a9bfbd3ec20d4f801628d479974f03e4d24a95d4282382bf8ef182",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1"
+    },
+    {
+      "id": "aarm-future-receipt",
+      "file": "aarm-future-receipt.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future receipt version cannot satisfy the required version-1 receipt binding.",
+      "sha256": "f10ccda5866817324458b5a8b92ab09d5c5b805487942ccc89017e3e5d82602b",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "required_code": "ecl.rule.aarm-receipt-bound.v1"
+    },
+    {
+      "id": "aarm-future-basis",
+      "file": "aarm-future-basis.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future decision-basis version cannot satisfy mandatory recorded decision basis.",
+      "sha256": "702a8fc864b20c7747f1f064f8bdf3cc645f3765cb5a7115c510877c4d58d70d",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "required_code": "ecl.rule.aarm-inputs-match-basis.v1"
+    },
+    {
+      "id": "acs-control",
+      "file": "acs-control.json",
+      "kind": "binding",
+      "accepted": true,
+      "rationale": "Unmodified applicable version-1 positive control.",
+      "sha256": "2d3831207ed779feb1ccc266ce3782a6e0be296bb262719223b898f4be713873",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"
+    },
+    {
+      "id": "acs-future-decision",
+      "file": "acs-future-decision.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future ACS decision cannot satisfy the current Guardian decision-record contract.",
+      "sha256": "bc0f390b9866bdb12ee9698d21e9e6c1788d5f54b0116e2abcf4498d86db2586",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "required_code": "ecl.rule.acs-decision-recorded.v1"
+    },
+    {
+      "id": "acs-future-basis",
+      "file": "acs-future-basis.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future decision-basis version cannot satisfy mandatory recorded decision basis.",
+      "sha256": "6d7dca0b032f93fafa4d8efad594d78274ee9ef8f8adb181f7cffea69534a83e",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "required_code": "ecl.rule.acs-inputs-match-basis.v1"
+    },
+    {
+      "id": "mcp-control",
+      "file": "mcp-control.json",
+      "kind": "binding",
+      "accepted": true,
+      "rationale": "Unmodified applicable version-1 positive control.",
+      "sha256": "00bd65b65d757c46c033d8ee245e754da4f3aec724a62733687f05302fafbd65",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"
+    },
+    {
+      "id": "mcp-future-request-binding",
+      "file": "mcp-future-request-binding.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future call binding cannot satisfy mandatory supported request binding.",
+      "sha256": "7cfadc892c6645310ce7169e4a3706b41fbb594829fd4026d228be5aff51ea70",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "required_code": "ecl.rule.mcp-request-from-call.v1"
+    },
+    {
+      "id": "mcp-future-terminal-binding",
+      "file": "mcp-future-terminal-binding.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future terminal binding cannot satisfy mandatory result binding.",
+      "sha256": "d8d63c9dc3e8a5576da8e633a1d5b2456686abb103fe0cd178f74f34e4344ca9",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "required_code": "ecl.rule.mcp-result-bound.v1"
+    },
+    {
+      "id": "mcp-future-basis",
+      "file": "mcp-future-basis.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Future decision-basis version cannot satisfy mandatory recorded decision basis.",
+      "sha256": "c641bf7463b513e6a602ce00b7c09da4825bc1c9698ffa0a6235f7a289e0b286",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "required_code": "ecl.rule.decision-basis-one-way.v1"
+    },
+    {
+      "id": "mcp-discharge-control",
+      "file": "mcp-discharge-control.json",
+      "kind": "binding",
+      "accepted": true,
+      "rationale": "Unmodified applicable version-1 positive control.",
+      "sha256": "6178ffbdecef5c3c9ec00694d704f35bf7abbbbc607438111c7935f583697f1f",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"
+    },
+    {
+      "id": "mcp-future-discharge",
+      "file": "mcp-future-discharge.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "A future discharge version cannot prove current before-release obligations.",
+      "sha256": "082fd4b3bf26425a5a12173d07f8fee48779cc089444cc413a10b356e7ae6b3d",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "required_code": "ecl.rule.mcp-obligations-discharged.v1"
+    },
+    {
+      "id": "otel-control",
+      "file": "otel-control.json",
+      "kind": "binding",
+      "accepted": true,
+      "rationale": "Unmodified applicable version-1 positive control.",
+      "sha256": "8b5e8ae3b25397851ffae7708c32f859a1277f2610ffb3843e7090fccdb37f41",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "id": "otel-future-reason",
+      "file": "otel-future-reason.json",
+      "kind": "binding",
+      "accepted": false,
+      "rationale": "Current telemetry reason attribute cannot be derived from a future extension version.",
+      "sha256": "528f823120993802877c00f1cd4c32126b1693ededb45b84d6153f56d8d18f76",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
+      "required_code": "ecl.rule.otel-record-matches-object.v1"
+    },
+    {
+      "id": "otel-future-reason-ignored",
+      "file": "otel-future-reason-ignored.json",
+      "kind": "binding",
+      "accepted": true,
+      "rationale": "Unknown noncritical data is retained in the evidence but does not become a current reason attribute.",
+      "sha256": "38aeb7f1fda2736a4084975bd2918b7f684f778ee525bc40c701504d813ee5eb",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "id": "bundle-control",
+      "file": "bundle-control.json",
+      "kind": "bundle",
+      "accepted": true,
+      "rationale": "Applicable signed version-1 bundle positive control.",
+      "sha256": "b6a3c7a7714eb5357759e4ba72c6a9eb934cc7fae77f6d4af49014ed3d8c0e18"
+    },
+    {
+      "id": "bundle-future-basis",
+      "file": "bundle-future-basis.json",
+      "kind": "bundle",
+      "accepted": false,
+      "rationale": "A correctly signed future basis cannot satisfy the bundle's mandatory basis rule.",
+      "sha256": "cc72dd1aa8333dab8a66ee2d8e9095905f1c31efa9e82b3e53872f2b220bec2a",
+      "required_code": "ecl.rule.decision-basis-required.v1"
+    },
+    {
+      "id": "bundle-future-coupling",
+      "file": "bundle-future-coupling.json",
+      "kind": "bundle",
+      "accepted": true,
+      "rationale": "Future noncritical coupling semantics cannot invent a current-version deferred witness obligation.",
+      "sha256": "7644fbbb0b0e99b7c944d60376180aa864a05d53976e5d3e3b07475953e4b1e3"
+    },
+    {
+      "id": "bundle-discharge-control",
+      "file": "bundle-discharge-control.json",
+      "kind": "bundle",
+      "accepted": true,
+      "rationale": "Applicable signed discharge positive control.",
+      "sha256": "8ae5dff451ed0ff04eee6da6f809e3b6fe7d11bdf6a71edb4be8a3d11b07d1b2"
+    },
+    {
+      "id": "bundle-future-discharge",
+      "file": "bundle-future-discharge.json",
+      "kind": "bundle",
+      "accepted": false,
+      "rationale": "Future discharge cannot prove current signed obligations.",
+      "sha256": "ebbb0efd8517dfeb9e801c8ec1abeb45f5a79681b269cb0ccd1275eda9df5246",
+      "required_code": "ecl.rule.prerelease-obligations-discharged.v1"
+    },
+    {
+      "id": "bundle-reason-control",
+      "file": "bundle-reason-control.json",
+      "kind": "bundle",
+      "accepted": true,
+      "rationale": "Applicable signed terminal reason positive control.",
+      "sha256": "afb2373a0de5c95dd9584c3da72b00ccb1c140469cbcd2b8e9244e72b9315df7"
+    },
+    {
+      "id": "bundle-future-reason",
+      "file": "bundle-future-reason.json",
+      "kind": "bundle",
+      "accepted": false,
+      "rationale": "Future reason cannot satisfy a required current-version terminal refusal reason.",
+      "sha256": "ca8872b47b1f9077cc80c7b5784b9ce795021a66b1c0d9bc1820315e8bb012d8",
+      "required_code": "ecl.error.semantic-invalid.v1"
+    }
+  ]
+}

@@ -156,8 +156,10 @@ else.
 The copyright licenses of ECL-1 are stated in [LICENSING](LICENSING.md). The
 Creative Commons Attribution 4.0 International license grants no patent
 rights. The Apache License, Version 2.0 grants, in its Section 3, a patent
-license from each contributor of code for the claims that its own
-contribution infringes. This pledge is separate from both licenses and limits
+license from each contributor for patent claims licensable by that contributor
+that are necessarily infringed by its contribution alone or by the combination
+of its contribution with the Work to which it was submitted. This pledge is
+separate from both licenses and limits
 neither.
 
 ## 9. No other rights

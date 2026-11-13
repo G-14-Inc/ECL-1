@@ -437,10 +437,12 @@ test("every binding vector: the record schema first, then the profile's rules", 
       } else {
         assert.deepEqual(found, [vector.expected_primary_id as string, ...vector.expected_secondary_ids].sort(), vector.id);
         if (vector.expected_primary_id !== "ecl.error.schema-invalid.v1") {
-          // A record's embedded decision response is held to DCMP2-053 under the response's own
-          // rule, and each DCMP-2 message it holds to the semantic rules of DCMP-2, none of which
-          // is one of the profiles' (AB1-013, AC1-012, MG1-007).
-          assert.ok(found.every((rule) => rules.has(rule) || rule === ONE_WAY_RULE || dcmpRules.has(rule)), vector.id);
+          // Retained messages and evidence events keep their own semantic diagnostics;
+          // retained request/response pairs also keep the common binding diagnostic.
+          assert.ok(found.every((rule) => rules.has(rule) || rule === ONE_WAY_RULE || dcmpRules.has(rule)
+            || rule === "ecl.error.request-binding-invalid.v1"
+            || rule === "ecl.error.semantic-invalid.v1" // EBMP2-056 in retained terminals
+            || rule === "ecl.rule.terminal-execution-state-consistent.v1"), vector.id);
         }
       }
     }
@@ -511,7 +513,8 @@ test("AC1-004: a deterministic Guardian decision that a hook point carried is ne
   assert.deepEqual(acs.check(valid), []);
   const signed = copied(valid);
   (signed["guardian"] as JsonObject)["channel"] = "signed";
-  assert.deepEqual(acs.check(signed), []);
+  assert.ok(acs.check(signed).some(f => f.ruleId === acs.RECORD_RULE));
+  assert.deepEqual(acs.check(vectorValue("acs-binding", "acs-valid-signed-guardian-names-key-and-request")), []);
   const hooked = copied(valid);
   (hooked["guardian"] as JsonObject)["channel"] = "hook";
   assert.deepEqual(rulesAndPaths(acs.check(hooked)), [`${acs.JUDGMENT_RULE} /inputs/1/class`]);
@@ -736,7 +739,7 @@ test("MG1-007: a response that the gateway refused and keeps as evidence is not 
   const answered = vectorValue("mcp-gateway", "mcp-valid-forwarded-on-admit");
   const response = answered["decision"] as JsonObject;
   const extensions = (response["response"] as JsonObject)["extensions"] as JsonObject[];
-  extensions.push({ id: "ecl.ext.outcome-reason.v1", version: 1, critical: false, value: { unexpected: true } });
+  extensions.push({ id: "ecl.ext.consequence-coupling.v1", version: 1, critical: false, value: { unexpected: true } });
   extensions.sort((left, right) => String(left["id"]).localeCompare(String(right["id"])));
   assert.ok(mcp.check(answered).some((item) => item.ruleId === "ecl.rule.extension-value-valid.v1"));
 });

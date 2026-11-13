@@ -11,6 +11,11 @@ dispositions, deciding by rough consensus; the chair hears appeals
 
 ## When a public review is held
 
+- The Version 1 public-review draft has a 60-day comment window, beginning
+  with its public announcement. Its prerelease source-build designation does
+  not make it an erratum or patch release exempt from review. The announcement
+  states the actual opening and closing dates and identifies the frozen draft
+  as specified below. Preparing a local candidate does not open that window.
 - Each new minor version (for example 1.1) and each new major version (for
   example 2.0) has a public review window before it is published. The window
   lasts 30 days for a minor version and 60 days for a major version, counted
@@ -18,7 +23,8 @@ dispositions, deciding by rough consensus; the chair hears appeals
   never shortens one.
 - Errata and patch versions follow the change process
   ([CHANGE_CONTROL](CHANGE_CONTROL.md), [ERRATA](ERRATA.md)) and have no
-  review window.
+  additional version-wide review window; their proposal comment and review
+  periods still apply.
 - This procedure applies from Version 1.0 on. Comments on a published version
   are welcome at any time as issues. They are answered under the change
   process, and a comment that leads to a change is carried into an erratum or
@@ -111,6 +117,16 @@ The schema enforces the tables: an accepted comment names its changes and
 change class, a deferred one names its target version, a duplicate names its
 original, a comment that changes nothing names no change, and a record holds
 only the credit that the commenter chose.
+
+Run `python scripts/check_repository_metadata.py <log.json>` to check a local
+log with the reference verifier's strict JSON parser and the schema, including
+calendar dates. The check also rejects repeated comment identifiers,
+self-referential or cyclic duplicate dispositions, a closing date before its
+opening date, and a disposition or appeal dated before receipt of its comment.
+An original comment outside the supplied log is reported as unchecked; the
+script does not fetch it. A published disposition can have a pending appeal,
+and an appeal can predate a revised disposition. Passing this metadata check
+does not establish that the conditions for ending the review have been met.
 
 ## Versioning the changes
 

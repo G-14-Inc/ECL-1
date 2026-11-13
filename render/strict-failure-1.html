@@ -13,7 +13,8 @@
 <h1 id="ecl-strict-failure-profile-1">ECL Strict Failure Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p><span id="SF1-001"><strong>SF1-001</strong></span><a class="requirement-link" href="#SF1-001" aria-label="Link to SF1-001">§</a> — A deployment claiming this profile MUST NOT declare a fail-open
 disposition for any in-scope action class.</p>
 <p><span id="SF1-002"><strong>SF1-002</strong></span><a class="requirement-link" href="#SF1-002" aria-label="Link to SF1-002">§</a> — Under this profile, the loss of any dependency MUST resolve to a
@@ -26,7 +27,9 @@ and MUST be recorded with its failure class.</p>
 <code>STRICT-FAILURE-1</code> in its <code>claimed_profiles</code> member; its <code>profile_id</code> and name
 decide nothing. A document that claims it MUST validate against the
 safe-state-profile schema, which requires <code>supplies_required_proof</code> for every
-dependency, with no <code>fail_open</code> disposition present.</p>
+dependency, and MUST pass <code>ecl.rule.strict-profile-forbids-fail-open.v1</code>, which
+rejects every <code>fail_open</code> disposition in the action classes, dependencies and
+evidence-buffer overflow policy.</p>
 <p><span id="SF1-005"><strong>SF1-005</strong></span><a class="requirement-link" href="#SF1-005" aria-label="Link to SF1-005">§</a> — A deployment that claims this profile MUST set
 <code>supplies_required_proof</code> to <code>true</code> for exactly those dependencies whose loss
 removes required proof (TIMING-SAFE-STATE-1 <a href="timing-safe-state-1.html#TS1-031">TS1-031</a>). This obligation binds the
@@ -45,8 +48,8 @@ standard sets which classes those are and when the whole deployment stops
 (<a href="ecl-1_standard.html#ECL1N-0191">ECL1N-0191</a> to <a href="ecl-1_standard.html#ECL1N-0193">ECL1N-0193</a>).</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/STRICT-FAILURE-1.md</code>, SHA-256 <code>034e2f7931dcda6c0e25fc6cc97c5f575e72b935b7e05a7c50e00ac92a12ec39</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/STRICT-FAILURE-1.md</code>, SHA-256 <code>d7008c36601347f5007a684a44b867e33404b9b638c6a6fd0bdd122b8d946d1c</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

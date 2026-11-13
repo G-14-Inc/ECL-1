@@ -13,7 +13,8 @@
 <h1 id="ecl-opentelemetry-evidence-export-profile-1">ECL OpenTelemetry Evidence Export Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile copies ECL decisions and evidence into OpenTelemetry log records so
 that observability tools and security information and event management (SIEM)
 systems can ingest them. The export is a copy. The signed evidence bundle remains
@@ -114,7 +115,19 @@ SHA-256 digest of the object it copies or the parameters digest that the object
 carries, other than the policy digest of the attribute table, which identifies
 the policy that decided as the policy's identifier and version do; a consumer
 that holds the export key MUST treat a record whose keyed digest differs from
-the one it computes over the bundle's object as not describing that object.</p>
+the one it computes over the bundle's object as not describing that object.
+The policy-digest exception applies only to the exact <code>ecl.policy.digest</code>
+attribute of the table; a declaration under <a href="otel-evidence-export-1.html#OE1-005">OE1-005</a> does not authorize an
+unkeyed digest in another attribute or the body. An identifier copied exactly
+to its applicable attribute-table slot remains an identifier when it is a
+content-addressed URI. This identifier exception applies only to <code>ecl.object.id</code>,
+<code>ecl.workflow.id</code>, <code>ecl.workflow.root_trace_id</code>, <code>ecl.issuer.id</code>, <code>ecl.producer.id</code>,
+<code>ecl.evidence.bundle</code>, <code>ecl.action.id</code>, <code>ecl.request.id</code>, <code>ecl.decision.id</code>,
+<code>ecl.policy.id</code>, <code>ecl.authorization.id</code>, <code>ecl.event.decision_id</code>, and the
+<a href="otel-evidence-export-1.html#OE1-005">OE1-005</a>-declared slots <code>ecl.actor.id</code>, <code>ecl.subject.id</code> and <code>ecl.action.target</code>,
+each holding exactly the identifier its table row specifies. It does not permit
+copies in other attributes or the body, or an unkeyed digest in non-identifier
+table fields such as <code>ecl.policy.version</code>.</p>
 <p><span id="OE1-005"><strong>OE1-005</strong></span><a class="requirement-link" href="#OE1-005" aria-label="Link to OE1-005">§</a> — A log record MUST NOT carry action parameters, tool arguments or
 results, constraints, credentials, tokens, signatures, key material, the free
 text of reasons, the identifiers of people and records (<code>ecl.actor.id</code>,
@@ -140,7 +153,11 @@ authorization, release or the absence of an effect from a record's severity or
 from the presence or absence of a record.</p>
 <p><span id="OE1-009"><strong>OE1-009</strong></span><a class="requirement-link" href="#OE1-009" aria-label="Link to OE1-009">§</a> — An exporter that retains export records MUST write each one as
 <code>ecl_otel_export_record_v1</code>, valid against
-<code>https://externalcontrollayer.ai/ns/schema/binding/otel-export/1</code>.</p>
+<code>https://externalcontrollayer.ai/ns/schema/binding/otel-export/1</code>. Each retained
+record MUST include <code>evidence_after</code>, the object as held after the export
+attempt, and it MUST equal the recorded <code>object</code>. This is a completeness
+requirement for the retained audit record; it does not make telemetry export
+or retention a dependency of decision, release or evidence recording.</p>
 <h2 id="keyed-digests">Keyed digests</h2>
 <p><span id="OE1-010"><strong>OE1-010</strong></span><a class="requirement-link" href="#OE1-010" aria-label="Link to OE1-010">§</a> — An exporter MUST NOT emit <code>ecl.object.digest</code>,
 <code>ecl.action.parameters_digest</code> or <code>ecl.export.key_id</code> unless the deployment
@@ -149,7 +166,8 @@ secure random source, generated for that deployment's telemetry export alone,
 held only by the exporter and by the consumers that match records to the bundle,
 never readable by the governed AI system, and never a key that signs or verifies
 ECL evidence. With an export key, every record MUST carry the key's identifier,
-a string, as the <code>stringValue</code> of <code>ecl.export.key_id</code>, which MUST NOT be derived
+a string of 1 to 256 Unicode code points, as the <code>stringValue</code> of
+<code>ecl.export.key_id</code>, which MUST NOT be derived
 from the key; in <code>ecl.object.digest</code>, the HMAC-SHA-256 (RFC 2104) under the key
 of the restricted canonical JSON of the object (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>); and, where the object
 has a parameters digest, in <code>ecl.action.parameters_digest</code>, the HMAC-SHA-256
@@ -158,7 +176,7 @@ under the key of the restricted canonical JSON of that digest; each HMAC as the
 hold the key that a record names MUST still treat as not describing the object a
 record whose keyed digests are not in that form, or that lacks a keyed digest
 that the object has.</p>
-<p>An unkeyed digest of an object, or the parameters digest that a request or an
+<p><strong><a href="otel-evidence-export-1.html#OE1-010">OE1-010</a> (continued)</strong> — An unkeyed digest of an object, or the parameters digest that a request or an
 execution event carries, lets a reader of the telemetry who can list the
 possible values, such as an amount or a short list of accounts, compute the
 digest of each candidate and confirm which one was used. A digest keyed with a
@@ -168,12 +186,12 @@ a guessed object by recomputing the keyed digest. The digests inside the signed 
 keyed and do not change. When replacing an export key, give the new key an
 identifier that no earlier export key of the deployment has used, so that
 retained records continue to identify the key they require. Changing key
-material does not itself change the identifier. An exporter without an export key
-exports no object or parameter digest; the unkeyed policy digest required by
-<a href="otel-evidence-export-1.html#OE1-004">OE1-004</a> remains. A consumer then matches records to the bundle by their
-identifiers.</p>
+material does not itself change the identifier. An exporter without an export
+key omits <code>ecl.object.digest</code> and <code>ecl.action.parameters_digest</code>. The policy
+digest and exact identifiers permitted by <a href="otel-evidence-export-1.html#OE1-004">OE1-004</a> remain; a consumer then
+matches records to the bundle by those identifiers.</p>
 <h2 id="attribute-table">Attribute table</h2>
-<p>Every attribute value is a string held as an OTLP <code>stringValue</code>, except
+<p><strong><a href="otel-evidence-export-1.html#OE1-003">OE1-003</a> (continued)</strong> — Every attribute value is a string held as an OTLP <code>stringValue</code>, except
 <code>ecl.workflow.attempt</code> and <code>ecl.workflow.sequence</code>, which are integers held as
 an <code>intValue</code> (<a href="otel-evidence-export-1.html#OE1-003">OE1-003</a>, <a href="otel-evidence-export-1.html#OE1-007">OE1-007</a>); an attribute held in another <code>AnyValue</code> kind,
 such as a <code>bytesValue</code> that holds the same text, does not hold the value that
@@ -370,6 +388,7 @@ that the row names and that holds the source member.</p>
 </tbody>
 </table>
 <h2 id="severity-table">Severity table</h2>
+<p><strong><a href="otel-evidence-export-1.html#OE1-008">OE1-008</a> (continued)</strong> — The following table gives the severity of each object.</p>
 <table tabindex="0">
 <thead>
 <tr>
@@ -430,24 +449,36 @@ carries, where the name <code>body</code> declares a log record body; the <code>
 same object as the evidence held it after the attempt. The rules registered
 for this profile, whose names begin <code>ecl.rule.otel-</code>, check a record after its
 schema; a checker compares a keyed digest only under an export key that its
-caller supplies, and recognizes a digest that needs no key without one.</p>
+caller supplies. Without that key, the reference checks recognize the
+object's SHA-256 digest, embedded SHA-256 digest values, and the SHA-256 of the
+canonical parameters-digest object in hexadecimal text or raw/hexadecimal
+<code>bytesValue</code> data, including nested <code>AnyValue</code> containers. This recognition
+is bounded to these representations; it does not establish that arbitrary
+encodings or other derived values disclose no protected data. The export
+policy and its assessment remain responsible for that broader obligation.</p>
 <h2 id="security-considerations">Security considerations</h2>
 <p>Telemetry pipelines are wider and less protected than the evidence store, and
 their contents reach people and systems outside the claim's trust boundary. The
 profile therefore exports identifiers, outcomes and, with an export key, keyed
-digests, and leaves parameters, results, reason text and every digest that needs
-no key in the bundle, apart from the policy digest, which identifies the policy
-as its identifier and version do. A digest of low-entropy content lets a reader
-confirm guessed values; this profile exports such digests only under an export
-key (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>), and exports the identifiers of people and records only when the
-export policy declares them. A record can be forged, dropped or delayed anywhere
-along the pipeline, so its only authority is the keyed digest that a consumer
-that holds the export key compares with the signed bundle. A reader who obtains
-the export key can test guesses as an unkeyed digest would let them, which is
-why the key stays with the exporter and those consumers. The <code>object_id</code> of an
-EBMP-2 event is derived from the event&#x27;s content (<a href="ebmp-2.html#EBMP2-047">EBMP2-047</a>) and is exported as
-its identifier; confirming a guess through it needs every member of the event,
-including the digests of the objects it references, which no record carries.
+digests. Other data are subject to the export policy under <a href="otel-evidence-export-1.html#OE1-005">OE1-005</a>. <a href="otel-evidence-export-1.html#OE1-004">OE1-004</a>
+permits the policy digest and exact identifier copies in designated table slots,
+including content-addressed URIs; it prohibits other digests computable without
+the export key. A digest of low-entropy content lets a reader confirm guessed
+values. The dedicated object and parameter digest attributes therefore use an
+export key (<a href="otel-evidence-export-1.html#OE1-010">OE1-010</a>), while identifiers of people and records require the
+declaration under <a href="otel-evidence-export-1.html#OE1-005">OE1-005</a>. A record can be forged, dropped or delayed anywhere
+along the pipeline. A consumer holding the export key can recompute the keyed digest from the
+corresponding object in the signed bundle and compare it with the record's
+digest. That comparison binds content and does not grant authority or replace
+bundle verification. A reader who obtains the export key can also test guesses against the keyed
+digests, which is why the key stays with the exporter and those consumers.
+EBMP-2 does not require an event's <code>object_id</code> to be derived from its content.
+Exported identifiers can still reveal information or allow records to be
+correlated. A content-derived identifier can confirm guesses when the input
+used to derive it is known or predictable.
+The deployment evaluates those risks in its export policy, including for the
+identifiers that this profile always exports; identifiers of people and
+records remain subject to the declaration rule of <a href="otel-evidence-export-1.html#OE1-005">OE1-005</a>.
 Making release wait for an export would let anyone who can disrupt the pipeline
 stop or slow governed actions, and a deny that depended on export would turn
 monitoring into a control path that the claim does not declare; both are
@@ -475,8 +506,8 @@ excluded by <a href="otel-evidence-export-1.html#OE1-002">OE1-002</a>.</p>
 that the suite's manifest names, never an operational key.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/OTEL-EVIDENCE-EXPORT-1.md</code>, SHA-256 <code>c0e1a9492421cfaf1d11aa062f76abb0ad7f37dbbb9f46e384a67b09406d824e</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/OTEL-EVIDENCE-EXPORT-1.md</code>, SHA-256 <code>634a0e69797dd96b44b92382e8a19624d23ce7a3ad8ee61ea228a2781bad1863</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

@@ -70,6 +70,8 @@ report.
 
 from __future__ import annotations
 
+from .extension_selection import interpreted_extension
+
 import json
 import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
@@ -82,7 +84,7 @@ from . import binding, integrity
 from . import bundle as causal
 from . import decision_basis_checks as basis
 from .canonical import CanonicalizationError, loads_json_strict, object_digest
-from .resources import object_findings, registry_document, schema_is_valid, validator_for
+from .resources import MAX_DEPTH, MAX_NODES, _limit_exceeded, extension_findings, object_findings, registry_document, schema_is_valid, validator_for
 from .schema import rfc3339_utc_nanoseconds
 from .signature_metadata import TIME_ATTESTATION_TYPE
 from .trust import (
@@ -153,6 +155,7 @@ SCOPE_CHECKS = (
     "object-rules",
     "decision-basis-recorded",
     "decision-basis-register",
+    "decision-input-timing",
     "bindings",
     "release-within-authority",
     "causal-completeness",
@@ -175,7 +178,9 @@ SCOPE_DISCHARGE = (
 SCOPE_POST_RELEASE = "post-release-obligations-met"
 # The item that applies only when the caller supplies a Consequential Action Register.
 SCOPE_REGISTER = "decision-basis-register"
-CONDITIONAL_SCOPE = frozenset({*SCOPE_DISCHARGE, SCOPE_POST_RELEASE})
+SCOPE_INPUT_TIMING = "decision-input-timing"
+REASON_INPUT_TIMES = "input-times-not-recorded"
+CONDITIONAL_SCOPE = frozenset({*SCOPE_DISCHARGE, SCOPE_POST_RELEASE, SCOPE_INPUT_TIMING})
 # The sentence for people that each item of the scope stands for (the table of EBMP2-076).
 SCOPE_TEXT: Mapping[str, str] = MappingProxyType(
     {
@@ -193,8 +198,11 @@ SCOPE_TEXT: Mapping[str, str] = MappingProxyType(
         "object-rules": "each signed object satisfies its schema and semantic rules, the one-way "
         "rule for a recorded decision basis among them",
         "decision-basis-recorded": "each decision response records its decision basis",
-        "decision-basis-register": "each decision basis agrees with the Consequential Action "
-        "Register supplied",
+        "decision-basis-register": "each decision basis matches the supplied register version, "
+        "inputs, classes, required flags, sources and derivations; recorded input timing is "
+        "compared with declared bounds only when the needed fields are supplied",
+        "decision-input-timing": "all applicable recorded input ages and acquisition deadlines "
+        "were checked against the supplied register; this does not establish that recorded times are true",
         "bindings": "each response binds its request, each event binds its request, response "
         "and authority, with the digests and use counts they name, each continuation binds the "
         "request, challenge and approval it continues, and each terminal event carries the "
@@ -456,6 +464,8 @@ class BundleReport:
     # EBMP-2 section 4: the identifiers of the causal predecessors that the bundle does not hold,
     # in ascending code-point order, each once.
     unresolved_predecessor_ids: tuple[str, ...] = ()
+    # The registered reference profiles use exactly zero response-clock allowance.
+    response_clock_skew_seconds: int = 0
 
 
 @dataclass(frozen=True)
@@ -466,6 +476,7 @@ class _Entry:
     payload: dict[str, Any]
     check: EnvelopeCheck
     signing_keys: frozenset[tuple[str, bytes]]
+    verified_signer_key_ids: frozenset[str] = frozenset()
 
 
 def _issue(code: str, message: str) -> str:
@@ -699,13 +710,13 @@ def _signer_status(
     at: str,
     *,
     original: TrustPolicy | None = None,
-    times: Mapping[str, str] | None = None,
+    times: Mapping[int, str] | None = None,
     current: TrustPolicy | None = None,
 ) -> str:
     """Check every signer, counted or not (TP1-004, TP1-005), in the order of IE1-040, step 6:
     every key acceptable for the object's suite, purpose and principal, and for current status
     the same public key as at signing; then no key revoked at its time; then every key within its
-    validity interval at its time. A key's time is `times[key_id]` when given (IE1-034), else
+    validity interval at its time. An entry's time is `times[position]` when given (IE1-034), else
     `at`; with `current`, the current policy's revocations apply too (TP1-006)."""
     signatures = envelope["signatures"]
     owner = _principal(payload)
@@ -725,7 +736,8 @@ def _signer_status(
             return POLICY_INVALID
         keys.append(key)
     statuses = {
-        _key_time_status(key, policy, (times or {}).get(key.key_id, at), current) for key in keys
+        _key_time_status(key, policy, (times or {}).get(position, at), current)
+        for position, key in enumerate(keys)
     }
     for status in (REVOKED, EXPIRED):
         if status in statuses:
@@ -740,7 +752,7 @@ def _verify_signature(
     at: str,
     *,
     signed_policy: TrustPolicy | None = None,
-    times: Mapping[str, str] | None = None,
+    times: Mapping[int, str] | None = None,
     current: TrustPolicy | None = None,
 ) -> tuple[str, frozenset[str]]:
     time_policy = _time_policy(payload)
@@ -764,9 +776,14 @@ def _verify_signature(
         if current is not None:
             # TP1-006: the current policy's revocations reach the historical check.
             context = replace(context, revocations=(*context.revocations, *current.revocations))
-        result = integrity.verify_envelope(
-            envelope, policy.keyring(), context, key_times=None if times is None else dict(times)
-        )
+        # The standalone verifier rejects duplicate (key, suite) entries before consulting
+        # key_times; the all-signer check above rejects one key under another suite. Preserve
+        # per-entry times for historical checks and dependencies, converting only for this API.
+        key_times = None if times is None else {
+            signature["key_id"]: times.get(position, at)
+            for position, signature in enumerate(envelope["signatures"])
+        }
+        result = integrity.verify_envelope(envelope, policy.keyring(), context, key_times=key_times)
     except integrity.IntegrityError as error:
         # The error code of INTEGRITY-ENVELOPE-1, IE1-040.
         return error.code, frozenset()
@@ -836,22 +853,9 @@ def _covered_indexes(
     return tuple(indexes)
 
 
-def _statement(entry: object) -> dict[str, Any] | None:
-    """The decoded time-attestation statement of a countersignature entry, when it has one."""
-    if type(entry) is not dict:
-        return None
-    attestation = entry.get("attestation")
-    if type(attestation) is not dict or attestation.get("payload_type") != TIME_ATTESTATION_TYPE:
-        return None
-    try:
-        statement = integrity.decode_canonical_json_payload(attestation)
-    except (integrity.IntegrityError, ValueError, TypeError):
-        return None
-    return statement if type(statement) is dict else None
-
-
 def _authority_current(
     attestation: dict[str, Any],
+    statement: dict[str, Any] | None,
     issuer: str | None,
     version: TrustPolicy | None,
     current: TrustPolicy,
@@ -871,6 +875,7 @@ def _authority_current(
         if (
             key is None
             or version is None
+            or not _payload_allows_signature(statement, signature)
             or not _key_acceptable(key, signature, PURPOSE_TRUSTED_TIME, issuer, version)
         ):
             status = POLICY_INVALID
@@ -886,11 +891,11 @@ def _attested_time(
     payload: dict[str, Any],
     versions: Sequence[TrustPolicy],
     current: TrustPolicy,
+    statement: dict[str, Any] | None,
 ) -> tuple[str, tuple[int, ...]] | None:
     """The time one trusted-time countersignature attests and the indexes of the signature
     entries it covers, or None when it is not valid (IE1-033, IE1-034, TP1-006)."""
     attestation = entry.get("attestation")
-    statement = _statement(entry)
     if type(attestation) is not dict or statement is None:
         return None
     if not schema_is_valid(TIME_ATTESTATION_SCHEMA, statement):
@@ -952,6 +957,7 @@ def _countersignatures(
     versions: Sequence[TrustPolicy],
     current: TrustPolicy,
     now: str,
+    statements: Sequence[dict[str, Any] | None],
 ) -> tuple[list[_Attestation] | None, list[TrustDependency]]:
     """Each trusted-time countersignature of the envelope, valid, and the trust dependencies of
     the time authorities' signers; None for the first list when one of them is not valid."""
@@ -961,13 +967,13 @@ def _countersignatures(
     valid: list[_Attestation] = []
     dependencies: list[TrustDependency] = []
     failed = False
-    for entry in entries if type(entries) is list else []:
-        statement = _statement(entry)
+    for position, entry in enumerate(entries if type(entries) is list else []):
+        statement = statements[position]
         attestation = entry.get("attestation") if type(entry) is dict else None
         counter_id = entry.get("counter_id") if type(entry) is dict else None
         counter = counter_id if type(counter_id) is str else None
         result = (
-            _attested_time(entry, envelope, payload, versions, current)
+            _attested_time(entry, envelope, payload, versions, current, statement)
             if type(entry) is dict and entry.get("claim") == integrity.TRUSTED_TIME_CLAIM
             else None
         )
@@ -980,7 +986,7 @@ def _countersignatures(
         version = next((item for item in versions if item.reference() == reference), None)
         attested = _text(statement, "issued_at") if statement is not None else None
         signers = (
-            _authority_current(attestation, issuer, version, current, now)
+            _authority_current(attestation, statement, issuer, version, current, now)
             if type(attestation) is dict
             else []
         )
@@ -993,7 +999,7 @@ def _countersignatures(
                 suite,
                 attested if result is not None else None,
                 None if version is None else version.version,
-                _authority_historical(attestation, key_id, version)
+                _authority_historical(attestation, statement, key_id, version)
                 if result is not None
                 else TRUSTED_TIME_INVALID,
                 current.version,
@@ -1019,7 +1025,15 @@ def _material(policy: TrustPolicy, key_id: str) -> bytes | None:
     return None if key is None else key.public_key
 
 
-def _authority_historical(attestation: Any, key_id: str, version: TrustPolicy | None) -> str:
+def _payload_allows_signature(payload: Any, signature: Mapping[str, Any]) -> bool:
+    """The payload-policy clauses of IE1-040 step 6(a), for one signature."""
+    policy = payload.get("integrity_policy", {}) if type(payload) is dict else {}
+    suites = policy.get("accepted_suites", [])
+    keys = policy.get("eligible_key_ids", [])
+    return signature.get("suite_id") in suites and (not keys or signature.get("key_id") in keys)
+
+
+def _authority_historical(attestation: Any, statement: Any, key_id: str, version: TrustPolicy | None) -> str:
     """The historical status of one signer of a valid attestation: its signature verifies with
     the key of the version the attestation names, or the dependency is not valid with
     `ecl.error.integrity-invalid.v1` (decision "A signature that does not verify"; the
@@ -1033,20 +1047,22 @@ def _authority_historical(attestation: Any, key_id: str, version: TrustPolicy | 
     material = None if version is None else version.keyring().get(key_id)
     if entry is None or material is None:
         return INTEGRITY_INVALID
+    if not _payload_allows_signature(statement, entry):
+        return POLICY_INVALID
     return (
         "valid" if integrity.signature_verifies(attestation, entry, material) else INTEGRITY_INVALID
     )
 
 
-def _later_than_now(payload: dict[str, Any], envelope: dict[str, Any], now: str) -> bool:
+def _later_than_now(payload: dict[str, Any], envelope: dict[str, Any], now: str, statements: Sequence[dict[str, Any] | None]) -> bool:
     """F08, EBMP2-057: the object's own time, or the attested time of one of its trusted-time
     countersignatures, is later than the evaluation time."""
     limit = _instant_ns(now)
     times = [_object_time(payload)]
     entries = envelope.get("countersignatures")
-    for entry in entries if type(entries) is list else []:
-        statement = _statement(entry)
-        times.append(_text(statement, "issued_at") if statement is not None else None)
+    for entry, statement in zip(entries if type(entries) is list else [], statements):
+        if type(entry) is dict and entry.get("claim") == integrity.TRUSTED_TIME_CLAIM:
+            times.append(_text(statement, "issued_at") if statement is not None else None)
     return any(
         (instant := _instant_or_none(value)) is not None and instant > limit for value in times
     )
@@ -1062,6 +1078,7 @@ def _evaluate_envelope(
     now: str,
     findings: _Sink,
     require_trusted_time: bool = False,
+    attestation_statements: Sequence[dict[str, Any] | None] = (),
 ) -> tuple[EnvelopeCheck, frozenset[tuple[str, bytes]], tuple[TrustDependency, ...], bool]:
     """One envelope's statuses, its signing key material, its trust dependencies (TP1-006) and
     whether a valid trusted-time countersignature covers every one of its signatures."""
@@ -1092,7 +1109,7 @@ def _evaluate_envelope(
             for key_id, suite in entries
         )
 
-    invalid = object_findings(payload)
+    invalid = [*object_findings(payload), *extension_findings(envelope)]
     if invalid:
         findings.extend(
             _issue(item.rule_id, f"object {index}: {item.path}: {item.message}") for item in invalid
@@ -1116,26 +1133,25 @@ def _evaluate_envelope(
         return check, frozenset(), plain(POLICY_INVALID, version), False
     signed_ids: frozenset[str] = frozenset()
     attestations, authority_dependencies = _countersignatures(
-        envelope, payload, index, versions, current_policy, now
+        envelope, payload, index, versions, current_policy, now, attestation_statements
     )
     # IE1-034: a covered signature is evaluated at the earliest attested time among the valid
     # countersignatures that cover it, every other one at the object's own time.
-    times: dict[str, str] = {}
+    times: dict[int, str] = {}
     covered_all = False
     trusted: str | None = None
     if attestations:
         for item in attestations:
             for position in item.covered:
-                key_id = entries[position][0]
-                if key_id not in times or _instant_ns(item.attested) < _instant_ns(times[key_id]):
-                    times[key_id] = item.attested
+                if position not in times or _instant_ns(item.attested) < _instant_ns(times[position]):
+                    times[position] = item.attested
         trusted = min((item.attested for item in attestations), key=_instant_ns)
         covered_all = all(
             any(position in item.covered for item in attestations)
             for position in range(len(entries))
         )
     try:
-        if _later_than_now(payload, envelope, now):
+        if _later_than_now(payload, envelope, now, attestation_statements):
             history_status = CLOCK_REGRESSED
         elif attestations is None:
             history_status = TRUSTED_TIME_INVALID
@@ -1203,7 +1219,7 @@ def _signer_dependencies(
     version: TrustPolicy,
     current: TrustPolicy,
     now: str,
-    times: Mapping[str, str],
+    times: Mapping[int, str],
     at: str,
     envelope_status: str,
 ) -> tuple[TrustDependency, ...]:
@@ -1218,13 +1234,13 @@ def _signer_dependencies(
     eligible = eligible_keys if type(eligible_keys) is list else []
     result: list[TrustDependency] = []
     signatures = envelope.get("signatures")
-    for signature in signatures if type(signatures) is list else []:
+    for position, signature in enumerate(signatures if type(signatures) is list else []):
         if type(signature) is not dict:
             continue
         key_id = _member_text(signature, "key_id")
         suite = _member_text(signature, "suite_id")
         in_payload_policy = suite in accepted and (not eligible or key_id in eligible)
-        own = times.get(key_id, at)
+        own = times.get(position, at)
         key = _trusted_key(version, key_id)
         if envelope_status in _ENVELOPE_WIDE:
             historical = envelope_status
@@ -1412,20 +1428,25 @@ def _extension_values(value: Mapping[str, Any], identifier: str) -> list[dict[st
         for extension in extensions
         if type(extension) is dict
         and extension.get("id") == identifier
+        and interpreted_extension(value, extension)
         and type(extension.get("value")) is dict
     ]
 
 
 def _use_limit(response: Mapping[str, Any]) -> int | None:
-    """EBMP2-073: the uses that an authorization allows: 1 when it is `single_use`, otherwise its
-    `max_uses` when it has one, and no limit otherwise."""
+    """EBMP2-073: one supported use, or None for an unsupported authorization.
+
+    None is a refusal, never an unbounded grant. The schema and response-binding checks apply
+    the same domain; this guard also protects direct consumption analysis.
+    """
     authorization = _mapping(response, "authorization")
-    if authorization is None:
+    if authorization is None or authorization.get("use_policy") != "single_use":
         return None
-    if authorization.get("use_policy") == "single_use":
-        return 1
-    uses = authorization.get("max_uses")
-    return uses if type(uses) is int else None
+    if "max_uses" in authorization:
+        uses = authorization["max_uses"]
+        if type(uses) is not int or uses != 1:
+            return None
+    return 1
 
 
 def _check_use_counts(consumed: Sequence[tuple[_Entry, _Entry]], findings: _Sink) -> None:
@@ -1439,6 +1460,14 @@ def _check_use_counts(consumed: Sequence[tuple[_Entry, _Entry]], findings: _Sink
             by_authorization.setdefault(identifier, []).append((event, response))
     for events in by_authorization.values():
         limit = _use_limit(events[0][1].payload)
+        if limit is None:
+            findings.append(
+                _issue(
+                    DECISION_BINDING_INVALID,
+                    "consumed authority has an unsupported use policy or maximum use count",
+                )
+            )
+            continue
         counts: list[int] = []
         for event, _ in events:
             count = (_mapping(event.payload, "event") or {}).get("use_count")
@@ -1652,7 +1681,7 @@ def _pair_main(
             ):
                 uses.append((entry, response))
             continue
-        if kind not in {"execution_released", "execution_terminal"}:
+        if kind not in {"release_prepared", "execution_released", "execution_observed", "execution_terminal"}:
             continue
         release_recorded = release_recorded or kind == "execution_released"
         key = _attempt_key(payload, event=True)
@@ -1705,20 +1734,16 @@ def _pair_main(
             authorization = (
                 _mapping(paired_response.payload, "authorization") if paired_response else None
             )
-            start = _text(authorization, "valid_from") if authorization is not None else None
-            end = _text(authorization, "valid_until") if authorization is not None else None
-            observed = _text(payload, "observed_at")
+            start = _instant_or_none(_text(authorization, "valid_from")) if authorization is not None else None
+            end = _instant_or_none(_text(authorization, "valid_until")) if authorization is not None else None
+            observed = _instant_or_none(_text(payload, "observed_at"))
             guard = _release_guard_ns(payload)
             # EBMP2-050 and EBMP2-071: the release is observed no earlier than valid_from, and the
             # observation plus the declared release guard is earlier than valid_until.
-            if (
-                start is None
-                or end is None
-                or observed is None
-                or guard is None
-                or not _instant_ns(start) <= _instant_ns(observed)
-                or not _instant_ns(observed) + guard < _instant_ns(end)
-            ):
+            # A malformed/missing timestamp is already a stage-3 schema finding. Do not let a
+            # later parse replace it, or invent an expiry comparison without valid operands.
+            if (start is not None and end is not None and observed is not None and guard is not None
+                and (start > observed or observed + guard >= end)):
                 events.append(
                     _issue(
                         EXPIRED,
@@ -1809,8 +1834,8 @@ def _check_continuations(
     the response and the approval among its causal predecessors by identifier and digest; when
     the continuation's response is an `admit`, every key that signed the approval holds
     `ecl.purpose.approval.v1` in the version the approval names and none is bound to the
-    request's actor, and the approval's `expires_at`, when present, is later than that
-    response's `evaluated_at`; and no two requests continue one response. Each failure is a
+    request's actor, and the approval's required `expires_at` is later than that
+    response's `evaluated_at`; and no two admitted requests continue one response. Each failure is a
     finding of stage 5 with `ecl.error.decision-binding-invalid.v1`.
 
     Every check whose objects the bundle holds is made: a named object that the bundle does not
@@ -1847,9 +1872,25 @@ def _check_continuations(
         if prior is None or response is None or approval is None:
             missing = True
         named_indexes.update(item.index for item in (prior, response, approval) if item)
-        if response_id is not None:
+        own = _text(entry.payload, "message_id")
+        answer = next(
+            (
+                other
+                for other in entries
+                if not other.observation
+                and other.check.kind == "decision_response"
+                and own is not None
+                and _text(other.payload, "request_id") == own
+            ),
+            None,
+        )
+        if (
+            response_id is not None
+            and answer is not None
+            and _text(answer.payload, "outcome") == "admit"
+        ):
             if response_id in continued:
-                fail("continues a response that another request continues")
+                fail("admits a continuation of a response that another admitted request continues")
             continued.add(response_id)
         if prior is not None:
             if prior.observation or prior.check.kind != "decision_request":
@@ -1893,18 +1934,6 @@ def _check_continuations(
                 fail(
                     "names as its approval an object that is not an approval of the continued request"
                 )
-            own = _text(entry.payload, "message_id")
-            answer = next(
-                (
-                    other
-                    for other in entries
-                    if not other.observation
-                    and other.check.kind == "decision_response"
-                    and own is not None
-                    and _text(other.payload, "request_id") == own
-                ),
-                None,
-            )
             # The approval's keys and expiry bear on the continuation only when its response
             # admits it: a deny or a new challenge is the right answer to an approval that has
             # expired or is not acceptable (DCMP2-057).
@@ -1953,17 +1982,19 @@ def _check_continuations(
 
 def _obligation_keys(
     response: Mapping[str, Any],
-) -> tuple[list[tuple[str, str]], set[tuple[str, str]], bool, dict[tuple[str, str], Any]]:
+) -> tuple[list[tuple[str, str]], set[tuple[str, str]], bool, dict[tuple[str, str], list[Any]]]:
     """EBMP2-070 on one decision response: the obligations it leaves to Enforcement before the
     release, by (`obligation_id`, `type`), in order and each once: each obligation whose
     `satisfaction` is `before_release`, and a witness result whose `outcome` is
     `required_before_release`, named by the `uri` of its reference and the type
     `ecl.obligation.verify-witness.v1`; every obligation it carries, the witness result included;
-    whether it carries an obligation to be met during or after execution (EBMP2-076); and the
-    value of each obligation it carries, the witness's URI for the witness result."""
+    whether it carries an obligation to be met during or after execution (EBMP2-076); and
+    every before-release value for each key, the witness's URI for the witness result. A later
+    or duplicated occurrence cannot replace another requirement sharing the same key."""
     required: list[tuple[str, str]] = []
     carried: set[tuple[str, str]] = set()
-    values: dict[tuple[str, str], Any] = {}
+    values: dict[tuple[str, str], list[Any]] = {}
+    other_values: dict[tuple[str, str], list[Any]] = {}
     post_release = False
     obligations = response.get("obligations")
     for item in obligations if type(obligations) is list else []:
@@ -1974,9 +2005,10 @@ def _obligation_keys(
             continue
         key = (identifier, kind)
         carried.add(key)
-        values.setdefault(key, item.get("value"))
+        other_values.setdefault(key, []).append(item.get("value"))
         satisfaction = item.get("satisfaction")
         if satisfaction == "before_release":
+            values.setdefault(key, []).append(item.get("value"))
             if key not in required:
                 required.append(key)
         elif type(satisfaction) is str and satisfaction in POST_RELEASE:
@@ -1992,9 +2024,11 @@ def _obligation_keys(
         ):
             key = (uri, WITNESS_OBLIGATION_TYPE)
             carried.add(key)
-            values.setdefault(key, uri)
+            values.setdefault(key, []).append(uri)
             if key not in required:
                 required.append(key)
+    for key, occurrences in other_values.items():
+        values.setdefault(key, occurrences)
     return required, carried, post_release, values
 
 
@@ -2020,7 +2054,7 @@ def _discharges(event: Mapping[str, Any]) -> tuple[bool, list[tuple[int, int, di
     present = False
     found: list[tuple[int, int, dict[str, Any]]] = []
     for index, extension in enumerate(extensions if type(extensions) is list else []):
-        if type(extension) is not dict or extension.get("id") != OBLIGATION_DISCHARGE:
+        if type(extension) is not dict or extension.get("id") != OBLIGATION_DISCHARGE or not interpreted_extension(event, extension):
             continue
         present = True
         value = extension.get("value")
@@ -2104,7 +2138,7 @@ def _signer_keys(entry: _Entry, versions: Sequence[TrustPolicy]) -> tuple[Truste
         return ()
     return tuple(
         key
-        for key_id in _signature_ids(entry.envelope)
+        for key_id in sorted(entry.verified_signer_key_ids)
         if (key := _trusted_key(version, key_id)) is not None
     )
 
@@ -2213,6 +2247,8 @@ def _proof_problems(
         problems.append((OBLIGATION_UNPROVEN, path, "names a decision message as a proof"))
         return problems
     event_type = _text(payload, "event_type")
+    if (event_type == "verification") != proof.observation:
+        problems.append((OBLIGATION_UNPROVEN, path, "names a carried proof in the wrong bundle collection"))
     event = _mapping(payload, "event") or {}
     if kind == WITNESS_OBLIGATION_TYPE:
         if event_type != "verification":
@@ -2388,13 +2424,13 @@ def _check_obligation_discharge(
                     )
                 )
             else:
-                if not _issuer_named(key, values.get(key), release.response):
-                    # The decision names no issuer, so the issuer test of condition b is not made
-                    # and the proofs are not reported verified (EBMP2-076, `issuer-not-named`).
-                    unnamed = True
-                problems.extend(
-                    _proof_problems(item, key, values.get(key), carried_proof, release, versions)
-                )
+                for value in values.get(key, [None]):
+                    if not _issuer_named(key, value, release.response):
+                        # Every applicable occurrence retains its own issuer and target.
+                        unnamed = True
+                    problems.extend(
+                        _proof_problems(item, key, value, carried_proof, release, versions)
+                    )
             findings.extend(
                 _issue(code, f"{path}{suffix}: {message}") for code, suffix, message in problems
             )
@@ -2416,7 +2452,7 @@ def _reason(entry: _Entry, response: _Entry | None, findings: _Sink) -> str | No
         [
             extension
             for extension in extensions
-            if type(extension) is dict and extension.get("id") == OUTCOME_REASON
+            if type(extension) is dict and extension.get("id") == OUTCOME_REASON and interpreted_extension(entry.payload, extension)
         ]
         if type(extensions) is list
         else []
@@ -2554,20 +2590,24 @@ def _check_decision_bases(
     *,
     register: Mapping[str, Any] | None,
     skew_seconds: int = 0,
-) -> None:
+) -> tuple[bool, bool]:
     """DCMP2-053 in the evidence: each decision response carries its decision basis; no input
     whose source is the request's actor is recorded as `verifiable`, and the request was not
     received before it was issued, less the response clock-skew allowance
     (DCMP2-047); and a basis agrees with the register when the caller supplies one. These are
     findings of stage 3 of EBMP2-068, ranked by their precedence."""
-    requests = {
-        identifier: entry.payload
-        for entry in entries
-        if not entry.observation
-        and _text(entry.payload, "protocol") == "DCMP-2"
-        and _text(entry.payload, "message_type") == "decision_request"
-        and (identifier := _text(entry.payload, "message_id")) is not None
-    }
+    # A duplicate identifier already fails stage 3. It cannot select a request for
+    # dependent checks by first/last array position (EBMP2-029, EBMP2-068).
+    timing_applied, timing_complete = False, True
+    requests: dict[str, dict[str, Any] | None] = {}
+    for entry in entries:
+        if (
+            not entry.observation
+            and _text(entry.payload, "protocol") == "DCMP-2"
+            and _text(entry.payload, "message_type") == "decision_request"
+            and (identifier := _text(entry.payload, "message_id")) is not None
+        ):
+            requests[identifier] = None if identifier in requests else entry.payload
     for entry in entries:
         payload = entry.payload
         if (
@@ -2604,6 +2644,9 @@ def _check_decision_bases(
             continue
         action = request.get("action")
         action_class = action.get("action_class") if isinstance(action, dict) else None
+        applicable, complete = basis.timing_coverage(value, register, action_class, evaluated_at=payload.get("evaluated_at"))
+        timing_applied = timing_applied or applicable
+        timing_complete = timing_complete and complete
         findings.extend(
             _issue(
                 basis.REGISTER_RULE,
@@ -2613,6 +2656,7 @@ def _check_decision_bases(
                 value, register, action_class, evaluated_at=payload.get("evaluated_at")
             )
         )
+    return timing_applied, timing_complete
 
 
 def _verify(
@@ -2633,6 +2677,9 @@ def _verify(
         return _invalid(problem)
     if type(source) is not dict:
         return _invalid(_issue(SCHEMA_INVALID, "the evidence bundle is not a JSON object"))
+    excess = _limit_exceeded(source, max_depth=MAX_DEPTH, max_nodes=MAX_NODES)
+    if excess is not None:
+        return _invalid(_issue(RESOURCE_LIMIT, excess))
     envelopes = source.get("envelopes")
     observations = source.get("observations", [])
     if type(envelopes) is not list or type(observations) is not list:
@@ -2657,6 +2704,9 @@ def _verify(
     for index, (is_observation, envelope) in enumerate(
         [(False, value) for value in envelopes] + [(True, value) for value in observations]
     ):
+        if node_count >= MAX_TOTAL_PAYLOAD_NODES:
+            findings.add(STAGE_PAYLOADS, budget_exceeded)
+            return BundleReport("invalid", tuple(checks), (), "not-analyzed", (), findings.ordered())
         # EBMP2-062: each payload is parsed with the nodes that remain of the bundle's budget as its
         # value limit, so that no payload is built beyond the budget (IE1-029; EBMP2-068, stage 2).
         try:
@@ -2691,6 +2741,35 @@ def _verify(
             )
         decoded.append((index, is_observation, envelope, payload))
 
+    # Immediate countersignature attestations are decoded payloads of this bundle too
+    # (EBMP2-062). Parse them before any signature work, then reuse the bounded statements.
+    # IE1-032 forbids attestations carrying countersignatures; no recursive interpretation.
+    attestation_statements: dict[int, tuple[dict[str, Any] | None, ...]] = {}
+    for index, envelope in enumerate([*envelopes, *observations]):
+        statements: list[dict[str, Any] | None] = []
+        for entry in envelope.get("countersignatures", []):
+            if node_count >= MAX_TOTAL_PAYLOAD_NODES:
+                findings.add(STAGE_PAYLOADS, budget_exceeded)
+                return BundleReport("invalid", tuple(checks), (), "not-analyzed", (), findings.ordered())
+            attestation = entry["attestation"]
+            try:
+                statement = integrity.decode_canonical_json_payload(
+                    attestation, max_nodes=MAX_TOTAL_PAYLOAD_NODES - node_count
+                )
+            except (integrity.IntegrityError, ValueError, TypeError) as error:
+                if isinstance(error, integrity.IntegrityError) and error.code == RESOURCE_LIMIT:
+                    findings.add(STAGE_PAYLOADS, budget_exceeded if isinstance(error, integrity.PayloadNodeBudgetError)
+                                 else _issue(RESOURCE_LIMIT, f"envelope {index} has an attestation payload exceeding a declared limit"))
+                    return BundleReport("invalid", tuple(checks), (), "not-analyzed", (), findings.ordered())
+                statements.append(None)
+                continue
+            node_count += _nodes(statement, MAX_TOTAL_PAYLOAD_NODES - node_count)
+            if node_count > MAX_TOTAL_PAYLOAD_NODES:
+                findings.add(STAGE_PAYLOADS, budget_exceeded)
+                return BundleReport("invalid", tuple(checks), (), "not-analyzed", (), findings.ordered())
+            statements.append(statement if type(statement) is dict and attestation.get("payload_type") == TIME_ATTESTATION_TYPE else None)
+        attestation_statements[index] = tuple(statements)
+
     versions = (policy, *history)
     entries: list[_Entry] = []
     seen_ids: set[str] = set()
@@ -2707,11 +2786,14 @@ def _verify(
             now,
             findings.at(STAGE_OBJECTS),
             require_trusted_time,
+            attestation_statements[index],
         )
         checks.append(check)
         dependencies.extend(depends)
         covered[index] = covered_all
-        entries.append(_Entry(index, is_observation, envelope, payload, check, signing_keys))
+        verified_ids = frozenset(dependency.key_id for dependency in depends
+                                if dependency.role == "signer" and dependency.historical == "valid")
+        entries.append(_Entry(index, is_observation, envelope, payload, check, signing_keys, verified_ids))
         if check.historical in (SCHEMA_INVALID, SEMANTIC_INVALID):
             # The object's own schema or semantic rules refuse it, and their findings are listed;
             # its signatures were not evaluated, so this is a finding of stage 3, not one about
@@ -2741,7 +2823,7 @@ def _verify(
                 _issue(SEMANTIC_INVALID, "an observation is not a verification event"),
             )
 
-    _check_decision_bases(
+    timing_applied, timing_complete = _check_decision_bases(
         entries,
         findings.at(STAGE_OBJECTS),
         register=register,
@@ -2775,9 +2857,11 @@ def _verify(
     # predecessor, which could be the consumption or the release they look for.
     unresolved = set(analysis.unresolved_predecessor_ids)
     for entry in entries:
-        if entry.observation or entry.check.kind != "execution_terminal":
+        if entry.observation or entry.check.kind not in {"execution_observed", "execution_terminal"}:
             continue
-        if _text(entry.payload, "event", "state") != "succeeded":
+        if entry.check.kind == "execution_terminal" and _text(entry.payload, "event", "state") not in {
+            "succeeded", "failed", "partially_succeeded", "unknown", "rolled_back", "compensated"
+        }:
             continue
         key = _attempt_key(entry.payload, event=True)
         if key is not None and _attempt_names_unresolved(key, entries, pairs, unresolved):
@@ -2787,7 +2871,9 @@ def _verify(
                 STAGE_CAUSAL,
                 _issue(
                     DECISION_BINDING_INVALID,
-                    "a succeeded attempt lacks consumed authority or release evidence",
+                    "a running attempt lacks consumed authority or release evidence"
+                    if entry.check.kind == "execution_observed" else
+                    "a post-release terminal attempt lacks consumed authority or release evidence",
                 ),
             )
     # EBMP2-074: a release of single-use authority has its consumption recorded, whatever the
@@ -2845,7 +2931,11 @@ def _verify(
     conditional = (SCOPE_DISCHARGE if discharge_applied else ()) + (
         (SCOPE_POST_RELEASE,) if post_release else ()
     )
+    if timing_applied:
+        conditional += (SCOPE_INPUT_TIMING,)
     reasons: dict[str, str] = {}
+    if timing_applied and not timing_complete:
+        reasons[SCOPE_INPUT_TIMING] = REASON_INPUT_TIMES
     if not pairs.release_recorded:
         reasons[SCOPE_RELEASE] = REASON_NO_RELEASE
     if discharge_applied and uncarried:
@@ -2867,6 +2957,7 @@ def _verify(
         proofs=proofs,
         pairs=pairs,
         register=register is not None,
+        input_timing_complete=timing_applied and timing_complete,
     )
     return BundleReport(
         verdict,
@@ -2899,6 +2990,7 @@ SCOPE_CHECK_IDS = (
     "current-compromise-knowledge",
     "trusted-time-countersignatures",
     "trusted-time-coverage",
+    "attestation-signers",
     "current-status",
     "object-schema",
     "object-semantics",
@@ -2907,6 +2999,7 @@ SCOPE_CHECK_IDS = (
     "decision-basis-present",
     "decision-basis-one-way",
     "decision-basis-register",
+    "decision-input-timing",
     "pairing",
     "continuation-history",
     "response-binding",
@@ -2927,12 +3020,13 @@ SCOPE_CHECK_IDS = (
 )
 SCOPE_OBJECT_SETS: Mapping[str, str] = MappingProxyType(
     {
-        "envelope-signatures": "trust-dependencies",
+        "envelope-signatures": "object-signing-dependencies",
         "current-trust": "trust-dependencies",
         "trusted-time": "object-signatures",
         "object-rules": "bundle-objects",
         "decision-basis-recorded": "decision-responses",
         "decision-basis-register": "decision-responses",
+        "decision-input-timing": "decision-responses",
         "bindings": "request-response-pairs",
         "release-within-authority": "released-attempts",
         "causal-completeness": "bundle-objects",
@@ -2955,6 +3049,7 @@ SCOPE_REQUIRED_CHECKS: Mapping[str, tuple[str, ...]] = MappingProxyType(
             "current-compromise-knowledge",
             "trusted-time-countersignatures",
             "trusted-time-coverage",
+            "attestation-signers",
         ),
         "object-rules": (
             "object-schema",
@@ -2965,6 +3060,7 @@ SCOPE_REQUIRED_CHECKS: Mapping[str, tuple[str, ...]] = MappingProxyType(
         ),
         "decision-basis-recorded": ("decision-basis-present",),
         "decision-basis-register": ("decision-basis-register",),
+        "decision-input-timing": ("decision-basis-register", "decision-input-timing"),
         "bindings": (
             "pairing",
             "continuation-history",
@@ -2990,7 +3086,7 @@ SCOPE_REQUIRED_CHECKS: Mapping[str, tuple[str, ...]] = MappingProxyType(
 )
 # The object sets that a report's envelope checks determine, which `report_scope` requires an
 # item's objects to cover: every object, and the decision responses.
-_WHOLE_BUNDLE_SETS = frozenset({"bundle-objects", "trust-dependencies", "object-signatures"})
+_WHOLE_BUNDLE_SETS = frozenset({"bundle-objects", "trust-dependencies", "object-signatures", "object-signing-dependencies"})
 
 
 def _checks_that_held(
@@ -3007,6 +3103,7 @@ def _checks_that_held(
     proofs: set[int],
     pairs: _Pairs,
     register: bool,
+    input_timing_complete: bool,
 ) -> dict[str, dict[str, list[Any]]]:
     """EBMP2-076: for each item of the scope, the checks of SCOPE_REQUIRED_CHECKS that ran over
     the item's object set and held, and the indexes of the objects they covered. An item whose
@@ -3031,6 +3128,7 @@ def _checks_that_held(
         "current-compromise-knowledge": REVOKED not in historical and signers_valid,
         "trusted-time-countersignatures": TRUSTED_TIME_INVALID not in historical,
         "trusted-time-coverage": bool(every) and all(covered.get(index) for index in every),
+        "attestation-signers": all(item.historical == "valid" for item in dependencies if item.role == "time-authority"),
         "current-status": all(check.current == "valid" for check in checks)
         and all(item.current == "valid" for item in dependencies),
         "object-schema": SCHEMA_INVALID not in codes[STAGE_OBJECTS],
@@ -3049,6 +3147,7 @@ def _checks_that_held(
         "decision-basis-present": basis.REQUIRED_RULE not in codes[STAGE_OBJECTS],
         "decision-basis-one-way": basis.ONE_WAY_RULE not in codes[STAGE_OBJECTS],
         "decision-basis-register": register and basis.REGISTER_RULE not in codes[STAGE_OBJECTS],
+        "decision-input-timing": input_timing_complete and basis.REGISTER_RULE not in codes[STAGE_OBJECTS],
         "pairing": not codes[STAGE_PAIRING],
         # An object that a continuation names and the bundle does not hold keeps the check from
         # holding over the item's whole object set (EBMP2-076).
@@ -3111,6 +3210,8 @@ def _checks_that_held(
     )
     objects = {
         "trust-dependencies": sorted({item.index for item in dependencies}),
+        "object-signing-dependencies": sorted({item.index for item in dependencies if item.role == "signer"}),
+        "attestation-signing-dependencies": sorted({item.index for item in dependencies if item.role == "time-authority"}),
         "object-signatures": every,
         "bundle-objects": every,
         "decision-responses": responses,
@@ -3157,10 +3258,18 @@ def _ran_in_full(item: str, report: BundleReport) -> bool:
     expected = _expected_objects(item, report)
     if expected is not None and not expected <= set(entry.get("objects", ())):
         return False
-    if SCOPE_OBJECT_SETS[item] == "trust-dependencies":
-        signed = {dependency.index for dependency in report.trust_dependencies}
+    if SCOPE_OBJECT_SETS[item] in {"trust-dependencies", "object-signing-dependencies"}:
+        signed = {dependency.index for dependency in report.trust_dependencies if SCOPE_OBJECT_SETS[item] == "trust-dependencies" or dependency.role == "signer"}
         if not {check.index for check in report.envelope_checks} <= signed:
             return False
+    if item in {"envelope-signatures", "trusted-time"}:
+        if any(check.historical != "valid" for check in report.envelope_checks):
+            return False
+        if any(dependency.historical != "valid" for dependency in report.trust_dependencies
+               if item == "trusted-time" or dependency.role == "signer"):
+            return False
+    if item == "trusted-time" and any(check.trusted_time is None for check in report.envelope_checks):
+        return False
     return item != "current-trust" or all(
         dependency.current == "valid" for dependency in report.trust_dependencies
     )
@@ -3204,6 +3313,8 @@ def report_scope(report: BundleReport) -> ReportScope:
         established.add("decision-basis-recorded")
         if report.register is not None:
             established.add("decision-basis-register")
+        if SCOPE_INPUT_TIMING in applies and SCOPE_INPUT_TIMING not in reasons:
+            established.add(SCOPE_INPUT_TIMING)
         if report.verdict != "incomplete":
             established.add("causal-completeness")
         if discharge:
@@ -3222,6 +3333,7 @@ def report_scope(report: BundleReport) -> ReportScope:
         # `decision-basis-register` applies only when the caller supplies a register
         # (registries/scope-checks.json).
         or (item == SCOPE_REGISTER and report.register is not None)
+        or (item == SCOPE_INPUT_TIMING and item in applies and report.register is not None)
     ]
     return ReportScope(
         tuple(item for item in items if item in established),
@@ -3288,8 +3400,11 @@ def primary_finding(report: BundleReport) -> str | None:
 
 def report_to_json(report: BundleReport) -> dict[str, Any]:
     """The JSON-compatible report, including its primary finding as the CLI reports it."""
+    from . import __build__, __version__
+
     value: dict[str, Any] = json.loads(json.dumps(asdict(report), ensure_ascii=False))
     value["primary"] = primary_finding(report)
+    value["software"] = {"name": "ecl-verify", "version": __version__, "source_build": __build__}
     return value
 
 
@@ -3312,18 +3427,27 @@ def verify_bundle(
     unless ``accept_current_trust_failure`` is set, which the report then records. With
     ``require_trusted_time`` every envelope needs a valid trusted-time countersignature and the
     report names ``ecl.verification-profile.reference-trusted-time.v1``. A decision response
-    without ``ecl.ext.decision-basis.v1`` makes the bundle invalid (DCMP2-053). ``register`` is a
-    Consequential Action Register document that has passed its schema (``load_register``); each
-    decision basis is then checked against it. Invalid bundle data is reported, never raised.
-    ``now``, ``response_clock_skew_seconds``, ``require_trusted_time`` and ``register`` are caller
+    without ``ecl.ext.decision-basis.v1`` makes the bundle invalid (DCMP2-053).
+
+    Parsed bundle inputs are bounded to depth 256 and 1,000,000 value nodes before schema or
+    cryptographic work. Shared children count at each occurrence; cycles are refused by the
+    depth bound. The separate byte-interface size limit is not a parsed-object size cap.
+
+    A supplied register is a Consequential Action Register document that has passed its schema
+    (``load_register``); each decision basis is then checked against it. Invalid bundle data is
+    reported, never raised.
+    ``now``, ``response_clock_skew_seconds``, ``accept_current_trust_failure``,
+    ``require_trusted_time`` and ``register`` are caller
     arguments: a malformed value raises ``ValueError``. The report's
     ``scope`` says what its verdict establishes and what it does not (EBMP2-076).
     """
     checked_now = _valid_now(now)
-    if type(response_clock_skew_seconds) is not int or response_clock_skew_seconds < 0:
-        raise ValueError("the response clock-skew allowance is a non-negative integer of seconds")
+    if type(response_clock_skew_seconds) is not int or response_clock_skew_seconds != 0:
+        raise ValueError("the registered reference profiles require a response clock-skew allowance of zero")
     if type(require_trusted_time) is not bool:
         raise ValueError("require_trusted_time is a bool")
+    if type(accept_current_trust_failure) is not bool:
+        raise ValueError("accept_current_trust_failure is a bool")
     if register is not None and register_schema_problems(register):
         raise ValueError("the register does not satisfy its schema")
     if register is not None and basis.register_document_problems(register):

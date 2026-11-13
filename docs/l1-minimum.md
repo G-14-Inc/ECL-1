@@ -1,13 +1,13 @@
 # Minimum path to an L1 claim
 
-ECL-1 `1.0`. This document is generated from the compiled requirement registry (`registries/requirements-compiled.json`) and the checklist in Section 11.3 of the standard, and is not edited by hand.
+ECL-1 Version 1 public review; source build `1.0.2-review.1`, prepared `2026-11-10`; local candidate. This document is generated from the compiled requirement registry (`registries/requirements-compiled.json`) and the checklist in Section 11.3 of the standard, and is not edited by hand.
 
-An `L1` claim answers 380 requirements across 8 documents and 33 checklist items. Of the requirements, 355 are obligations (MUST), 11 are recommendations (SHOULD only) and 14 are permissions (MAY only). 36 are marked conditional by an opening-text heuristic: they open with a condition, either a choice that only some deployments make, such as federation or an AI bill of materials, or an event that every deployment handles when it happens, such as a key compromise. The list sizes the first implementation and the first assessment. It is not a conformance claim.
+An `L1` claim answers 404 requirements across 9 documents and 33 checklist items. Of the requirements, 379 are obligations (MUST), 11 are recommendations (SHOULD only) and 14 are permissions (MAY only). 36 are marked conditional by an opening-text heuristic: they open with a condition, either a choice that only some deployments make, such as federation or an AI bill of materials, or an event that every deployment handles when it happens, such as a key compromise. The list sizes the first implementation and the first assessment. It is not a conformance claim.
 
 ## How the path is derived
 
 - Every requirement of the core standard whose minimum level is `L1` is on the path. The minimum level is the `Min Level` cell of an FR row, or the level qualifier that opens a requirement ("For `L2` and above", "`L2`:" and similar); a requirement without one applies at every level (standard, Section 6.1).
-- An obligation on the path, a requirement with a MUST-class keyword, that names a companion protocol or profile brings in every requirement of that document that applies at `L1`. An obligation on the path that cites another requirement by its ID brings in that requirement. A recommendation or permission on the path brings nothing in, because it binds no claim. This repeats until nothing new is named.
+- An obligation on the path, a requirement with a MUST-class keyword, that names a companion protocol or profile brings in every requirement of that document that applies at `L1`. An obligation on the path that cites another requirement by its ID brings in that requirement. A recommendation or permission on the path brings nothing in, because it binds no claim. Dependency discovery uses the complete compiled text, including explicitly attributed continuation paragraphs and tables. This repeats until nothing new is named.
 - A companion that no obligation on the path names is not on the path. A claim that declares a profile, or uses a function that a protocol governs, adds those requirements.
 - The generator marks a requirement conditional when its text opens with a condition such as "When", "If" or "This model".
 
@@ -20,16 +20,17 @@ Requirement IDs link to their complete text in the generated HTML documents. Che
 | Document | On the path because | Requirements | Obligations | Recommendations | Permissions | Conditional |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | ECL-1 core standard | it is the core standard | 186 | 163 | 11 | 12 | 31 |
-| DCMP-2 | named by ECL1N-0022, ECL1N-0057, ECL1N-0118, EBMP2-006, EBMP2-057, EBMP2-059, EBMP2-069, EBMP2-078, IE1-034, TP1-004, TP1-010 | 57 | 57 | 0 | 0 | 1 |
-| EBMP-2 | named by ECL1N-0022, ECL1N-0057, ECL1N-0118, ECL1N-0199, DCMP2-043, DCMP2-056, IE1-021, IE1-022, IE1-034, TP1-006 | 78 | 76 | 0 | 2 | 3 |
-| INTEGRITY-ENVELOPE-1 | named by ECL1N-0022, ECL1N-0117, DCMP2-002, DCMP2-043, EBMP2-057, EBMP2-068, TP1-002, TP1-006, TP1-007, TP1-010 | 39 | 39 | 0 | 0 | 0 |
-| TIMING-SAFE-STATE-1 | requirements on the path cite TS1-014, TS1-018, TS1-027, TS1-031, TS1-032, TS1-034 | 6 | 6 | 0 | 0 | 0 |
+| DCMP-2 | named by ECL1N-0022, ECL1N-0057, ECL1N-0118, ECL1N-0186, EBMP2-006, EBMP2-008, EBMP2-057, EBMP2-059, EBMP2-069, EBMP2-076, EBMP2-078, IE1-034, IE1-039, TP1-004, TP1-010 | 57 | 57 | 0 | 0 | 1 |
+| EBMP-2 | named by ECL1N-0022, ECL1N-0057, ECL1N-0118, ECL1N-0199, DCMP2-043, DCMP2-056, IE1-021, IE1-022, IE1-034, IE1-039, TP1-003, TP1-006, DW1-002 | 78 | 76 | 0 | 2 | 3 |
+| INTEGRITY-ENVELOPE-1 | named by ECL1N-0022, ECL1N-0117, DCMP2-002, DCMP2-043, EBMP2-057, EBMP2-068, TP1-002, TP1-003, TP1-006, TP1-007, TP1-010 | 39 | 39 | 0 | 0 | 0 |
+| DISTRIBUTED-WORKFLOW-1 | requirements on the path cite DW1-002, DW1-009 | 2 | 2 | 0 | 0 | 0 |
+| TIMING-SAFE-STATE-1 | requirements on the path cite TS1-014, TS1-018, TS1-027, TS1-031, TS1-032, TS1-034, TS1-035, TS1-036 | 8 | 8 | 0 | 0 | 0 |
 | EVIDENCE-LIFECYCLE-1 | requirements on the path cite EL1-014 | 1 | 1 | 0 | 0 | 0 |
-| EXTENSION-REGISTRY-1 | requirements on the path cite XR1-005, XR1-006, XR1-023 | 3 | 3 | 0 | 0 | 1 |
-| TRUST-POLICY-1 | named by EBMP2-057, EBMP2-060, EBMP2-068, IE1-034, IE1-037 | 10 | 10 | 0 | 0 | 0 |
-| Total | | 380 | 355 | 11 | 14 | 36 |
+| EXTENSION-REGISTRY-1 | named by EBMP2-068, IE1-040 | 23 | 23 | 0 | 0 | 1 |
+| TRUST-POLICY-1 | named by EBMP2-057, EBMP2-060, EBMP2-068, EBMP2-076, IE1-034, IE1-037 | 10 | 10 | 0 | 0 | 0 |
+| Total | | 404 | 379 | 11 | 14 | 36 |
 
-Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, AUTHZEN-BINDING-1, STRICT-FAILURE-1, AARM-BINDING-1, ACS-BINDING-1, MCP-GATEWAY-1, OTEL-EVIDENCE-EXPORT-1, OAUTH-AUTHORITY-1.
+Not on the path: DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, AUTHZEN-BINDING-1, STRICT-FAILURE-1, AARM-BINDING-1, ACS-BINDING-1, MCP-GATEWAY-1, OTEL-EVIDENCE-EXPORT-1, OAUTH-AUTHORITY-1.
 
 ## Checklist items for an L1 claim
 
@@ -68,7 +69,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [EA-29](../standard/ECL-1_Standard.md#1133-enforcement-and-action-controls) | Section 8.8 | Always | Does each loss of required proof or deployment-wide halt trigger bring at least the scope and state required by ECL1N-0191, and are all applicable lifting conditions of ECL1N-0193 met? |
 | [PA-03](../standard/ECL-1_Standard.md#1134-provenance-and-evidence-controls) | Section 5.5 (ECL1N-0048, ECL1N-0145) | Evidence produced | Is the evidence-granularity tier appropriate to the action class and event type? |
 | [PA-07](../standard/ECL-1_Standard.md#1134-provenance-and-evidence-controls) | Section 5.5 (ECL1N-0050, ECL1N-0195 to ECL1N-0199) / FR-113 | Evidence produced | Are evidence bundles retained for the required minimum at every level, and related verifier-critical artifacts for the same minimum at L2 and above? |
-| [PA-08](../standard/ECL-1_Standard.md#1134-provenance-and-evidence-controls) | Section 9.8 | Signed evidence produced | Is every evidence-signing key inventoried, held out of the governed AI system's reach, and bound to one component role (ECL1N-0155 to ECL1N-0157)? |
+| [PA-08](../standard/ECL-1_Standard.md#1134-provenance-and-evidence-controls) | Section 9.8 | Signed evidence produced | Is every accepted evidence-signing key inventoried, and are keys operated within the claim boundary isolated and role-bound as ECL1N-0156 and ECL1N-0157 require? |
 | [PA-09](../standard/ECL-1_Standard.md#1134-provenance-and-evidence-controls) | Section 9.8 | Signed evidence produced | Are evidence-signing keys rotated within their declared lifetime with overlap, and is key compromise handled by an exercised revocation procedure (ECL1N-0158, ECL1N-0159)? |
 | [VF-01](../standard/ECL-1_Standard.md#1135-verification-and-fleet-controls) | FR-005 | Always | Is there requirement-to-evidence traceability for all applicable controls? |
 | [VF-06](../standard/ECL-1_Standard.md#1135-verification-and-fleet-controls) | Section 5.6 | Always | Are the detections that indicate wrong behavior declared, each with its response (ECL1N-0167)? |
@@ -107,12 +108,12 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [ECL1N-0021](../render/ecl-1_standard.html#ECL1N-0021) | 3.3 | obligation | Living-specification references in this subsection MUST NOT be invoked normatively in a claim, profile, or checklist package unless the claimant or profile… |
 | [ECL1N-0022](../render/ecl-1_standard.html#ECL1N-0022) | 3.4 | obligation | The companion artifacts listed in this subsection are part of the normative assessment package at every level. |
 | [ECL1N-0023](../render/ecl-1_standard.html#ECL1N-0023) | 3.6 | obligation, conditional | When a deployment profile claims ECL-1 conformance in a sector governed by IEC 62443 or ISO 26262, the applicable sector standard controls MUST be treated as… |
-| [ECL1N-0024](../render/ecl-1_standard.html#ECL1N-0024) | 3.7 | obligation | For each control that an ECL-1 conformance claim asserts from Sections 6, 7, 10, or 11, the claim MUST cite the control's requirement or checklist identifier… |
+| [ECL1N-0024](../render/ecl-1_standard.html#ECL1N-0024) | 3.7 | obligation | For each control that an ECL-1 conformance claim or component implementation report asserts from Sections 6, 7, 10, or 11, the claim or report MUST cite the… |
 | [ECL1N-0025](../render/ecl-1_standard.html#ECL1N-0025) | 3.7 | obligation | Any living-specification reference used normatively in a claim or profile MUST be frozen by version, date, or immutable hash in the relevant package. |
 | [ECL1N-0026](../render/ecl-1_standard.html#ECL1N-0026) | 3.7 | obligation | A mapping claim to an external framework MUST distinguish direct runtime support, supporting evidence only, and residual obligations. |
 | [ECL1N-0027](../render/ecl-1_standard.html#ECL1N-0027) | 3.7 | obligation | Conformance to ECL-1 MUST NOT be represented as automatic certification or legal compliance with any external framework that this document cites. |
 | [ECL1N-0028](../render/ecl-1_standard.html#ECL1N-0028) | 5.1 | obligation | All in-scope consequential actions MUST cross the Enforcement Boundary before execution. |
-| [ECL1N-0029](../render/ecl-1_standard.html#ECL1N-0029) | 8.8 | obligation, conditional | When the degraded-mode window expires or a critical integrity failure occurs, a system in Degraded Mode MUST transition to Restricted Mode or Emergency Halt. |
+| [ECL1N-0029](../render/ecl-1_standard.html#ECL1N-0029) | 8.8 | obligation, conditional | When the degraded-mode window expires, a system in Degraded Mode MUST transition to at least Restricted Mode. |
 | [ECL1N-0030](../render/ecl-1_standard.html#ECL1N-0030) | 11.6 | obligation | An AI bill of materials used as part of an ECL-1 conformance claim (AIBOM-MIN-1) MUST include at minimum: artifact identifier, supplier or owner, component… |
 | [ECL1N-0031](../render/ecl-1_standard.html#ECL1N-0031) | 5.3 | obligation | Across heterogeneous token or credential systems, each delegation hop MUST preserve or narrow the parent authority on operation scope, resource scope, data… |
 | [ECL1N-0032](../render/ecl-1_standard.html#ECL1N-0032) | 5 | obligation | ECL-1 defines a logical control architecture. |
@@ -152,11 +153,11 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [ECL1N-0070](../render/ecl-1_standard.html#ECL1N-0070) | 6.4 | obligation, conditional | When a profile or SoI invokes consequence-coupling controls, the required identifiers, inputs, and outcomes for those controls MUST be carried in the decision… |
 | [ECL1N-0071](../render/ecl-1_standard.html#ECL1N-0071) | 7.2 | obligation | The required minimum level for a System of Interest MUST be determined by high-water-mark scoring across: - autonomy - data sensitivity - action consequence |
 | [ECL1N-0072](../render/ecl-1_standard.html#ECL1N-0072) | 7.2 | obligation, conditional | If any dimension cannot be defensibly scored due to missing information, the scorer MUST identify the missing dimensions and assign a provisional level. |
-| [ECL1N-0073](../render/ecl-1_standard.html#ECL1N-0073) | 7.4 | obligation | Every claim MUST declare one of the following boundary classes: - `full-system-mediation` - `bounded-action-class-mediation` -… |
+| [ECL1N-0073](../render/ecl-1_standard.html#ECL1N-0073) | 7.4 | obligation | Every claim MUST declare one of the following boundary classes: - `full-system-mediation` - `bounded-action-class-mediation` |
 | [ECL1N-0074](../render/ecl-1_standard.html#ECL1N-0074) | 7.4 | obligation | Boundary class MUST be stated alongside the claimed level. |
 | [ECL1N-0075](../render/ecl-1_standard.html#ECL1N-0075) | 7.5 | obligation, conditional | Sector profiles MAY require a higher class. |
 | [ECL1N-0076](../render/ecl-1_standard.html#ECL1N-0076) | 7.5 | obligation | Public claims satisfied only at `Class A` MUST disclose that the control plane uses same-operator separated controls and that no separately administered or… |
-| [ECL1N-0077](../render/ecl-1_standard.html#ECL1N-0077) | 7.6 | obligation | Conditional conformance is not permitted for `L4`. |
+| [ECL1N-0077](../render/ecl-1_standard.html#ECL1N-0077) | 7.6 | obligation | Conditional conformance is permitted only for `L2` and `L3`. |
 | [ECL1N-0078](../render/ecl-1_standard.html#ECL1N-0078) | 7.7 | obligation | Any public, procurement-facing, or regulator-facing ECL-1 claim MUST state at least all of the following: - the System of Interest identifier or bounded SoI… |
 | [ECL1N-0079](../render/ecl-1_standard.html#ECL1N-0079) | 7.7 | obligation, conditional | When external framework support is asserted, the claim surface MUST also name the framework, the packet identifier, and the bounded obligation slice being… |
 | [ECL1N-0080](../render/ecl-1_standard.html#ECL1N-0080) | 7.8 | obligation | Assessment records MUST include artifact hashes or equivalent immutable references for reproducibility. |
@@ -217,7 +218,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [ECL1N-0138](../render/ecl-1_standard.html#ECL1N-0138) | 11.6 | permission | Provenance exports submitted for checklist evaluation MAY be redacted. |
 | [ECL1N-0139](../render/ecl-1_standard.html#ECL1N-0139) | 11.6 | obligation | Provenance exports submitted for checklist evaluation MUST preserve verifier-critical fields as defined in Section 9.7. |
 | [ECL1N-0141](../render/ecl-1_standard.html#ECL1N-0141) | 5.1 | obligation | A conformant implementation MUST NOT provide an undisclosed bypass path around the Enforcement Layer for in-scope actions, and MUST NOT suppress the required… |
-| [ECL1N-0142](../render/ecl-1_standard.html#ECL1N-0142) | 7.5 | obligation | A claim MUST achieve at least the control-independence class that the following table gives for its claimed level. |
+| [ECL1N-0142](../render/ecl-1_standard.html#ECL1N-0142) | 7.5 | obligation | A claim MUST achieve at least the control-independence class that the following table gives for its claimed level. \| Claimed Level \| Minimum independence class… |
 | [ECL1N-0143](../render/ecl-1_standard.html#ECL1N-0143) | 7.5 | obligation | A `Class B` or `Class C` claim MUST identify the separately administered trust domain in which control approval and evidence verification both occur, the… |
 | [ECL1N-0144](../render/ecl-1_standard.html#ECL1N-0144) | 7.5 | obligation | A `Class C` claim MUST also identify the externally independent authority that holds control approval and evidence verification and state why it is independent… |
 | [ECL1N-0145](../render/ecl-1_standard.html#ECL1N-0145) | 5.5 | obligation | A producer MUST NOT use summary evidence unless reconstructability is preserved, and MUST use expanded evidence for overrides, incidents, critical actions… |
@@ -238,7 +239,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [ECL1N-0167](../render/ecl-1_standard.html#ECL1N-0167) | 5.6 | obligation | A claim MUST declare the detections that indicate that the SoI may be acting wrongly, including verification findings, monitoring alerts, anomaly signals, and… |
 | [ECL1N-0170](../render/ecl-1_standard.html#ECL1N-0170) | 5.7 | obligation | A change to the policy, the Consequential Action Register, the tool or capability manifest reachable by the SoI, an enforcement point's configuration, the trust… |
 | [ECL1N-0172](../render/ecl-1_standard.html#ECL1N-0172) | 5.10 | obligation | For each in-scope action class, the Consequential Action Register MUST state the largest aggregate effect that the SoI could cause through that class in one… |
-| [ECL1N-0174](../render/ecl-1_standard.html#ECL1N-0174) | 5.11 | obligation, conditional | When a person approves or rejects a consequential action, the approval MUST be made on a human-readable presentation of its operation, target, every parameter… |
+| [ECL1N-0174](../render/ecl-1_standard.html#ECL1N-0174) | 5.11 | obligation, conditional | When a person approves or rejects a consequential action, the approval or rejection MUST be made on a human-readable presentation of its operation, target… |
 | [ECL1N-0177](../render/ecl-1_standard.html#ECL1N-0177) | 5.11 | obligation, conditional | When the Consequential Action Register declares a human-approval threshold for an action class (ECL1N-0007), the Decision Layer MUST NOT return `admit` for an… |
 | [ECL1N-0178](../render/ecl-1_standard.html#ECL1N-0178) | 5.2 | obligation | For each in-scope action class, the Consequential Action Register MUST declare, for each decision input that ECL1N-0164 requires it to state, its class as… |
 | [ECL1N-0179](../render/ecl-1_standard.html#ECL1N-0179) | 5.2 | obligation | An `actor_supplied` or `judgment` input MUST NOT be the basis of an `admit`. |
@@ -287,7 +288,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [DCMP2-010](../render/dcmp-2.html#DCMP2-010) | 3.1 | obligation | Each delegation hop MUST be independently referenceable, integrity-verifiable, audience-bound, expiry-bounded, and scope-attenuating. |
 | [DCMP2-011](../render/dcmp-2.html#DCMP2-011) | 3.1 | obligation | An idempotency key MAY identify an intended effect boundary, but MUST NOT replace the unique message, action, attempt, decision, authority, or receipt… |
 | [DCMP2-012](../render/dcmp-2.html#DCMP2-012) | 3.2 | obligation | A response whose outcome is not `admit` MUST NOT carry an `authorization` object. |
-| [DCMP2-013](../render/dcmp-2.html#DCMP2-013) | 3.2 | obligation | An `admit` response MUST carry an authorization object whose audience, scope digest, validity interval, and use policy bind the exact release authority. |
+| [DCMP2-013](../render/dcmp-2.html#DCMP2-013) | 3.2 | obligation | An `admit` response MUST carry an authorization object whose audience, scope digest, validity interval, and use policy bind the exact release authority for one… |
 | [DCMP2-014](../render/dcmp-2.html#DCMP2-014) | 3.2 | obligation | A deny, hold, challenge, expired, revoked, cancelled, or superseded message MUST NOT be interpreted as release authority. |
 | [DCMP2-015](../render/dcmp-2.html#DCMP2-015) | 3.2 | obligation | An authorization validity interval MUST be non-empty, MUST be contained within any governing decision and delegation validity interval, and MUST NOT exceed the… |
 | [DCMP2-016](../render/dcmp-2.html#DCMP2-016) | 3.2 | obligation | Every response MUST bind the policy identifier, version, digest, and applicable policy epoch. |
@@ -324,13 +325,13 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [DCMP2-047](../render/dcmp-2.html#DCMP2-047) | 8 | obligation | A response's `issued_at` MUST NOT be earlier than its request's `issued_at` by more than the response clock-skew allowance that the verification profile… |
 | [DCMP2-048](../render/dcmp-2.html#DCMP2-048) | 8 | obligation | In an `admit`, `authorization.audience` MUST equal the request's `authority_request.audience`, reported as `ecl.error.audience-mismatch.v1` when it does not… |
 | [DCMP2-049](../render/dcmp-2.html#DCMP2-049) | 8 | obligation | In an `admit`, the authorization window MUST be non-empty and no longer than the request's `requested_validity_seconds`; `valid_from` MUST NOT be earlier than… |
-| [DCMP2-050](../render/dcmp-2.html#DCMP2-050) | 8 | obligation | In an `admit`, a `single_use` authorization MUST omit `max_uses` or set it to 1, and when the request carries `authority_request.max_uses` the authorization… |
+| [DCMP2-050](../render/dcmp-2.html#DCMP2-050) | 8 | obligation | A request's `authority_request.use_policy` and an `admit`'s `authorization.use_policy` MUST be `single_use`. |
 | [DCMP2-051](../render/dcmp-2.html#DCMP2-051) | 8 | obligation | A consumer MUST NOT release an action on a response that fails any of DCMP2-044 to DCMP2-050, and an evidence verifier MUST report such a response as not… |
 | [DCMP2-052](../render/dcmp-2.html#DCMP2-052) | 3.2 | obligation | An `admit` response MUST NOT carry, in `ecl.ext.consequence-coupling.v1`, a `budget_result` whose outcome is not `authorized`, a `witness_result` whose outcome… |
 | [DCMP2-053](../render/dcmp-2.html#DCMP2-053) | 3.2 | obligation | A response that carries `ecl.ext.decision-basis.v1` MUST NOT list one `input` more than once, MUST NOT record an `actor_supplied` or `judgment` input, or an… |
 | [DCMP2-054](../render/dcmp-2.html#DCMP2-054) | 3.1 | obligation | `action.risk_class`, `constraints`, `action.budget_debit`, and the `witness_reference` and `capability_manifest` of `ecl.ext.consequence-coupling.v1` in a… |
 | [DCMP2-055](../render/dcmp-2.html#DCMP2-055) | 3.1 | obligation | A request's `action.budget_debit.amount` MUST be written without a sign, so that no declared debit is negative. |
-| [DCMP2-056](../render/dcmp-2.html#DCMP2-056) | 3.3 | obligation | A request that continues a request answered with a decision response whose outcome is `challenge` MUST be a new decision request (DCMP2-021, DCMP2-026): a new… |
+| [DCMP2-056](../render/dcmp-2.html#DCMP2-056) | 3.3 | obligation | A request that continues a human-approval challenge MUST be a new decision request (DCMP2-021, DCMP2-026): a new `message_id`; the continued request's… |
 | [DCMP2-057](../render/dcmp-2.html#DCMP2-057) | 3.3 | obligation | The Decision Layer MUST evaluate a continuation afresh under the policy in force at its evaluation and MUST NOT copy the outcome, authorization or obligations… |
 
 ### EBMP-2 (`protocols/EBMP-2.md`)
@@ -344,7 +345,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [EBMP2-005](../render/ebmp-2.html#EBMP2-005) | 3 | permission | A profile MAY require additional registered critical events. |
 | [EBMP2-006](../render/ebmp-2.html#EBMP2-006) | 3.1 | obligation | A decision event MUST reference the exact DCMP-2 decision, record its outcome, and bind the evaluated policy. |
 | [EBMP2-007](../render/ebmp-2.html#EBMP2-007) | 3.1 | obligation | An authority event MUST identify the authority and its state: `issued`, `active`, `consumed`, `revoked`, `expired`, or `superseded`. |
-| [EBMP2-008](../render/ebmp-2.html#EBMP2-008) | 3.1 | obligation | Consumption MUST be separately recorded for a single-use authority. |
+| [EBMP2-008](../render/ebmp-2.html#EBMP2-008) | 3.1 | obligation | Consumption MUST be separately recorded for each DCMP-2 single-use authority. |
 | [EBMP2-009](../render/ebmp-2.html#EBMP2-009) | 3.1 | obligation | Revocation, expiry, and supersession MUST NOT delete an authority record and MUST NOT be treated as proof that a prior release did not occur. |
 | [EBMP2-010](../render/ebmp-2.html#EBMP2-010) | 3.2 | obligation | An execution attempt MUST have a unique attempt identifier. |
 | [EBMP2-011](../render/ebmp-2.html#EBMP2-011) | 3.2 | obligation | A terminal attempt MUST NOT return to a non-terminal state. |
@@ -383,15 +384,15 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [EBMP2-044](../render/ebmp-2.html#EBMP2-044) | 8 | obligation | An EBMP-1 adapter MUST identify every lossless, derived, defaulted, omitted, and impossible field. |
 | [EBMP2-045](../render/ebmp-2.html#EBMP2-045) | 8 | permission | A richer implementation-native receipt MAY coexist with EBMP-2 only when a digest-bound causal relation and precedence rule identify which artifact supports… |
 | [EBMP2-046](../render/ebmp-2.html#EBMP2-046) | 9 | obligation | An event record's `event.kind` MUST be the kind its `event_type` requires, and an authority or execution event's `event.state` MUST be one its `event_type`… |
-| [EBMP2-047](../render/ebmp-2.html#EBMP2-047) | 10 | obligation | An `execution_released` or `execution_terminal` event MUST bind its request: `event.action_id` MUST equal the request's `action.action_id`; when the event… |
+| [EBMP2-047](../render/ebmp-2.html#EBMP2-047) | 10 | obligation | A `release_prepared`, `execution_released`, `execution_observed` or `execution_terminal` event MUST bind its request: `event.action_id` MUST equal the request's… |
 | [EBMP2-048](../render/ebmp-2.html#EBMP2-048) | 10 | obligation, conditional | When a response to the request exists, an execution event MUST name it: `event.decision.uri` MUST equal the response's `message_id`, `event.decision.digest`… |
 | [EBMP2-049](../render/ebmp-2.html#EBMP2-049) | 10 | obligation | An execution event that carries `event.authority` MUST belong to an `admit` response; `event.authority.uri` MUST equal the authorization's `authorization_id`… |
-| [EBMP2-050](../render/ebmp-2.html#EBMP2-050) | 10 | obligation | An `execution_released` event MUST belong to an `admit` response, its `observed_at` MUST NOT be earlier than the authorization's `valid_from`, and its… |
+| [EBMP2-050](../render/ebmp-2.html#EBMP2-050) | 10 | obligation | An `execution_released` or `execution_observed` event MUST belong to an `admit` response. |
 | [EBMP2-051](../render/ebmp-2.html#EBMP2-051) | 10 | obligation | The state of an `execution_terminal` event MUST agree with the outcome of its response under the state-outcome table of the verification profile. |
 | [EBMP2-052](../render/ebmp-2.html#EBMP2-052) | 10 | obligation | An `authority_issued` or `authority_consumed` event MUST belong to an `admit` response whose `authorization.authorization_id` equals the event's… |
 | [EBMP2-053](../render/ebmp-2.html#EBMP2-053) | 10 | obligation | For one action attempt, a non-execution terminal state (`denied`, `held`, `challenged`, `expired_before_release`) MUST NOT coexist with consumed authority, an… |
 | [EBMP2-054](../render/ebmp-2.html#EBMP2-054) | 10 | obligation | A `request` or `decision` reference in an event MUST resolve to a message in the bundle with the same `workflow_id`, `root_trace_id` and `attempt`, and a digest… |
-| [EBMP2-055](../render/ebmp-2.html#EBMP2-055) | 10 | obligation | A `succeeded` attempt MUST have an `authority_consumed` event in state `consumed` that binds its response under EBMP2-052, and an `execution_released` event for… |
+| [EBMP2-055](../render/ebmp-2.html#EBMP2-055) | 10 | obligation | An attempt with an `execution_observed` event in state `running`, or whose terminal state is `succeeded`, `failed`, `partially_succeeded`, `unknown`… |
 | [EBMP2-056](../render/ebmp-2.html#EBMP2-056) | 10 | obligation | A terminal event MUST carry at most one `ecl.ext.outcome-reason.v1` extension, whose value is exactly `{"code": C}` with `C` an active registered error code. |
 | [EBMP2-057](../render/ebmp-2.html#EBMP2-057) | 11 | obligation | An observation MUST be an EBMP-2 `verification` event; a verifier MUST report one that is not with `ecl.error.semantic-invalid.v1`. |
 | [EBMP2-058](../render/ebmp-2.html#EBMP2-058) | 11 | obligation | A verifier MUST pair objects by identity and never by an event's claimed decision URI: a request by its `message_id` and by its (`action.action_id`… |
@@ -409,11 +410,11 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [EBMP2-070](../render/ebmp-2.html#EBMP2-070) | 3.2 | obligation, conditional | When the decision response that an `execution_released` event records carries an obligation whose `satisfaction` is `before_release`, or carries in… |
 | [EBMP2-071](../render/ebmp-2.html#EBMP2-071) | 3.2 | obligation | The `observed_at` of an `execution_released` event MUST be the enforcement point's observation of the release boundary that its profile declares, taken after… |
 | [EBMP2-072](../render/ebmp-2.html#EBMP2-072) | 10 | obligation | A verifier MUST report with `ecl.error.expired.v1`, as a finding of stage 7 of EBMP2-068, an `execution_terminal` event that binds its request and response and… |
-| [EBMP2-073](../render/ebmp-2.html#EBMP2-073) | 10 | obligation | An `authority_consumed` event in state `consumed` that binds its response under EBMP2-052 and carries `use_count` MUST give a value from 1 to the number of uses… |
-| [EBMP2-074](../render/ebmp-2.html#EBMP2-074) | 10 | obligation | An action attempt with an `execution_released` event that binds its request and response, and whose authorization's `use_policy` is `single_use`, MUST also have… |
-| [EBMP2-075](../render/ebmp-2.html#EBMP2-075) | 10 | obligation, conditional | When a request carries `ecl.ext.mcp-binding.v1`, an `execution_released` or `execution_terminal` event of its action that carries the extension MUST carry, in… |
+| [EBMP2-073](../render/ebmp-2.html#EBMP2-073) | 10 | obligation | An `authority_consumed` event in state `consumed` that binds its response under EBMP2-052 MUST refer to a `single_use` authorization whose `max_uses` is absent… |
+| [EBMP2-074](../render/ebmp-2.html#EBMP2-074) | 10 | obligation | An action attempt with an `execution_released` event that binds its request and response MUST also have an `authority_consumed` event in state `consumed`… |
+| [EBMP2-075](../render/ebmp-2.html#EBMP2-075) | 10 | obligation, conditional | When a request carries `ecl.ext.mcp-binding.v1`, a `release_prepared`, `execution_released`, `execution_observed` or `execution_terminal` event of its action… |
 | [EBMP2-076](../render/ebmp-2.html#EBMP2-076) | 11 | obligation | With each verdict a verifier MUST report its scope, as the two lists of the table below: `established`, the checks that it made for the bundle and that held… |
-| [EBMP2-077](../render/ebmp-2.html#EBMP2-077) | 4 | obligation | A causal predecessor MUST have its successor's `workflow.root_trace_id`, and MUST be in its successor's workflow or in the workflow that its successor's… |
+| [EBMP2-077](../render/ebmp-2.html#EBMP2-077) | 4 | obligation | A causal predecessor MUST have its successor's `workflow.root_trace_id`, and MUST be in its successor's workflow, in the workflow that its successor's… |
 | [EBMP2-078](../render/ebmp-2.html#EBMP2-078) | 11 | obligation | A bundle MAY hold a continued request and its continuation (DCMP-2 DCMP2-056), each with its own response and attempt, and then verifies as one history. |
 
 ### INTEGRITY-ENVELOPE-1 (`protocols/INTEGRITY-ENVELOPE-1.md`)
@@ -422,7 +423,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | --- | --- | --- | --- |
 | [IE1-001](../render/integrity-envelope-1.html#IE1-001) | 1 | obligation | A signed ECL JSON payload MUST first satisfy the restricted ECL canonical JSON profile. |
 | [IE1-002](../render/integrity-envelope-1.html#IE1-002) | 1 | obligation | The JSON profile MUST conform to I-JSON (RFC 7493) and RFC 8785 behavior, including I-JSON's prohibition of surrogate code points and noncharacters in strings… |
-| [IE1-003](../render/integrity-envelope-1.html#IE1-003) | 1 | obligation | Decimal quantities, currency, durations, integers outside the exact range, and other precision-sensitive values MUST use registered string representations. |
+| [IE1-003](../render/integrity-envelope-1.html#IE1-003) | 1 | obligation | Decimal quantities, currency, integers outside the exact range, and other precision-sensitive values MUST use registered string representations. |
 | [IE1-004](../render/integrity-envelope-1.html#IE1-004) | 1 | obligation | A consumer MUST apply the verified RFC 8785 erratum relevant to negative zero (Errata ID 7920) and MUST reject rather than normalize ambiguous input. |
 | [IE1-005](../render/integrity-envelope-1.html#IE1-005) | 2 | obligation | The envelope MUST carry the payload bytes as canonical base64, payload media type, and payload digest. |
 | [IE1-006](../render/integrity-envelope-1.html#IE1-006) | 2 | obligation | The verifier MUST recompute the payload digest before signature policy evaluation. |
@@ -430,7 +431,7 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [IE1-008](../render/integrity-envelope-1.html#IE1-008) | 2 | obligation | A logical protocol identifier and canonical content digest together identify an immutable object version. |
 | [IE1-009](../render/integrity-envelope-1.html#IE1-009) | 3 | obligation | Signers and verifiers MUST compute this domain-separated input over the exact payload type and decoded payload bytes. |
 | [IE1-010](../render/integrity-envelope-1.html#IE1-010) | 3 | obligation | A signature valid for one payload type MUST NOT validate for another payload type. |
-| [IE1-011](../render/integrity-envelope-1.html#IE1-011) | 3 | obligation | A verifier MUST NOT re-serialize a parsed payload before signature verification. |
+| [IE1-011](../render/integrity-envelope-1.html#IE1-011) | 3 | obligation | A verifier MUST verify signatures over the transported payload bytes, not a replacement serialization. |
 | [IE1-012](../render/integrity-envelope-1.html#IE1-012) | 4 | obligation | Envelope fields MUST NOT weaken the payload-bound policy. |
 | [IE1-013](../render/integrity-envelope-1.html#IE1-013) | 4 | obligation | The threshold MUST be an integer, MUST be at least one when integrity is required, MUST be zero when integrity is declared optional, and MUST NOT be lower than… |
 | [IE1-014](../render/integrity-envelope-1.html#IE1-014) | 4 | obligation | Each valid signer MUST count at most once toward threshold, independent of duplicate signature entries. |
@@ -457,8 +458,15 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [IE1-035](../render/integrity-envelope-1.html#IE1-035) | 9 | obligation | A verification profile MAY require trusted time. |
 | [IE1-037](../render/integrity-envelope-1.html#IE1-037) | 1 | obligation | A consumer MUST refuse a configured limit that IE1-028 does not allow before it reads any input, as a configuration error and never as the finding of a check… |
 | [IE1-038](../render/integrity-envelope-1.html#IE1-038) | 1 | obligation | A validator MUST evaluate the `pattern` keyword of an ECL schema as an ECMA-262 regular expression that may match anywhere in the string unless the pattern… |
-| [IE1-039](../render/integrity-envelope-1.html#IE1-039) | 11 | obligation | A verifier MUST count a signature only under a key whose trust-policy purposes include the purpose of the payload that this table gives: |
+| [IE1-039](../render/integrity-envelope-1.html#IE1-039) | 11 | obligation | A verifier MUST count a signature only under a key whose trust-policy purposes include the purpose of the payload that this table gives: \| Payload \| Payload… |
 | [IE1-040](../render/integrity-envelope-1.html#IE1-040) | 11 | obligation | A verifier MUST check an envelope in this order, and MUST refuse an envelope at the first step it fails, with that step's error code: 1. the envelope satisfies… |
+
+### DISTRIBUTED-WORKFLOW-1 (`protocols/DISTRIBUTED-WORKFLOW-1.md`)
+
+| ID | Section | Kind | Opening excerpt |
+| --- | --- | --- | --- |
+| [DW1-002](../render/distributed-workflow-1.html#DW1-002) | 1 | obligation | A child workflow MUST identify its parent workflow and the exact causal object that created or delegated it. |
+| [DW1-009](../render/distributed-workflow-1.html#DW1-009) | 2 | obligation | A fork MUST preserve the common predecessor. |
 
 ### TIMING-SAFE-STATE-1 (`protocols/TIMING-SAFE-STATE-1.md`)
 
@@ -470,6 +478,8 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 | [TS1-031](../render/timing-safe-state-1.html#TS1-031) | 4 | obligation | A consumer MUST treat required proof as the set of inputs that TS1-018 names: policy, identity, authority, integrity, critical-extension handling, and… |
 | [TS1-032](../render/timing-safe-state-1.html#TS1-032) | 4 | obligation | A failure whose consequence is that any required proof is absent, invalid, expired, or unavailable MUST be classified as missing required proof and MUST fail… |
 | [TS1-034](../render/timing-safe-state-1.html#TS1-034) | 2 | obligation | Every declared timing bound MUST name its observation points (the events between which the interval is measured), its objective type (a maximum, or a stated… |
+| [TS1-035](../render/timing-safe-state-1.html#TS1-035) | 2 | obligation | A revocation-propagation deadline and an emergency-halt acknowledgment bound are distinct obligations and MUST be declared separately; satisfying one MUST NOT… |
+| [TS1-036](../render/timing-safe-state-1.html#TS1-036) | 2 | obligation | A control acknowledgment bound (B) is the maximum interval, at the declared observation points, between a control operation's request and its durable… |
 
 ### EVIDENCE-LIFECYCLE-1 (`protocols/EVIDENCE-LIFECYCLE-1.md`)
 
@@ -481,8 +491,28 @@ Not on the path: DISTRIBUTED-WORKFLOW-1, DCMP2-HTTP-1, TRANSACTIONAL-EFFECT-1, A
 
 | ID | Section | Kind | Opening excerpt |
 | --- | --- | --- | --- |
+| [XR1-001](../render/extension-registry-1.html#XR1-001) | 1 | obligation | Every extension MUST declare identifier, version, criticality, applicable object types, affected fields, interpretation or schema, owner class, status, and… |
+| [XR1-002](../render/extension-registry-1.html#XR1-002) | 1 | obligation | An identifier MUST be globally collision-resistant within the ECL registry namespace. |
+| [XR1-003](../render/extension-registry-1.html#XR1-003) | 1 | obligation | An extension version MUST be immutable after allocation. |
+| [XR1-004](../render/extension-registry-1.html#XR1-004) | 1 | obligation | Criticality MUST be evaluated per occurrence and MAY be constrained by the registry or active profile. |
 | [XR1-005](../render/extension-registry-1.html#XR1-005) | 1 | obligation | A sender MUST mark an extension critical when ignoring it could change admission, authority, enforcement, evidence interpretation, safe state, or conformance… |
 | [XR1-006](../render/extension-registry-1.html#XR1-006) | 2 | obligation | Unknown critical extensions MUST be rejected. |
+| [XR1-007](../render/extension-registry-1.html#XR1-007) | 2 | obligation | Unknown non-critical extensions MUST be preserved intact and reported when the object is forwarded, transformed, or re-emitted. |
+| [XR1-008](../render/extension-registry-1.html#XR1-008) | 2 | obligation | A non-critical extension MUST NOT alter core semantics. |
+| [XR1-009](../render/extension-registry-1.html#XR1-009) | 2 | obligation | Duplicate extension identifier/version pairs in one object MUST be rejected. |
+| [XR1-010](../render/extension-registry-1.html#XR1-010) | 2 | obligation | Conflicting versions of one extension in one object MUST be rejected unless the registry explicitly defines composability. |
+| [XR1-011](../render/extension-registry-1.html#XR1-011) | 3 | obligation | Registry entries MUST have an append-only allocation history. |
+| [XR1-012](../render/extension-registry-1.html#XR1-012) | 3 | obligation | Active, deprecated, prohibited, superseded, and reserved status MUST be distinguishable. |
+| [XR1-013](../render/extension-registry-1.html#XR1-013) | 3 | obligation | Deprecation MUST identify replacement, transition window, and compatibility impact where applicable. |
+| [XR1-014](../render/extension-registry-1.html#XR1-014) | 3 | obligation | Emergency prohibition MUST identify security rationale, effective time, affected profiles, and review or appeal path. |
+| [XR1-015](../render/extension-registry-1.html#XR1-015) | 3 | obligation | An offline verification package MUST bind the registry snapshot used by the verifier. |
+| [XR1-016](../render/extension-registry-1.html#XR1-016) | 3 | obligation | Registry recognition MUST NOT grant trust or authority. |
+| [XR1-017](../render/extension-registry-1.html#XR1-017) | 4 | obligation | A private-use extension identifier MUST be either an absolute URI under a namespace its owner controls, other than `https://externalcontrollayer.ai/`, or a… |
+| [XR1-018](../render/extension-registry-1.html#XR1-018) | 4 | obligation | A conformance claim MUST disclose critical private extensions needed to interpret the claim package. |
+| [XR1-019](../render/extension-registry-1.html#XR1-019) | 4 | obligation | A public interoperability claim MUST NOT depend on an undocumented private critical extension. |
+| [XR1-020](../render/extension-registry-1.html#XR1-020) | 5 | obligation | Adding an optional non-critical extension MUST be treated as an additive change. |
+| [XR1-021](../render/extension-registry-1.html#XR1-021) | 5 | obligation | Making an extension critical, changing its interpretation, narrowing accepted values, or changing core state behavior MUST be treated as breaking unless a… |
+| [XR1-022](../render/extension-registry-1.html#XR1-022) | 5 | obligation | A converter MUST report preserved, translated, defaulted, dropped, and impossible extension mappings. |
 | [XR1-023](../render/extension-registry-1.html#XR1-023) | 1 | obligation, conditional | When the registry entry of an extension that a consumer processes names a value schema, the consumer MUST validate the extension's `value` against that schema… |
 
 ### TRUST-POLICY-1 (`profiles/TRUST-POLICY-1.md`)

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -11,11 +12,13 @@ import (
 	"math/big"
 	"regexp"
 	"sort"
+	"strings"
 	"unicode/utf8"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/canon"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/envelope"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
 )
 
@@ -90,9 +93,16 @@ var (
 	severityText = map[int64]string{SeverityInfo: "INFO", SeverityWarn: "WARN", SeverityError: "ERROR"}
 	// OTelDeclaredOnly are the attributes that identify people and records, exported only when
 	// declared (OE1-005).
-	OTelDeclaredOnly = map[string]bool{"ecl.actor.id": true, "ecl.subject.id": true, "ecl.action.target": true}
-	dcmpAll          = []attributeSource{{"ecl.issuer.id", []string{"issuer", "id"}}}
-	dcmpRequest      = []attributeSource{
+	OTelDeclaredOnly     = map[string]bool{"ecl.actor.id": true, "ecl.subject.id": true, "ecl.action.target": true}
+	otelTableIdentifiers = map[string]bool{
+		"ecl.actor.id": true, "ecl.subject.id": true, "ecl.action.target": true,
+		"ecl.object.id": true, "ecl.workflow.id": true, "ecl.workflow.root_trace_id": true,
+		"ecl.issuer.id": true, "ecl.producer.id": true, "ecl.evidence.bundle": true, "ecl.action.id": true,
+		"ecl.request.id": true, "ecl.decision.id": true, "ecl.policy.id": true, "ecl.authorization.id": true,
+		"ecl.event.decision_id": true,
+	}
+	dcmpAll     = []attributeSource{{"ecl.issuer.id", []string{"issuer", "id"}}}
+	dcmpRequest = []attributeSource{
 		{"ecl.action.class", []string{"action", "action_class"}},
 		{"ecl.actor.id", []string{"actor", "id"}}, {"ecl.subject.id", []string{"subject", "id"}},
 	}
@@ -214,7 +224,7 @@ func LoadExportKeys(data []byte) (map[string]ExportKey, error) {
 // pick returns a string or an integer member (never a boolean), or nil.
 func pick(value any, path []string) any {
 	switch found := member(value, path...).(type) {
-	case string:
+	case string, int, int64:
 		return found
 	case json.Number:
 		if _, isInteger := pyjson.Int(found); isInteger {
@@ -377,7 +387,7 @@ func OTelAttributes(value map[string]any, bundleID any, key *ExportKey, declared
 		}
 		if pyjson.Equal(value["event_type"], terminalEvent) {
 			for _, item := range array(value, "extensions") {
-				if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["id"], outcomeReason) {
+				if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["id"], outcomeReason) && validatorx.InterpretedOccurrence(value, entry) {
 					if code := text(entry, "value", "code"); code != nil {
 						result["ecl.event.reason_code"] = code
 					}
@@ -476,6 +486,138 @@ func otelDeclared(record map[string]any) map[string]bool {
 	return declared
 }
 
+// Known unkeyed SHA-256 values only; this is not a general information-leak detector.
+func otelKnownUnkeyed(value map[string]any) (map[string]bool, error) {
+	digest, err := canon.Digest(value)
+	if err != nil {
+		return nil, err
+	}
+	known := map[string]bool{digest: true}
+	if parameters, ok := otelParametersDigest(value).(map[string]any); ok {
+		digest, err := canon.Digest(parameters)
+		if err != nil {
+			return nil, err
+		}
+		known[digest] = true
+	}
+	pending := []any{value}
+	for len(pending) > 0 {
+		current := pending[len(pending)-1]
+		pending = pending[:len(pending)-1]
+		switch item := current.(type) {
+		case map[string]any:
+			if digest, ok := item["value"].(string); ok && item["algorithm"] == "ecl.digest.sha-256.v1" && otelKeyedHex.MatchString(digest) {
+				known[digest] = true
+			}
+			for _, child := range item {
+				pending = append(pending, child)
+			}
+		case []any:
+			pending = append(pending, item...)
+		}
+	}
+	return known, nil
+}
+
+func otelDigestText(value string, known map[string]bool) bool {
+	lower, run := strings.ToLower(value), 0
+	for index := 0; index < len(lower); index++ {
+		c := lower[index]
+		if c >= '0' && c <= '9' || c >= 'a' && c <= 'f' {
+			run++
+		} else {
+			run = 0
+		}
+		if run >= 64 && known[lower[index-63:index+1]] {
+			return true
+		}
+	}
+	return false
+}
+
+func otelAnyValueDigest(value any, known map[string]bool) bool {
+	prefixes := map[string]bool{}
+	for digest := range known {
+		prefixes[digest[:8]] = true
+	}
+	pending := []any{value}
+	for len(pending) > 0 {
+		current := pending[len(pending)-1]
+		pending = pending[:len(pending)-1]
+		item, ok := current.(map[string]any)
+		if !ok {
+			continue
+		}
+		if text, ok := item["stringValue"].(string); ok && otelDigestText(text, known) {
+			return true
+		}
+		if encoded, ok := item["bytesValue"].(string); ok {
+			encoded = strings.ReplaceAll(strings.ReplaceAll(encoded, "-", "+"), "_", "/")
+			raw, err := base64.StdEncoding.DecodeString(encoded + strings.Repeat("=", (4-len(encoded)%4)%4))
+			if err == nil {
+				if otelDigestText(string(raw), known) {
+					return true
+				}
+				for index := 0; index+32 <= len(raw); index++ {
+					if prefixes[hex.EncodeToString(raw[index:index+4])] && known[hex.EncodeToString(raw[index:index+32])] {
+						return true
+					}
+				}
+			}
+		}
+		pending = append(pending, array(item, "arrayValue", "values")...)
+		for _, entry := range array(item, "kvlistValue", "values") {
+			if name, isText := textOf(entry, "key"); isText && otelDigestText(name, known) {
+				return true
+			}
+			pending = append(pending, member(entry, "value"))
+		}
+	}
+	return false
+}
+
+func otelUnkeyedExportProblems(log, value map[string]any, unkeyed, expected map[string]any) []problem {
+	known, err := otelKnownUnkeyed(value)
+	if err != nil {
+		return []problem{{"/object", "the object is outside the restricted canonical profile"}}
+	}
+	policy := ""
+	if text(value, "protocol") == "DCMP-2" && text(value, "message_type") == decisionResponse {
+		policy, _ = textOf(value, "policy", "digest", "value")
+	}
+	var problems []problem
+	for _, item := range array(log, "attributes") {
+		name, ok := textOf(item, "key")
+		if !ok {
+			continue
+		}
+		held := member(item, "value")
+		valueMap, isMap := held.(map[string]any)
+		if name == "ecl.policy.digest" && policy != "" && isMap && len(valueMap) == 1 && valueMap["stringValue"] == policy {
+			continue
+		}
+		// OE1-003/004: only the exact identifier in its applicable table slot.
+		if identifier, isText := expected[name].(string); otelTableIdentifiers[name] && isText && isMap && len(valueMap) == 1 && valueMap["stringValue"] == identifier {
+			continue
+		}
+		if name == OTelObjectDigest || name == OTelParametersDigest {
+			if !isMap || len(valueMap) != 1 || !holds(valueMap, "stringValue") {
+				continue
+			}
+			if valueMap["stringValue"] == unkeyed[name] {
+				continue
+			}
+		}
+		if otelDigestText(name, known) || otelAnyValueDigest(held, known) {
+			problems = append(problems, problem{"/log_record/attributes", name + " carries a digest that needs no export key"})
+		}
+	}
+	if otelAnyValueDigest(log["body"], known) {
+		problems = append(problems, problem{"/log_record/body", "the body carries a digest that needs no export key"})
+	}
+	return problems
+}
+
 func otelExport(record, value map[string]any, _ map[string]ExportKey) []problem {
 	var problems []problem
 	attempted := nanos(member(record, "export", "attempted_at"))
@@ -483,7 +625,9 @@ func otelExport(record, value map[string]any, _ map[string]ExportKey) []problem 
 	if attempted == nil || recorded == nil || attempted.Cmp(recorded) < 0 {
 		problems = append(problems, problem{"/export/attempted_at", "the exporter read the object before its time"})
 	}
-	if after, isObject := object(record, "evidence_after"); isObject {
+	if after, isObject := object(record, "evidence_after"); !isObject {
+		problems = append(problems, problem{"/evidence_after", "the retained record lacks the evidence after the export"})
+	} else {
 		left, leftErr := canon.Marshal(after)
 		right, rightErr := canon.Marshal(value)
 		if leftErr != nil || rightErr != nil || !bytes.Equal(left, right) {
@@ -522,8 +666,8 @@ func otelMatch(record, value map[string]any, keys map[string]ExportKey) []proble
 	actual := attributeMap(log)
 	declared := otelDeclared(record)
 	named := actual[OTelKeyID]
-	if _, isText := named.(string); named != nil && !isText {
-		// OE1-010: the record carries the key's identifier, a string.
+	if identifier, isText := named.(string); named != nil && (!isText || utf8.RuneCountInString(identifier) < 1 || utf8.RuneCountInString(identifier) > 256) {
+		// OE1-010: the supported identifier has 1 to 256 Unicode code points.
 		problems = append(problems, problem{"/log_record/attributes", OTelKeyID + " is not the identifier of a key"})
 	}
 	var key *ExportKey
@@ -606,6 +750,7 @@ func otelMatch(record, value map[string]any, keys map[string]ExportKey) []proble
 			problems = append(problems, problem{"/log_record/attributes", name + " is a digest that needs no export key"})
 		}
 	}
+	problems = append(problems, otelUnkeyedExportProblems(log, value, unkeyed, expected)...)
 	return problems
 }
 

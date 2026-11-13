@@ -12,7 +12,8 @@
 <main id="main">
 <h1 id="ecl-distributed-and-long-running-workflow-semantics-1">ECL Distributed and Long-Running Workflow Semantics 1</h1>
 <p>Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version</p>
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <h2 id="1-scope">1. Scope</h2>
 <p>This profile defines semantics for multi-agent, multi-service, delegated,
 retried, concurrent, partially completed, and long-running actions. It does not
@@ -20,7 +21,17 @@ require a central coordinator or global consensus.</p>
 <p><span id="DW1-001"><strong>DW1-001</strong></span><a class="requirement-link" href="#DW1-001" aria-label="Link to DW1-001">§</a> — Every action workflow MUST have a workflow identifier and root
 trace identifier.</p>
 <p><span id="DW1-002"><strong>DW1-002</strong></span><a class="requirement-link" href="#DW1-002" aria-label="Link to DW1-002">§</a> — A child workflow MUST identify its parent workflow and the exact
-causal object that created or delegated it.</p>
+causal object that created or delegated it. For EBMP-2 evidence, the child
+record's causal ancestry identifies that object through the digest-bound path
+specified in <a href="ebmp-2.html#EBMP2-077">EBMP2-077</a>; the parent identifier alone is insufficient. In an
+<code>ECL-WI-1</code> work intent, either <code>parent_workflow.uri</code> or
+<code>workflow.parent_workflow_id</code> identifies the parent of a child workflow. If
+both are present, they MUST name the same logical identifier, and neither MAY name the child's own <code>workflow.workflow_id</code>. A
+child work intent MUST carry at least one digest-bound causal predecessor
+identifying its creation or delegation. A consumer MUST reject an inconsistent
+parent declaration or a child with no causal predecessor with
+<code>ecl.rule.work-intent-context-consistent.v1</code>. Checking this declaration alone
+does not establish the referenced object's contents or complete ancestry.</p>
 <p><span id="DW1-003"><strong>DW1-003</strong></span><a class="requirement-link" href="#DW1-003" aria-label="Link to DW1-003">§</a> — Every retry MUST create a new attempt identity. Prior attempt
 state and side effects remain evidence.</p>
 <p><span id="DW1-004"><strong>DW1-004</strong></span><a class="requirement-link" href="#DW1-004" aria-label="Link to DW1-004">§</a> — An idempotency key identifies an intended effect boundary and
@@ -28,7 +39,9 @@ MUST NOT be treated as proof that a duplicate effect did not occur.</p>
 <h2 id="2-causal-graph">2. Causal graph</h2>
 <p><span id="DW1-005"><strong>DW1-005</strong></span><a class="requirement-link" href="#DW1-005" aria-label="Link to DW1-005">§</a> — Causality MUST be represented by logical identifier plus
 canonical digest.</p>
-<p><span id="DW1-006"><strong>DW1-006</strong></span><a class="requirement-link" href="#DW1-006" aria-label="Link to DW1-006">§</a> — The causal graph MUST be acyclic.</p>
+<p><span id="DW1-006"><strong>DW1-006</strong></span><a class="requirement-link" href="#DW1-006" aria-label="Link to DW1-006">§</a> — The causal graph MUST be acyclic. A work intent MUST NOT
+name its own <code>intent_id</code> as a causal predecessor; a consumer MUST reject that
+self-reference with <code>ecl.rule.message-cannot-cause-itself.v1</code>.</p>
 <p><span id="DW1-007"><strong>DW1-007</strong></span><a class="requirement-link" href="#DW1-007" aria-label="Link to DW1-007">§</a> — Sequence numbers provide ordering only within their declared
 sequence domain. A consumer MUST NOT infer global order from unrelated
 sequences.</p>
@@ -49,7 +62,13 @@ MUST be retained and reconciled by a declared precedence or adjudication rule.
 Last-writer-wins is prohibited for security-relevant conflicts unless a
 profile explicitly defines and justifies it.</p>
 <p><span id="DW1-015"><strong>DW1-015</strong></span><a class="requirement-link" href="#DW1-015" aria-label="Link to DW1-015">§</a> — An agent's declared intent is not execution authority. Intent,
-Decision, Authority, Enforcement, and observed effect MUST remain distinct.</p>
+Decision, Authority, Enforcement, and observed effect MUST remain distinct.
+An <code>ECL-WI-1</code> work intent MUST state its advisory validity interval as
+<code>issued_at</code> and <code>expires_at</code>, with expiry strictly later than issue; a consumer
+MUST reject an empty or reversed interval with
+<code>ecl.rule.expiry-after-issue.v1</code>. Expiry ends the intent's applicability as a
+current coordination advisory, not the retention of its historical record.
+Neither a valid intent nor its validity interval grants execution authority.</p>
 <h2 id="4-epochs-and-stale-work">4. Epochs and stale work</h2>
 <p><span id="DW1-016"><strong>DW1-016</strong></span><a class="requirement-link" href="#DW1-016" aria-label="Link to DW1-016">§</a> — A long-running workflow MUST bind the relevant policy, trust,
 registry, capability, and source epochs at each decision boundary.</p>
@@ -90,8 +109,8 @@ intended offline verification claim.</p>
 and enumerate open actions and unresolved predecessors.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/DISTRIBUTED-WORKFLOW-1.md</code>, SHA-256 <code>fa723afef20a01eae249564190d4274c150f65e3e1f2db59649c0ea73bf2dabc</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>protocols/DISTRIBUTED-WORKFLOW-1.md</code>, SHA-256 <code>2c102204e8f25d08530e9d93058ead2d0d08097cd670cb592ee5c8231ab95e6a</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

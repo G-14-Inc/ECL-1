@@ -7,6 +7,7 @@
  * on the shared conformance corpus.
  */
 
+export { SOFTWARE_VERSION, SOURCE_BUILD } from "./version.js";
 export type { JsonArray, JsonObject, JsonPrimitive, JsonValue } from "./json/value.js";
 export { PythonTypeError } from "./json/value.js";
 export { PythonValueError } from "./semantic/python.js";

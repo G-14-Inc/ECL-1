@@ -25,7 +25,7 @@ export const SCOPE_MISMATCH = "ecl.error.scope-mismatch.v1";
 
 const RESPONDS_TO = "ecl.relation.responds-to.v1";
 const OUTCOMES = new Set(["admit", "deny", "hold", "challenge"]);
-const EXECUTION_EVENTS = new Set(["execution_released", "execution_terminal"]);
+const EXECUTION_EVENTS = new Set(["release_prepared", "execution_released", "execution_observed", "execution_terminal"]);
 const AUTHORITY_EVENTS = new Set(["authority_issued", "authority_consumed"]);
 const NANOSECONDS = 1_000_000_000n;
 const INSTANT = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]{1,9}))?Z$/;
@@ -234,6 +234,15 @@ function admits(response: Bound | undefined): boolean {
   return response !== undefined && response.text("outcome") === "admit";
 }
 
+function requireSingleUse(authority: Bound): void {
+  if (authority.text("use_policy") !== "single_use") {
+    throw authority.error("use_policy is unsupported; only single_use is defined");
+  }
+  if (authority.has("max_uses") && authority.integer("max_uses") !== 1) {
+    throw authority.error("max_uses must be absent or the integer 1");
+  }
+}
+
 /**
  * Throw BindingError unless `response` is the answer to `request` (DCMP2-044 to DCMP2-050).
  * `responseClockSkewSeconds` is the verification profile's allowance (DCMP2-047).
@@ -246,6 +255,7 @@ export function checkResponseBinding(request: JsonValue, response: JsonValue, re
   const answer = read(response, "response", REQUEST_BINDING_INVALID);
   requireMessage(asked, "decision_request");
   requireMessage(answer, "decision_response");
+  requireSingleUse(asked.member("authority_request"));
   answersTheRequest(asked, answer);
   sameText(answer, asked, "workflow", "workflow_id");
   sameText(answer, asked, "workflow", "root_trace_id");
@@ -273,6 +283,10 @@ export function checkResponseBinding(request: JsonValue, response: JsonValue, re
   if (outcome !== "admit") {
     return;
   }
+  requireSingleUse(answer.member("authorization"));
+  if (answer.instant("evaluated_at") >= asked.instant("expires_at")) {
+    throw answer.error("evaluated_at is at or after the request's expires_at");
+  }
   // 6a: the audience requested.
   const audience = answer.text("authorization", "audience");
   if (audience !== asked.text("authority_request", "audience")) {
@@ -296,12 +310,6 @@ export function checkResponseBinding(request: JsonValue, response: JsonValue, re
   }
   // 6d1: single use is one use; no more uses than requested.
   const grantedUses = (): number | undefined => (answer.has("authorization", "max_uses") ? answer.integer("authorization", "max_uses") : undefined);
-  if (answer.text("authorization", "use_policy") === "single_use") {
-    const granted = grantedUses();
-    if (granted !== undefined && granted !== 1) {
-      throw answer.error("a single_use authorization has a max_uses other than 1");
-    }
-  }
   if (asked.has("authority_request", "max_uses")) {
     const granted = grantedUses();
     if (granted === undefined || granted > asked.integer("authority_request", "max_uses")) {
@@ -323,7 +331,7 @@ export function checkResponseBinding(request: JsonValue, response: JsonValue, re
 }
 
 /**
- * Throw BindingError unless the execution `event` (execution_released or execution_terminal)
+ * Throw BindingError unless the execution `event`
  * records `request` and `response` (EBMP2-047 to EBMP2-051). `response` is undefined when the
  * decision point gave none.
  */
@@ -333,8 +341,10 @@ export function checkEventBinding(event: JsonValue, request: JsonValue, response
   const answer = response === undefined ? undefined : read(response, "response", DECISION_BINDING_INVALID);
   requireEvent(recorded, EXECUTION_EVENTS, "execution");
   requireMessage(asked, "decision_request");
+  requireSingleUse(asked.member("authority_request"));
   if (answer !== undefined) {
     requireMessage(answer, "decision_response");
+    if (admits(answer)) requireSingleUse(answer.member("authorization"));
   }
   if (recorded.text("event", "action_id") !== asked.text("action", "action_id")) {
     throw recorded.error("event.action_id is not the request's action");
@@ -390,7 +400,9 @@ export function checkEventBinding(event: JsonValue, request: JsonValue, response
     if (!admits(answer)) {
       throw recorded.error("releases, and there is no response that admits");
     }
-  } else {
+  } else if (recorded.text("event_type") === "execution_observed" && !admits(answer)) {
+    throw recorded.error("records running execution, and there is no response that admits");
+  } else if (recorded.text("event_type") === "execution_terminal") {
     const state = recorded.text("event", "state");
     const wanted = Object.prototype.hasOwnProperty.call(TERMINAL_STATE_OUTCOMES, state) ? TERMINAL_STATE_OUTCOMES[state] : undefined;
     if (wanted === undefined) {
@@ -415,6 +427,7 @@ export function checkAuthorityEventBinding(event: JsonValue, response: JsonValue
   if (!admits(answer)) {
     throw recorded.error("records an authorization, and the response does not admit");
   }
+  requireSingleUse(answer.member("authorization"));
   const granted = answer.text("authorization", "authorization_id");
   if (recorded.text("event", "authorization_id") !== granted) {
     throw recorded.error("event.authorization_id is not the response's");

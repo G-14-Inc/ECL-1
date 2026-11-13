@@ -56,12 +56,18 @@ def _valid_rfc3339_utc(value: object) -> bool:
 
 def _valid_bracketed_authority(netloc: str) -> bool:
     """Apply IE1-038 directly; urlsplit's host checks vary by Python patch level."""
-    host_and_port = netloc.rpartition("@")[2]
+    userinfo, separator, host_and_port = netloc.rpartition("@")
+    if separator and ("[" in userinfo or "]" in userinfo):
+        return False
     before, opening, bracketed = host_and_port.partition("[")
     if not opening or before:
         return False
     hostname, closing, port = bracketed.partition("]")
-    if not closing or (port and not port.startswith(":")):
+    if (
+        not closing
+        or any(character in hostname + port for character in "[]")
+        or (port and not port.startswith(":"))
+    ):
         return False
     if hostname.startswith("v"):
         return re.fullmatch(r"v[a-fA-F0-9]+\..+", hostname) is not None
@@ -98,6 +104,35 @@ def _valid_absolute_uri(value: object) -> bool:
         and _URI_SCHEME.fullmatch(parsed.scheme)
         and (parsed.netloc or parsed.path)
     )
+
+
+def reserved_extension_namespace(identifier: str) -> bool:
+    """Whether an HTTP(S) extension URI names the reserved ECL authority (XR1-017).
+
+    This comparison alone decodes ASCII unreserved host escapes once and removes one
+    terminal DNS dot. It never rewrites an identifier, path or principal identity.
+    """
+    # URI validation owns malformed inputs; urlsplit must not sanitize them into a host.
+    if not _valid_absolute_uri(identifier):
+        return False
+    try:
+        parsed = urlsplit(identifier)
+        if parsed.scheme.lower() not in {"http", "https"} or parsed.hostname is None:
+            return False
+        host = _PERCENT_ESCAPE.sub(
+            lambda match: (
+                character
+                if (character := chr(int(match.group()[1:], 16)))
+                in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
+                else match.group()
+            ),
+            parsed.hostname,
+        )
+        if host.endswith("."):
+            host = host[:-1]
+        return host.lower() == "externalcontrollayer.ai"
+    except ValueError:
+        return False
 
 
 def ecl_format_checker() -> FormatChecker:

@@ -2,7 +2,8 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 **SF1-001** — A deployment claiming this profile MUST NOT declare a fail-open
 disposition for any in-scope action class.
@@ -19,7 +20,9 @@ and MUST be recorded with its failure class.
 `STRICT-FAILURE-1` in its `claimed_profiles` member; its `profile_id` and name
 decide nothing. A document that claims it MUST validate against the
 safe-state-profile schema, which requires `supplies_required_proof` for every
-dependency, with no `fail_open` disposition present.
+dependency, and MUST pass `ecl.rule.strict-profile-forbids-fail-open.v1`, which
+rejects every `fail_open` disposition in the action classes, dependencies and
+evidence-buffer overflow policy.
 
 **SF1-005** — A deployment that claims this profile MUST set
 `supplies_required_proof` to `true` for exactly those dependencies whose loss

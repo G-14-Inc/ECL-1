@@ -6,8 +6,9 @@
 // envelope carries valid trusted-time countersignatures (IE1-032 to IE1-035); and current status
 // at the caller's evaluation time under the caller's current policy. Objects are paired by
 // identity, never by an event's claimed decision URI; each pair is bound (DCMP-2 section 8,
-// EBMP-2 section 10); the events' causal closure is analyzed with the bundle's DCMP-2 messages as
-// permitted external predecessors; and each terminal effect gets its evidence level.
+// EBMP-2 section 10); one causal graph over every bundle object, including DCMP-2 messages and
+// observations, is analyzed without external predecessors (EBMP2-059, EBMP2-077); and each
+// terminal effect gets its evidence level after scope is computed (EBMP2-061).
 //
 // The verdict is exactly one of invalid, incomplete, current-trust-failed and verified
 // (EBMP2-060). A bundle that would otherwise verify but has a signer that is not acceptable now
@@ -24,8 +25,8 @@
 // release, records in ecl.ext.obligation-discharge.v1 a discharge of each one; the obligations come
 // from the response as the bundle holds it, never from the producer's own list
 // (ecl.rule.prerelease-obligations-discharged.v1). A terminal event that records, in
-// ecl.ext.mcp-binding.v1, a forward that completed outside the authorization's window or a release
-// after valid_until makes the bundle invalid with ecl.error.expired.v1 (EBMP2-072). The use counts
+// ecl.ext.mcp-binding.v1, released_after_valid_until makes the bundle invalid with
+// ecl.error.expired.v1; a completion after the window is informational (EBMP2-072). The use counts
 // of consumed authority stay within the authorization's use policy (EBMP2-073), a release of
 // single-use authority has its consumption recorded (EBMP2-074), and an event that carries the MCP
 // binding names the call that its request bound (EBMP2-075).
@@ -49,6 +50,7 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/instant"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/registry"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/trust"
 )
@@ -133,6 +135,7 @@ var (
 		"object-rules",
 		"decision-basis-recorded",
 		"decision-basis-register",
+		"decision-input-timing",
 		"bindings",
 		"release-within-authority",
 		"causal-completeness",
@@ -158,7 +161,8 @@ var (
 		"trusted-time":                              "a separate time authority attests a time for each signature of each envelope and observation, binding that signature, each signature was valid at that time, and each time authority's key was valid then and is not revoked by the current trust policy at or before it",
 		"object-rules":                              "each signed object satisfies its schema and semantic rules, the one-way rule for a recorded decision basis among them",
 		"decision-basis-recorded":                   "each decision response records its decision basis",
-		"decision-basis-register":                   "each decision basis agrees with the Consequential Action Register supplied",
+		"decision-basis-register":                   "each decision basis matches the supplied register version, inputs, classes, required flags, sources and derivations; recorded input timing is compared with declared bounds only when the needed fields are supplied",
+		"decision-input-timing":                     "all applicable recorded input ages and acquisition deadlines were checked against the supplied register; this does not establish that recorded times are true",
 		"bindings":                                  "each response binds its request, each event binds its request, response and authority, with the digests and use counts they name, each continuation binds the request, challenge and approval it continues, and each terminal event carries the outcome reason its state and response require",
 		"release-within-authority":                  "each recorded release time lies within the authorization's validity window",
 		"causal-completeness":                       "over every object of the bundle, observations included, every causal predecessor is in the bundle with the digest that names it and in the workflow, trace and attempt that the rules allow, the graph is acyclic, identifiers are unique, and every request has a terminal event",
@@ -263,6 +267,7 @@ type Report struct {
 	Effects                     []EffectEvidence
 	Findings                    []BundleFinding
 	VerificationProfile         string
+	ResponseClockSkewSeconds    int64
 	AcceptedCurrentTrustFailure bool
 	// Register names the register version that the decision bases were checked against, if the
 	// caller gave one: the register member a decision basis would carry for it.
@@ -307,12 +312,13 @@ type Options struct {
 }
 
 type entry struct {
-	index       int
-	observation bool
-	envelope    map[string]any
-	payload     map[string]any
-	check       EnvelopeCheck
-	signingKeys map[string]bool
+	index                int
+	observation          bool
+	envelope             map[string]any
+	payload              map[string]any
+	check                EnvelopeCheck
+	signingKeys          map[string]bool
+	verifiedSignerKeyIDs []string
 }
 
 type pairs struct {
@@ -658,9 +664,9 @@ func keyAcceptable(key trust.Key, signature map[string]any, purpose, owner strin
 // signerStatus checks every signer, counted or not (TP1-004, TP1-005), in the order of IE1-040,
 // step 6: every key acceptable for the object's suite, purpose and principal, and for current
 // status the same public key as at signing; then no key revoked at its time; then every key
-// within its validity interval at its time. A key's time is times[key_id] when given (IE1-034),
+// within its validity interval at its time. An entry's time is times[position] when given (IE1-034),
 // else at; with current, the current policy's revocations apply too (TP1-006).
-func signerStatus(envelopeValue, payload map[string]any, policy *trust.Policy, purpose, at string, original *trust.Policy, times map[string]string, current *trust.Policy) string {
+func signerStatus(envelopeValue, payload map[string]any, policy *trust.Policy, purpose, at string, original *trust.Policy, times map[int]string, current *trust.Policy) string {
 	signatures, _ := pyjson.Array(envelopeValue["signatures"])
 	owner, hasOwner := principalOf(payload)
 	integrityPolicy, _ := pyjson.Object(payload["integrity_policy"])
@@ -683,9 +689,9 @@ func signerStatus(envelopeValue, payload map[string]any, policy *trust.Policy, p
 		keys = append(keys, key)
 	}
 	statuses := map[string]bool{}
-	for _, key := range keys {
+	for position, key := range keys {
 		moment := at
-		if own, present := times[key.KeyID]; present {
+		if own, present := times[position]; present {
 			moment = own
 		}
 		statuses[keyTimeStatus(key, policy, moment, current)] = true
@@ -698,7 +704,7 @@ func signerStatus(envelopeValue, payload map[string]any, policy *trust.Policy, p
 	return "valid"
 }
 
-func checkSignature(envelopeValue, payload map[string]any, policy *trust.Policy, at string, signed *trust.Policy, times map[string]string, current *trust.Policy) (string, map[string]bool, error) {
+func checkSignature(envelopeValue, payload map[string]any, policy *trust.Policy, at string, signed *trust.Policy, times map[int]string, current *trust.Policy) (string, map[string]bool, error) {
 	timePolicy, _ := pyjson.TextAt(payload, "integrity_policy", "verification_time_policy")
 	expected := "ecl.time.observed-at.v1"
 	if protocol, _ := pyjson.Text(payload["protocol"]); protocol == "DCMP-2" {
@@ -717,7 +723,21 @@ func checkSignature(envelopeValue, payload map[string]any, policy *trust.Policy,
 			// TP1-006: the current policy's revocations reach the historical check.
 			context.Revocations = append(append([]envelope.Revocation{}, context.Revocations...), current.Revocations...)
 		}
-		context.KeyTimes = times
+		// The standalone verifier rejects duplicate (key, suite) entries before using
+		// KeyTimes; signerStatus rejects one key under another suite. Historical status
+		// and dependency reporting retain the per-entry times.
+		if times != nil {
+			context.KeyTimes = map[string]string{}
+			signatures, _ := pyjson.Array(envelopeValue["signatures"])
+			for position, signature := range signatures {
+				keyID, _ := pyjson.TextAt(signature, "key_id")
+				moment := at
+				if own, present := times[position]; present {
+					moment = own
+				}
+				context.KeyTimes[keyID] = moment
+			}
+		}
 		var result *envelope.Result
 		result, err = envelope.Verify(envelopeValue, policy.Keyring(), context)
 		if err == nil {
@@ -746,23 +766,6 @@ type attestation struct {
 	counterID string
 	attested  string
 	covered   []int
-}
-
-// statementOf returns the decoded time-attestation statement of a countersignature entry.
-func statementOf(entry any) (map[string]any, bool) {
-	object, isObject := pyjson.Object(entry)
-	if !isObject {
-		return nil, false
-	}
-	signedAttestation, isObject := pyjson.Object(object["attestation"])
-	if !isObject || !pyjson.Equal(signedAttestation["payload_type"], envelope.TimeAttestationType) {
-		return nil, false
-	}
-	statement, err := envelope.DecodeCanonicalJSONPayload(signedAttestation)
-	if err != nil {
-		return nil, false
-	}
-	return pyjson.Object(statement)
 }
 
 // coveredIndexes returns the indexes of the envelope's signature entries that covered.signatures
@@ -804,21 +807,12 @@ func coveredIndexes(statement, envelopeValue map[string]any) ([]int, bool) {
 
 // attestedTime returns the time one trusted-time countersignature attests and the indexes of the
 // signature entries it covers, or ok false when it is not valid (IE1-033, IE1-034, TP1-006).
-func attestedTime(countersignature, envelopeValue, payload map[string]any, versions []*trust.Policy, current *trust.Policy) (string, []int, bool, error) {
+func attestedTime(countersignature, envelopeValue, payload map[string]any, versions []*trust.Policy, current *trust.Policy, statement map[string]any) (string, []int, bool, error) {
 	signedAttestation, ok := pyjson.Object(countersignature["attestation"])
 	if !ok || !pyjson.Equal(signedAttestation["payload_type"], envelope.TimeAttestationType) {
 		return "", nil, false, nil
 	}
-	statementValue, err := envelope.DecodeCanonicalJSONPayload(signedAttestation)
-	if err != nil {
-		var integrity *envelope.Error
-		if errors.As(err, &integrity) {
-			return "", nil, false, nil
-		}
-		return "", nil, false, err
-	}
-	statement, isObject := pyjson.Object(statementValue)
-	if !isObject {
+	if statement == nil {
 		return "", nil, false, nil
 	}
 	if valid, err := schema.ECL().Valid(TimeAttestationSchema, statement); err != nil || !valid {
@@ -913,8 +907,12 @@ func authorityDependencies(index int, counterID *string, statement map[string]an
 		}
 		keyID, _ := pyjson.Text(signature["key_id"])
 		suite, _ := pyjson.Text(signature["suite_id"])
+		payloadPolicy, _ := pyjson.ObjectAt(statement, "integrity_policy")
+		acceptedSuites, _ := pyjson.Array(pyjson.Get(payloadPolicy, "accepted_suites"))
+		eligibleKeys, _ := pyjson.Array(pyjson.Get(payloadPolicy, "eligible_key_ids"))
+		eligible := pyjson.InList(suite, acceptedSuites) && (len(eligibleKeys) == 0 || pyjson.InList(keyID, eligibleKeys))
 		status := PolicyInvalid
-		if key, known := current.Key(keyID); known && version != nil && keyAcceptable(key, signature, trust.PurposeTrustedTime, issuer, hasIssuer, version) {
+		if key, known := current.Key(keyID); eligible && known && version != nil && keyAcceptable(key, signature, trust.PurposeTrustedTime, issuer, hasIssuer, version) {
 			status = keyTimeStatus(key, current, now, nil)
 		}
 		// A signer of a valid attestation whose signature does not verify is not historically valid
@@ -922,7 +920,9 @@ func authorityDependencies(index int, counterID *string, statement map[string]an
 		historical := TrustedTimeInvalid
 		if valid {
 			historical = IntegrityInvalid
-			if keyMaterial, held := version.Keyring()[keyID]; held && envelope.SignatureVerifies(signedAttestation, signature, keyMaterial) {
+			if !eligible {
+				historical = PolicyInvalid
+			} else if keyMaterial, held := version.Keyring()[keyID]; held && envelope.SignatureVerifies(signedAttestation, signature, keyMaterial) {
 				historical = "valid"
 			}
 		}
@@ -939,7 +939,7 @@ func authorityDependencies(index int, counterID *string, statement map[string]an
 // countersignaturesOf returns each trusted-time countersignature of the envelope, valid, and the
 // trust dependencies of the time authorities' signers; failed is true when one of them is not
 // valid.
-func countersignaturesOf(envelopeValue, payload map[string]any, index int, versions []*trust.Policy, current *trust.Policy, now string) ([]attestation, bool, []TrustDependency, error) {
+func countersignaturesOf(envelopeValue, payload map[string]any, index int, versions []*trust.Policy, current *trust.Policy, now string, statements []map[string]any) ([]attestation, bool, []TrustDependency, error) {
 	entries, present := envelopeValue["countersignatures"]
 	if !present || entries == nil {
 		return nil, false, nil, nil
@@ -948,12 +948,13 @@ func countersignaturesOf(envelopeValue, payload map[string]any, index int, versi
 	var valid []attestation
 	var dependencies []TrustDependency
 	failed := false
-	for _, item := range list {
+	for position, item := range list {
+		statement := statements[position]
 		countersignature, isObject := pyjson.Object(item)
 		ok, attested, covered := false, "", []int(nil)
 		if isObject && pyjson.Equal(countersignature["claim"], envelope.TrustedTimeClaim) {
 			var err error
-			if attested, covered, ok, err = attestedTime(countersignature, envelopeValue, payload, versions, current); err != nil {
+			if attested, covered, ok, err = attestedTime(countersignature, envelopeValue, payload, versions, current, statement); err != nil {
 				return nil, false, nil, err
 			}
 		}
@@ -965,7 +966,6 @@ func countersignaturesOf(envelopeValue, payload map[string]any, index int, versi
 			}
 			signedAttestation, _ = pyjson.Object(countersignature["attestation"])
 		}
-		statement, _ := statementOf(item)
 		if signedAttestation != nil {
 			dependencies = append(dependencies, authorityDependencies(index, counterID, statement, signedAttestation, ok, attested, versions, current, now)...)
 		}
@@ -984,16 +984,16 @@ func countersignaturesOf(envelopeValue, payload map[string]any, index int, versi
 
 // laterThanNow reports whether the object's own time, or the attested time of one of its
 // trusted-time countersignatures, is later than the evaluation time (EBMP2-057, F08).
-func laterThanNow(envelopeValue, payload map[string]any, now string) bool {
+func laterThanNow(envelopeValue, payload map[string]any, now string, statements []map[string]any) bool {
 	limit := nanos(now)
 	var times []any
 	if own, hasOwn := objectTime(payload); hasOwn {
 		times = append(times, own)
 	}
 	entries, _ := pyjson.Array(envelopeValue["countersignatures"])
-	for _, item := range entries {
-		if statement, ok := statementOf(item); ok {
-			times = append(times, statement["issued_at"])
+	for position, item := range entries {
+		if pyjson.Equal(pyjson.Get(item, "claim"), envelope.TrustedTimeClaim) && statements[position] != nil {
+			times = append(times, statements[position]["issued_at"])
 		}
 	}
 	for _, value := range times {
@@ -1011,14 +1011,14 @@ var envelopeWide = map[string]bool{ClockRegressed: true, TrustedTimeInvalid: tru
 // signerDependencies returns each signer of the envelope as a trust dependency (TP1-006), with
 // the time of its historical check, its historical status under the named version and the
 // current policy's revocations, and its current status under the current policy at now.
-func signerDependencies(envelopeValue, payload map[string]any, index int, purpose string, version, current *trust.Policy, now string, times map[string]string, at string, envelopeStatus string) []TrustDependency {
+func signerDependencies(envelopeValue, payload map[string]any, index int, purpose string, version, current *trust.Policy, now string, times map[int]string, at string, envelopeStatus string) []TrustDependency {
 	owner, hasOwner := principalOf(payload)
 	integrityPolicy, _ := pyjson.Object(payload["integrity_policy"])
 	acceptedSuites, _ := pyjson.Array(integrityPolicy["accepted_suites"])
 	eligibleKeys, _ := pyjson.Array(integrityPolicy["eligible_key_ids"])
 	var result []TrustDependency
 	signatures, _ := pyjson.Array(envelopeValue["signatures"])
-	for _, item := range signatures {
+	for position, item := range signatures {
 		signature, isObject := pyjson.Object(item)
 		if !isObject {
 			continue
@@ -1028,7 +1028,7 @@ func signerDependencies(envelopeValue, payload map[string]any, index int, purpos
 		inPayloadPolicy := pyjson.InList(signature["suite_id"], acceptedSuites) &&
 			(len(eligibleKeys) == 0 || pyjson.InList(keyID, eligibleKeys))
 		own := at
-		if moment, present := times[keyID]; present {
+		if moment, present := times[position]; present {
 			own = moment
 		}
 		historical := PolicyInvalid
@@ -1091,11 +1091,14 @@ func plainDependencies(envelopeValue any, index int, status string, version, cur
 	return result
 }
 
-func evaluateEnvelope(envelopeValue, payload map[string]any, index int, observation bool, current *trust.Policy, versions []*trust.Policy, now string, findings *[]BundleFinding, requireTrustedTime bool) (EnvelopeCheck, map[string]bool, []TrustDependency, bool, error) {
+func evaluateEnvelope(envelopeValue, payload map[string]any, index int, observation bool, current *trust.Policy, versions []*trust.Policy, now string, findings *[]BundleFinding, requireTrustedTime bool, attestationStatements []map[string]any) (EnvelopeCheck, map[string]bool, []TrustDependency, bool, error) {
 	check := EnvelopeCheck{Index: index, ObjectID: identifierOf(payload), Kind: kindOf(payload), SignerKeyIDs: signatureIDs(envelopeValue)}
 	invalid, err := objectFindings(payload)
 	if err != nil {
 		return check, nil, nil, false, err
+	}
+	for _, item := range validatorx.ExtensionConsumers(envelopeValue, nil) {
+		invalid = append(invalid, Finding{RuleID: item.RuleID, Path: item.Path, Detail: item.Detail})
 	}
 	if len(invalid) > 0 {
 		// EBMP2-068, stage 3: an object that fails its schema is schema-invalid; one that satisfies
@@ -1122,22 +1125,21 @@ func evaluateEnvelope(envelopeValue, payload map[string]any, index int, observat
 		check.Historical, check.Current = PolicyInvalid, PolicyInvalid
 		return check, map[string]bool{}, plainDependencies(envelopeValue, index, PolicyInvalid, version, current), false, nil
 	}
-	attestations, failed, authorities, err := countersignaturesOf(envelopeValue, payload, index, versions, current, now)
+	attestations, failed, authorities, err := countersignaturesOf(envelopeValue, payload, index, versions, current, now, attestationStatements)
 	if err != nil {
 		return check, nil, nil, false, err
 	}
 	// IE1-034: a covered signature is evaluated at the earliest attested time among the valid
 	// countersignatures that cover it, every other one at the object's own time.
 	entries := signatureEntries(envelopeValue)
-	times := map[string]string{}
+	times := map[int]string{}
 	coveredAll := false
 	trusted := ""
 	if !failed && len(attestations) > 0 {
 		for _, item := range attestations {
 			for _, position := range item.covered {
-				keyID := entries[position]
-				if previous, present := times[keyID]; !present || instant.Compare(nanos(item.attested), nanos(previous)) < 0 {
-					times[keyID] = item.attested
+				if previous, present := times[position]; !present || instant.Compare(nanos(item.attested), nanos(previous)) < 0 {
+					times[position] = item.attested
 				}
 			}
 			if trusted == "" || instant.Compare(nanos(item.attested), nanos(trusted)) < 0 {
@@ -1170,7 +1172,7 @@ func evaluateEnvelope(envelopeValue, payload map[string]any, index int, observat
 			}
 		}()
 		switch {
-		case laterThanNow(envelopeValue, payload, now):
+		case laterThanNow(envelopeValue, payload, now, attestationStatements):
 			historical = ClockRegressed
 		case failed:
 			historical = TrustedTimeInvalid
@@ -1383,24 +1385,29 @@ func extensionValues(value map[string]any, identifier string) []map[string]any {
 		}
 		id, isText := pyjson.Text(extension["id"])
 		inner, innerIsObject := pyjson.Object(extension["value"])
-		if isText && id == identifier && innerIsObject {
+		if isText && id == identifier && validatorx.InterpretedOccurrence(value, extension) && innerIsObject {
 			found = append(found, inner)
 		}
 	}
 	return found
 }
 
-// useLimit gives the uses that an authorization allows (EBMP2-073): 1 when it is single_use,
-// otherwise its max_uses when it has one, and no limit otherwise.
+// useLimit gives one use for supported single-use authority (EBMP2-073).
+// A false second result means unsupported, never unlimited authority.
 func useLimit(response map[string]any) (int64, bool) {
 	authorization, ok := pyjson.ObjectAt(response, "authorization")
 	if !ok {
 		return 0, false
 	}
-	if policy, _ := pyjson.Text(authorization["use_policy"]); policy == "single_use" {
-		return 1, true
+	if policy, _ := pyjson.Text(authorization["use_policy"]); policy != "single_use" {
+		return 0, false
 	}
-	return pyjson.Int(authorization["max_uses"])
+	if raw, present := authorization["max_uses"]; present {
+		if count, ok := pyjson.Int(raw); !ok || count != 1 {
+			return 0, false
+		}
+	}
+	return 1, true
 }
 
 // authorityUse is an authority_consumed event in state consumed that binds its response.
@@ -1428,6 +1435,10 @@ func checkUseCounts(consumed []authorityUse, findings *[]BundleFinding) {
 	for _, identifier := range order {
 		uses := byAuthorization[identifier]
 		limit, limited := useLimit(uses[0].response.payload)
+		if !limited {
+			*findings = append(*findings, issue(DecisionBindingInvalid, "the authorization uses an unsupported use policy or limit"))
+			continue
+		}
 		counts := map[int64]bool{}
 		repeated := false
 		for _, item := range uses {
@@ -1436,7 +1447,7 @@ func checkUseCounts(consumed []authorityUse, findings *[]BundleFinding) {
 			if !isInt {
 				continue
 			}
-			if count < 1 || (limited && count > limit) {
+			if count < 1 || count > limit {
 				*findings = append(*findings, issue(DecisionBindingInvalid, fmt.Sprintf("envelope %d: the use count is outside the authorization's use policy", item.event.index)))
 			}
 			repeated = repeated || counts[count]
@@ -1445,7 +1456,7 @@ func checkUseCounts(consumed []authorityUse, findings *[]BundleFinding) {
 		if repeated {
 			*findings = append(*findings, issue(DecisionBindingInvalid, "two consumptions of one authorization record one use"))
 		}
-		if limited && int64(len(uses)) > limit {
+		if int64(len(uses)) > limit {
 			*findings = append(*findings, issue(DecisionBindingInvalid, "an authorization is consumed more often than its use policy allows"))
 		}
 	}
@@ -1479,15 +1490,15 @@ func completedAfterWindow(terminal, response map[string]any) bool {
 	return false
 }
 
-// releaseGuardNs returns the release guard an execution_released event declares, in nanoseconds,
+// releaseGuardMilliseconds returns the release guard an execution_released event declares, in milliseconds,
 // or false when the event does not carry it as an integer (its schema then refuses it) (EBMP2-071).
-func releaseGuardNs(event map[string]any) (int64, bool) {
+func releaseGuardMilliseconds(event map[string]any) (int64, bool) {
 	body, _ := pyjson.ObjectAt(event, "event")
 	milliseconds, isInt := pyjson.Int(body["release_guard_ms"])
 	if !isInt {
 		return 0, false
 	}
-	return milliseconds * 1_000_000, true
+	return milliseconds, true
 }
 
 // mcpBindingProblem applies EBMP2-075: when the request carries the MCP binding, each occurrence of
@@ -1626,7 +1637,7 @@ func pairMain(entries []*entry, checks *[]BindingCheck, staged *stagedFindings, 
 			}
 			continue
 		}
-		if kind != "execution_released" && kind != "execution_terminal" {
+		if kind != "release_prepared" && kind != "execution_released" && kind != "execution_observed" && kind != "execution_terminal" {
 			continue
 		}
 		found.releaseRecorded = found.releaseRecorded || kind == "execution_released"
@@ -1690,10 +1701,14 @@ func pairMain(entries []*entry, checks *[]BindingCheck, staged *stagedFindings, 
 				}
 			}
 			observed, hasObserved := pyjson.Text(payload["observed_at"])
-			guard, hasGuard := releaseGuardNs(payload)
+			guard, hasGuard := releaseGuardMilliseconds(payload)
 			// EBMP2-050 and EBMP2-071: the release is observed no earlier than valid_from, and the
 			// observation plus the declared release guard is earlier than valid_until.
-			if !hasStart || !hasEnd || !hasObserved || !hasGuard || instant.Compare(nanos(start), nanos(observed)) > 0 || instant.Compare(nanos(observed).AddNanoseconds(guard), nanos(end)) >= 0 {
+			startAt, startValid := instantOrNone(start)
+			endAt, endValid := instantOrNone(end)
+			observedAt, observedValid := instantOrNone(observed)
+			// Malformed operands already have stage-3 schema findings; keep them intact.
+			if hasStart && hasEnd && hasObserved && hasGuard && startValid && endValid && observedValid && (instant.Compare(startAt, observedAt) > 0 || instant.Compare(observedAt.AddMilliseconds(guard), endAt) >= 0) {
 				*events = append(*events, issue(Expired, "the release, with its declared release guard, lies outside the authorization's validity window"))
 			}
 		}
@@ -1727,10 +1742,11 @@ type obligationKey struct{ id, kind string }
 // obligation it carries, the witness result included; whether it carries an obligation to be met
 // during or after execution (EBMP2-076); and the value of each obligation it carries, the
 // witness's URI for the witness result.
-func obligationKeys(response map[string]any) ([]obligationKey, map[obligationKey]bool, bool, map[obligationKey]any) {
+func obligationKeys(response map[string]any) ([]obligationKey, map[obligationKey]bool, bool, map[obligationKey][]any) {
 	var required []obligationKey
 	carried := map[obligationKey]bool{}
-	values := map[obligationKey]any{}
+	values := map[obligationKey][]any{}
+	otherValues := map[obligationKey][]any{}
 	post := false
 	require := func(key obligationKey) {
 		for _, item := range required {
@@ -1753,11 +1769,10 @@ func obligationKeys(response map[string]any) ([]obligationKey, map[obligationKey
 		}
 		key := obligationKey{identifier, kind}
 		carried[key] = true
-		if _, known := values[key]; !known {
-			values[key] = item["value"]
-		}
+		otherValues[key] = append(otherValues[key], item["value"])
 		satisfaction, isText := pyjson.Text(item["satisfaction"])
 		if isText && satisfaction == "before_release" {
+			values[key] = append(values[key], item["value"])
 			require(key)
 		} else if isText && postRelease[satisfaction] {
 			post = true
@@ -1772,10 +1787,13 @@ func obligationKeys(response map[string]any) ([]obligationKey, map[obligationKey
 		if outcome, _ := pyjson.Text(witness["outcome"]); outcome == "required_before_release" && hasURI {
 			key := obligationKey{uri, witnessObligationType}
 			carried[key] = true
-			if _, known := values[key]; !known {
-				values[key] = uri
-			}
+			values[key] = append(values[key], uri)
 			require(key)
+		}
+	}
+	for key, occurrences := range otherValues {
+		if _, known := values[key]; !known {
+			values[key] = occurrences
 		}
 	}
 	return required, carried, post, values
@@ -1815,7 +1833,7 @@ func discharges(event map[string]any) (bool, []dischargeEntry) {
 		if !isObject {
 			continue
 		}
-		if id, _ := pyjson.Text(extension["id"]); id != obligationDischarge {
+		if id, _ := pyjson.Text(extension["id"]); id != obligationDischarge || !validatorx.InterpretedOccurrence(event, extension) {
 			continue
 		}
 		present = true
@@ -1850,7 +1868,7 @@ func (r release) deadline() (instant.Instant, bool) {
 	if !r.hasObserved || !r.hasGuard {
 		return instant.Instant{}, false
 	}
-	return r.observed.AddNanoseconds(r.guard), true
+	return r.observed.AddMilliseconds(r.guard), true
 }
 
 // dischargeProblem is a condition that an entry fails: the finding code, the path below the entry
@@ -1899,7 +1917,7 @@ func signerKeys(item *entry, versions []*trust.Policy) []trust.Key {
 	if version == nil {
 		return keys
 	}
-	for _, keyID := range signatureIDs(item.envelope) {
+	for _, keyID := range item.verifiedSignerKeyIDs {
 		if key, found := version.Key(keyID); found {
 			keys = append(keys, key)
 		}
@@ -2011,6 +2029,9 @@ func proofProblems(item map[string]any, key obligationKey, value any, proof *ent
 		return problems
 	}
 	eventType, _ := pyjson.Text(payload["event_type"])
+	if (eventType == "verification") != proof.observation {
+		problems = append(problems, dischargeProblem{ObligationUnproven, path, "names a carried proof in the wrong bundle collection"})
+	}
 	event, _ := pyjson.ObjectAt(payload, "event")
 	switch key.kind {
 	case witnessObligationType:
@@ -2106,7 +2127,7 @@ func checkObligationDischarge(entries []*entry, found *pairs, findings *[]Bundle
 		}
 		rel := release{request: request.payload, response: response.payload, skew: skew}
 		rel.observed, rel.hasObserved = instantOrNone(item.payload["observed_at"])
-		rel.guard, rel.hasGuard = releaseGuardNs(item.payload)
+		rel.guard, rel.hasGuard = releaseGuardMilliseconds(item.payload)
 		rel.issued, rel.hasIssued = instantOrNone(response.payload["issued_at"])
 		rel.actor, rel.hasActor = pyjson.TextAt(request.payload, "actor", "id")
 		named := map[obligationKey]bool{}
@@ -2147,12 +2168,12 @@ func checkObligationDischarge(entries []*entry, found *pairs, findings *[]Bundle
 			case digestIsObject && !referenceDigestMatches(map[string]any{"digest": digest}, carriedProof.payload):
 				problems = append(problems, dischargeProblem{DischargeRule, "/proof/digest", "names an object of the bundle by another digest"})
 			default:
-				if !issuerNamed(key, values[key], rel.response) {
-					// The decision names no issuer, so the issuer test of condition b is not made
-					// and the proofs are not reported verified (EBMP2-076, issuer-not-named).
-					unnamed = true
+				for _, value := range values[key] {
+					if !issuerNamed(key, value, rel.response) {
+						unnamed = true
+					}
+					problems = append(problems, proofProblems(discharged.item, key, value, carriedProof, rel, versions)...)
 				}
-				problems = append(problems, proofProblems(discharged.item, key, values[key], carriedProof, rel, versions)...)
 			}
 			for _, problem := range problems {
 				*findings = append(*findings, issue(problem.code, path+problem.suffix+": "+problem.message))
@@ -2172,7 +2193,7 @@ func reasonOf(item *entry, response *entry, findings *[]BundleFinding) *string {
 	extensions, _ := pyjson.Array(item.payload["extensions"])
 	var matching []map[string]any
 	for _, extension := range extensions {
-		if object, isObject := pyjson.Object(extension); isObject && pyjson.Equal(object["id"], outcomeReason) {
+		if object, isObject := pyjson.Object(extension); isObject && pyjson.Equal(object["id"], outcomeReason) && validatorx.InterpretedOccurrence(item.payload, object) {
 			matching = append(matching, object)
 		}
 	}
@@ -2336,6 +2357,9 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 	if !ok {
 		return invalidReport(issue(SchemaInvalid, "the evidence bundle is not a JSON object")), nil
 	}
+	if excess := limitExceeded(bundle); excess != "" {
+		return invalidReport(issue(ResourceLimitExceeded, excess)), nil
+	}
 	envelopes, envelopesOK := pyjson.Array(bundle["envelopes"])
 	var observations []any
 	observationsOK := true
@@ -2376,6 +2400,9 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 	all := append(append([]any{}, envelopes...), observations...)
 	for index, value := range all {
 		observation := index >= len(envelopes)
+		if nodeCount >= MaxTotalPayloadNodes {
+			return budgetExceeded(), nil
+		}
 		// EBMP2-062: each payload is parsed with the nodes that remain of the bundle's budget as
 		// its value limit, so that no payload is built beyond the budget (IE1-029; EBMP2-068,
 		// stage 2).
@@ -2409,20 +2436,68 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 		envelopeObject, _ := pyjson.Object(value)
 		decoded = append(decoded, decodedEnvelope{index, observation, envelopeObject, payload})
 	}
+	// EBMP2-062 includes immediate attestation payloads before signature work. IE1-032
+	// forbids nested countersignatures; retain bounded statements without recursion.
+	attestationStatements := map[int][]map[string]any{}
+	for index, value := range all {
+		counters, _ := pyjson.Array(pyjson.Get(value, "countersignatures"))
+		statements := make([]map[string]any, 0, len(counters))
+		for _, entry := range counters {
+			if nodeCount >= MaxTotalPayloadNodes {
+				return budgetExceeded(), nil
+			}
+			attestation, _ := pyjson.Object(pyjson.Get(entry, "attestation"))
+			statementValue, err := envelope.DecodeCanonicalJSONPayloadWithin(attestation, MaxTotalPayloadNodes-nodeCount)
+			if err != nil {
+				var refusal *envelope.Error
+				if !errors.As(err, &refusal) {
+					return nil, err
+				}
+				if refusal.Code == ResourceLimitExceeded {
+					if refusal.NodeBudget {
+						return budgetExceeded(), nil
+					}
+					*staged.at(stagePayloads) = append(*staged.at(stagePayloads), issue(ResourceLimitExceeded, fmt.Sprintf("envelope %d has an attestation payload exceeding a declared limit", index)))
+					report := invalidReport(staged.ordered()...)
+					report.EnvelopeChecks = checks
+					return report, nil
+				}
+				statements = append(statements, nil)
+				continue
+			}
+			nodeCount += countNodes(statementValue, MaxTotalPayloadNodes-nodeCount)
+			if nodeCount > MaxTotalPayloadNodes {
+				return budgetExceeded(), nil
+			}
+			statement, _ := pyjson.Object(statementValue)
+			if !pyjson.Equal(attestation["payload_type"], envelope.TimeAttestationType) {
+				statement = nil
+			}
+			statements = append(statements, statement)
+		}
+		attestationStatements[index] = statements
+	}
 	versions := append([]*trust.Policy{policy}, history...)
 	var entries []*entry
 	seenIDs := map[string]bool{}
 	dependencies := []TrustDependency{}
 	covered := map[int]bool{}
 	for _, item := range decoded {
-		check, signingKeys, depends, coveredAll, err := evaluateEnvelope(item.envelope, item.payload, item.index, item.observation, policy, versions, now, staged.at(stageObjects), requireTrustedTime)
+		check, signingKeys, depends, coveredAll, err := evaluateEnvelope(item.envelope, item.payload, item.index, item.observation, policy, versions, now, staged.at(stageObjects), requireTrustedTime, attestationStatements[item.index])
 		if err != nil {
 			return nil, err
 		}
 		checks = append(checks, check)
 		dependencies = append(dependencies, depends...)
 		covered[item.index] = coveredAll
-		entries = append(entries, &entry{index: item.index, observation: item.observation, envelope: item.envelope, payload: item.payload, check: check, signingKeys: signingKeys})
+		verifiedIDs := []string{}
+		for _, dependency := range depends {
+			if dependency.Role == "signer" && dependency.Historical == "valid" {
+				verifiedIDs = append(verifiedIDs, dependency.KeyID)
+			}
+		}
+		sort.Strings(verifiedIDs)
+		entries = append(entries, &entry{index: item.index, observation: item.observation, envelope: item.envelope, payload: item.payload, check: check, signingKeys: signingKeys, verifiedSignerKeyIDs: verifiedIDs})
 		if check.Historical == SchemaInvalid || check.Historical == SemanticInvalid {
 			// The object's own schema or semantic rules refuse it, and their findings are listed;
 			// its signatures were not evaluated, so this is a finding of stage 3, not one about the
@@ -2443,7 +2518,8 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 		}
 	}
 	// The decision-basis rules are findings of stage 3, ranked by their precedence (EBMP2-068).
-	if err := checkDecisionBases(entries, staged.at(stageObjects), register, skew); err != nil {
+	timingApplied, timingComplete, basisError := checkDecisionBases(entries, staged.at(stageObjects), register, skew)
+	if err := basisError; err != nil {
 		return nil, err
 	}
 	found, err := pairMain(entries, &bindings, staged, skew)
@@ -2474,10 +2550,10 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 		unresolved[identifier] = true
 	}
 	for _, item := range entries {
-		if item.observation || item.check.Kind != "execution_terminal" {
+		if item.observation || (item.check.Kind != "execution_observed" && item.check.Kind != "execution_terminal") {
 			continue
 		}
-		if state, _ := pyjson.TextAt(item.payload, "event", "state"); state != "succeeded" {
+		if state, _ := pyjson.TextAt(item.payload, "event", "state"); item.check.Kind == "execution_terminal" && !slices.Contains([]string{"succeeded", "failed", "partially_succeeded", "unknown", "rolled_back", "compensated"}, state) {
 			continue
 		}
 		key, ok := attemptKey(item.payload, true)
@@ -2485,7 +2561,11 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 			continue
 		}
 		if !ok || !found.consumed[key] || !found.released[key] {
-			*staged.at(stageCausal) = append(*staged.at(stageCausal), issue(DecisionBindingInvalid, "a succeeded attempt lacks consumed authority or release evidence"))
+			message := "a post-release terminal attempt lacks consumed authority or release evidence"
+			if item.check.Kind == "execution_observed" {
+				message = "a running attempt lacks consumed authority or release evidence"
+			}
+			*staged.at(stageCausal) = append(*staged.at(stageCausal), issue(DecisionBindingInvalid, message))
 		}
 	}
 	// EBMP2-074: a release of single-use authority has its consumption recorded, whatever the
@@ -2550,8 +2630,14 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 	if carriesPost {
 		conditional = append(conditional, scopePostRelease)
 	}
+	if timingApplied {
+		conditional = append(conditional, "decision-input-timing")
+	}
 	// The stated reasons that keep an item out of Established (EBMP2-076).
 	reasons := map[string]string{}
+	if timingApplied && !timingComplete {
+		reasons["decision-input-timing"] = "input-times-not-recorded"
+	}
 	if !found.releaseRecorded {
 		reasons[ScopeRelease] = ReasonNoRelease
 	}
@@ -2570,7 +2656,7 @@ func verifyChecked(source any, policy *trust.Policy, now string, history []*trus
 	held := checksThatHeld(heldInputs{
 		checks: checks, entries: entries, dependencies: dependencies, covered: covered, staged: staged,
 		analysis: analysis, missingTerminal: missingTerminal, continuationMissing: continuationMissing,
-		continuationNamed: continuationNamed, proofs: proofs, found: found, register: register != nil,
+		continuationNamed: continuationNamed, proofs: proofs, found: found, register: register != nil, inputTimingComplete: timingApplied && timingComplete,
 	})
 	sort.SliceStable(dependencies, func(i, j int) bool { return dependencies[i].Index < dependencies[j].Index })
 	return &Report{
@@ -2708,9 +2794,17 @@ func checkContinuations(entries []*entry, findings *[]BundleFinding, versions []
 				named[held.index] = true
 			}
 		}
-		if hasResponseID {
+		own, hasOwn := pyjson.Text(item.payload["message_id"])
+		var answer *entry
+		for _, other := range entries {
+			if answers, _ := pyjson.Text(other.payload["request_id"]); !other.observation && other.check.Kind == "decision_response" && hasOwn && answers == own {
+				answer = other
+				break
+			}
+		}
+		if outcome, _ := pyjson.Text(pyjson.Get(answerPayload(answer), "outcome")); hasResponseID && answer != nil && outcome == "admit" {
 			if continued[responseID] {
-				fail("continues a response that another request continues")
+				fail("admits a continuation of a response that another admitted request continues")
 			}
 			continued[responseID] = true
 		}
@@ -2747,14 +2841,6 @@ func checkContinuations(entries []*entry, findings *[]BundleFinding, versions []
 			protocol, _ := pyjson.Text(approval.payload["protocol"])
 			if protocol != "EBMP-2" || !pyjson.Equal(event["kind"], "intervention") || !pyjson.Equal(event["operation"], "approve") || !hasRequestID || !pyjson.Equal(event["target_id"], requestID) {
 				fail("names as its approval an object that is not an approval of the continued request")
-			}
-			own, hasOwn := pyjson.Text(item.payload["message_id"])
-			var answer *entry
-			for _, other := range entries {
-				if answers, _ := pyjson.Text(other.payload["request_id"]); !other.observation && other.check.Kind == "decision_response" && hasOwn && answers == own {
-					answer = other
-					break
-				}
 			}
 			// The approval's keys and expiry bear on the continuation only when its response admits
 			// it: a deny or a new challenge is the right answer to an approval that has expired or
@@ -2814,21 +2900,22 @@ func checkContinuations(entries []*entry, findings *[]BundleFinding, versions []
 var (
 	ScopeCheckIDs = []string{
 		"envelope-integrity", "time-not-after-evaluation", "historical-signers", "current-compromise-knowledge",
-		"trusted-time-countersignatures", "trusted-time-coverage", "current-status", "object-schema",
+		"trusted-time-countersignatures", "trusted-time-coverage", "attestation-signers", "current-status", "object-schema",
 		"object-semantics", "observation-kind", "identifiers-unique", "decision-basis-present",
-		"decision-basis-one-way", "decision-basis-register", "pairing", "continuation-history",
+		"decision-basis-one-way", "decision-basis-register", "decision-input-timing", "pairing", "continuation-history",
 		"response-binding", "event-binding", "release-window", "predecessors-resolved",
 		"predecessor-digests", "graph-acyclic", "causal-context", "sequence-monotonic",
 		"state-transitions", "terminal-per-request", "attempt-authority-consumed",
 		"obligation-discharge", "obligation-proofs", "outcome-reasons", "corroborating-observation",
 	}
 	ScopeObjectSets = map[string]string{
-		"envelope-signatures":                       "trust-dependencies",
+		"envelope-signatures":                       "object-signing-dependencies",
 		"current-trust":                             "trust-dependencies",
 		"trusted-time":                              "object-signatures",
 		"object-rules":                              "bundle-objects",
 		"decision-basis-recorded":                   "decision-responses",
 		"decision-basis-register":                   "decision-responses",
+		"decision-input-timing":                     "decision-responses",
 		"bindings":                                  "request-response-pairs",
 		"release-within-authority":                  "released-attempts",
 		"causal-completeness":                       "bundle-objects",
@@ -2838,10 +2925,11 @@ var (
 	ScopeRequiredChecks = map[string][]string{
 		"envelope-signatures":                       {"envelope-integrity", "time-not-after-evaluation", "historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures"},
 		"current-trust":                             {"current-status"},
-		"trusted-time":                              {"historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures", "trusted-time-coverage"},
+		"trusted-time":                              {"historical-signers", "current-compromise-knowledge", "trusted-time-countersignatures", "trusted-time-coverage", "attestation-signers"},
 		"object-rules":                              {"object-schema", "object-semantics", "observation-kind", "identifiers-unique", "decision-basis-one-way"},
 		"decision-basis-recorded":                   {"decision-basis-present"},
 		"decision-basis-register":                   {"decision-basis-register"},
+		"decision-input-timing":                     {"decision-basis-register", "decision-input-timing"},
 		"bindings":                                  {"pairing", "continuation-history", "response-binding", "event-binding", "outcome-reasons"},
 		"release-within-authority":                  {"release-window"},
 		"causal-completeness":                       {"identifiers-unique", "predecessors-resolved", "predecessor-digests", "graph-acyclic", "causal-context", "sequence-monotonic", "state-transitions", "terminal-per-request", "attempt-authority-consumed"},
@@ -2850,7 +2938,7 @@ var (
 	}
 	// wholeBundleSets are the object sets that a report's envelope checks determine, which ScopeOf
 	// requires an item's objects to cover.
-	wholeBundleSets = map[string]bool{"bundle-objects": true, "trust-dependencies": true, "object-signatures": true}
+	wholeBundleSets = map[string]bool{"bundle-objects": true, "trust-dependencies": true, "object-signing-dependencies": true, "object-signatures": true}
 )
 
 func (s *stagedFindings) codes(stage int) map[string]bool {
@@ -2883,6 +2971,7 @@ type heldInputs struct {
 	proofs              map[int]bool
 	found               *pairs
 	register            bool
+	inputTimingComplete bool
 }
 
 // checksThatHeld returns, for each item of the scope, the checks of ScopeRequiredChecks that ran
@@ -2934,6 +3023,7 @@ func checksThatHeld(in heldInputs) map[string]ScopeItemChecks {
 		"current-compromise-knowledge":   !historical[Revoked] && signersValid,
 		"trusted-time-countersignatures": !historical[TrustedTimeInvalid],
 		"trusted-time-coverage":          coveredAll,
+		"attestation-signers":            dependenciesValid,
 		"current-status":                 allCurrent && dependenciesCurrent,
 		"object-schema":                  !objects[SchemaInvalid],
 		"object-semantics":               !otherObjectCodes,
@@ -2942,6 +3032,7 @@ func checksThatHeld(in heldInputs) map[string]ScopeItemChecks {
 		"decision-basis-present":         !objects[DecisionBasisRequired],
 		"decision-basis-one-way":         !objects[decisionBasisOneWay],
 		"decision-basis-register":        in.register && !objects[DecisionBasisMatchesRegister],
+		"decision-input-timing":          in.inputTimingComplete && !objects[DecisionBasisMatchesRegister],
 		"pairing":                        len(in.staged.stages[stagePairing]) == 0,
 		"continuation-history":           len(in.staged.stages[stagePairing]) == 0 && !in.continuationMissing,
 		"response-binding":               len(in.staged.stages[stageRequests]) == 0,
@@ -2965,7 +3056,7 @@ func checksThatHeld(in heldInputs) map[string]ScopeItemChecks {
 			holds[check] = false
 		}
 	}
-	responses, paired, released, dependencyIndexes := map[int]bool{}, map[int]bool{}, map[int]bool{}, map[int]bool{}
+	responses, paired, released, dependencyIndexes, signerIndexes := map[int]bool{}, map[int]bool{}, map[int]bool{}, map[int]bool{}, map[int]bool{}
 	for _, item := range in.entries {
 		if item.check.Kind == "decision_response" {
 			responses[item.index] = true
@@ -3012,15 +3103,19 @@ func checksThatHeld(in heldInputs) map[string]ScopeItemChecks {
 	}
 	for _, item := range in.dependencies {
 		dependencyIndexes[item.Index] = true
+		if item.Role == "signer" {
+			signerIndexes[item.Index] = true
+		}
 	}
 	sets := map[string][]int{
-		"trust-dependencies":     sortedInts(dependencyIndexes),
-		"object-signatures":      every,
-		"bundle-objects":         every,
-		"decision-responses":     sortedInts(responses),
-		"request-response-pairs": sortedInts(paired),
-		"released-attempts":      sortedInts(released),
-		"discharge-entries":      sortedInts(discharge),
+		"trust-dependencies":          sortedInts(dependencyIndexes),
+		"object-signing-dependencies": sortedInts(signerIndexes),
+		"object-signatures":           every,
+		"bundle-objects":              every,
+		"decision-responses":          sortedInts(responses),
+		"request-response-pairs":      sortedInts(paired),
+		"released-attempts":           sortedInts(released),
+		"discharge-entries":           sortedInts(discharge),
 	}
 	result := map[string]ScopeItemChecks{}
 	for item, required := range ScopeRequiredChecks {
@@ -3076,13 +3171,27 @@ func ranInFull(item string, report *Report) bool {
 			}
 		}
 	}
-	if ScopeObjectSets[item] == "trust-dependencies" {
+	if ScopeObjectSets[item] == "trust-dependencies" || ScopeObjectSets[item] == "object-signing-dependencies" {
 		signed := map[int]bool{}
 		for _, dependency := range report.TrustDependencies {
-			signed[dependency.Index] = true
+			if ScopeObjectSets[item] == "trust-dependencies" || dependency.Role == "signer" {
+				signed[dependency.Index] = true
+			}
 		}
 		for _, check := range report.EnvelopeChecks {
 			if !signed[check.Index] {
+				return false
+			}
+		}
+	}
+	if item == "envelope-signatures" || item == "trusted-time" {
+		for _, check := range report.EnvelopeChecks {
+			if check.Historical != "valid" || (item == "trusted-time" && check.TrustedTime == nil) {
+				return false
+			}
+		}
+		for _, dependency := range report.TrustDependencies {
+			if (item == "trusted-time" || dependency.Role == "signer") && dependency.Historical != "valid" {
 				return false
 			}
 		}
@@ -3157,6 +3266,7 @@ func ScopeOf(report *Report) ReportScope {
 		established["trusted-time"] = true
 		established["decision-basis-recorded"] = true
 		established["decision-basis-register"] = report.Register != nil
+		established["decision-input-timing"] = report.Register != nil && applies["decision-input-timing"] && reasons["decision-input-timing"] == ""
 		established["causal-completeness"] = report.Verdict != Incomplete
 		established[scopeDischarge[0]] = discharge
 		if discharge {
@@ -3181,7 +3291,7 @@ func ScopeOf(report *Report) ReportScope {
 		}
 		// decision-basis-register applies only when the caller supplies a register
 		// (registries/scope-checks.json).
-		if item == "decision-basis-register" && report.Register == nil {
+		if (item == "decision-basis-register" && report.Register == nil) || (item == "decision-input-timing" && (report.Register == nil || !applies[item])) {
 			continue
 		}
 		if established[item] {
@@ -3227,6 +3337,9 @@ func WithScope(report *Report) *Report {
 // digits on a calendar day that exists.
 var ErrInvalidNow = errors.New("now must be RFC 3339 UTC with 0, 3 or 6 fractional digits, on a calendar date that exists")
 
+// ErrReferenceSkew rejects a positive allowance in either registered reference profile.
+var ErrReferenceSkew = errors.New("the registered reference profiles require a response clock-skew allowance of zero")
+
 // Verify checks the signatures, bindings, causality and effects of a signed evidence bundle (a
 // parsed value) under the reference verification profile, against policy, the caller's current
 // trust policy. Invalid bundle data is reported, never returned as an error; an invalid option is
@@ -3238,6 +3351,9 @@ func Verify(bundle any, policy *trust.Policy, options Options) (report *Report, 
 	}
 	if options.ResponseClockSkewSeconds < 0 {
 		return nil, ErrNegativeSkew
+	}
+	if options.ResponseClockSkewSeconds > 0 {
+		return nil, ErrReferenceSkew
 	}
 	profile := ReferenceProfile
 	if options.RequireTrustedTime {
@@ -3420,10 +3536,11 @@ func (r *Report) JSON() map[string]any {
 		}
 	}
 	return map[string]any{
-		"verdict": r.Verdict, "envelope_checks": checks, "binding_checks": bindings,
+		"software": map[string]any{"name": "ecl-verify-go", "version": SoftwareVersion, "source_build": SourceBuild},
+		"verdict":  r.Verdict, "envelope_checks": checks, "binding_checks": bindings,
 		"primary":       optional(PrimaryFinding(r)),
 		"causal_status": r.CausalStatus, "effects": effects, "findings": findings,
-		"verification_profile": r.VerificationProfile, "accepted_current_trust_failure": r.AcceptedCurrentTrustFailure,
+		"verification_profile": r.VerificationProfile, "response_clock_skew_seconds": r.ResponseClockSkewSeconds, "accepted_current_trust_failure": r.AcceptedCurrentTrustFailure,
 		"register":                   register,
 		"scope":                      map[string]any{"established": items(r.Scope.Established), "not_established": items(r.Scope.NotEstablished), "reasons": reasons, "checks": scopeChecks},
 		"completion_after_window":    r.CompletionAfterWindow,

@@ -187,6 +187,19 @@
             "required": [
               "federated"
             ]
+          },
+          "delivery_surfaces": {
+            "contains": {
+              "enum": [
+                "hosted_control_plane",
+                "self_managed_control_plane"
+              ]
+            }
+          },
+          "timing_case": {
+            "required": [
+              "federated_exchange_seconds"
+            ]
           }
         }
       }
@@ -264,6 +277,413 @@
           "topology_controls": {
             "required": [
               "air_gapped"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_level": {
+            "minimum": 3
+          }
+        },
+        "required": [
+          "claim_level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timing_case": {
+            "properties": {
+              "trusted_time_or_secure_monotonic": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_level": {
+            "const": 1
+          }
+        },
+        "required": [
+          "claim_level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timing_case": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "uses_default_baseline": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "uses_default_baseline"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "const": 86400
+                    },
+                    "offline_staleness_seconds": {
+                      "const": 86400
+                    },
+                    "evidence_export_seconds": {
+                      "const": 259200
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "exclusiveMinimum": 86400
+                    }
+                  },
+                  "required": [
+                    "connected_revocation_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "offline_staleness_seconds": {
+                      "exclusiveMinimum": 86400
+                    }
+                  },
+                  "required": [
+                    "offline_staleness_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "evidence_export_seconds": {
+                      "exclusiveMinimum": 259200
+                    }
+                  },
+                  "required": [
+                    "evidence_export_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_level": {
+            "const": 2
+          }
+        },
+        "required": [
+          "claim_level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timing_case": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "uses_default_baseline": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "uses_default_baseline"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "const": 900
+                    },
+                    "offline_staleness_seconds": {
+                      "const": 14400
+                    },
+                    "evidence_export_seconds": {
+                      "const": 86400
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "exclusiveMinimum": 900
+                    }
+                  },
+                  "required": [
+                    "connected_revocation_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "offline_staleness_seconds": {
+                      "exclusiveMinimum": 14400
+                    }
+                  },
+                  "required": [
+                    "offline_staleness_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "evidence_export_seconds": {
+                      "exclusiveMinimum": 86400
+                    }
+                  },
+                  "required": [
+                    "evidence_export_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_level": {
+            "const": 3
+          }
+        },
+        "required": [
+          "claim_level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timing_case": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "uses_default_baseline": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "uses_default_baseline"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "const": 300
+                    },
+                    "offline_staleness_seconds": {
+                      "const": 3600
+                    },
+                    "evidence_export_seconds": {
+                      "const": 14400
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "exclusiveMinimum": 300
+                    }
+                  },
+                  "required": [
+                    "connected_revocation_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "offline_staleness_seconds": {
+                      "exclusiveMinimum": 3600
+                    }
+                  },
+                  "required": [
+                    "offline_staleness_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "evidence_export_seconds": {
+                      "exclusiveMinimum": 14400
+                    }
+                  },
+                  "required": [
+                    "evidence_export_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_level": {
+            "const": 4
+          }
+        },
+        "required": [
+          "claim_level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timing_case": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "uses_default_baseline": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "uses_default_baseline"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "const": 60
+                    },
+                    "offline_staleness_seconds": {
+                      "const": 900
+                    },
+                    "evidence_export_seconds": {
+                      "const": 3600
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "connected_revocation_seconds": {
+                      "exclusiveMinimum": 60
+                    }
+                  },
+                  "required": [
+                    "connected_revocation_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "offline_staleness_seconds": {
+                      "exclusiveMinimum": 900
+                    }
+                  },
+                  "required": [
+                    "offline_staleness_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "evidence_export_seconds": {
+                      "exclusiveMinimum": 3600
+                    }
+                  },
+                  "required": [
+                    "evidence_export_seconds"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "assessor_deviation_approval"
+                  ]
+                }
+              }
             ]
           }
         }

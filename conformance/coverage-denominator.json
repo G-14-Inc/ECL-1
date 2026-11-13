@@ -2,107 +2,63 @@
   "candidate_version": "1.0",
   "excluded_schemas": [
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/archive-reproducibility/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/candidate-verification/1"
-    },
-    {
-      "justification": "Conformance runner input schema: the artifact of a bundle-stage vector, tested by tests/test_conformance_stages.py against every bundle-stage vector; it is not a runtime wire schema.",
+      "justification": "Conformance runner input schema, not a runtime wire schema. tests/test_repository_metadata_schemas.py checks every passing bundle-stage input and missing-records refusals.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-bundle-input/1"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-result/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Repository runner-result metadata, excluded from the runtime wire denominator. scripts/run_conformance.py validates every emitted result against this schema; final corpus execution checks the current candidate.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-result/2"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-vector-manifest/2"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Repository metadata, excluded from the runtime wire denominator. tests/test_repository_metadata_schemas.py validates the published instances and refuses an invalid schema-version discriminator.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/conformance-vector-manifest/3"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Legacy repository replay metadata, excluded from the runtime wire denominator. The current verifier refuses legacy reports unless the caller explicitly opts in. Version 1 replay is not current-candidate qualification evidence.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/cross-implementation-report/1"
     },
     {
-      "justification": "Repository implementation-report/evidence schema, tested by source/corpus/raw-binding refusal probes and make go-conformance; it is not a runtime wire schema.",
+      "justification": "Legacy repository replay metadata, excluded from the runtime wire denominator. tests/test_external_report_v3.py exercises explicit version-2 opt-in and bound raw-result verification; it does not establish deployment conformance.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/cross-implementation-report/2"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/cyclonedx-sbom-validation/1"
+      "justification": "Repository cross-implementation observation metadata, not a runtime wire or claim document. Schema acceptance and refusal are exercised directly by tests/test_public_review_denominator.py and bound-evidence checks by tests/test_external_report_v3.py; these tests do not establish deployment conformance.",
+      "schema_id": "https://externalcontrollayer.ai/ns/schema/cross-implementation-report/3"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/evaluation-implementation-map/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Repository metadata, excluded from the runtime wire denominator. tests/test_repository_metadata_schemas.py validates the published instances and refuses an invalid schema-version discriminator.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/evaluation-implementation-map/2"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Legacy repository replay metadata, excluded from the runtime wire denominator. The current verifier refuses legacy reports unless the caller explicitly opts in. Version 1 replay is not current-candidate qualification evidence.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/1"
     },
     {
-      "justification": "Repository implementation-report evidence schema: the raw result of one report row, tested by the raw-binding refusal probes of tests/test_external_report_v2.py and by make go-conformance and make ts-conformance; it is not a runtime wire schema.",
+      "justification": "Legacy repository report-evidence schema, not a runtime wire schema. tests/test_external_report_v3.py checks explicit legacy opt-in and raw-result binding for version 2.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/2"
     },
     {
-      "justification": "The ECL incident replay scenario format: scripts/run_scenarios.py validates every scenario file in conformance/scenarios against it under make scenarios and tests/test_scenarios.py, including inconsistent scenarios it must refuse; scenarios are test inputs, not runtime wire or document objects.",
+      "justification": "Repository cross-implementation observation metadata, not a runtime wire or claim document. Schema acceptance and refusal are exercised directly by tests/test_public_review_denominator.py and bound-evidence checks by tests/test_external_report_v3.py; these tests do not establish deployment conformance.",
+      "schema_id": "https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/3"
+    },
+    {
+      "justification": "Repository incident-scenario input format, not a runtime wire or claim document. tests/test_repository_metadata_schemas.py validates every supplied scenario shape and schema-version refusals. Shape validation does not establish scenario execution; no incident replay runner is included in this source export.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/incident-scenario/1"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/python-dependency-lock/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Repository metadata, excluded from the runtime wire denominator. tests/test_repository_metadata_schemas.py validates the published instances and refuses an invalid schema-version discriminator.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/registry/2"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/release-gate-ledger/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/release-lineage/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/release-manifest/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/requirement-coverage/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/requirement-coverage/2"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
-      "schema_id": "https://externalcontrollayer.ai/ns/schema/requirement-evaluation-catalog/1"
-    },
-    {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Repository metadata, excluded from the runtime wire denominator. tests/test_repository_metadata_schemas.py validates the published instances and refuses an invalid schema-version discriminator.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/requirement-evaluation-catalog/2"
     },
     {
-      "justification": "Repository tooling or generated-artifact schema; exercised by make spec-check and the schema validation tests rather than runtime wire vectors.",
+      "justification": "Repository metadata, excluded from the runtime wire denominator. tests/test_repository_metadata_schemas.py validates the published instances and refuses an invalid schema-version discriminator.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/requirement-registry/2"
     },
     {
-      "justification": "Governance record for public review dispositions (governance/PUBLIC_REVIEW.md), not a runtime, claim or assessment artifact; its rules are checked by tests/test_public_review.py rather than by conformance vectors.",
+      "justification": "Governance record for public review dispositions, not a runtime claim or assessment artifact. tests/test_repository_metadata_schemas.py validates the example template and disposition-category refusals. Review procedure and actual dispositions require editorial examination.",
       "schema_id": "https://externalcontrollayer.ai/ns/schema/review-disposition-log/1"
     },
     {
@@ -124,6 +80,7 @@
     "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
     "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1",
     "https://externalcontrollayer.ai/ns/schema/common/1",
+    "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
     "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
     "https://externalcontrollayer.ai/ns/schema/dcmp/2",
     "https://externalcontrollayer.ai/ns/schema/deployment-profile/1",
@@ -163,5 +120,5 @@
     }
   ],
   "unit_rules": "Each schema root; each oneOf/anyOf alternative; each if predicate arm plus a present else arm; each enum keyword; each active semantic rule. The wire, extension-value, claim and assessment document schemas are included. A unit exclusion names its reason.",
-  "version": 10
+  "version": 12
 }

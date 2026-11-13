@@ -21,12 +21,35 @@
     }
   ],
   "guardian": {
+    "authenticated_context": {
+      "dcmp_request_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "0c63c0d1a4949e5eaf459802b36f7ad4b8e5d95c35a5c6aec4377604b6d1bd31"
+      },
+      "method": "steps/toolCallRequest",
+      "request_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "8166b7a6df1b0c20e7f40768fb968ec0fef2dffae93f54fbc1fa2cb756d09a17"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b",
+      "session_id": "sess-acs-0001"
+    },
     "channel": "signed",
     "key_id": "urn:example:key:acs-guardian-signing",
     "observed_at": "2026-09-30T09:00:00.080000Z",
     "request_digest": {
       "algorithm": "ecl.digest.sha-256.v1",
       "value": "8166b7a6df1b0c20e7f40768fb968ec0fef2dffae93f54fbc1fa2cb756d09a17"
+    },
+    "request_params": {
+      "arguments": {
+        "note": "The customer asked to close case 4411",
+        "patch": {
+          "status": "closed"
+        },
+        "record_id": "r-17"
+      },
+      "tool_name": "records.update"
     },
     "result": {
       "acs_version": "0.1.0",

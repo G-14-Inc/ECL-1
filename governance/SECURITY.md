@@ -27,6 +27,15 @@ release's content is pushed to it, is not a publication: publication begins
 when the release's content is pushed. Public issue trackers are never recommended
 for unpatched, exploitable details.
 
+For the historical Version 1.0 and v1.0.1 releases, the externally exercised
+email and GitHub private-reporting tests were waived and were not completed
+before publication. The exceptions dated November 5 and November 9, 2026 are
+recorded in [RELEASE_POLICY](RELEASE_POLICY.md#version-10-release-exception)
+and its [correction-release exception](RELEASE_POLICY.md#correction-release-exception-v101).
+Configuration records do not establish that an external report reached the
+response team. These bounded exceptions do not establish a successful live
+intake test or waive an outside technical security review.
+
 ## Triage
 
 The security response lead records:

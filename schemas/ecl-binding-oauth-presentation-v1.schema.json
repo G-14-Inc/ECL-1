@@ -24,7 +24,7 @@
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
     },
     "issuer_keys": {
-      "description": "OA1-007: the issuer's public keys from the verifier's own configuration.",
+      "description": "OA1-007: the issuer's public keys from the verifier's own configuration. The binding checker requires distinct kid values before selecting a key, including when repeated entries hold the same public key.",
       "type": "object",
       "required": [
         "keys"
@@ -121,7 +121,8 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 256
-          }
+          },
+          "description": "OA1-004: previously accepted identifiers whose replay-cache entries remain active at presented_at, scoped to the current proof-key thumbprint, HTTP method and normalized htu (or a broader replay-safe scope). Retain each accepted proof through iat + dpop_proof_window_seconds, including equality. This record declares cache state; it does not prove its completeness."
         }
       }
     },
@@ -161,7 +162,7 @@
       "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*$"
     },
     "publicJwk": {
-      "description": "A public JWK with its kid; private key members are refused.",
+      "description": "A public JWK with its kid. The private d member of EC and OKP keys is refused; additional members follow their key-type rules and unknown metadata is ignored (RFC 7517, Section 4).",
       "type": "object",
       "required": [
         "kid",

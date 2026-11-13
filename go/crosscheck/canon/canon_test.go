@@ -57,6 +57,45 @@ func TestOnlyExactIntegers(t *testing.T) {
 	}
 }
 
+func TestProducerIntegerKindsAndLexicalForms(t *testing.T) {
+	bad := []any{uint64(1 << 53), int64(1 << 53), int64(-1 << 53), json.Number("01"), json.Number("-01"), json.Number("00"), json.Number("-00"), json.Number("-0"), json.Number("+1"), json.Number("-"), json.Number(""), json.Number("1.0"), json.Number("1e0")}
+	// The platform's unsigned type must not bypass the check applied to uint64.
+	if ^uint(0) > 1<<32-1 {
+		large := uint64(1 << 53)
+		bad = append(bad, uint(large))
+	}
+	for _, value := range bad {
+		for _, wrapped := range []any{value, []any{value}, map[string]any{"number": value}} {
+			if got, err := canon.Marshal(wrapped); err == nil {
+				t.Errorf("Marshal accepted %T(%v): %s", value, value, got)
+			}
+			if _, err := canon.Digest(wrapped); err == nil {
+				t.Errorf("Digest accepted %T(%v)", value, value)
+			}
+			if _, err := canon.Reference(wrapped); err == nil {
+				t.Errorf("Reference accepted %T(%v)", value, value)
+			}
+		}
+	}
+	valid := []any{int(1), int8(-128), int16(-32768), int32(-2147483648), int64(-9007199254740991), uint(1), uint8(255), uint16(65535), uint32(4294967295), uint64(9007199254740991), json.Number("0"), json.Number("-1"), json.Number("9007199254740991")}
+	for _, value := range valid {
+		encoded, err := canon.Marshal(value)
+		if err != nil {
+			t.Errorf("refused %T(%v): %v", value, value, err)
+			continue
+		}
+		parsed, err := strict.Parse(encoded)
+		if err != nil {
+			t.Errorf("emitted invalid strict JSON for %T(%v): %q", value, value, encoded)
+			continue
+		}
+		reencoded, err := canon.Marshal(parsed)
+		if err != nil || string(reencoded) != string(encoded) {
+			t.Errorf("canonical round trip changed %T(%v): %q -> %q (%v)", value, value, encoded, reencoded, err)
+		}
+	}
+}
+
 // TestNoncharactersAreOutsideTheRestrictedProfile: the restricted profile
 // excludes the 66 Unicode noncharacters from strings and member names (IE1-002), as the reference's
 // canonicalize does, so content that holds one has no restricted canonical form and an exchange

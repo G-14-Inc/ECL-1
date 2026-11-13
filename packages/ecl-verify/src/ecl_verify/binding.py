@@ -26,6 +26,8 @@ event check (rule 8) is the reference verification profile's,
 `check_response_binding(request, response)`, request-binding-invalid unless a rule names another:
 
   0. the arguments are a decision_request and a decision_response.
+  0a. the request asks for single_use, with max_uses absent or the integer 1, even when the
+      response does not admit. Reserved or unknown use policies are refused, never reinterpreted.
   1. response.request_id is request.message_id.
   2. the same workflow_id, then the same root_trace_id.
   3. the same attempt: the decision point copies the request's (DCMP2-045).
@@ -35,26 +37,30 @@ event check (rule 8) is the reference verification profile's,
      here is digest-mismatch.
   5. response.issued_at is not before request.issued_at less the response clock-skew allowance.
   6. for an admit only: the authorization
+     first has the same supported use-policy domain as rule 0a, before expiry and audience checks;
+     admitting evaluated_at is before request.expires_at, before the authority checks below;
      a. has the audience that the request asked for (audience-mismatch);
      b. has as scope_digest the digest of {"request_id": message_id, "action": action}, computed as
         adapter.build_decision_response computes it (scope-mismatch);
      c. has the use_policy that the request asked for;
      d. lasts longer than nothing and no longer than requested_validity_seconds;
-     d1. has max_uses absent or 1 if it is single_use; and, if the request gave max_uses, has one
-         that is no greater;
+     d1. carries max_uses of 1 when the request explicitly gave max_uses;
      d2. is contained in the decision (DCMP2-015): it begins no earlier than the response's
          issued_at, ends no later than its expires_at when it has one, and ends no later than
          issued_at plus requested_validity_seconds, so that a window far ahead is refused even
          when the response has no expires_at.
 
-`check_event_binding(event, *, request, response)` for an execution_released or execution_terminal
-event, decision-binding-invalid unless a rule names another:
+`check_event_binding(event, *, request, response)` for release_prepared, execution_released,
+execution_observed or execution_terminal, decision-binding-invalid unless a rule names another:
 
   0. the arguments are such an event, a decision_request, and a decision_response or None.
+  0a. the request and any admitting authorization use the supported single_use domain of the
+      response check. These event-check failures use decision-binding-invalid.
   1. event.action_id is request.action.action_id.
-  1a. if the event repeats them: its operation, its parameters_digest and its target.uri are those
-     of the request's action. Only the algorithm and the value of the digests are compared, and
-     only the uri of a target: its version and digest change with the effect.
+  1a. if any of the four execution event types repeats them: its operation,
+     parameters_digest and target.uri are those of the request's action. Only the algorithm and
+     value of the digests are compared, and only the uri of a target: its version and digest change
+     with the effect (EBMP2-047).
   2. with a response, response.request_id is request.message_id.
   3. the same workflow_id, then the same root_trace_id, as the request, and as the response when
      there is one.
@@ -63,7 +69,7 @@ event, decision-binding-invalid unless a rule names another:
   6. decision.digest is object_digest(response). Any failure here is digest-mismatch.
   7. an event that carries authority has a response that admits, and authority.uri is that
      response's authorization_id.
-  8. execution_released has a response that admits. execution_terminal is in a state that
+  8. execution_released and execution_observed have a response that admits. execution_terminal is in a state that
      TERMINAL_STATE_OUTCOMES lists, and its response has an outcome that it lists for that state, or
      no response where it lists that.
 
@@ -72,6 +78,7 @@ event, decision-binding-invalid unless a rule names another:
 
   0. the arguments are such an event and a decision_response.
   1. the response admits, and the event's authorization_id is its authorization_id.
+     Before comparing the identifiers, the authorization uses the supported single_use domain.
   2. exactly one causal predecessor has the id response.message_id, and its digest is
      object_digest(response). Other predecessors are allowed. Any failure here is digest-mismatch.
   3. the same workflow_id, then the same root_trace_id.
@@ -99,7 +106,7 @@ SCOPE_MISMATCH = "ecl.error.scope-mismatch.v1"
 _DIGEST_SUITE = "ecl.digest.sha-256.v1"
 _RESPONDS_TO = "ecl.relation.responds-to.v1"
 _OUTCOMES = frozenset({"admit", "deny", "hold", "challenge"})
-_EXECUTION_EVENTS = frozenset({"execution_released", "execution_terminal"})
+_EXECUTION_EVENTS = frozenset({"release_prepared", "execution_released", "execution_observed", "execution_terminal"})
 _AUTHORITY_EVENTS = frozenset({"authority_issued", "authority_consumed"})
 
 _ADMIT: frozenset[str | None] = frozenset({"admit"})
@@ -312,6 +319,7 @@ def check_response_binding(
     answer = _read(response, "response", REQUEST_BINDING_INVALID)
     _require_message(asked, "decision_request")
     _require_message(answer, "decision_response")
+    _require_single_use(asked.member("authority_request"))
     _answers_the_request(asked, answer)
     _same_text(answer, asked, "workflow", "workflow_id")
     _same_text(answer, asked, "workflow", "root_trace_id")
@@ -319,11 +327,13 @@ def check_response_binding(
     _responds_to_the_request(asked, answer)
     _is_not_before_the_request(asked, answer, response_clock_skew_seconds * _NANOSECONDS)
     if _outcome(answer) == "admit":
+        _require_single_use(answer.member("authorization"))
+        if answer.instant("evaluated_at") >= asked.instant("expires_at"):
+            raise answer.error("evaluated_at is at or after the request's expires_at")
         _has_the_audience_requested(asked, answer)
         _has_the_scope_of_the_action(asked, answer)
         _has_the_use_policy_requested(asked, answer)
         _lasts_no_longer_than_requested(asked, answer)
-        _single_use_is_one_use(answer)
         _has_no_more_uses_than_requested(asked, answer)
         _begins_no_earlier_than_it_is_issued(answer)
         _ends_by_the_time_the_response_expires(answer)
@@ -411,11 +421,11 @@ def _granted_uses(response: _Object) -> int | None:
     return response.integer("authorization", "max_uses")
 
 
-def _single_use_is_one_use(response: _Object) -> None:
-    if response.text("authorization", "use_policy") != "single_use":
-        return
-    if _granted_uses(response) not in (None, 1):
-        raise response.error("a single_use authorization has a max_uses other than 1")
+def _require_single_use(authority: _Object) -> None:
+    if authority.text("use_policy") != "single_use":
+        raise authority.error("use_policy is unsupported; only single_use is defined")
+    if authority.has("max_uses") and authority.integer("max_uses") != 1:
+        raise authority.error("max_uses must be absent or the integer 1")
 
 
 def _has_no_more_uses_than_requested(request: _Object, response: _Object) -> None:
@@ -467,8 +477,11 @@ def check_event_binding(
     answer = None if response is None else _read(response, "response", DECISION_BINDING_INVALID)
     _require_event(recorded, _EXECUTION_EVENTS, "execution")
     _require_message(asked, "decision_request")
+    _require_single_use(asked.member("authority_request"))
     if answer is not None:
         _require_message(answer, "decision_response")
+        if _admits(answer):
+            _require_single_use(answer.member("authorization"))
     _records_the_action(recorded, asked)
     _repeats_the_operation(recorded, asked)
     _repeats_the_parameters(recorded, asked)
@@ -491,7 +504,9 @@ def check_event_binding(
         _authority_is_the_authorization(recorded, answer)
     if recorded.text("event_type") == "execution_released":
         _release_needs_a_response_that_admits(recorded, answer)
-    else:
+    elif recorded.text("event_type") == "execution_observed" and not _admits(answer):
+        raise recorded.error("records running execution, and there is no response that admits")
+    elif recorded.text("event_type") == "execution_terminal":
         _state_agrees_with_the_outcome(recorded, answer)
 
 
@@ -592,6 +607,7 @@ def check_authority_event_binding(event: Mapping[str, Any], *, response: Mapping
 def _records_an_authorization_that_was_granted(event: _Object, response: _Object) -> None:
     if not _admits(response):
         raise event.error("records an authorization, and the response does not admit")
+    _require_single_use(response.member("authorization"))
     granted = response.text("authorization", "authorization_id")
     if event.text("event", "authorization_id") != granted:
         raise event.error("event.authorization_id is not the response's")

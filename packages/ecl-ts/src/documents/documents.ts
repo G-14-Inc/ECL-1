@@ -6,7 +6,8 @@
  * registered semantic rules whose `applies_to` names the document's type: its `protocol`, or the
  * `$id` of the schema the vector names. The work intent (ECL-WI-1) carries extensions, and the
  * extension rules apply to it (XR1-006, XR1-009, XR1-010 and XR1-017): EXTENSION-REGISTRY-1
- * section 2; the register declarations rule applies to an action register (ECL1N-0178).
+ * section 2; DW1-002/006/015 additionally govern its parent, causal identity and advisory
+ * interval. The register declarations rule applies to an action register (ECL1N-0178).
  *
  * A rule registered for a document type later needs no code here: the registry's `applies_to`
  * names the type, and the semantic validator holds the rule.
@@ -27,6 +28,7 @@ export const DOCUMENT_SCHEMAS: readonly string[] = [
   NS + "action-register/1",
   NS + "assessment-package/1",
   NS + "conformance-claim/1",
+  NS + "component-implementation-report/1",
   NS + "deployment-profile/1",
   NS + "lifecycle-policy/1",
   NS + "mapping-packet/1",
@@ -40,6 +42,10 @@ let defaultSemantics: SemanticValidator | undefined;
  * The findings of the registered rules whose `applies_to` names the document's type, its
  * `protocol` or the `$id` of its schema: the semantic findings of the document, kept only for those
  * rules.
+ *
+ * This helper does not validate a schema. Without `schema`, it selects only rules registered
+ * for the supplied `protocol`; documents without that member need an explicit schema URI.
+ * Use `evaluateDocument(schema, value)` for the schema and applicable semantic checks together.
  */
 export function documentRuleFindings(value: JsonValue, semantics?: SemanticValidator, schema?: string): Finding[] {
   if (!isObject(value)) {
@@ -57,7 +63,9 @@ export function documentRuleFindings(value: JsonValue, semantics?: SemanticValid
  * The `document` stage for a parsed document and the schema it names: one schema finding when the
  * value is not an object; else one schema finding when it fails that schema, together with the
  * findings of the rules that apply to its type, which the stage applies whether or not the schema
- * accepts the document, as the reference runner does.
+ * accepts the document, as the reference runner does. The caller supplies an acyclic parsed
+ * JSON value within its application resource limits; use parseStrictJson for serialized input,
+ * as the conformance runner does before this stage.
  */
 export function evaluateDocument(schema: string, value: JsonValue, schemas: SchemaSet = recordSchemas(), semantics?: SemanticValidator): Finding[] {
   if (!isObject(value)) {

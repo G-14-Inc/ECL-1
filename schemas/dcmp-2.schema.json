@@ -189,14 +189,12 @@
                 "use_policy": {
                   "type": "string",
                   "enum": [
-                    "single_use",
-                    "bounded_multi_use"
+                    "single_use"
                   ]
                 },
                 "max_uses": {
                   "type": "integer",
-                  "minimum": 1,
-                  "maximum": 1000000
+                  "const": 1
                 }
               }
             },
@@ -256,14 +254,12 @@
         "use_policy": {
           "type": "string",
           "enum": [
-            "single_use",
-            "bounded_multi_use"
+            "single_use"
           ]
         },
         "max_uses": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 1000000
+          "const": 1
         },
         "token_reference": {
           "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
@@ -310,7 +306,10 @@
               "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
             },
             "policy": {
-              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference"
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/policyReference",
+              "required": [
+                "epoch"
+              ]
             },
             "reasons": {
               "type": "array",

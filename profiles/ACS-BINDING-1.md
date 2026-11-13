@@ -2,7 +2,8 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 This profile states how a deployment of the OWASP Agent Control Standard (ACS)
 connects to an ECL-1 deployment. An ACS Guardian becomes a decision source for
@@ -79,7 +80,15 @@ through a DCMP-2 decision response that an ECL decision point issues and signs
 for the exact request (DCMP2-044 to DCMP2-051); an enforcement point MUST
 release an action only on that response's `admit`, and a Guardian `allow` MUST
 NOT create, widen or extend ECL authority, so the decision point still applies
-its native authority, scope, validity, budget and human-approval checks.
+its native authority, scope, validity, budget and human-approval checks. A
+retained exchange record's `response` and each retained `modification_response`
+MUST bind the record's corresponding `request` or `modification_request` under
+DCMP2-044 to DCMP2-050, with the reference profile's response clock-skew
+allowance of zero, whether or not the action was released and for every outcome.
+The authority checks that those requirements restrict to `admit` apply only to
+`admit`. A record verifier MUST report a missing corresponding request or a
+failed response binding with `ecl.error.request-binding-invalid.v1`, retaining
+the underlying binding failure's code in the diagnostic message.
 
 ## Dispositions
 
@@ -98,9 +107,18 @@ evaluator, is a `judgment` input. Any other Guardian decision is
 `actor_supplied` when it reaches the ECL decision point through a hook point or
 any other channel that the governed AI system can write, unless the decision
 point verifies the Guardian's signature over the decision under a key that the
-governed AI system cannot use; an ACS-Core HMAC under a key that the Observed
+governed AI system cannot use, authenticates a commitment to the exact evaluated
+ACS request params, and checks the authenticated session, hooked-step identifier
+and method against the current request; an ACS-Core HMAC under a key that the Observed
 Agent holds does not qualify, and an ACS-Crypto asymmetric signature under a
-key held only by the Guardian does (ECL1N-0178, AC1-009). Otherwise it takes
+key held only by the Guardian qualifies only with that request-content and
+context binding (ECL1N-0178, AC1-009). The request commitment MUST be obtained
+from a verified ACS chain whose signed head commits to a step `request_hash`,
+or from a directly authenticated request digest under a declared signed
+representation. Matching a `request_id` alone is insufficient. The decision
+point MUST compare the commitment with the exact request it submitted for the
+current step and check the mapping of those params to the actual DCMP request.
+Otherwise it takes
 the least trusted class of the inputs it evaluated, so one that evaluated
 SessionContext, Intent or other content the governed AI system wrote is
 `actor_supplied`. A Guardian decision that is a `judgment` or `actor_supplied`
@@ -110,21 +128,50 @@ obtained the decision from the Guardian directly (`direct`), verified a
 Guardian signature under a key that the governed AI system cannot use
 (`signed`), or received it through a hook point (`hook`), and MUST name, in the
 `derived_from` of the Guardian decision's input, each decision input that the
-Guardian's request carried other than the action itself. A Guardian decision
-whose input has no `derived_from`, or whose channel is `hook`, MUST NOT be
-declared `verifiable`. When the response carries `ecl.ext.acs-decision.v1`,
+Guardian's request carried other than the action itself. Every decided Guardian
+input MUST explicitly carry `derived_from`, including an empty list when there
+were no other decision inputs, independently of its class. A missing list MUST
+be rejected with `ecl.rule.acs-judgment-guardian.v1`; it MUST NOT be inferred
+from a declared class. An unavailable Guardian decision after a failed exchange
+is recorded as unavailable, without inventing its evaluated inputs. A Guardian
+decision whose channel is `hook` MUST NOT be declared `verifiable`. When the response carries `ecl.ext.acs-decision.v1`,
 exactly one input MUST carry `guardian: true`. The class that this requirement
 gives a Guardian decision holds in every decision basis that the exchange
 record holds: an entry of the `ecl.ext.decision-basis.v1` of the record's
 `modification_response` whose `input` is the input that the record marks
 `guardian` MUST have the class of the marked input. When `guardian.channel` is
-`signed`, the record MUST also give, in `guardian.key_id`, the identifier of
+`signed` and `guardian.status` is `decided`, the record MUST also give, in
+`guardian.key_id`, the identifier of
 the key under which the decision point verified the Guardian's signature and,
-in `guardian.request_digest`, the `ecl.digest.sha-256.v1` digest of the RFC
-8785 canonical form of the request that the Guardian evaluated. A verifier of
-the record cannot itself verify the Guardian's signature, which the record does
-not hold: the channel, the key and the digest are the adapter's statements,
-which an assessor checks against the deployment.
+in `guardian.request_params`, the exact ACS request envelope `params`. The
+`guardian.request_digest` MUST be the `ecl.digest.sha-256.v1` digest of the
+UTF-8 RFC 8785 canonical form of those params, excluding the outer envelope and
+signature. This is the hashing domain of ACS `ContextEntry.request_hash`, not
+the entire ACS envelope or DCMP message. The record MUST carry
+`guardian.authenticated_context` with the authenticated `session_id`,
+`request_id`, `method` and `request_digest`, matching the record's session,
+Guardian result's step identifier, hook and params digest. Its
+`dcmp_request_digest` MUST equal the SHA-256 digest of the RFC 8785 form of the
+record's DCMP `request`; it records the adapter's checked mapping to that request
+and is not itself claimed to be a field signed by the Guardian. A supplied
+chain for a decided signed exchange MUST include the step's `request_hash` equal to the
+params digest. A record verifier MUST reject a mismatch with
+`ecl.rule.acs-decision-recorded.v1`. On a failed exchange, `guardian.channel`
+names the attempted route, not a verified decision. For a failed signed route,
+`guardian.request_params` and `guardian.request_digest` MAY be omitted together;
+if either is retained, both MUST be retained and the digest MUST match the
+RFC 8785 form of those submitted params. Any retained `guardian.key_id` or
+`guardian.authenticated_context` is attempted or unavailable evidence, not a
+claim of successful authentication, and the record verifier MUST NOT require
+it to bind an unavailable Guardian result. These failed records remain subject
+to the deny and non-release requirements of AC1-006.
+
+A verifier of the record cannot verify the Guardian's signature, which the
+record does not hold. The authenticated context, key and checked mapping are
+adapter assertions. The assessor checks the actual signed representation,
+request-content comparison, session and step binding, and mapping into DCMP
+against the deployment. A consistent offline record alone does not establish
+those live checks.
 
 **AC1-005** — A `modify` decision MUST NOT release the original action. The
 action that the modification produces, if it is to go ahead, MUST be submitted
@@ -138,8 +185,9 @@ by identifier and digest with the relation `ecl.relation.modification-of.v1`,
 and is evaluated and admitted on its own; an enforcement point MUST release only
 the parameters that the new request's `admit` binds, and a `modifications`
 object that the pinned text forbids (a wholesale replacement combined with
-edits, or edits with overlapping targets), or one that cannot be applied under
-the next section, MUST end in `deny` of the original with no new request. An
+edits, or a redaction whose target overlaps a parameter override), or one that
+cannot be applied under the next section, MUST end in `deny` of the original
+with no new request. An
 exchange record of a `modify` that holds neither a `modification_request` nor a
 `release` records a `deny` of the original with no new request and MUST NOT be
 reported for the missing new request, since the record does not show why the
@@ -187,7 +235,8 @@ any of these: no usable Guardian decision within the negotiated timeout; a
 transport failure; an error response without a decision; a decision whose
 disposition the mapping of AC1-004 does not name; a decision for a `request_id`
 other than the hooked step's; a response whose ACS signature, where the session
-requires one, does not verify; and a decision that arrives after the
+requires one, does not verify; a signed-channel response whose request-content
+commitment, session, method or step does not match under AC1-004; and a decision that arrives after the
 enforcement point applied the safe state for the step. A deployment that claims
 this profile MUST negotiate `on_decision_failure` as `deny`, and MUST configure
 the startup posture that the pinned text sets out of band as `refuse`, so that
@@ -226,20 +275,27 @@ ECL decision response MUST carry the registered extension `ecl.ext.acs-decision.
 with the Guardian's decision, its evaluator, the ACS `request_id`, the
 `chain_hash` that the Guardian published for the step, and for a `modify` the
 `ecl.digest.sha-256.v1` digest of the RFC 8785 form of its `modifications`
-object; when the deployment claims the ACS-Audit profile it MUST also carry the
-step's `request_hash`. A verifier that recomputes the ACS session chain under
+object; when the deployment claims the ACS-Audit profile, or supplies an ACS
+chain as the request-content commitment for a signed channel, it MUST also
+carry the step's `request_hash`, computed from the exact ACS request params as
+AC1-004 specifies. A verifier that recomputes the ACS session chain under
 the chain-hashing rule below MUST find each recorded `chain_hash` as the head
 after that step's ContextEntry, which is the entry whose `step_id` is the
 recorded `request_id`.
 
-The chain-hashing rule restates section 8.2 of the pinned Instrument
+**AC1-008 (continued)** — The chain-hashing rule restates section 8.2 of the pinned Instrument
 specification. A ContextEntry's `entry_hash` is the lowercase hexadecimal
 SHA-256 of the UTF-8 bytes of the RFC 8785 canonical form of the entry with its
 `entry_hash` and `previous_hash` members removed, followed by the 32 bytes that
 the entry's `previous_hash` encodes in hexadecimal, or by no bytes for the
 first entry of a session, whose `previous_hash` is null or absent. Each later
 entry's `previous_hash` is the `entry_hash` of the entry before it, and the
-chain head after an entry is that entry's `entry_hash`.
+chain head after an entry is that entry's `entry_hash`. A retained chain MUST
+give each ContextEntry a distinct `entry_id` within the session, as the pinned
+ContextEntry schema specifies. A repeated identifier maps to
+`ecl.rule.acs-decision-recorded.v1`. This does not require distinct `step_id`
+values: the pinned Instrument specification's section 9.1 assigns an
+`intent_extension` the originating ASK's `step_id`.
 
 **AC1-009** — The ACS session chain MUST be treated as a native record that
 coexists with EBMP-2 evidence under EBMP2-045: the signed ECL evidence bundle is
@@ -252,7 +308,11 @@ key) MUST NOT be presented as satisfying FR-108.
 write each one as `ecl_acs_exchange_v1`, valid against
 `https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1`, and every
 value of `ecl.ext.acs-decision.v1` it emits MUST validate against
-`https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1`.
+`https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1`. An exchange
+with `guardian.status` equal to `decided` MUST retain its `guardian.result`;
+the record verifier MUST report an absent result with
+`ecl.rule.acs-decision-recorded.v1`. A schema-gated verifier rejects that
+incomplete record with `ecl.error.schema-invalid.v1` before semantic checks.
 
 **AC1-011** — When the Observed Agent wraps MCP traffic in the ACS
 `protocols/MCP/*` namespace, a request that reaches an in-scope MCP server MUST
@@ -338,7 +398,9 @@ posture and whether the deployment claims ACS-Audit (`audit_profile`); the
 `unmapped_disposition`, `request_mismatch`, `signature_invalid` or `late`, the
 decision failures of AC1-006), the time the adapter observed it, the `channel`
 through which the decision point obtained a decision (`direct`, `signed` or
-`hook`, AC1-004) and the Guardian's `result`; the `inputs` of the ECL decision,
+`hook`, AC1-004), the Guardian's `result`, and for a decided signed exchange the exact
+`request_params`, their `request_digest`, the `key_id` and the
+`authenticated_context` of AC1-004; the `inputs` of the ECL decision,
 which are the entries of the decision basis that the response records in
 `ecl.ext.decision-basis.v1` (AC1-012), with the Guardian's decision marked by
 `guardian` and the inputs its request carried named in that entry's
@@ -347,6 +409,10 @@ modified action went ahead the `modification_request` and
 `modification_response`; the session `chain` up to the step; and a `release`
 member only when the action was released. The rules registered for this
 profile, whose names begin `ecl.rule.acs-`, check a record after its schema.
+On a failed exchange, an optional channel names the attempted route. Submitted
+request params and their local digest can be retained together; absent params
+are not fabricated, and a retained key or context does not assert a verified
+Guardian decision.
 
 ## Security considerations
 
@@ -372,7 +438,7 @@ the Guardian's own signature can be (AC1-004).
 
 | Kind | What the citation establishes |
 | --- | --- |
-| Vectors | The `acs-binding` suite accepts a deny for a Guardian decision that arrived after the safe state was applied, and a `modify` that ends in `deny` with no new request and no release, and refuses a fail-open proceed after a Guardian decision failure, a negotiated `proceed` posture, an admit after a decision failure, a release when an `ask` expires even with `timeout_disposition` `allow`, an expiry into a fail-open state or after the Guardian's deadline, an outcome weaker than the mapped disposition, a modification released under the original request or with other parameters, a new request that carries a number where the effective parameters hold a boolean, a modification response without its new request, a new request recorded, and released, after a Guardian decision other than `modify`, a Guardian `allow` from an `agent` or `composite` evaluator, or from one that states no evaluator, used as `verifiable` or as the basis of an `admit`, a deterministic Guardian decision carried by a hook point used as `verifiable`, a modification admitted on a Guardian decision that a hook point carried or that an `agent` evaluator made, a `signed` channel without the identifier of the key that signed the decision or the digest of the Guardian's request, a released request that declares a negative budget debit, a response that records a Guardian decision that no input marks, a record without the channel of a decision, a release without an `admit`, a response that does not record the Guardian decision, and a recorded chain head that the recomputed ACS chain does not contain; the `binding-basis` suite refuses a record whose inputs disagree with the decision basis of its response, a record whose response or modification response carries no decision basis, and a record whose response's decision basis breaks DCMP2-053, alone or with the request it answers |
+| Vectors | The `acs-binding` suite accepts a deny for a Guardian decision that arrived after the safe state was applied, and a `modify` that ends in `deny` with no new request and no release, and refuses a fail-open proceed after a Guardian decision failure, a negotiated `proceed` posture, an admit after a decision failure, a release when an `ask` expires even with `timeout_disposition` `allow`, an expiry into a fail-open state or after the Guardian's deadline, an outcome weaker than the mapped disposition, a modification released under the original request or with other parameters, a new request that carries a number where the effective parameters hold a boolean, a modification response without its new request, a new request recorded, and released, after a Guardian decision other than `modify`, a Guardian `allow` from an `agent` or `composite` evaluator, or from one that states no evaluator, used as `verifiable` or as the basis of an `admit`, a deterministic Guardian decision carried by a hook point used as `verifiable`, a modification admitted on a Guardian decision that a hook point carried or that an `agent` evaluator made, a decided `signed` exchange without the identifier of the key that signed the decision or the digest of the Guardian's request, a released request that declares a negative budget debit, a response that records a Guardian decision that no input marks, a record without the channel of a decision, a release without an `admit`, a response that does not record the Guardian decision, and a recorded chain head that the recomputed ACS chain does not contain; the `binding-basis` suite refuses a record whose inputs disagree with the decision basis of its response, a record whose response or modification response carries no decision basis, and a record whose response's decision basis breaks DCMP2-053, alone or with the request it answers |
 | Assessor procedure | Hook-point placement and enforcement class, handshake postures, Guardian identity, and how the deployment derives each action's target and operation from its arguments, which decides whether a modification can be applied, so that no modification that changes them is released (AC1-005) |
 
 The vectors establish the behavior of exchange records, not the conformance of

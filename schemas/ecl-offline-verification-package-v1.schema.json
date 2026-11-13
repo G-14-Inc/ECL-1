@@ -34,17 +34,17 @@
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
     },
     "trust_policy": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+      "$ref": "#/$defs/sha256ResourceReference"
     },
     "revocation_snapshot": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+      "$ref": "#/$defs/sha256ResourceReference"
     },
     "registry_snapshots": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        "$ref": "#/$defs/sha256ResourceReference"
       }
     },
     "time_evidence": {
@@ -52,7 +52,7 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        "$ref": "#/$defs/sha256ResourceReference"
       }
     },
     "artifacts": {
@@ -101,7 +101,7 @@
             "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
           },
           "digest": {
-            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+            "$ref": "#/$defs/sha256Digest"
           }
         }
       }
@@ -137,6 +137,43 @@
           "const": "ecl.zip.store.v1"
         }
       }
+    }
+  },
+  "$defs": {
+    "sha256Digest": {
+      "description": "IE1-022 check 3: each artifact and material reference carries a SHA-256 digest.",
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+        },
+        {
+          "properties": {
+            "algorithm": {
+              "const": "ecl.digest.sha-256.v1"
+            },
+            "value": {
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      ]
+    },
+    "sha256ResourceReference": {
+      "allOf": [
+        {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        },
+        {
+          "required": [
+            "digest"
+          ],
+          "properties": {
+            "digest": {
+              "$ref": "#/$defs/sha256Digest"
+            }
+          }
+        }
+      ]
     }
   }
 }

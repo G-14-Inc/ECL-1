@@ -46,7 +46,8 @@ export const BINDING_RULES: readonly string[] = [
 
 /**
  * The findings of the binding profile whose record `value` is, sorted by rule and path. `exportKeys`
- * are the OpenTelemetry export keys the caller holds, by identifier.
+ * are the OpenTelemetry export keys the caller holds, by identifier. The record must already
+ * have passed the schema of its binding profile; use `evaluateBindingRecord` to check both.
  */
 export function bindingFindings(value: JsonValue, exportKeys: ReadonlyMap<string, otel.ExportKey> = new Map()): Finding[] {
   const version = isObject(value) ? value["schema_version"] : undefined;
@@ -60,7 +61,8 @@ export function bindingFindings(value: JsonValue, exportKeys: ReadonlyMap<string
 /**
  * The runner's `binding` stage for a parsed record and the schema the vector names: one
  * schema finding when the value is not an object or fails that schema, else the profile's
- * findings, under the OpenTelemetry export keys the caller holds.
+ * findings, under the OpenTelemetry export keys the caller holds. An unsupported schema
+ * identifier is a caller configuration error.
  */
 export function evaluateBindingRecord(
   schema: string,
@@ -68,6 +70,9 @@ export function evaluateBindingRecord(
   schemas: SchemaSet = recordSchemas(),
   exportKeys: ReadonlyMap<string, otel.ExportKey> = new Map(),
 ): Finding[] {
+  if (![aarm.EXCHANGE_SCHEMA, acs.EXCHANGE_SCHEMA, mcp.EXCHANGE_SCHEMA, otel.EXPORT_SCHEMA, oauth.PRESENTATION_SCHEMA].includes(schema)) {
+    throw new Error("unsupported binding record schema");
+  }
   if (!isObject(value)) {
     return [{ ruleId: SCHEMA_INVALID, path: "/", message: "a binding record is a JSON object" }];
   }

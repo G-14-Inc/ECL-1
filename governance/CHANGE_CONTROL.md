@@ -11,7 +11,7 @@ section 8).
 | Class | Examples | Minimum effect | Discussion before the editors decide |
 | --- | --- | --- | --- |
 | Editorial | Typo, formatting, non-normative clarification | No semantic or test change | The pull request's review |
-| Corrective | Erratum that restores already intended behavior | Erratum or patch version; regression proof | At least 30 days, with an announcement, for a proposed corrective erratum ([ERRATA](ERRATA.md)); an embargoed security fix follows SECURITY |
+| Corrective | Implementation or generated-artifact repair to unchanged, unambiguous published requirements; textual clarification with no change to required or permitted behavior | Erratum or patch version; regression proof | At least 30 days, with an announcement, for a proposed corrective erratum ([ERRATA](ERRATA.md)); an embargoed security fix follows SECURITY |
 | Additive | New optional field, profile, or non-critical allocation | Minor version, with positive and negative vectors | 14 days |
 | Behavioral | Changed rule, default, error, criticality, or claim meaning | Minor version, with explicit compatibility review and versioned migration | 14 days, after an announcement in the "Announcements" category of the discussions |
 | Breaking | Removed or renamed required surface, or widened or narrowed incompatible semantics | Major version; old identifiers never reused | 30 days, after an announcement |
@@ -24,6 +24,22 @@ for a minor version and 60 days for a major version
 ([PUBLIC_REVIEW](PUBLIC_REVIEW.md)). Patch versions and errata have no
 additional version-wide review window; their proposal comment and review
 periods still apply.
+
+An observable implementation fix can be corrective when the old implementation
+violated an unchanged, unambiguous requirement. Changing a normative rule,
+default, required diagnostic, evidence classification or claim meaning is
+behavioral even when it repairs a defect. Resolving contradictory requirements
+also requires behavioral review: record the competing readings, the selected
+behavior and the effect on implementations that followed either reading.
+Unclear prior conformance does not establish compatibility. If the repair
+removes behavior on which a previously conforming implementation could rely,
+apply the breaking-change class and its migration requirements.
+
+The [November 10, 2026 clarification](RELEASE-CLARIFICATION-2026-11-10.md)
+applies this distinction to the preserved v1.0.1 record. It adds a compatibility
+assessment without changing that release's historical label or inventing a
+past compatibility waiver. Subsequent changes follow this classification and
+the applicable review, versioning and migration process.
 
 ## Proposal contents
 
@@ -38,6 +54,11 @@ Every non-editorial proposal identifies:
 - whether the change alters the six-responsibility boundary.
 
 ## Required review
+
+The historical [Version 1.0](RELEASE_POLICY.md#version-10-release-exception)
+and [v1.0.1](RELEASE_POLICY.md#correction-release-exception-v101) exceptions
+waived only their named steps. They neither record completion of those steps
+nor waive compatibility obligations.
 
 - Editorial: an editor and the automated checks.
 - Corrective or additive: an editor and a second reviewer.

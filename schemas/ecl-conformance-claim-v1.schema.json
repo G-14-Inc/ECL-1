@@ -50,8 +50,7 @@
     "boundary_class": {
       "enum": [
         "full-system-mediation",
-        "bounded-action-class-mediation",
-        "component-or-profile-implementation"
+        "bounded-action-class-mediation"
       ]
     },
     "independence": {
@@ -306,6 +305,46 @@
               "same_operator_disclosure"
             ]
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "const": 1
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "not": {
+              "const": "conditional_conformance"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "full_conformance"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "conditions"
+          ]
         }
       }
     }

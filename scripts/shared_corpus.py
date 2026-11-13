@@ -20,6 +20,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from ecl_verify.canonical import (
+    MAX_JSON_BYTES, MAX_JSON_BYTES_CEILING, load_json_strict, loads_json_strict,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ("strict-json", "canonical-digest", "semantic-rules", "safe-state-profile-rules")
 OPTIONAL = (
@@ -33,10 +37,12 @@ OPTIONAL = (
     "document-validation",
     "extension-version-rule",
     "document-extension-rules",
+    "deployment-timing-case",
     "key-role-separation",
     "binding-basis-agreement-rule",
     "otel-export-keyed-digests",
     "offline-package-verification",
+    "work-intent-contract",
 )
 # Suites whose rules form their own optional capability, whatever their stage.
 SUITE_CAPABILITIES = {
@@ -51,6 +57,8 @@ SUITE_CAPABILITIES = {
 # changed rule, because a library without it cannot evaluate even their passing vectors as the
 # suite means them. An override takes precedence over SUITE_CAPABILITIES.
 SUITE_OVERRIDES = {
+    "ecl-1-v1.0-work-intent-contract": "work-intent-contract",
+    "ecl-1-v1.0-deployment-timing-case": "deployment-timing-case",
     # TP1-009 and TP1-010: a trust-policy key holds one role, and a DCMP-2 request or response
     # counts only under a key of its role.
     "ecl-1-v1.0-key-roles": "key-role-separation",
@@ -105,10 +113,14 @@ STAGES = {
 }
 
 
-def carried_extensions(path: Path) -> set[str]:
+def carried_extensions(path: Path, **limits: int) -> set[str]:
     """The identifiers of the extensions that a JSON object artifact carries, or none."""
     try:
-        value = json.loads(path.read_bytes())
+        byte_limit = limits.get("max_bytes", MAX_JSON_BYTES)
+        if type(byte_limit) is not int or not 0 <= byte_limit <= MAX_JSON_BYTES_CEILING:
+            raise ValueError("invalid vector byte limit")
+        with path.open("rb") as source:
+            value = loads_json_strict(source.read(byte_limit + 1), **limits)
     except ValueError:
         return set()
     extensions = value.get("extensions") if isinstance(value, dict) else None
@@ -131,9 +143,18 @@ def capability_of(root: Path, suite: str, vector: dict[str, Any]) -> str:
         # A register that the register declarations rule refuses, which a bundle verifier given
         # the register applies before it checks a decision basis against it (DCMP2-053).
         return "decision-basis-rule"
-    if stage == "document" and any(name.startswith("ecl.rule.") for name in expected):
+    if stage == "document" and "ecl.rule.deployment-timing-case-consistent.v1" in expected:
+        return "deployment-timing-case"
+    if stage == "document" and vector.get("schema") == "https://externalcontrollayer.ai/ns/schema/work-intent/1" and any(name in {"ecl.rule.work-intent-context-consistent.v1", "ecl.rule.message-cannot-cause-itself.v1", "ecl.rule.expiry-after-issue.v1"} for name in expected):
+        return "work-intent-contract"
+    if stage == "document" and any(
+        name.startswith("ecl.rule.") and not name.startswith("ecl.rule.json-")
+        for name in expected
+    ):
         # A document that a registered rule refuses: the extension rules that apply to a work
         # intent (ECL-WI-1) at the document stage, beyond its schema.
+        # XR1 document checks intentionally stay in this stage-specific capability;
+        # a Parse refusal is not an extension-rule result.
         return "document-extension-rules"
     own = sorted({RULE_CAPABILITIES[name] for name in expected if name in RULE_CAPABILITIES})
     if own:
@@ -143,7 +164,7 @@ def capability_of(root: Path, suite: str, vector: dict[str, Any]) -> str:
     if stage in ("protocol", "semantic"):
         own = sorted(
             EXTENSION_CAPABILITIES[name]
-            for name in carried_extensions(root / vector["path"])
+            for name in carried_extensions(root / vector["path"], **vector.get("strict_json_limits", {}))
             if name in EXTENSION_CAPABILITIES
         )
         if own:
@@ -175,9 +196,11 @@ def build(root: Path) -> dict[str, Any]:
     seen: set[str] = set()
     suites: set[str] = set()
     for path in manifests(root):
-        manifest = json.loads(path.read_bytes())
+        manifest = load_json_strict(path)
         if manifest["schema_version"] != "ecl_conformance_vector_manifest_v3":
             raise ValueError("shared corpus requires v3 manifests")
+        if manifest["suite"] in suites:
+            raise ValueError("duplicate suite identifier")
         suites.add(manifest["suite"])
         for vector in manifest["vectors"]:
             if vector["id"] in seen:
@@ -191,7 +214,7 @@ def build(root: Path) -> dict[str, Any]:
         raise ValueError(
             "the capability maps name suites that no manifest declares: " + ", ".join(unknown)
         )
-    versions = json.loads((root / "release/VERSION_SET.json").read_bytes())
+    versions = load_json_strict(root / "release/VERSION_SET.json")
     return {
         "schema_version": "ecl_shared_corpus_v1",
         "version": 1,

@@ -9,4 +9,5 @@ rules (`semantic`, `semantic_rc4`, `decision_basis_checks`, `extensions`), integ
 `deployment`, `safe_state`, `timing`). `cli` is the command.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.2a1"
+__build__ = "1.0.2-review.1"

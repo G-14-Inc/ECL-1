@@ -39,12 +39,18 @@ the rules when:
   `deny` or `hold` for an action that would exceed it; an instance that cannot
   reach the ledger, and holds no allocation, cannot show that an action stays
   within the budget, and answers `deny` or `hold` for the budgeted classes;
-- an action key produces at most one committed effect and a charged use of
-  authority at most one effect, across retries and duplicates (TE1-003). When
-  an enforcement point asks a second instance after the first timed out, both
-  may answer; the enforcement point uses at most one authorization for the
-  action key and returns the committed outcome to a retry (TE1-006, TE1-008,
-  TE1-010);
+- failover after a decision timeout uses a new request identifier and a new
+  workflow attempt. The old attempt remains in its recorded safe state; a late
+  response cannot release it, and no attempt acquires two responses (DCMP2-005,
+  DCMP2-014, DCMP2-026, DCMP2-041, EBMP2-058). Every authorization remains
+  single-use across instances and recovered attempts (ECL1N-0186, ECL1N-0189).
+  A dispatch whose outcome is unknown is reconciled before any retry that could
+  repeat its effect; a new decision or authorization does not settle that outcome;
+- where the deployment also claims TRANSACTIONAL-EFFECT-1, its shared effect
+  store enforces at most one committed effect per action key across retries and
+  duplicates. A retry of a committed action returns that outcome, and a charged
+  use remains spent (TE1-003, TE1-006, TE1-008, TE1-010). This profile's action-key
+  contract is additional to the core single-use and recovery requirements;
 - a halt reaches every instance and every enforcement point, and takes
   precedence over ordinary admission and cached allow decisions (TS1-025). The
   halt acknowledgment bound and the revocation propagation deadline are
@@ -131,9 +137,10 @@ declared time when the decision service is unreachable. The pattern stays
 within the rules when:
 
 - the mode states what remains permitted, for how long, under which cached
-  epochs, and how it expires into restricted mode or halt (TS1-019), and it
-  does expire into one of them when its window ends or a critical integrity
-  failure occurs (ECL1N-0029);
+  epochs, and how it expires into restricted mode or halt (TS1-019). Window
+  expiry brings at least Restricted Mode; a critical integrity failure brings
+  Emergency Halt, with the trigger precedence of ECL1N-0146 and ECL1N-0104.
+  A stricter state may be entered earlier (ECL1N-0029, ECL1N-0105);
 - the policy, trust-root, registry, revocation and evidence-export staleness
   budgets are declared separately (TS1-012), and none exceeds the offline
   control-state staleness that the declared timing case allows (ECL1N-0097,
@@ -146,7 +153,8 @@ within the rules when:
   register declares for the class, records the basis of each decision, and
   treats a cached input as late once it is older than its declared maximum
   age. A required input that the outage leaves unavailable or late prevents an
-  `admit`, and an optional one does not affect the outcome;
+  `admit`. An optional input in either condition may make the outcome stricter
+  but cannot otherwise affect it (ECL1N-0182);
 - budgets are spent from allocations granted before the outage, which
   together do not exceed the budget (ECL1N-0173);
 - evidence is buffered with declared capacity, durability, encryption,
@@ -174,10 +182,12 @@ adds instances measures propagation to the slowest of them, monitors the timing
 case continuously and keeps breach evidence (FR-112), and applies its timeout
 safe-state rule when a gate exceeds its deadline (TS1-009).
 
-The authorization validity window bounds what a revocation can still miss. The
-claim declares a maximum authorization validity that producer, consumer and
-verifier each enforce (TE1-009), and after a control change is acknowledged no
-effect that depends on the revoked authority may commit (TE1-005). Checking current local control state at release prevents use after the
+The authorization validity window bounds what a revocation can still miss. A
+claim that includes TRANSACTIONAL-EFFECT-1 declares a maximum authorization
+validity that producer, consumer and verifier each enforce (TE1-009); under that
+profile, after a control change is acknowledged no effect that depends on the
+revoked authority may commit (TE1-005). The core release checks still apply to
+every claim. Checking current local control state at release prevents use after the
 revocation has reached the enforcement point; the declared propagation
 deadline still bounds the preceding interval. In either case, the halts, quarantines
 and revocations that the declared timing case requires to have reached the

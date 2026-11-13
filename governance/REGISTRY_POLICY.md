@@ -29,9 +29,11 @@ process ([CHARTER](CHARTER.md), section 8).
 - ECL media types use the IANA vendor tree: `application/vnd.ecl.dcmp+json`,
   `application/vnd.ecl.ebmp+json`, `application/vnd.ecl.integrity-envelope+json`,
   `application/vnd.ecl.time-attestation+json` and
-  `application/vnd.ecl.bundle+zip`. They are not yet registered with IANA;
-  the maintainer files their registration under RFC 6838, which needs the
-  published specifications.
+  `application/vnd.ecl.bundle+zip`. The Version 1.0 release records them as
+  not yet registered with IANA. The maintainer plans to submit their
+  vendor-tree registrations under RFC 6838 with the published ECL
+  specifications. RFC 6838 encourages a published specification for
+  vendor-tree registrations; it does not require one.
 - The standard is cited as "ECL-1" or "ECL-1 Version 1.0", never "ECL-1.0",
   which is the SPDX identifier of the Educational Community License 1.0.
 - Vendor or organization extensions use a collision-resistant namespace under

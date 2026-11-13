@@ -12,7 +12,8 @@
 <main id="main">
 <h1 id="ebmp-2-evidence-bundle-and-manifest-protocol">EBMP-2: Evidence Bundle and Manifest Protocol</h1>
 <p>Version: 2.0 (wire <code>schema_version</code> <code>2.0</code>)
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code>
 Schemas: <code>schemas/ebmp-2.schema.json</code>; signed evidence bundles
 <code>schemas/ecl-evidence-bundle-v1.schema.json</code>; native adapter bindings
 <code>schemas/ecl-adapter-binding-v1.schema.json</code></p>
@@ -80,9 +81,10 @@ events the states, that each core event type carries.</p>
 record its outcome, and bind the evaluated policy.</p>
 <p><span id="EBMP2-007"><strong>EBMP2-007</strong></span><a class="requirement-link" href="#EBMP2-007" aria-label="Link to EBMP2-007">§</a> — An authority event MUST identify the authority and its state:
 <code>issued</code>, <code>active</code>, <code>consumed</code>, <code>revoked</code>, <code>expired</code>, or <code>superseded</code>.</p>
-<p><span id="EBMP2-008"><strong>EBMP2-008</strong></span><a class="requirement-link" href="#EBMP2-008" aria-label="Link to EBMP2-008">§</a> — Consumption MUST be separately recorded for a single-use
-authority. A release without provable consumption is nonconformant where the
-profile requires replay prevention.</p>
+<p><span id="EBMP2-008"><strong>EBMP2-008</strong></span><a class="requirement-link" href="#EBMP2-008" aria-label="Link to EBMP2-008">§</a> — Consumption MUST be separately recorded for each DCMP-2
+single-use authority. A release without provable consumption is nonconformant.
+Recording consumption more than once MUST NOT create additional release
+authority (<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, <a href="ebmp-2.html#EBMP2-073">EBMP2-073</a>).</p>
 <p><span id="EBMP2-009"><strong>EBMP2-009</strong></span><a class="requirement-link" href="#EBMP2-009" aria-label="Link to EBMP2-009">§</a> — Revocation, expiry, and supersession MUST NOT delete an
 authority record and MUST NOT be treated as proof that a prior release did not
 occur.</p>
@@ -114,7 +116,13 @@ reject an <code>execution_terminal</code> event whose <code>event.state</code> i
 execution outcome nor a non-execution terminal disposition, and an event of any
 other type whose <code>event.state</code> is one of them, with
 <code>ecl.rule.terminal-execution-state-consistent.v1</code>.</p>
-<p>The states of one attempt move only forward along the progression above. This
+<p><span id="EBMP2-065"><strong>EBMP2-065</strong></span><a class="requirement-link" href="#EBMP2-065" aria-label="Link to EBMP2-065">§</a> — The execution events of one attempt, those with the same
+<code>event.action_id</code> and <code>event.attempt_id</code>, taken in ascending order of
+<code>workflow.sequence</code> and then of <code>object_id</code>, MUST carry states in which every
+state after the first is one that the table lists for the state before it. A
+consumer MUST reject a bundle with an attempt that does not with
+<code>ecl.rule.execution-state-transition-valid.v1</code>.</p>
+<p><strong><a href="ebmp-2.html#EBMP2-065">EBMP2-065</a> (continued)</strong> — The states of one attempt move only forward along the progression above. This
 table gives, for each state, the states that may follow it in the same attempt;
 an attempt's first state may be any state, and nothing follows a terminal
 outcome or a non-execution terminal disposition.</p>
@@ -132,7 +140,7 @@ outcome or a non-execution terminal disposition.</p>
 </tr>
 <tr>
 <td><code>prepared</code></td>
-<td><code>released</code>, <code>cancelled</code>, <code>timed_out</code>, <code>denied</code>, <code>held</code>, <code>expired_before_release</code></td>
+<td><code>released</code>, <code>cancelled</code>, <code>timed_out</code>, <code>denied</code>, <code>held</code>, <code>challenged</code>, <code>expired_before_release</code></td>
 </tr>
 <tr>
 <td><code>released</code></td>
@@ -144,12 +152,6 @@ outcome or a non-execution terminal disposition.</p>
 </tr>
 </tbody>
 </table>
-<p><span id="EBMP2-065"><strong>EBMP2-065</strong></span><a class="requirement-link" href="#EBMP2-065" aria-label="Link to EBMP2-065">§</a> — The execution events of one attempt, those with the same
-<code>event.action_id</code> and <code>event.attempt_id</code>, taken in ascending order of
-<code>workflow.sequence</code> and then of <code>object_id</code>, MUST carry states in which every
-state after the first is one that the table lists for the state before it. A
-consumer MUST reject a bundle with an attempt that does not with
-<code>ecl.rule.execution-state-transition-valid.v1</code>.</p>
 <p><span id="EBMP2-066"><strong>EBMP2-066</strong></span><a class="requirement-link" href="#EBMP2-066" aria-label="Link to EBMP2-066">§</a> — Every execution event with the same <code>event.action_id</code>,
 <code>workflow.workflow_id</code> and <code>workflow.attempt</code> MUST carry the same
 <code>event.attempt_id</code>, and one <code>event.attempt_id</code> MUST NOT appear with two
@@ -262,7 +264,7 @@ that does not bind this exchange by the member that the table gives.</li>
 </tr>
 </tbody>
 </table>
-<p>These checks belong to stage 8 of <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a> and read the members that are
+<p><strong><a href="ebmp-2.html#EBMP2-070">EBMP2-070</a> (continued)</strong> — These checks belong to stage 8 of <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a> and read the members that are
 present with the types their value schema gives them (<a href="dcmp-2.html#DCMP2-043">DCMP2-043</a>). An entry
 with defect 1 is not checked further. The result and time checks in 2 to 4,
 and the entry's own <code>fresh_until</code> check in 7, apply to every remaining entry.
@@ -370,8 +372,9 @@ every edge of the causal graph within one workflow, DCMP-2 messages and
 observations included (<a href="ebmp-2.html#EBMP2-059">EBMP2-059</a>). A producer gives a record a sequence greater
 than the sequence of every predecessor that it names in the same workflow. A
 producer that shares no counter with the others, such as an independent observer
-or an approval service, uses one more than the greatest such predecessor, which
-it can always do because it holds those predecessors.</p>
+or an approval service, can use one more than the greatest predecessor sequence
+when that value is within the permitted range. At the range limit, it cannot
+create a valid successor in the same sequence domain.</p>
 <p><span id="EBMP2-026"><strong>EBMP2-026</strong></span><a class="requirement-link" href="#EBMP2-026" aria-label="Link to EBMP2-026">§</a> — Timestamps MUST NOT be used to fabricate missing causal edges
 or override contradictory sequence and digest evidence.</p>
 <p><span id="EBMP2-027"><strong>EBMP2-027</strong></span><a class="requirement-link" href="#EBMP2-027" aria-label="Link to EBMP2-027">§</a> — A bundle manifest MUST declare <code>complete</code>, <code>incomplete</code>, or
@@ -382,13 +385,36 @@ recalculation yields any open action or unresolved required predecessor.</p>
 <p><span id="EBMP2-029"><strong>EBMP2-029</strong></span><a class="requirement-link" href="#EBMP2-029" aria-label="Link to EBMP2-029">§</a> — Bundle order is not semantic order. Consumers MUST derive
 causal order from authenticated references and profile rules.</p>
 <p><span id="EBMP2-077"><strong>EBMP2-077</strong></span><a class="requirement-link" href="#EBMP2-077" aria-label="Link to EBMP2-077">§</a> — A causal predecessor MUST have its successor's
-<code>workflow.root_trace_id</code>, and MUST be in its successor's workflow or in the
-workflow that its successor's <code>workflow.parent_workflow_id</code> names, as a
-child workflow names its parent. A predecessor in its successor's workflow
+<code>workflow.root_trace_id</code>, and MUST be in its successor's workflow, in the
+workflow that its successor's <code>workflow.parent_workflow_id</code> names, or in a
+child workflow whose own <code>workflow.parent_workflow_id</code> names the successor's
+workflow. The last case permits a parent to join its child's recorded result
+(<a href="distributed-workflow-1.html#DW1-002">DW1-002</a>, <a href="distributed-workflow-1.html#DW1-009">DW1-009</a>); it does not permit a reference to an unrelated or sibling
+workflow. For a child-to-parent join, the child record MUST have a causal path
+to the exact creating or delegating object in its declared parent workflow.
+The path consists of zero or more predecessor edges within the child workflow,
+followed by a predecessor edge to that parent object. Every edge MUST bind the
+predecessor's logical identifier and canonical digest; every child record on
+the path MUST identify the same parent and root trace. A declared parent
+identifier alone does not establish this relationship.
+Held ancestors in that child workflow MUST agree on its declared parent,
+including when another predecessor is absent.</p>
+<p><strong><a href="ebmp-2.html#EBMP2-077">EBMP2-077</a> (continued)</strong> — If no such path exists in the held graph and no named absent predecessor could
+complete it, the verifier MUST report
+<code>ecl.rule.bundle-causal-context-consistent.v1</code>. When no held path establishes
+the origin, a named absent predecessor on a possible path leaves it unresolved and MUST prevent causal-completeness
+scope, including when that predecessor is declared external. A later child
+record can inherit its origin through earlier child records; it need not
+repeat the direct reference to the parent object.</p>
+<p><strong><a href="ebmp-2.html#EBMP2-077">EBMP2-077</a> (continued)</strong> — A predecessor in its successor's workflow
 MUST NOT have a greater <code>workflow.attempt</code> than its successor: a later attempt
 can follow an earlier one, never the reverse. A verifier MUST report a
 predecessor that the bundle holds and that fails this rule with
-<code>ecl.rule.bundle-causal-context-consistent.v1</code>.</p>
+<code>ecl.rule.bundle-causal-context-consistent.v1</code>.
+Sequence and attempt counters in different workflows are separate domains;
+neither counter supplies a global order. Digest resolution, acyclicity and
+required-child closure still apply. An absent child record leaves a required
+join unresolved, rather than establishing the child's completion.</p>
 <h2 id="5-identity-and-integrity">5. Identity and integrity</h2>
 <p><span id="EBMP2-030"><strong>EBMP2-030</strong></span><a class="requirement-link" href="#EBMP2-030" aria-label="Link to EBMP2-030">§</a> — A storage path, database primary key, display label, or tenant-local sequence MUST NOT substitute for canonical content identity.</p>
 <p><span id="EBMP2-031"><strong>EBMP2-031</strong></span><a class="requirement-link" href="#EBMP2-031" aria-label="Link to EBMP2-031">§</a> — The exact immutable version of a record MUST be identified by
@@ -557,8 +583,8 @@ mismatch with <code>ecl.rule.event-type-kind-consistent.v1</code>. The state of 
 <p>These rules state what binds an event to the request and response it records.
 An execution event binds its request and response when it meets <a href="ebmp-2.html#EBMP2-047">EBMP2-047</a>,
 <a href="ebmp-2.html#EBMP2-048">EBMP2-048</a>, the admitting-response and authorization-identifier checks of
-<a href="ebmp-2.html#EBMP2-049">EBMP2-049</a>, and, for <code>execution_released</code>, belongs to an <code>admit</code> response
-(<a href="ebmp-2.html#EBMP2-050">EBMP2-050</a>), or, for <code>execution_terminal</code>, meets <a href="ebmp-2.html#EBMP2-051">EBMP2-051</a>. An
+<a href="ebmp-2.html#EBMP2-049">EBMP2-049</a>, and, for <code>execution_released</code> or <code>execution_observed</code>, belongs to an
+<code>admit</code> response (<a href="ebmp-2.html#EBMP2-050">EBMP2-050</a>), or, for <code>execution_terminal</code>, meets <a href="ebmp-2.html#EBMP2-051">EBMP2-051</a>. An
 <code>authority_issued</code> or <code>authority_consumed</code> event binds its response under
 <a href="ebmp-2.html#EBMP2-052">EBMP2-052</a>. Each event&#x27;s core binding check follows the listed order and stops
 at its first failure, using the rule's named error code or
@@ -575,8 +601,8 @@ all collected stage-7 findings across the bundle.</p>
 <p>An object's digest is its <code>ecl.digest.sha-256.v1</code> digest over restricted
 canonical JSON. A member that a rule reads and that is missing or has the wrong
 type fails that rule.</p>
-<p><span id="EBMP2-047"><strong>EBMP2-047</strong></span><a class="requirement-link" href="#EBMP2-047" aria-label="Link to EBMP2-047">§</a> — An <code>execution_released</code> or <code>execution_terminal</code> event MUST bind
-its request: <code>event.action_id</code> MUST equal the request's <code>action.action_id</code>; when
+<p><span id="EBMP2-047"><strong>EBMP2-047</strong></span><a class="requirement-link" href="#EBMP2-047" aria-label="Link to EBMP2-047">§</a> — A <code>release_prepared</code>, <code>execution_released</code>, <code>execution_observed</code>
+or <code>execution_terminal</code> event MUST bind its request: <code>event.action_id</code> MUST equal the request's <code>action.action_id</code>; when
 the event carries them, <code>event.operation</code>, the algorithm and value of
 <code>event.parameters_digest</code>, and <code>event.target.uri</code> MUST equal those of the
 request's action; and the event's <code>workflow_id</code>, <code>root_trace_id</code> and <code>attempt</code>
@@ -591,10 +617,16 @@ MUST NOT carry <code>event.decision</code>.</p>
 an <code>admit</code> response; <code>event.authority.uri</code> MUST equal the authorization's
 <code>authorization_id</code>, and <code>event.authority.digest</code> MUST be the digest of the
 response's <code>authorization</code> object (otherwise <code>ecl.error.digest-mismatch.v1</code>).</p>
-<p><span id="EBMP2-050"><strong>EBMP2-050</strong></span><a class="requirement-link" href="#EBMP2-050" aria-label="Link to EBMP2-050">§</a> — An <code>execution_released</code> event MUST belong to an <code>admit</code>
-response, its <code>observed_at</code> MUST NOT be earlier than the authorization's
-<code>valid_from</code>, and its <code>observed_at</code> plus its <code>release_guard_ms</code> MUST be earlier
-than the authorization's <code>valid_until</code> (otherwise <code>ecl.error.expired.v1</code>).</p>
+<p><span id="EBMP2-050"><strong>EBMP2-050</strong></span><a class="requirement-link" href="#EBMP2-050" aria-label="Link to EBMP2-050">§</a> — An <code>execution_released</code> or <code>execution_observed</code> event MUST
+belong to an <code>admit</code> response. For <code>execution_released</code>, its <code>observed_at</code> MUST
+NOT be earlier than the authorization's <code>valid_from</code>, and its <code>observed_at</code>
+plus its <code>release_guard_ms</code> MUST be earlier than the authorization's
+<code>valid_until</code> (otherwise <code>ecl.error.expired.v1</code>).</p>
+<p>Running execution can continue after a release made inside the authority's
+window; its observation time is not a second release time. Generic
+<code>release_prepared</code> evidence alone does not assert admission or release. A
+profile can impose a narrower preparation sequence, as MCP-GATEWAY-1 does
+under <a href="mcp-gateway-1.html#MG1-014">MG1-014</a>.</p>
 <p><span id="EBMP2-072"><strong>EBMP2-072</strong></span><a class="requirement-link" href="#EBMP2-072" aria-label="Link to EBMP2-072">§</a> — A verifier MUST report with <code>ecl.error.expired.v1</code>, as a finding
 of stage 7 of <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a>, an <code>execution_terminal</code> event that binds its request
 and response and carries <code>ecl.ext.mcp-binding.v1</code> with
@@ -613,9 +645,9 @@ profile. In the reference verification profile
 fail-closed deny, <code>held</code> requires <code>hold</code>; <code>challenged</code> requires <code>challenge</code>;
 <code>denied</code> requires <code>deny</code>, an <code>admit</code> later denied at enforcement, or no response;
 and every other terminal state requires <code>admit</code>.</p>
-<p><span id="EBMP2-075"><strong>EBMP2-075</strong></span><a class="requirement-link" href="#EBMP2-075" aria-label="Link to EBMP2-075">§</a> — When a request carries <code>ecl.ext.mcp-binding.v1</code>, an
-<code>execution_released</code> or <code>execution_terminal</code> event of its action that carries
-the extension MUST carry, in each occurrence, every member of the request's
+<p><span id="EBMP2-075"><strong>EBMP2-075</strong></span><a class="requirement-link" href="#EBMP2-075" aria-label="Link to EBMP2-075">§</a> — When a request carries <code>ecl.ext.mcp-binding.v1</code>, a
+<code>release_prepared</code>, <code>execution_released</code>, <code>execution_observed</code> or
+<code>execution_terminal</code> event of its action that carries the extension MUST carry, in each occurrence, every member of the request's
 value with the same value, so that the evidence names the call that was decided;
 and an <code>execution_terminal</code> event in state <code>succeeded</code> or <code>failed</code> MUST carry
 the extension with <code>response_digest</code>, the digest of the server's response. A
@@ -632,15 +664,14 @@ to an <code>admit</code> response whose <code>authorization.authorization_id</co
 response with the response's digest (otherwise <code>ecl.error.digest-mismatch.v1</code>);
 and its <code>workflow_id</code>, <code>root_trace_id</code> and <code>attempt</code> MUST equal the response's.</p>
 <p><span id="EBMP2-073"><strong>EBMP2-073</strong></span><a class="requirement-link" href="#EBMP2-073" aria-label="Link to EBMP2-073">§</a> — An <code>authority_consumed</code> event in state <code>consumed</code> that binds its
-response under <a href="ebmp-2.html#EBMP2-052">EBMP2-052</a> and carries <code>use_count</code> MUST give a value from 1 to the
-number of uses that the authorization allows: 1 when its <code>use_policy</code> is
-<code>single_use</code>, and otherwise its <code>max_uses</code> when it has one. A bundle MUST NOT
-hold, for one authorization, more <code>authority_consumed</code> events in state
-<code>consumed</code> that bind its response under <a href="ebmp-2.html#EBMP2-052">EBMP2-052</a> than the authorization allows,
-whether or not those events carry <code>use_count</code>. Any two of those events that
-carry <code>use_count</code> MUST carry different values. A verifier MUST report a bundle that
-breaks this with <code>ecl.error.decision-binding-invalid.v1</code>, as a finding of stage
-7 of <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a>.</p>
+response under <a href="ebmp-2.html#EBMP2-052">EBMP2-052</a> MUST refer to a <code>single_use</code> authorization whose
+<code>max_uses</code> is absent or the integer 1. If the event carries <code>use_count</code>, it MUST
+be the integer 1. A bundle MUST NOT hold, for one authorization, more than one
+<code>authority_consumed</code> event in state <code>consumed</code> that binds its response under
+<a href="ebmp-2.html#EBMP2-052">EBMP2-052</a>, whether or not the event carries <code>use_count</code>. A verifier MUST report a
+bundle that breaks this with <code>ecl.error.decision-binding-invalid.v1</code>, as a
+finding of stage 7 of <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a>. An unsupported authorization policy MUST NOT
+be interpreted as an unlimited use count.</p>
 <p><span id="EBMP2-053"><strong>EBMP2-053</strong></span><a class="requirement-link" href="#EBMP2-053" aria-label="Link to EBMP2-053">§</a> — For one action attempt, a non-execution terminal state
 (<code>denied</code>, <code>held</code>, <code>challenged</code>, <code>expired_before_release</code>) MUST NOT coexist with
 consumed authority, an <code>execution_released</code> event, an <code>event.authority</code>
@@ -650,17 +681,23 @@ message in the bundle with the same <code>workflow_id</code>, <code>root_trace_i
 and a digest the reference carries MUST be that message's digest. A
 <code>decision_recorded</code> event's <code>outcome</code> and <code>policy</code> MUST equal those of the
 response it references.</p>
-<p><span id="EBMP2-055"><strong>EBMP2-055</strong></span><a class="requirement-link" href="#EBMP2-055" aria-label="Link to EBMP2-055">§</a> — A <code>succeeded</code> attempt MUST have an <code>authority_consumed</code> event in
+<p><span id="EBMP2-055"><strong>EBMP2-055</strong></span><a class="requirement-link" href="#EBMP2-055" aria-label="Link to EBMP2-055">§</a> — An attempt with an <code>execution_observed</code> event in state <code>running</code>,
+or whose terminal state is <code>succeeded</code>, <code>failed</code>, <code>partially_succeeded</code>, <code>unknown</code>,
+<code>rolled_back</code> or <code>compensated</code>, MUST have an <code>authority_consumed</code> event in
 state <code>consumed</code> that binds its response under <a href="ebmp-2.html#EBMP2-052">EBMP2-052</a>, and an
 <code>execution_released</code> event for the same attempt that binds its request and
 response (section 10). A verifier MUST apply this rule to every attempt of the
 bundle, whatever the causal closure of the rest of the bundle, except an attempt
 one of whose objects in the bundle (its request, its response or one of its
 events) names a causal predecessor that the bundle does not hold, since that
-predecessor could be the event that the rule asks for (<a href="ebmp-2.html#EBMP2-059">EBMP2-059</a>).</p>
+predecessor could be the event that the rule asks for (<a href="ebmp-2.html#EBMP2-059">EBMP2-059</a>).
+Running and these terminal states record an execution attempt after release;
+a refusal or expiry before release uses its non-execution state. A <code>cancelled</code> or <code>timed_out</code>
+terminal may describe either side of the release boundary and does not alone
+establish release. A recorded release remains subject to <a href="ebmp-2.html#EBMP2-074">EBMP2-074</a> in every
+terminal state.</p>
 <p><span id="EBMP2-074"><strong>EBMP2-074</strong></span><a class="requirement-link" href="#EBMP2-074" aria-label="Link to EBMP2-074">§</a> — An action attempt with an <code>execution_released</code> event that binds
-its request and response, and whose authorization's <code>use_policy</code> is
-<code>single_use</code>, MUST also have an <code>authority_consumed</code> event in state <code>consumed</code>
+its request and response MUST also have an <code>authority_consumed</code> event in state <code>consumed</code>
 (<a href="ebmp-2.html#EBMP2-008">EBMP2-008</a>), whatever its terminal state. A verifier MUST apply this rule to
 every such attempt, whatever the causal closure of the rest of the bundle,
 except an attempt one of whose objects in the bundle names a causal predecessor
@@ -682,7 +719,7 @@ versions of it (TRUST-POLICY-1), the evaluation time and the verification
 profile (<a href="ebmp-2.html#EBMP2-067">EBMP2-067</a>). A bundle carries decision requests, decision responses and
 EBMP-2 events; the bundle verifier does not verify the other DCMP-2 message
 types. The evaluation time is the instant at which the verifier evaluates
-current status. It is not a cutoff: Version 1.0 does not define an as-of
+current status. It is not a cutoff: ECL-1 Version 1 does not define an as-of
 assessment, and a verifier does not report what a bundle established at an
 earlier instant.</p>
 <p><span id="EBMP2-057"><strong>EBMP2-057</strong></span><a class="requirement-link" href="#EBMP2-057" aria-label="Link to EBMP2-057">§</a> — An observation MUST be an EBMP-2 <code>verification</code> event; a
@@ -730,8 +767,11 @@ the continuation's workflow, attempt, <code>action</code>, <code>actor</code>, <
 <code>authority_request</code> relate to the continued request&#x27;s as <a href="dcmp-2.html#DCMP2-056">DCMP2-056</a> requires;
 that the continuation lists the response and the approval that <code>continues</code>
 names among its <code>workflow.causal_predecessors</code>, each by identifier and digest;
-and that no other request of the bundle continues the same response. When the
-continuation's response is an <code>admit</code>, the verifier MUST also check that every
+and that no two requests of the bundle which continue the same response have
+decision responses whose <code>outcome</code> is <code>admit</code>. A continuation answered with
+<code>deny</code> or <code>challenge</code> does not violate this uniqueness condition; its remaining
+binding and causal checks still apply. When the continuation's response is an
+<code>admit</code>, the verifier MUST also check that every
 key that signed the approval holds <code>ecl.purpose.approval.v1</code> in the
 trust-policy version that the approval names, and that no key that signed it is
 bound to the request&#x27;s actor, as <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a> condition 5 asks of an approval
@@ -808,7 +848,7 @@ in the bundle. The stages are:</p>
 <ol>
 <li>the input, where a failure stops verification: the earlier policy versions that the caller supplies (<a href="trust-policy-1.html#TP1-001">TP1-001</a>), <code>ecl.error.signature-policy-invalid.v1</code>; the bundle's shape, <code>ecl.error.schema-invalid.v1</code>; its limits on envelopes and observations (<a href="ebmp-2.html#EBMP2-062">EBMP2-062</a>), <code>ecl.error.resource-limit-exceeded.v1</code>; then its schema, <code>ecl.error.schema-invalid.v1</code>;</li>
 <li>the payloads: each envelope&#x27;s payload under INTEGRITY-ENVELOPE-1 <a href="integrity-envelope-1.html#IE1-040">IE1-040</a> step 3, whose strict parse takes the nodes that remain of the payload node limit of <a href="ebmp-2.html#EBMP2-062">EBMP2-062</a> as its value limit (<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>, check 3), so that a payload that exceeds them stops verification before its later checks; <code>ecl.error.resource-limit-exceeded.v1</code> before <code>ecl.error.integrity-invalid.v1</code>;</li>
-<li>the objects: each object&#x27;s schema and semantic rules, with the findings that <a href="dcmp-2.html#DCMP2-043">DCMP2-043</a> gives the object, an object that fails its schema making its envelope not historically valid with <code>ecl.error.schema-invalid.v1</code> and one that satisfies its schema but fails a semantic rule with <code>ecl.error.semantic-invalid.v1</code>; unique object identifiers; the decision-basis rules of <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> (<code>ecl.rule.decision-basis-required.v1</code>, <code>ecl.rule.decision-basis-matches-register.v1</code>, and <code>ecl.rule.decision-basis-one-way.v1</code> for an input recorded as <code>verifiable</code> whose source is the request&#x27;s actor); and the kind of each observation (<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>); <code>ecl.error.schema-invalid.v1</code>, then the registered rules in ascending order of precedence, then <code>ecl.error.semantic-invalid.v1</code>, so that a bundle whose only defect is one object has the primary finding that <a href="dcmp-2.html#DCMP2-043">DCMP2-043</a> gives that object;</li>
+<li>the objects: each object&#x27;s schema and semantic rules, with the findings that <a href="dcmp-2.html#DCMP2-043">DCMP2-043</a> gives the object, an object that fails its schema making its envelope not historically valid with <code>ecl.error.schema-invalid.v1</code> and one that satisfies its schema but fails a semantic rule with <code>ecl.error.semantic-invalid.v1</code>; the extension-consumer rules of EXTENSION-REGISTRY-1 for each envelope's own <code>extensions</code>; unique object identifiers; the decision-basis rules of <a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> (<code>ecl.rule.decision-basis-required.v1</code>, <code>ecl.rule.decision-basis-matches-register.v1</code>, and <code>ecl.rule.decision-basis-one-way.v1</code> for an input recorded as <code>verifiable</code> whose source is the request&#x27;s actor); and the kind of each observation (<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>); <code>ecl.error.schema-invalid.v1</code>, then the registered rules in ascending order of precedence, then <code>ecl.error.semantic-invalid.v1</code>, so that a bundle whose only defect is one object has the primary finding that <a href="dcmp-2.html#DCMP2-043">DCMP2-043</a> gives that object;</li>
 <li>the signers: each other envelope&#x27;s historical validity (<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>, <a href="integrity-envelope-1.html#IE1-032">IE1-032</a> to <a href="integrity-envelope-1.html#IE1-036">IE1-036</a>, <a href="integrity-envelope-1.html#IE1-040">IE1-040</a>, TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>); <code>ecl.error.clock-regressed.v1</code>, <code>ecl.error.signature-policy-invalid.v1</code>, <code>ecl.error.trusted-time-invalid.v1</code>, <code>ecl.error.trusted-time-required.v1</code>, <code>ecl.error.revoked.v1</code>, <code>ecl.error.expired.v1</code>, <code>ecl.error.resource-limit-exceeded.v1</code>, <code>ecl.error.integrity-invalid.v1</code>, then <code>ecl.error.threshold-not-met.v1</code>;</li>
 <li>pairing (<a href="ebmp-2.html#EBMP2-058">EBMP2-058</a>, <a href="ebmp-2.html#EBMP2-066">EBMP2-066</a>, <a href="ebmp-2.html#EBMP2-078">EBMP2-078</a>); <code>ecl.error.schema-invalid.v1</code>, then <code>ecl.error.decision-binding-invalid.v1</code>;</li>
 <li>the binding of each response to its request (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-051">DCMP2-051</a>), each pair stopping at its first failure; <code>ecl.error.request-binding-invalid.v1</code>, <code>ecl.error.digest-mismatch.v1</code>, <code>ecl.error.audience-mismatch.v1</code>, then <code>ecl.error.scope-mismatch.v1</code>;</li>
@@ -823,7 +863,11 @@ this list.</p>
 names, and the reference verification profile
 <code>ecl.verification-profile.reference.v1</code> when the caller names none; a bundle
 does not select its profile. The verifier MUST report the profile it applied
-with the verdict.</p>
+with the verdict.
+The registered reference profiles use zero response clock skew. A verifier
+MUST refuse a nonzero <code>response_clock_skew_seconds</code> input for one of those
+profiles rather than report a reference-profile result under different time
+rules. Every report MUST state the effective <code>response_clock_skew_seconds</code>.</p>
 <p><span id="EBMP2-076"><strong>EBMP2-076</strong></span><a class="requirement-link" href="#EBMP2-076" aria-label="Link to EBMP2-076">§</a> — With each verdict a verifier MUST report its scope, as the two
 lists of the table below: <code>established</code>, the checks that it made for the bundle
 and that held, and <code>not_established</code>, the other checks that apply to the bundle
@@ -855,6 +899,15 @@ informational member <code>completion_after_window</code> set to <code>true</cod
 event records a <code>forward_completed_at</code> at or after the authorization's
 <code>valid_until</code> (<a href="ebmp-2.html#EBMP2-072">EBMP2-072</a>); the member is not a finding and changes no verdict.
 An offline package has the scope of the report that <a href="integrity-envelope-1.html#IE1-022">IE1-022</a> gives it.</p>
+<p><strong><a href="ebmp-2.html#EBMP2-076">EBMP2-076</a> (continued)</strong> — The qualifying verdicts used below are <code>verified</code>, <code>current-trust-failed</code> and
+<code>incomplete</code>. A qualifying verdict is necessary but is not sufficient: each
+item must also pass every check on its complete object set in the scope-check
+registry. Object-signing dependencies and time-attestation-signing dependencies
+are distinct sets. All signatures on a time attestation must meet the
+historical eligibility and revocation checks for <code>trusted-time</code> to be
+established, including signatures not needed to meet its threshold. A valid
+threshold alone does not establish that scope item. <code>current-trust</code> includes
+both dependency sets.</p>
 <table tabindex="0">
 <thead>
 <tr>
@@ -866,8 +919,8 @@ An offline package has the scope of the report that <a href="integrity-envelope-
 <tbody>
 <tr>
 <td><code>envelope-signatures</code></td>
-<td>Each envelope&#x27;s and observation&#x27;s payload digest and signatures verify under the trust-policy version that its object names, at the object&#x27;s own time or its trusted time, and the caller&#x27;s current policy revokes none of its trust dependencies at or before its time (<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>, TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>).</td>
-<td>The verdict is <code>verified</code>, <code>current-trust-failed</code> or <code>incomplete</code>.</td>
+<td>Each envelope&#x27;s and observation&#x27;s payload digest and signatures verify under the trust-policy version that its object names, at the object&#x27;s own time or its trusted time, and the caller&#x27;s current policy revokes none of its object-signing dependencies at or before its time (<a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>, TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>).</td>
+<td>A qualifying verdict and every required registry check over the complete object-signing dependency set.</td>
 </tr>
 <tr>
 <td><code>current-trust</code></td>
@@ -877,32 +930,37 @@ An offline package has the scope of the report that <a href="integrity-envelope-
 <tr>
 <td><code>trusted-time</code></td>
 <td>A separate time authority attests a time for each signature of each envelope and observation, binding that signature (<a href="integrity-envelope-1.html#IE1-033">IE1-033</a>), and each signature was valid at that time (<a href="integrity-envelope-1.html#IE1-032">IE1-032</a> to <a href="integrity-envelope-1.html#IE1-035">IE1-035</a>); each time authority&#x27;s key is valid at its attested time under the policy version its attestation names and is not revoked by the caller&#x27;s current policy at or before that time (TRUST-POLICY-1 <a href="trust-policy-1.html#TP1-006">TP1-006</a>).</td>
-<td>As <code>envelope-signatures</code>, and every signature of every envelope and observation is covered by a valid trusted-time countersignature.</td>
+<td>A qualifying verdict and every required registry check over the item's complete object set, and every signature of every envelope and observation is covered by a valid trusted-time countersignature.</td>
 </tr>
 <tr>
 <td><code>object-rules</code></td>
 <td>Each signed object satisfies its schema and its semantic rules, the one-way rule for a recorded decision basis among them (<a href="ebmp-2.html#EBMP2-068">EBMP2-068</a>, stage 3).</td>
-<td>As <code>envelope-signatures</code>.</td>
+<td>A qualifying verdict and every required registry check over the item's complete object set.</td>
 </tr>
 <tr>
 <td><code>decision-basis-recorded</code></td>
 <td>Each decision response records its decision basis (<a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>).</td>
-<td>As <code>envelope-signatures</code>.</td>
+<td>A qualifying verdict and every required registry check over the item's complete object set.</td>
 </tr>
 <tr>
 <td><code>decision-basis-register</code></td>
-<td>Each decision basis agrees with the Consequential Action Register that the caller supplied (<a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>).</td>
-<td>As <code>envelope-signatures</code>. It applies only when the caller supplies a register.</td>
+<td>Each decision basis names the supplied register version and matches its declared inputs, classes, required flags, sources and derivations. Recorded input timing is compared with declared deadlines and maximum ages only when the necessary fields are supplied (<a href="dcmp-2.html#DCMP2-053">DCMP2-053</a>). This check does not re-evaluate policy or approval thresholds.</td>
+<td>A qualifying verdict and every required registry check over the item's complete object set. It applies only when the caller supplies a register.</td>
+</tr>
+<tr>
+<td><code>decision-input-timing</code></td>
+<td>The recorded ages and acquisition times of every available input with a declared temporal constraint meet the supplied register's maximum ages and deadlines. This does not establish that any recorded time is true.</td>
+<td>Applies only when a register is supplied and at least one available input has a declared maximum age or deadline. Established only with a qualifying verdict, every required registry check over the decision responses, and all operands needed for those comparisons present; otherwise not established, with <code>input-times-not-recorded</code> when a needed timestamp is absent or unreadable. Unavailable, late or malformed inputs create no available-input timing check.</td>
 </tr>
 <tr>
 <td><code>bindings</code></td>
 <td>Each response binds its request, each event binds its request, response and authority, with the digests and use counts that they name, each continuation binds the request, challenge and approval that it continues, and each terminal event carries the outcome reason that its state and response require (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-051">DCMP2-051</a>, <a href="ebmp-2.html#EBMP2-047">EBMP2-047</a> to <a href="ebmp-2.html#EBMP2-054">EBMP2-054</a>, <a href="ebmp-2.html#EBMP2-056">EBMP2-056</a>, <a href="ebmp-2.html#EBMP2-073">EBMP2-073</a>, <a href="ebmp-2.html#EBMP2-075">EBMP2-075</a>, <a href="ebmp-2.html#EBMP2-078">EBMP2-078</a>).</td>
-<td>As <code>envelope-signatures</code>.</td>
+<td>A qualifying verdict and every required registry check over the item's complete object set.</td>
 </tr>
 <tr>
 <td><code>release-within-authority</code></td>
 <td>Each recorded release time lies within the authorization's validity window with the release guard added, and no terminal event records that a release may have come after <code>valid_until</code> (<a href="ebmp-2.html#EBMP2-050">EBMP2-050</a>, <a href="ebmp-2.html#EBMP2-072">EBMP2-072</a>).</td>
-<td>As <code>envelope-signatures</code>, when the bundle records a release; when it records none, it is not established, with the reason <code>no-release-recorded</code>.</td>
+<td>A qualifying verdict and every required registry check over the item's complete object set, when the bundle records a release; when it records none, it is not established, with the reason <code>no-release-recorded</code>.</td>
 </tr>
 <tr>
 <td><code>causal-completeness</code></td>
@@ -912,12 +970,12 @@ An offline package has the scope of the report that <a href="integrity-envelope-
 <tr>
 <td><code>prerelease-obligations-discharge-recorded</code></td>
 <td>Each release records a discharge of every obligation that its decision left to Enforcement before the release, checked no later than the release was observed and fresh at the release (<a href="ebmp-2.html#EBMP2-070">EBMP2-070</a>).</td>
-<td>As <code>envelope-signatures</code>. It applies only when the verifier applied <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a> to an <code>execution_released</code> event whose response carries such an obligation.</td>
+<td>A qualifying verdict and every required registry check over the item&#x27;s complete object set. It applies only when the verifier applied <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a> to an <code>execution_released</code> event whose response carries such an obligation.</td>
 </tr>
 <tr>
 <td><code>prerelease-obligations-proofs-verified</code></td>
 <td>Each pre-release discharge carries its proof, and each proof is a valid ECL object under the trust policy, signed by the issuer the obligation names, of a type the obligation admits, bound to this exchange and fresh at the release (<a href="ebmp-2.html#EBMP2-070">EBMP2-070</a>).</td>
-<td>As <code>prerelease-obligations-discharge-recorded</code>, and only when every entry&#x27;s proof is an ECL object that the bundle carries and that passes conditions 5 to 8 of <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a>; when an entry&#x27;s proof is not an ECL object that the bundle carries, it is not established, with the reason <code>proof-not-ecl-object</code>, and when the decision names no issuer for an obligation, with the reason <code>issuer-not-named</code>; when both apply, the report gives <code>proof-not-ecl-object</code>.</td>
+<td>As <code>prerelease-obligations-discharge-recorded</code>, and only when every entry&#x27;s proof is an ECL object that the bundle carries and that passes conditions 5, 7 and 8 of <a href="ebmp-2.html#EBMP2-070">EBMP2-070</a>, with the discharge checks (including condition 6) already satisfied; when an entry&#x27;s proof is not an ECL object that the bundle carries, it is not established, with the reason <code>proof-not-ecl-object</code>, and when the decision names no issuer for an obligation, with the reason <code>issuer-not-named</code>; when both apply, the report gives <code>proof-not-ecl-object</code>.</td>
 </tr>
 <tr>
 <td><code>prerelease-obligations-met</code></td>
@@ -960,8 +1018,8 @@ and MUST refuse a bundle that exceeds them before verifying signatures, with
 limits of 256 envelopes, 256 observations and 100 000 nodes.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/EBMP-2.md</code>, SHA-256 <code>ba776e14cd7323457051bf994b473fcc5ab7d833543e7aee24cadea4798148c6</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>protocols/EBMP-2.md</code>, SHA-256 <code>fe41d05c25fca144cd6bbf4074a0cbf006f6e9d9c410fbe5fc344b706b6690e0</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

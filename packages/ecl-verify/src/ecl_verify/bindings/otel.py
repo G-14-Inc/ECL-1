@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from ..extension_selection import interpreted_extension
+
 import base64
 import binascii
 import hashlib
@@ -69,6 +71,13 @@ ERROR_STATES = frozenset({"failed", "partially_succeeded", "timed_out", "cancell
 EMERGENCY_OPERATIONS = frozenset({"halt", "quarantine"})
 
 DECLARED_ONLY = frozenset({"ecl.actor.id", "ecl.subject.id", "ecl.action.target"})
+
+_TABLE_IDENTIFIERS = DECLARED_ONLY | frozenset({
+    "ecl.object.id", "ecl.workflow.id", "ecl.workflow.root_trace_id",
+    "ecl.issuer.id", "ecl.producer.id", "ecl.evidence.bundle", "ecl.action.id",
+    "ecl.request.id", "ecl.decision.id", "ecl.policy.id", "ecl.authorization.id",
+    "ecl.event.decision_id",
+})
 
 EXECUTION_KIND = "execution"
 
@@ -254,6 +263,92 @@ def unkeyed_digests(value: Mapping[str, Any]) -> dict[str, str]:
     return found
 
 
+def _known_unkeyed_digests(value: Mapping[str, Any]) -> frozenset[str]:
+    """Recognizable SHA-256 values, not a detector for arbitrary data encodings or derivations."""
+    known = {object_digest_hex(value)}
+    parameters = _parameters_digest(value)
+    if type(parameters) is dict:
+        known.add(object_digest_hex(parameters))
+    pending: list[object] = [value]
+    while pending:
+        current = pending.pop()
+        if type(current) is dict:
+            digest = current.get("value")
+            if current.get("algorithm") == "ecl.digest.sha-256.v1" and type(digest) is str and _KEYED_HEX.fullmatch(digest):
+                known.add(digest)
+            pending.extend(current.values())
+        elif type(current) is list:
+            pending.extend(current)
+    return frozenset(known)
+
+
+def _digest_text(value: str, known: frozenset[str]) -> bool:
+    lower = value.lower()
+    run = 0
+    for index, character in enumerate(lower):
+        run = run + 1 if character in "0123456789abcdef" else 0
+        if run >= 64 and lower[index - 63:index + 1] in known:
+            return True
+    return False
+
+
+def _anyvalue_digest(value: object, known: frozenset[str]) -> bool:
+    """Inspect typed AnyValue containers iteratively; recognize hex and bytes encodings."""
+    raw_known = {bytes.fromhex(digest) for digest in known}
+    prefixes = {digest[:4] for digest in raw_known}
+    pending = [value]
+    while pending:
+        current = pending.pop()
+        if type(current) is not dict:
+            continue
+        string = current.get("stringValue")
+        if type(string) is str and _digest_text(string, known):
+            return True
+        encoded = current.get("bytesValue")
+        if type(encoded) is str:
+            try:
+                normalized = encoded.replace("-", "+").replace("_", "/")
+                raw = base64.b64decode(normalized + "=" * (-len(normalized) % 4), validate=True)
+            except (binascii.Error, ValueError):
+                raw = b""
+            if _digest_text(raw.decode("latin-1"), known):
+                return True
+            for index in range(max(0, len(raw) - 31)):
+                if raw[index:index + 4] in prefixes and raw[index:index + 32] in raw_known:
+                    return True
+        pending.extend(array(current, "arrayValue", "values"))
+        for entry in array(current, "kvlistValue", "values"):
+            name = text(entry, "key")
+            if name is not None and _digest_text(name, known):
+                return True
+            pending.append(member(entry, "value"))
+    return False
+
+
+def _unkeyed_export_problems(log: Mapping[str, Any], value: Mapping[str, Any], unkeyed: Mapping[str, str], expected: Mapping[str, object]) -> list[tuple[str, str]]:
+    known = _known_unkeyed_digests(value)
+    policy = member(value, "policy", "digest", "value") if value.get("protocol") == "DCMP-2" and value.get("message_type") == DECISION_RESPONSE else None
+    problems = []
+    for item in array(log, "attributes"):
+        name, held = text(item, "key"), member(item, "value")
+        if name is None:
+            continue
+        if name == "ecl.policy.digest" and type(policy) is str and held == {"stringValue": policy}:
+            continue  # The exact OE1-004 table exception, not a declaration exception.
+        if name in _TABLE_IDENTIFIERS and type(expected.get(name)) is str and held == {"stringValue": expected[name]}:
+            continue  # OE1-003/004: only the exact identifier in its applicable table slot.
+        if name in (OBJECT_DIGEST, PARAMETERS_DIGEST):
+            if type(held) is not dict or set(held) != {"stringValue"}:
+                continue  # The existing table/HMAC-kind checks already refuse this form.
+            if held.get("stringValue") == unkeyed.get(name):
+                continue  # Preserve the existing specific diagnostic without duplicating it.
+        if _digest_text(name, known) or _anyvalue_digest(held, known):
+            problems.append(("/log_record/attributes", f"{name} carries a digest that needs no export key"))
+    if _anyvalue_digest(log.get("body"), known):
+        problems.append(("/log_record/body", "the body carries a digest that needs no export key"))
+    return problems
+
+
 def object_time(value: Mapping[str, Any]) -> str | None:
     """The time a record copies: a message's `issued_at` or an event's `observed_at`."""
     name = "issued_at" if value.get("protocol") == "DCMP-2" else "observed_at"
@@ -277,8 +372,10 @@ def _expected_attributes(
     """The attribute table of OTEL-EVIDENCE-EXPORT-1 for one object, each the object's own value.
 
     With `export_key`, the object's digest and its parameters digest are keyed with it and the
-    key is named (OE1-010); without one, no digest is exported (OE1-004). The identifiers of
-    people and records are exported only when `declared` names them (OE1-005). A row applies only
+    key is named (OE1-010); without one, those two digest attributes are omitted. OE1-004
+    permits the policy digest and exact identifiers in their designated table slots, including
+    content-addressed URIs. The identifiers of people and records are exported only when
+    `declared` names them (OE1-005). A row applies only
     to the objects it names: the action rows to a decision request and to execution events, the
     rows of a decision to a decision response, the request's identifier to a decision response, a
     challenge, a challenge response and a request event, the event's decision to decision and
@@ -350,7 +447,7 @@ def _expected_attributes(
                 result["ecl.event.decision_id"] = decision
         if value.get("event_type") == TERMINAL_EVENT:
             for item in array(value, "extensions"):
-                if type(item) is dict and item.get("id") == OUTCOME_REASON:
+                if type(item) is dict and item.get("id") == OUTCOME_REASON and interpreted_extension(value, item):
                     code = text(item, "value", "code")
                     if code is not None:
                         result["ecl.event.reason_code"] = code
@@ -433,7 +530,9 @@ def _export(record: Mapping[str, Any], value: Mapping[str, Any]) -> list[tuple[s
     if attempted is None or recorded is None or attempted < recorded:
         problems.append(("/export/attempted_at", "the exporter read the object before its time"))
     after = obj(record, "evidence_after")
-    if after is not None:
+    if after is None:
+        problems.append(("/evidence_after", "the retained record lacks the evidence after the export"))
+    else:
         try:
             same = canonicalize(after) == canonicalize(dict(value))
         except CanonicalizationError:
@@ -463,8 +562,8 @@ def _match(
     actual = _attribute_map(log)
     declared = _declared(record)
     named = actual.get(KEY_ID)
-    if named is not None and type(named) is not str:
-        # OE1-010: the record carries the key's identifier, a string.
+    if named is not None and (type(named) is not str or not 1 <= len(named) <= 256):
+        # OE1-010: the supported identifier has 1 to 256 Unicode code points.
         problems.append(("/log_record/attributes", f"{KEY_ID} is not the identifier of a key"))
     key = export_keys.get(named) if type(named) is str else None
     # A record that names a key the caller does not hold: its keyed digests cannot be computed. The
@@ -528,6 +627,7 @@ def _match(
         for name, digest in sorted(unkeyed.items())
         if type(actual.get(name)) is str and actual.get(name) == digest
     )
+    problems.extend(_unkeyed_export_problems(log, value, unkeyed, expected))
     return problems
 
 

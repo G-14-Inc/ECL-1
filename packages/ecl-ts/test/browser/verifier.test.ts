@@ -419,16 +419,26 @@ test("input problems are announced, and nothing is reported as verified", async 
   // TP1-007: the refusal names the registered code, as the library and the command line do.
   assert.match(alert, /ecl\.error\.resource-limit-exceeded\.v1/);
   assert.equal(await page.isHidden("#result"), true);
-  // An offline package is a ZIP file, refused without reading it above its own larger limit.
+  // IE1-022/028: an unread package above its archive limit has an ordinary invalid report.
   const large = Buffer.alloc(16 * 1024 * 1024 + 1, 0);
   large.write("PK", 0, "latin1");
   await page.setInputFiles("#bundle", { name: "large.zip", mimeType: "application/zip", buffer: large });
   await page.click("#verify");
-  await page.waitForFunction(() => (document.getElementById("problem")?.textContent ?? "").includes("16384 KiB"));
-  alert = await page.getByRole("alert").innerText();
-  assert.match(alert, /offline package large\.zip is larger than 16384 KiB/);
-  assert.match(alert, /ecl\.error\.resource-limit-exceeded\.v1/);
-  assert.equal(await page.isHidden("#result"), true);
+  await page.waitForFunction(() => (document.getElementById("status")?.textContent ?? "").startsWith("Verification finished"));
+  assert.equal(await page.isHidden("#problem"), true);
+  assert.equal(await page.isHidden("#result"), false);
+  assert.equal(await page.getAttribute("#verdict", "data-verdict"), "invalid");
+  assert.equal(await page.getByRole("status").innerText(), "Verification finished. Verdict: Invalid.");
+  assert.equal(await page.evaluate(() => document.activeElement?.id), "result-heading");
+  const report = JSON.parse((await page.locator("#result-body details pre code").textContent())!);
+  assert.equal(report.verdict, "invalid");
+  assert.equal(report.primary, "ecl.error.resource-limit-exceeded.v1");
+  assert.match(report.findings[0], /^ecl\.error\.resource-limit-exceeded\.v1:/);
+  assert.deepEqual(report.scope.established, []);
+  assert.deepEqual(report.scope.checks, {});
+  assert.deepEqual(report.envelope_checks, []);
+  assert.deepEqual(report.binding_checks, []);
+  assert.deepEqual(report.effects, []);
   await close(session);
 });
 

@@ -22,8 +22,7 @@
     },
     "method": {
       "enum": [
-        "tools/call",
-        "tasks/update"
+        "tools/call"
       ]
     },
     "server_id": {
@@ -45,23 +44,63 @@
       "maxLength": 128
     },
     "tool_definition_digest": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+      "properties": {
+        "algorithm": {
+          "const": "ecl.digest.sha-256.v1"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
     },
     "mapping_id": {
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
     },
     "params_digest": {
       "description": "MG1-004: the ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the call's complete params object, _meta included.",
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+      "properties": {
+        "algorithm": {
+          "const": "ecl.digest.sha-256.v1"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
     },
     "input_responses_digest": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+      "properties": {
+        "algorithm": {
+          "const": "ecl.digest.sha-256.v1"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
     },
     "request_state_digest": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+      "properties": {
+        "algorithm": {
+          "const": "ecl.digest.sha-256.v1"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
     },
     "response_digest": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+      "properties": {
+        "algorithm": {
+          "const": "ecl.digest.sha-256.v1"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
     },
     "forward_completed_at": {
       "description": "EBMP2-071: on an execution_terminal event, the gateway's observation, by its own clock, of the moment the server's answer to the forwarded call arrived. A verifier does not compare it with the authorization's window: an answer that arrives after valid_until is reported as the informational member completion_after_window of the report, not as a finding (EBMP2-072).",

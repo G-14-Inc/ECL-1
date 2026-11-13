@@ -1,6 +1,8 @@
 package corpus
 
 import (
+	"reflect"
+	"sort"
 	"strings"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
@@ -8,10 +10,16 @@ import (
 
 // ExpectedScope is a vector's expected_scope: the two lists of EBMP2-076 in table order and the
 // reasons of the items that a reason keeps out of established.
+type ExpectedChecks struct {
+	Checks  []string `json:"checks"`
+	Objects []int    `json:"objects"`
+}
+
 type ExpectedScope struct {
-	Established    []string          `json:"established"`
-	NotEstablished []string          `json:"not_established"`
-	Reasons        map[string]string `json:"reasons"`
+	Established    []string                   `json:"established"`
+	NotEstablished []string                   `json:"not_established"`
+	Reasons        map[string]string          `json:"reasons"`
+	Checks         *map[string]ExpectedChecks `json:"checks,omitempty"`
 }
 
 // ExpectedEffect is one entry of a vector's expected_effects: the level that every terminal
@@ -44,6 +52,36 @@ func ReportMatches(report *evidence.Report, scope *ExpectedScope, effects []Expe
 				return false
 			}
 		}
+		if scope.Checks != nil {
+			if len(report.Scope.Checks) != len(*scope.Checks) {
+				return false
+			}
+			for item, want := range *scope.Checks {
+				got, present := report.Scope.Checks[item]
+				if !present {
+					return false
+				}
+				checks, objects := append([]string{}, got.Checks...), append([]int{}, got.Objects...)
+				wantedChecks, wantedObjects := append([]string{}, want.Checks...), append([]int{}, want.Objects...)
+				sort.Strings(checks)
+				sort.Ints(objects)
+				sort.Strings(wantedChecks)
+				sort.Ints(wantedObjects)
+				for i := 1; i < len(checks); i++ {
+					if checks[i] == checks[i-1] {
+						return false
+					}
+				}
+				for i := 1; i < len(objects); i++ {
+					if objects[i] == objects[i-1] {
+						return false
+					}
+				}
+				if !reflect.DeepEqual(checks, wantedChecks) || !reflect.DeepEqual(objects, wantedObjects) {
+					return false
+				}
+			}
+		}
 	}
 	if unresolved != nil {
 		got := map[string]bool{}
@@ -59,6 +97,15 @@ func ReportMatches(report *evidence.Report, scope *ExpectedScope, effects []Expe
 		}
 		for identifier := range want {
 			if !got[identifier] {
+				return false
+			}
+		}
+	}
+	// Unicode White_Space, shared with the report checker; retain IDs unchanged.
+	const observationWhiteSpace = "\u0009\u000a\u000b\u000c\u000d\u0020\u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000"
+	if effects != nil {
+		for _, effect := range report.Effects {
+			if strings.Trim(effect.ActionID, observationWhiteSpace) == "" {
 				return false
 			}
 		}

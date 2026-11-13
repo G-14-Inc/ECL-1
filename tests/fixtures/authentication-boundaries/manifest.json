@@ -1,0 +1,889 @@
+{
+  "schema_version": "authentication-boundaries-regressions-v1",
+  "cases": [
+    {
+      "case": "acs-signed-chain-control",
+      "path": "acs-signed-chain-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "accept",
+      "sha256": "4b04808e2c3bd49e93d6a2609b6be3e82441db21ffb86ef351ccb826fd915e8f",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-signed-absent-chain-control",
+      "path": "acs-signed-absent-chain-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "accept",
+      "sha256": "d54e274d3c5056cffaeddeefde6cee169b2f224b73b9276f72cfc934cd2a2f63",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-signed-absent-chain-foreign-hash",
+      "path": "acs-signed-absent-chain-foreign-hash.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "reject",
+      "sha256": "3e521a5b63dcff6090a9bbac6621524f295065085db24a830635109643123234",
+      "expected_rules": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ]
+    },
+    {
+      "case": "acs-signed-empty-chain-control",
+      "path": "acs-signed-empty-chain-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "accept",
+      "sha256": "3e1d79b3582fb0ad17f179c5bb6daa1afdb9220c6b694fd7bfcc26e37f6c3950",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-signed-empty-chain-foreign-hash",
+      "path": "acs-signed-empty-chain-foreign-hash.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "reject",
+      "sha256": "dfb2ddd97a3c174ebb66725327802325ff8234aa4c489ff80992623148385945",
+      "expected_rules": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ]
+    },
+    {
+      "case": "acs-both-chain-and-request-hash-wrong",
+      "path": "acs-both-chain-and-request-hash-wrong.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "reject",
+      "sha256": "497c118f3157635c644eaf1898e6f0bb9c9cdeb1e61d245831f190a624c1cc71",
+      "expected_rules": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "required_paths": [
+        "/response/extensions/chain_hash",
+        "/response/extensions/request_hash"
+      ]
+    },
+    {
+      "case": "acs-optional-recorded-hash-wrong",
+      "path": "acs-optional-recorded-hash-wrong.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F01",
+      "expected": "reject",
+      "sha256": "e3c0e414c45bec73c1e31af9a303332e5627fb5af1c313ae597edfd10445039d",
+      "expected_rules": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ]
+    },
+    {
+      "case": "acs-redactions-duplicate",
+      "path": "acs-redactions-duplicate.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "accept",
+      "sha256": "ccc40358409b0bd714e9ebbce9e868ed483276c001927e34e93b969a6b39042a",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-redactions-child-then-parent",
+      "path": "acs-redactions-child-then-parent.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "accept",
+      "sha256": "3ffcf0ddaffc447c48175bdbcee7f0d86e098abea04ff7899b911956459e3173",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-redactions-unknown-extra",
+      "path": "acs-redactions-unknown-extra.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "accept",
+      "sha256": "64be2ebd5cc549d7da47479f9a6cf78954d8f50c63a632e17124b9951a376f77",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-replacement-object",
+      "path": "acs-replacement-object.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "reject",
+      "sha256": "8f87b1822d0490ec06f877cb12f9b3344caca59688a1154d35e074a8ad853a55",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ]
+    },
+    {
+      "case": "acs-replacement-null",
+      "path": "acs-replacement-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "reject",
+      "sha256": "6e38e4bf3d1562f6108247efc686ee79d769069cbd2fd3de695b8d2ceba13e07",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ]
+    },
+    {
+      "case": "acs-replacement-number",
+      "path": "acs-replacement-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "reject",
+      "sha256": "fe87e113808bf9cd508d58cba620f69896c77a0c9675f3fef83fb869d9bb9e6b",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ]
+    },
+    {
+      "case": "acs-replacement-boolean",
+      "path": "acs-replacement-boolean.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "reject",
+      "sha256": "0a038a09030d7c934ade549711b5a4b3d149bcc82344d78f9e335e4a14635a9a",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ]
+    },
+    {
+      "case": "acs-null-wholesale-with-edits",
+      "path": "acs-null-wholesale-with-edits.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F02",
+      "expected": "reject",
+      "sha256": "3d40a645cf43503413289956723db42db8bec5b87f23c6ca17c60904aaba7d0c",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-control",
+      "path": "acs-ask-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "8e6e7f2e3b75ebc32537155c272f59399461df349e4e54ca966f3d6521adf9b5",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-ask-absent-long-wait",
+      "path": "acs-ask-absent-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "43ba30613400cccb93d4407f77abebb002a7de22cf550f23d26d304a859fc19c",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-string-long-wait",
+      "path": "acs-ask-string-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "a3fcecf5fa18d5ec8fa62c678a60c495065bde1f03370c6b324285242aa62ef0",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-boolean-long-wait",
+      "path": "acs-ask-boolean-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "22d809bc20e03244f849491ff495975df7a9e872601a23c5f211b735b9b54f50",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-negative-long-wait",
+      "path": "acs-ask-negative-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "d9d642dad9817c4d90ecb4f4aef08efe3be05519b8aed2cda18d3ff19b714394",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-zero-long-wait",
+      "path": "acs-ask-zero-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "2b427eb18d44db28cc2adb6b89132b0175bb314ea0f0f781fd243ec20321f41b",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-deadline-before",
+      "path": "acs-ask-deadline-before.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "1dc61fff39617257b5f2d8420ce1f911566190853c0e817b657064e964d1861d",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-ask-deadline-equal",
+      "path": "acs-ask-deadline-equal.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "a367f3e525bc740c5fd92bcadbc3c503767cdbb655da4015a74bc92ff6d3cc4f",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-ask-deadline-after",
+      "path": "acs-ask-deadline-after.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "4377243fd8080935dbc0a7ea294edff56ee6dd96691ec5435972c45cb1b841fe",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-ask-missing-timeout-denied-control",
+      "path": "acs-ask-missing-timeout-denied-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "62530c4914e3ab07b425e11cc92b711c22e4b377cff321349c61667f9fde7d90",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-defer-control",
+      "path": "acs-defer-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "0247e2f66867b7bb8c5fc78172fcd99524c3ac4fb1411c5ab68b1e1b325f6e42",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-defer-absent-long-wait",
+      "path": "acs-defer-absent-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "d696c61a1b248c84e7776d0467454f51cd26ab5ffad77f35057c490bab1406ff",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-defer-string-long-wait",
+      "path": "acs-defer-string-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "409928d979d2b0ff44d922311fc319de8577bcb3994dffeab8954506b6ab50bd",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-defer-boolean-long-wait",
+      "path": "acs-defer-boolean-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "b6f6f9e8f531e82e89863e684fb2415ba7febf96fbbced3f880630e65437cb9b",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-defer-negative-long-wait",
+      "path": "acs-defer-negative-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "0f74a888a487eb4ba88ec2416e632205727624182ef684ff72aea40bb71a0fc0",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-defer-zero-long-wait",
+      "path": "acs-defer-zero-long-wait.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "0661390134ee028169bbd23cd86434b5994642e0457eccd8e7e5212e26aabe6c",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-defer-deadline-before",
+      "path": "acs-defer-deadline-before.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "1d86106a4993c43e62c85b845c0e5b63338769faed5d149913e29cbd779e909d",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-defer-deadline-equal",
+      "path": "acs-defer-deadline-equal.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "40bc510d1e64bf103329beb7d85d139578726fd0569e6ce1a84b269961cac707",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-defer-deadline-after",
+      "path": "acs-defer-deadline-after.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "reject",
+      "sha256": "41665706c21559f259acdf29f7e6086a3a02f6cff7efefcad950dd26c5843055",
+      "expected_rules": [
+        "ecl.rule.acs-expiry-no-release.v1"
+      ]
+    },
+    {
+      "case": "acs-defer-missing-timeout-denied-control",
+      "path": "acs-defer-missing-timeout-denied-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "4c4c7e1c538b769d994ec37dc72b65aab29b2ea9aba8394447ed1fb8f8f3eba2",
+      "expected_rules": []
+    },
+    {
+      "case": "acs-defer-zero-denied-control",
+      "path": "acs-defer-zero-denied-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "allegation": "B05-F03",
+      "expected": "accept",
+      "sha256": "3d3b1a684bdc77a5a6ec98512528eeabe8a1ba434e4100954570a963968380d0",
+      "expected_rules": []
+    },
+    {
+      "case": "aarm-deny-receipt-control",
+      "path": "aarm-deny-receipt-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "allegation": "B05-F07",
+      "expected": "accept",
+      "sha256": "27ec4da0eb159231fe7436b1fa0fa0f7d464309c61f390ed339aa1aff29b1908",
+      "expected_rules": []
+    },
+    {
+      "case": "aarm-deny-no-receipt-control",
+      "path": "aarm-deny-no-receipt-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "allegation": "B05-F07",
+      "expected": "accept",
+      "sha256": "93a3d87042907e755620ab0a48ae41e1ba743575b0d65c0f9f64063d08e9f067",
+      "expected_rules": []
+    },
+    {
+      "case": "aarm-no-receipt-foreign-action",
+      "path": "aarm-no-receipt-foreign-action.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "allegation": "B05-F07",
+      "expected": "reject",
+      "sha256": "8f94bc7d6f6b8e854ca4ff80257b278452238f21593467943c26989e926252a1",
+      "expected_rules": [
+        "ecl.rule.aarm-receipt-bound.v1"
+      ]
+    },
+    {
+      "case": "aarm-with-receipt-foreign-action",
+      "path": "aarm-with-receipt-foreign-action.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "allegation": "B05-F07",
+      "expected": "reject",
+      "sha256": "ca31ccf8fe7701b4860a5fecc9f7e04d97bbc2c12db3eef6c7503d4c4a3ab105",
+      "expected_rules": [
+        "ecl.rule.aarm-receipt-bound.v1"
+      ]
+    },
+    {
+      "case": "oauth-signed-control",
+      "path": "oauth-signed-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "accept",
+      "sha256": "4b8fb6352c4dff501baef61d07808a12532412d7a4977e0de2a1523a032ff0aa",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-nondelegated-act-foreign",
+      "path": "oauth-nondelegated-act-foreign.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "reject",
+      "sha256": "6fedd329a1ed4a0b613580818560f67eaef9fd14110bbe93dbaf3b22dae22c56",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-nondelegated-act-number",
+      "path": "oauth-nondelegated-act-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "reject",
+      "sha256": "5b4ce3c94f963c26339ea00497261ef48fa619deb6ec79e61069737ef31882cf",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-nondelegated-act-redundant",
+      "path": "oauth-nondelegated-act-redundant.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "accept",
+      "sha256": "485455befd74a222335bfa95331f373572cc12b5bfc6bfdca488893273246ec3",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-nondelegated-act-null",
+      "path": "oauth-nondelegated-act-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "reject",
+      "sha256": "9e68dc449795f5293b648f1f4162c109a43ab2f2809ae4b6bd0a08856006217d",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-nested-act-informational",
+      "path": "oauth-nested-act-informational.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "accept",
+      "sha256": "b547a9b208c008681a98fb6e3097de9a44c008e89ff9550a4fcfff35cc75a7c1",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-nested-act-iss-only",
+      "path": "oauth-nested-act-iss-only.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "accept",
+      "sha256": "de0deeeeb34269b62b64570fb10da19c3f4db3dbfe40a8d7da1fe79fc2e57a6f",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-nested-act-number",
+      "path": "oauth-nested-act-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "reject",
+      "sha256": "ad1d261be8d2a7cc7b1dfe7c78f6a21c172ae09a608a91d775f392272b24dc2c",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-nested-act-null",
+      "path": "oauth-nested-act-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F04",
+      "expected": "reject",
+      "sha256": "5d0de25cdaf1dd4782facbd829efd71a8470b74c61461b9e0f71c61543844d53",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-window-inverted",
+      "path": "oauth-window-inverted.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F05",
+      "expected": "reject",
+      "sha256": "f178c0b15321cb9d7e4b5334ca14b5ee2db42a732a7f4f2b7e6c8252d0859093",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-window-equal",
+      "path": "oauth-window-equal.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F05",
+      "expected": "reject",
+      "sha256": "1c15da468641dc637c6c64ec29c7e1edea40517640f2811beaa53c1e5de37773",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-window-ordered",
+      "path": "oauth-window-ordered.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F05",
+      "expected": "accept",
+      "sha256": "31cec8a86b666ce1c582f90e25098cf3301bd908a69635be981ccd612bc7a734",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-window-nbf-before-iat",
+      "path": "oauth-window-nbf-before-iat.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F05",
+      "expected": "accept",
+      "sha256": "a7cee7cd7a52213219b2e70fbdda59c30b034225005b7c2c403f2030c364aaa6",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-offcurve-eddsa",
+      "path": "oauth-offcurve-eddsa.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "be7f4b3dd3cbceb065b12041d32207c38cda408ebfdb3f2110f781b72a985298",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the signature check"
+    },
+    {
+      "case": "oauth-offcurve-es256",
+      "path": "oauth-offcurve-es256.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "c1bb1ca32e0910ab665b586d87000ef82e8b71b12af1c49f671b3b95af1b917c",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the algorithm check"
+    },
+    {
+      "case": "oauth-small-order-0-0",
+      "path": "oauth-small-order-0-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "c267f62ee7ce4d97ed929ce117b88a011262733e5f389d15179f2bd60dbba8a1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-0-1",
+      "path": "oauth-small-order-0-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "98f11b6b96dda0285f8b9cffb383cd881f8161f72c4dbf8184648e25113296c4",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-1-0",
+      "path": "oauth-small-order-1-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "d620e0f17827a5112e2c80dd476bf1ea97d1604e32bcafe5558f412fdab61326",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-1-1",
+      "path": "oauth-small-order-1-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "9f225b398d122e2bd7c2eda0063553f4d3ab7c2b93c549669e1a1881ddfe7538",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-2-0",
+      "path": "oauth-small-order-2-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "c0cc8a59eef73d549fb45c31be1365d685135c6710b664a928c5b13be1217463",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-2-1",
+      "path": "oauth-small-order-2-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "93efb22ba9d5b33b69cf822abdda2d1278c17222bb61d53fe586d5c238e24b96",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-3-0",
+      "path": "oauth-small-order-3-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "cf0caf70d15eb3640c4523a22b88eddc8fd7941b2844d91e4d2fcbcf3ce98ecb",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-3-1",
+      "path": "oauth-small-order-3-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "eff190ab900f7bbd9ea58a45a2f610dc4b621dc9dd5dc13bd0d04cdd29d0c6ae",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-4-0",
+      "path": "oauth-small-order-4-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "f7386e4a1c8cdd8c94a1b812ffc35ebc4487a9114d160a9fc0fee597b6c7fa17",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-4-1",
+      "path": "oauth-small-order-4-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "5d0f58e9214bbc4a2c95778dc97c02bab3b17321a17c25643b7ff82895119582",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-5-0",
+      "path": "oauth-small-order-5-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "f15b84899a49538567338115695430f2b06dff01fc1086fa66eaa9f503c7aa7d",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-5-1",
+      "path": "oauth-small-order-5-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "0865e2d31289ffd7a9d971708849f7a65219d37a4a0e6a8b839f2ce886b2d110",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-6-0",
+      "path": "oauth-small-order-6-0.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "ca9cabc4c7882a6f47fb0b27a0f8ec7e63cc868728afb5b32b066b5662219a3a",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-small-order-6-1",
+      "path": "oauth-small-order-6-1.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F06",
+      "expected": "reject",
+      "sha256": "c6f68f8e0ca4e85d66eafac9c992d2956b2e3f6591a81f8fa6beb6e2baaf4310",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "message": "the proof fails the key check"
+    },
+    {
+      "case": "oauth-accepted-with-error-registered",
+      "path": "oauth-accepted-with-error-registered.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F08",
+      "expected": "reject",
+      "sha256": "fddee1e4a76930e1552d79a461c50a144128750cd535e6d3b14e9daae0a80193",
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1"
+      ]
+    },
+    {
+      "case": "oauth-voluntary-refusal-registered",
+      "path": "oauth-voluntary-refusal-registered.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F08",
+      "expected": "accept",
+      "sha256": "3474acf57a09cd14b00dece2d796382dfbbcef9bee1c5e18e27396d3ef4420fe",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-accepted-with-error-non-error",
+      "path": "oauth-accepted-with-error-non-error.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F08",
+      "expected": "reject",
+      "sha256": "2924f480d95e9ced73bc1941cd13114797dba9eebe9ac15d008b42eab54c06de",
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1"
+      ]
+    },
+    {
+      "case": "oauth-voluntary-refusal-non-error",
+      "path": "oauth-voluntary-refusal-non-error.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F08",
+      "expected": "reject",
+      "sha256": "5914e7cd055a60bddb89de6de53df926dd24ac1f58259012f1a17a61f06c0495",
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1"
+      ]
+    },
+    {
+      "case": "oauth-accepted-with-error-unallocated",
+      "path": "oauth-accepted-with-error-unallocated.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F08",
+      "expected": "reject",
+      "sha256": "2103b838b409b6bcac3691a1e340b7c5b18e1b4999343b016f8c6f7083a9d3bd",
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1"
+      ]
+    },
+    {
+      "case": "oauth-voluntary-refusal-unallocated",
+      "path": "oauth-voluntary-refusal-unallocated.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F08",
+      "expected": "reject",
+      "sha256": "80e39b4c3af3fde2f91f3cda1a43002d9ca6dd4a886d9f68f28d036c5a0c84c8",
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-jkt-empty-refused",
+      "path": "oauth-cnf-jkt-empty-refused.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "reject",
+      "sha256": "9bbbab99001b796422de137b7d372a7696b5d2a9a75ee147d9bd338ffb541b6a",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-certificate-empty",
+      "path": "oauth-cnf-certificate-empty.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "reject",
+      "sha256": "c5993f05e6330ee394755ff0e2ce659f939b0e19d22e7d4c2578409b1be51d41",
+      "expected_rules": [
+        "ecl.error.schema-invalid.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-jkt-short-refused",
+      "path": "oauth-cnf-jkt-short-refused.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "reject",
+      "sha256": "e35e435909566fdd2f82f5c08ccca158fa0d76642dc91bca90dd61c6c15f999f",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-certificate-short",
+      "path": "oauth-cnf-certificate-short.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "reject",
+      "sha256": "62c7deab670bd8eb881acc9caf7fc791ae90b081247fa3d8800dd2909c32fb94",
+      "expected_rules": [
+        "ecl.error.schema-invalid.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-jkt-noncanonical-tail-refused",
+      "path": "oauth-cnf-jkt-noncanonical-tail-refused.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "reject",
+      "sha256": "c6b01db3d5febe1d1cf04b81f4a9af3fdb34eb3e17c0afe007082c0efae301d3",
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-certificate-noncanonical-tail",
+      "path": "oauth-cnf-certificate-noncanonical-tail.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "reject",
+      "sha256": "bb007b8380ac34e5183801e5841c2e54c98bd79ee86619fd3c27af70abc2c0f2",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ]
+    },
+    {
+      "case": "oauth-cnf-jkt-canonical-refused",
+      "path": "oauth-cnf-jkt-canonical-refused.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "accept",
+      "sha256": "d70b2626014c76a2b3e9a75c5203d5a3054647d7096ed91436627c3468efb3ac",
+      "expected_rules": []
+    },
+    {
+      "case": "oauth-cnf-certificate-canonical",
+      "path": "oauth-cnf-certificate-canonical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "allegation": "B05-F09",
+      "expected": "accept",
+      "sha256": "08b8605f1e48e1007afb56294ca75b32d3f5915a6e15f384d7f6400d5066b7d8",
+      "expected_rules": []
+    }
+  ]
+}

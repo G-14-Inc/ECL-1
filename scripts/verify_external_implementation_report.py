@@ -6,11 +6,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from referencing import Registry
 from jsonschema.exceptions import ValidationError
 
 
@@ -19,11 +20,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages" / "ecl-verify" / "src"))
 sys.path.insert(0, str(ROOT))
 
-from scripts.external_report_v2 import verify_v2  # noqa: E402
+from scripts.external_report_v2 import validate_report_text, verify_v2  # noqa: E402
 from scripts.external_report_v3 import verify_v3  # noqa: E402
 
 from ecl_verify.canonical import MAX_JSON_BYTES, load_json_strict  # noqa: E402
 from ecl_verify.offline import safe_relative_path  # noqa: E402
+from ecl_verify.schema import ecl_format_checker  # noqa: E402
+from ecl_verify.schema_patterns import schema_validator  # noqa: E402
 
 MAX_BOUND_FILE_BYTES = 512 * 1024 * 1024
 MAX_BOUND_TOTAL_BYTES = 4 * 1024 * 1024 * 1024
@@ -59,6 +62,11 @@ def sha256_file(path: Path) -> str:
 def source_tree(root: Path) -> tuple[str, list[dict[str, Any]]]:
     """Digest an exact, clean source export without VCS metadata."""
 
+    root = Path(os.path.abspath(root))
+    if root.is_symlink():
+        raise ValueError("external implementation source root is a symlink")
+    if root.name == ".git":
+        raise ValueError("external implementation source must be a clean export without .git metadata")
     root = root.resolve(strict=True)
     if not root.is_dir():
         raise ValueError("external implementation root is not a directory")
@@ -72,11 +80,19 @@ def source_tree(root: Path) -> tuple[str, list[dict[str, Any]]]:
                 "external implementation tree exceeds verifier budget"
             )
         relative = path.relative_to(root).as_posix()
+        # These names are discovered under root, not supplied archive/evidence paths.
+        # Preserve their exact UTF-8 spelling without normalization or Windows aliases.
+        try:
+            relative.encode("utf-8")
+        except UnicodeEncodeError as error:
+            raise ValueError("source name is not valid UTF-8") from error
+        if "\\" in relative or any(part in ("", ".", "..") for part in relative.split("/")):
+            raise ValueError("source name is not a relative POSIX path")
         if path.is_symlink():
             raise ValueError(
                 f"external implementation source contains a symlink: {relative}"
             )
-        if ".git" in path.parts:
+        if ".git" in path.relative_to(root).parts:
             raise ValueError(
                 "external implementation source must be a clean export "
                 "without .git metadata"
@@ -87,7 +103,6 @@ def source_tree(root: Path) -> tuple[str, list[dict[str, Any]]]:
             raise ValueError(
                 f"external implementation source is not a regular file: {relative}"
             )
-        safe_relative_path(relative)
         total_bytes += path.stat().st_size
         if total_bytes > MAX_BOUND_TOTAL_BYTES:
             raise ValueError(
@@ -130,6 +145,32 @@ def confined_file(root: Path, relative: str) -> Path:
     return resolved
 
 
+def legacy_vectors(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Check the fields this historical format uses, without guessing a manifest version tag."""
+    vectors = manifest.get("vectors")
+    if not isinstance(manifest.get("suite"), str) or not isinstance(vectors, list):
+        raise ValueError("legacy version 1 requires the matching RC-3 manifest with suite and vectors")
+    result: dict[str, dict[str, Any]] = {}
+    for index, vector in enumerate(vectors):
+        if not isinstance(vector, dict):
+            raise ValueError(f"legacy manifest vector {index}: expected an object")
+        identifier = vector.get("id")
+        primary = vector.get("expected_primary_ids")
+        if (
+            not isinstance(identifier, str) or not identifier
+            or not isinstance(vector.get("path"), str)
+            or vector.get("expected") not in ("pass", "fail")
+            or not isinstance(primary, list)
+            or any(not isinstance(value, str) or not value for value in primary)
+            or len(primary) != len(set(primary))
+        ):
+            raise ValueError(f"legacy manifest vector {index}: requires id, path, expected and distinct expected_primary_ids")
+        if identifier in result:
+            raise ValueError(f"legacy manifest vector identifiers repeat: {identifier}")
+        result[identifier] = vector
+    return result
+
+
 def verify(
     root: Path,
     report: dict[str, Any],
@@ -153,26 +194,14 @@ def verify(
     schema = read_json(
         root / "schemas" / "ecl-cross-implementation-report-v1.schema.json"
     )
-    Draft202012Validator(schema).validate(report)
+    schema_validator(schema, registry=Registry(), format_checker=ecl_format_checker()).validate(report)
     if report["decision"] != "pass":
         raise ValueError("external implementation report is not a passing run")
     if report["network_used"]:
         raise ValueError("external implementation run used a network dependency")
 
     implementation = report["implementation"]
-    if any(
-        implementation[key] == "UNASSIGNED"
-        for key in (
-            "name",
-            "version",
-            "source_repository",
-            "source_revision",
-            "language",
-            "runtime",
-            "maintainer",
-        )
-    ):
-        raise ValueError("external implementation provenance is unassigned")
+    validate_report_text(report)
     if implementation["source_tree_sha256"] == "0" * 64:
         raise ValueError("external implementation source digest is a placeholder")
     if evidence_root is None or implementation_root is None:
@@ -186,6 +215,7 @@ def verify(
 
     manifest_path = root / "conformance" / "manifest.json"
     manifest = read_json(manifest_path)
+    expected = legacy_vectors(manifest)
     suite = report["suite"]
     if suite["id"] != manifest["suite"]:
         raise ValueError("external implementation suite identifier mismatch")
@@ -197,7 +227,6 @@ def verify(
     results = {item["id"]: item for item in report["vector_results"]}
     if len(results) != len(report["vector_results"]):
         raise ValueError("external implementation result identifiers repeat")
-    expected = {item["id"]: item for item in manifest["vectors"]}
     if set(results) != set(expected):
         missing = sorted(set(expected) - set(results))
         extra = sorted(set(results) - set(expected))
@@ -207,7 +236,7 @@ def verify(
         )
     for identifier, vector in expected.items():
         result = results[identifier]
-        artifact = root / vector["path"]
+        artifact = confined_file(root, vector["path"])
         if result["artifact_sha256"] != sha256_file(artifact):
             raise ValueError(f"{identifier}: vector artifact digest mismatch")
         if result["expected"] != vector["expected"]:
@@ -271,7 +300,7 @@ def verify(
     for identifier, result in results.items():
         raw_path = evidence_by_digest[result["raw_result_sha256"]][0]
         raw = read_json(raw_path)
-        Draft202012Validator(raw_schema).validate(raw)
+        schema_validator(raw_schema, registry=Registry(), format_checker=ecl_format_checker()).validate(raw)
         expected_raw = {
             "schema_version": "ecl_external_vector_raw_result_v1",
             "suite_id": suite["id"],

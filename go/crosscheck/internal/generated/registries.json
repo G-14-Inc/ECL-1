@@ -13,7 +13,7 @@
     {
       "id": "ecl.error.integrity-invalid.v1",
       "status": "active",
-      "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). The codes for a policy, key, threshold or trusted-time failure are its children."
+      "description": "An integrity envelope is malformed: its payload is not canonical base64, does not match its payload digest, is not canonical strict JSON or does not match its payload media type, its signature entries are incomplete or repeated, or a signature value is not canonical base64 or, for P-256, not minimal DER with a low S value (IE1-040). Child codes explicitly declare this identifier in parent_code; revoked and expired do not."
     },
     {
       "id": "ecl.error.unknown-critical-extension.v1",
@@ -93,7 +93,7 @@
     {
       "id": "ecl.error.threshold-not-met.v1",
       "status": "active",
-      "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040)."
+      "description": "The number of unique policy-eligible approvals, signatures, or witnesses is below the required threshold, or a required eligible signer is missing; for an integrity envelope, only when no signature failed for a reason of its own (IE1-040)."
     },
     {
       "id": "ecl.error.unresolved-predecessor.v1",
@@ -281,16 +281,18 @@
       "precedence": 140,
       "applies_to": [
         "DCMP-2",
-        "EBMP-2"
+        "EBMP-2",
+        "ECL-WI-1"
       ],
-      "description": "A message or event does not reference itself as a causal predecessor."
+      "description": "A message, event or work intent does not reference its own logical identifier as a causal predecessor."
     },
     {
       "id": "ecl.rule.expiry-after-issue.v1",
       "status": "active",
       "precedence": 130,
       "applies_to": [
-        "DCMP-2"
+        "DCMP-2",
+        "ECL-WI-1"
       ],
       "description": "An expiry time is strictly later than the corresponding issue or validity start time."
     },
@@ -336,9 +338,10 @@
       "precedence": 120,
       "applies_to": [
         "DCMP-2",
-        "EBMP-2"
+        "EBMP-2",
+        "ECL-WI-1"
       ],
-      "description": "Integrity thresholds, required signers, accepted suites, and the required flag are mutually consistent."
+      "description": "The integrity threshold is consistent with the required flag and required-key count, and every required key is eligible when eligible keys are listed (IE1-013)."
     },
     {
       "id": "ecl.rule.bundle-object-identifiers-unique.v1",
@@ -481,7 +484,9 @@
       "precedence": 115,
       "applies_to": [
         "DCMP-2",
-        "EBMP-2"
+        "EBMP-2",
+        "ECL-IE-1",
+        "ECL-WI-1"
       ],
       "description": "The value of an extension whose registry entry names a value schema validates against that schema."
     },
@@ -519,7 +524,7 @@
       "applies_to": [
         "DCMP-2"
       ],
-      "description": "A response that records its decision basis lists each input once, input names compared after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1; cites no actor_supplied or judgment input, and no input that was not available or was computed from one that was not, as supporting it; records no input computed from an input that is not verifiable as verifiable; and has no input computed from itself, directly or through other inputs. An admit cites at least one verifiable input as supporting it and no required input that was not available or was computed from one that was not. The outcome is no less strict than a recorded verifiable-only outcome; while that outcome is not admit, no input supports the outcome, and when it is admit, a verifiable input supports it and no required verifiable input was not available. No input obtained after the decision is recorded as available, and no value describes a time after the decision or after the input was obtained; a record that gives obtained_at gives received_at, no later than the decision, and a record that gives received_at gives both obtained_at and value_at for each available input. A verifier that holds the request rejects a response recording as verifiable an input whose source is the request's actor, or recording received_at earlier than the request's issued_at by more than the response clock-skew allowance of DCMP2-047. Each decision response that an AARM, ACS or MCP exchange record holds carries exactly one decision basis and is checked with the request the record holds."
+      "description": "A response that records its decision basis lists each input once, input names compared after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1; cites no actor_supplied or judgment input, and no input that was not available or was computed from one that was not, as supporting it; records no input computed from an input that is not verifiable as verifiable; and has no input computed from itself, directly or through other inputs. An admit cites at least one verifiable input as supporting it and no required input that was not available or was computed from one that was not. The outcome is no less strict than a recorded verifiable-only outcome; while that outcome is not admit, no input supports the outcome, and when it is admit, a verifiable input supports it and no required verifiable input was not available. No input obtained after the decision is recorded as available, and no value describes a time after the decision or after the input was obtained; a record that gives obtained_at gives received_at, no later than the decision, and a record that gives received_at gives both obtained_at and value_at for each available input. A verifier that holds the request rejects a response recording as verifiable an input whose source is the request's actor, or recording received_at earlier than the request's issued_at by more than the response clock-skew allowance of DCMP2-047. Each decision response that an AARM, ACS, MCP or OAuth exchange record holds carries exactly one decision basis and is checked with the request the record holds."
     },
     {
       "id": "ecl.rule.decision-basis-required.v1",
@@ -674,7 +679,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1"
       ],
-      "description": "The ECL response records the Guardian decision it depends on in ecl.ext.acs-decision.v1, and each recorded chain head is the head of the recomputed ACS session chain after that step."
+      "description": "A decided Guardian exchange retains its result; the ECL response records the decision it depends on in ecl.ext.acs-decision.v1, and each recorded chain head is the recomputed ACS session chain head after that step. A decided signed exchange retains consistent authenticated request context. A failed signed route asserts no verified decision; any retained submitted request params and local digest occur together and match."
     },
     {
       "id": "ecl.rule.acs-inputs-match-basis.v1",
@@ -719,7 +724,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"
       ],
-      "description": "An MCP gateway forwards a request only on a verified admit bound to its decision request, within the authorization's window and uses, at a final observation that the release guard places before the window's end and that the release event records, with a send that completed before the window's end, and forwards exactly the call that the admitted request binds: its method, tool, arguments, input responses and request state, a params object with the digest that the admitted request carries, and no member added or removed."
+      "description": "An MCP gateway forwards a request only on a verified admit bound to its decision request, within the authorization's window and uses, at a final observation that the release guard places before the window's end and that the release event records, with no release marked released_after_valid_until, and forwards exactly the call that the admitted request binds: its method, tool, arguments, input responses and request state, a params object with the digest that the admitted request carries, and no member added or removed. A late completion is informational (EBMP2-072)."
     },
     {
       "id": "ecl.rule.mcp-obligations-discharged.v1",
@@ -728,7 +733,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"
       ],
-      "description": "An MCP gateway forwards on an admit that leaves obligations to Enforcement before the release, each obligation whose satisfaction is before_release and each state witness that the admit defers, only on an execution_released event that records in ecl.ext.obligation-discharge.v1 a discharge of each of them as satisfied, with no entry that names an obligation the admit does not carry or that another entry names, and that the record's obligation_discharge repeats."
+      "description": "Every retained MCP obligation discharge consistently names obligations carried by the admit and includes every pre-release obligation, including on a refused attempt: no unrequested, duplicate, unsatisfied or missing entry, acquisition no later than check, and check no later than a reliable retained final observation. A retained release additionally records that same discharge and establishes freshness through the final observation plus guard. An explicitly failed final clock comparison does not establish proof expiry or check-to-final order; intrinsic ordering still applies."
     },
     {
       "id": "ecl.rule.mcp-refusal-defined.v1",
@@ -746,7 +751,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1"
       ],
-      "description": "The evidence of a forwarded MCP request binds the server's response by RFC 8785 digest, records the state that response reads as and the forward's completion, and the governed AI system receives that response, with the code of a server error that uses one of the error table's codes replaced by -32603; a refused request is recorded in a non-release state, or as cancelled when its authorization was consumed, and a recovered exchange claims only the outcome that the gateway's journal shows."
+      "description": "The evidence of a forwarded MCP request binds the server's response by RFC 8785 digest, records the state that response reads as and any required completion observation, and the governed AI system receives that response, with the code of a server error that uses one of the error table's codes replaced by -32603. An ordinary unanswered forward carries no server-answer completion time; retained completion agrees across the record and is no later than the terminal observation. Recovery may omit unavailable completion observations without inventing a time. A refused request is recorded in a non-release state, or as cancelled when its authorization was consumed, and a recovered exchange claims only the outcome that the gateway's journal shows."
     },
     {
       "id": "ecl.rule.otel-export-after-evidence.v1",
@@ -755,7 +760,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
       ],
-      "description": "An exporter reads an object no earlier than its time, and the evidence is the same after an export, failed or not."
+      "description": "An exporter reads an object no earlier than its time, and each retained export record includes evidence_after equal in restricted canonical JSON to that object, after a successful or failed export."
     },
     {
       "id": "ecl.rule.otel-record-matches-object.v1",
@@ -764,7 +769,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
       ],
-      "description": "An exported log record's event name, time and table attributes are those of the object it copies, its observed time is not earlier than the object's time, it carries no digest that can be computed without the export key, and with an export key it names the key and carries the object's keyed digest."
+      "description": "An exported log record's event name, time and table attributes are those of the object it copies, and its observed time is not earlier than the object's time. Recognizable unkeyed digests are refused under OE1-004, preserving its exact policy-digest slot and the exact table-identifier copies governed by OE1-003, OE1-004 and OE1-005. A record naming an export key uses a key identifier of 1 to 256 Unicode code points and carries the required keyed digests in their specified form."
     },
     {
       "id": "ecl.rule.otel-record-minimized.v1",
@@ -800,7 +805,7 @@
       "applies_to": [
         "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
       ],
-      "description": "A resource server accepts a token only when every segment reads under the strict JSON profile, it verifies under a configured issuer key with an allowed asymmetric algorithm and no header key, unknown kid or crit member, and its iss is the configured issuer."
+      "description": "A resource server accepts a token only when the presentation record's configured issuer keys have distinct kid values, the decoded protected header and payload read under the strict JSON profile, the signature is decoded and verified as bytes under a configured issuer key with an allowed asymmetric algorithm and no header key, unknown kid or crit member, and its iss is the configured issuer."
     },
     {
       "id": "ecl.rule.oauth-presentation-checked.v1",
@@ -829,73 +834,146 @@
         "EBMP-2 bundle"
       ],
       "description": "An execution_released event whose decision response carries an obligation to be met before release, or a witness result required before release, records in ecl.ext.obligation-discharge.v1 a discharge of each such obligation, recorded as satisfied with a proof reference and digest and checked no later than the release was observed. Missing discharge entries, unknown or duplicate obligations, invalid result or check ordering, and a carried proof digest mismatch use this rule. An unknown or duplicate obligation gates the remaining checks for that entry. A carried proof digest mismatch gates its envelope-validity, signer, type, binding and proof-freshness checks. Other proof failures, and an entry fresh_until that is not later than the release observation plus release_guard_ms, use ecl.error.obligation-unproven.v1. A carried ECL proof whose digest matches is checked for valid envelope, authorized signer and purpose, admitted type, exchange binding and freshness under EBMP2-070."
+    },
+    {
+      "id": "ecl.rule.dependency-classification-consistent.v1",
+      "status": "active",
+      "precedence": 399,
+      "applies_to": [
+        "SAFE-STATE-PROFILE"
+      ],
+      "description": "A dependency identifier is declared once; an advisory dependency supplies no required proof; fail-open authorization names each covered declared advisory dependency once (TS1-031, TS1-033)."
+    },
+    {
+      "id": "ecl.rule.deployment-timing-case-consistent.v1",
+      "status": "active",
+      "precedence": 411,
+      "applies_to": [
+        "https://externalcontrollayer.ai/ns/schema/deployment-profile/1"
+      ],
+      "description": "A federated deployment declares its trust-bundle and revocation exchange interval no longer than its connected revocation interval. This compares declared bounds; it does not establish runtime timing performance."
+    },
+    {
+      "id": "ecl.rule.action-class-policy-unambiguous.v1",
+      "status": "active",
+      "precedence": 398,
+      "applies_to": [
+        "SAFE-STATE-PROFILE"
+      ],
+      "description": "Each action_class in a safe-state profile is declared once; ordering cannot select between conflicting policies."
+    },
+    {
+      "id": "ecl.rule.work-intent-context-consistent.v1",
+      "status": "active",
+      "precedence": 142,
+      "applies_to": [
+        "ECL-WI-1"
+      ],
+      "description": "A child work intent identifies a distinct parent consistently in both supported representations and carries a digest-bound causal predecessor identifying creation or delegation."
     }
   ],
   "extensions": [
     {
       "id": "ecl.ext.trusted-time-evidence.v1",
       "status": "deprecated",
-      "version": 1
+      "version": 1,
+      "applies_to": [
+        "DCMP-2",
+        "EBMP-2",
+        "ECL-IE-1"
+      ]
     },
     {
       "id": "ecl.ext.consequence-coupling.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1",
+      "applies_to": [
+        "DCMP-2",
+        "EBMP-2"
+      ]
     },
     {
       "id": "ecl.ext.outcome-reason.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1",
+      "applies_to": [
+        "EBMP-2"
+      ]
     },
     {
       "id": "ecl.ext.approval-record.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/approval-record/1",
+      "applies_to": [
+        "EBMP-2"
+      ]
     },
     {
       "id": "ecl.ext.control-change.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/control-change/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/control-change/1",
+      "applies_to": [
+        "EBMP-2"
+      ]
     },
     {
       "id": "ecl.ext.runtime-configuration.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/runtime-configuration/1",
+      "applies_to": [
+        "DCMP-2"
+      ]
     },
     {
       "id": "ecl.ext.decision-basis.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+      "applies_to": [
+        "DCMP-2"
+      ]
     },
     {
       "id": "ecl.ext.aarm-receipt.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+      "applies_to": [
+        "EBMP-2"
+      ]
     },
     {
       "id": "ecl.ext.acs-decision.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+      "applies_to": [
+        "DCMP-2"
+      ]
     },
     {
       "id": "ecl.ext.mcp-binding.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+      "applies_to": [
+        "DCMP-2",
+        "EBMP-2"
+      ]
     },
     {
       "id": "ecl.ext.obligation-discharge.v1",
       "status": "active",
       "version": 1,
-      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1"
+      "value_schema": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1",
+      "applies_to": [
+        "EBMP-2"
+      ]
     }
   ],
   "vocabulary": [

@@ -107,15 +107,7 @@ func Ed25519KeyProblem(raw []byte) string {
 // (IE1-016). This is how Go's crypto/ed25519 verifies; a cofactored equation, which some
 // libraries use, accepts signatures this profile refuses.
 func VerifyEd25519(publicKey, message, signature []byte) bool {
-	if len(publicKey) != ed25519.PublicKeySize || len(signature) != ed25519.SignatureSize {
-		return false
-	}
-	// Go's decoder also accepts the non-canonical encodings of a point; this profile does not.
-	data := append([]byte{}, publicKey...)
-	sign := data[31] >> 7
-	data[31] &= 0x7f
-	y := littleEndian(data)
-	if y.Cmp(edField) >= 0 || (sign == 1 && (y.Cmp(big.NewInt(1)) == 0 || y.Cmp(new(big.Int).Sub(edField, big.NewInt(1))) == 0)) {
+	if len(signature) != ed25519.SignatureSize || Ed25519KeyProblem(publicKey) != "" {
 		return false
 	}
 	return ed25519.Verify(ed25519.PublicKey(publicKey), message, signature)

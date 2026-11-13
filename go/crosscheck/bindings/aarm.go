@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/semantic"
 )
@@ -139,17 +140,29 @@ func aarmReceiptBound(view aarmView) []problem {
 	receipt, retained := object(view.record, "receipt")
 	terminal := member(view.record, "terminal")
 	values := extensionValues(terminal, aarmReceipt)
+	var actionProblems []problem
+	if terminal != nil {
+		bound := false
+		for _, candidate := range view.candidates {
+			if text(candidate.request, "action", "action_id") == text(terminal, "event", "action_id") {
+				bound = true
+			}
+		}
+		if !bound {
+			actionProblems = append(actionProblems, problem{"/terminal/event/action_id", "the terminal event is bound to another action"})
+		}
+	}
 	if !retained && len(values) == 0 {
-		return nil
+		return actionProblems
 	}
 	if !retained {
-		return []problem{{"/receipt", "the terminal event binds a receipt that the record does not retain"}}
+		return append(actionProblems, problem{"/receipt", "the terminal event binds a receipt that the record does not retain"})
 	}
 	if len(values) != 1 {
-		return []problem{{"/terminal/extensions", "the terminal event binds the receipt exactly once"}}
+		return append(actionProblems, problem{"/terminal/extensions", "the terminal event binds the receipt exactly once"})
 	}
 	value := values[0]
-	var problems []problem
+	problems := actionProblems
 	if !pyjson.Equal(value["receipt_id"], receipt["receipt_id"]) {
 		problems = append(problems, problem{"/terminal/extensions", "the bound receipt_id is not the receipt's"})
 	}
@@ -168,16 +181,7 @@ func aarmReceiptBound(view aarmView) []problem {
 	if !sameDigest(digestValue(digestOf(member(receipt, "action", "parameters"))), member(original, "action", "parameters_digest")) {
 		problems = append(problems, problem{"/receipt/action/parameters", "the receipt's parameters are not the requested ones"})
 	}
-	bound := false
-	action := text(terminal, "event", "action_id")
-	for _, candidate := range view.candidates {
-		if text(candidate.request, "action", "action_id") == action {
-			bound = true
-		}
-	}
-	if !bound {
-		problems = append(problems, problem{"/terminal/event/action_id", "the receipt is bound to another action"})
-	}
+
 	return problems
 }
 
@@ -215,5 +219,23 @@ func checkAARM(record map[string]any) []Finding {
 	// own rule, which is not one of the profile's.
 	out = append(out, findings(ruleOneWay, oneWayResponseProblems(record, [2][]string{{"request"}, {"response"}}, [2][]string{{"modification_request"}, {"modification_response"}}))...)
 	// AB1-013: each DCMP-2 message that the record holds satisfies the semantic rules of DCMP-2.
-	return append(out, messageFindings(record, []string{"request"}, []string{"response"}, []string{"modification_request"}, []string{"modification_response"})...)
+	out = append(out, messageFindings(record, []string{"request"}, []string{"response"}, []string{"modification_request"}, []string{"modification_response"})...)
+	out = append(out, responseBindingFindings(record, [2]string{"request", "response"}, [2]string{"modification_request", "modification_response"})...)
+	if terminal, present := object(record, "terminal"); present {
+		if text(terminal, "event_type") != "execution_terminal" {
+			out = append(out, Finding{RuleID: RuleAARMReceipt, Path: "/terminal/event_type", Detail: "the receipt requires an execution_terminal event"})
+		}
+		for _, item := range TerminalReasonFindings(terminal, "", false) {
+			out = append(out, Finding{RuleID: item.RuleID, Path: "/terminal" + item.Path, Detail: item.Detail})
+		}
+		found, err := evidence.ObjectFindings(terminal)
+		if err != nil {
+			out = append(out, Finding{RuleID: schemaInvalid, Path: "/terminal", Detail: err.Error()})
+		} else {
+			for _, item := range found {
+				out = append(out, Finding{RuleID: item.RuleID, Path: "/terminal" + item.Path, Detail: item.Detail})
+			}
+		}
+	}
+	return out
 }

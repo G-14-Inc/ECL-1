@@ -63,7 +63,15 @@
                 "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
               },
               "signature_digest": {
-                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+                "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+                "properties": {
+                  "algorithm": {
+                    "const": "ecl.digest.sha-256.v1"
+                  },
+                  "value": {
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
               }
             }
           }

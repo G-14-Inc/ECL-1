@@ -23,6 +23,22 @@
       ]
     },
     {
+      "id": "object-signing-dependencies",
+      "description": "Each signing key of each envelope and observation payload, whether or not its signature counts. Excludes signatures on time attestations. Report indexes identify the containing envelope or observation.",
+      "requirements": [
+        "TP1-006",
+        "EBMP2-076"
+      ]
+    },
+    {
+      "id": "attestation-signing-dependencies",
+      "description": "Each signing key of each time attestation, whether or not its signature counts. Report indexes identify the envelope or observation carrying the countersignature.",
+      "requirements": [
+        "TP1-006",
+        "EBMP2-076"
+      ]
+    },
+    {
       "id": "object-signatures",
       "description": "Each signature entry of each object in envelopes and observations, with the trusted-time countersignatures that cover it and the signature entries of their attestations. An object without a countersignature is in the set, so that the item is not established while any object has a signature that no countersignature covers.",
       "requirements": [
@@ -99,7 +115,7 @@
     },
     {
       "id": "historical-signers",
-      "description": "Each trust dependency, every key that signed an object or an attestation whether or not its signature counts, is valid at the dependency's time under the trust-policy version that its object or attestation names, for the object's purpose and principal, and its signature verifies; and the signatures that count meet the policy.",
+      "description": "Each object-signing dependency is valid at its own evaluation time under the payload's policy, including accepted suites, eligible keys, purpose, principal, validity and signature verification; the signatures that count meet the threshold. Time-attestation dependencies are checked by attestation-signers.",
       "requirements": [
         "EBMP2-057",
         "IE1-040",
@@ -118,7 +134,7 @@
     },
     {
       "id": "current-compromise-knowledge",
-      "description": "The caller's current policy holds no revocation of a key with any trust dependency's key identifier or public key effective at or before the dependency's own time.",
+      "description": "The caller's current policy has no revocation of an object-signing dependency's key identifier or public key effective at or before that dependency's own time. Time-attestation dependencies are covered by attestation-signers.",
       "requirements": [
         "TP1-006",
         "ECL1N-0159"
@@ -148,6 +164,22 @@
       ],
       "codes": [
         "ecl.error.trusted-time-required.v1"
+      ]
+    },
+    {
+      "id": "attestation-signers",
+      "description": "Every time-attestation signing dependency, including an uncounted signature, meets IE1-040 step 6 at the attested time under the attestation payload's accepted suites and eligible keys, and the named and current policies' effective revocations. This is stronger than threshold validity of the attestation.",
+      "requirements": [
+        "IE1-040",
+        "TP1-006",
+        "EBMP2-076"
+      ],
+      "codes": [
+        "ecl.error.signature-policy-invalid.v1",
+        "ecl.error.revoked.v1",
+        "ecl.error.expired.v1",
+        "ecl.error.integrity-invalid.v1",
+        "ecl.error.trusted-time-invalid.v1"
       ]
     },
     {
@@ -229,13 +261,23 @@
     },
     {
       "id": "decision-basis-register",
-      "description": "Each decision basis agrees with the Consequential Action Register that the caller supplied.",
+      "description": "Each decision basis names the supplied register version and matches its declared inputs, classes, required flags, sources and derivations. Recorded input timing is compared with declared deadlines and maximum ages only when the necessary fields are supplied (DCMP2-053). This check does not re-evaluate policy or approval thresholds.",
       "requirements": [
         "DCMP2-053"
       ],
       "codes": [
         "ecl.rule.decision-basis-matches-register.v1"
       ]
+    },
+    {
+      "id": "decision-input-timing",
+      "description": "The recorded timestamps needed for every applicable available-input maximum-age or acquisition-deadline comparison are supplied. Bounds are checked by decision-basis-register; recorded times are not established as true.",
+      "requirements": [
+        "DCMP2-053",
+        "ECL1N-0194",
+        "EBMP2-076"
+      ],
+      "codes": []
     },
     {
       "id": "pairing",
@@ -251,7 +293,7 @@
     },
     {
       "id": "continuation-history",
-      "description": "Each continuation names the request, challenge response and approval that DCMP2-056 requires and relates to the continued request as it requires; lists the response and the approval among its causal predecessors by identifier and digest; and no challenge is continued twice; and, when the continuation's response is an admit, rests on an approval whose signing keys hold ecl.purpose.approval.v1, none of them bound to the request's actor, and whose expires_at, when present, is later than the evaluated_at of that response.",
+      "description": "Each continuation names the request, challenge response and approval that DCMP2-056 requires and relates to the continued request as it requires; lists the response and the approval among its causal predecessors by identifier and digest; and no challenge has two admitted continuations (denied or challenged continuations do not violate this uniqueness condition); and, when the continuation's response is an admit, rests on an approval whose signing keys hold ecl.purpose.approval.v1, none of them bound to the request's actor, and whose required expires_at is later than the evaluated_at of that response.",
       "requirements": [
         "EBMP2-078",
         "DCMP2-056"
@@ -346,7 +388,7 @@
     },
     {
       "id": "causal-context",
-      "description": "Every predecessor has its successor's root trace and is in its workflow, with an attempt no greater, or in its parent workflow.",
+      "description": "Every held predecessor has its successor's root trace and is in the same workflow with an attempt no greater, its declared parent workflow, or a child workflow. A child-to-parent join requires a digest-bound path through that child's ancestry to its creating or delegating parent object; an absent origin leaves the relationship unresolved.",
       "requirements": [
         "EBMP2-077"
       ],
@@ -386,7 +428,7 @@
     },
     {
       "id": "attempt-authority-consumed",
-      "description": "Each succeeded attempt, and each released attempt under a single-use authorization, has its authority_consumed event; the check runs whatever the closure of the rest of the bundle and is silent only for an attempt whose own objects name a predecessor that the bundle does not hold.",
+      "description": "Each attempt with running execution, or with terminal state succeeded, failed, partially_succeeded, unknown, rolled_back or compensated, has its authority_consumed and release events, and each released attempt under a single-use authorization has its authority_consumed event. The check runs whatever the closure of the rest of the bundle and is silent only for an attempt whose own objects name a predecessor that the bundle does not hold.",
       "requirements": [
         "EBMP2-055",
         "EBMP2-074"
@@ -397,7 +439,7 @@
     },
     {
       "id": "obligation-discharge",
-      "description": "Each release records a discharge of every obligation that its decision left to Enforcement before the release, checked no later than the release was observed (conditions 1 to 4).",
+      "description": "Each release records a discharge of every required pre-release obligation; the entry, result, binding, time and carried-proof digest satisfy EBMP2-070 conditions 1, 2, 3, 4 and 6, under the specified gates and precedence.",
       "requirements": [
         "EBMP2-070"
       ],
@@ -407,12 +449,13 @@
     },
     {
       "id": "obligation-proofs",
-      "description": "Each discharge's proof is an object of the bundle, signed by the issuer the obligation names, of an admitted type, bound to the exchange and fresh at the release (conditions 5 to 8).",
+      "description": "Each carried ECL proof satisfies the issuer and purpose, admitted type and exchange binding, and freshness checks of EBMP2-070 conditions 5, 7 and 8, including its stated issuer/purpose exception; an uncarried proof or unnamed issuer does not establish proof scope.",
       "requirements": [
         "EBMP2-070"
       ],
       "codes": [
-        "ecl.rule.prerelease-obligations-discharged.v1"
+        "ecl.rule.prerelease-obligations-discharged.v1",
+        "ecl.error.obligation-unproven.v1"
       ]
     },
     {
@@ -470,7 +513,7 @@
     {
       "item": "envelope-signatures",
       "established": "checked",
-      "object_set": "trust-dependencies",
+      "object_set": "object-signing-dependencies",
       "required_checks": [
         "envelope-integrity",
         "time-not-after-evaluation",
@@ -510,7 +553,8 @@
         "historical-signers",
         "current-compromise-knowledge",
         "trusted-time-countersignatures",
-        "trusted-time-coverage"
+        "trusted-time-coverage",
+        "attestation-signers"
       ],
       "trust_knowledge": [
         "named-policy-version",
@@ -565,6 +609,23 @@
       "permitted_waivers": [],
       "condition": "When the caller supplied a register.",
       "reasons": []
+    },
+    {
+      "item": "decision-input-timing",
+      "established": "checked",
+      "object_set": "decision-responses",
+      "required_checks": [
+        "decision-basis-register",
+        "decision-input-timing"
+      ],
+      "trust_knowledge": [
+        "register"
+      ],
+      "permitted_waivers": [],
+      "condition": "When a register is supplied and at least one recorded available input has a declared maximum age or acquisition deadline.",
+      "reasons": [
+        "input-times-not-recorded"
+      ]
     },
     {
       "item": "bindings",

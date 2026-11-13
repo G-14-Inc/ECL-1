@@ -122,6 +122,13 @@ function objectSets(value: JsonObject): Record<string, number[]> {
   return {
     "bundle-objects": indexes,
     "trust-dependencies": indexes,
+    "object-signing-dependencies": indexes,
+    "attestation-signing-dependencies": indexes.filter((index) => {
+      const envelope = objectsOf(value)[index] as JsonObject;
+      return ((envelope["countersignatures"] as JsonObject[] | undefined) ?? []).some((counter) =>
+        (((counter["attestation"] as JsonObject)["signatures"] as JsonValue[] | undefined) ?? []).length > 0,
+      );
+    }),
     "object-signatures": indexes,
     "decision-responses": responses,
     "request-response-pairs": sorted(pairs),
@@ -194,7 +201,8 @@ test("EBMP2-078: an absent named object exempts no other check, and keeps bindin
   assert.equal(subject.verdict, "invalid");
   assert.equal(reportedIdentifiers(subject)[0], BINDING);
   assert.ok(subject.findings.some((finding) => finding.message.endsWith("the continuation changes the continued request's subject")));
-  // A second continuation of one challenge that names an approval the bundle does not hold.
+  // An unanswered continuation is not a second admission. Its mismatched approval
+  // reference still fails the independent causal-binding check.
   const second = history((payloads) => {
     const continuation = payloads[indexOfKind(payloads, "decision_request", 1)] as JsonObject;
     const again = structuredClone(continuation) as JsonObject;
@@ -205,7 +213,7 @@ test("EBMP2-078: an absent named object exempts no other check, and keeps bindin
   });
   const twice = verifySuite(second);
   assert.equal(twice.verdict, "invalid");
-  assert.ok(twice.findings.some((finding) => finding.code === BINDING && finding.message.endsWith("continues a response that another request continues")), JSON.stringify(twice.findings));
+  assert.ok(twice.findings.some((finding) => finding.code === BINDING && finding.message.endsWith("does not list its approval among its causal predecessors with its digest")), JSON.stringify(twice.findings));
 });
 
 test("EBMP2-078: the continuation lists its response and approval, and rests on an approval in force by an approval key", () => {

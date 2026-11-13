@@ -21,6 +21,9 @@ the documents they cite.
 ## Normative profiles
 
 Each of these has compiled requirement IDs and its own version.
+`TRUST-POLICY-1` is a normative companion at every level whenever signed
+evidence verification applies (ECL1N-0022); its name as a profile does not make
+its invoked trust rules optional.
 
 - `TRUST-POLICY-1.md` binds caller-supplied policy versions, key roles, principals, revocation and byte-loading limits. Its vectors are in the `trust-policy`, `key-roles`, `envelope` and `evidence-bundle` suites of `conformance/suites/`.
 - `STRICT-FAILURE-1.md` forbids fail-open dispositions for in-scope action classes and requires that required proof fail closed; a safe-state profile document claims it in its `claimed_profiles` member.

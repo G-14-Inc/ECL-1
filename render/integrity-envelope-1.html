@@ -12,7 +12,8 @@
 <main id="main">
 <h1 id="ecl-integrity-envelope-1">ECL Integrity Envelope 1</h1>
 <p>Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code>
 Schemas: <code>schemas/ecl-integrity-envelope-v1.schema.json</code>,
 <code>schemas/ecl-time-attestation-v1.schema.json</code></p>
 <p>This protocol is ECL Integrity Envelope 1, published as the document
@@ -38,9 +39,12 @@ prohibited, integers are limited to the exact interoperable range, and
 duplicate members are prohibited. The noncharacters are U+FDD0 to U+FDEF and
 the last two code points of each of the 17 Unicode planes (U+FFFE, U+FFFF,
 U+1FFFE, U+1FFFF and so on to U+10FFFF).</p>
-<p><span id="IE1-003"><strong>IE1-003</strong></span><a class="requirement-link" href="#IE1-003" aria-label="Link to IE1-003">§</a> — Decimal quantities, currency, durations, integers outside the
-exact range, and other precision-sensitive values MUST use registered string
-representations.</p>
+<p><span id="IE1-003"><strong>IE1-003</strong></span><a class="requirement-link" href="#IE1-003" aria-label="Link to IE1-003">§</a> — Decimal quantities, currency, integers outside the exact range,
+and other precision-sensitive values MUST use registered string
+representations. Durations MUST use their schema-defined representation and
+unit: exact-integer fields such as <code>requested_validity_seconds</code> and
+<code>release_guard_ms</code> remain integers within their declared ranges; other duration
+representations are registered strings.</p>
 <p><span id="IE1-004"><strong>IE1-004</strong></span><a class="requirement-link" href="#IE1-004" aria-label="Link to IE1-004">§</a> — A consumer MUST apply the verified RFC 8785 erratum relevant to
 negative zero (Errata ID 7920) and MUST reject rather than normalize ambiguous
 input.</p>
@@ -62,11 +66,11 @@ a trust-policy document):</p>
 <li>no object repeats a member name, after escapes are decoded, or the finding is <code>ecl.rule.json-no-duplicate-members.v1</code>;</li>
 <li>every number is an integer within the exact interoperable range, written without a fraction, an exponent or a negative zero, or the finding is <code>ecl.rule.json-restricted-numbers.v1</code>.</li>
 </ol>
-<p>Checks 3 to 6 read every value of the input, including each value of a repeated
+<p><strong><a href="integrity-envelope-1.html#IE1-037">IE1-037</a> (continued)</strong> — Checks 3 to 6 read every value of the input, including each value of a repeated
 member name. The limits are each consumer&#x27;s own (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>), so whether an input
 near a limit passes check 1 or check 3 can differ between consumers; the order
 of the other checks does not.</p>
-<p>Check 2 comes before check 3 wherever each defect lies in the text: an input
+<p><strong><a href="integrity-envelope-1.html#IE1-037">IE1-037</a> (continued)</strong> — Check 2 comes before check 3 wherever each defect lies in the text: an input
 that goes beyond a nesting or value limit and departs from the grammar only
 later in the text has the finding of check 2. A consumer keeps this order
 without building an oversized value (<a href="integrity-envelope-1.html#IE1-029">IE1-029</a>): it counts values and nesting as
@@ -81,8 +85,8 @@ need a convention that every validator shares.</p>
 as an ECMA-262 regular expression that may match anywhere in the string unless
 the pattern anchors it, so that <code>$</code> matches only at the end of the string, never
 before a final line terminator, and <code>.</code> matches no line terminator. It MUST
-treat the <code>format</code> keyword as an assertion for the two formats that the ECL
-schemas use, and a string satisfies them as follows:</p>
+treat the <code>date-time</code> and <code>uri</code> formats as assertions under this protocol,
+with the following string conditions:</p>
 <ol>
 <li><code>date-time</code>: the string matches the pattern of <code>rfc3339Utc</code> in the common schema (<code>schemas/ecl-common-v1.schema.json</code>) and names a date from 0001-01-01 to 9999-12-31 that exists in the Gregorian calendar;</li>
 <li><code>uri</code>: every character is an ASCII letter or digit or one of <code>-._~:/?#[]@!$&amp;'()*+,;=%</code>; every <code>%</code> is followed by two hexadecimal digits; the string begins with a scheme (a letter followed by letters, digits, <code>+</code>, <code>-</code> and <code>.</code>) and <code>:</code>; the characters after that <code>:</code> up to the first <code>?</code> or <code>#</code> are neither empty nor exactly <code>//</code>; and when those characters begin with <code>//</code>, the authority that follows, up to the next <code>/</code>, holds <code>[</code> or <code>]</code> only around an IP literal: after its last <code>@</code> the authority begins with <code>[</code> and holds a <code>]</code>, the characters between that <code>[</code> and the first <code>]</code> are an IPv6 address in the text form of RFC 4291 section 2.2 (with no leading zero in an octet of an embedded IPv4 address), optionally followed by <code>%</code> and one or more characters other than <code>%</code>, or are a lowercase <code>v</code>, one or more hexadecimal digits, <code>.</code> and one or more characters, and any characters after that <code>]</code> begin with <code>:</code>.</li>
@@ -111,9 +115,9 @@ strings.</p>
 over the exact payload type and decoded payload bytes.</p>
 <p><span id="IE1-010"><strong>IE1-010</strong></span><a class="requirement-link" href="#IE1-010" aria-label="Link to IE1-010">§</a> — A signature valid for one payload type MUST NOT validate for
 another payload type.</p>
-<p><span id="IE1-011"><strong>IE1-011</strong></span><a class="requirement-link" href="#IE1-011" aria-label="Link to IE1-011">§</a> — A verifier MUST NOT re-serialize a parsed payload before
-signature verification. The verifier MUST verify the transported canonical
-bytes and then separately prove that those bytes are canonical.</p>
+<p><span id="IE1-011"><strong>IE1-011</strong></span><a class="requirement-link" href="#IE1-011" aria-label="Link to IE1-011">§</a> — A verifier MUST verify signatures over the transported payload
+bytes, not a replacement serialization. It MUST separately check that those
+bytes are canonical, in the order specified by <a href="integrity-envelope-1.html#IE1-040">IE1-040</a>.</p>
 <h2 id="4-payload-bound-policy">4. Payload-bound policy</h2>
 <p>The signed payload carries:</p>
 <ul>
@@ -133,7 +137,7 @@ MUST NOT be lower than the number of mandatory signers; when the policy lists
 eligible keys, every mandatory signer MUST be one of them. A consumer MUST
 reject a payload-bound policy that fails any of these conditions with
 <code>ecl.rule.integrity-threshold-consistent.v1</code>.</p>
-<p>These are the only conditions of that rule. An empty list of eligible keys
+<p><strong><a href="integrity-envelope-1.html#IE1-013">IE1-013</a> (continued)</strong> — These are the only conditions of that rule. An empty list of eligible keys
 leaves the eligible keys unbounded, so mandatory signers need no eligible list.
 Payload object validation applies <a href="integrity-envelope-1.html#IE1-013">IE1-013</a>, including its required-key subset
 check, with <code>ecl.rule.integrity-threshold-consistent.v1</code>; bundle verification
@@ -144,7 +148,7 @@ signer outside a non-empty eligible-key list cannot count in step 6, and step
 7 refuses the envelope with the code of the earliest reason in step 6, in the
 order of step 6's sub-steps, that some signature has, or
 <code>ecl.error.threshold-not-met.v1</code> when no signature has any of those reasons.</p>
-<p>A threshold higher than the number of keys in a non-empty eligible-key list
+<p><strong><a href="integrity-envelope-1.html#IE1-013">IE1-013</a> (continued)</strong> — A threshold higher than the number of keys in a non-empty eligible-key list
 is not an <a href="integrity-envelope-1.html#IE1-013">IE1-013</a> consistency failure, but no envelope can meet that threshold.
 A signature using a suite the policy does not accept cannot count under
 <a href="integrity-envelope-1.html#IE1-040">IE1-040</a> step 6(a). In standalone verification, other acceptable signatures can
@@ -224,7 +228,13 @@ at the check that meets the limit:</p>
 </ol>
 <p><span id="IE1-023"><strong>IE1-023</strong></span><a class="requirement-link" href="#IE1-023" aria-label="Link to IE1-023">§</a> — The policies for verification at issue time, observation time,
 trusted timestamp time, current time, and other declared times are distinct. A verifier
-MUST state which policy it applied.</p>
+MUST state which policy it applied.
+A corpus replay report MUST state the verification-time policy for every
+evaluated envelope, evidence-bundle or package stage, determined from the
+stages of vectors supported by its declared capabilities. A narrower
+capability, including key-role-separation, does not waive the policy of a stage
+it evaluates. The report MUST NOT state a stage policy when every vector of
+that stage is unsupported.</p>
 <p><span id="IE1-024"><strong>IE1-024</strong></span><a class="requirement-link" href="#IE1-024" aria-label="Link to IE1-024">§</a> — A signature MUST NOT count, even when its cryptographic check
 passes, if its key is not acceptable under the trust policy, suite, purpose or
 policy context, or is revoked or outside its validity interval at the
@@ -468,7 +478,8 @@ an envelope at the first step it fails, with that step's error code:</p>
 <ol>
 <li>the envelope satisfies its schema, or <code>ecl.error.schema-invalid.v1</code>;</li>
 <li>its encoded payload, its number of signature entries and each encoded signature value are within the verifier&#x27;s declared limits (<a href="integrity-envelope-1.html#IE1-028">IE1-028</a>), or <code>ecl.error.resource-limit-exceeded.v1</code>;</li>
-<li>the payload is canonical base64, its digest is the <code>ecl.digest.sha-256.v1</code> digest of the decoded bytes, the bytes are canonical strict JSON (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>, <a href="integrity-envelope-1.html#IE1-011">IE1-011</a>, <a href="integrity-envelope-1.html#IE1-037">IE1-037</a>) whose value is an object with an <code>integrity_policy</code> object, and the payload media type and the payload's <code>protocol</code> name the same protocol (<a href="integrity-envelope-1.html#IE1-010">IE1-010</a>), or <code>ecl.error.integrity-invalid.v1</code>; a declared limit that the strict parse reaches (<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>, checks 1 and 3) gives <code>ecl.error.resource-limit-exceeded.v1</code> instead;</li>
+<li>the payload is canonical base64, its digest is the <code>ecl.digest.sha-256.v1</code> digest of the decoded bytes, the bytes are canonical strict JSON (<a href="integrity-envelope-1.html#IE1-001">IE1-001</a>, <a href="integrity-envelope-1.html#IE1-011">IE1-011</a>, <a href="integrity-envelope-1.html#IE1-037">IE1-037</a>) whose value is an object with an <code>integrity_policy</code> object, and the payload media type and the payload's <code>protocol</code> name the same protocol (<a href="integrity-envelope-1.html#IE1-010">IE1-010</a>), or <code>ecl.error.integrity-invalid.v1</code>; a declared limit that the strict parse reaches (<a href="integrity-envelope-1.html#IE1-037">IE1-037</a>, checks 1 and 3) gives <code>ecl.error.resource-limit-exceeded.v1</code> instead;
+after these checks and before step 4, the verifier MUST apply the extension-consumer rules of EXTENSION-REGISTRY-1 to the envelope's own <code>extensions</code>, reporting their registered rule codes in registry precedence order. This narrow check does not apply the payload's full object schema or its other semantic rules during standalone envelope verification;</li>
 <li>the lists of the payload-bound policy are within the verifier's declared limits, or <code>ecl.error.resource-limit-exceeded.v1</code>; then the policy requires integrity, its threshold is at least one and not lower than the number of required keys, its key and suite lists are lists of distinct identifiers with at least one accepted suite, and its trust-policy reference, verification-time policy and revocation policy are those of the trust policy and evaluation the verifier applies, or <code>ecl.error.signature-policy-invalid.v1</code>;</li>
 <li>every signature entry names a key and a suite, and no two entries name the same key and suite, or <code>ecl.error.integrity-invalid.v1</code>;</li>
 <li>each signature entry is examined in turn: (a) the payload&#x27;s policy accepts its suite, the trust policy allows the suite, the key is eligible when the policy lists eligible keys, the trust policy holds the key with that suite, and the key holds the purpose of the payload (<a href="integrity-envelope-1.html#IE1-039">IE1-039</a>), or the signature does not count because its key is not acceptable; (b) the key is not revoked at the evaluation time, or the signature does not count because its key is revoked; (c) the evaluation time is within the key&#x27;s validity interval, or the signature does not count because its key is expired or not yet valid; (d) the signature value is canonical base64, a P-256 signature is minimally encoded DER with a low S value (<a href="integrity-envelope-1.html#IE1-017">IE1-017</a>) and an ML-DSA-65 signature is 3309 bytes long (<a href="integrity-envelope-1.html#IE1-018">IE1-018</a>), or the verifier refuses the envelope with <code>ecl.error.integrity-invalid.v1</code>; (e) the signature verifies, for Ed25519 with S below the group order under the cofactorless equation (<a href="trust-policy-1.html#TP1-008">TP1-008</a>), or it does not count because it does not verify;</li>
@@ -480,8 +491,8 @@ signature of a bundle's envelope, counted or not, passes steps 6 (a) to (c)
 under the object&#x27;s purpose and principal (<a href="trust-policy-1.html#TP1-004">TP1-004</a>, <a href="trust-policy-1.html#TP1-005">TP1-005</a>, <a href="ebmp-2.html#EBMP2-057">EBMP2-057</a>).</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/INTEGRITY-ENVELOPE-1.md</code>, SHA-256 <code>43383e10e6d20d808036e401b86146f17ab3a0b6067c910605eaf784fa73e6e8</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>protocols/INTEGRITY-ENVELOPE-1.md</code>, SHA-256 <code>0a01a232bcb2707c384d36c980f6c67fde8d7828b3109c9883db0e0610ba6758</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

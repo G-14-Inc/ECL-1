@@ -4,6 +4,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 from scripts.external_report_v2 import TreeReader, _verify_bound_report
+from scripts.scope_expectations import effect_identifiers_nonblank, scope_expectation_matches
 
 OBSERVATIONS = {
     "expected_verdict": "observed_verdict",
@@ -41,10 +42,12 @@ def observations_match(row: dict[str, Any], vector: dict[str, Any]) -> bool:
         elif expected == "expected_unresolved_predecessor_ids":
             met = met and len(actual) == len(set(actual)) and set(actual) == set(want)
         elif expected == "expected_effects":
-            met = met and all(
+            met = met and effect_identifiers_nonblank(actual) and all(
                 {item["level"] for item in actual if item["action_id"] == e["action_id"]} == {e["level"]}
                 for e in want
             )
+        elif expected == "expected_scope":
+            met = met and scope_expectation_matches(actual, want)
         else:
             met = met and actual == want
     return met

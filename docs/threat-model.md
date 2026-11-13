@@ -48,7 +48,9 @@ identity, so that a mapped call now does something else, or a changed
 description carries instructions to the model. Or the governed AI system stops,
 reconfigures or runs code inside the gateway, sends a request that no mapping covers, or reads a
 server's own error as the gateway's refusal. Or the gateway forwards members that no decision
-covered, such as a `_meta` entry or a task that changes how the server runs the call. Mitigations: every request passes
+covered, such as a `_meta` entry or a task that changes how the server runs the call.
+
+Mitigations: every request passes
 through the gateway and any other path is closed or disclosed in the Negative
 Boundary Annex, and the gateway runs in no process, container or account that
 the governed AI system can start, stop or configure or execute code in
@@ -81,7 +83,9 @@ As ACS-BINDING-1 reads the pinned ACS text, the handshake member
 off would then let actions go ahead, and a hook in the agent's own process can
 be disabled by the agent. ACS-Core signs with an HMAC under a key that the
 Observed Agent holds, so such a hook can also forge the Guardian's decision that
-it carries. Mitigations: a decision failure at an ECL enforcement point ends in
+it carries.
+
+Mitigations: a decision failure at an ECL enforcement point ends in
 the declared safe state whatever posture was negotiated, a claim negotiates
 `deny` and sets the startup posture to `refuse`, and a failure includes a
 timeout, a transport failure, an error response, an unmapped disposition, a
@@ -123,40 +127,46 @@ Telemetry pipelines reach more people and systems than the evidence store. An
 exporter that copies action parameters, tool arguments, results, credentials,
 tokens, signatures or reason text into a record discloses them, a consumer may
 read a record, its severity or its absence as evidence of authorization, and an
-export failure could block or change a decision. Mitigations: none of that data
+export failure could block or change a decision.
+
+Mitigations: none of that data
 leaves unless the export policy declares the attribute and its data class, and
 no undeclared attribute or body is emitted (OE1-005, EBMP2-034, EBMP2-035); the
 identifiers of people and records, `ecl.actor.id`, `ecl.subject.id` and
 `ecl.action.target`, also leave only when the export policy declares them
 (OE1-005); telemetry is a copy and never the evidence (OE1-001); object and
-parameter digests are exported only as keyed digests (OE1-010), because a
-reader who can list the possible parameter values (an amount, a short list of
-accounts) could compute each candidate's digest and confirm which one was used;
-with the deployment's export key, the object's digest and its parameters digest
-are HMAC-SHA-256 under that key, each the `stringValue` of 64 lowercase
-hexadecimal digits that a consumer without the key still checks, and without one
-no object or parameter digest is exported (OE1-010); each attribute key appears once, so that no
+parameter digest attributes are exported only as keyed digests (OE1-010), because
+a reader who can list the possible parameter values (an amount, a short list of
+accounts) could otherwise compute each candidate's digest and confirm which one
+was used. With the deployment's export key, these attributes carry HMAC-SHA-256
+values as `stringValue` fields of 64 lowercase hexadecimal digits; without a
+key, these attributes are omitted. Each attribute key appears once, so that no
 reader takes a first attribute of a key that no check saw (OE1-003); nothing is
 inferred from severity or absence (OE1-008); and an export failure changes no
 decision, release or evidence (OE1-002).
 
-What remains: the unkeyed policy digest, policy identifier and version remain
-in the export under OE1-004. The exported object identifiers and outcomes still
-describe activity, and a declared identifier of a person or record tells every reader of
-the pipeline who acted or on what. A reader who obtains the export key can confirm guesses as an unkeyed digest
-would allow, so the key's custody, an assessor check, decides how far the keyed
-digests protect. The `object_id` of an EBMP-2 event is derived from its content
-(EBMP2-047) and is exported as its identifier; a reader would need every member
-of the event, including the digests of the objects it references, which no
-record carries, to confirm a guess through it. Without an export key, a
-consumer matches records to the bundle by identifier only.
+What remains: OE1-004 permits the unkeyed policy digest and exact identifier
+copies in designated attribute-table slots, including content-addressed URIs.
+Identifiers and outcomes can reveal activity or allow records to be correlated;
+identifiers of people and records require the declaration under OE1-005.
+EBMP-2 identifies events by URI and binds referenced content separately by
+canonical digest (EBMP2-002). It does not require an event's `object_id` to be
+derived from its content. A content-derived identifier can confirm guesses when
+the input used to derive it is known or predictable; the keyed-digest rules do
+not conceal identifiers. The deployment evaluates this exposure in its export
+policy. A reader who obtains the export key can also test guesses against the
+keyed digest attributes, so key custody remains part of the assessment. Without
+that key, a consumer can use identifiers to locate objects in the bundle;
+verification of the underlying bundle remains necessary.
 
 ### OAUTH-AUTHORITY-1: token replay and audience confusion
 
 An access token that expresses ECL authority is copied and presented again, at
 another resource server, after the authorization expired or was revoked, or with
 another request; or a verifier accepts a token whose header chooses its own key
-or algorithm. Mitigations: `aud` is exactly the authorization's audience
+or algorithm.
+
+Mitigations: `aud` is exactly the authorization's audience
 (OA1-002); the token's validity lies inside the authorization window, with a
 short maximum lifetime (OA1-003); the token is sender-constrained by DPoP or
 mutual TLS to a key the governed AI system cannot read, the DPoP proof's
@@ -188,7 +198,9 @@ An AARM control plane, or a model behind its context accumulation, intent
 alignment or semantic distance, is compromised or steered by the content it
 evaluates and returns ALLOW or a favorable score for an action that policy over
 verifiable inputs would not admit; or an AARM receipt is offered as proof that
-an action was authorized. Mitigations: the R2, R3 and R7 outputs, and the AARM
+an action was authorized.
+
+Mitigations: the R2, R3 and R7 outputs, and the AARM
 decision in the judgment-source role, which the record lists once as an R4
 input, are `judgment` inputs and never the basis of an `admit` (AB1-006); ALLOW
 maps to `admit` only when policy over `verifiable` inputs permits the action
@@ -387,10 +399,12 @@ refuses a release observed, with its guard added, at or after a proof's
 would extend the window; the gateway reads a monotonic clock before the wall
 clock at each check and refuses a regression (MG1-014).
 
-What remains: a gateway counts the uses of an authorization in the instance
-that holds them, so two instances that each hold an authorization would each
-release once under it; a deployment routes every use of an authorization
-through one instance or shares the use store (MG1-005). A proof's freshness
+What remains: MG1-005 requires one authoritative consumption history for
+every use of an authorization, across gateway instances, restarts, and journal
+retirement, supplied by a shared store or one exclusive owner. A per-instance
+counter alone cannot satisfy that requirement. Deployment tests and the
+assessor must establish that the actual store or owner covers every release
+path; a valid exchange record alone does not establish it. A proof's freshness
 bound is what its type declares; a proof type that declares none is fresh for
 as long as the claim's rule says, and the verifier can test only the bound that
 the discharge records.

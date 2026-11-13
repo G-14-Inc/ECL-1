@@ -1,11 +1,13 @@
 # Implementer guide
 
-This guide is for a team that implements ECL-1 Version 1.0 in its own
+This guide is for a team implementing the ECL-1 Version 1 public-review
+candidate, source `1.0.2-review.1`, in its own
 component, such as an agent host, a tool server, a gateway, a decision service,
 an enforcement point or a verifier. It explains what to implement, how to run
-the conformance tests against the component, how to record the run in a
-conformance report, how to exchange signed evidence with another
-implementation, and how to state and submit a claim. The guide is informative:
+the conformance tests against the component, how to record that test run, how
+to exchange signed evidence with another implementation, and how to describe
+the component in an implementation report. A deployment's full-system or
+bounded action-class mediation claim is separate. The guide is informative:
 where it and a requirement differ, the requirement governs. Following it is not
 an assessment.
 
@@ -25,14 +27,20 @@ Version 1.0 that conform to its normative requirements
    record one result for each.
 4. Verify the evidence your component produces with the offline verifier, and
    verify the sample evidence with your own verifier if you build one.
-5. Record the run in the conformance report template.
-6. State your claim as Section 7.7 of the standard requires, and submit it
-   with its report.
+5. Record the test run in the shared-corpus conformance report template.
+6. Prepare a component or profile implementation report under
+   [Section 2.5](../standard/ECL-1_Standard.md#25-conformance-claim-boundary-and-claim-classes)
+   and the [component report schema](../schemas/ecl-component-implementation-report-v1.schema.json).
+   If claiming mediation for a deployment, prepare its separate claim and
+   assessment evidence under Sections 7 and 11.
 
 ## What to implement
 
-Implement [the core standard](../standard/ECL-1_Standard.md), its companion
-protocols, and the profiles your claim names:
+Implement the applicable requirements of
+[the core standard](../standard/ECL-1_Standard.md), its companion protocols,
+and the profiles your component supports. The implementation report records
+the component's capabilities, requirement results and limitations; it does not
+establish a deployment's conformance. Relevant responsibilities include:
 
 - the one-way rule (Section 5.2 of the core standard): classify each decision
   input in the Consequential Action Register, with whether the action class
@@ -52,7 +60,7 @@ protocols, and the profiles your claim names:
   OpenTelemetry or OAuth ([bindings guide](bindings.md)).
 
 [The rendered index](../render/index.html) links every normative source. The
-minimum set of requirements for an `L1` implementation is listed in
+minimum set of requirements for an `L1` mediation claim is listed in
 [docs/l1-minimum.md](l1-minimum.md).
 
 Derive your implementation and your adverse test cases from the normative
@@ -153,14 +161,16 @@ vectors and the capability each one needs; each vector's manifest, in
 artifact to your component at the vector's stage and compare what it reports
 with the expected result.
 
-Required capabilities: `strict-json`, `canonical-digest`, `semantic-rules` and
+The shared-corpus report profile requires these capabilities:
+`strict-json`, `canonical-digest`, `semantic-rules` and
 `safe-state-profile-rules`. Optional capabilities: `schema-validation`,
 `trust-policy-load`, `envelope-signature-verification`,
 `evidence-bundle-verification`, `control-extension-rules`,
 `binding-profile-rules`, `decision-basis-rule`, `document-validation`,
-`extension-version-rule`, `document-extension-rules`, `key-role-separation`,
-`binding-basis-agreement-rule`, `otel-export-keyed-digests` and
-`offline-package-verification`. `shared-corpus.json` gives each vector's
+`extension-version-rule`, `document-extension-rules`, `deployment-timing-case`,
+`key-role-separation`, `binding-basis-agreement-rule`,
+`otel-export-keyed-digests`, `offline-package-verification` and
+`work-intent-contract`. `shared-corpus.json` gives each vector's
 capability.
 
 - `evidence-bundle-verification` covers every vector of the `evidence-bundle`
@@ -200,6 +210,9 @@ capability.
 - `offline-package-verification` covers the `package` stage: an
   `ecl.zip.store.v1` archive whose evidence bundle is verified under the
   caller's trust policy (IE1-021, IE1-022).
+- `work-intent-contract` covers the named suite and the work-intent parent-context,
+  self-causation and advisory-interval rules (DW1-002, DW1-006, DW1-015). These
+  declaration checks neither resolve causal ancestry nor grant execution authority.
 
 Rules for results:
 
@@ -239,6 +252,8 @@ Validate the completed report against the schema with any JSON Schema draft
 A failed or unsupported vector stays failed or unsupported in the report. The
 report's `claim_boundary` states what it is: a record of a run of the
 conformance tests, not an assessment or a certification.
+This test-run report can supply evidence for a component implementation report
+or a mediation assessment; it does not replace either document.
 
 Beside the report, keep the offline verifier's output on the evidence your
 component produced: run `ecl-verify-ts` with `--json` on each bundle, under the
@@ -278,12 +293,23 @@ samples beside it give: `denied.json`, `verified` with a denied action;
 of `ecl-verify-ts` on the same files, and record both commands and the
 comparison of levels in your report.
 
-## Describe and submit a claim
+## Describe the implementation and any mediation claim
 
-- Name ECL-1 Version 1.0, each companion version and each profile that the
-  claim relies on, the level, the claim status and the claim boundary, as
-  Section 7.7 of the standard requires, and the capability set of your
-  conformance report.
+For a standalone component or profile, use the
+[component implementation report schema](../schemas/ecl-component-implementation-report-v1.schema.json).
+Identify the exact component artifact and version, supported capabilities,
+protocol and profile versions, applicable requirements and their results,
+evidence and limitations. Retain the shared-corpus test-run report as evidence.
+The component report carries no `L1`–`L4` level or mediation conformance status
+and does not establish the conformance of a deployment using the component
+([Section 2.5](../standard/ECL-1_Standard.md#25-conformance-claim-boundary-and-claim-classes)).
+
+For a full-system or bounded action-class mediation claim:
+
+- Name the exact ECL source revision, each companion version and each profile
+  the claim relies on, the level, claim status and boundary, and the other
+  fields Section 7.7 requires. Provide the deployment evidence and assessment
+  required by Sections 7 and 11; a component report cannot waive those duties.
 - For a Transactional Effect statement, name the store, the action class, the
   declared bound B and the counterexample-test catalog (TE1-013).
 - Label the evidence of an effect `issuer-asserted` unless a separately keyed
@@ -297,7 +323,17 @@ comparison of levels in your report.
   implementation is self-testing; an independent assessment needs an assessor
   who meets the independence requirements of Section 7 of the standard
   ([assessor independence](../governance/ASSESSOR_INDEPENDENCE.md)).
-- Submit the claim with its conformance report and the verifier's output by
+- Submit the mediation claim with its shared-corpus test-run report and the verifier's output by
   pull request to the implementers registry of the ECL-1 repository, as
   [governance/CONFORMANCE_CLAIMS.md](../governance/CONFORMANCE_CLAIMS.md) describes. The editors check that the
   submission is complete and list it as self-declared.
+
+That registry procedure is for mediation claims with the fields it requires.
+It does not provide a listing path for a standalone component report; do not
+assign a component an ECL level to fit the registry entry.
+
+The optional `deployment-timing-case` capability checks the declared federated
+exchange interval against the declared connected revocation interval
+(`ecl.rule.deployment-timing-case-consistent.v1`). Its suite includes boundary
+controls and a refusal when exchange is slower. This capability validates
+declarations; it does not measure or establish deployment timing performance.

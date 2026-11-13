@@ -1,0 +1,809 @@
+{
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "contract": "MG1-016 governs newly settled unconsumed admit recovery reasons; MG1-010 retains the original first cause otherwise.",
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "cases": [
+    {
+      "id": "settled-tool-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-tool-recovery-reason.json",
+      "sha256": "c090484b7f114a41997d41a9b5933ed7e0c644c87942e64b1ee4bfdccd89ae6c",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-tool-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-tool-earlier-cause.json",
+      "sha256": "cb710cdfac850415eb76ccf761efbf4a5a665cca69af10b59f6e1bf666c2f18a",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-tool-missing",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-tool-missing.json",
+      "sha256": "ee018daf3578967fc731c6fca1afd034db375c6da8a034de136d8650ccf8b273",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-tool-different",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-tool-different.json",
+      "sha256": "24f484bd65c20a74657fef3f4a6e1ff6856134e8990e1e95ae3b74d79b77d442",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "ordinary-tool-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-tool-earlier-cause.json",
+      "sha256": "4a3767ade4587b674578bcb03a1dbcb25a74b63c73d3145ff23e9460393ef8b2",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "ordinary-tool-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-tool-recovery-reason.json",
+      "sha256": "c1937be07545612007b0ef1d0f1b3e586dbdd93b6b393bc575dba603259535ef",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-tool-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-tool-earlier-cause.json",
+      "sha256": "f93b488be21359ff7906dbe2bb54ad0998cf8af3a0752ec4106b947a6cdd8b64",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-tool-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-tool-recovery-reason.json",
+      "sha256": "b42fc7a3d0e58967638e4d1eab1059d8d0eecf1ac4502da62e0f811c845fe9d6",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "settled-server-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-server-recovery-reason.json",
+      "sha256": "c8160e49ecfd6da75010458a779b24c8924b6e8fcf97c6950a777ecb545a0ea6",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-server-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-server-earlier-cause.json",
+      "sha256": "a83bf3ddbfcd50b4081466a763ca5df1fe4af897c9fd4a5c0566712f7a51ec3f",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-server-missing",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-server-missing.json",
+      "sha256": "1bcc85967f490e6282b8e9c79fad5924e3d4a53e20f39fb4ccf26db314fb8ee9",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-server-different",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-server-different.json",
+      "sha256": "a64de0634aaba74287a58162d04b0d762b3892156d216090d9cf1f57350d5860",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "ordinary-server-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-server-earlier-cause.json",
+      "sha256": "17675976fe900fd72c592ad4fc92eb7f9cca6cedeae029c4fd9e3ddfe2097ed5",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "ordinary-server-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-server-recovery-reason.json",
+      "sha256": "ece024819f4c4a2915a2b11d1db8387036b66e1762c0ac5d2f1d21ad7d6689bb",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-server-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-server-earlier-cause.json",
+      "sha256": "2595ad5756a507d684a523d9b77e5087078bbca7532aafdda12577741b9efdd5",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-server-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-server-recovery-reason.json",
+      "sha256": "de9e3b8dc14762abee8affc1a5e9ba58e9d79be58a09f62ecfdff78948f4d878",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "settled-obligation-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-obligation-recovery-reason.json",
+      "sha256": "f18912a635f20daddc3c3df68595606a66a1c2e4af4c0699d413b2ac0a772651",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-obligation-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-obligation-earlier-cause.json",
+      "sha256": "36dc008847ecc3b96dd401a9ab24e5bebebde4615aef46af14a379d571cda7c4",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-obligation-missing",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-obligation-missing.json",
+      "sha256": "348cd9984e98b648b188d53bbb25f9ffcf4189e7f19bdfc98d9de9c6695af19d",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-obligation-different",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-obligation-different.json",
+      "sha256": "833b6e02a8863940e51611165b8a1e8a4580cd99489b7aca60a77a3926343aeb",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "ordinary-obligation-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-obligation-earlier-cause.json",
+      "sha256": "b470e581bb82af62513cc18662db538ce21281d192cba1ae5af4e2ed6b3f6793",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "ordinary-obligation-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-obligation-recovery-reason.json",
+      "sha256": "1387e2b49ab523bd7030b60fd7f5b0574489a174b0667e663a5bf4b8da328a8e",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-obligation-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-obligation-earlier-cause.json",
+      "sha256": "a580c13ccacc867a2f76af505d62442e3c7fa38d1331dc2d4534c2856691e782",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-obligation-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-obligation-recovery-reason.json",
+      "sha256": "1ee7078a3135ff1e411030284bdb733eb455301984df9f1f3612d4e6c6b89d6d",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "settled-expired-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-expired-recovery-reason.json",
+      "sha256": "873ef91621fed999f29507825875722c828f9ba879ccc577b16abc888c75fa10",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-expired-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-expired-earlier-cause.json",
+      "sha256": "11264a83ed4ab2685557fe8c2551c4862a2b60ae7b8953302746e4fdadec584c",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-expired-missing",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-expired-missing.json",
+      "sha256": "89159d703d29ab243a9b73cc916d12f97efac9b458305f30a892ac04cb2da0fa",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-expired-different",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-expired-different.json",
+      "sha256": "806c0a51ab33599eb1f056b14677eb9ad76ae661de0db7c9b15a7fccb8b446c6",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "ordinary-expired-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-expired-earlier-cause.json",
+      "sha256": "8b5b5ca1a77c2c5c670a9b7433bd1ffe3f51d6af330c5dd0891a4958bd87d051",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "expired_before_release",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "ordinary-expired-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-expired-recovery-reason.json",
+      "sha256": "6b3cd20b10cc4e8d1dc556844269919cadc26f60141f28a1e9d1e0b5815c2d34",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "expired_before_release",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-expired-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-expired-earlier-cause.json",
+      "sha256": "aca2db9be2871ab30bc339a9f2253295310d4f41a1463d1b1bccf2750bf5e2ed",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "expired_before_release",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-expired-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-expired-recovery-reason.json",
+      "sha256": "a59c3c8afcd9868d29da3428d3bc6c10b33ac26e076c56fdb1697b9837bec469",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "expired_before_release",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "settled-halt-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-halt-recovery-reason.json",
+      "sha256": "e909a95ee44032f341ea503c219afdf0ba5488b2a560c6c025a889e28bd6bd9f",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-halt-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-halt-earlier-cause.json",
+      "sha256": "317fb59589272a6cf4d261a334d0c0ff3e9b96186d4a958f3c88e7a3cb6333e3",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-halt-missing",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-halt-missing.json",
+      "sha256": "e921c8dc415d8edd6b65df299c92fc14357f31702f5eb3c6ec6861ab1375dc7f",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-halt-different",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-halt-different.json",
+      "sha256": "5b92b99688f108c5ae5d7d3053383f773b4da60b931c8d3dc712998e9a274d5a",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "ordinary-halt-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-halt-earlier-cause.json",
+      "sha256": "77af619744e19f68a4b6f41c2dafa0103fbeb459982adb70424bdb1e610efeba",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "ordinary-halt-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-halt-recovery-reason.json",
+      "sha256": "bb77ef49d3afc14633bd4ef5f3ae5b0b1e2ffcf710fc2a7360842bab2c6dfdfa",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-halt-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-halt-earlier-cause.json",
+      "sha256": "247738bcffc1efd051bcfb04f0c34923ce9a5b38572341b52e070bfbf4f550ca",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-halt-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-halt-recovery-reason.json",
+      "sha256": "e88e41a58fc9ba04347f4fddc8d261551c14b31eac5c4d083b4931dbbe2d2233",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "settled-stale-control-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-stale-control-recovery-reason.json",
+      "sha256": "dff3071214292fcaaf7a9be442758825cfaca7367455d5e59dd246413d9ce1ac",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-stale-control-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-stale-control-earlier-cause.json",
+      "sha256": "b94b158b407c5ec9204070a208c4ad0f2524075e60945b394cd8720e86eb2f0a",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-stale-control-missing",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-stale-control-missing.json",
+      "sha256": "0e3a8b3ce8f88a291189db2a60ad1c0a6109ab23ce15a3e2cae9da3ea8c45f98",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "settled-stale-control-different",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-stale-control-different.json",
+      "sha256": "843b03739f186bcce275f1bb807d2993010780d175c60eed665cd05e7e7d7156",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Newly settled unconsumed admit retains the MG1-016 recovery reason independently of the earlier returned refusal."
+    },
+    {
+      "id": "ordinary-stale-control-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-stale-control-earlier-cause.json",
+      "sha256": "572d7e24c39d7a281f88e8ae9d02e976257fa3d3a782b7eecbca819fc0b7ddf2",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "ordinary-stale-control-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/ordinary-stale-control-recovery-reason.json",
+      "sha256": "e0aeb16e8cf9e41d6803b71e488e2333a5cda817ec7397ce9f1aa1b43a80a417",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-stale-control-earlier-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-stale-control-earlier-cause.json",
+      "sha256": "42988a2c759351d96c488bdd122fa6e793d571fce25062c24f0571227f048eeb",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "recorded-stale-control-recovery-reason",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/recorded-stale-control-recovery-reason.json",
+      "sha256": "7ddd8d727b2806bbc85af8369506fd0d3fc014b7eaa32ba42b8fbbfed6415946",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/extensions"
+      ],
+      "purpose": "Ordinary refusals and retained original terminals still require the first MG1-006 cause."
+    },
+    {
+      "id": "control-unconsumed-no-return",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-unconsumed-no-return.json",
+      "sha256": "6771fbd9b78679df7accb5d8921591c4df86f1b155f5722a9b201b4cf253bb23",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Unchanged recovery uncertainty, committed use, or non-admit first-cause behavior."
+    },
+    {
+      "id": "control-consumed-no-return",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-consumed-no-return.json",
+      "sha256": "4d0a7c6e4add7580e20788baa325261a821ca3d9f8fd7048776723a5a493f68d",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "cancelled",
+      "required_finding_paths": [],
+      "purpose": "Unchanged recovery uncertainty, committed use, or non-admit first-cause behavior."
+    },
+    {
+      "id": "control-released-unknown",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-released-unknown.json",
+      "sha256": "6fa84ab38b0f1438716a8d702a590dddb815fa068ae39874d350628dbab9901b",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "unknown",
+      "required_finding_paths": [],
+      "purpose": "Unchanged recovery uncertainty, committed use, or non-admit first-cause behavior."
+    },
+    {
+      "id": "control-decision-denied",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-decision-denied.json",
+      "sha256": "1a95c760d7c0fe336e45e2840dafc600b4444a6f3c9fdd556463fd2c9454cc68",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "required_finding_paths": [],
+      "purpose": "Unchanged recovery uncertainty, committed use, or non-admit first-cause behavior."
+    },
+    {
+      "id": "control-decision-held",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-decision-held.json",
+      "sha256": "a5081d3051b1a96384a6d422d82a0f89d22277acc72dfa986f538519cb839181",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "required_finding_paths": [],
+      "purpose": "Unchanged recovery uncertainty, committed use, or non-admit first-cause behavior."
+    },
+    {
+      "id": "control-decision-challenged",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-decision-challenged.json",
+      "sha256": "17ccb398a2f5a02dc156ce47b9abfbbdb6fd8ea208d38ddcbbc84cc4773cd80d",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "required_finding_paths": [],
+      "purpose": "Unchanged recovery uncertainty, committed use, or non-admit first-cause behavior."
+    },
+    {
+      "id": "settled-tool-wrong-returned-cause",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-tool-wrong-returned-cause.json",
+      "sha256": "07cbf11c9be8bf28170cd601dcc420b4c369f0ed685a924a3958528261d9d890",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-refusal-defined.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/returned/error"
+      ],
+      "purpose": "The recovery-reason exception does not waive MG1-006 for the retained returned error."
+    },
+    {
+      "id": "control-mcp-invalid-recovered-admit-denied-names-authority",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-mcp-invalid-recovered-admit-denied-names-authority.json",
+      "sha256": "3c7620e26af71b363fb67c1b7434c2bb272918f6e4d6fa2859095f90aba8fcd2",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/event/authority"
+      ],
+      "purpose": "Existing corpus negative: the reason exception does not waive state or consumed-authority checks."
+    },
+    {
+      "id": "control-mcp-invalid-recovered-admit-denied-with-prepared",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-mcp-invalid-recovered-admit-denied-with-prepared.json",
+      "sha256": "7f9da0cc1379ddddeaedf869fbc82de2b8bbfa834a54333d4e2275a8dde87ca4",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "required_finding_paths": [
+        "/terminal/event/state"
+      ],
+      "purpose": "Existing corpus negative: the reason exception does not waive state or consumed-authority checks."
+    },
+    {
+      "id": "control-mcp-invalid-recovered-cancelled-without-authority",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/control-mcp-invalid-recovered-cancelled-without-authority.json",
+      "sha256": "d453d20c4801782c25adc22c5f99c7d48be35f36e659755e0535642ba0007c12",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "cancelled",
+      "required_finding_paths": [
+        "/terminal/event/authority"
+      ],
+      "purpose": "Existing corpus negative: the reason exception does not waive state or consumed-authority checks."
+    },
+    {
+      "id": "settled-admit-held-invalid",
+      "path": "tests/fixtures/mcp-recovery-reason-priority/settled-admit-held-invalid.json",
+      "sha256": "320819fef7b38b4e4b66be933de582937ab6a92989f05e782388c59e3ba456d2",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "required_finding_paths": [
+        "/terminal/event/state"
+      ],
+      "purpose": "A retained admit does not permit a held terminal; the denied-only recovery exception does not apply."
+    }
+  ]
+}

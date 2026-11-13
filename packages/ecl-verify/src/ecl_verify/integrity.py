@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import base64
 import hashlib
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
@@ -18,7 +17,7 @@ from .canonical import (
     loads_json_strict,
     same_json,
 )
-from .schema import parse_rfc3339_utc
+from .schema import rfc3339_utc_nanoseconds
 
 
 class IntegrityError(ValueError):
@@ -477,17 +476,16 @@ def _decode_signature(value: str) -> bytes:
         raise IntegrityError("signature is not canonical base64")
     return decoded
 
-def _time(value: str) -> datetime:
+def _time(value: str) -> int:
     try:
-        parsed = parse_rfc3339_utc(value)
+        return rfc3339_utc_nanoseconds(value)
     except ValueError as exc:
         raise IntegrityError(f"invalid UTC timestamp: {value!r}") from exc
-    return parsed.astimezone(timezone.utc)
 
 def _validate_context(
     policy: dict[str, Any],
     context: VerificationContext,
-) -> datetime:
+) -> int:
     trust = policy.get("trust_policy")
     if not isinstance(trust, dict):
         raise _policy_error("signed payload lacks a trust policy reference")
@@ -529,7 +527,7 @@ def _key_ineligibility(
     *,
     payload_type: str,
     context: VerificationContext,
-    evaluated_at: datetime,
+    evaluated_at: int,
     role: str | None = None,
 ) -> str | None:
     """Why a key cannot count for this payload at `evaluated_at` (IE1-040, step 6 (a) to (c)):
@@ -567,6 +565,15 @@ def _verify_signature(
 
         if not isinstance(public_key, Ed25519PublicKey):
             raise IntegrityError("Ed25519 suite requires an Ed25519 public key")
+        # Direct callers use the same key domain as TrustPolicy.load (TP1-003).
+        # Import here because trust imports the key and context types from this module.
+        from cryptography.exceptions import InvalidSignature
+        from .trust import _require_ed25519_point
+
+        try:
+            _require_ed25519_point(public_key.public_bytes_raw())
+        except ValueError as exc:
+            raise InvalidSignature from exc
         public_key.verify(signature, message)
         return
     if suite_id == "ecl.sig.ecdsa-p256-sha256.v1":
@@ -614,7 +621,7 @@ def _verify_signature(
 def verify_envelope(
     envelope: dict[str, Any],
     keyring: dict[str, VerificationKey],
-    context: VerificationContext,
+    context: VerificationContext | Callable[[Any], VerificationContext],
     *,
     key_times: dict[str, str] | None = None,
 ) -> VerificationResult:
@@ -624,7 +631,9 @@ def verify_envelope(
     check it first). `key_times` gives a signing key its own evaluation time, which takes the
     place of the context's for that key's revocation and validity (IE1-034: a signature that a
     trusted-time countersignature covers is evaluated at its attested time, each other one at
-    the object's own time); the threshold counts each signature as evaluated at its own time."""
+    the object's own time); the threshold counts each signature as evaluated at its own time.
+    A context provider receives the checked payload only after the resource,
+    payload/media and policy checks, preserving their refusal order."""
 
     from cryptography.exceptions import InvalidSignature
 
@@ -680,6 +689,13 @@ def verify_envelope(
     policy = payload.get("integrity_policy") if isinstance(payload, dict) else None
     if not isinstance(policy, dict):
         raise IntegrityError("signed payload lacks integrity_policy")
+    # Step 3: outer extensions have their own registered consumer-rule diagnostics.
+    from .resources import extension_findings
+
+    outer_findings = extension_findings(envelope)
+    if outer_findings:
+        finding = outer_findings[0]
+        raise IntegrityError(finding.message, code=finding.rule_id)
     # Step 4: the payload-bound policy, its lists' declared limit first.
     for name in ("accepted_suites", "eligible_key_ids", "required_key_ids"):
         raw = policy.get(name)
@@ -699,7 +715,7 @@ def verify_envelope(
         raise _policy_error("integrity threshold must be at least one")
 
     def policy_string_set(name: str) -> set[str]:
-        raw = policy.get(name)
+        raw = policy.get(name, [] if name in {"eligible_key_ids", "required_key_ids"} else None)
         if not isinstance(raw, list) or any(
             not isinstance(item, str) or not item for item in raw
         ):
@@ -715,6 +731,13 @@ def verify_envelope(
         raise _policy_error("accepted_suites cannot be empty")
     if required_keys and threshold < len(required_keys):
         raise _policy_error("threshold cannot be lower than required key count")
+    if callable(context):
+        try:
+            context = context(payload)
+        except Exception as exc:
+            raise _policy_error(f"verification context provider refused the payload: {exc}") from exc
+        if not isinstance(context, VerificationContext):
+            raise _policy_error("verification context provider returned no VerificationContext")
     evaluated_at = _validate_context(policy, context)
     context_allowed_suites = set(context.allowed_suites)
     context_prohibited_suites = set(context.prohibited_suites)
@@ -728,9 +751,9 @@ def verify_envelope(
     for item in signatures:
         if not isinstance(item, dict):
             raise IntegrityError("integrity signature entry must be an object")
-        key_id = str(item.get("key_id") or "")
-        suite_id = str(item.get("suite_id") or "")
-        if not key_id or not suite_id:
+        key_id = item.get("key_id")
+        suite_id = item.get("suite_id")
+        if not isinstance(key_id, str) or not key_id or not isinstance(suite_id, str) or not suite_id:
             raise IntegrityError("integrity signature identity is incomplete")
         if (key_id, suite_id) in observed:
             raise IntegrityError("duplicate signature identity")
@@ -745,7 +768,8 @@ def verify_envelope(
         # (a) an acceptable key for this suite, payload and policy.
         key = keyring.get(key_id)
         if (
-            suite_id not in accepted_suites
+            (protocol == "DCMP-2" and role is None)
+            or suite_id not in accepted_suites
             or suite_id not in context_allowed_suites
             or suite_id in context_prohibited_suites
             or (eligible_keys and key_id not in eligible_keys)

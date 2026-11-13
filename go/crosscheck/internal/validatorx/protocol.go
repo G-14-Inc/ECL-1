@@ -91,6 +91,16 @@ func contains(values []string, value string) bool {
 	return false
 }
 
+// MalformedEBMPEvent identifies a truthy non-object event container on an event
+// record. Falsy values retain the reference's empty-object behavior.
+func MalformedEBMPEvent(root map[string]any) bool {
+	if root["protocol"] != "EBMP-2" || root["object_type"] != "event_record" {
+		return false
+	}
+	_, isObject := root["event"].(map[string]any)
+	return !isObject && pyjson.Truthy(root["event"])
+}
+
 // Protocol returns the RC-4 rule findings and the XR1-010 findings for one DCMP-2 or EBMP-2
 // object. An extensions member that is not an array of objects gets no finding here: the schema
 // and the core's extension check refuse it.
@@ -109,7 +119,7 @@ func Protocol(value any, options validator.Options) []validator.Finding {
 			id, _ := extension["id"].(string)
 			// XR1-017: allocated under any status, a deprecated identifier included; the options
 			// name only the active entries, the occurrences a consumer knows (XR1-006).
-			if strings.HasPrefix(id, "ecl.") && !Allocated(id) {
+			if (strings.HasPrefix(id, "ecl.") && !Allocated(id)) || reservedExtensionNamespace(id) {
 				add(RuleExtensionNamespace, fmt.Sprintf("/extensions/%d/id", index), "unallocated ECL extension identifier")
 			}
 		}
@@ -145,6 +155,10 @@ func Protocol(value any, options validator.Options) []validator.Finding {
 		}
 	case "EBMP-2":
 		if root["object_type"] != "event_record" {
+			return findings
+		}
+		if MalformedEBMPEvent(root) {
+			add(schemaInvalid, "/", "EBMP-2 semantic check rejected malformed input: event must be an object")
 			return findings
 		}
 		eventType, _ := root["event_type"].(string)

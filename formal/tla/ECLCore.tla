@@ -18,6 +18,11 @@
 (* decision service can be unavailable. The emergency halt is a separate   *)
 (* plane that works during that outage and is acknowledged within the      *)
 (* bound B.                                                                *)
+(* An authenticated challenge approval is consumed by at most one new     *)
+(* admitting continuation request. A conflicting request identifier is    *)
+(* refused without a second decision response. Stale control state latches*)
+(* a per-EP restricted action class; fresh proof and a recorded lift are    *)
+(* required to release that restriction. Short outages need not trigger it.*)
 (*                                                                         *)
 (* The governed AI system can propose any request through any enforcement  *)
 (* point, chooses its own asserted input values (actor_supplied) and       *)
@@ -69,7 +74,12 @@ Flaws == {"outage_proceeds", "no_digest_binding", "no_target_binding",
           "ignore_halt", "halt_unbounded", "evidence_not_atomic", "bypass",
           "actor_writes_authority", "actor_writes_decision", "actor_erases_evidence",
           "judgment_admits", "self_report_admits", "hold_never_times_out",
-          "no_decision_timeout", "halt_ack_lost", "late_decision_used"}
+          "no_decision_timeout", "halt_ack_lost", "late_decision_used",
+          "skip_reconciliation", "continuation_not_bound", "approval_reuse",
+          "expired_approval", "revoked_approval", "skip_restriction_lift",
+          "stale_recovery_proof", "unrecorded_restriction_lift",
+          "continuation_attempt_collision", "repeated_staleness_ignored",
+          "recovery_never_resumes"}
 
 ASSUME Variant \in Flaws \cup {"correct"}
 ASSUME /\ Allowed \subseteq [target : Targets, params : Params]
@@ -124,14 +134,21 @@ AuthorityOf(d) ==
      epoch |-> d.epoch]
 
 VARIABLES
+    continuations, \* immutable fresh-request links to challenges and approvals
+    approvals, revokedApprovals, \* authenticated approval records and their revocations
+    rejected,      \* refused request-identity collisions, not decision responses
+    restriction,   \* per-EP action-class restriction and fresh-proof generations
+    liftLog,       \* recorded authorized lifting control actions
     now,          \* global tick
+    operationMode, \* unavailable, reconciling or normal; TS1-014
+    recoveryChecks, \* completed frontiers for the current recovery
     dsUp,         \* decision service available
     upSince,      \* tick since which it has been continuously up, or NoTime
     downSince,    \* tick at which the current outage began, or NoTime
     outages,      \* outages so far
     submitted,    \* requests the actor has submitted
     pending,      \* [req, deadline]: awaiting a decision
-    held,         \* [req, deadline]: held or challenged, awaiting an authenticated input
+    held,         \* [req, decision, deadline]: bounded hold/challenge progress
     decisions,    \* decision records; only the decision service adds to this set
     issued,       \* authority objects; only the decision service adds to this set
     consumed,     \* authority objects an enforcement point has used
@@ -141,12 +158,12 @@ VARIABLES
     view,         \* enforcement point -> [synced, epoch, revoked]: its local control state
     haltAt,       \* tick of the emergency halt request, or NoTime
     halted,       \* enforcement point -> halt acknowledged
-    closed,       \* requests that ended in deny or the declared safe state
+    closed,       \* denied, challenged, refused or timed-out attempts; never release authority
     effects,      \* effects that occurred
     unlogged,     \* effects whose evidence is not yet written (flaw evidence_not_atomic only)
     log           \* append-only evidence log
 
-vars == << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+vars == << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
            decisions, issued, consumed, revocations, trustEpoch, trustChanges,
            view, haltAt, halted, closed, effects, unlogged, log >>
 
@@ -157,22 +174,72 @@ Authorities == [req : Requests, aud : EPs, from : 0..MaxTime,
 Decisions == [req : Requests, outcome : {"admit", "deny", "hold", "challenge"},
               at : 0..MaxTime, epoch : Epochs]
 Effects == [n : Nat, ep : EPs, scope : Scopes, auth : Authorities \cup {NoAuthority},
-            at : 0..MaxTime, up : BOOLEAN, upSince : Times, downSince : Times]
+            at : 0..MaxTime, up : BOOLEAN, upSince : Times, downSince : Times, synced : 0..MaxTime]
+
+Approvals == [challenge : Decisions, at : 0..MaxTime, deadline : 0..MaxTime,
+              until : Validity..(MaxTime + Validity), epoch : Epochs]
+Continuations == [req : Requests, challenge : Decisions, approval : Approvals,
+                  root : ReqIds, attempt : 1..MaxRequests]
+
+ContextOf(r) ==
+    IF \E c \in continuations : c.req = r
+    THEN LET c == CHOOSE c \in continuations : c.req = r
+         IN [root |-> c.root, attempt |-> c.attempt]
+    ELSE [root |-> r.id, attempt |-> 0]
+
+(* Allocate a fresh attempt within the workflow, including siblings. The  *)
+(* existing accepted root counts as attempt zero; rejected ID collisions   *)
+(* never acquire a workflow attempt. EBMP2-058 forbids two requests with   *)
+(* the same workflow/action/attempt identity.                              *)
+NextContinuationAttempt(r) ==
+    Cardinality({old \in submitted \ rejected : ContextOf(old).root = ContextOf(r).root})
+
+Admitted(r) == \E d \in decisions : d.req = r /\ d.outcome = "admit"
+
+ContinuationBound(c) ==
+    /\ c.challenge.outcome = "challenge"
+    /\ c.approval.challenge = c.challenge
+    /\ c.req.id # c.challenge.req.id
+    /\ c.req.action = c.challenge.req.action /\ c.req.aud = c.challenge.req.aud
+    /\ c.root = ContextOf(c.challenge.req).root
+    /\ c.attempt > ContextOf(c.challenge.req).attempt
+    /\ c.approval.at <= c.approval.deadline
+
+ContinuationReady(c) ==
+    /\ Flawed("continuation_not_bound") \/ ContinuationBound(c)
+    /\ Flawed("expired_approval") \/ now < c.approval.until
+    /\ Flawed("revoked_approval") \/ c.approval \notin revokedApprovals
+    /\ c.approval.epoch = trustEpoch
+    /\ Flawed("approval_reuse")
+       \/ ~\E other \in continuations :
+            /\ other.challenge = c.challenge \/ other.approval = c.approval
+            /\ Admitted(other.req)
+
+RecoveryFrontiers == {"policy_epochs", "revocations", "consumed_authorities",
+                      "buffered_evidence", "unresolved_effects", "clock_continuities"}
 
 TypeOK ==
+    /\ continuations \subseteq Continuations
+    /\ approvals \subseteq Approvals /\ revokedApprovals \subseteq approvals
+    /\ rejected \subseteq submitted
+    /\ restriction \in [EPs -> [active : BOOLEAN, generation : 0..MaxTime,
+                                  proof : 0..MaxTime, lifted : 0..MaxTime, faultAt : Times]]
+    /\ liftLog \in Seq([ep : EPs, generation : 0..MaxTime, at : 0..MaxTime])
+    /\ operationMode \in {"unavailable", "reconciling", "normal"}
+    /\ recoveryChecks \subseteq RecoveryFrontiers
     /\ now \in 0..MaxTime
     /\ dsUp \in BOOLEAN /\ upSince \in Times /\ downSince \in Times
     /\ outages \in 0..MaxOutages
     /\ submitted \subseteq Requests
     /\ pending \subseteq [req : Requests, deadline : 0..MaxTime]
-    /\ held \subseteq [req : Requests, deadline : 0..MaxTime]
+    /\ held \subseteq [req : Requests, decision : Decisions, deadline : 0..MaxTime]
     /\ decisions \subseteq Decisions
     /\ issued \subseteq Authorities
     /\ consumed \subseteq Authorities
     /\ revocations \subseteq [auth : Authorities, at : 0..MaxTime]
     /\ trustEpoch \in Epochs
     /\ trustChanges \subseteq [epoch : Epochs, at : 0..MaxTime]
-    /\ view \in [EPs -> [synced : 0..MaxTime, epoch : Epochs, revoked : SUBSET Authorities]]
+    /\ view \in [EPs -> [synced : 0..MaxTime, epoch : Epochs, revoked : SUBSET Authorities, recovery : 0..MaxOutages]]
     /\ haltAt \in Times
     /\ halted \in [EPs -> BOOLEAN]
     /\ closed \subseteq Requests
@@ -181,12 +248,17 @@ TypeOK ==
     /\ log \in Seq([kind : {"effect"}, n : Nat])
 
 Init ==
+    /\ continuations = {} /\ approvals = {} /\ revokedApprovals = {} /\ rejected = {}
+    /\ restriction = [ep \in EPs |-> [active |-> FALSE, generation |-> 0,
+                                       proof |-> 0, lifted |-> 0, faultAt |-> NoTime]]
+    /\ liftLog = << >>
+    /\ operationMode = "normal" /\ recoveryChecks = RecoveryFrontiers
     /\ now = 0
     /\ dsUp = TRUE /\ upSince = 0 /\ downSince = NoTime /\ outages = 0
     /\ submitted = {} /\ pending = {} /\ held = {}
     /\ decisions = {} /\ issued = {} /\ consumed = {}
     /\ revocations = {} /\ trustEpoch = 0 /\ trustChanges = {}
-    /\ view = [ep \in EPs |-> [synced |-> 0, epoch |-> 0, revoked |-> {}]]
+    /\ view = [ep \in EPs |-> [synced |-> 0, epoch |-> 0, revoked |-> {}, recovery |-> 0]]
     /\ haltAt = NoTime /\ halted = [ep \in EPs |-> FALSE]
     /\ closed = {} /\ effects = {} /\ unlogged = {} /\ log = << >>
 
@@ -197,11 +269,13 @@ Init ==
 Submit(r) ==
     /\ Cardinality(submitted) < MaxRequests
     /\ r \notin submitted
-    /\ submitted' = submitted \cup {r}
-    /\ pending' = pending \cup {[req |-> r, deadline |-> Min(now + DecisionDeadline, MaxTime)]}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, held, decisions, issued,
-                    consumed, revocations, trustEpoch, trustChanges, view, haltAt,
-                    halted, closed, effects, unlogged, log >>
+    /\ LET collision == \E old \in submitted : old.id = r.id
+       IN /\ submitted' = submitted \cup {r}
+          /\ pending' = IF collision THEN pending
+                         ELSE pending \cup {[req |-> r, deadline |-> Min(now + DecisionDeadline, MaxTime)]}
+          /\ rejected' = IF collision THEN rejected \cup {r} ELSE rejected
+          /\ closed' = IF collision THEN closed \cup {r} ELSE closed
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, held, decisions, issued, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, effects, unlogged, log >>
 
 (* Flaw "bypass": a path from the actor to the effect that skips the       *)
 (* enforcement point (ECL1N-0033, ECL1N-0141).                             *)
@@ -210,8 +284,8 @@ DirectEffect(r) ==
     /\ r \in submitted
     /\ effects' = effects \cup {[n |-> Cardinality(effects), ep |-> r.aud, scope |-> ScopeOf(r),
                                  auth |-> NoAuthority, at |-> now, up |-> dsUp,
-                                 upSince |-> upSince, downSince |-> downSince]}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+                                 upSince |-> upSince, downSince |-> downSince, synced |-> view[r.aud].synced]}
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, haltAt, halted, closed, unlogged, log >>
 
@@ -222,7 +296,7 @@ ForgeAuthority(r) ==
     /\ r \in submitted
     /\ issued' = issued \cup {[req |-> r, aud |-> r.aud, from |-> now,
                                until |-> now + Validity, epoch |-> trustEpoch]}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, consumed, revocations, trustEpoch, trustChanges, view,
                     haltAt, halted, closed, effects, unlogged, log >>
 
@@ -234,7 +308,7 @@ ForgeDecision(r) ==
     /\ LET d == [req |-> r, outcome |-> "admit", at |-> now, epoch |-> trustEpoch]
        IN /\ decisions' = decisions \cup {d}
           /\ issued' = issued \cup {AuthorityOf(d)}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     consumed, revocations, trustEpoch, trustChanges, view, haltAt,
                     halted, closed, effects, unlogged, log >>
 
@@ -244,7 +318,7 @@ EraseEvidence ==
     /\ Flawed("actor_erases_evidence")
     /\ Len(log) > 0
     /\ log' = SubSeq(log, 1, Len(log) - 1)
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, haltAt, halted, closed, effects, unlogged >>
 
@@ -252,41 +326,64 @@ EraseEvidence ==
 (* The decision service. s and j are chosen by the governed AI system.     *)
 
 Decide(p, s, j) ==
-    /\ dsUp
+    /\ dsUp /\ operationMode = "normal"
     /\ p \in pending
     /\ (Flawed("late_decision_used") \/ now < p.deadline)
     /\ LET r == p.req
-           collision == \E d \in decisions : d.req.id = r.id /\ d.req # r   \* DCMP2-005
-           o == IF collision THEN "deny" ELSE Evaluate(r, s, j)
+           continuationOK == \A c \in continuations : c.req = r => ContinuationReady(c)
+           o == IF continuationOK THEN Evaluate(r, s, j) ELSE "deny"
            d == [req |-> r, outcome |-> o, at |-> now, epoch |-> trustEpoch]
        IN /\ pending' = pending \ {p}
           /\ decisions' = decisions \cup {d}
           /\ issued' = IF o = "admit" THEN issued \cup {AuthorityOf(d)} ELSE issued
           /\ held' = IF o \in {"hold", "challenge"}
-                        THEN held \cup {[req |-> r, deadline |-> Min(now + HoldDeadline, MaxTime)]}
+                        THEN held \cup {[req |-> r, decision |-> d,
+                                          deadline |-> Min(now + HoldDeadline, MaxTime)]}
                         ELSE held
-          /\ closed' = IF o = "deny" THEN closed \cup {r} ELSE closed
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, consumed,
-                    revocations, trustEpoch, trustChanges, view, haltAt, halted,
-                    effects, unlogged, log >>
+          /\ closed' = IF o \in {"deny", "challenge"} THEN closed \cup {r} ELSE closed
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, effects, unlogged, log >>
 
-(* An authenticated approval or signed witness answers a hold or challenge *)
-(* (ECL1N-0177, DCMP2-021). The actor cannot perform this step. The new    *)
-(* evaluation rests on the verifiable inputs.                              *)
-Resolve(h) ==
-    /\ dsUp
-    /\ h \in held
-    /\ now < h.deadline
-    /\ LET r == h.req
-           o == VerifiableOnly(r)
-           d == [req |-> r, outcome |-> o, at |-> now, epoch |-> trustEpoch]
-       IN /\ held' = held \ {h}
-          /\ decisions' = decisions \cup {d}
-          /\ issued' = IF o = "admit" THEN issued \cup {AuthorityOf(d)} ELSE issued
-          /\ closed' = IF o = "deny" THEN closed \cup {r} ELSE closed
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, consumed,
-                    revocations, trustEpoch, trustChanges, view, haltAt, halted,
-                    effects, unlogged, log >>
+(* Human approval is authenticated, separate from the actor and bound to   *)
+(* one challenge response. It is an input to a later evaluation, not an    *)
+(* admit. Approval is enabled only while capacity for a fresh continuation *)
+(* remains in this finite campaign. Non-human hold progression is omitted; *)
+(* the bounded hold can still time out.                                    *)
+Approve(h) ==
+    /\ dsUp /\ operationMode = "normal"
+    /\ h \in held /\ h.decision.outcome = "challenge"
+    /\ now <= h.deadline
+    /\ Cardinality(submitted) < MaxRequests
+    /\ \E id \in ReqIds : ~\E r \in submitted : r.id = id
+    /\ approvals' = approvals \cup {[challenge |-> h.decision, at |-> now,
+                                     deadline |-> h.deadline, until |-> now + Validity,
+                                     epoch |-> trustEpoch]}
+    /\ held' = held \ {h}
+    /\ UNCHANGED << continuations, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, decisions, issued, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, closed, effects, unlogged, log >>
+
+(* The actor may offer a mismatched approval/challenge/action combination. *)
+(* Decide checks the immutable continuation context before admitting it.   *)
+SubmitContinuation(r, d, ap) ==
+    /\ Cardinality(submitted) < MaxRequests /\ r \notin submitted
+    /\ d \in decisions /\ ap \in approvals
+    /\ LET collision == \E old \in submitted : old.id = r.id
+           c == [req |-> r, challenge |-> d, approval |-> ap,
+                  root |-> ContextOf(d.req).root,
+                  attempt |-> IF Flawed("continuation_attempt_collision")
+                              THEN ContextOf(d.req).attempt + 1
+                              ELSE NextContinuationAttempt(d.req)]
+       IN /\ submitted' = submitted \cup {r}
+          /\ pending' = IF collision THEN pending
+                         ELSE pending \cup {[req |-> r, deadline |-> Min(now + DecisionDeadline, MaxTime)]}
+          /\ continuations' = IF collision THEN continuations ELSE continuations \cup {c}
+          /\ rejected' = IF collision THEN rejected \cup {r} ELSE rejected
+          /\ closed' = IF collision THEN closed \cup {r} ELSE closed
+    /\ UNCHANGED << approvals, revokedApprovals, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, held, decisions, issued, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, effects, unlogged, log >>
+
+RevokeApproval(ap) ==
+    /\ ap \in approvals /\ ap \notin revokedApprovals
+    /\ Cardinality(revokedApprovals) < MaxRevocations
+    /\ revokedApprovals' = revokedApprovals \cup {ap}
+    /\ UNCHANGED << continuations, approvals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held, decisions, issued, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, closed, effects, unlogged, log >>
 
 -----------------------------------------------------------------------------
 (* Enforcement points.                                                     *)
@@ -305,13 +402,13 @@ DecisionTimeout(p) ==
     /\ IF Flawed("outage_proceeds") /\ ~dsUp
          THEN LET e == [n |-> Cardinality(effects), ep |-> p.req.aud, scope |-> ScopeOf(p.req),
                         auth |-> NoAuthority, at |-> now, up |-> dsUp,
-                        upSince |-> upSince, downSince |-> downSince]
+                        upSince |-> upSince, downSince |-> downSince, synced |-> view[p.req.aud].synced]
               IN /\ effects' = effects \cup {e}
                  /\ log' = Append(log, [kind |-> "effect", n |-> e.n])
                  /\ UNCHANGED closed
          ELSE /\ closed' = closed \cup {p.req}
               /\ UNCHANGED << effects, log >>
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, held, decisions,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, held, decisions,
                     issued, consumed, revocations, trustEpoch, trustChanges, view,
                     haltAt, halted, unlogged >>
 
@@ -323,13 +420,15 @@ HoldTimeout(h) ==
     /\ now >= h.deadline
     /\ held' = held \ {h}
     /\ closed' = closed \cup {h.req}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, haltAt, halted, effects, unlogged, log >>
 
 (* The checks an enforcement point applies to a presented request and      *)
 (* authority object; each flaw drops one.                                  *)
 Admissible(ep, sc, a) ==
+    /\ (Flawed("skip_restriction_lift") \/ ~restriction[ep].active)
+    /\ operationMode # "reconciling"                                     \* TS1-014
     /\ a.req.id = sc.id                                                          \* DCMP2-044
     /\ Flawed("no_digest_binding") \/ a.req.action.params = sc.action.params    \* DCMP2-007, DCMP2-044
     /\ Flawed("no_target_binding") \/ a.req.action.target = sc.action.target    \* DCMP2-044
@@ -349,7 +448,7 @@ Execute(ep, sc, a) ==
     /\ a \in issued
     /\ Admissible(ep, sc, a)
     /\ LET e == [n |-> Cardinality(effects), ep |-> ep, scope |-> sc, auth |-> a, at |-> now,
-                 up |-> dsUp, upSince |-> upSince, downSince |-> downSince]
+                 up |-> dsUp, upSince |-> upSince, downSince |-> downSince, synced |-> view[ep].synced]
        IN /\ effects' = effects \cup {e}
           /\ consumed' = consumed \cup {a}
           /\ IF Flawed("evidence_not_atomic")
@@ -357,7 +456,7 @@ Execute(ep, sc, a) ==
                     /\ UNCHANGED log
                ELSE /\ log' = Append(log, [kind |-> "effect", n |-> e.n])
                     /\ UNCHANGED unlogged
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, revocations, trustEpoch, trustChanges, view,
                     haltAt, halted, closed >>
 
@@ -365,7 +464,7 @@ RecordEvidence(e) ==
     /\ e \in unlogged
     /\ unlogged' = unlogged \ {e}
     /\ log' = Append(log, [kind |-> "effect", n |-> e.n])
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, haltAt, halted, closed, effects >>
 
@@ -376,13 +475,13 @@ RecordEvidence(e) ==
 (* decision, and leaving it out only removes redundant states.              *)
 Sync(ep) ==
     /\ dsUp
-    /\ LET fresh == [synced |-> now, epoch |-> trustEpoch, revoked |-> {rv.auth : rv \in revocations}]
+    /\ LET fresh == [synced |-> now, epoch |-> trustEpoch, revoked |-> {rv.auth : rv \in revocations}, recovery |-> outages]
        IN /\ view[ep] # fresh
           /\ \/ SyncWithoutNews
              \/ view[ep].epoch # fresh.epoch
              \/ view[ep].revoked # fresh.revoked
           /\ view' = [view EXCEPT ![ep] = fresh]
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     haltAt, halted, closed, effects, unlogged, log >>
 
@@ -394,7 +493,7 @@ Revoke(a) ==
     /\ Cardinality(revocations) < MaxRevocations
     /\ ~\E rv \in revocations : rv.auth = a
     /\ revocations' = revocations \cup {[auth |-> a, at |-> now]}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, trustEpoch, trustChanges, view, haltAt,
                     halted, closed, effects, unlogged, log >>
 
@@ -404,7 +503,7 @@ TrustChange ==
     /\ trustEpoch < MaxTrustChanges
     /\ trustEpoch' = trustEpoch + 1
     /\ trustChanges' = trustChanges \cup {[epoch |-> trustEpoch + 1, at |-> now]}
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, view, haltAt, halted,
                     closed, effects, unlogged, log >>
 
@@ -412,16 +511,85 @@ Fail ==
     /\ dsUp
     /\ outages < MaxOutages
     /\ dsUp' = FALSE /\ downSince' = now /\ upSince' = NoTime /\ outages' = outages + 1
-    /\ UNCHANGED << now, submitted, pending, held, decisions, issued, consumed,
+    /\ operationMode' = "unavailable" /\ recoveryChecks' = {}
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, now, submitted, pending, held, decisions, issued, consumed,
                     revocations, trustEpoch, trustChanges, view, haltAt, halted, closed,
                     effects, unlogged, log >>
 
 Recover ==
     /\ ~dsUp
     /\ dsUp' = TRUE /\ upSince' = now /\ downSince' = NoTime
-    /\ UNCHANGED << now, outages, submitted, pending, held, decisions, issued, consumed,
+    /\ operationMode' = IF Flawed("skip_reconciliation") THEN "normal" ELSE "reconciling"
+    /\ recoveryChecks' = {}
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, now, outages, submitted, pending, held, decisions, issued, consumed,
                     revocations, trustEpoch, trustChanges, view, haltAt, halted, closed,
                     effects, unlogged, log >>
+
+(* Service reachability alone is not normal-mode recovery. These frontiers *)
+(* are abstract checks of the represented state, not proofs of a concrete   *)
+(* journal, external effect, wall clock or distributed storage protocol.    *)
+(* This model shares consumed authority globally, logs each correct effect *)
+(* atomically and has no unknown effects or clock jumps. Those four       *)
+(* frontiers are therefore trivial here; implementations must refine them. *)
+RecoveryReady ==
+    /\ recoveryChecks = RecoveryFrontiers
+    /\ \A ep \in EPs : /\ view[ep].epoch = trustEpoch
+                         /\ view[ep].revoked = {rv.auth : rv \in revocations}
+                         /\ view[ep].synced >= upSince
+                         /\ view[ep].recovery = outages
+    /\ consumed \subseteq issued
+    /\ unlogged = {}
+
+Reconcile ==
+    /\ dsUp /\ operationMode = "reconciling"
+    /\ recoveryChecks # RecoveryFrontiers
+    /\ consumed \subseteq issued /\ unlogged = {}
+    /\ view' = [ep \in EPs |-> [synced |-> now, epoch |-> trustEpoch,
+                                  revoked |-> {rv.auth : rv \in revocations}, recovery |-> outages]]
+    /\ recoveryChecks' = RecoveryFrontiers
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, now, dsUp, upSince, downSince, outages,
+                    submitted, pending, held, decisions, issued, consumed,
+                    revocations, trustEpoch, trustChanges, haltAt, halted,
+                    closed, effects, unlogged, log >>
+
+ResumeNormal ==
+    /\ ~Flawed("recovery_never_resumes")
+    /\ dsUp /\ operationMode = "reconciling"
+    /\ RecoveryReady
+    /\ operationMode' = "normal"
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, recoveryChecks, now, dsUp, upSince, downSince, outages,
+                    submitted, pending, held, decisions, issued, consumed,
+                    revocations, trustEpoch, trustChanges, view, haltAt, halted,
+                    closed, effects, unlogged, log >>
+
+(* One abstract action class is represented per enforcement point. Fresh  *)
+(* proof rechecks the represented control state after the restriction     *)
+(* trigger. Existing unexpired authority is still checked at Execute.     *)
+CurrentControlProof(ep) ==
+    /\ dsUp
+    /\ view[ep].synced >= restriction[ep].faultAt
+    /\ now - view[ep].synced <= StalenessBound
+    /\ view[ep].epoch = trustEpoch
+    /\ view[ep].revoked = {rv.auth : rv \in revocations}
+    /\ ~halted[ep]
+
+ObtainFreshProof(ep) ==
+    /\ restriction[ep].active /\ CurrentControlProof(ep)
+    /\ restriction[ep].proof # restriction[ep].generation
+    /\ restriction' = [restriction EXCEPT ![ep].proof = restriction[ep].generation]
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held, decisions, issued, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, closed, effects, unlogged, log >>
+
+(* This model chooses a recorded authorized lift for the staleness trigger *)
+(* (ECL1N-0193). It does not impose that choice on every deployment mode.   *)
+LiftRestriction(ep) ==
+    /\ restriction[ep].active /\ CurrentControlProof(ep)
+    /\ Flawed("stale_recovery_proof") \/ restriction[ep].proof = restriction[ep].generation
+    /\ restriction' = [restriction EXCEPT ![ep].active = FALSE,
+                                          ![ep].lifted = restriction[ep].generation]
+    /\ liftLog' = IF Flawed("unrecorded_restriction_lift") THEN liftLog
+                  ELSE Append(liftLog, [ep |-> ep, generation |-> restriction[ep].generation,
+                                       at |-> now])
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held, decisions, issued, consumed, revocations, trustEpoch, trustChanges, view, haltAt, halted, closed, effects, unlogged, log >>
 
 (* The emergency plane is separately authenticated: the actor cannot use   *)
 (* it, and it does not depend on the decision service (FR-004, DCMP2-025). *)
@@ -429,7 +597,7 @@ HaltRequest ==
     /\ AllowHalt
     /\ haltAt = NoTime
     /\ haltAt' = now
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, halted, closed, effects, unlogged, log >>
 
@@ -438,7 +606,7 @@ HaltAck(ep) ==
     /\ haltAt # NoTime
     /\ ~halted[ep]
     /\ halted' = [halted EXCEPT ![ep] = TRUE]
-    /\ UNCHANGED << now, dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, restriction, liftLog, operationMode, recoveryChecks, now, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, haltAt, closed, effects, unlogged, log >>
 
@@ -448,6 +616,9 @@ HaltAck(ep) ==
 (* requests and holds at their deadlines. Tick may reach a deadline, but    *)
 (* cannot pass it until its request is resolved. Weak fairness supplies     *)
 (* eventual timeout transitions. These are model assumptions.               *)
+(* Each new fresh-to-stale crossing starts a new fault generation, even   *)
+(* if an earlier restriction remains active. Proof obtained before that   *)
+(* crossing cannot authorize its lift (ECL1N-0193).                       *)
 Tick ==
     /\ now < MaxTime
     /\ \/ Flawed("no_decision_timeout") \/ Flawed("late_decision_used")
@@ -461,14 +632,24 @@ Tick ==
        \/ now + 1 - haltAt <= HaltBound
        \/ \A ep \in EPs : halted[ep]
     /\ now' = now + 1
-    /\ UNCHANGED << dsUp, upSince, downSince, outages, submitted, pending, held,
+    /\ restriction' = [ep \in EPs |->
+         IF ~Flawed("ignore_staleness")
+               /\ now + 1 - view[ep].synced > StalenessBound
+               /\ IF Flawed("repeated_staleness_ignored") THEN ~restriction[ep].active
+                   ELSE now - view[ep].synced <= StalenessBound
+         THEN [restriction[ep] EXCEPT !.active = TRUE,
+                                    !.generation = @ + 1, !.faultAt = now + 1]
+         ELSE restriction[ep]]
+    /\ UNCHANGED << continuations, approvals, revokedApprovals, rejected, liftLog, operationMode, recoveryChecks, dsUp, upSince, downSince, outages, submitted, pending, held,
                     decisions, issued, consumed, revocations, trustEpoch, trustChanges,
                     view, haltAt, halted, closed, effects, unlogged, log >>
 
 Next ==
     \/ \E r \in Requests : Submit(r)
     \/ \E p \in pending, s \in SelfReports, j \in Judgments : Decide(p, s, j)
-    \/ \E h \in held : Resolve(h)
+    \/ \E h \in held : Approve(h)
+    \/ \E r \in Requests, d \in decisions, ap \in approvals : SubmitContinuation(r, d, ap)
+    \/ \E ap \in approvals : RevokeApproval(ap)
     \/ \E p \in pending : DecisionTimeout(p)
     \/ \E h \in held : HoldTimeout(h)
     \/ \E ep \in EPs, sc \in Scopes, a \in issued : Execute(ep, sc, a)
@@ -482,6 +663,9 @@ Next ==
     \/ \E ep \in EPs : Sync(ep)
     \/ Fail
     \/ Recover
+    \/ Reconcile
+    \/ ResumeNormal
+    \/ \E ep \in EPs : ObtainFreshProof(ep) \/ LiftRestriction(ep)
     \/ HaltRequest
     \/ \E ep \in EPs : HaltAck(ep)
     \/ Tick
@@ -490,6 +674,7 @@ Next ==
 (* environment (outages) or the operators.                                 *)
 Fairness ==
     /\ WF_vars(Tick)
+    /\ WF_vars(Reconcile) /\ WF_vars(ResumeNormal)
     /\ \A ep \in EPs : WF_vars(Sync(ep)) /\ WF_vars(HaltAck(ep))
     /\ WF_vars(\E p \in pending : DecisionTimeout(p))
     /\ WF_vars(\E h \in held : HoldTimeout(h))
@@ -569,12 +754,12 @@ AdmitOnlyAllowed == \A d \in decisions : d.outcome = "admit" => d.req.action \in
 
 (* S7. An outage never lets an action go ahead: an effect while the        *)
 (* decision service is down rests on an admit issued before the outage     *)
-(* began, inside the staleness bound measured from the outage's start.     *)
+(* began, inside the staleness bound measured from the actual view refresh.     *)
 NoEffectDuringOutage ==
     \A e \in effects : ~e.up =>
         /\ e.auth # NoAuthority
         /\ e.auth.from <= e.downSince
-        /\ e.at <= e.downSince + StalenessBound
+        /\ e.at <= e.synced + StalenessBound
 
 (* S8. A request that ended in deny or the declared safe state has no      *)
 (* effect.                                                                 *)
@@ -597,11 +782,79 @@ NoLateDecision ==
     [][\A d \in decisions' \ decisions :
         \A q \in pending \cup held : d.req = q.req => now < q.deadline]_vars
 
+(* Recovery safety: ordinary effects are withheld while reconciling and   *)
+(* a return to normal requires all modeled frontiers. A new revocation     *)
+(* after normal resumption still follows the declared propagation bound.   *)
+NoEffectDuringReconciliation ==
+    [][operationMode = "reconciling" => effects' = effects]_vars
+
+RecoveryBeforeNormal ==
+    [][(operationMode # "normal" /\ operationMode' = "normal") =>
+        (operationMode = "reconciling" /\ RecoveryReady)]_vars
+
+(* Request identity, human-approval progression and recovery restrictions. *)
+UniqueDecisionResponse ==
+    \A d1,d2 \in decisions : d1.req.id = d2.req.id => d1 = d2
+
+UniqueWorkflowAttempt ==
+    \A a,b \in submitted \ rejected :
+        (ContextOf(a) = ContextOf(b) /\ a.action = b.action) => a = b
+
+ContinuationAdmitBound ==
+    \A c \in continuations : \A d \in decisions :
+        (d.req = c.req /\ d.outcome = "admit") =>
+            /\ ContinuationBound(c)
+            /\ d.at < c.approval.until /\ c.approval.epoch = d.epoch
+
+OneAdmittingContinuation ==
+    \A c1,c2 \in continuations :
+        (Admitted(c1.req) /\ Admitted(c2.req)
+         /\ (c1.challenge = c2.challenge \/ c1.approval = c2.approval)) => c1.req = c2.req
+
+NoContinuationWithRevokedApproval ==
+    [][\A d \in decisions' \ decisions : d.outcome = "admit" =>
+         \A c \in continuations : c.req = d.req => c.approval \notin revokedApprovals]_vars
+
+ControlStateFreshAtEffect ==
+    \A e \in effects : e.auth # NoAuthority => e.at <= e.synced + StalenessBound
+
+NoEffectWhileRestricted ==
+    [][\A e \in effects' \ effects : ~restriction[e.ep].active]_vars
+
+(* A second fault must invalidate proof collected for an earlier fault, *)
+(* including a second crossing while the first restriction is active.   *)
+FreshStalenessInvalidatesProof ==
+    [][\A ep \in EPs :
+         (now' = now + 1 /\ now - view[ep].synced <= StalenessBound
+          /\ now' - view[ep].synced > StalenessBound) =>
+             /\ restriction'[ep].active
+             /\ restriction'[ep].generation = restriction[ep].generation + 1
+             /\ restriction'[ep].faultAt = now'
+             /\ restriction'[ep].proof # restriction'[ep].generation]_vars
+
+RestrictionLiftRequiresFreshProof ==
+    [][\A ep \in EPs : (restriction[ep].active /\ ~restriction'[ep].active) =>
+         /\ CurrentControlProof(ep)
+         /\ restriction[ep].proof = restriction[ep].generation
+         /\ Len(liftLog') = Len(liftLog) + 1
+         /\ liftLog'[Len(liftLog')].ep = ep
+         /\ liftLog'[Len(liftLog')].generation = restriction[ep].generation]_vars
+
+LiftLogAppendOnly ==
+    [][Len(liftLog') >= Len(liftLog) /\ SubSeq(liftLog',1,Len(liftLog)) = liftLog]_vars
+
+NoRecoveredEffectOnUnreconciledState ==
+    [][\A e \in effects' \ effects :
+        (dsUp /\ outages > 0 /\ view[e.ep].recovery < outages /\ e.auth # NoAuthority) =>
+            /\ e.auth \notin {rv.auth : rv \in revocations}
+            /\ e.auth.epoch >= trustEpoch]_vars
+
 Safety ==
     /\ TypeOK /\ EffectHasMatchingAdmit /\ EffectWithinAuthority /\ SingleUse
     /\ NoEffectBeyondHaltBound /\ RevocationBound /\ EffectHasEvidence
     /\ OneWayRule /\ AdmitOnlyAllowed /\ NoEffectDuringOutage /\ SafeStateHasNoEffect
-    /\ DeadlineBound
+    /\ DeadlineBound /\ UniqueDecisionResponse /\ ContinuationAdmitBound
+    /\ OneAdmittingContinuation /\ ControlStateFreshAtEffect /\ UniqueWorkflowAttempt
 
 -----------------------------------------------------------------------------
 (* Liveness under fairness.                                                *)
@@ -609,9 +862,9 @@ Safety ==
 HeldReqs == {h.req : h \in held}
 FinalDecided(r) == \E d \in decisions : d.req = r /\ d.outcome \in {"admit", "deny"}
 
-(* A held or challenged action is eventually decided or ends in the safe   *)
-(* state.                                                                  *)
-HoldResolves == \A r \in Requests : (r \in HeldReqs) ~> (FinalDecided(r) \/ r \in closed)
+(* A bounded progress wait eventually closes by timeout or by recording  *)
+(* a challenge approval. Any continuation has its own request obligation. *)
+HoldResolves == \A r \in Requests : (r \in HeldReqs) ~> (r \notin HeldReqs)
 
 (* Every submitted request is eventually decided or ends in the safe state. *)
 RequestResolves ==
@@ -619,5 +872,12 @@ RequestResolves ==
 
 (* A halt request takes effect at every enforcement point.                 *)
 HaltTakesEffect == (haltAt # NoTime) ~> (\A ep \in EPs : halted[ep])
+
+(* No fairness is imposed on restoration of the external service. Once   *)
+(* service availability eventually becomes permanent, fair control steps *)
+(* complete reconciliation and return global operation to normal. A      *)
+(* separate class restriction may still need an operator-authorized lift. *)
+RecoveryCompletes ==
+    (<>[]dsUp) => ((operationMode = "reconciling") ~> (operationMode = "normal"))
 
 =============================================================================

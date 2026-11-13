@@ -130,7 +130,9 @@ test("the report keeps the reference's JSON shape", async () => {
     "findings",
     "primary",
     "register",
+    "response_clock_skew_seconds",
     "scope",
+    "software",
     "trust_dependencies",
     "unresolved_predecessor_ids",
     "verdict",
@@ -138,6 +140,8 @@ test("the report keeps the reference's JSON shape", async () => {
   ]);
   assert.equal(value["primary"], null);
   assert.equal(value["register"], null);
+  assert.equal(value["response_clock_skew_seconds"], 0);
+  assert.deepEqual(value["software"], { name: "ecl-ts", version: "1.0.2-review.1", source_build: "1.0.2-review.1" });
 });
 
 test("DCMP2-053: the verifier requires the decision basis of every decision response", () => {
@@ -441,13 +445,18 @@ test("EBMP2-072 to EBMP2-075: recorded forwards, use counts, single-use releases
     "bundle-invalid-mcp-success-without-response-digest": ["ecl.error.decision-binding-invalid.v1", "envelope 4: the terminal event binds no server response"],
     "bundle-invalid-use-count-beyond-policy": ["ecl.error.decision-binding-invalid.v1", "envelope 2: the use count is outside the authorization's use policy"],
     "bundle-invalid-single-use-consumed-twice": ["ecl.error.decision-binding-invalid.v1", "two consumptions of one authorization record one use"],
-    "bundle-invalid-single-use-release-without-consumption": ["ecl.error.decision-binding-invalid.v1", "envelope 2: a release of single-use authority has no recorded consumption"],
   };
   for (const [id, [code, message]] of Object.entries(expected)) {
     const report = run(id);
     assert.equal(report.verdict, "invalid", id);
     assert.deepEqual([report.findings[0]?.code, report.findings[0]?.message], [code, message], id);
   }
+  const missingConsumption = run("bundle-invalid-single-use-release-without-consumption");
+  assert.equal(missingConsumption.verdict, "invalid");
+  assert.deepEqual(missingConsumption.findings.map((finding) => [finding.code, finding.message]), [
+    ["ecl.error.decision-binding-invalid.v1", "a post-release terminal attempt lacks consumed authority or release evidence"],
+    ["ecl.error.decision-binding-invalid.v1", "envelope 2: a release of single-use authority has no recorded consumption"],
+  ]);
   const within = run("bundle-valid-mcp-forward-within-authority");
   assert.equal(within.verdict, "verified");
   assert.equal(within.completionAfterWindow, false);

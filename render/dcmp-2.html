@@ -12,7 +12,8 @@
 <main id="main">
 <h1 id="dcmp-2-decision-and-control-message-protocol">DCMP-2: Decision and Control Message Protocol</h1>
 <p>Version: 2.0 (wire <code>schema_version</code> <code>2.0</code>)
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code>
 Schema: <code>schemas/dcmp-2.schema.json</code>
 Registry dependencies: algorithm suites, extensions, errors, semantic rules</p>
 <h2 id="1-purpose">1. Purpose</h2>
@@ -26,6 +27,10 @@ described in BCP 14 when, and only when, they appear in all capitals.</p>
 <h2 id="2-conformance-surface">2. Conformance surface</h2>
 <p><span id="DCMP2-001"><strong>DCMP2-001</strong></span><a class="requirement-link" href="#DCMP2-001" aria-label="Link to DCMP2-001">§</a> — A DCMP-2 producer MUST emit an object that satisfies the
 published JSON Schema and all applicable semantic rules.</p>
+<p>This draft supports only <code>single_use</code> authority. The previously allocated
+<code>bounded_multi_use</code> value is reserved and unsupported; its presence in a
+registry or historical artifact does not make it an accepted wire value.
+<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a> defines the request and authorization domains.</p>
 <p><span id="DCMP2-002"><strong>DCMP2-002</strong></span><a class="requirement-link" href="#DCMP2-002" aria-label="Link to DCMP2-002">§</a> — A DCMP-2 consumer MUST perform strict JSON parsing before
 schema validation. Duplicate members, floating-point values, negative zero,
 integers outside the interoperable exact range, invalid Unicode scalar values,
@@ -103,7 +108,7 @@ supplied.</li>
 <code>authorization</code> object.</p>
 <p><span id="DCMP2-013"><strong>DCMP2-013</strong></span><a class="requirement-link" href="#DCMP2-013" aria-label="Link to DCMP2-013">§</a> — An <code>admit</code> response MUST carry an authorization object whose
 audience, scope digest, validity interval, and use policy bind the exact release
-authority. A consumer MUST reject an <code>admit</code> response whose <code>authorization</code> is
+authority for one action release. A consumer MUST reject an <code>admit</code> response whose <code>authorization</code> is
 absent or not an object, or lacks any of <code>authorization_id</code>, <code>audience</code>,
 <code>scope_digest</code>, <code>valid_from</code>, <code>valid_until</code> and <code>use_policy</code>, with
 <code>ecl.rule.admit-requires-valid-authority.v1</code>; how these members bind the request
@@ -176,18 +181,22 @@ list one <code>input</code> more than once, MUST NOT record an <code>actor_suppl
 <code>derived_from</code> names an input that is not <code>verifiable</code>; each name in
 <code>derived_from</code> MUST be the <code>input</code> of another entry of the record, and the
 inputs that <code>derived_from</code> names, followed through other entries, MUST NOT
-include the entry itself. An <code>admit</code> response that carries it MUST record at
+include the entry itself.</p>
+<p><strong><a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> (continued)</strong> — An <code>admit</code> response that carries it MUST record at
 least one <code>verifiable</code> input with the <code>effect</code> <code>supports</code>, and MUST NOT record
 an input whose <code>required</code> is <code>true</code> and whose <code>status</code> is not <code>available</code>. When
 the extension gives <code>verifiable_only_outcome</code>, the response's <code>outcome</code> MUST NOT
 come before it in the strictness order <code>admit</code>, <code>challenge</code>, <code>hold</code>, <code>deny</code> of
 ECL-1 Section 4.3; an entry MUST NOT have the <code>effect</code> <code>supports</code> unless
-<code>verifiable_only_outcome</code> is <code>admit</code>; and when <code>verifiable_only_outcome</code> is
+<code>verifiable_only_outcome</code> is <code>admit</code>; when <code>verifiable_only_outcome</code> is
+<code>deny</code>, each <code>actor_supplied</code> or <code>judgment</code> entry MUST have the <code>effect</code> <code>none</code>
+(<a href="ecl-1_standard.html#ECL1N-0181">ECL1N-0181</a>); and when <code>verifiable_only_outcome</code> is
 <code>admit</code>, at least one <code>verifiable</code> entry MUST have the <code>effect</code> <code>supports</code>, and an entry whose <code>class</code> is <code>verifiable</code> and whose
 <code>required</code> is <code>true</code> MUST have the <code>status</code> <code>available</code>. In these conditions an
 input also counts as not <code>available</code> when its <code>derived_from</code> names, directly or
 through other entries, an input whose <code>status</code> is not <code>available</code> (ECL-1 Section
-4.3). An entry whose <code>obtained_at</code> is later than the response's <code>evaluated_at</code>
+4.3).</p>
+<p><strong><a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> (continued)</strong> — An entry whose <code>obtained_at</code> is later than the response's <code>evaluated_at</code>
 MUST NOT be <code>available</code>, and an extension whose entries give <code>obtained_at</code> MUST
 give <code>received_at</code>, no later than <code>evaluated_at</code>. When the extension gives
 <code>received_at</code>, every entry whose <code>status</code> is <code>available</code> MUST give <code>obtained_at</code>
@@ -197,7 +206,8 @@ record and with a register, after the case normalization of RFC 3986 section
 6.2.2.1 and RFC 8141 section 3.1: the URI scheme, the namespace identifier of a
 URN and the host of an <code>http</code> or <code>https</code> URI are lowercased, and the two
 hexadecimal digits of each percent-encoding are uppercased; no other
-normalization is applied. A consumer MUST reject a response that fails these
+normalization is applied.</p>
+<p><strong><a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> (continued)</strong> — A consumer MUST reject a response that fails these
 conditions with <code>ecl.rule.decision-basis-one-way.v1</code>, after validating the
 extension&#x27;s value against its value schema (<a href="extension-registry-1.html#XR1-023">XR1-023</a>). An evidence verifier MUST
 reject a decision response that does not carry the extension with
@@ -207,7 +217,8 @@ with <code>ecl.rule.decision-basis-one-way.v1</code>, a response whose extension
 compared as input names are, because an input that the governed AI system
 produces is <code>actor_supplied</code> (ECL-1 Section 4.3, <a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>), or gives a
 <code>received_at</code> earlier than the request's <code>issued_at</code> by more than the response
-clock-skew allowance of <a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>. A verifier MUST refuse, as a usage error, a
+clock-skew allowance of <a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>.</p>
+<p><strong><a href="dcmp-2.html#DCMP2-053">DCMP2-053</a> (continued)</strong> — A verifier MUST refuse, as a usage error, a
 register that fails its schema or <code>ecl.rule.register-declarations-consistent.v1</code>
 (<a href="ecl-1_standard.html#ECL1N-0178">ECL1N-0178</a>), among them a register that declares an action class, or an input
 of one class, more than once. A verifier given a version of the register MUST
@@ -233,8 +244,8 @@ as ECL-1 Section 4.3 requires.</p>
 <p><span id="DCMP2-021"><strong>DCMP2-021</strong></span><a class="requirement-link" href="#DCMP2-021" aria-label="Link to DCMP2-021">§</a> — Challenge satisfaction MUST cause a new evaluation and a new
 decision response. It MUST NOT mutate or retroactively convert an earlier
 response.</p>
-<p><span id="DCMP2-056"><strong>DCMP2-056</strong></span><a class="requirement-link" href="#DCMP2-056" aria-label="Link to DCMP2-056">§</a> — A request that continues a request answered with a decision
-response whose outcome is <code>challenge</code> MUST be a new decision request (<a href="dcmp-2.html#DCMP2-021">DCMP2-021</a>,
+<p><span id="DCMP2-056"><strong>DCMP2-056</strong></span><a class="requirement-link" href="#DCMP2-056" aria-label="Link to DCMP2-056">§</a> — A request that continues a human-approval challenge MUST be a
+new decision request (<a href="dcmp-2.html#DCMP2-021">DCMP2-021</a>,
 <a href="dcmp-2.html#DCMP2-026">DCMP2-026</a>): a new <code>message_id</code>; the continued request's <code>workflow.workflow_id</code>
 and <code>workflow.root_trace_id</code>; a <code>workflow.attempt</code> greater than the continued
 request's; and an <code>action</code>, <code>actor</code>, <code>subject</code> and <code>authority_request</code> equal to
@@ -248,6 +259,13 @@ The continued request keeps its one response, the challenge, and its attempt
 ends in the <code>challenged</code> state; the continuation's response is the one that can
 authorize a release. <code>protocols/examples/dcmp-2-continuation.json</code> shows a
 continuation with the objects it names.</p>
+<p><strong><a href="dcmp-2.html#DCMP2-056">DCMP2-056</a> (continued)</strong> — A non-human evidence challenge requires a binding profile that defines its
+progression, source authentication and retained causal evidence. This Version 1
+continuation record supports the human-approval progression only. A bundle
+with an unresolved challenge predecessor is incomplete under <a href="ebmp-2.html#EBMP2-059">EBMP2-059</a> and
+MUST NOT be presented as a complete challenge history. A consumer MUST NOT
+discard a causal edge or substitute a decision-basis label for the source
+authentication that the challenge requires.</p>
 <p><span id="DCMP2-057"><strong>DCMP2-057</strong></span><a class="requirement-link" href="#DCMP2-057" aria-label="Link to DCMP2-057">§</a> — The Decision Layer MUST evaluate a continuation afresh under the
 policy in force at its evaluation and MUST NOT copy the outcome, authorization or
 obligations of the continued response. The approval is a decision input of that
@@ -347,10 +365,24 @@ EBMP-2 <a href="ebmp-2.html#EBMP2-068">EBMP2-068</a>.</p>
 <h2 id="8-response-binding">8. Response binding</h2>
 <p>A response is valid for release only as the answer to one exact request. These
 rules state what binds the two. A verifier, an enforcement point and an
-evidence consumer apply them in the order listed and report the first failure
-with the error code named for it, or with <code>ecl.error.request-binding-invalid.v1</code>
-where none is named. A member a rule reads that is missing or of the wrong type
-fails that rule.</p>
+evidence consumer apply the checks in the following order and report the first
+failure with the error code named for it, or with
+<code>ecl.error.request-binding-invalid.v1</code> where none is named. Requirement numbers
+identify the rules; they do not prescribe their execution order. A member a rule
+reads that is missing or of the wrong type fails that rule.</p>
+<ol>
+<li>Check the message types and the request's supported use-policy domain
+(<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>), then the request, workflow, trace and attempt identifiers
+(<a href="dcmp-2.html#DCMP2-045">DCMP2-045</a>).</li>
+<li>Check the <code>responds-to</code> predecessor (<a href="dcmp-2.html#DCMP2-046">DCMP2-046</a>), then issue-time chronology
+(<a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>). For a non-<code>admit</code> response, the authority checks do not apply.</li>
+<li>For an <code>admit</code>, check the authorization's supported use-policy domain
+(<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>), then request expiry at evaluation (<a href="dcmp-2.html#DCMP2-047">DCMP2-047</a>).</li>
+<li>Check audience (<a href="dcmp-2.html#DCMP2-048">DCMP2-048</a>), scope digest (<a href="dcmp-2.html#DCMP2-044">DCMP2-044</a>), use-policy equality
+(<a href="dcmp-2.html#DCMP2-048">DCMP2-048</a>), authorization duration (<a href="dcmp-2.html#DCMP2-049">DCMP2-049</a>), the explicit maximum-use echo
+(<a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>), and authorization containment in the response interval
+(<a href="dcmp-2.html#DCMP2-049">DCMP2-049</a>), in that order.</li>
+</ol>
 <p><span id="DCMP2-044"><strong>DCMP2-044</strong></span><a class="requirement-link" href="#DCMP2-044" aria-label="Link to DCMP2-044">§</a> — In an <code>admit</code>, <code>authorization.scope_digest</code> MUST be the
 <code>ecl.digest.sha-256.v1</code> digest of the restricted canonical JSON of an object
 with exactly two members: <code>request_id</code>, set to the request's <code>message_id</code>, and
@@ -367,7 +399,15 @@ relations are permitted.</p>
 <p><span id="DCMP2-047"><strong>DCMP2-047</strong></span><a class="requirement-link" href="#DCMP2-047" aria-label="Link to DCMP2-047">§</a> — A response's <code>issued_at</code> MUST NOT be earlier than its request's
 <code>issued_at</code> by more than the response clock-skew allowance that the
 verification profile declares. The reference verification profile
-(<code>ecl.verification-profile.reference.v1</code>) declares an allowance of zero.</p>
+(<code>ecl.verification-profile.reference.v1</code>) declares an allowance of zero.
+For an <code>admit</code>, the response's <code>evaluated_at</code> MUST be earlier than the request's
+<code>expires_at</code>: request expiry is exclusive at evaluation, without a clock-skew
+allowance. The Decision Layer MUST NOT admit an expired request, and an evidence
+consumer MUST report an evaluation at or after request expiry with
+<code>ecl.error.request-binding-invalid.v1</code>, after the issue-time chronology and
+supported-use-policy checks and before the remaining admitting-response authority
+checks. A <code>deny</code>, <code>hold</code> or <code>challenge</code>
+MAY be evaluated at or after request expiry to record the non-admitting result.</p>
 <p><span id="DCMP2-048"><strong>DCMP2-048</strong></span><a class="requirement-link" href="#DCMP2-048" aria-label="Link to DCMP2-048">§</a> — In an <code>admit</code>, <code>authorization.audience</code> MUST equal the request's
 <code>authority_request.audience</code>, reported as <code>ecl.error.audience-mismatch.v1</code> when it
 does not, and <code>authorization.use_policy</code> MUST equal the request's
@@ -376,10 +416,24 @@ does not, and <code>authorization.use_policy</code> MUST equal the request's
 longer than the request's <code>requested_validity_seconds</code>; <code>valid_from</code> MUST NOT be
 earlier than the response's <code>issued_at</code>; <code>valid_until</code> MUST NOT be later than the
 response's <code>expires_at</code> when the response has one, and MUST NOT be later than the
-response's <code>issued_at</code> plus <code>requested_validity_seconds</code>.</p>
-<p><span id="DCMP2-050"><strong>DCMP2-050</strong></span><a class="requirement-link" href="#DCMP2-050" aria-label="Link to DCMP2-050">§</a> — In an <code>admit</code>, a <code>single_use</code> authorization MUST omit <code>max_uses</code>
-or set it to 1, and when the request carries <code>authority_request.max_uses</code> the
-authorization MUST carry a <code>max_uses</code> that is not greater.</p>
+response's <code>issued_at</code> plus <code>requested_validity_seconds</code>.
+An authorization MAY outlive the request's <code>expires_at</code> when the request was
+unexpired at the admitting evaluation and these authorization bounds hold.</p>
+<p><span id="DCMP2-050"><strong>DCMP2-050</strong></span><a class="requirement-link" href="#DCMP2-050" aria-label="Link to DCMP2-050">§</a> — A request's <code>authority_request.use_policy</code> and an <code>admit</code>'s
+<code>authorization.use_policy</code> MUST be <code>single_use</code>. In both objects, <code>max_uses</code>
+MUST be absent or the integer 1; when the request carries
+<code>authority_request.max_uses</code>, the authorization MUST carry <code>max_uses</code> equal to 1.
+A consumer MUST reject any other use policy or maximum, including the
+reserved <code>bounded_multi_use</code> value, and MUST NOT reinterpret it as single-use
+authority. A decoded-object response-binding checker MUST report these domain
+failures with <code>ecl.error.request-binding-invalid.v1</code>: it checks the request
+domain before matching the response, including a non-<code>admit</code> response, and the
+admitting authorization domain before the request-expiry and other authority
+checks. Schema validation remains the earlier gate for protocol objects.
+Decoded-object execution-event and authority-event binding checkers MUST also
+reject unsupported domains in the requests or admitting authorizations they
+receive, using their event-binding diagnostic
+<code>ecl.error.decision-binding-invalid.v1</code> before comparing the bound identifiers.</p>
 <p><span id="DCMP2-051"><strong>DCMP2-051</strong></span><a class="requirement-link" href="#DCMP2-051" aria-label="Link to DCMP2-051">§</a> — A consumer MUST NOT release an action on a response that fails
 any of <a href="dcmp-2.html#DCMP2-044">DCMP2-044</a> to <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a>, and an evidence verifier MUST report such a
 response as not binding its request.</p>
@@ -391,8 +445,8 @@ honored it. Those properties require the Authority, Enforcement, Provenance,
 Verification, and Fleet evidence defined by ECL-1 and EBMP-2.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>protocols/DCMP-2.md</code>, SHA-256 <code>13a709ac4a57dac8a7f718677d1117be75d22a290e61114df1d1c6c32605a2ba</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>protocols/DCMP-2.md</code>, SHA-256 <code>4dad34f7d2e50e8a4047a2c92934d5ebb032db2a0af4c0664aa8f6bd17412fc9</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

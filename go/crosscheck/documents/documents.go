@@ -6,7 +6,8 @@
 // applies_to names the document's type: its protocol, or the $id of the schema that the vector
 // names. The work intent (ECL-WI-1) carries extensions, and the extension rules apply to it
 // (XR1-006, XR1-009, XR1-010 and XR1-017): EXTENSION-REGISTRY-1 section 2; the register
-// declarations rule applies to an action register (ECL1N-0178).
+// declarations rule applies to an action register (ECL1N-0178). Work-intent parent,
+// causal-identity and advisory-interval rules apply under DW1-002/006/015.
 //
 // A rule registered for a document type later needs no code here: the registry's applies_to
 // names the type, and the semantic package holds the rule.
@@ -25,6 +26,7 @@ var Schemas = []string{
 	namespace + "action-register/1",
 	namespace + "assessment-package/1",
 	namespace + "conformance-claim/1",
+	namespace + "component-implementation-report/1",
 	namespace + "deployment-profile/1",
 	namespace + "lifecycle-policy/1",
 	namespace + "mapping-packet/1",
@@ -62,7 +64,9 @@ func RuleFindings(document map[string]any, schemaID string) ([]semantic.Finding,
 // finding when the value is not an object; else one schema finding when it fails that schema,
 // together with the findings of the rules that apply to its type, which the stage applies
 // whether or not the schema accepts the document, as the reference runner does. The findings
-// are sorted by rule, path and detail.
+// are sorted by rule, path and detail. The caller supplies an acyclic parsed JSON value within
+// its application resource limits; use strict.Parse for serialized input, as the conformance
+// runner does before this stage.
 func Evaluate(schemaID string, value any) ([]semantic.Finding, error) {
 	document, isObject := value.(map[string]any)
 	if !isObject {

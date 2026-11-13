@@ -149,15 +149,17 @@ test("the value schema comes first, and a malformed record yields findings, neve
     assert.ok(found.length > 0);
     assert.ok(!found.some((item) => item.message.includes("could not be completed") || item.message.includes("rejected malformed input")));
   }
-  // An unhashable class is malformed input for the whole check, as in the reference.
+  // ROOT-056: the value schema refuses a malformed class; independently typed one-way
+  // members remain checkable without aborting the entire decision-basis rule.
   const unhashable = changed(inputs(), ANOMALY, { effect: "supports", class: ["judgment"] });
   assert.deepEqual(
     new SemanticValidator()
       .validate(withBasis(admit(), unhashable))
       .filter((item) => item.message.startsWith("decision basis semantic check"))
       .map((item) => item.ruleId),
-    ["ecl.error.schema-invalid.v1"],
+    [],
   );
+  assert.ok(new SemanticValidator().validate(withBasis(admit(), unhashable)).some((item) => item.ruleId === "ecl.rule.extension-value-valid.v1"));
 });
 
 test("a request or an event carrying the extension is not judged as a decision", () => {

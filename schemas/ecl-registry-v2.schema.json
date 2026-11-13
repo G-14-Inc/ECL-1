@@ -59,7 +59,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^(?:ecl\\.[a-z0-9][a-z0-9._-]*\\.v[0-9]+|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._~/-]+)$"
+          "pattern": "^(?:ecl\\.[a-z0-9][a-z0-9._-]*\\.v[1-9][0-9]*|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._~/-]+)$"
         },
         "status": {
           "enum": [
@@ -93,13 +93,34 @@
           "minLength": 1
         },
         "superseded_by": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^(?:ecl\\.[a-z0-9][a-z0-9._-]*\\.v[1-9][0-9]*|https://externalcontrollayer\\.ai/ns/[A-Za-z0-9._~/-]+)$",
+          "description": "Allocated preferred successor identity for a superseded entry."
         },
         "attributes": {
           "type": "object"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "superseded"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "superseded_by"
+            ]
+          }
+        }
+      ]
     }
   }
 }

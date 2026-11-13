@@ -13,7 +13,8 @@
 <h1 id="ecl-transactional-effect-profile-1">ECL Transactional Effect Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile governs a declared action class over a store with the properties
 below. It is self-contained: the values a deployment chooses, such as the
 acknowledgment bound B and the maximum authorization validity, are parameters
@@ -28,15 +29,15 @@ transaction, which <a href="transactional-effect-1.html#TE1-002">TE1-002</a> and
 of the effect.</p>
 <p><span id="TE1-001"><strong>TE1-001</strong></span><a class="requirement-link" href="#TE1-001" aria-label="Link to TE1-001">§</a> — The effect store MUST refuse changes to protected resources from every credential available to the SoI's services or agents except through the admission function. Credentials outside the declared trust boundary (store superuser, schema owner, host administrator) MUST be enumerated in the claim's negative boundary. (CE-13)</p>
 <p><span id="TE1-002"><strong>TE1-002</strong></span><a class="requirement-link" href="#TE1-002" aria-label="Link to TE1-002">§</a> — Before evaluating authority, time, control state and preconditions, admission MUST establish mutual exclusion against every control change and competing effect that could invalidate those evaluations, using a declared total lock order whose control-change conflicts are <strong>fairly queued</strong> (a waiting control change MUST NOT be overtaken indefinitely by later-arriving compatible work); MUST evaluate all of them at one admission instant from the declared time source while that exclusion holds; and MUST commit the effect atomically with the admission. An equivalent isolation mechanism MAY substitute under <a href="ecl-1_standard.html#ECL1N-0061">ECL1N-0061</a> with evidence. (CE-01, CE-05, CE-32)</p>
-<p><span id="TE1-003"><strong>TE1-003</strong></span><a class="requirement-link" href="#TE1-003" aria-label="Link to TE1-003">§</a> — An action key MUST produce at most one committed effect, and a charged use of authority MUST produce at most one committed effect, across retries, reissues, concurrent duplicates, crashes and recovery. (CE-02..04, CE-08)</p>
+<p><span id="TE1-003"><strong>TE1-003</strong></span><a class="requirement-link" href="#TE1-003" aria-label="Link to TE1-003">§</a> — The claim MUST define the action-key namespace, including any authenticated principal or tenant context it uses to distinguish independent intents. Within that declared namespace, an action key MUST produce at most one committed effect, and a charged policy or grant use under <a href="transactional-effect-1.html#TE1-010">TE1-010</a> MUST produce at most one committed effect, across retries, reissues, concurrent duplicates, crashes and recovery. (CE-02..04, CE-08)</p>
 <p><span id="TE1-004"><strong>TE1-004</strong></span><a class="requirement-link" href="#TE1-004" aria-label="Link to TE1-004">§</a> — Evidence of a committed effect MUST be committed atomically with the effect, and the store MUST refuse a terminal record that contradicts the presence or absence of the effect. Evidence of a non-effect outcome MUST be durable before the outcome is reported. An artifact MUST NOT be fabricated for a dependency that produced none. (CE-09, CE-30, CE-11)</p>
 <p><span id="TE1-005"><strong>TE1-005</strong></span><a class="requirement-link" href="#TE1-005" aria-label="Link to TE1-005">§</a> — A control change MUST be acknowledged only after it is durable; every effect MUST be serialized entirely before or after each control change affecting its scope; after acknowledgment no effect depending on the halted scope or revoked authority may commit. The acknowledgment bound B MUST be declared and enforced — a single acknowledgment attempt MUST succeed within B under sustained admission load and against sessions that override cooperative timeouts, if necessary by terminating the conflicting effect and issuance sessions. Contention between two emergency-plane operations is outside B, and each such operation MUST NOT hold its transaction open. (CE-05, CE-12, CE-31, CE-32)</p>
 <p><span id="TE1-006"><strong>TE1-006</strong></span><a class="requirement-link" href="#TE1-006" aria-label="Link to TE1-006">§</a> — A retry with the same action key and request digest MUST return the committed outcome without re-applying the effect, and MUST NOT report a committed success as denied. A same-key request with a different digest MUST be rejected as a distinct intent. (CE-04, CE-08)</p>
 <p><span id="TE1-007"><strong>TE1-007</strong></span><a class="requirement-link" href="#TE1-007" aria-label="Link to TE1-007">§</a> — Non-release outcomes MUST NOT emit <code>authority_consumed</code> or <code>execution_released</code>, MUST NOT carry side effects, and MUST be recorded with their own EBMP-2 non-release state (<code>denied</code>, <code>held</code>, <code>challenged</code>, <code>expired_before_release</code>), never coerced into another state. (CE-21, CE-22)</p>
-<p><span id="TE1-008"><strong>TE1-008</strong></span><a class="requirement-link" href="#TE1-008" aria-label="Link to TE1-008">§</a> — The applied parameters, target and expected precondition MUST be exactly those bound by the admitted authorization; that authorization MUST be verifiably bound to the action key and request digest; and admission MUST refuse an authorization whose bound values differ from those the enforcement point requested. (CE-14, CE-28)</p>
+<p><span id="TE1-008"><strong>TE1-008</strong></span><a class="requirement-link" href="#TE1-008" aria-label="Link to TE1-008">§</a> — The applied parameters, target and expected precondition MUST be exactly those bound by the admitted authorization; that per-action DCMP-2 authorization MUST be <code>single_use</code> under <a href="dcmp-2.html#DCMP2-050">DCMP2-050</a> and verifiably bound to the action key and request digest; and admission MUST refuse an authorization whose bound values differ from those the enforcement point requested. (CE-14, CE-28)</p>
 <p><span id="TE1-009"><strong>TE1-009</strong></span><a class="requirement-link" href="#TE1-009" aria-label="Link to TE1-009">§</a> — Every decision about time MUST use one declared time source of a declared time class; the deployment MUST declare the source's discipline and the verifier-facing skew policy; admission MUST reject an instant earlier than the authorization's issue time; and the claim MUST declare a maximum authorization validity, which producer, consumer and verifier MUST each enforce by rejecting a longer validity. (CE-16, CE-27)</p>
-<p><span id="TE1-010"><strong>TE1-010</strong></span><a class="requirement-link" href="#TE1-010" aria-label="Link to TE1-010">§</a> — Authority quota MUST be accounted in charged uses: a charge is consumed at most once per action key, never re-consumed by reissue or retry, MUST NOT exceed the grant's maximum, and a charged action later denied at admission still consumes its charge. The profile MUST state this consumption rule. (CE-24)</p>
-<p><span id="TE1-011"><strong>TE1-011</strong></span><a class="requirement-link" href="#TE1-011" aria-label="Link to TE1-011">§</a> — Each terminal outcome class MUST yield the evidence set that the TRANSACTIONAL-EFFECT-1 outcome evidence table gives for it, carrying its primary reason as a registered identifier; requests rejected before an action is claimed are outside evidence scope and the claim MUST say so. (CE-21, CE-25)</p>
+<p><span id="TE1-010"><strong>TE1-010</strong></span><a class="requirement-link" href="#TE1-010" aria-label="Link to TE1-010">§</a> — A policy or higher-level grant quota MUST be accounted in charged uses: a charge is consumed at most once per action key, never re-consumed by reissue or retry, MUST NOT exceed the grant's maximum, and a charged action later denied at admission still consumes its charge. The profile MUST state this consumption rule. This quota is separate from each action's DCMP-2 <code>single_use</code> authorization; charging the quota MUST NOT by itself create release authority or an EBMP-2 <code>authority_consumed</code> event. Such an event records per-action release-authority consumption only when <a href="transactional-effect-1.html#TE1-007">TE1-007</a> and the outcome evidence table permit it. (CE-24)</p>
+<p><span id="TE1-011"><strong>TE1-011</strong></span><a class="requirement-link" href="#TE1-011" aria-label="Link to TE1-011">§</a> — Each terminal outcome class MUST yield the evidence set that the TRANSACTIONAL-EFFECT-1 outcome evidence table gives for it, with a terminal reason as specified by that table; any reason carried MUST be a registered identifier; requests rejected before an action is claimed are outside evidence scope and the claim MUST say so. (CE-21, CE-25)</p>
 <p><span id="TE1-012"><strong>TE1-012</strong></span><a class="requirement-link" href="#TE1-012" aria-label="Link to TE1-012">§</a> — The emergency control plane (halt, resume, revoke) MUST be authenticated separately from policy administration, restricted to containment actions, and separately audited; its use MUST be visible in the control event stream. (CE-13, CE-31)</p>
 <p><span id="TE1-013"><strong>TE1-013</strong></span><a class="requirement-link" href="#TE1-013" aria-label="Link to TE1-013">§</a> — A claim of this profile MUST name its counterexample-test catalog,
 store, action class and declared bound B under which it was demonstrated, and
@@ -100,7 +101,7 @@ produced by the enforcement point.</p>
 <tr>
 <td>Decision point response invalid</td>
 <td>request; <code>execution_terminal</code> (<code>denied</code>); the invalid artifact kept outside the bundle</td>
-<td><code>ecl.error.integrity-invalid.v1</code></td>
+<td>The registered reason for the failed check, under the binding's error precedence: for MCP/DCMP2-HTTP-1, <code>ecl.error.integrity-invalid.v1</code>, <code>ecl.error.signature-policy-invalid.v1</code>, <code>ecl.error.request-binding-invalid.v1</code>, or <code>ecl.error.dependency-response-invalid.v1</code>, as applicable</td>
 </tr>
 </tbody>
 </table>
@@ -218,8 +219,8 @@ disclosed claim boundaries.</p>
 </tr>
 <tr>
 <td>CE-04</td>
-<td>One action key is used by two principals or tenants, or with a changed body</td>
-<td>Independent actions for different principals or tenants; a changed body is refused as a distinct intent</td>
+<td>The same raw action-key value is used in two declared namespaces distinguished by authenticated principal or tenant context, or a request body changes within one namespace</td>
+<td>Independent actions in the different namespaces; a changed body under the same namespaced key is refused as a distinct intent</td>
 </tr>
 <tr>
 <td>CE-05</td>
@@ -273,7 +274,7 @@ disclosed claim boundaries.</p>
 </tr>
 <tr>
 <td>CE-24</td>
-<td>The authorization's maximum number of uses is reached</td>
+<td>The policy or higher-level grant's maximum number of charged uses is reached</td>
 <td>Further actions are refused; retries of charged actions still complete; a charged action denied later has consumed its charge</td>
 </tr>
 <tr>
@@ -283,8 +284,8 @@ disclosed claim boundaries.</p>
 </tr>
 <tr>
 <td>CE-27</td>
-<td>The enforcement point's host clock is skewed by minutes</td>
-<td>No protocol timestamp or verdict changes</td>
+<td>The enforcement point's host clock is skewed by minutes while the declared time source is separate and remains unaffected</td>
+<td>No protocol timestamp or verdict changes due to the host-clock skew</td>
 </tr>
 <tr>
 <td>CE-28</td>
@@ -310,8 +311,8 @@ disclosed claim boundaries.</p>
 </table>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/TRANSACTIONAL-EFFECT-1.md</code>, SHA-256 <code>dd28c7f714dc630aa23ee04203b4359cd1857fdfb21a5829c7137e9627b0ebdb</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/TRANSACTIONAL-EFFECT-1.md</code>, SHA-256 <code>2ef69e3738590ca72fc7361fa69941c32a1fea10f0ffdcd8706a727c07291387</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

@@ -163,7 +163,7 @@
             "uniqueItems": true,
             "items": {
               "type": "string",
-              "pattern": "^/"
+              "pattern": "^(?:/(?:[^~/]|~[01])*)+$"
             }
           },
           "note": {
@@ -216,7 +216,7 @@
         "properties": {
           "target_path": {
             "type": "string",
-            "pattern": "^/"
+            "pattern": "^(?:/(?:[^~/]|~[01])*)+$"
           },
           "derivation": {
             "type": "string",

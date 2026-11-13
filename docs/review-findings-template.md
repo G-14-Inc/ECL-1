@@ -1,6 +1,6 @@
 # ECL-1 finding
 
-Use this template for a finding about ECL-1 Version 1.0: about its texts, its
+Use this template for a finding about ECL-1 Version 1: about its texts, its
 schemas, its conformance tests, its sample evidence or its offline verifier,
 and for the findings of an assessment. A finding about the standard goes to the
 ECL-1 repository as an issue; during a public review window it is a review

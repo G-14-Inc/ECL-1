@@ -129,6 +129,34 @@ test("objectDigest is the SHA-256 of the canonical bytes", () => {
   assert.equal(objectDigest({}), sha256Hex(hex("7b7d")));
 });
 
+test("canonical arrays refuse numeric-looking members outside the array-index range", () => {
+  for (const name of ["4294967295", "4294967296", "9007199254740991", "9999999999999999999999999999999999999999", "01", "-1", "1e2", "extra"]) {
+    for (const initial of [[], ["held"]]) {
+      const array = Object.assign(initial, { [name]: "authorization-required" });
+      for (const value of [array, { nested: array }]) {
+        for (const entry of [canonicalize, canonicalText, objectDigest, digestObject]) {
+          assert.throws(
+            () => entry(value as JsonValue),
+            (error: unknown) => error instanceof CanonicalizationError && error.ruleId === "ecl.rule.json-strict-syntax.v1",
+            `${entry.name}: ${name}`,
+          );
+        }
+      }
+    }
+  }
+  // Real indexed positions extend length and retain their values in the canonical form.
+  const indexed: JsonValue[] = [];
+  indexed[0] = "held";
+  indexed[1] = { allowed: false };
+  assert.equal(canonicalText(indexed), '["held",{"allowed":false}]');
+  assert.deepEqual(parseStrictJson(canonicalText(indexed)), indexed);
+  assert.equal(canonicalText([]), "[]");
+  // The largest array index is real, but a sparse array of that length exceeds the node budget.
+  const large: JsonValue[] = [];
+  large[4294967294] = "held";
+  assert.throws(() => canonicalize(large), (error: unknown) => error instanceof CanonicalizationError && error.ruleId === "ecl.error.resource-limit-exceeded.v1");
+});
+
 test("IE1-002: canonicalize refuses a noncharacter in a string or a member name, as the reference does", () => {
   for (const code of [0xfdd0, 0xfdef, 0xfffe, 0xffff, 0x1fffe, 0x1ffff, 0x10fffe, 0x10ffff]) {
     const text = "x" + String.fromCodePoint(code);

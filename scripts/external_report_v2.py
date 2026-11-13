@@ -12,23 +12,27 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from jsonschema.protocols import Validator
 from jsonschema.exceptions import ValidationError
 
 from ecl_verify.canonical import CanonicalizationError, load_json_strict
+from ecl_verify.schema import ecl_format_checker
+from ecl_verify.schema_patterns import schema_validator
+from referencing import Registry
 
 TreeReader = Callable[[Path], tuple[str, list[dict[str, Any]]]]
+
+PROVENANCE_TEXT_FIELDS = (
+    "name", "version", "source_repository", "source_revision", "language",
+    "runtime", "maintainer", "relationship_disclosure",
+)
 
 REPORT_SCHEMA = "schemas/ecl-cross-implementation-report-v2.schema.json"
 RAW_RESULT_SCHEMA = "schemas/ecl-external-vector-raw-result-v2.schema.json"
 RAW_RESULT_VERSION = "ecl_external_vector_raw_result_v2"
-# The stage whose verification-time policy a report states when it declares the capability that
-# evaluates the stage (IE1-023; conformance/README.md fixes the policy of each stage).
-TIME_POLICY_STAGES = {
-    "envelope-signature-verification": "envelope",
-    "evidence-bundle-verification": "evidence-bundle",
-    "offline-package-verification": "package",
-}
+# A suite can assign an envelope vector to a narrower capability such as key-role
+# separation. The evaluated stage, not the capability's name, requires its time policy.
+TIME_POLICY_STAGES = frozenset({"envelope", "evidence-bundle", "package"})
 # A capability that an implementation may declare only together with another: bundle verification
 # applies the one-way rule of DCMP2-053 to each decision basis, and so do the
 # AARM, ACS and MCP checkers to the decision responses that an exchange record holds (AB1-013,
@@ -42,6 +46,19 @@ IMPLIED_CAPABILITIES = {
 }
 
 
+def required_time_policy_stages(
+    vectors: dict[str, dict[str, Any]],
+    declarations: dict[str, dict[str, Any]],
+    capabilities: set[str],
+) -> set[str]:
+    return {
+        vector["stage"]
+        for identifier, vector in vectors.items()
+        if vector["stage"] in TIME_POLICY_STAGES
+        and declarations[identifier]["capability"] in capabilities
+    }
+
+
 def read(path: Path) -> dict[str, Any]:
     value = load_json_strict(path)
     if not isinstance(value, dict):
@@ -49,12 +66,39 @@ def read(path: Path) -> dict[str, Any]:
     return value
 
 
+def validate_report_text(report: dict[str, Any]) -> None:
+    """Refuse blank declarations and the explicit placeholder; authenticate no identity."""
+    implementation = report["implementation"]
+    for field in PROVENANCE_TEXT_FIELDS:
+        value = implementation[field]
+        if not isinstance(value, str) or not value.strip() or value.strip().casefold() == "unassigned":
+            raise ValueError(f"implementation.{field}: provenance is blank or unassigned")
+    for index, value in enumerate(report["limitations"]):
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"limitations[{index}]: a limitation must contain non-whitespace text")
+
+
+def registered_findings(root: Path) -> set[str]:
+    """Active finding identities from the frozen error and semantic-rule registries."""
+    result: set[str] = set()
+    for name in ("error-codes", "semantic-rules"):
+        entries = read(root / "registries" / f"{name}.json").get("entries")
+        if not isinstance(entries, list) or not entries:
+            raise ValueError(f"{name}: finding registry must contain entries")
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("id"), str) or not entry["id"]:
+                raise ValueError(f"{name}: finding registry entry has no identifier")
+            if entry.get("status") == "active":
+                result.add(entry["id"])
+    return result
+
+
 def location(error: ValidationError) -> str:
     """The JSON Pointer of the member a schema error concerns, `/` for the whole value."""
     return "/" + "/".join(str(part) for part in error.absolute_path)
 
 
-def first_schema_error(validator: Draft202012Validator, value: object) -> ValidationError | None:
+def first_schema_error(validator: Validator, value: object) -> ValidationError | None:
     errors = sorted(validator.iter_errors(value), key=lambda item: [str(p) for p in item.path])
     return errors[0] if errors else None
 
@@ -63,7 +107,7 @@ def raw_result_problem(
     raw_path: Path,
     row: dict[str, Any],
     revision: str,
-    validator: Draft202012Validator,
+    validator: Validator,
     *, version: int = 2,
 ) -> str | None:
     """Why an evidence file is not the raw result of `row`, or None when it is.
@@ -130,7 +174,7 @@ def _verify_bound_report(
         raise ValueError("unsupported report verification contract")
     report_schema = f"schemas/ecl-cross-implementation-report-v{version}.schema.json"
     raw_schema = f"schemas/ecl-external-vector-raw-result-v{version}.schema.json"
-    error = first_schema_error(Draft202012Validator(read(root / report_schema)), report)
+    error = first_schema_error(schema_validator(read(root / report_schema), registry=Registry(), format_checker=ecl_format_checker()), report)
     if error is not None:
         raise ValueError(
             f"the report does not satisfy cross-implementation-report/{version} at {location(error)}: "
@@ -141,22 +185,7 @@ def _verify_bound_report(
     if report["network_used"] or evidence_root is None or implementation_root is None:
         raise ValueError("network-free report needs source and evidence roots")
     implementation = report["implementation"]
-    if (
-        any(
-            implementation[key] == "UNASSIGNED"
-            for key in (
-                "name",
-                "version",
-                "source_repository",
-                "source_revision",
-                "language",
-                "runtime",
-                "maintainer",
-            )
-        )
-        or not implementation["relationship_disclosure"].strip()
-    ):
-        raise ValueError("external implementation provenance is unassigned")
+    validate_report_text(report)
     tree_hash, tree_entries = source_tree(implementation_root)
     if implementation["source_tree_sha256"] != tree_hash:
         raise ValueError("external implementation source-tree digest mismatch")
@@ -169,13 +198,6 @@ def _verify_bound_report(
     for declared, implied in sorted(IMPLIED_CAPABILITIES.items()):
         if declared in capabilities and implied not in capabilities:
             raise ValueError(f"an implementation that declares {declared} also declares {implied}")
-    stated = set(report["time_policies"])
-    due = {stage for capability, stage in TIME_POLICY_STAGES.items() if capability in capabilities}
-    if stated != due:
-        raise ValueError(
-            "time_policies must state exactly the stages the implementation evaluates: "
-            f"expected {sorted(due)}, found {sorted(stated)}"
-        )
     if (
         report["suite"]["manifest_sha256"] != sha256_file(corpus_path)
         or report["suite"]["corpus_version"] != corpus["version"]
@@ -201,6 +223,13 @@ def _verify_bound_report(
         or set(results) != set(vectors)
     ):
         raise ValueError("external result set differs from complete corpus")
+    stated = set(report["time_policies"])
+    due = required_time_policy_stages(vectors, declarations, capabilities)
+    if stated != due:
+        raise ValueError(
+            "time_policies must state exactly the supported vector stages the implementation evaluates: "
+            f"expected {sorted(due)}, found {sorted(stated)}"
+        )
     evidence = report["evidence"]
     if len(evidence) > 100_000 or len({row["path"] for row in evidence}) != len(evidence):
         raise ValueError("external evidence count/path violation")
@@ -212,7 +241,8 @@ def _verify_bound_report(
         if total > 4 * 1024**3 or sha256_file(path) != row["sha256"]:
             raise ValueError("external evidence byte budget or digest mismatch")
         bound[row["sha256"]] = path
-    raw_validator = Draft202012Validator(read(root / raw_schema))
+    raw_validator = schema_validator(read(root / raw_schema), registry=Registry(), format_checker=ecl_format_checker())
+    finding_ids = registered_findings(root)
     seen: set[str] = set()
     failed: list[str] = []
     unsupported: list[str] = []
@@ -241,13 +271,19 @@ def _verify_bound_report(
             secondary = row["observed_secondary_ids"]
             if (primary is None and secondary) or primary in secondary:
                 raise ValueError(identifier + ": findings require one distinct primary")
+            findings_registered = all(
+                finding in finding_ids
+                for finding in ([primary] if primary is not None else []) + secondary
+            )
             met = (
                 primary is None and not row["observed_secondary_ids"]
                 if vector["expected"] == "pass"
                 else primary == vector["expected_primary_id"]
             )
-            met = met and observations_met
+            met = met and observations_met and findings_registered
             if (row["status"] == "met") != met:
+                if not findings_registered:
+                    raise ValueError(identifier + ": a met row requires registered finding identifiers")
                 raise ValueError(identifier + ": status does not match actual vector expectations")
             if not met:
                 failed.append(identifier)

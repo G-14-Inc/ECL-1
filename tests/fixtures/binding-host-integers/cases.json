@@ -1,0 +1,311 @@
+[
+  {
+    "id": "mcp-prior-used",
+    "fixture": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+    "prepare": [
+      {
+        "path": [
+          "prior_uses"
+        ],
+        "value": 1
+      }
+    ],
+    "field_path": [
+      "prior_uses"
+    ],
+    "host_value": 1,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [
+      "ecl.rule.mcp-forward-requires-admit.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "mcp-unused-control",
+    "fixture": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+    "prepare": [
+      {
+        "path": [
+          "prior_uses"
+        ],
+        "value": 0
+      }
+    ],
+    "field_path": [
+      "prior_uses"
+    ],
+    "host_value": 0,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [],
+    "clean": true
+  },
+  {
+    "id": "mcp-boolean",
+    "fixture": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+    "prepare": [
+      {
+        "path": [
+          "prior_uses"
+        ],
+        "value": 0
+      }
+    ],
+    "field_path": [
+      "prior_uses"
+    ],
+    "host_value": true,
+    "host_kind": "scalar",
+    "schema_valid": false,
+    "required": [
+      "ecl.error.schema-invalid.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "mcp-fraction",
+    "fixture": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+    "prepare": [
+      {
+        "path": [
+          "prior_uses"
+        ],
+        "value": 0
+      }
+    ],
+    "field_path": [
+      "prior_uses"
+    ],
+    "host_value": 0.5,
+    "host_kind": "scalar",
+    "schema_valid": false,
+    "required": [
+      "ecl.error.schema-invalid.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "mcp-over-bound",
+    "fixture": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+    "prepare": [
+      {
+        "path": [
+          "prior_uses"
+        ],
+        "value": 0
+      }
+    ],
+    "field_path": [
+      "prior_uses"
+    ],
+    "host_value": 1000001,
+    "host_kind": "whole-float",
+    "schema_valid": false,
+    "required": [
+      "ecl.error.schema-invalid.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "oauth-shorter-lifetime",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "max_token_lifetime_seconds"
+        ],
+        "value": 1
+      }
+    ],
+    "field_path": [
+      "max_token_lifetime_seconds"
+    ],
+    "host_value": 1,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [
+      "ecl.rule.oauth-token-expresses-admit.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "oauth-lifetime-boundary",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "max_token_lifetime_seconds"
+        ],
+        "value": 10
+      }
+    ],
+    "field_path": [
+      "max_token_lifetime_seconds"
+    ],
+    "host_value": 10,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [],
+    "clean": true
+  },
+  {
+    "id": "oauth-smaller-proof-window",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "presentation",
+          "presented_at"
+        ],
+        "value": "2026-09-30T09:00:04.000000Z"
+      },
+      {
+        "path": [
+          "dpop_proof_window_seconds"
+        ],
+        "value": 1
+      }
+    ],
+    "field_path": [
+      "dpop_proof_window_seconds"
+    ],
+    "host_value": 1,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [
+      "ecl.rule.oauth-presentation-checked.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "oauth-proof-boundary",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "presentation",
+          "presented_at"
+        ],
+        "value": "2026-09-30T09:00:04.000000Z"
+      },
+      {
+        "path": [
+          "dpop_proof_window_seconds"
+        ],
+        "value": 2
+      }
+    ],
+    "field_path": [
+      "dpop_proof_window_seconds"
+    ],
+    "host_value": 2,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [],
+    "clean": true
+  },
+  {
+    "id": "oauth-first-use",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "presentation",
+          "use_count"
+        ],
+        "value": 1
+      }
+    ],
+    "field_path": [
+      "presentation",
+      "use_count"
+    ],
+    "host_value": 1,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [],
+    "clean": true
+  },
+  {
+    "id": "oauth-repeated-use",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "presentation",
+          "use_count"
+        ],
+        "value": 2
+      }
+    ],
+    "field_path": [
+      "presentation",
+      "use_count"
+    ],
+    "host_value": 2,
+    "host_kind": "whole-float",
+    "schema_valid": true,
+    "required": [
+      "ecl.rule.oauth-presentation-checked.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "oauth-fractional-lifetime",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "max_token_lifetime_seconds"
+        ],
+        "value": 1
+      }
+    ],
+    "field_path": [
+      "max_token_lifetime_seconds"
+    ],
+    "host_value": 0.5,
+    "host_kind": "scalar",
+    "schema_valid": false,
+    "required": [
+      "ecl.error.schema-invalid.v1"
+    ],
+    "clean": false
+  },
+  {
+    "id": "oauth-zero-proof-window",
+    "fixture": "conformance/suites/oauth-authority/oauth-valid-dpop-es256-accepted.json",
+    "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+    "prepare": [
+      {
+        "path": [
+          "dpop_proof_window_seconds"
+        ],
+        "value": 1
+      }
+    ],
+    "field_path": [
+      "dpop_proof_window_seconds"
+    ],
+    "host_value": 0,
+    "host_kind": "whole-float",
+    "schema_valid": false,
+    "required": [
+      "ecl.error.schema-invalid.v1"
+    ],
+    "clean": false
+  }
+]

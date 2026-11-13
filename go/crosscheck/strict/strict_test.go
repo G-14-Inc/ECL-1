@@ -90,8 +90,8 @@ func ExampleParse() {
 	// map[amount:15]
 }
 
-// The declared limits of IE1-028: every limit is at least 1 and at most what the imported core
-// applies, and a parse under other limits is refused, before the input is read, as a limit.
+// The configured limits of IE1-028: every limit is at least 1 and at most its declared ceiling;
+// other configurations are refused before reading the input with ConfigurationInvalid.
 func TestLimitsAreCheckedBeforeTheInput(t *testing.T) {
 	for _, limits := range []strict.Limits{
 		{MaxBytes: 0, MaxDepth: 4, MaxNodes: 8},

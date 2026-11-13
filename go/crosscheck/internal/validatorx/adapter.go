@@ -26,7 +26,8 @@ var (
 		"inbound_requires_native_reevaluation": true,
 		"conflict_disposition":                 "fail_closed_no_release",
 	}
-	arrayIndex = regexp.MustCompile(`^(?:0|[1-9][0-9]*)$`)
+	arrayIndex  = regexp.MustCompile(`^(?:0|[1-9][0-9]*)$`)
+	jsonPointer = regexp.MustCompile(`^(?:/(?:[^~/]|~[01])*)+$`)
 )
 
 const adapterBindingPrefix = "https://externalcontrollayer.ai/ns/adapter-binding/sha256/"
@@ -97,10 +98,10 @@ func entryStringLists(entries []map[string]any, ok bool, member string) ([][]str
 	return values, true
 }
 
-// namesDerivedObject reports whether a JSON Pointer's first reference token is an array index
-// (RFC 6901, section 4) less than count.
+// namesDerivedObject reports whether a valid JSON Pointer starts with an array index
+// (RFC 6901, sections 3 and 4) less than count.
 func namesDerivedObject(pointer string, count int) bool {
-	if !strings.HasPrefix(pointer, "/") {
+	if !jsonPointer.MatchString(pointer) {
 		return false
 	}
 	token := strings.Split(pointer, "/")[1]

@@ -19,6 +19,7 @@ import { verifyPackageBytes } from "../src/offline/package.js";
 import { DEFAULT_OFFLINE_RESOURCE_LIMITS } from "../src/offline/zip.js";
 import { MAX_TRUST_POLICY_BYTES } from "../src/trust/policy.js";
 import type { TrustPolicy } from "../src/trust/policy.js";
+import { oversizedPackageReport } from "./package-limit.js";
 
 const KIB = 1024;
 /** The largest offline package the page reads: its declared archive limit (IE1-028). */
@@ -453,9 +454,10 @@ function start(): void {
       // An offline package is a ZIP archive, whose bytes begin with "PK"; a JSON bundle cannot.
       const head = new Uint8Array(await bundleFile.slice(0, 2).arrayBuffer());
       const kind = head[0] === 0x50 && head[1] === 0x4b ? "package" : "bundle";
-      const data =
+      const oversizedPackage = kind === "package" && bundleFile.size > MAX_PACKAGE_BYTES;
+      const data = oversizedPackage ? undefined :
         kind === "package" ? await read(bundleFile, MAX_PACKAGE_BYTES, "offline package") : await read(bundleFile, MAX_BUNDLE_BYTES, "evidence bundle");
-      evidence = { kind, bytes: data.length };
+      evidence = { kind, bytes: bundleFile.size };
       const trustPolicy = await read(policyFile, MAX_TRUST_POLICY_BYTES, "trust policy");
       const history: Uint8Array[] = [];
       for (const file of Array.from(historyField.files ?? [])) {
@@ -472,13 +474,17 @@ function start(): void {
         acceptCurrentTrustFailure: acceptField.checked,
         ...(register === undefined ? {} : { register }),
       };
-      ({ report, policy } = kind === "package" ? verifyPackageBytes(data, trustPolicy, { ...options, limits: PACKAGE_LIMITS }) : verifyBundleBytes(data, trustPolicy, options));
+      ({ report, policy } = oversizedPackage
+        ? oversizedPackageReport(trustPolicy, options, bundleFile.size, MAX_PACKAGE_BYTES)
+        : kind === "package"
+          ? verifyPackageBytes(data!, trustPolicy, { ...options, limits: PACKAGE_LIMITS })
+          : verifyBundleBytes(data!, trustPolicy, options));
     } catch (error) {
       if (error instanceof InputProblem) {
         showProblem(error.message, undefined, error.code);
       } else if (error instanceof VerifierInputError) {
         if (error.message.startsWith("invalid evaluation time")) {
-          showProblem("Write the evaluation time in UTC like 2026-10-01T00:00:00Z, with 0, 3 or 6 digits after the seconds, or leave it empty.", error.message);
+          showProblem("Write the evaluation time in UTC like 2026-10-01T00:00:00Z, with whole seconds or three or six fractional digits, or leave it empty.", error.message);
         } else {
           showProblem("The files could not be verified.", error.message, error.code);
         }

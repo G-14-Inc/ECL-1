@@ -9,6 +9,7 @@ from typing import Any
 from ecl_verify.decision_basis_checks import input_key
 from ecl_verify.semantic import Finding
 
+from .terminal_reason import terminal_reason_findings
 from . import jcs
 from .common import (
     ONE_WAY_RULE,
@@ -33,6 +34,7 @@ from .common import (
     obj,
     one_way_response_problems,
     release_problems,
+    response_binding_findings,
     same_digest,
     text,
 )
@@ -189,9 +191,6 @@ def _receipt(record: Mapping[str, Any], candidates: list[Exchange]) -> list[tupl
         problems.append(
             ("/receipt/action/parameters", "the receipt's parameters are not the requested ones")
         )
-    actions = {text(item.request, "action", "action_id") for item in candidates}
-    if text(terminal, "event", "action_id") not in actions:
-        problems.append(("/terminal/event/action_id", "the receipt is bound to another action"))
     return problems
 
 
@@ -213,6 +212,11 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
             Finding(OUTCOME_RULE, "/response/outcome", f"{decision} cannot become {outcome}")
         )
     result += findings(RELEASE_RULE, release_problems(member(record, "release"), candidates))
+    terminal = obj(record, "terminal")
+    if terminal is not None and text(terminal, "event", "action_id") not in {
+        text(item.request, "action", "action_id") for item in candidates
+    }:
+        result.append(Finding(RECEIPT_RULE, "/terminal/event/action_id", "the terminal event is bound to another action"))
     result += findings(RECEIPT_RULE, _receipt(record, candidates))
     result += findings(BASIS_RULE, basis_problems(record, "aarm_requirement"))
     result += findings(BASIS_RULE, modification_basis_problems(record))
@@ -224,6 +228,9 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
             (("modification_request",), ("modification_response",)),
         ),
     )
+    result += response_binding_findings(
+        record, ("request", "response"), ("modification_request", "modification_response")
+    )
     result += message_findings(
         record,
         ("request",),
@@ -231,4 +238,18 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
         ("modification_request",),
         ("modification_response",),
     )
+    terminal = obj(record, "terminal")
+    if terminal is not None:
+        from ecl_verify.resources import object_findings
+
+        if terminal.get("event_type") != "execution_terminal":
+            result.append(Finding(RECEIPT_RULE, "/terminal/event_type", "the receipt requires an execution_terminal event"))
+        result.extend(
+            Finding(item.rule_id, "/terminal" + item.path, item.message)
+            for item in object_findings(terminal)
+        )
+        result.extend(
+            Finding(item.rule_id, "/terminal" + item.path, item.message)
+            for item in terminal_reason_findings(terminal)
+        )
     return result

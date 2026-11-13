@@ -41,10 +41,12 @@ affected scope when the assessor:
 - holds a material undisclosed financial interest;
 - cannot publish or communicate a failing result to the authorized recipient.
 
-Separate personnel inside one organization may support a Class B claim only
-when reporting, access, incentives, evidence selection, and decision authority
-are demonstrably separated as required by the standard. A name change or
-separate account is insufficient.
+`Class B` concerns the control plane's separately administered trust domain
+(Section 7.5); it is not an assessor-independence designation. Separate
+personnel inside one organization may support that control-plane boundary
+only when its administration, access and decision controls meet ECL1N-0143.
+The assessor must separately meet Section 7.11's requirements. A name change
+or separate account is insufficient.
 
 ## Competence
 
@@ -67,13 +69,13 @@ claimant-controlled network dependencies, receives the Negative Boundary
 Annex, and can issue a fail or indeterminate result. Missing material evidence
 is not a pass.
 
-## AI-assisted and internal review
+## Tools used in an assessment
 
-AI tools may support evidence organization and bounded analysis, but the
-record names the tool role and human accountability. AI-assisted review is an
-internal pre-assessment and cannot satisfy the assessor independence of
-Sections 7.8 and 7.11. Repeated model calls are not multiple independent
-assessors.
+The assessment record identifies the tools used, their role and the
+accountable assessor. Tools may support evidence organization and analysis;
+their outputs do not themselves constitute an assessment. The assessor must
+meet the competence and independence requirements of Sections 7.8 and 7.11,
+regardless of the tools used.
 
 ## Conformance-mark boundary
 

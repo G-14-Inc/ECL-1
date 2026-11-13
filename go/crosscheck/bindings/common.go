@@ -15,6 +15,7 @@ import (
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/instant"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/semantic"
 )
 
@@ -55,6 +56,25 @@ type problem struct {
 	message string
 }
 
+// responseBindingFindings applies AB1-002/AC1-003 for every retained response and
+// every outcome. The shared checker applies authority constraints only to admits.
+func responseBindingFindings(record map[string]any, pairs ...[2]string) []Finding {
+	var out []Finding
+	for _, pair := range pairs {
+		if !holds(record, pair[1]) {
+			continue
+		}
+		err := evidence.CheckResponseBinding(member(record, pair[0]), member(record, pair[1]), 0)
+		var refusal *evidence.BindingError
+		if errors.As(err, &refusal) {
+			out = append(out, Finding{RuleID: "ecl.error.request-binding-invalid.v1", Path: "/" + pair[1], Detail: "the retained response does not bind its request: " + refusal.Code + ": " + refusal.Error()})
+		} else if err != nil {
+			raise(err)
+		}
+	}
+	return out
+}
+
 func findings(rule string, problems []problem) []Finding {
 	out := make([]Finding, 0, len(problems))
 	for _, item := range problems {
@@ -86,9 +106,9 @@ func textOf(value any, path ...string) (string, bool) {
 	return found, ok
 }
 
-// integer returns the integer at path (never a boolean), or false.
+// integer reads a schema-admitted mathematical integer (never a boolean).
 func integer(value any, path ...string) (int64, bool) {
-	return pyjson.Int(member(value, path...))
+	return pyjson.SchemaInt(member(value, path...))
 }
 
 func object(value any, path ...string) (map[string]any, bool) {
@@ -264,7 +284,7 @@ func extensionValues(value any, identifier string) []map[string]any {
 	var found []map[string]any
 	for _, item := range array(value, "extensions") {
 		entry, isObject := item.(map[string]any)
-		if !isObject || !pyjson.Equal(entry["id"], identifier) {
+		if !isObject || !pyjson.Equal(entry["id"], identifier) || !validatorx.InterpretedOccurrence(value, entry) {
 			continue
 		}
 		if content, isObject := entry["value"].(map[string]any); isObject {
@@ -278,7 +298,7 @@ func extensionValues(value any, identifier string) []map[string]any {
 func extensionEntries(value any, identifier string) []map[string]any {
 	var found []map[string]any
 	for _, item := range array(value, "extensions") {
-		if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["id"], identifier) {
+		if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["id"], identifier) && validatorx.InterpretedOccurrence(value, entry) {
 			found = append(found, entry)
 		}
 	}
@@ -524,7 +544,7 @@ func oneWayResponseProblems(record map[string]any, exchanges ...[2][]string) []p
 		var found []carried
 		for index, item := range array(response, "extensions") {
 			entry, isEntry := item.(map[string]any)
-			if isEntry && pyjson.Equal(entry["id"], decisionBasis) {
+			if isEntry && pyjson.Equal(entry["id"], decisionBasis) && validatorx.InterpretedOccurrence(response, entry) {
 				found = append(found, carried{index, entry})
 			}
 		}
@@ -563,7 +583,7 @@ func basisClassProblems(record map[string]any, responsePath []string, required m
 	prefix := "/" + strings.Join(responsePath, "/") + "/extensions"
 	for index, item := range array(response, "extensions") {
 		entry, isEntry := item.(map[string]any)
-		if !isEntry || !pyjson.Equal(entry["id"], decisionBasis) {
+		if !isEntry || !pyjson.Equal(entry["id"], decisionBasis) || !validatorx.InterpretedOccurrence(response, entry) {
 			continue
 		}
 		for position, input := range array(entry["value"], "inputs") {
@@ -587,7 +607,7 @@ func singleBasis(record map[string]any, name string) (int, map[string]any, bool)
 	position, found := -1, 0
 	var value any
 	for index, item := range array(member(record, name), "extensions") {
-		if entry, isEntry := item.(map[string]any); isEntry && pyjson.Equal(entry["id"], decisionBasis) {
+		if entry, isEntry := item.(map[string]any); isEntry && pyjson.Equal(entry["id"], decisionBasis) && validatorx.InterpretedOccurrence(member(record, name), entry) {
 			found++
 			position, value = index, entry["value"]
 		}
@@ -815,7 +835,7 @@ func basisProblems(record map[string]any, marker string) []problem {
 	var positions []int
 	for index, item := range extensions {
 		if entry, isObject := item.(map[string]any); isObject {
-			if identifier, isText := entry["id"].(string); isText && identifier == decisionBasis {
+			if identifier, isText := entry["id"].(string); isText && identifier == decisionBasis && validatorx.InterpretedOccurrence(response, entry) {
 				positions = append(positions, index)
 			}
 		}

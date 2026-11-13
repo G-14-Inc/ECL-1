@@ -416,6 +416,42 @@
   "prior_uses": 0,
   "received_at": "2026-09-30T09:00:00.000000Z",
   "release_guard_milliseconds": 250,
+  "release_observations": {
+    "final": {
+      "control_state": {
+        "fresh_until": "2026-09-30T09:05:00.000000Z",
+        "halt": false,
+        "quarantine": false,
+        "reference": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "e2c042f8b3688817e31719050ab7e224c9358a52d4c2086696ae1a4fd4b12b33"
+          },
+          "uri": "urn:example:control-snapshot:mcp-public-review-repair"
+        },
+        "revoked": false,
+        "status": "current"
+      },
+      "observed_at": "2026-09-30T09:00:05.010000Z"
+    },
+    "initial": {
+      "control_state": {
+        "fresh_until": "2026-09-30T09:05:00.000000Z",
+        "halt": false,
+        "quarantine": false,
+        "reference": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "e2c042f8b3688817e31719050ab7e224c9358a52d4c2086696ae1a4fd4b12b33"
+          },
+          "uri": "urn:example:control-snapshot:mcp-public-review-repair"
+        },
+        "revoked": false,
+        "status": "current"
+      },
+      "observed_at": "2026-09-30T09:00:00.200000Z"
+    }
+  },
   "returned": {
     "error": {
       "code": -31010,
@@ -521,7 +557,7 @@
     },
     "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/ecb5e6b7c66be5c5586e2f010d1ae5d36a43cb889c30245f1f5497dddfccd017",
     "object_type": "event_record",
-    "observed_at": "2026-09-30T09:00:00.400000Z",
+    "observed_at": "2026-09-30T09:00:05.020000Z",
     "producer": {
       "id": "urn:example:enforcement-point:bindings",
       "trust_domain": "urn:example:trust-domain:bindings",

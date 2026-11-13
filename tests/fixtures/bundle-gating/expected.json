@@ -12,7 +12,7 @@
       "expected_findings": [
         "ecl.error.digest-mismatch.v1: execution:3 does not bind",
         "ecl.error.digest-mismatch.v1: event decision digest does not match",
-        "ecl.error.decision-binding-invalid.v1: a succeeded attempt lacks consumed authority or release evidence"
+        "ecl.error.decision-binding-invalid.v1: a post-release terminal attempt lacks consumed authority or release evidence"
       ]
     },
     {
@@ -66,7 +66,7 @@
       "rationale": "Removing the consumption and rebinding the release predecessor leaves a single-use release with stale uncarried proof. Stage-8 decision-binding-invalid ranks before obligation-unproven.",
       "expected_verdict": "invalid",
       "expected_findings": [
-        "ecl.error.decision-binding-invalid.v1: a succeeded attempt lacks consumed authority or release evidence",
+        "ecl.error.decision-binding-invalid.v1: a post-release terminal attempt lacks consumed authority or release evidence",
         "ecl.error.decision-binding-invalid.v1: envelope 2: a release of single-use authority has no recorded consumption",
         "ecl.error.obligation-unproven.v1: object 2: /extensions/0/value/obligations/0/fresh_until: is not later than the release plus its declared release guard"
       ]

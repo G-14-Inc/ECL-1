@@ -1,11 +1,12 @@
 # ECL-1 bindings
 
-This guide explains the five binding profiles of ECL-1. Read it if you run one
+This guide explains five binding profiles of ECL-1. Read it if you run one
 of these systems beside an ECL-1 deployment: an AARM control plane, an Agent
 Control Standard (ACS) Guardian, Model Context Protocol (MCP) servers, an
 OpenTelemetry pipeline or an OAuth authorization server. Each profile is a
 normative companion of ECL-1 Version 1.0 and applies only to a claim that
-declares it. This guide adds no requirements; the profiles in
+declares it. Except for the MCP deployment-test matrix explicitly designated below as a
+normative annex of MCP-GATEWAY-1, this guide adds no requirements; the profiles in
 [`profiles/`](../profiles/) are the text that counts.
 
 ## What you need to do
@@ -57,12 +58,29 @@ on its own. These ideas recur across the profiles:
 - **Modifications.** When the other system changes an
   action's parameters, the changed action goes through ECL as a new decision
   request that names the original with `ecl.relation.modification-of.v1`. The
-  original is never released, and only a modification has a new request.
+  original is never released. In ACS and AARM exchange records, only a
+  `modify` or `MODIFY` decision may carry `modification_request`.
 - **Evidence.** Receipts, session chains, log records and
   tokens are bound to the signed ECL evidence by digest. When one disagrees
   with the evidence, the evidence governs and the disagreement is reported.
 
 ## Choosing a profile
+
+### Assessing an interception point
+
+These examples illustrate AB1-010 and AC1-002; they do not replace the
+assessment of the deployment's actual paths and privileges.
+
+| Deployment and claim | Assessment of the claimed enforcement point |
+| --- | --- |
+| An AARM SDK hook or ACS hook runs in an agent process whose code the agent can change. The claim calls that hook Soft Enforcement because a remote service supplies its decisions. | Fails. The actor-modifiable hook cannot be claimed as an ECL enforcement point of either class. A remote decision does not prevent the agent from bypassing the hook. |
+| The same hook carries an upstream decision to a separate ECL Decision Layer. A gateway outside the agent's process, container and account mediates every in-scope effect; the agent cannot disable it, change its decisions or use another credential path. The claim names that gateway as the enforcement point. | The placement can satisfy AB1-010 or AC1-002 when the assessor verifies those facts. The upstream decision still follows the profile's authentication and input-class rules; all other applicable requirements remain to be assessed. |
+
+The assessment record identifies the actual enforcement component and the
+evidence used to establish its boundary. Labeling an actor-modifiable hook
+"Soft Enforcement" does not cure a prohibited placement.
+
+### Profile selection
 
 | Profile | Use it when | Conformance suite |
 | --- | --- | --- |
@@ -150,7 +168,12 @@ Each AARM receipt (R5) is bound to the action's ECL evidence: the action's
 identifier, its decision and the SHA-256 digest of its RFC 8785 canonical form
 (AB1-007). A receipt supports claims about what AARM evaluated. It does not
 show that an action was authorized or released; the ECL evidence shows that
-(AB1-008).
+(AB1-008). The record checker requires an `execution_terminal` event with a
+terminal execution state, checks its EBMP-2 object semantics (including residual
+state and extension rules), and binds the receipt digest, decision, parameters
+and action identifier. The terminal-to-response decision reference and digest,
+signed causal closure and signatures are checked by full bundle verification;
+the receipt record API does not establish those relationships (AB1-007).
 
 An AARM interception point where the governed AI system can execute code, or
 that it can start, stop or reconfigure, is never claimed as an ECL enforcement
@@ -246,18 +269,21 @@ any other path being closed or disclosed in the Negative Boundary Annex (MG1-001
 `tools/call`, the gateway:
 
 1. refuses, before any decision, a call that holds, in any member, a number
-   that RFC 8785 cannot represent exactly; it creates no exchange record,
+   that RFC 8785 cannot represent exactly; it needs no exchange record,
    because that record could not hold the call as received. It also refuses,
    before any decision, a call with a top-level member other than `jsonrpc`,
    `id`, `method` and `params`, but records that refusal (MG1-004);
 2. checks that the tool has a reviewed mapping, and that the tool's current
-   definition and the server's name and version still match it;
+   definition and the server's identifier, name and version still match it;
 3. builds a DCMP-2 decision request whose action class, operation and target
    come from the mapping, with the call's arguments as `action.parameters` and,
    in `ecl.ext.mcp-binding.v1`, the digest of the call's complete `params`, its
    `_meta` included; a call without `arguments` has the parameters `{}`, and a
    call whose `arguments` is not an object, null included, is refused with
-   -31007 (MG1-004);
+   -31007 (MG1-004). Fractional argument values are outside the restricted
+   canonical profile and are refused; an integral value such as `2.0` is read
+   from its RFC 8785 form as `2`. Any number in `id` or `params` with magnitude
+   greater than 2^53 - 1 is refused;
 4. asks the decision service under DCMP2-HTTP-1 and verifies the signed
    response, which includes the one-way rule of DCMP2-053 for its decision
    basis, and checks that the response carries exactly one decision basis,
@@ -283,39 +309,51 @@ any other path being closed or disclosed in the Negative Boundary Annex (MG1-001
 7. records EBMP-2 evidence that binds the server's response by digest, and
    returns that response. A server's own error that uses a code of the
    profile's table reaches the governed AI system with the code -32603, so a
-   code of the table always means the gateway's refusal (MG1-010).
+   table code has the meaning assigned by the table: -31009 reports a forwarded
+   call with an unknown effect, and the other rows report gateway refusals
+   (MG1-010).
 
-When a step fails, the gateway forwards nothing and returns a JSON-RPC error
-from the profile's table, codes -31001 to -31008, -31010 and -31011, with the
+When a check fails before the release boundary, the gateway withholds the call
+and returns a JSON-RPC error
+from the profile's table, codes -31001 to -31008 and -31010 to -31013, with the
 cause and a registered reason in `data.ecl`. When several causes hold, it
 returns the code of the first in the order that MG1-006 gives: -31007, -31008,
--31004, -31005, the decision's outcome, -31010, -31011, then -31006, except
+-31004, -31005, the decision's outcome, -31012, -31013, -31010, -31011, then -31006, except
 that after a use is consumed a journal failure that cancels the attempt is
-reported as -31011 before -31010 or -31006. Code
+reported as -31011 before the later control, obligation and time causes. Code
 -31009 reports a forwarded call whose server never answered; the evidence
 records its effect as unknown.
 
 The release boundary is the write of the forwarded request to the server's
-transport (MG1-014). On a verified admit the gateway takes these steps in order
-and writes nothing unless each passes: under a lock, it reads a monotonic clock
-and then its wall clock and commits one use, as MG1-005 requires, when the authorization is valid at
-that time and until the release guard after it; it records the committed `authority_consumed` event,
-then `release_prepared`, which names the attempt; it proves the pre-release
-obligations and records, for each proof, the instant after which it no longer
-shows the obligation met (`fresh_until`); it reads the monotonic clock and then
-the wall clock again under the lock, the final observation, and releases only
-when that observation satisfies the same `valid_from` and `valid_until`
-comparisons, with no further use consumed, and, with the guard added, precedes
-every `fresh_until`, refusing with -31006 and `ecl.error.clock-regressed.v1` a
-wall clock that reads earlier than at the first check or that disagrees with the
-monotonic clock by more than the guard; and it records `execution_released`,
-observed at the final observation and carrying the guard as `release_guard_ms`,
-and writes the request. The release guard is the bound that the claim declares
+transport (MG1-014). The numbered release order below is MG1-014's order,
+separate from the seven per-call steps above:
+
+1. Under the authorization lock, read the monotonic clock and then the wall
+   clock. Establish the window, use policy, current authenticated required
+   control state and absence of applicable halt, quarantine or revocation;
+   then atomically commit one use and its signed consumption event.
+2. Record the committed `authority_consumed` event in the exchange journal.
+3. Record `release_prepared`, naming the attempt.
+4. Discharge the obligations, retaining their proofs and `fresh_until` bounds.
+5. Read the monotonic and wall clocks under the lock and repeat the window and
+   control-state checks. The final observation plus guard must strictly precede
+   every proof and control snapshot's freshness bound. Refuse a regressed clock
+   with -31006 and `ecl.error.clock-regressed.v1`.
+6. Record `execution_released` with that final observation and guard, then write
+   the request only after the immediate pre-dispatch checks pass.
+
+The release guard is the bound that the claim declares
 on the delay from the final observation to the write: the recorded release time
 is the final observation, and the release begins within the guard after it.
 Immediately before the write, after the connection is open, the gateway also
 checks, with the monotonic clock, that no more than the guard has elapsed since
 the final observation and that the authorization and every proof have not ended.
+It orders received control changes against dispatch and checks again for halt,
+quarantine, revocation and stale required control state. A control failure before
+consumption ends denied without authority; after consumption it ends cancelled
+with the consumed authority and no effects. Codes -31012 and -31013 distinguish
+applicable controls from unusable control state. The record retains explicit
+initial/final observations; a response time cannot establish a failed proof check.
 A refusal after the use was consumed is recorded as a `cancelled` attempt, since
 a non-release state would contradict the consumed authority (EBMP2-053); an
 admit that names one obligation twice is refused with -31005 before any use is
@@ -330,21 +368,28 @@ when the server, or a system behind it, acted on the request.
 
 Each EBMP-2 event of a side-effecting request, with the exchange record and
 the signed decision messages once the decision is known, is journaled in the
-order of MG1-014—`authority_consumed` after step 1 consumes the use, each
+order of MG1-014—`authority_consumed` at MG1-014 step 2, after
+MG1-014 step 1 consumes the use, each
 required entry flushed to storage before the next release step, and
 `execution_released` durable before the transport write—one journal per
 exchange, and the journal is kept until the exchange's record and bundle are
-durable (MG1-016). One gateway instance owns an evidence directory at a time: it holds
+durable (MG1-016).
+
+One gateway instance owns an evidence directory at a time: it holds
 an exclusive lock on the directory, taken before it reads a journal, and a
 second gateway, a recovery command or a library caller that finds the lock held
 stops before it reads or writes anything else there. Only the entry that opens
 an exchange creates its journal; an append that finds no journal before the
 release refuses the request with -31011, keeps any consumed use consumed and
-reports the missing journal. When the journal
+reports the missing journal.
+
+When the journal
 cannot record an entry before the release, because a write or a flush fails, the
 storage is full or the sink fails in any other way, the gateway refuses with
 -31011 under MG1-006's precedence rules, keeps any consumed use consumed and writes nothing to the server
-(MG1-017). When the gateway starts, under the lock, it settles each journal that
+(MG1-017).
+
+When the gateway starts, under the lock, it settles each journal that
 an earlier run left: a journal with `execution_released` and no terminal event
 becomes a terminal in state `unknown`. An intact journal without
 `execution_released` identifies an attempt that was not sent. Recovery resolves
@@ -353,15 +398,21 @@ that exchange's consumption against the authoritative store: a committed use is
 authority reference; a non-admit decision gives its own non-release state. No
 verified decision resolves to `denied`. Unresolved or inconsistent consumption
 is retained and reported without inventing a terminal or permitting another use.
-Recovery never resends the request. Recovery records its decision in the journal before it writes any
+Recovery never resends the request.
+
+Recovery records its decision in the journal before it writes any
 record and its completion after, derives record identifiers from the journal and
 never signs a terminal twice, so a recovery that is interrupted or repeated
 writes the same files; a journal that does not open with its first entry, holds
 two exchanges or does not parse beyond a torn last line is kept and listed as
-damaged, with nothing settled from it, and recovery deletes no journal. The
+damaged, with nothing settled from it, and recovery deletes no journal.
+
+The
 claim declares which failures its journal survives: the exit of the gateway's
 process, a crash of its host, a failure of its storage and the loss of an
-evidence service that it writes to (MG1-016). A gateway that counts the uses of
+evidence service that it writes to (MG1-016).
+
+A gateway that counts the uses of
 an authorization in the instance that holds them needs every use of an
 authorization routed through one instance, or a use store that its instances
 share (MG1-005). Consumption history must also survive restart and journal
@@ -371,6 +422,12 @@ bound to a persistent gateway-assigned exchange identity distinct from a client
 JSON-RPC `id`. An uncertain commit blocks further uses until the store resolves
 it; absence from an exchange journal does not resolve it. A cancellation does
 not restore a consumed use.
+
+This profile supplies a complete forwarding mapping for `tools/call` only.
+`tasks/update`, consequential `resources/read` and other consequential non-tool
+methods remain governed and are refused with -31007 unless the claim identifies
+a separate complete enforcement profile for their action and evidence mapping.
+The pinned tasks overview alone supplies no such mapping.
 
 A claim may list `server/discover`, `tools/list`, `resources/list`,
 `resources/templates/list`, `prompts/list` and `subscriptions/listen` to pass
@@ -388,6 +445,11 @@ the change and updates the mapping. Tool descriptions are text that a server
 controls and a language model reads, which is why a change waits for review
 and why tool annotations never choose the action class.
 
+### MCP deployment-test matrix (normative annex)
+
+This matrix is incorporated by MCP-GATEWAY-1 as its normative deployment-test
+annex. Its required observations are controlling and changes require normative
+profile change review. Explanatory examples outside this matrix remain informative.
 The behavior matrix below lists, for each family of the release path, what a
 test of a gateway must observe. Such tests can drive the gateway with a clock
 that moves only when the test moves it and with faults injected at each step of
@@ -413,6 +475,8 @@ clock or with a second process.
 | A stall before the write, on the real clock (MG1-014) | Nothing written; -31006 |
 | A server answer that arrives after `valid_until` for a request written inside its window, on the real clock (MG1-015) | `forward_completed_at` after `valid_until` and no `released_after_valid_until`, which is the gateway's own observation of its write; the checker reports nothing |
 | A stall before the write longer than the release guard, with the window open (MG1-014, MG1-015) | Nothing written; -31006, the attempt cancelled with a residual state that names the guard; the checker takes the cause from the record |
+| Halt, quarantine or revocation at initial check, after admit before final check, or after release evidence before dispatch (MG1-014) | No dispatch; -31012; denied without authority before consumption or cancelled with the consumed authority after it; retained control snapshot reference and reason agree |
+| Required control state unavailable, stale, or expiring at observation plus guard (MG1-014) | No dispatch; -31013 with safe-state-required; both initial and final control checks exercised; just-after-boundary current-state control forwards once |
 | The journal at each step (MG1-016) | The use count and signed `authority_consumed` event commit atomically in the use store at step 1; the same event is flushed to the journal at step 2; each required entry is durable before the next release step, and `execution_released` is durable before the transport write |
 | A write or flush failure, or full storage, before the release (MG1-017) | -31011 under MG1-006's precedence rules, no upstream call; an already consumed use stays consumed |
 | A storage failure with an obligation pending (MG1-006) | Before consumption, -31010 takes precedence; after consumption, a journal failure cancelling the attempt is -31011; no upstream call |
@@ -503,7 +567,12 @@ tokens enforce an ECL `admit` without learning DCMP-2. One token expresses one
 An issuer issues a token only for a verified `admit` with an empty
 `obligations` array. It refuses every nonempty obligations array, including
 obligations claimed to have been discharged, and never issues a token for
-`deny`, `hold` or `challenge` (OA1-008). The token carries every claim that
+`deny`, `hold` or `challenge` (OA1-008). The presentation-record checker applies
+DCMP-2 message semantics to both retained decision messages and requires exactly
+one decision basis satisfying contextual DCMP2-053, including its time and
+actor-source checks, whether the presentation was accepted or refused. Unknown
+critical extensions and invalid decision-basis predicates are reported under
+their registered rules. The token carries every claim that
 RFC 9068 requires of a JWT access token, among them `iss`, `client_id` and `jti` as strings, and with a
 lifetime greater than zero (OA1-001, OA1-003). A resource server accepts the
 token only for the request it names, within its use limit and with a valid proof
@@ -513,10 +582,10 @@ own configuration and refuses the algorithm `none`, symmetric algorithms, an
 declares it, a header without a key identifier or with an unknown one, a `typ`
 other than the string `at+jwt`, compared exactly, keys carried in the token's
 header, an issuer it is not configured for and a signature that does not verify
-(OA1-007). It reads every segment of a token or proof as strict JSON, so a time
-claim is an integer and a NumericDate with a fraction is refused, and refuses a
-segment whose base64url text is not canonical, which would let two token strings
-carry one signature (OA1-007). It may allow a clock skew of at most 60 seconds
+(OA1-007). It reads the header and payload segments of a token or proof as strict
+JSON, so a time claim is an integer and a NumericDate with a fraction is refused.
+It also refuses any segment whose base64url text is not canonical, which would
+let two token strings carry one signature (OA1-007). It may allow a clock skew of at most 60 seconds
 on `nbf` (or `iat` when `nbf` is absent) and `exp`, none by default, but the
 presentation must fall inside the
 ECL entry's window with no allowance (OA1-003). It checks the DPoP proof's
@@ -563,7 +632,7 @@ needs: `binding-profile-rules` for most vectors of the profile suites;
 with the decision basis of its response, those of the `binding-basis` suite and
 a few of the `aarm-binding` and `acs-binding` suites; and
 `otel-export-keyed-digests` for the `otel-export` suite, whose digests are keyed
-and are checked with the suite's export key file. The AARM, ACS and MCP checks apply the one-way rule
+and are checked with the suite's export key file. The AARM, ACS, MCP and OAuth checks apply the one-way rule
 of DCMP2-053 to the decision responses that a record holds, so an
 implementation that declares `binding-profile-rules` or
 `binding-basis-agreement-rule` also declares `decision-basis-rule`. The

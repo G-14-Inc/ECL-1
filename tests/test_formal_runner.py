@@ -130,11 +130,11 @@ class FormalRunnerTests(unittest.TestCase):
         self.assertTrue(result.passed)
         self.assertEqual(result.observed, "WitnessNoTimeout")
 
-    def test_derivation_setting_preserves_default_and_positive_flag(self):
+    def test_derivation_diagnostics_default_and_explicit_historical_setting(self):
         default = runner.tamarin_command(self.tools, None, None)
-        diagnostic = runner.tamarin_command(self.tools, "no_scope_check", "authorization_scope_and_audience", 10)
-        self.assertIn("--derivcheck-timeout=0", default)
-        self.assertIn("--derivcheck-timeout=10", diagnostic)
+        diagnostic = runner.tamarin_command(self.tools, "no_scope_check", "authorization_scope_and_audience", 0)
+        self.assertIn("--derivcheck-timeout=10", default)
+        self.assertIn("--derivcheck-timeout=0", diagnostic)
         self.assertIn("-D=no_scope_check", diagnostic)
         self.assertIn("--prove=authorization_scope_and_audience", diagnostic)
 
@@ -161,14 +161,14 @@ class FormalRunnerTests(unittest.TestCase):
         self.assertEqual(record["checks"][0]["started_utc"], first.started_utc)
         self.assertEqual(record["checks"][0]["java"], "17.test")
         self.assertIsNone(record["checks"][1]["java"])
-        self.assertEqual(record["settings"]["derivcheck_timeout"], 0)
+        self.assertEqual(record["settings"]["derivcheck_timeout"], 10)
 
     def test_stale_retained_check_and_different_settings_are_refused(self):
         path = self.directory / "record.json"
         runner.write_record(path, [self.execute()], self.tools, 9)
         second = self.execute(name="protocol-correct")
         with self.assertRaisesRegex(ValueError, "other settings"):
-            runner.write_record(path, [second], self.tools, 9, 10)
+            runner.write_record(path, [second], self.tools, 9, 0)
         with patch.object(runner, "inputs", return_value={"changed": "model"}), self.assertRaisesRegex(ValueError, "stale retained"):
             runner.write_record(path, [second], self.tools, 9)
 

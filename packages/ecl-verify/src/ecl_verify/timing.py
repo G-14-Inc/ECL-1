@@ -3,20 +3,42 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta
-from typing import Iterable, Mapping
+from collections.abc import Mapping
+import re
 
-from .schema import parse_rfc3339_utc
+from .schema import rfc3339_utc_nanoseconds
 
 
 class TimingError(ValueError):
     """Raised when timing or availability evidence is ambiguous."""
 
 
-def _time(value: str) -> datetime:
+def _text(value: object, name: str) -> None:
+    if type(value) is not str or not value.strip():
+        raise TimingError(f"{name} must be nonempty text")
+
+
+def _strings(value: object, name: str, *, nonempty: bool = False) -> None:
+    if type(value) is not tuple or (nonempty and not value):
+        raise TimingError(f"{name} must be a tuple of nonempty strings")
+    for item in value:
+        _text(item, name)
+
+
+def _integer(value: object, name: str, *, minimum: int = 0) -> None:
+    if type(value) is not int or value < minimum:
+        raise TimingError(f"{name} must be an integer at least {minimum}")
+
+
+def _boolean(value: object, name: str) -> None:
+    if type(value) is not bool:
+        raise TimingError(f"{name} must be a boolean")
+
+
+def _time(value: str) -> int:
     """An ECL RFC 3339 UTC instant, by the shared parser (one to nine fractional digits)."""
     try:
-        return parse_rfc3339_utc(value)
+        return rfc3339_utc_nanoseconds(value)
     except ValueError as exc:
         raise TimingError(f"invalid UTC timestamp: {value!r}") from exc
 
@@ -32,6 +54,15 @@ class TimeEvidence:
     epoch_value: int | None = None
 
     def validate(self) -> None:
+        _text(self.time_class, "time class")
+        for name in ("wall_time", "clock_id", "unit", "trusted_source_id", "epoch_name"):
+            value = getattr(self, name)
+            if value is not None:
+                _text(value, name)
+        for name in ("ticks", "epoch_value"):
+            value = getattr(self, name)
+            if value is not None:
+                _integer(value, name)
         if self.time_class not in {
             "issuer_wall",
             "observer_wall",
@@ -53,7 +84,7 @@ class TimeEvidence:
         elif self.time_class == "monotonic_duration":
             if (
                 not self.clock_id
-                or not isinstance(self.ticks, int)
+                or type(self.ticks) is not int
                 or self.ticks < 0
                 or self.unit not in {"nanosecond", "microsecond", "millisecond"}
             ):
@@ -63,7 +94,7 @@ class TimeEvidence:
         elif self.time_class in {"policy_epoch", "revocation_epoch"}:
             if (
                 not self.epoch_name
-                or not isinstance(self.epoch_value, int)
+                or type(self.epoch_value) is not int
                 or self.epoch_value < 0
             ):
                 raise TimingError("epoch evidence is incomplete")
@@ -98,6 +129,11 @@ class LatencyMeasurementPlan:
     hot_path_dependencies: tuple[str, ...]
 
     def validate(self) -> None:
+        for name in ("start_boundary", "end_boundary", "sampling_interval", "warmup_handling", "environment_class"):
+            _text(getattr(self, name), name)
+        _strings(self.percentiles, "percentiles", nonempty=True)
+        _strings(self.action_classes, "action classes", nonempty=True)
+        _strings(self.hot_path_dependencies, "hot-path dependencies")
         if (
             not self.start_boundary
             or not self.end_boundary
@@ -125,7 +161,20 @@ class LatencyEvidence:
     product_claim_configuration_digest: str
 
     def validate(self) -> None:
+        if not isinstance(self.plan, LatencyMeasurementPlan):
+            raise TimingError("latency evidence requires a measurement plan")
         self.plan.validate()
+        if type(self.raw_observations_ns) is not tuple or not self.raw_observations_ns:
+            raise TimingError("raw observations must be a nonempty tuple of integer nanoseconds")
+        for value in self.raw_observations_ns:
+            _integer(value, "raw observation")
+        _text(self.calculation_method, "calculation method")
+        _strings(self.exclusions, "exclusions")
+        _strings(self.breach_observation_ids, "breach observation identifiers")
+        for name in ("tested_configuration_digest", "product_claim_configuration_digest"):
+            value = getattr(self, name)
+            if type(value) is not str or re.fullmatch(r"[0-9a-f]{64}", value) is None:
+                raise TimingError(f"{name} must be a lowercase SHA-256 digest")
         if (
             not self.raw_observations_ns
             or any(value < 0 for value in self.raw_observations_ns)
@@ -145,6 +194,10 @@ class DependencyDeclaration:
     required_before_release: bool
 
     def validate(self) -> None:
+        _text(self.dependency_id, "dependency identifier")
+        _text(self.dependency_class, "dependency class")
+        _integer(self.staleness_budget_seconds, "staleness budget")
+        _boolean(self.required_before_release, "required-before-release declaration")
         if self.dependency_class not in {
             "hot_path",
             "cached",
@@ -168,6 +221,13 @@ class LocalGateDependencyProfile:
     undeclared_network_dependency: bool
 
     def validate(self) -> None:
+        if type(self.dependencies) is not tuple or any(not isinstance(item, DependencyDeclaration) for item in self.dependencies):
+            raise TimingError("dependencies must be a tuple of dependency declarations")
+        if not isinstance(self.domain_budgets_seconds, Mapping):
+            raise TimingError("domain budgets must be a mapping")
+        _boolean(self.undeclared_network_dependency, "undeclared network dependency")
+        for value in self.domain_budgets_seconds.values():
+            _integer(value, "domain staleness budget")
         for dependency in self.dependencies:
             dependency.validate()
         if set(self.domain_budgets_seconds) != REQUIRED_STALENESS_DOMAINS:
@@ -198,6 +258,11 @@ class EmergencyChannelDrill:
     independence_verified: bool
 
     def validate(self) -> None:
+        _text(self.channel_id, "channel identifier")
+        _integer(self.interval_seconds, "drill interval", minimum=1)
+        _boolean(self.independence_verified, "independence declaration")
+        if self.material_architecture_change_at is not None:
+            _text(self.material_architecture_change_at, "architecture change time")
         if (
             not self.channel_id
             or self.interval_seconds < 1
@@ -206,7 +271,9 @@ class EmergencyChannelDrill:
             raise TimingError("emergency-channel drill is incomplete")
         last = _time(self.last_tested_at)
         evaluated = _time(self.evaluated_at)
-        if evaluated - last > timedelta(seconds=self.interval_seconds):
+        if last > evaluated:
+            raise TimingError("completed drill is later than its evaluation time")
+        if evaluated - last > self.interval_seconds * 1_000_000_000:
             raise TimingError("emergency-channel drill interval is overdue")
         if self.material_architecture_change_at:
             changed = _time(self.material_architecture_change_at)
@@ -223,7 +290,9 @@ class AvailabilityEvidence:
     untested_assumptions: tuple[str, ...]
 
     def validate(self) -> None:
-        groups: tuple[Iterable[str], ...] = (
+        for name in ("measured_behavior", "designed_behavior", "untested_assumptions"):
+            _strings(getattr(self, name), name)
+        groups = (
             self.measured_behavior,
             self.designed_behavior,
             self.untested_assumptions,

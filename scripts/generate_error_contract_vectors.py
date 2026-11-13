@@ -44,7 +44,8 @@ def build(root: Path):
     c = "urn:example:key:error-contract-p256"
     r = "urn:example:key:error-contract-revoked"
     description_a = copy.deepcopy(next(k for k in source_policy["keys"] if k["key_id"] == a))
-    assert base64.b64encode(key_a.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)).decode() == description_a["public_key"]
+    if base64.b64encode(key_a.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)).decode() != description_a["public_key"]:
+        raise ValueError("Public fixture key differs from the source trust policy")
     description_b = copy.deepcopy(description_a)
     description_b.update(key_id=b, public_key=base64.b64encode(key_b.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)).decode())
     description_a["purposes"] = description_b["purposes"] = ["ecl.purpose.decision-request.v1"]

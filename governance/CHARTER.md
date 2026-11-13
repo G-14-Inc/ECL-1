@@ -128,6 +128,13 @@ Each published version records the people who held the roles for it. One
 person may hold several roles, but may not satisfy alone a required
 two-person, independence, appeal or conflict-review separation.
 
+The [Version 1.0](RELEASE_POLICY.md#version-10-release-exception) and
+[v1.0.1](RELEASE_POLICY.md#correction-release-exception-v101) release exceptions
+waived only their specified review and rebuild steps. They do not establish
+that a separate reviewer performed those steps. The historical role and
+review evidence, including roles whose holder is not established, is recorded
+in [the November 10 clarification](RELEASE-CLARIFICATION-2026-11-10.md).
+
 ## 8. How decisions are made
 
 - **The editors propose.** A proposal is an issue or a pull request that

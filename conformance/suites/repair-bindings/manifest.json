@@ -1,0 +1,1385 @@
+{
+  "candidate_version": "1.0",
+  "schema_shadowed_rules": [
+    {
+      "justification": "The safe-state schema conditional rejects every advisory dependency that supplies required proof, so this predicate is always secondary to schema invalidity in the complete stage. The direct semantic API still reports it; the conditional has separate attributed positive and negative schema witnesses.",
+      "rule": "ecl.rule.dependency-classification-consistent.v1",
+      "vector": "repair-safe-state-advisory-required-proof"
+    }
+  ],
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-public-review-repair-bindings",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-all-frontiers",
+      "path": "conformance/suites/repair-bindings/repair-safe-state-all-frontiers.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state all frontiers"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-missing-policy-epochs",
+      "negates": [
+        "TS1-014"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-missing-policy-epochs.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state missing policy epochs"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-missing-revocations",
+      "negates": [
+        "TS1-014"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-missing-revocations.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state missing revocations"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-missing-consumed-authorities",
+      "negates": [
+        "TS1-014"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-missing-consumed-authorities.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state missing consumed authorities"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-missing-buffered-evidence",
+      "negates": [
+        "TS1-014"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-missing-buffered-evidence.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state missing buffered evidence"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-missing-unresolved-effects",
+      "negates": [
+        "TS1-014"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-missing-unresolved-effects.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state missing unresolved effects"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-missing-clock-discontinuities",
+      "negates": [
+        "TS1-014"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-missing-clock-discontinuities.json",
+      "requirement_ids": [
+        "TS1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state missing clock discontinuities"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "id": "repair-safe-state-advisory-required-proof",
+      "negates": [
+        "TS1-031"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-safe-state-advisory-required-proof.json",
+      "requirement_ids": [
+        "TS1-031"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state advisory required proof"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-required-hot-path",
+      "path": "conformance/suites/repair-bindings/repair-safe-state-required-hot-path.json",
+      "requirement_ids": [
+        "TS1-031",
+        "TS1-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state required hot path"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-required-cached",
+      "path": "conformance/suites/repair-bindings/repair-safe-state-required-cached.json",
+      "requirement_ids": [
+        "TS1-031",
+        "TS1-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state required cached"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-safe-state-required-asynchronous",
+      "path": "conformance/suites/repair-bindings/repair-safe-state-required-asynchronous.json",
+      "requirement_ids": [
+        "TS1-031",
+        "TS1-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "safe state required asynchronous"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-ordinary-key",
+      "path": "conformance/suites/repair-bindings/repair-oauth-ordinary-key.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth ordinary key"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-00",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-00.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 00"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-01",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-01.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 01"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-02",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-02.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 02"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-03",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-03.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 03"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-04",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-04.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 04"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-05",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-05.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 05"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-06",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-06.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 06"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-07",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-07.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 07"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-08",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-08.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 08"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-09",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-09.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 09"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-10",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-10.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 10"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-11",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-11.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 11"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-12",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-12.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 12"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-small-order-13",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-small-order-13.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth small order 13"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-identity-new-jti",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-identity-new-jti.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth identity new jti"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-ordinary-key-constant-signature",
+      "negates": [
+        "OA1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-ordinary-key-constant-signature.json",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth ordinary key constant signature"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-token-signature-checked.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "id": "repair-oauth-corrupt-issuer-signature",
+      "negates": [
+        "OA1-007"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-corrupt-issuer-signature.json",
+      "requirement_ids": [
+        "OA1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth corrupt issuer signature"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-actor-supplied-supports",
+      "negates": [
+        "OA1-008",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-actor-supplied-supports.json",
+      "requirement_ids": [
+        "OA1-008",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth actor supplied supports"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-judgment-supports",
+      "negates": [
+        "OA1-008",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-judgment-supports.json",
+      "requirement_ids": [
+        "OA1-008",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth judgment supports"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.decision-basis-one-way.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-missing-basis",
+      "negates": [
+        "OA1-008",
+        "DCMP2-053"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-missing-basis.json",
+      "requirement_ids": [
+        "OA1-008",
+        "DCMP2-053"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth missing basis"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-unknown-critical",
+      "negates": [
+        "OA1-008",
+        "XR1-006"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-unknown-critical.json",
+      "requirement_ids": [
+        "OA1-008",
+        "XR1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth unknown critical"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-request-unknown-critical",
+      "negates": [
+        "OA1-008",
+        "XR1-006"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-request-unknown-critical.json",
+      "requirement_ids": [
+        "OA1-008",
+        "XR1-006"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "oauth request unknown critical"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-future-iat-first-use",
+      "path": "conformance/suites/repair-bindings/repair-oauth-future-iat-first-use.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "Single-use DPoP timing/replay case: future-iat-first-use. Any seen jti comes from the distinct prior authorization in conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json, under the same proof key, method and htu; the current authorization use_count is 1."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-future-iat-retained",
+      "negates": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-future-iat-retained.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "Single-use DPoP timing/replay case: future-iat-retained. Any seen jti comes from the distinct prior authorization in conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json, under the same proof key, method and htu; the current authorization use_count is 1."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-inclusive-endpoint-retained",
+      "negates": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-inclusive-endpoint-retained.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "Single-use DPoP timing/replay case: inclusive-endpoint-retained. Any seen jti comes from the distinct prior authorization in conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json, under the same proof key, method and htu; the current authorization use_count is 1."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-inclusive-endpoint-first-use",
+      "path": "conformance/suites/repair-bindings/repair-oauth-inclusive-endpoint-first-use.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "Single-use DPoP timing/replay case: inclusive-endpoint-first-use. Any seen jti comes from the distinct prior authorization in conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json, under the same proof key, method and htu; the current authorization use_count is 1."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.oauth-presentation-checked.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-after-endpoint",
+      "negates": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-oauth-after-endpoint.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "Single-use DPoP timing/replay case: after-endpoint. Any seen jti comes from the distinct prior authorization in conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json, under the same proof key, method and htu; the current authorization use_count is 1."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-oauth-inclusive-endpoint-replay-refused",
+      "path": "conformance/suites/repair-bindings/repair-oauth-inclusive-endpoint-replay-refused.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "Correct replay refusal at the inclusive proof-cache endpoint. The seen jti belongs to the distinct prior authorization in conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json, under the same proof key, method and htu; the current authorization use_count is 1."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-bound",
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-bound.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed bound"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-wrong-session",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-wrong-session.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed wrong session"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-wrong-step",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-wrong-step.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed wrong step"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-wrong-method",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-wrong-method.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed wrong method"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-wrong-request-digest",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-wrong-request-digest.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed wrong request digest"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-wrong-dcmp-request-digest",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-wrong-dcmp-request-digest.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed wrong dcmp request digest"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-substituted-params",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-substituted-params.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed substituted params"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-envelope-domain",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-envelope-domain.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed envelope domain"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-decision-recorded.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-decision-recorded.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-no-chain-request-hash",
+      "negates": [
+        "AC1-004",
+        "AC1-008"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-no-chain-request-hash.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-008"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed no chain request hash"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-signed-no-context",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-signed-no-context.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs signed no context"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-missing-derivation-verifiable",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-missing-derivation-verifiable.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs missing derivation verifiable"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-missing-derivation-actor-supplied",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-missing-derivation-actor-supplied.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs missing derivation actor supplied"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-missing-derivation-judgment",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-missing-derivation-judgment.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs missing derivation judgment"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-context-derivation-control",
+      "path": "conformance/suites/repair-bindings/repair-acs-context-derivation-control.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs context derivation control"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-context-missing-actor",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-context-missing-actor.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs context missing actor"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-context-missing-judgment",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-context-missing-judgment.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs context missing judgment"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "ecl.rule.acs-judgment-guardian.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.acs-judgment-guardian.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-acs-context-wrong-judgment",
+      "negates": [
+        "AC1-004"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-acs-context-wrong-judgment.json",
+      "requirement_ids": [
+        "AC1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "acs context wrong judgment"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-aarm-terminal-control",
+      "path": "conformance/suites/repair-bindings/repair-aarm-terminal-control.json",
+      "requirement_ids": [
+        "AB1-007",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "aarm terminal control"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-aarm-release-in-terminal-slot",
+      "negates": [
+        "AB1-007",
+        "AB1-009"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-aarm-release-in-terminal-slot.json",
+      "requirement_ids": [
+        "AB1-007",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "aarm release in terminal slot"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-aarm-nonterminal-state",
+      "negates": [
+        "AB1-007",
+        "AB1-009"
+      ],
+      "path": "conformance/suites/repair-bindings/repair-aarm-nonterminal-state.json",
+      "requirement_ids": [
+        "AB1-007",
+        "AB1-009"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_bindings_vectors.py",
+        "kind": "mutation",
+        "mutation": "aarm nonterminal state"
+      },
+      "stage": "binding"
+    }
+  ]
+}

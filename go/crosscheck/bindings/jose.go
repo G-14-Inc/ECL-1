@@ -122,6 +122,11 @@ func checkedHeader(header map[string]any, expectedType string) (string, error) {
 	if _, present := header["crit"]; present {
 		return "", &JoseError{"crit", "the header has a crit member this verifier does not understand"}
 	}
+	// RFC 7797 requires b64 in crit whenever used; this verifier supports no
+	// critical JOSE extensions. JWTs also forbid b64=false.
+	if _, present := header["b64"]; present {
+		return "", &JoseError{"b64", "the b64 header extension is not supported for these JWTs"}
+	}
 	return name, nil
 }
 
@@ -206,7 +211,7 @@ func verifySignature(algorithm string, jwk map[string]any, signingInput, signatu
 }
 
 // VerifyJWS returns the header and claims of a token signed by one of keys (by kid), after every
-// check of OA1-007: an asymmetric algorithm of the declared set, the expected typ, no crit, no
+// check of OA1-007: an asymmetric algorithm of the declared set, the expected typ, no crit or b64, no
 // header that carries or points to a key, a configured kid and a valid signature.
 func VerifyJWS(token any, keys map[string]map[string]any, expectedType string) (map[string]any, map[string]any, error) {
 	decoded, err := DecodeJWS(token)
@@ -233,6 +238,33 @@ func VerifyJWS(token any, keys map[string]map[string]any, expectedType string) (
 	return decoded.Header, decoded.Claims, nil
 }
 
+// smallOrderDPoPKey recognizes every point of order dividing 8. The sign bit
+// does not affect the order; reducing y also rejects non-canonical encodings of
+// those points accepted by some JOSE decoders. Issuer keys are configured trust
+// inputs and are not affected by this presenter-key check.
+func smallOrderDPoPKey(raw []byte) bool {
+	if len(raw) != ed25519.PublicKeySize {
+		return false
+	}
+	encoded := make([]byte, len(raw))
+	for i := range raw {
+		encoded[len(raw)-1-i] = raw[i]
+	}
+	encoded[0] &= 0x7f
+	field := new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1), 255), big.NewInt(19))
+	y := new(big.Int).Mod(new(big.Int).SetBytes(encoded), field)
+	if y.Sign() == 0 || y.Cmp(big.NewInt(1)) == 0 || y.Cmp(new(big.Int).Sub(field, big.NewInt(1))) == 0 {
+		return true
+	}
+	for _, text := range []string{"2707385501144840649318225287225658788936804267575313519463743609750303402022", "55188659117513257062467267217118295137698188065244968500265048394206261417927"} {
+		weak, _ := new(big.Int).SetString(text, 10)
+		if y.Cmp(weak) == 0 {
+			return true
+		}
+	}
+	return false
+}
+
 // VerifyDPoP returns the header, claims and key thumbprint of a DPoP proof (RFC 9449), checked
 // with the public key its header carries.
 func VerifyDPoP(proof any) (map[string]any, map[string]any, string, error) {
@@ -252,6 +284,15 @@ func VerifyDPoP(proof any) (map[string]any, map[string]any, string, error) {
 	}
 	if !isObject {
 		return nil, nil, "", &JoseError{"key-header", "a DPoP proof carries exactly its public key in jwk"}
+	}
+	if pyjson.Equal(jwk["kty"], "OKP") && pyjson.Equal(jwk["crv"], "Ed25519") {
+		raw, err := coordinate(jwk, "x", ed25519.PublicKeySize)
+		if err != nil {
+			return nil, nil, "", err
+		}
+		if smallOrderDPoPKey(raw) {
+			return nil, nil, "", &JoseError{"key", "a DPoP Ed25519 presenter key must not have small order"}
+		}
 	}
 	if err := verifySignature(algorithm, jwk, decoded.SigningInput, decoded.Signature); err != nil {
 		return nil, nil, "", err

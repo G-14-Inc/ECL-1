@@ -1,8 +1,8 @@
 /**
  * Schema and semantic findings for one DCMP-2, EBMP-2 or ECL-IE-1 object, as the bundle verifier
- * applies them to each signed payload. The parser limits of the reference come first: an object
- * nested deeper than 32 levels or holding more than 10 000 values gets one finding and nothing
- * else is checked.
+ * applies them to each signed payload. The declared strict-parser profile comes first: root
+ * depth zero, every scalar leaf included, 256 levels and 1 000 000 values by default. Exceeding
+ * a declared limit is a resource-limit finding before schema or semantic checks.
  */
 
 import { get, isArray, isObject } from "../json/value.js";
@@ -12,9 +12,11 @@ import type { SchemaSet } from "../schema/validator.js";
 import { isMalformedInputError } from "./python.js";
 import { SCHEMA_INVALID, SemanticValidator, sortFindings } from "./rules.js";
 import type { Finding } from "./rules.js";
+import { MAX_JSON_DEPTH, MAX_JSON_NODES, MAX_JSON_DEPTH_CEILING, MAX_JSON_NODES_CEILING, RESOURCE_LIMIT, CONFIGURATION_INVALID } from "../json/strict.js";
+import type { StrictJsonLimits } from "../json/strict.js";
 
-export const MAX_OBJECT_DEPTH = 32;
-export const MAX_OBJECT_NODES = 10_000;
+export const MAX_OBJECT_DEPTH = MAX_JSON_DEPTH;
+export const MAX_OBJECT_NODES = MAX_JSON_NODES;
 const MAX_FINDINGS_PER_RULE = 100;
 const MAX_TEXT = 200;
 const PROTOCOL_SCHEMAS: Record<string, string> = {
@@ -24,25 +26,29 @@ const PROTOCOL_SCHEMAS: Record<string, string> = {
 const ENVELOPE_SCHEMA = "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1";
 
 function cut(text: string): string {
-  return text.length <= MAX_TEXT ? text : text.slice(0, MAX_TEXT - 1) + "…";
+  const characters = Array.from(text);
+  return characters.length <= MAX_TEXT ? text : characters.slice(0, MAX_TEXT - 1).join("") + "…";
 }
 
 function invalid(path: string, message: string): Finding {
   return { ruleId: SCHEMA_INVALID, path: cut(path), message: cut(message) };
 }
 
-function limitExceeded(value: JsonValue): string | undefined {
+export function objectLimitExceeded(value: JsonValue, maxDepth = MAX_JSON_DEPTH, maxNodes = MAX_JSON_NODES): string | undefined {
   let nodes = 1;
-  const pending: Array<[JsonValue, number]> = [[value, 1]];
+  const pending: Array<[JsonValue, number]> = [[value, 0]];
   while (pending.length > 0) {
     const [container, depth] = pending.pop() as [JsonValue, number];
-    if (depth > MAX_OBJECT_DEPTH) {
-      return `nesting depth exceeds ${MAX_OBJECT_DEPTH}`;
+    if (depth > maxDepth) {
+      return `nesting depth exceeds ${maxDepth}`;
     }
     const children = isArray(container) ? container : isObject(container) ? Object.values(container) : [];
     nodes += children.length;
-    if (nodes > MAX_OBJECT_NODES) {
-      return `node count exceeds ${MAX_OBJECT_NODES}`;
+    if (nodes > maxNodes) {
+      return `node count exceeds ${maxNodes}`;
+    }
+    if (children.length > 0 && depth + 1 > maxDepth) {
+      return `nesting depth exceeds ${maxDepth}`;
     }
     for (const child of children) {
       if (isArray(child) || isObject(child)) {
@@ -85,22 +91,39 @@ function capped(findings: Finding[]): Finding[] {
 let defaultSemantics: SemanticValidator | undefined;
 
 /**
- * The schema and semantic findings for a DCMP-2, EBMP-2 or ECL-IE-1 value. It never throws:
- * anything that is not one of those objects yields one `ecl.error.schema-invalid.v1` finding.
+ * Schema and semantic findings for a JSON value under a valid validator configuration.
+ * Values outside the DCMP-2, EBMP-2 and ECL-IE-1 object families yield a schema finding.
+ * Recognized malformed-input errors from schema or semantic validation become schema findings;
+ * unexpected faults, including errors from caller-supplied validator configuration, propagate.
  */
-export function objectFindings(value: JsonValue, schemas: SchemaSet = eclSchemas(), semantics?: SemanticValidator): Finding[] {
+export function objectFindings(value: JsonValue, schemas: SchemaSet = eclSchemas(), semantics?: SemanticValidator, limits: Pick<StrictJsonLimits, "maxDepth" | "maxNodes"> = {}): Finding[] {
+  const maxDepth = limits.maxDepth === undefined ? MAX_OBJECT_DEPTH : limits.maxDepth;
+  const maxNodes = limits.maxNodes === undefined ? MAX_OBJECT_NODES : limits.maxNodes;
+  for (const [name, limit, ceiling] of [["maxDepth", maxDepth, MAX_JSON_DEPTH_CEILING], ["maxNodes", maxNodes, MAX_JSON_NODES_CEILING]] as const) {
+    if (typeof limit !== "number" || !Number.isSafeInteger(limit) || limit < 1 || limit > ceiling) {
+      return [{ ruleId: CONFIGURATION_INVALID, path: "/", message: `${name} must be an integer from 1 to ${ceiling}` }];
+    }
+  }
   if (!isObject(value)) {
     return [invalid("/", "an ECL object must be a JSON object")];
   }
-  const excess = limitExceeded(value);
+  const excess = objectLimitExceeded(value, maxDepth, maxNodes);
   if (excess !== undefined) {
-    return [invalid("/", excess)];
+    return [{ ruleId: RESOURCE_LIMIT, path: "/", message: excess }];
   }
   const schema = schemaFor(value);
   if (schema === undefined) {
     return [invalid("/", "not a DCMP-2 or EBMP-2 object, and not an ECL-IE-1 envelope")];
   }
-  const errors = schemas.errors(schema, value, MAX_FINDINGS_PER_RULE + 1);
+  let errors: ReturnType<SchemaSet["errors"]>;
+  try {
+    errors = schemas.errors(schema, value, MAX_FINDINGS_PER_RULE + 1);
+  } catch (error) {
+    if (!isMalformedInputError(error)) {
+      throw error;
+    }
+    return [invalid("/", `schema validation could not be completed: ${(error as Error).name}`)];
+  }
   const findings = errors.slice(0, MAX_FINDINGS_PER_RULE).map((error) => invalid(error.path, `${error.keyword}: ${error.message}`));
   if (errors.length > MAX_FINDINGS_PER_RULE) {
     findings.push(invalid("/", "more schema errors follow, and are not listed"));

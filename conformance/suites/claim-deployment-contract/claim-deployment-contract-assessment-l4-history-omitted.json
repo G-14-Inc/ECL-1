@@ -1,0 +1,163 @@
+{
+  "artifact_manifest": [
+    {
+      "artifact_id": "urn:example:ecl:artifact:action-register",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "8282828282828282828282828282828282828282828282828282828282828282"
+      },
+      "observed_at": "2026-07-27T11:00:00Z",
+      "reference": {
+        "uri": "urn:example:ecl:action-register:payments",
+        "version": "1"
+      },
+      "role": "action_register",
+      "source_boundary": "assessed payments runtime"
+    },
+    {
+      "artifact_id": "urn:example:ecl:artifact:deployment-profile",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "8383838383838383838383838383838383838383838383838383838383838383"
+      },
+      "observed_at": "2026-07-27T11:00:00Z",
+      "reference": {
+        "uri": "urn:example:ecl:profile:centralized-hosted-local-gate",
+        "version": "1"
+      },
+      "role": "deployment_profile",
+      "source_boundary": "local gate and hosted control plane"
+    },
+    {
+      "artifact_id": "urn:example:ecl:artifact:conformance-result",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "8484848484848484848484848484848484848484848484848484848484848484"
+      },
+      "observed_at": "2026-07-27T11:30:00Z",
+      "reference": {
+        "uri": "urn:example:ecl:conformance-result:payments",
+        "version": "1"
+      },
+      "role": "conformance_result",
+      "source_boundary": "reference implementation under assessment"
+    }
+  ],
+  "boundary_class": "bounded-action-class-mediation",
+  "candidate_version": "1.0",
+  "checklist": [
+    {
+      "evidence": [
+        "urn:example:ecl:artifact:conformance-result"
+      ],
+      "item_id": "urn:example:ecl:checklist:decision-authority-enforcement",
+      "minimum_level": 1,
+      "notes": "The example binds a pre-action decision, transaction authority, and local hard gate.",
+      "requirement_ids": [
+        "FR-101",
+        "FR-104",
+        "DCMP2-040"
+      ],
+      "result": "pass"
+    },
+    {
+      "evidence": [
+        "urn:example:ecl:evidence:provider-inventory"
+      ],
+      "item_id": "urn:example:ecl:checklist:ml-dsa-provider",
+      "minimum_level": 1,
+      "notes": "The illustrative package preserves an unresolved provider/KAT gate rather than treating a policy declaration as cryptographic implementation evidence.",
+      "requirement_ids": [
+        "IE1-018"
+      ],
+      "result": "fail"
+    }
+  ],
+  "claim_decision": {
+    "claim_artifact": {
+      "uri": "urn:example:ecl:claim:payments",
+      "version": "1"
+    },
+    "rationale": "The example intentionally demonstrates a bounded open finding and makes no conformance claim.",
+    "status": "assessment_only"
+  },
+  "evaluated_at": "2026-07-27T12:00:00Z",
+  "findings": [
+    {
+      "disposition": "open",
+      "evidence": [
+        "urn:example:ecl:evidence:provider-inventory"
+      ],
+      "finding_id": "urn:example:ecl:finding:ml-dsa-provider",
+      "requirement_ids": [
+        "IE1-018"
+      ],
+      "severity": "major",
+      "title": "No approved ML-DSA-65 provider and known-answer-test result"
+    }
+  ],
+  "independence": {
+    "assessor_id": "urn:example:ecl:assessor:independent-lab",
+    "claim_approval_authority_within_24_months": false,
+    "class": "C",
+    "compensation_contingent_on_claim": false,
+    "competency_evidence": {
+      "uri": "urn:example:ecl:assessor:competency",
+      "version": "1"
+    },
+    "conflict_disclosure": {
+      "uri": "urn:example:ecl:assessor:conflict-disclosure",
+      "version": "1"
+    },
+    "managed_operator_within_24_months": false,
+    "material_affiliate_or_reseller": false,
+    "primary_implementer": false
+  },
+  "integrity": {
+    "envelope": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "8787878787878787878787878787878787878787878787878787878787878787"
+      },
+      "uri": "urn:example:ecl:envelope:assessment:payments",
+      "version": "1"
+    },
+    "manifest_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "8686868686868686868686868686868686868686868686868686868686868686"
+    },
+    "package_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "8585858585858585858585858585858585858585858585858585858585858585"
+    }
+  },
+  "level": 4,
+  "package_id": "urn:example:ecl:assessment:payments",
+  "package_version": "1",
+  "procurement_decision": {
+    "decision": "not_evaluated",
+    "decision_owner": "urn:example:buyer:procurement-owner",
+    "rationale": "Procurement is a separate buyer decision and is outside this example.",
+    "separate_from_assessment": true
+  },
+  "residual_risks": [
+    {
+      "affected_boundary": "integrity algorithm suite",
+      "description": "The ML-DSA-65 optional suite cannot be represented as implemented or conformant.",
+      "owner": "urn:example:ecl:owner:integrity",
+      "risk_id": "urn:example:ecl:risk:post-quantum-suite-unverified",
+      "treatment": "defer"
+    }
+  ],
+  "runtime_evidence_observed_at": "2026-07-27T11:00:00Z",
+  "schema_version": "ecl_assessment_package_v1",
+  "static_artifact": false,
+  "system_of_interest": {
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "8181818181818181818181818181818181818181818181818181818181818181"
+    },
+    "uri": "urn:example:ecl:soi:payments",
+    "version": "1"
+  }
+}

@@ -25,14 +25,15 @@
  * (`pyjson.ts`).
  */
 
+import { ERROR_CODES } from "../generated/registries.js";
 import { sha256Hex, utf8 } from "../crypto/bytes.js";
 import { isObject, pythonStr } from "../json/value.js";
 import type { JsonObject, JsonValue } from "../json/value.js";
 import type { Finding } from "../semantic/rules.js";
-import { urlsplit, urlunsplit } from "../schema/formats.js";
-import { array, at, binds, digestOf, findings, holds, instant, integer, member, obj, sameDigest, text } from "./common.js";
+import { urlsplit } from "../schema/formats.js";
+import { ONE_WAY_RULE, array, at, binds, digestOf, findings, holds, instant, integer, member, messageFindings, obj, oneWayResponseProblems, sameDigest, text } from "./common.js";
 import type { Problem } from "./common.js";
-import { decodeJws, isPyObject, JoseError, tokenHash, verifyDpop, verifyJws } from "./jose.js";
+import { b64urlDecode, decodeJws, isPyObject, JoseError, tokenHash, verifyDpop, verifyJws } from "./jose.js";
 import { pyEquals, pyIn, pySameJson, toPy } from "./pyjson.js";
 import type { PyObject, PyValue } from "./pyjson.js";
 
@@ -59,6 +60,7 @@ export const SCOPE_MISMATCH = "ecl.error.scope-mismatch.v1";
 export const EXPIRED = "ecl.error.expired.v1";
 export const REPLAY = "ecl.error.replay.v1";
 export const INTEGRITY_INVALID = "ecl.error.integrity-invalid.v1";
+export const BINDING_UNSUPPORTED = "ecl.error.binding-unsupported.v1";
 
 export const ISSUE_RULE = "ecl.rule.oauth-token-expresses-admit.v1";
 export const SIGNATURE_RULE = "ecl.rule.oauth-token-signature-checked.v1";
@@ -77,7 +79,7 @@ function pyInt(value: PyValue | undefined): bigint | null {
   return typeof value === "bigint" ? value : null;
 }
 
-/** The ECL `authorization_details` entry for an admit, as the profile's entry table gives. */
+/** Project the entry table's members; callers verify the admit and supported use policy separately. */
 export function authorizationDetailsEntry(request: JsonObject, response: JsonObject, withDecision = true): JsonObject {
   const authorization = response["authorization"] as JsonObject;
   const action = request["action"] as JsonObject;
@@ -129,6 +131,12 @@ function entries(claims: PyObject): PyValue[] {
 }
 
 /** Each way a token fails to express its admit (the issuer's side). */
+function validThumbprint(value: PyValue | undefined): boolean {
+  if (typeof value !== "string" || value.length !== 43) return false;
+  try { return b64urlDecode(value).length === 32; }
+  catch (error) { if (error instanceof JoseError) return false; throw error; }
+}
+
 export function issueProblems(request: JsonObject, response: JsonObject, token: string, maxLifetime: number): Problem[] {
   if (at(response, "outcome") !== "admit" || !binds(request, response)) {
     return [["/token", "the token was issued for something other than a verified admit"]];
@@ -190,13 +198,23 @@ export function issueProblems(request: JsonObject, response: JsonObject, token: 
     end === null ||
     begins * NANOSECONDS < start ||
     expires * NANOSECONDS > end ||
+    begins >= expires ||
     !(0n < expires - issued && expires - issued <= BigInt(maxLifetime))
   ) {
     problems.push(["/token/exp", "the token's validity is not inside the window and bound"]);
   }
   const [subject, actor] = subjectAndActor(request);
   const act = own(claims, "act");
-  if (!pyEquals(own(claims, "sub"), subject) || (actor !== null && !pyEquals(isPyObject(act) ? own(act, "sub") : null, actor))) {
+  let malformedActor = false;
+  if (act !== undefined) {
+    let nested: PyValue | undefined = act;
+    while (true) {
+      if (!isPyObject(nested)) { malformedActor = true; break; }
+      if (own(nested, "act") === undefined) break;
+      nested = own(nested, "act");
+    }
+  }
+  if (!pyEquals(own(claims, "sub"), subject) || malformedActor || ((actor !== null || act !== undefined) && !pyEquals(isPyObject(act) ? own(act, "sub") : null, member(request, "actor", "id")))) {
     problems.push(["/token/act", "the subject and actor are not the request's"]);
   }
   const confirmation = own(claims, "cnf");
@@ -206,7 +224,7 @@ export function issueProblems(request: JsonObject, response: JsonObject, token: 
     !isPyObject(confirmation) ||
     confirmationKeys.length !== 1 ||
     (confirmationKeys[0] !== "jkt" && confirmationKeys[0] !== "x5t#S256") ||
-    typeof own(confirmation, confirmationKeys[0] as string) !== "string"
+    !validThumbprint(own(confirmation, confirmationKeys[0] as string))
   ) {
     problems.push(["/token/cnf", "the token is not sender-constrained by one key"]);
   }
@@ -248,20 +266,26 @@ export function signatureProblems(token: string, keys: ReadonlyMap<string, PyObj
  */
 function htu(uri: string): string | null {
   const parts = urlsplit(uri);
-  if (parts === undefined) {
+  if (parts === undefined || parts.scheme === "") {
     return null;
   }
-  return urlunsplit(parts.scheme, parts.netloc, parts.path, "", "");
+  // OA1-004 preserves every other character, including an empty authority's slashes.
+  return parts.scheme + uri.slice(uri.indexOf(":")).split(/[?#]/, 1)[0];
 }
 
 function possession(record: JsonObject, claims: PyObject, token: string, presentation: JsonObject, presented: bigint | null): CodedProblem[] {
   const cnf = own(claims, "cnf");
   const confirmation: PyObject = isPyObject(cnf) ? cnf : {};
+  const confirmationNames = Object.keys(confirmation);
+  if (confirmationNames.length !== 1 || !["jkt", "x5t#S256"].includes(confirmationNames[0] as string)
+    || !validThumbprint(own(confirmation, confirmationNames[0] as string))) {
+    return [["/token/cnf", "the token is not sender-constrained by one key", INTEGRITY_INVALID]];
+  }
   if (own(confirmation, "x5t#S256") !== undefined) {
     // The bound thumbprint is a string: a null one is not matched by a presentation that carries no
     // client certificate.
     const bound = own(confirmation, "x5t#S256");
-    if (typeof bound !== "string" || !pyEquals(toPy(at(presentation, "client_certificate_sha256")), bound)) {
+    if (!validThumbprint(bound) || !pyEquals(toPy(at(presentation, "client_certificate_sha256")), bound)) {
       return [["/presentation", "the client certificate is not the bound one", INTEGRITY_INVALID]];
     }
     return [];
@@ -331,15 +355,20 @@ export function presentationChecks(record: JsonObject): CodedProblem[] {
     throw error;
   }
   const presentation = obj(record, "presentation") ?? {};
+  const found = entries(claims);
+  const entry: PyObject = found.length === 1 ? (found[0] as PyObject) : {};
+  const maxUses = own(entry, "max_uses");
   const problems: CodedProblem[] = [];
   if (!pyEquals(own(claims, "aud"), toPy(at(record, "resource_server")))) {
     problems.push(["/token/aud", "the token is for another audience", AUDIENCE_MISMATCH]);
   }
   const presented = instant(at(presentation, "presented_at"));
-  const found = entries(claims);
-  const entry: PyObject = found.length === 1 ? (found[0] as PyObject) : {};
   if (!withinValidity(record, claims, found, presented)) {
     problems.push(["/presentation/presented_at", "outside the token's validity", EXPIRED]);
+  }
+  if (found.length === 1 && (own(entry, "use_policy") !== "single_use" ||
+      (maxUses !== undefined && pyInt(maxUses) !== 1n))) {
+    return [...problems, ["/token/authorization_details", "only single_use with max_uses absent or 1 is supported", BINDING_UNSUPPORTED]];
   }
   problems.push(...possession(record, claims, token, presentation, presented));
   const actions = own(entry, "actions");
@@ -350,10 +379,8 @@ export function presentationChecks(record: JsonObject): CodedProblem[] {
   ) {
     problems.push(["/presentation", "another target, operation or parameter digest", SCOPE_MISMATCH]);
   }
-  const maxUses = own(entry, "max_uses");
-  const limit = own(entry, "use_policy") === "single_use" ? 1n : pyInt(maxUses);
   const used = integer(presentation, "use_count");
-  if (used === null || (limit !== null && BigInt(used) > limit)) {
+  if (used !== 1) {
     problems.push(["/presentation/use_count", "beyond the entry's use policy", REPLAY]);
   }
   return problems;
@@ -376,7 +403,7 @@ function withinValidity(record: JsonObject, claims: PyObject, found: readonly Py
   const skew = BigInt(integer(record, "clock_skew_seconds") || DEFAULT_CLOCK_SKEW);
   const begins = pyInt(own(claims, "nbf") !== undefined ? own(claims, "nbf") : own(claims, "iat"));
   const expires = pyInt(own(claims, "exp"));
-  if (presented === null || begins === null || expires === null) {
+  if (presented === null || begins === null || expires === null || begins >= expires) {
     return false;
   }
   if (!((begins - skew) * NANOSECONDS <= presented && presented < (expires + skew) * NANOSECONDS)) {
@@ -396,8 +423,7 @@ function withinValidity(record: JsonObject, claims: PyObject, found: readonly Py
  * of audience, validity, proof of possession, scope and uses.
  */
 export function refusalProblems(record: JsonObject): CodedProblem[] {
-  const token = text(record, "token") ?? "";
-  const signature = signatureProblems(token, issuerKeys(record), at(record, "issuer"));
+  const signature = recordSignatureProblems(record);
   if (signature.length > 0) {
     return signature.map(([path, message]): CodedProblem => [path, message, INTEGRITY_INVALID]);
   }
@@ -411,6 +437,9 @@ export function refusalProblems(record: JsonObject): CodedProblem[] {
 function refusal(record: JsonObject): Problem[] {
   const first = refusalProblems(record)[0];
   if (first === undefined) {
+    if (!ERROR_CODES.some((entry) => entry.id === member(record, "result", "error"))) {
+      return [["/result/error", "a refusal must name a registered error code"]];
+    }
     return [];
   }
   const expected = first[2];
@@ -428,6 +457,22 @@ function sameDigestPy(left: PyValue | undefined, right: PyValue | undefined): bo
   const algorithm = own(left, "algorithm");
   const value = own(left, "value");
   return typeof algorithm === "string" && typeof value === "string" && algorithm === own(right, "algorithm") && value === own(right, "value");
+}
+
+function recordSignatureProblems(record: JsonObject): Problem[] {
+  // OA1-007: no key map may silently select one of several entries with the same kid.
+  const seen = new Set<string>();
+  const problems: Problem[] = [];
+  array(record, "issuer_keys", "keys").forEach((entry, index) => {
+    const keyId = text(entry, "kid");
+    if (keyId === null) return; // Entry shape and member types are checked by the schema.
+    if (seen.has(keyId)) {
+      problems.push([`/issuer_keys/keys/${index}/kid`, "issuer key identifiers must be distinct"]);
+    }
+    seen.add(keyId);
+  });
+  if (problems.length > 0) return problems;
+  return signatureProblems(text(record, "token") ?? "", issuerKeys(record), at(record, "issuer"));
 }
 
 function issuerKeys(record: JsonObject): Map<string, PyObject> {
@@ -450,7 +495,7 @@ export const ISSUER_RULES: ReadonlyArray<readonly [string, (record: JsonObject, 
   [ISSUE_RULE, (record, request, response, token) => issueProblems(request, response, token, integer(record, "max_token_lifetime_seconds") || DEFAULT_MAX_LIFETIME)],
 ];
 export const ACCEPTANCE_RULES: ReadonlyArray<readonly [string, (record: JsonObject, token: string) => Problem[]]> = [
-  [SIGNATURE_RULE, (record, token) => signatureProblems(token, issuerKeys(record), at(record, "issuer"))],
+  [SIGNATURE_RULE, (record) => recordSignatureProblems(record)],
   [PRESENTATION_RULE, (record) => presentationProblems(record)],
 ];
 export const REFUSAL_RULES: ReadonlyArray<readonly [string, (record: JsonObject) => Problem[]]> = [[REFUSAL_RULE, (record) => refusal(record)]];
@@ -464,6 +509,8 @@ export function check(record: JsonObject): Finding[] {
     return [];
   }
   const result = ISSUER_RULES.flatMap(([rule, problems]) => findings(rule, problems(record, request, response, token)));
+  result.push(...findings(ONE_WAY_RULE, oneWayResponseProblems(record, [["request"], ["response"]])));
+  result.push(...messageFindings(record, ["request"], ["response"]));
   const accepted = member(record, "result", "accepted");
   if (accepted === false) {
     return [...result, ...REFUSAL_RULES.flatMap(([rule, problems]) => findings(rule, problems(record)))];
@@ -471,5 +518,6 @@ export function check(record: JsonObject): Finding[] {
   if (accepted !== true) {
     return result;
   }
+  if (holds(obj(record, "result") ?? {}, "error")) result.push(...findings(REFUSAL_RULE, [["/result/error", "an accepted presentation must not carry an error"]]));
   return [...result, ...ACCEPTANCE_RULES.flatMap(([rule, problems]) => findings(rule, problems(record, token)))];
 }

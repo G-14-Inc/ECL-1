@@ -55,6 +55,9 @@ export const DEFAULT_OFFLINE_RESOURCE_LIMITS: OfflineResourceLimits = Object.fre
 
 const LIMIT_NAMES = ["maxArchiveBytes", "maxMemberCount", "maxEntryUncompressedBytes", "maxTotalUncompressedBytes", "maxCompressionRatio", "maxPathBytes"] as const;
 
+/** IE1-028's encoded-input ceiling also applies to the archive's encoded bytes. */
+export const MAX_ARCHIVE_BYTES_CEILING = 2_147_483_647;
+
 /** `limits` when every limit is a finite positive integer (IE1-028); otherwise RangeError. */
 export function checkLimits(limits: unknown): OfflineResourceLimits {
   if (typeof limits !== "object" || limits === null) {
@@ -64,6 +67,9 @@ export function checkLimits(limits: unknown): OfflineResourceLimits {
     const value = (limits as Record<string, unknown>)[name];
     if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 1) {
       throw new RangeError(`the offline resource limit ${name} is a positive integer`);
+    }
+    if (name === "maxArchiveBytes" && value > MAX_ARCHIVE_BYTES_CEILING) {
+      throw new RangeError(`the offline resource limit maxArchiveBytes is at most ${MAX_ARCHIVE_BYTES_CEILING}`);
     }
   }
   return limits as OfflineResourceLimits;
@@ -467,6 +473,12 @@ function layoutProblem(data: Uint8Array, members: ReadonlyArray<{ nameBytes: Uin
   return undefined;
 }
 
+// Names are untrusted until the portable-name check. Keep refusal messages valid in the
+// restricted JSON report even when a ZIP directory contains Unicode noncharacters.
+function quotedEntryName(name: string): string {
+  return JSON.stringify(name).replace(/[^\x20-\x7e]/g, (unit) => `\\u${unit.charCodeAt(0).toString(16).padStart(4, "0")}`);
+}
+
 /**
  * The members of an archive in exact `ecl.zip.store.v1` form, in archive order. Anything else is
  * an ArchiveRefusal: `limit` is true when the archive exceeds one of `limits`. Invalid `limits`
@@ -484,17 +496,17 @@ export function readStoredZip(data: Uint8Array, limits: OfflineResourceLimits): 
   let total = 0;
   for (const entry of entries) {
     if (entry.flags & 0x1) {
-      throw profileDeparture(`an encrypted member: ${entry.name}`);
+      throw profileDeparture(`an encrypted member: ${quotedEntryName(entry.name)}`);
     }
     if (entry.fileSize > limits.maxEntryUncompressedBytes) {
-      throw new ArchiveRefusal(`archive member exceeds the verifier budget: ${entry.name}`, true);
+      throw new ArchiveRefusal(`archive member exceeds the verifier budget: ${quotedEntryName(entry.name)}`, true);
     }
     total += entry.fileSize;
     if (total > limits.maxTotalUncompressedBytes) {
       throw new ArchiveRefusal("archive expansion exceeds the verifier budget", true);
     }
     if (entry.fileSize > 0 && BigInt(entry.fileSize) > BigInt(Math.max(entry.compressedSize, 1)) * BigInt(limits.maxCompressionRatio)) {
-      throw new ArchiveRefusal(`archive member compression ratio exceeds the verifier budget: ${entry.name}`, true);
+      throw new ArchiveRefusal(`archive member compression ratio exceeds the verifier budget: ${quotedEntryName(entry.name)}`, true);
     }
   }
   const seen = new Set<string>();
@@ -502,13 +514,13 @@ export function readStoredZip(data: Uint8Array, limits: OfflineResourceLimits): 
   let prior: Uint8Array | undefined;
   for (const entry of entries) {
     if (entry.name.includes("\u0000")) {
-      throw profileDeparture(`a name with a NUL character: ${JSON.stringify(entry.name)}`);
+      throw profileDeparture(`a name with a NUL character: ${quotedEntryName(entry.name)}`);
     }
     if (entry.nameBytes.length > limits.maxPathBytes) {
       throw new ArchiveRefusal("archive member name exceeds the verifier budget", true);
     }
     if (!isEntryName(entry.name)) {
-      throw profileDeparture(`a name that is not an entry name: ${JSON.stringify(entry.name)}`);
+      throw profileDeparture(`a name that is not an entry name: ${quotedEntryName(entry.name)}`);
     }
     const alias = foldAscii(entry.name);
     if (seen.has(alias)) {
@@ -524,6 +536,7 @@ export function readStoredZip(data: Uint8Array, limits: OfflineResourceLimits): 
       entry.date !== PROFILE_DOS_DATE ||
       entry.time !== 0 ||
       entry.method !== 0 ||
+      entry.compressedSize !== entry.fileSize ||
       entry.flags !== 0 ||
       entry.extraLength !== 0 ||
       entry.commentLength !== 0

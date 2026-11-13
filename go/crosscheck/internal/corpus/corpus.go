@@ -17,12 +17,14 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/bindings"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/canon"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/documents"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/envelope"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/evidence"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/instant"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validator"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/validatorx"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/offline"
@@ -45,14 +47,69 @@ var Capabilities = []string{
 	"schema-validation", "trust-policy-load", "envelope-signature-verification",
 	"evidence-bundle-verification", "control-extension-rules", "binding-profile-rules",
 	"decision-basis-rule", "document-validation", "extension-version-rule",
-	"document-extension-rules", "key-role-separation", "binding-basis-agreement-rule",
-	"otel-export-keyed-digests", "offline-package-verification",
+	"document-extension-rules", "deployment-timing-case", "key-role-separation", "binding-basis-agreement-rule",
+	"otel-export-keyed-digests", "offline-package-verification", "work-intent-contract",
+}
+
+// The v3 profile's capability vocabulary, separate from this implementation's support.
+var requiredCapabilities = []string{"strict-json", "canonical-digest", "semantic-rules", "safe-state-profile-rules"}
+var optionalCapabilities = []string{
+	"schema-validation", "trust-policy-load", "envelope-signature-verification", "evidence-bundle-verification", "control-extension-rules", "binding-profile-rules", "decision-basis-rule", "document-validation", "extension-version-rule", "document-extension-rules", "deployment-timing-case", "key-role-separation", "binding-basis-agreement-rule", "otel-export-keyed-digests", "offline-package-verification", "work-intent-contract",
+}
+
+func corpusCapabilities(corpus Corpus) ([]string, error) {
+	for name, list := range map[string][]string{"required_capabilities": corpus.Required, "optional_capabilities": corpus.Optional} {
+		if list == nil {
+			return nil, fmt.Errorf("%s must be an array", name)
+		}
+		seen := map[string]bool{}
+		for _, item := range list {
+			if item == "" || seen[item] {
+				return nil, fmt.Errorf("invalid or duplicate %s", name)
+			}
+			seen[item] = true
+		}
+	}
+	for _, required := range corpus.Required {
+		if !has(Capabilities, required) {
+			return nil, fmt.Errorf("missing required capability: %s", required)
+		}
+	}
+	if len(corpus.Required) != len(requiredCapabilities) {
+		return nil, errors.New("corpus required capabilities differ from the v3 profile")
+	}
+	for _, required := range requiredCapabilities {
+		if !has(corpus.Required, required) {
+			return nil, errors.New("corpus required capabilities differ from the v3 profile")
+		}
+	}
+	for _, optional := range corpus.Optional {
+		if !has(optionalCapabilities, optional) || has(corpus.Required, optional) {
+			return nil, errors.New("unregistered or overlapping optional capability")
+		}
+	}
+	if corpus.Vectors == nil {
+		return nil, errors.New("corpus vectors must be an array")
+	}
+	supported := []string{}
+	for _, capability := range Capabilities {
+		if has(corpus.Required, capability) || has(corpus.Optional, capability) {
+			supported = append(supported, capability)
+		}
+	}
+	for _, implication := range [][2]string{{"evidence-bundle-verification", "decision-basis-rule"}, {"binding-profile-rules", "decision-basis-rule"}, {"binding-basis-agreement-rule", "decision-basis-rule"}, {"offline-package-verification", "evidence-bundle-verification"}} {
+		if has(supported, implication[0]) && !has(supported, implication[1]) {
+			return nil, fmt.Errorf("%s requires %s", implication[0], implication[1])
+		}
+	}
+	return supported, nil
 }
 
 // Disclosure states how this implementation relates to the reference.
 const Disclosure = "Robert F. Tilley Jr. and G-14, Inc. maintain this repository's Go library packages, protocol and profile rules, runner and Python reference. The imported foundation core is separately maintained. The repository code implements the documented behavior without importing or calling the Python reference."
 
 const schemaInvalid = "ecl.error.schema-invalid.v1"
+const semanticInvalid = "ecl.error.semantic-invalid.v1"
 
 // strictRules are the registered rules of strict input (IE1-002, IE1-037).
 var strictRules = map[string]bool{
@@ -182,11 +239,37 @@ func encode(value any) ([]byte, error) {
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
 	encoder.SetEscapeHTML(false)
-	err := encoder.Encode(value)
-	return bytes.TrimSuffix(buffer.Bytes(), []byte("\n")), err
+	if err := encoder.Encode(value); err != nil {
+		return nil, err
+	}
+	// Python's compact ensure_ascii=False JSON leaves these scalar values literal.
+	// Skip complete escape pairs so a literal backslash-u spelling stays unchanged.
+	data := bytes.TrimSuffix(buffer.Bytes(), []byte("\n"))
+	out := make([]byte, 0, len(data))
+	for index := 0; index < len(data); {
+		if data[index] == '\\' && index+1 < len(data) {
+			if index+6 <= len(data) && (string(data[index:index+6]) == `\u2028` || string(data[index:index+6]) == `\u2029`) {
+				out = append(out, 0xe2, 0x80, 0xa8+(data[index+5]-'8'))
+				index += 6
+				continue
+			}
+			out = append(out, data[index], data[index+1])
+			index += 2
+			continue
+		}
+		out = append(out, data[index])
+		index++
+	}
+	return out, nil
 }
 
-func read(root, relative string) ([]byte, error) {
+// Reporting budgets are distinct from the verifier's stage limits. Files larger than
+// this report-integrity ceiling cannot be bound by this runner's report.
+const maxBoundFileBytes int64 = 512 * 1024 * 1024
+const maxBoundTotalBytes int64 = 4 * 1024 * 1024 * 1024
+const maxBoundFileCount = 100_000
+
+func openArtifact(root, relative string) (*os.File, error) {
 	if !fs.ValidPath(relative) || strings.Contains(relative, "\\") {
 		return nil, fmt.Errorf("unsafe artifact path: %s", relative)
 	}
@@ -201,23 +284,110 @@ func read(root, relative string) ([]byte, error) {
 			return nil, fmt.Errorf("artifact symlink: %s", relative)
 		}
 	}
-	info, err := os.Stat(current)
-	if err != nil {
-		return nil, err
-	}
-	if !info.Mode().IsRegular() || info.Size() > 16*1024*1024 {
-		return nil, fmt.Errorf("artifact budget or type: %s", relative)
-	}
 	file, err := os.Open(current)
 	if err != nil {
 		return nil, err
 	}
+	info, err := file.Stat()
+	if err != nil || !info.Mode().IsRegular() {
+		file.Close()
+		if err != nil {
+			return nil, err
+		}
+		return nil, fmt.Errorf("artifact type: %s", relative)
+	}
+	return file, nil
+}
+
+func readPrefix(root, relative string, limit int64) ([]byte, error) {
+	file, err := openArtifact(root, relative)
+	if err != nil {
+		return nil, err
+	}
 	defer file.Close()
-	data, err := io.ReadAll(io.LimitReader(file, 16*1024*1024+1))
-	if len(data) > 16*1024*1024 {
+	return io.ReadAll(io.LimitReader(file, limit+1))
+}
+
+// Metadata retains its own bounded read. Vector data uses its declared stage below.
+func read(root, relative string) ([]byte, error) {
+	data, err := readPrefix(root, relative, strict.MaxInputBytes)
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > strict.MaxInputBytes {
 		return nil, errors.New("artifact byte limit exceeded")
 	}
-	return data, err
+	return data, nil
+}
+
+// readAndHash retains at most prefixBytes and streams the exact file digest from the
+// same open handle. A zero prefix hashes source bytes without retaining their contents.
+func readAndHash(root, relative string, prefixBytes int64) ([]byte, string, int64, error) {
+	file, err := openArtifact(root, relative)
+	if err != nil {
+		return nil, "", 0, err
+	}
+	defer file.Close()
+	before, err := file.Stat()
+	if err != nil {
+		return nil, "", 0, err
+	}
+	if before.Size() > maxBoundFileBytes {
+		return nil, "", 0, fmt.Errorf("artifact exceeds report byte budget: %s", relative)
+	}
+	if prefixBytes < 0 {
+		return nil, "", 0, errors.New("negative retained prefix")
+	}
+	if prefixBytes > maxBoundFileBytes+1 {
+		prefixBytes = maxBoundFileBytes + 1
+	}
+	hash := sha256.New()
+	data, err := io.ReadAll(io.TeeReader(io.LimitReader(file, prefixBytes), hash))
+	if err != nil {
+		return nil, "", 0, err
+	}
+	rest, err := io.Copy(hash, io.LimitReader(file, maxBoundFileBytes+1-int64(len(data))))
+	if err != nil {
+		return nil, "", 0, err
+	}
+	size := int64(len(data)) + rest
+	after, err := file.Stat()
+	if err != nil {
+		return nil, "", 0, err
+	}
+	current, err := os.Stat(file.Name())
+	if err != nil {
+		return nil, "", 0, err
+	}
+	if size > maxBoundFileBytes {
+		return nil, "", 0, fmt.Errorf("artifact exceeds report byte budget: %s", relative)
+	}
+	if size != before.Size() || after.Size() != before.Size() || !before.ModTime().Equal(after.ModTime()) || !os.SameFile(before, current) || current.Size() != size {
+		return nil, "", 0, fmt.Errorf("artifact changed during read: %s", relative)
+	}
+	return data, hex.EncodeToString(hash.Sum(nil)), size, nil
+}
+
+func vectorByteLimit(vector Vector) (int64, error) {
+	switch vector.Stage {
+	case "package":
+		return offline.DefaultLimits.MaxArchiveBytes, nil
+	case "trust-policy":
+		return trust.MaxPolicyBytes, nil
+	}
+	limits := strict.DefaultLimits
+	if vector.StrictJSONLimits != nil {
+		limits = strict.Limits{MaxBytes: vector.StrictJSONLimits.MaxBytes, MaxDepth: vector.StrictJSONLimits.MaxDepth, MaxNodes: vector.StrictJSONLimits.MaxNodes}
+	}
+	for _, item := range []struct {
+		name  string
+		value int
+	}{{"MaxBytes", limits.MaxBytes}, {"MaxDepth", limits.MaxDepth}, {"MaxNodes", limits.MaxNodes}} {
+		if _, err := strict.LimitFromJSON(item.name, item.value); err != nil {
+			return 0, err
+		}
+	}
+	return int64(limits.MaxBytes), nil
 }
 
 func decode(root, path string, out any) error {
@@ -234,18 +404,41 @@ func decode(root, path string, out any) error {
 // SourceHash returns the source-tree digest of a clean export: the SHA-256 of the compact JSON
 // list of {path, sha256, size_bytes}, sorted by path.
 func SourceHash(root string) (string, error) {
+	return sourceHash(root, maxBoundFileCount*2)
+}
+
+// sourceHash counts descendant entries; the root itself is checked but is not an entry.
+func sourceHash(root string, maxEntries int) (string, error) {
+	root, err := filepath.Abs(root)
+	if err != nil {
+		return "", err
+	}
 	entries := []map[string]any{}
-	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
+	var totalBytes int64
+	visited := 0
+	err = filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
+		}
+		if path != root {
+			visited++
+			if visited > maxEntries {
+				return errors.New("source tree entry budget exceeded")
+			}
 		}
 		if entry.Type()&os.ModeSymlink != 0 {
 			return errors.New("source symlink")
 		}
+		if entry.Name() == ".git" {
+			return errors.New("source must be a clean export")
+		}
+		if path != root && (!utf8.ValidString(entry.Name()) || strings.Contains(entry.Name(), "\\")) {
+			return errors.New("source name is not a valid UTF-8 relative POSIX name")
+		}
+		if path == root && !entry.IsDir() {
+			return errors.New("source root is not a directory")
+		}
 		if entry.IsDir() {
-			if entry.Name() == ".git" {
-				return errors.New("source must be a clean export")
-			}
 			return nil
 		}
 		info, err := entry.Info()
@@ -259,15 +452,22 @@ func SourceHash(root string) (string, error) {
 		if err != nil {
 			return err
 		}
-		data, err := read(root, filepath.ToSlash(relative))
+		_, hash, size, err := readAndHash(root, filepath.ToSlash(relative), 0)
 		if err != nil {
 			return err
 		}
-		entries = append(entries, map[string]any{"path": filepath.ToSlash(relative), "sha256": digest(data), "size_bytes": len(data)})
+		totalBytes += size
+		if totalBytes > maxBoundTotalBytes || len(entries) >= maxBoundFileCount {
+			return errors.New("source tree report budget exceeded")
+		}
+		entries = append(entries, map[string]any{"path": filepath.ToSlash(relative), "sha256": hash, "size_bytes": size})
 		return nil
 	})
 	if err != nil {
 		return "", err
+	}
+	if len(entries) == 0 {
+		return "", errors.New("source tree is empty")
 	}
 	sort.Slice(entries, func(i, j int) bool { return entries[i]["path"].(string) < entries[j]["path"].(string) })
 	encoded, err := encode(entries)
@@ -334,6 +534,11 @@ func Evaluate(data []byte, vector Vector, context *Context) ([]string, error) {
 	if err != nil {
 		var strictErr *strict.Error
 		if errors.As(err, &strictErr) {
+			// The corpus requires a verdict even when its common Parse step refuses
+			// an evidence bundle. No trust, schema, scope or effect checks ran.
+			if vector.Stage == "evidence-bundle" && context != nil && context.Verdicts != nil {
+				context.Verdicts[vector.ID] = "invalid"
+			}
 			return []string{strictErr.RuleID}, nil
 		}
 		return nil, err
@@ -434,7 +639,7 @@ func Evaluate(data []byte, vector Vector, context *Context) ([]string, error) {
 	case "safe-state-profile":
 		ids = ruleIDs(validatorx.Validate(object), func(item validator.Finding) string { return item.RuleID })
 	case "semantic", "protocol":
-		findings, err := semantic.ValidateBytes(data, context.Semantics)
+		findings, err := semantic.Validate(object, context.Semantics)
 		if err != nil {
 			return nil, err
 		}
@@ -466,12 +671,9 @@ func vectorOptions(root string, vector Vector) (*trust.Policy, evidence.Options,
 	}
 	options := evidence.Options{Now: vector.EvaluatedAt, History: history, RequireTrustedTime: vector.RequireTrustedTime, AcceptCurrentTrustFailure: vector.AcceptCurrentTrustFailure}
 	if vector.RegisterPath != "" {
-		data, err := read(root, vector.RegisterPath)
+		data, err := readPrefix(root, vector.RegisterPath, evidence.MaxRegisterBytes)
 		if err != nil {
 			return nil, evidence.Options{}, err
-		}
-		if len(data) > evidence.MaxRegisterBytes+1 {
-			data = data[:evidence.MaxRegisterBytes+1]
 		}
 		register, err := evidence.LoadRegister(data)
 		if err != nil {
@@ -483,25 +685,21 @@ func vectorOptions(root string, vector Vector) (*trust.Policy, evidence.Options,
 }
 
 func verifyEnvelope(object map[string]any, policy *trust.Policy) ([]string, error) {
-	payload, err := envelope.DecodeCanonicalJSONPayload(object)
-	if err == nil {
+	_, err := envelope.VerifyWithContext(object, policy.Keyring(), func(payload any) (envelope.Context, error) {
 		payloadObject, isObject := payload.(map[string]any)
 		if !isObject {
-			return nil, errors.New("envelope payload is not an object")
+			return envelope.Context{}, errors.New("envelope payload has no object time")
 		}
 		member, timePolicy := "observed_at", "ecl.time.observed-at.v1"
 		if payloadObject["protocol"] == "DCMP-2" {
 			member, timePolicy = "issued_at", "ecl.time.issued-at.v1"
 		}
 		at, hasTime := payloadObject[member].(string)
-		if !hasTime {
-			return []string{schemaInvalid}, nil
+		if !hasTime || !instant.Valid(at) {
+			return envelope.Context{}, errors.New("envelope payload lacks a valid verification-time timestamp")
 		}
-		var context envelope.Context
-		if context, err = policy.VerificationContext(at, timePolicy); err == nil {
-			_, err = envelope.Verify(object, policy.Keyring(), context)
-		}
-	}
+		return policy.VerificationContext(at, timePolicy)
+	})
 	var refusal *envelope.Error
 	switch {
 	case err == nil:
@@ -515,23 +713,17 @@ func verifyEnvelope(object map[string]any, policy *trust.Policy) ([]string, erro
 
 // loadKeyFile reads a suite's export key file (OE1-010) within the trust-policy byte budget.
 func loadKeyFile(root, path string) (map[string]bindings.ExportKey, error) {
-	data, err := read(root, path)
+	data, err := readPrefix(root, path, trust.MaxPolicyBytes)
 	if err != nil {
 		return nil, err
-	}
-	if len(data) > trust.MaxPolicyBytes+1 {
-		data = data[:trust.MaxPolicyBytes+1]
 	}
 	return bindings.LoadExportKeys(data)
 }
 
 func loadPolicyFile(root, path string) (*trust.Policy, error) {
-	data, err := read(root, path)
+	data, err := readPrefix(root, path, trust.MaxPolicyBytes)
 	if err != nil {
 		return nil, err
-	}
-	if len(data) > trust.MaxPolicyBytes+1 {
-		data = data[:trust.MaxPolicyBytes+1]
 	}
 	return trust.Load(data)
 }
@@ -553,7 +745,7 @@ func selectBundleFinding(observed []string, precedence map[string]int, errorCode
 
 // selectFindings is the reference runner's choice of a primary identifier and the sorted
 // secondary ones: a strict-JSON rule first, then schema invalidity, then the one registered
-// interface error, then the rule of lowest precedence.
+// specific interface error, then the rule of lowest precedence, then semantic-invalid.
 func selectFindings(observed []string, precedence map[string]int, errorCodes map[string]bool) (string, []string, error) {
 	findings := map[string]bool{}
 	for _, id := range observed {
@@ -580,13 +772,16 @@ func selectFindings(observed []string, precedence map[string]int, errorCodes map
 		}
 		return chosen
 	}
-	var strict, reported, all []string
+	var strict, reported, ranked []string
 	for id := range findings {
-		all = append(all, id)
+		if _, ok := precedence[id]; ok {
+			ranked = append(ranked, id)
+		}
 		if strictRules[id] {
 			strict = append(strict, id)
 		}
-		if isError(id) {
+		// A generic semantic failure is not a second specific interface error.
+		if isError(id) && id != semanticInvalid {
 			reported = append(reported, id)
 		}
 	}
@@ -600,8 +795,10 @@ func selectFindings(observed []string, precedence map[string]int, errorCodes map
 		return "", nil, errors.New("ambiguous interface errors: a vector must have one loader or integrity error")
 	case len(reported) == 1:
 		primary = reported[0]
-	case len(all) > 0:
-		primary = best(all)
+	case len(ranked) > 0:
+		primary = best(ranked)
+	case findings[semanticInvalid]:
+		primary = semanticInvalid
 	default:
 		return "", []string{}, nil
 	}
@@ -663,17 +860,30 @@ func registries(root string) (map[string]int, map[string]bool, error) {
 // Run evaluates the complete shared corpus under root, writes the report to reportPath and its
 // raw evidence beside it, and returns a summary and whether every vector met its expectation.
 func Run(root, revision, reportPath string) (map[string]any, bool, error) {
+	return run(root, revision, reportPath, nil)
+}
+
+// run allows an internal caller to observe the completed input preflight before
+// output starts. The public runner uses no callback; tests use the checkpoint
+// to change a corpus deterministically after its bytes have been parsed.
+func run(root, revision, reportPath string, afterCorpusParsed func() error) (map[string]any, bool, error) {
+	corpusData, err := read(root, "conformance/shared-corpus.json")
+	if err != nil {
+		return nil, false, err
+	}
+	if _, err = strict.Parse(corpusData); err != nil {
+		return nil, false, fmt.Errorf("configuration JSON: %w", err)
+	}
 	var corpus Corpus
-	if err := decode(root, "conformance/shared-corpus.json", &corpus); err != nil {
+	if err := json.Unmarshal(corpusData, &corpus); err != nil {
 		return nil, false, err
 	}
 	if corpus.Schema != "ecl_shared_corpus_v1" || corpus.Version != 1 || corpus.Candidate != "1.0" {
 		return nil, false, errors.New("unsupported corpus identity")
 	}
-	for _, required := range corpus.Required {
-		if !has(Capabilities, required) {
-			return nil, false, fmt.Errorf("missing required capability: %s", required)
-		}
+	capabilities, err := corpusCapabilities(corpus)
+	if err != nil {
+		return nil, false, err
 	}
 	manifests := []string{"conformance/manifest.json"}
 	paths, err := filepath.Glob(filepath.Join(root, "conformance/suites/*/manifest.json"))
@@ -688,6 +898,7 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 	suites := map[string]string{}
 	policies := map[string]string{}
 	keyFiles := map[string]string{}
+	seenSuites := map[string]bool{}
 	for _, path := range manifests {
 		var manifest Manifest
 		if err := decode(root, path, &manifest); err != nil {
@@ -696,6 +907,10 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 		if manifest.Schema != "ecl_conformance_vector_manifest_v3" {
 			return nil, false, errors.New("manifest must be v3")
 		}
+		if manifest.Suite == "" || seenSuites[manifest.Suite] {
+			return nil, false, errors.New("missing or duplicate manifest suite")
+		}
+		seenSuites[manifest.Suite] = true
 		for _, vector := range manifest.Vectors {
 			if _, exists := vectors[vector.ID]; exists {
 				return nil, false, errors.New("duplicate manifest vector ID")
@@ -727,7 +942,22 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
+	if afterCorpusParsed != nil {
+		if err := afterCorpusParsed(); err != nil {
+			return nil, false, err
+		}
+	}
+	// Preserve existing outputs before creating any raw-evidence directory.
+	if _, err := os.Lstat(reportPath); err == nil {
+		return nil, false, errors.New("report output already exists")
+	} else if !os.IsNotExist(err) {
+		return nil, false, err
+	}
 	evidenceDir := strings.TrimSuffix(filepath.Base(reportPath), filepath.Ext(reportPath)) + "-evidence"
+	if !offline.IsEntryName(evidenceDir) || len(evidenceDir) > 255 {
+		nameHash := sha256.Sum256([]byte(filepath.Base(reportPath)))
+		evidenceDir = "report-" + hex.EncodeToString(nameHash[:]) + "-evidence"
+	}
 	evidenceRoot := filepath.Join(filepath.Dir(reportPath), evidenceDir)
 	if err := os.Mkdir(evidenceRoot, 0700); err != nil {
 		return nil, false, err
@@ -749,12 +979,16 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 	verdictChecks := 0
 	for index, item := range corpus.Vectors {
 		vector := vectors[item.ID]
-		data, err := read(root, vector.Path)
+		limit, err := vectorByteLimit(vector)
 		if err != nil {
 			return nil, false, err
 		}
-		result := Result{ID: item.ID, Suite: item.Suite, ArtifactHash: digest(data), Expected: vector.Expected, Secondary: []string{}}
-		if !has(Capabilities, item.Capability) {
+		data, artifactHash, _, err := readAndHash(root, vector.Path, limit+1)
+		if err != nil {
+			return nil, false, err
+		}
+		result := Result{ID: item.ID, Suite: item.Suite, ArtifactHash: artifactHash, Expected: vector.Expected, Secondary: []string{}}
+		if !has(capabilities, item.Capability) {
 			if !has(corpus.Optional, item.Capability) {
 				return nil, false, fmt.Errorf("missing required capability: %s", item.Capability)
 			}
@@ -852,10 +1086,6 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 		results = append(results, result)
 		counts[result.Status]++
 	}
-	corpusData, err := read(root, "conformance/shared-corpus.json")
-	if err != nil {
-		return nil, false, err
-	}
 	decision := "pass"
 	if !allMet {
 		decision = "fail"
@@ -866,18 +1096,24 @@ func Run(root, revision, reportPath string) (map[string]any, bool, error) {
 	}
 	// The verification-time policy of each stage that a declared capability evaluates (IE1-023),
 	// as conformance/README.md fixes them.
+	evaluatedStages := map[string]bool{}
+	for _, item := range corpus.Vectors {
+		if has(capabilities, item.Capability) {
+			evaluatedStages[vectors[item.ID].Stage] = true
+		}
+	}
 	timePolicies := map[string]any{}
-	if has(Capabilities, "envelope-signature-verification") {
+	if evaluatedStages["envelope"] {
 		timePolicies["envelope"] = []string{"ecl.time.issued-at.v1", "ecl.time.observed-at.v1"}
 	}
-	if has(Capabilities, "evidence-bundle-verification") {
+	if evaluatedStages["evidence-bundle"] {
 		timePolicies["evidence-bundle"] = []string{"ecl.verification-profile.reference-trusted-time.v1", "ecl.verification-profile.reference.v1"}
 	}
-	if has(Capabilities, "offline-package-verification") {
+	if evaluatedStages["package"] {
 		timePolicies["package"] = []string{"ecl.verification-profile.reference-trusted-time.v1", "ecl.verification-profile.reference.v1"}
 	}
 	report := map[string]any{"schema_version": "ecl_cross_implementation_report_v3", "candidate_version": "1.0", "profile_version": "3", "decision": decision,
-		"implementation": map[string]any{"name": "ECL Go library", "version": "1.0", "source_repository": "go/crosscheck", "source_revision": revision, "source_tree_sha256": sourceHash, "language": "Go", "runtime": runtime.Version(), "maintainer": "Robert F. Tilley Jr.; G-14, Inc.", "relationship_disclosure": Disclosure, "imports_ecl_reference": false, "capabilities": Capabilities},
+		"implementation": map[string]any{"name": "ECL Go library", "version": evidence.SoftwareVersion, "source_repository": "go/crosscheck", "source_revision": revision, "source_tree_sha256": sourceHash, "language": "Go", "runtime": runtime.Version(), "maintainer": "Robert F. Tilley Jr.; G-14, Inc.", "relationship_disclosure": Disclosure, "imports_ecl_reference": false, "capabilities": capabilities},
 		"suite":          map[string]any{"id": "ecl-1-v1.0-shared", "manifest_sha256": digest(corpusData), "vector_count": len(results), "corpus_version": corpus.Version}, "network_used": false, "time_policies": timePolicies, "vector_results": results, "evidence": evidenceRows,
 		"limitations": limitations, "claim_boundary": "cross-implementation-corpus-replay"}
 	encoded, err := encode(report)

@@ -47,12 +47,18 @@ claim boundary as Section 7.7 requires. Check each part against its section:
 
 | Part of the claim | Where the standard states it |
 |---|---|
-| The claim class: full-system mediation, bounded action-class mediation, or a component or profile implementation, which does not provide the guarantee | Section 2.5 |
+| The claim class: full-system mediation or bounded action-class mediation | Section 2.5 |
 | The System of Interest, the Consequential Action Register and the Negative Boundary Annex | Sections 2.4 and 2.5 (ECL1N-0007 to ECL1N-0011) |
 | The level, at least the required minimum level | Sections 7.1 and 7.2 |
 | The independence class, at least the minimum for the level | Section 7.5 (ECL1N-0142 to ECL1N-0144) |
 | The status: full, conditional or assessment-only | Section 7.6 |
 | The version set, the assessment date and the limits | Sections 7.7 and 7.12 (ECL1N-0087) |
+
+A component or profile implementation report uses the separate
+[component report schema](../schemas/ecl-component-implementation-report-v1.schema.json).
+It identifies supported capabilities, requirement results and evidence without
+an `L1`–`L4` level or a mediation conformance status. Assess a deployment's
+mediation claim separately under Sections 7 and 11.
 
 The claim and assessment documents have schemas in [schemas/](../schemas/), and
 [CONFORMANCE-CLAIMS-1](../profiles/CONFORMANCE-CLAIMS-1.md) describes them;

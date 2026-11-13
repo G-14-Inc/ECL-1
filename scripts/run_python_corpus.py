@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.run_conformance import run  # noqa: E402
 from scripts.shared_corpus import OPTIONAL, REQUIRED, build  # noqa: E402
+from ecl_verify import __version__, __build__  # noqa: E402
 
 
 def replay(root: Path) -> dict[str, Any]:
@@ -26,6 +27,7 @@ def replay(root: Path) -> dict[str, Any]:
         raise ValueError("Python replay does not cover the declared corpus")
     return {
         "schema_version": "ecl_python_corpus_result_v1",
+        "software": {"name": "ecl-verify", "version": __version__, "source_build": __build__},
         "candidate_version": report["candidate_version"],
         "corpus_version": corpus["version"],
         "capabilities": [*REQUIRED, *OPTIONAL],

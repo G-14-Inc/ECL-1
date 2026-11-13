@@ -1,4 +1,8 @@
-# ECL-1 in one page, for buyers
+# ECL-1 guide for buyers
+
+This guide describes the Version 1 public-review candidate, source
+`1.0.2-review.1`. Identify its draft status and exact source digest when
+requesting or evaluating a claim.
 
 ECL-1 is a technical standard for controlling the actions of AI systems
 that can change things outside themselves: records, payments, messages,
@@ -24,20 +28,25 @@ governance program; it is not a substitute for those (Section 2.7).
 1. Ask for the supplier's claim statement and check it against the list below.
 2. Ask for a sample evidence bundle and its trust policy, and verify the
    bundle yourself with the [offline verifier](../web/verifier/index.html),
-   which runs in your browser and sends nothing anywhere. From L2 the standard
+   which processes the selected files locally without uploading them. From L2 the standard
    requires that evidence be independently verifiable outside the primary
    control plane (FR-108).
 3. Ask for the records listed under "What to ask a supplier for".
 4. Check the level and independence class against your own risk, using the
    standard's Section 7.
 5. Check the version the claim names. A claim cites ECL-1 Version 1.0, or a
-   later version, with the companion versions it uses; a claim against an
-   earlier release candidate is not a claim against Version 1.0.
+   later version, with the companion versions it uses, the applied correction
+   release and errata, and an immutable source identity. For this candidate,
+   record source `1.0.2-review.1`, its draft status and its digest. The historical
+   corrected source is `v1.0.1` with `ERR-1.0-001` and that archive's SHA-256.
+   A claim against one source version does not establish conformance against
+   another source version.
 
 ## What a claim must tell you
 
 A valid ECL-1 claim names the system it covers, its level, its status, its
-boundary, its independence class, the versions it uses, its assessment date and
+boundary, its independence class, the versions and corrections it uses, its
+immutable source identity, its assessment, affirmation or evidence-refresh date, and
 its limits (standard, Section 7.7). "ECL-1 compliant" on its own is not a valid
 claim.
 
@@ -52,6 +61,14 @@ claim.
   outside the operator. L2 and L3 need at least Class B, and L4 needs Class C.
 - **Status.** Full conformance, conditional conformance (L2 and L3 only, with
   deadlines), or assessment-only (evidence exists, assessment is not complete).
+- **Boundary.** A claim at L1 through L4 covers full-system mediation or bounded
+  action classes. A component or profile implementation report states its
+  applicable requirement results, capabilities, versions, evidence and limits;
+  it carries no overall ECL level and cannot replace deployment assessment.
+
+An assessment-only statement labels an evidence-refresh date as such, for
+example "evidence refreshed 2027-01-15; assessment in progress". It does not
+describe that date as a completed assessment.
 
 ## What to ask a supplier for
 
@@ -84,15 +101,21 @@ trust or expiry checks fail at the selected evaluation time.
 
 ## Where the standard stands
 
-ECL-1 Version 1.0 is a published standard, maintained by G-14, Inc. and
-developed in the open by the ECL-1 Working Group. Its conformance tests have a
-passing and a failing case for every unit of the published coverage
-denominator (`conformance/coverage-denominator.json`): each branch of the
-message formats, the extension values and the claim and assessment documents,
-and each checking rule. Three units cannot be tested on their own, and the
-denominator gives the reason for each. The denominator counts message formats
-and checking rules, not the runtime behavior of a deployment, which an
-assessor examines.
+G-14, Inc. maintains this local public-review candidate while community
+working-group roles are being established. The published v1.0 and v1.0.1
+artifacts remain historical references. Publication, approval and any dated
+review window for the candidate are separate recorded decisions.
+
+The [coverage denominator](../conformance/coverage-denominator.json) identifies
+the measured message formats, extension values, claim/report documents and
+checking rules. Coverage must be computed for this candidate's exact sources;
+historical coverage counts do not establish its current coverage. Runtime
+behavior and a deployment's actual boundary require assessment evidence.
+
+The [review design guide](review-design-decisions.md) explains the repaired
+request-expiry and continuation-history contracts. A passing record check is
+bounded by its stated verification scope and cannot establish all runtime
+policy or approval duties.
 
 A conformance claim is self-declared by its supplier. The ECL-1 repository
 lists submitted claims as self-declared, and lists an assessor's assessment

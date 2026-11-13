@@ -214,7 +214,7 @@ function utf8Length(text: string, stopAbove: number): number {
       length += 1;
     } else if (unit < 0x800) {
       length += 2;
-    } else if (unit >= 0xd800 && unit <= 0xdbff) {
+    } else if (unit >= 0xd800 && unit <= 0xdbff && text.charCodeAt(index + 1) >= 0xdc00 && text.charCodeAt(index + 1) <= 0xdfff) {
       length += 4;
       index += 1;
     } else {

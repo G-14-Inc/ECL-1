@@ -1,0 +1,554 @@
+{
+  "cases": [
+    {
+      "id": "f008-post-terminal-running",
+      "records": [
+        {
+          "object_id": "one",
+          "workflow": {
+            "workflow_id": "w",
+            "root_trace_id": "t",
+            "attempt": 1,
+            "sequence": 1,
+            "causal_predecessors": []
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "a",
+            "attempt_id": "attempt",
+            "state": "succeeded"
+          }
+        },
+        {
+          "object_id": "two",
+          "workflow": {
+            "workflow_id": "w",
+            "root_trace_id": "t",
+            "attempt": 1,
+            "sequence": 2,
+            "causal_predecessors": []
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "a",
+            "attempt_id": "attempt",
+            "state": "running"
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": []
+    },
+    {
+      "id": "f008-valid-released-terminal-control",
+      "records": [
+        {
+          "object_id": "one",
+          "workflow": {
+            "workflow_id": "w",
+            "root_trace_id": "t",
+            "attempt": 1,
+            "sequence": 1,
+            "causal_predecessors": []
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "a",
+            "attempt_id": "attempt",
+            "state": "released"
+          }
+        },
+        {
+          "object_id": "two",
+          "workflow": {
+            "workflow_id": "w",
+            "root_trace_id": "t",
+            "attempt": 1,
+            "sequence": 2,
+            "causal_predecessors": []
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "a",
+            "attempt_id": "attempt",
+            "state": "succeeded"
+          }
+        }
+      ],
+      "options": {},
+      "status": "complete",
+      "unresolved": []
+    },
+    {
+      "id": "f008-genuine-open-control",
+      "records": [
+        {
+          "object_id": "one",
+          "workflow": {
+            "workflow_id": "w",
+            "root_trace_id": "t",
+            "attempt": 1,
+            "sequence": 1,
+            "causal_predecessors": []
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "a",
+            "attempt_id": "attempt",
+            "state": "released"
+          }
+        }
+      ],
+      "options": {},
+      "status": "incomplete",
+      "unresolved": []
+    },
+    {
+      "id": "f008-over-limit-closed-chain",
+      "records": [
+        {
+          "object_id": "new",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "old",
+                "relation": "ecl.relation.follows.v1",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "e0359047faccc07e2135ff0722236b6d208d56b1f3fa34591137385d9d39a22e"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "old",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        }
+      ],
+      "options": {
+        "max_records": 1
+      },
+      "status": "indeterminate",
+      "unresolved": []
+    },
+    {
+      "id": "f008-complete-chain-control",
+      "records": [
+        {
+          "object_id": "new",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "old",
+                "relation": "ecl.relation.follows.v1",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "e0359047faccc07e2135ff0722236b6d208d56b1f3fa34591137385d9d39a22e"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "old",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        }
+      ],
+      "options": {},
+      "status": "complete",
+      "unresolved": []
+    },
+    {
+      "id": "f008-missing-predecessor-control",
+      "records": [
+        {
+          "object_id": "new",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "old",
+                "relation": "ecl.relation.follows.v1",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "e0359047faccc07e2135ff0722236b6d208d56b1f3fa34591137385d9d39a22e"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {},
+      "status": "incomplete",
+      "unresolved": [
+        "old"
+      ]
+    },
+    {
+      "id": "f004-duplicate-permutation-0",
+      "records": [
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "not-held",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": [
+        "really-missing"
+      ]
+    },
+    {
+      "id": "f004-duplicate-permutation-1",
+      "records": [
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        },
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "not-held",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": [
+        "really-missing"
+      ]
+    },
+    {
+      "id": "f004-duplicate-permutation-2",
+      "records": [
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "not-held",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        },
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": [
+        "really-missing"
+      ]
+    },
+    {
+      "id": "f004-duplicate-permutation-3",
+      "records": [
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "not-held",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": [
+        "really-missing"
+      ]
+    },
+    {
+      "id": "f004-duplicate-permutation-4",
+      "records": [
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "not-held",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": [
+        "really-missing"
+      ]
+    },
+    {
+      "id": "f004-duplicate-permutation-5",
+      "records": [
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 2,
+            "causal_predecessors": [
+              {
+                "id": "not-held",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "object_id": "duplicate",
+          "workflow": {
+            "sequence": 1,
+            "causal_predecessors": []
+          }
+        }
+      ],
+      "options": {},
+      "status": "indeterminate",
+      "unresolved": [
+        "really-missing"
+      ]
+    },
+    {
+      "id": "f008-predecessor-budget",
+      "records": [
+        {
+          "object_id": "unique",
+          "workflow": {
+            "sequence": 3,
+            "causal_predecessors": [
+              {
+                "id": "duplicate",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              },
+              {
+                "id": "really-missing",
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "max_predecessors_per_record": 1
+      },
+      "status": "indeterminate",
+      "unresolved": []
+    }
+  ]
+}

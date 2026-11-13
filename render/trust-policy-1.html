@@ -13,10 +13,14 @@
 <h1 id="ecl-trust-policy-profile-1">ECL Trust Policy Profile 1</h1>
 <p>Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version</p>
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: <code>1.0.2-review.1</code>; prepared <code>2026-11-10</code></p>
 <p>This profile describes the caller-controlled trust-policy input to envelope
 verification (INTEGRITY-ENVELOPE-1 section 11) and to the offline bundle
-verifier. Standalone envelope verification binds each payload to the purpose of
+verifier. It is a normative companion under ECL-1 Section 3.4: its invoked
+requirements apply whenever envelope or bundle verification applies, at every
+conformance level. A claim cannot waive them by omitting a profile declaration.
+Standalone envelope verification binds each payload to the purpose of
 its role (<a href="trust-policy-1.html#TP1-010">TP1-010</a>); the bundle verifier additionally binds every object role and
 principal within each media type.</p>
 <p><span id="TP1-001"><strong>TP1-001</strong></span><a class="requirement-link" href="#TP1-001" aria-label="Link to TP1-001">§</a> — The verifier MUST use only its caller's current trust policy and
@@ -90,7 +94,7 @@ interface. An interface that accepts parsed objects applies the envelope,
 observation, node and depth limits that it declares (EBMP-2 <a href="ebmp-2.html#EBMP2-062">EBMP2-062</a>). An
 embedded reference identifies a supplied policy version; it never supplies that
 policy's keys. The current policy and the history versions are caller inputs.</p>
-<p>The seven registered purposes are <code>ecl.purpose.decision-request.v1</code>,
+<p><strong><a href="trust-policy-1.html#TP1-003">TP1-003</a> (continued)</strong> — The seven registered purposes are <code>ecl.purpose.decision-request.v1</code>,
 <code>ecl.purpose.decision-response.v1</code>, <code>ecl.purpose.control.v1</code>,
 <code>ecl.purpose.evidence-event.v1</code>, <code>ecl.purpose.observation.v1</code>,
 <code>ecl.purpose.trusted-time.v1</code>, which signs time attestations
@@ -176,8 +180,8 @@ input. These checks establish a verifier's behavior, not the identity or
 independence of an assessor or the trustworthiness of production keys.</p>
 <aside class="source-record" aria-label="Source record">
 <dl>
-<dt>Source</dt><dd><code>profiles/TRUST-POLICY-1.md</code>, SHA-256 <code>59b49033fec310594576f9c3d2ed1325ea10f15d10c0c8e3febfd3f2ae3bd388</code></dd>
-<dt>Release status</dt><dd>absent</dd>
+<dt>Source</dt><dd><code>profiles/TRUST-POLICY-1.md</code>, SHA-256 <code>71506dd9db5e070a0fcd6e56ade3159af638fdb2568795881c41f2361a2b1922</code></dd>
+<dt>Release status</dt><dd>ECL-1 Version 1 public review; source 1.0.2-review.1; review date 2026-11-10; local candidate</dd>
 <dt>Rights</dt><dd>Text: CC BY 4.0. Schemas, tests and code: Apache-2.0. Patent pledge: PATENTS.md.</dd>
 </dl>
 </aside>

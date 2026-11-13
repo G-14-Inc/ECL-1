@@ -1,0 +1,232 @@
+[
+  {
+    "id": "no-constraint",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input"
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      false,
+      true
+    ]
+  },
+  {
+    "id": "unavailable",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "unavailable"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "maximum_age_seconds": 10,
+              "deadline_milliseconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      false,
+      true
+    ]
+  },
+  {
+    "id": "maximum-age-missing",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "maximum_age_seconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "id": "maximum-age-present",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available",
+          "value_at": "2026-09-29T10:00:00Z"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "maximum_age_seconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      true,
+      true
+    ]
+  },
+  {
+    "id": "deadline-missing",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "deadline_milliseconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "id": "deadline-present",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available",
+          "obtained_at": "2026-09-29T10:00:00Z"
+        }
+      ],
+      "received_at": "2026-09-29T10:00:00Z"
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "deadline_milliseconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      true,
+      true
+    ]
+  },
+  {
+    "id": "deadline-partial",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available",
+          "obtained_at": "2026-09-29T10:00:00Z"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "deadline_milliseconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "id": "both-age-only",
+    "basis": {
+      "inputs": [
+        {
+          "input": "urn:example:input",
+          "status": "available",
+          "value_at": "2026-09-29T10:00:00Z"
+        }
+      ]
+    },
+    "register": {
+      "entries": [
+        {
+          "action_class_id": "ecl.action.ai-proposed-operation.v1",
+          "decision_inputs": [
+            {
+              "input": "urn:example:input",
+              "maximum_age_seconds": 10,
+              "deadline_milliseconds": 10
+            }
+          ]
+        }
+      ]
+    },
+    "expected": [
+      true,
+      false
+    ]
+  }
+]

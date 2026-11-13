@@ -88,10 +88,10 @@ func TestBundleManifestIsClassifiedByProtocol(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// The analysis reports every rule the records break, as the reference does: the repeated
-	// terminal is also a transition from a terminal state.
+	// A repeated identity is ambiguous. Its colliding records are excluded from
+	// downstream state-transition inference; the identity finding remains decisive.
 	findings, err = Evaluate(bundle, Vector{Stage: "bundle"}, context())
-	if err != nil || len(findings) != 2 || findings[0] != validator.RuleBundleObjectUnique || findings[1] != validator.RuleExecutionTransition {
+	if err != nil || len(findings) != 1 || findings[0] != validator.RuleBundleObjectUnique {
 		t.Fatalf("bare bundle: %v %v", findings, err)
 	}
 }

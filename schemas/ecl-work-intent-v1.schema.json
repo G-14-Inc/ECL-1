@@ -34,13 +34,15 @@
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/workflowContext"
     },
     "parent_workflow": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference",
+      "description": "The parent workflow logical identifier as uri (DW1-002); agrees with workflow.parent_workflow_id when both appear. Its digest is optional; the causal predecessor identifies the exact creating or delegating object."
     },
     "issued_at": {
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
     },
     "expires_at": {
-      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc",
+      "description": "DW1-015: strictly later than issued_at. Expiry ends current advisory applicability; historical retention is unaffected."
     },
     "exact_targets": {
       "type": "array",
@@ -120,5 +122,42 @@
     "integrity_policy": {
       "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/integrityPolicy"
     }
-  }
+  },
+  "description": "A coordination advisory, never execution authority (DW1-015). Registered rules additionally check its issue/expiry interval, self-causation and declared parent context.",
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          {
+            "required": [
+              "parent_workflow"
+            ]
+          },
+          {
+            "required": [
+              "workflow"
+            ],
+            "properties": {
+              "workflow": {
+                "required": [
+                  "parent_workflow_id"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "workflow": {
+            "properties": {
+              "causal_predecessors": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,508 @@
+{
+  "cases": [
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-digest-standard-padded.json",
+      "id": "otel-digest-standard-padded",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-digest-standard-unpadded.json",
+      "id": "otel-digest-standard-unpadded",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-digest-url-padded.json",
+      "id": "otel-digest-url-padded",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-digest-url-unpadded.json",
+      "id": "otel-digest-url-unpadded",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-digest-mixed-padded.json",
+      "id": "otel-digest-mixed-padded",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-digest-url-hex-bytes.json",
+      "id": "otel-digest-url-hex-bytes",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-unrelated-url-bytes-control.json",
+      "id": "otel-unrelated-url-bytes-control",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-nested-url-digest.json",
+      "id": "otel-nested-url-digest",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-005",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-nested-url-unrelated.json",
+      "id": "otel-nested-url-unrelated",
+      "requirement_ids": [
+        "OE1-004",
+        "OE1-005",
+        "OE1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-policy-id.json",
+      "id": "otel-table-ecl-policy-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-table-identifier-copy-extra.json",
+      "id": "otel-table-identifier-copy-extra",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-table-identifier-copy-body.json",
+      "id": "otel-table-identifier-copy-body",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-table-identifier-copy-wrong-slot.json",
+      "id": "otel-table-identifier-copy-wrong-slot",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-object-id.json",
+      "id": "otel-table-ecl-object-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-decision-id.json",
+      "id": "otel-table-ecl-decision-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-authorization-id.json",
+      "id": "otel-table-ecl-authorization-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-request-id.json",
+      "id": "otel-table-ecl-request-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-workflow-id.json",
+      "id": "otel-table-ecl-workflow-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-workflow-root_trace_id.json",
+      "id": "otel-table-ecl-workflow-root_trace_id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-table-ecl-issuer-id.json",
+      "id": "otel-table-ecl-issuer-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-event-table-ecl-event-decision_id.json",
+      "id": "otel-event-table-ecl-event-decision_id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-event-table-ecl-request-id.json",
+      "id": "otel-event-table-ecl-request-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-event-table-ecl-action-id.json",
+      "id": "otel-event-table-ecl-action-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-event-table-ecl-producer-id.json",
+      "id": "otel-event-table-ecl-producer-id",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "otel-event-table-ecl-evidence-bundle.json",
+      "id": "otel-event-table-ecl-evidence-bundle",
+      "requirement_ids": [
+        "OE1-003",
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.otel-record-matches-object.v1"
+      ],
+      "file": "otel-nonidentifier-table-digest-refused.json",
+      "id": "otel-nonidentifier-table-digest-refused",
+      "requirement_ids": [
+        "OE1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/otel-export/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-mtls-control.json",
+      "id": "oauth-mtls-control",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-mtls-replay-refusal-control.json",
+      "id": "oauth-mtls-replay-refusal-control",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-jkt-accepted.json",
+      "id": "oauth-cnf-jkt-accepted",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-jkt-integrity-before-replay.json",
+      "id": "oauth-cnf-jkt-integrity-before-replay",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-jkt-wrong-replay-refusal.json",
+      "id": "oauth-cnf-jkt-wrong-replay-refusal",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-jkt-null-accepted.json",
+      "id": "oauth-cnf-jkt-null-accepted",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-jkt-null-integrity-before-replay.json",
+      "id": "oauth-cnf-jkt-null-integrity-before-replay",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-jkt-null-wrong-replay-refusal.json",
+      "id": "oauth-cnf-jkt-null-wrong-replay-refusal",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-other-accepted.json",
+      "id": "oauth-cnf-other-accepted",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-other-integrity-before-replay.json",
+      "id": "oauth-cnf-other-integrity-before-replay",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-refusal-named.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-other-wrong-replay-refusal.json",
+      "id": "oauth-cnf-other-wrong-replay-refusal",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1",
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-dpop-extra-accepted.json",
+      "id": "oauth-cnf-dpop-extra-accepted",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-token-expresses-admit.v1"
+      ],
+      "file": "oauth-cnf-dpop-extra-integrity-before-scope.json",
+      "id": "oauth-cnf-dpop-extra-integrity-before-scope",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-011"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-htu-normal-spelling.json",
+      "id": "oauth-htu-normal-spelling",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-htu-https-single-slash.json",
+      "id": "oauth-htu-https-single-slash",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "file": "oauth-htu-https-single-slash-changed-spelling.json",
+      "id": "oauth-htu-https-single-slash-changed-spelling",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-htu-https-empty-authority.json",
+      "id": "oauth-htu-https-empty-authority",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-htu-custom-empty-authority.json",
+      "id": "oauth-htu-custom-empty-authority",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "file": "oauth-htu-custom-empty-authority-changed-spelling.json",
+      "id": "oauth-htu-custom-empty-authority-changed-spelling",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    },
+    {
+      "expected_rules": [],
+      "file": "oauth-htu-custom-single-slash.json",
+      "id": "oauth-htu-custom-single-slash",
+      "requirement_ids": [
+        "OA1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1"
+    }
+  ]
+}

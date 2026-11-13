@@ -1,0 +1,207 @@
+{
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+  "source_control": {
+    "path": "conformance/suites/aarm-binding/aarm-valid-allow-released.json",
+    "sha256": "12f66977e5a9bfbd3ec20d4f801628d479974f03e4d24a95d4282382bf8ef182"
+  },
+  "contract": "AB1-007/EBMP2-056 intrinsic checks only; terminal-to-response pairing remains bundle verification",
+  "cases": [
+    {
+      "id": "succeeded-without-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-without-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "12f66977e5a9bfbd3ec20d4f801628d479974f03e4d24a95d4282382bf8ef182"
+    },
+    {
+      "id": "failed-with-active-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-with-active-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "62bb03a355dfa844de114e028c56c1430151765e11bd6b8615ba3e2ccbd7581c"
+    },
+    {
+      "id": "expired-with-active-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-with-active-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "a90d23bce48529c9e0c345477c82e8ddf6e6765c5427feecb6b39252cd5e17f5"
+    },
+    {
+      "id": "failed-without-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-without-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "1018e84b25732aab74b77c7de2d8f03e0cccdc33dcbc5ee81a15c6f7fb1b2651"
+    },
+    {
+      "id": "denied-unpaired-without-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-unpaired-without-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "3ebc92904e5cf158217b1b0570e3b4fc322aefd46a9fd22764e26b1fe1bff09d"
+    },
+    {
+      "id": "succeeded-future-noncritical-reason-ignored",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-future-noncritical-reason-ignored.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "3a01b07a9def62363a39fd71caaa5e4691a42cd557c7243aaeb8a45f0d12d2d7"
+    },
+    {
+      "id": "succeeded-active-reason-forbidden",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-active-reason-forbidden.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "6016439077e26931becc7ac3f6013d730354c3342f6eafb4f3c1050ade2eb71b"
+    },
+    {
+      "id": "expired-missing-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-missing-reason.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "218d6e7817de7ce1764e67c6f14db3f643525cbedd5b5667ae85d7cf0b476bc5"
+    },
+    {
+      "id": "failed-nonerror-identifier",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-nonerror-identifier.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "794f9846cdcb4420ec6fced6aad97d1b6624879db8e348cefdfc2cf17bce795e"
+    },
+    {
+      "id": "failed-unregistered-error",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-unregistered-error.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "395f8010265d8fd928f841e2237c4559d0d30515afbbdddcd0b0ce6620e87dab"
+    },
+    {
+      "id": "failed-nonexact-value",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-nonexact-value.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.extension-value-valid.v1",
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "d6d62b25ef19a8425a8f4b7bdcec016e51c1541ebd6d49cce8def7c27d9abed2"
+    },
+    {
+      "id": "failed-two-reasons",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-two-reasons.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.extension-identifiers-unique.v1",
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "5f9785824148ea8fc230303a6fa6afd8f1488df9770226dd69fa993725fef3df"
+    },
+    {
+      "id": "expired-future-reason-does-not-satisfy",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-future-reason-does-not-satisfy.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "sha256": "832fa452425707665f2a98c06a640b15621f9c9e3584b3c3763e7012858a23c7"
+    },
+    {
+      "id": "succeeded-critical-future-reason-rejected",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-critical-future-reason-rejected.json",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "sha256": "ba26dd42296e123e6d2708fbc0939ee380523d364d1683f2d76d5e468dc9feea"
+    },
+    {
+      "id": "denied-with-active-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-with-active-reason.json",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "sha256": "31500d4c350dddae015f717655f9b6c7bc81a6c3b86e9451448ccf137c4195d0"
+    }
+  ],
+  "helper_cases": [
+    {
+      "id": "denied-paired-admit-requires-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-unpaired-without-reason.json",
+      "response_outcome": "admit",
+      "paired": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "denied-paired-absent-requires-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-unpaired-without-reason.json",
+      "response_outcome": null,
+      "paired": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "denied-paired-deny-no-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-unpaired-without-reason.json",
+      "response_outcome": "deny",
+      "paired": true,
+      "expected_rules": []
+    },
+    {
+      "id": "denied-unpaired-does-not-infer-response",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-unpaired-without-reason.json",
+      "response_outcome": null,
+      "paired": false,
+      "expected_rules": []
+    },
+    {
+      "id": "denied-paired-admit-with-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-with-active-reason.json",
+      "response_outcome": "admit",
+      "paired": true,
+      "expected_rules": []
+    },
+    {
+      "id": "expired-intrinsic-still-requires-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-missing-reason.json",
+      "response_outcome": null,
+      "paired": false,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "succeeded-paired-forbids-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-active-reason-forbidden.json",
+      "response_outcome": "admit",
+      "paired": true,
+      "expected_rules": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    }
+  ]
+}

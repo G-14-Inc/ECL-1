@@ -1,0 +1,48 @@
+{
+  "schema_version": "ecl_component_implementation_report_v1",
+  "report_id": "urn:example:report:component",
+  "component": {
+    "name": "Example offline verifier",
+    "version": "0.1-review",
+    "artifact": {
+      "uri": "urn:example:component:artifact",
+      "version": "0.1-review",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    }
+  },
+  "version_set": {
+    "core_version": "1.0",
+    "profile_versions": [
+      "TRUST-POLICY-1:1.0"
+    ]
+  },
+  "capabilities": [
+    "envelope verification"
+  ],
+  "applicable_requirements": [
+    {
+      "requirement_id": "IE1-040",
+      "applicability": "Envelope verification is implemented.",
+      "result": "unknown",
+      "evidence_refs": [
+        "urn:example:component:artifact"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "uri": "urn:example:component:artifact",
+      "version": "0.1-review",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic document-shape example. No deployment has been assessed."
+  ]
+}

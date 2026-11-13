@@ -43,7 +43,20 @@
       "required": [
         "uri",
         "digest"
-      ]
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest",
+          "properties": {
+            "algorithm": {
+              "const": "ecl.digest.sha-256.v1"
+            },
+            "value": {
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
     },
     "decisionInput": {
       "description": "One decision input of a decision: an entry of the decision basis. A record that embeds it closes it with unevaluatedProperties and may add members of its own.",

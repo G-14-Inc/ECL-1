@@ -73,7 +73,7 @@ export function loadRegister(data: Uint8Array): JsonValue {
   const inconsistent = registerDocumentProblems(value as JsonObject);
   if (inconsistent.length > 0) {
     const [path, message] = inconsistent[0] as [string, string];
-    throw new VerifierInputError(`malformed register: the register breaks ${REGISTER_DOCUMENT_RULE}: ${path}: ${message}`);
+    throw new VerifierInputError(`malformed register: the register breaks ${REGISTER_DOCUMENT_RULE}: ${path}: ${message}`, REGISTER_DOCUMENT_RULE);
   }
   return value;
 }

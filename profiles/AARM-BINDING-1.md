@@ -2,7 +2,8 @@
 
 Requirement-IDs: compiled
 Version: 1.0
-Status: normative profile of ECL-1 Version 1.0, a published version
+Status: normative profile in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 This profile states how a control plane that implements AARM (Autonomous Action
 Runtime Management) connects to an ECL-1 deployment without weakening the
@@ -60,7 +61,15 @@ the exact request (DCMP2-044 to DCMP2-051) and is signed under the claim's trust
 policy with a key that the policy accepts for the decision-response purpose
 (TRUST-POLICY-1), and an enforcement point MUST release an action only on such a
 response; an AARM decision, receipt or other AARM artifact MUST NOT release an
-action by itself.
+action by itself. A retained exchange record's `response` and each retained
+`modification_response` MUST bind the record's corresponding `request` or
+`modification_request` under DCMP2-044 to DCMP2-050, with the reference
+profile's response clock-skew allowance of zero, whether or not the action was
+released and for every outcome. The authority checks that those requirements
+restrict to `admit` apply only to `admit`. A record verifier MUST report a
+missing corresponding request or a failed response binding with
+`ecl.error.request-binding-invalid.v1`, retaining the underlying binding
+failure's code in the diagnostic message.
 
 ## Decisions
 
@@ -161,7 +170,14 @@ form of the receipt as retained, signature included, and the AARM decision that
 the receipt records in `decision.result`; that decision MUST be the decision the
 exchange record holds and consistent with the ECL outcome under AB1-003, and the
 receipt's `action.parameters` MUST have, under DCMP2-007, the digest that the
-decision request carries in `action.parameters_digest`.
+decision request carries in `action.parameters_digest`. The record's `terminal`
+member MUST be an `execution_terminal` event with an execution payload and a
+terminal execution state, and MUST satisfy the applicable EBMP-2 object semantic
+rules. A record verifier MUST reject a nonterminal event in this member. The
+record API checks the action identifier, receipt binding and response-independent
+terminal outcome-reason clauses of EBMP2-056;
+terminal-to-response decision references, causal closure and signatures remain
+checks of signed-bundle verification under EBMP-2.
 
 **AB1-008** — The signed ECL evidence bundle MUST be treated as the record of
 whether an action was authorized and released (EBMP2-045): an AARM receipt

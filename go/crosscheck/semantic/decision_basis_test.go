@@ -239,15 +239,16 @@ func TestDecisionBasisValueSchemaFirstAndMalformedValues(t *testing.T) {
 			}
 		}
 	}
-	// An unhashable class is malformed input for the whole check, as in the reference.
+	// ROOT-056: leave a malformed class to its value schema while preserving other checks.
 	unhashable := changedInput(basisInputs(), anomaly, map[string]any{"effect": "supports", "class": []any{"judgment"}})
 	var guarded []string
-	for _, item := range validated(t, withBasis(parsedVector(t, admitVector), unhashable)) {
+	malformedFound := validated(t, withBasis(parsedVector(t, admitVector), unhashable))
+	for _, item := range malformedFound {
 		if strings.HasPrefix(item.Detail, "decision basis semantic check") {
 			guarded = append(guarded, item.RuleID)
 		}
 	}
-	if strings.Join(guarded, " ") != semantic.SchemaInvalid {
+	if len(guarded) != 0 || !ids(malformedFound)[semantic.RuleExtensionValue] {
 		t.Fatalf("%v", guarded)
 	}
 }

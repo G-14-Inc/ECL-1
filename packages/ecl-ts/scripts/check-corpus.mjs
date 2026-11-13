@@ -2,7 +2,7 @@
 /**
  * Run ecl-verify-ts, the command-line verifier of this package, on every evidence-bundle and
  * offline-package vector of the conformance corpus and on the sample evidence, and compare each
- * verdict and exit status with the expected one.
+ * verdict, primary finding and exit status with the expected ones.
  *
  *   node scripts/check-corpus.mjs [--repo-root DIR]
  *
@@ -23,8 +23,10 @@
  * did not, and 2 on a usage error. It reads only the files named above and makes no network request.
  */
 
+import { artifactPath, readArtifact, scopeExpectationMatches } from "../dist/conformance/corpus.js";
+import { parseStrictJson } from "../dist/json/strict.js";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,7 +58,9 @@ function options(argv) {
 }
 
 function readJson(root, path) {
-  return JSON.parse(readFileSync(join(root, path), "utf8"));
+  const value = parseStrictJson(readArtifact(root, path));
+  if (value === null || Array.isArray(value) || typeof value !== "object") throw new Error(`${path}: root must be an object`);
+  return value;
 }
 
 /** Exact equality of two JSON values, as the reference runner compares a scope. */
@@ -78,14 +82,14 @@ function same(left, right) {
 function scopeMatches(vector, report) {
   if (vector.expected_scope !== undefined) {
     const scope = report?.scope;
-    if (scope === undefined || !same({ established: scope.established, not_established: scope.not_established, reasons: scope.reasons }, vector.expected_scope)) {
+    if (scope === undefined || !scopeExpectationMatches(scope, vector.expected_scope)) {
       return false;
     }
   }
   if (vector.expected_unresolved_predecessor_ids !== undefined) {
     const reported = new Set(report?.unresolved_predecessor_ids ?? []);
     const expected = new Set(vector.expected_unresolved_predecessor_ids);
-    if (!Array.isArray(report?.unresolved_predecessor_ids) || reported.size !== expected.size || [...expected].some((identifier) => !reported.has(identifier))) {
+    if (!Array.isArray(report?.unresolved_predecessor_ids) || reported.size !== report.unresolved_predecessor_ids.length || reported.size !== expected.size || [...expected].some((identifier) => !reported.has(identifier))) {
       return false;
     }
   }
@@ -114,10 +118,10 @@ function verify(root, args) {
   return { status: result.status, report, stderr: (result.stderr ?? "").trim().slice(-400) };
 }
 
-function vectorArguments(vector) {
-  const args = [vector.path, "--trust-policy", vector.trust_policy_path];
+function vectorArguments(root, vector) {
+  const args = [artifactPath(root, vector.path), "--trust-policy", artifactPath(root, vector.trust_policy_path), "--input-format", vector.stage === "package" ? "package" : "bundle"];
   for (const path of vector.trust_policy_history_paths ?? []) {
-    args.push("--trust-policy-history", path);
+    args.push("--trust-policy-history", artifactPath(root, path));
   }
   args.push("--now", vector.evaluated_at);
   if (vector.require_trusted_time === true) {
@@ -127,7 +131,7 @@ function vectorArguments(vector) {
     args.push("--accept-current-trust-failure");
   }
   if (typeof vector.register_path === "string") {
-    args.push("--register", vector.register_path);
+    args.push("--register", artifactPath(root, vector.register_path));
   }
   return args;
 }
@@ -137,31 +141,41 @@ function main() {
   if (!existsSync(CLI)) {
     throw new Error("dist/cli/ecl-verify.js is missing: run npm run build first");
   }
+  const suiteEntries = readdirSync(join(root, "conformance/suites"), { withFileTypes: true });
+  if (suiteEntries.some((entry) => entry.isSymbolicLink())) throw new Error("suite directory contains a symlink");
   const manifests = [
     "conformance/manifest.json",
-    ...readdirSync(join(root, "conformance/suites"))
+    ...suiteEntries.filter((entry) => entry.isDirectory()).map((entry) => entry.name)
       .sort()
       .map((suite) => `conformance/suites/${suite}/manifest.json`)
       .filter((path) => existsSync(join(root, path))),
   ];
-  const vectors = manifests.flatMap((path) => readJson(root, path).vectors.filter((vector) => typeof vector.expected_verdict === "string"));
+  const vectors = manifests.flatMap((path) => readJson(root, path).vectors.filter((vector) => {
+    const signed = vector.stage === "evidence-bundle" || vector.stage === "package";
+    if (signed !== (typeof vector.expected_verdict === "string")) throw new Error(`${vector.id}: bundle/package stage must have its verdict`);
+    return signed;
+  }));
   const corpus = readJson(root, "conformance/shared-corpus.json").vectors.filter((row) => CAPABILITIES.has(row.capability));
   const listed = new Set(vectors.map((vector) => vector.id));
   const expected = new Set(corpus.map((row) => row.id));
+  if (listed.size !== vectors.length || expected.size !== corpus.length) {
+    throw new Error("duplicate manifest or corpus vector ID");
+  }
   const unmatched = [...expected].filter((id) => !listed.has(id)).concat([...listed].filter((id) => !expected.has(id)));
   const failures = [];
   const verdicts = {};
   for (const vector of vectors) {
-    const { status, report, stderr } = verify(root, vectorArguments(vector));
+    const { status, report, stderr } = verify(root, vectorArguments(root, vector));
     const verdict = report?.verdict ?? null;
     verdicts[vector.expected_verdict] = (verdicts[vector.expected_verdict] ?? 0) + 1;
-    if (verdict !== vector.expected_verdict || status !== EXIT[vector.expected_verdict] || !scopeMatches(vector, report)) {
+    const expectedPrimary = vector.expected === "pass" ? null : vector.expected_primary_id;
+    if (verdict !== vector.expected_verdict || status !== EXIT[vector.expected_verdict] || report?.primary !== expectedPrimary || !scopeMatches(vector, report)) {
       failures.push({ id: vector.id, expected: vector.expected_verdict, verdict, status, stderr });
     }
   }
   const samples = [];
   for (const [name, [verdict, level]] of Object.entries(SAMPLES)) {
-    const { status, report, stderr } = verify(root, [`${FIXTURES}/${name}.json`, "--trust-policy", `${FIXTURES}/trust-policy.json`, "--now", FIXTURE_TIME]);
+    const { status, report, stderr } = verify(root, [artifactPath(root, `${FIXTURES}/${name}.json`), "--trust-policy", artifactPath(root, `${FIXTURES}/trust-policy.json`), "--now", FIXTURE_TIME, "--input-format", "bundle"]);
     const met = report?.verdict === verdict && status === EXIT[verdict] && report?.effects?.[0]?.level === level;
     samples.push({ name, verdict: report?.verdict ?? null, level: report?.effects?.[0]?.level ?? null, met });
     if (!met) {

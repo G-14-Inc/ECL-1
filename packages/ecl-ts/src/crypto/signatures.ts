@@ -94,7 +94,7 @@ export function ed25519KeyProblem(raw: Uint8Array): string | undefined {
 
 /** Ed25519 verification under the cofactorless equation; false for any failure. */
 export function verifyEd25519(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean {
-  if (publicKey.length !== 32 || signature.length !== 64) {
+  if (signature.length !== 64 || ed25519KeyProblem(publicKey) !== undefined) {
     return false;
   }
   const rBytes = signature.subarray(0, 32);
@@ -235,8 +235,9 @@ export function publicKeyProblem(suiteId: string, raw: Uint8Array): string | und
 
 /**
  * Verify `signature` over `message` under a key of `suiteId`. Returns false when the signature
- * does not verify; throws SignatureEncodingError for an encoding the suite refuses outright,
- * UnsupportedSuiteError for ML-DSA-65, and an Error for an unknown suite.
+ * does not verify; throws SignatureEncodingError for an encoding the suite refuses outright
+ * or an unknown suite, and UnsupportedSuiteError for the recognized but unimplemented ML-DSA-65
+ * provider. UnsupportedSuiteError is a library capability exception without a registered code.
  */
 export function verifySignature(suiteId: string, publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean {
   if (suiteId === ED25519_SUITE) {

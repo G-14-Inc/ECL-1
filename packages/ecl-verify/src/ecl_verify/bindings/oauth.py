@@ -5,13 +5,14 @@ from __future__ import annotations
 import hashlib
 from collections.abc import Mapping
 from typing import Any
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 
 from ecl_verify.canonical import same_json
 from ecl_verify.semantic import Finding
 
 from . import jose
 from .common import (
+    ONE_WAY_RULE,
     array,
     binds,
     digest_of,
@@ -19,7 +20,9 @@ from .common import (
     instant,
     integer,
     member,
+    message_findings,
     obj,
+    one_way_response_problems,
     same_digest,
     text,
 )
@@ -53,6 +56,8 @@ REPLAY = "ecl.error.replay.v1"
 INTEGRITY_INVALID = "ecl.error.integrity-invalid.v1"
 
 NO_AUTHORITY = "ecl.error.no-authority.v1"
+
+BINDING_UNSUPPORTED = "ecl.error.binding-unsupported.v1"
 
 ISSUE_RULE = "ecl.rule.oauth-token-expresses-admit.v1"
 
@@ -118,6 +123,15 @@ def _entries(claims: Mapping[str, Any]) -> list[Any]:
     ]
 
 
+def _thumbprint(value: Any) -> bool:
+    if type(value) is not str or len(value) != 43:
+        return False
+    try:
+        return len(jose.b64url_decode(value)) == 32
+    except jose.JoseError:
+        return False
+
+
 def issue_problems(
     request: Mapping[str, Any], response: Mapping[str, Any], token: str, *, max_lifetime: int
 ) -> list[tuple[str, str]]:
@@ -167,12 +181,25 @@ def issue_problems(
         or end is None
         or begins * _NANOSECONDS < start
         or expires * _NANOSECONDS > end
+        or begins >= expires
         or not 0 < expires - issued <= max_lifetime
     ):
         problems.append(("/token/exp", "the token's validity is not inside the window and bound"))
     subject, actor = subject_and_actor(request)
-    if claims.get("sub") != subject or (
-        actor is not None and member(claims, "act", "sub") != actor
+    current = claims.get("act")
+    malformed_actor = False
+    if "act" in claims:
+        nested = current
+        while True:
+            if type(nested) is not dict:
+                malformed_actor = True
+                break
+            if "act" not in nested:
+                break
+            nested = nested["act"]
+    if claims.get("sub") != subject or malformed_actor or (
+        (actor is not None or "act" in claims)
+        and member(claims, "act", "sub") != member(request, "actor", "id")
     ):
         problems.append(("/token/act", "the subject and actor are not the request's"))
     confirmation = claims.get("cnf")
@@ -180,7 +207,7 @@ def issue_problems(
     if (
         type(confirmation) is not dict
         or set(confirmation) not in ({"jkt"}, {"x5t#S256"})
-        or any(type(value) is not str for value in confirmation.values())
+        or any(not _thumbprint(value) for value in confirmation.values())
     ):
         problems.append(("/token/cnf", "the token is not sender-constrained by one key"))
     reference = member(response, "authorization", "token_reference", "digest")
@@ -217,7 +244,12 @@ def _htu(uri: str) -> str | None:
         parts = urlsplit(uri)
     except ValueError:
         return None
-    return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
+    if not parts.scheme:
+        return None
+    # OA1-004 permits only scheme case folding and query/fragment removal.
+    # Reserializing URL parts would also change an empty authority's slash count.
+    colon = uri.find(":")
+    return parts.scheme + uri[colon:].split("?", 1)[0].split("#", 1)[0]
 
 
 def presentation_problems(record: Mapping[str, Any]) -> list[tuple[str, str, str]]:
@@ -229,14 +261,19 @@ def presentation_problems(record: Mapping[str, Any]) -> list[tuple[str, str, str
     except jose.JoseError:
         return [("/token", "the token is not a compact JWS", INTEGRITY_INVALID)]
     presentation = obj(record, "presentation") or {}
+    entries = _entries(claims)
+    entry = entries[0] if len(entries) == 1 else {}
     problems: list[tuple[str, str, str]] = []
     if claims.get("aud") != record.get("resource_server"):
         problems.append(("/token/aud", "the token is for another audience", AUDIENCE_MISMATCH))
     presented = instant(presentation.get("presented_at"))
-    entries = _entries(claims)
-    entry = entries[0] if len(entries) == 1 else {}
     if not _within_validity(record, claims, entries, presented):
         problems.append(("/presentation/presented_at", "outside the token's validity", EXPIRED))
+    if len(entries) == 1 and (
+        entry.get("use_policy") != "single_use"
+        or ("max_uses" in entry and (type(entry["max_uses"]) is not int or entry["max_uses"] != 1))
+    ):
+        return problems + [("/token/authorization_details", "only single_use with max_uses absent or 1 is supported", BINDING_UNSUPPORTED)]
     problems += _possession(record, claims, token, presentation, presented)
     if (
         presentation.get("target") != entry.get("identifier")
@@ -246,9 +283,8 @@ def presentation_problems(record: Mapping[str, Any]) -> list[tuple[str, str, str
         problems.append(
             ("/presentation", "another target, operation or parameter digest", SCOPE_MISMATCH)
         )
-    limit = 1 if entry.get("use_policy") == "single_use" else integer(entry, "max_uses")
     used = integer(presentation, "use_count")
-    if used is None or (limit is not None and used > limit):
+    if used != 1:
         problems.append(("/presentation/use_count", "beyond the entry's use policy", REPLAY))
     return problems
 
@@ -261,7 +297,7 @@ def _within_validity(
     to which no allowance applies."""
     skew = integer(record, "clock_skew_seconds") or DEFAULT_CLOCK_SKEW
     begins, expires = claims.get("nbf", claims.get("iat")), claims.get("exp")
-    if presented is None or type(begins) is not int or type(expires) is not int:
+    if presented is None or type(begins) is not int or type(expires) is not int or begins >= expires:
         return False
     if not (begins - skew) * _NANOSECONDS <= presented < (expires + skew) * _NANOSECONDS:
         return False
@@ -276,8 +312,7 @@ def refusal_problems(record: Mapping[str, Any]) -> list[tuple[str, str, str]]:
     """(path, message, code) of each check of the presentation table that the presentation fails,
     in the table's order (OA1-011): the token's JWS checks (OA1-007), then the resource server's
     checks of audience, validity, proof of possession, scope and uses."""
-    token = text(record, "token") or ""
-    signature = signature_problems(token, _issuer_keys(record), record.get("issuer"))
+    signature = _record_signature_problems(record)
     if signature:
         return [(path, message, INTEGRITY_INVALID) for path, message in signature]
     return presentation_problems(record)
@@ -288,12 +323,37 @@ def _refusal(record: Mapping[str, Any]) -> list[tuple[str, str]]:
     of a presentation that fails no check may name any registered error."""
     problems = refusal_problems(record)
     if not problems:
+        from ecl_verify.resources import registry_document
+        named = member(record, "result", "error")
+        if not any(entry["id"] == named for entry in registry_document("error-codes")["entries"]):
+            return [("/result/error", "a refusal must name a registered error code")]
         return []
     expected = problems[0][2]
     named = member(record, "result", "error")
     if named != expected:
         return [("/result/error", f"the first check that fails gives {expected}")]
     return []
+
+
+def _record_signature_problems(record: Mapping[str, Any]) -> list[tuple[str, str]]:
+    # OA1-007: reject ambiguous identifiers before constructing the key map, even when
+    # duplicate entries contain the same public key or are not selected by this token.
+    seen: set[str] = set()
+    problems: list[tuple[str, str]] = []
+    for index, item in enumerate(array(record, "issuer_keys", "keys")):
+        key_id = text(item, "kid")
+        if key_id is None:
+            continue  # The record schema checks the shape and type of every entry.
+        if key_id in seen:
+            problems.append((
+                f"/issuer_keys/keys/{index}/kid", "issuer key identifiers must be distinct",
+            ))
+        seen.add(key_id)
+    if problems:
+        return problems
+    return signature_problems(
+        text(record, "token") or "", _issuer_keys(record), record.get("issuer"),
+    )
 
 
 def _issuer_keys(record: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
@@ -312,11 +372,13 @@ def _possession(
     presented: int | None,
 ) -> list[tuple[str, str, str]]:
     confirmation = obj(claims, "cnf") or {}
+    if set(confirmation) not in ({"jkt"}, {"x5t#S256"}) or any(not _thumbprint(value) for value in confirmation.values()):
+        return [("/token/cnf", "the token is not sender-constrained by one key", INTEGRITY_INVALID)]
     if "x5t#S256" in confirmation:
         # The bound thumbprint is a string: a null one is not matched by a presentation that
         # carries no client certificate.
         bound = confirmation["x5t#S256"]
-        if type(bound) is not str or presentation.get("client_certificate_sha256") != bound:
+        if not _thumbprint(bound) or presentation.get("client_certificate_sha256") != bound:
             return [
                 ("/presentation", "the client certificate is not the bound one", INTEGRITY_INVALID)
             ]
@@ -383,13 +445,18 @@ def check(record: Mapping[str, Any]) -> list[Finding]:
     result = findings(
         ISSUE_RULE, issue_problems(request, response, token, max_lifetime=max_lifetime)
     )
+    result += findings(
+        ONE_WAY_RULE, one_way_response_problems(record, (("request",), ("response",)))
+    )
+    result += message_findings(record, ("request",), ("response",))
     accepted = member(record, "result", "accepted")
     if accepted is False:
         return result + findings(REFUSAL_RULE, _refusal(record))
     if accepted is not True:
         return result
-    keys = _issuer_keys(record)
-    result += findings(SIGNATURE_RULE, signature_problems(token, keys, record.get("issuer")))
+    if "error" in (obj(record, "result") or {}):
+        result += findings(REFUSAL_RULE, [("/result/error", "an accepted presentation must not carry an error")])
+    result += findings(SIGNATURE_RULE, _record_signature_problems(record))
     result += findings(
         PRESENTATION_RULE, [(path, message) for path, message, _ in presentation_problems(record)]
     )

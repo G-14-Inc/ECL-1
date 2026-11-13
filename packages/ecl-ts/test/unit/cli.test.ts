@@ -18,6 +18,41 @@ function run(args: string[]): { status: number | null; stdout: string; stderr: s
   return { status: result.status, stdout: result.stdout, stderr: result.stderr };
 }
 
+test("every value-taking option rejects a missing operand, including repeated trailing options", () => {
+  const base = [join(repoRoot(), "conformance/fixtures/evidence/succeeded.json"),
+    "--trust-policy", join(repoRoot(), "conformance/fixtures/evidence/trust-policy.json"),
+    "--now", "2026-10-01T00:00:00Z", "--json"];
+  for (const flag of ["--trust-policy", "--trust-policy-history", "--now", "--register"]) {
+    const result = run([...base, flag]);
+    assert.equal(result.status, 2, flag);
+    assert.equal(result.stdout, "", flag);
+    assert.match(result.stderr, /^usage:/, flag);
+  }
+  assert.equal(run(base).status, 0);
+});
+
+test("untrusted ZIP member names cannot break JSON refusal reports", () => {
+  const cases = JSON.parse(new TextDecoder().decode(bytes("tests/fixtures/offline-cli-cases.json"))).cases as
+    Array<{id: string; archive_hex: string; primary: string}>;
+  const folder = mkdtempSync(join(tmpdir(), "ecl-zip-report-"));
+  try {
+    for (const item of cases) {
+      const path = join(folder, item.id + ".zip");
+      writeFileSync(path, Buffer.from(item.archive_hex, "hex"));
+      const result = run([path, "--trust-policy", join(repoRoot(), "conformance/suites/offline-package/trust-policy.json"),
+        "--now", "2026-10-01T00:00:00Z", "--json"]);
+      assert.equal(result.status, 1, item.id);
+      assert.equal(result.stderr, "", item.id);
+      const report = JSON.parse(result.stdout);
+      assert.equal(report.verdict, "invalid", item.id);
+      assert.equal(report.primary, item.primary, item.id);
+      assert.deepEqual(report.scope.established, [], item.id);
+    }
+  } finally {
+    rmSync(folder, {recursive: true, force: true});
+  }
+});
+
 function args(vector: Vector, file?: string): string[] {
   const found = [file ?? join(repoRoot(), vector.path), "--trust-policy", join(repoRoot(), vector.trust_policy_path as string), "--now", vector.evaluated_at as string];
   for (const path of vector.trust_policy_history_paths ?? []) {

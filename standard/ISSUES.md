@@ -1,5 +1,8 @@
 # ECL-1 normative issues
 
+Status: issue dispositions for the ECL-1 Version 1 public-review local candidate.
+Source build: `1.0.2-review.1`; prepared `2026-11-10`.
+
 This index preserves the questions and their dispositions. Issues 001 and 002
 were resolved earlier. Issues 003 through 007 are resolved in this candidate's
 requirements and assessment procedures as recorded below. A disposition is not

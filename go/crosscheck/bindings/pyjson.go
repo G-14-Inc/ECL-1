@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/strict"
 )
 
 var (
@@ -22,8 +24,6 @@ var (
 
 // The budgets and the integer range of the reference's strict JSON profile (IE1-002).
 const (
-	maxStrictDepth  = 256
-	maxStrictNodes  = 1_000_000
 	maxSafeInteger  = 9007199254740991
 	maxSafeDigits   = 16
 	negativeZeroInt = "-0"
@@ -60,63 +60,19 @@ func ParseJWSJSON(data []byte) (any, error) {
 	return parser.document()
 }
 
-// ParseStrictSegment reads a JWS segment as the reference reads it (OA1-007): under the strict
-// JSON profile of ECL objects (IE1-002), with the reference's budgets. A number with a fraction
-// or an exponent, NaN, Infinity, -Infinity, -0 or an integer beyond plus or minus 2^53 - 1, a lone
-// surrogate, a byte-order mark, more than 256 levels of nesting or more than a million values is
-// errNotStrict; an object that repeats a member name is errRepeatedMember; other text that is not
-// JSON is errPyJSON. The refusals come in the order in which the reference meets them: a number
-// when it is read, a repeated name when its object closes, and the rest after the whole value.
+// ParseStrictSegment reads a compact-JWS JSON segment under IE1-002 and IE1-037.
+// The public strict parser supplies the same scalar, duplicate-member and number precedence
+// as other ECL inputs. JOSE retains its existing duplicate-versus-other malformed diagnostics.
 func ParseStrictSegment(data []byte) (any, error) {
-	if !utf8.Valid(data) || strings.HasPrefix(string(data), "\ufeff") {
-		return nil, errNotStrict
+	value, err := strict.Parse(data)
+	if err == nil {
+		return value, nil
 	}
-	parser := &pyParser{text: string(data), strict: true}
-	value, err := parser.document()
-	if err != nil {
-		return nil, err
+	var refusal *strict.Error
+	if errors.As(err, &refusal) && refusal.RuleID == strict.RuleNoDuplicateMembers {
+		return nil, errRepeatedMember
 	}
-	if !withinStrictLimits(value) {
-		return nil, errNotStrict
-	}
-	return value, nil
-}
-
-// withinStrictLimits reports whether a parsed value keeps the reference's budgets of depth (the
-// value itself at depth 0) and values, and holds no lone surrogate in a string or a member name.
-func withinStrictLimits(value any) bool {
-	type pending struct {
-		value any
-		depth int
-	}
-	stack := []pending{{value, 0}}
-	nodes := 0
-	for len(stack) > 0 {
-		current := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
-		nodes++
-		if nodes > maxStrictNodes || current.depth > maxStrictDepth {
-			return false
-		}
-		switch typed := current.value.(type) {
-		case string:
-			if !utf8.ValidString(typed) {
-				return false
-			}
-		case []any:
-			for _, item := range typed {
-				stack = append(stack, pending{item, current.depth + 1})
-			}
-		case map[string]any:
-			for name, item := range typed {
-				if !utf8.ValidString(name) {
-					return false
-				}
-				stack = append(stack, pending{item, current.depth + 1})
-			}
-		}
-	}
-	return true
+	return nil, errNotStrict
 }
 
 type pyFrame struct {

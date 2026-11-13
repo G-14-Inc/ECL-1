@@ -1,7 +1,7 @@
 {
   "schema_version": "ecl_mapping_packet_v1",
   "packet_id": "urn:example:ecl:crosswalk:owasp-acs-core",
-  "packet_version": "11",
+  "packet_version": "13",
   "framework": "OWASP Agent Control Standard (ACS)",
   "framework_edition": "v0.1.0 (source tag v0.1.2; commit authored 2026-09-09)",
   "framework_source": {
@@ -18,10 +18,10 @@
     "media_type": "text/plain",
     "digest": {
       "algorithm": "ecl.digest.sha-256.v1",
-      "value": "6452a45b5a06885775128fe5c5d0d2c8c473c9b0782abb0c18568808d2c95bd3"
+      "value": "e5f2375234962ecb9b2225184d651c3eb657dc736d2715d79c3b393b1681ad7d"
     }
   },
-  "updated_at": "2026-11-09T18:30:16Z",
+  "updated_at": "2026-11-11T20:14:06Z",
   "validation_state": "internally_reviewed",
   "obligations": [
     {
@@ -32,13 +32,13 @@
       },
       "support_class": "out_of_scope",
       "ecl_surfaces": [],
-      "evidence": [],
       "residual_obligations": "ECL profile declaration does not implement in-band ACS ClientHello/ServerHello negotiation. The ACS-Core wire protocol is outside ECL by design and connects through the binding profile ACS-BINDING-1 in profiles/.",
       "assumptions": [
         "The comparison is ACS-Core only, not optional profiles.",
         "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
       ],
-      "validation_state": "internally_reviewed"
+      "validation_state": "internally_reviewed",
+      "evidence": []
     },
     {
       "framework_clause": "Request/response envelope",
@@ -51,22 +51,22 @@
         "DCMP2-001",
         "DCMP2-002"
       ],
+      "residual_obligations": "DCMP-2 is a different wire protocol; no JSON-RPC 2.0 ACS envelope compatibility is provided. ACS messages connect to DCMP-2 decisions through the binding profile ACS-BINDING-1 in profiles/.",
+      "assumptions": [
+        "A shared request/response concept is not wire compatibility.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "13a709ac4a57dac8a7f718677d1117be75d22a290e61114df1d1c6c32605a2ba"
+            "value": "4dad34f7d2e50e8a4047a2c92934d5ebb032db2a0af4c0664aa8f6bd17412fc9"
           }
         }
-      ],
-      "residual_obligations": "DCMP-2 is a different wire protocol; no JSON-RPC 2.0 ACS envelope compatibility is provided. ACS messages connect to DCMP-2 decisions through the binding profile ACS-BINDING-1 in profiles/.",
-      "assumptions": [
-        "A shared request/response concept is not wire compatibility.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "Hook taxonomy",
@@ -76,13 +76,13 @@
       },
       "support_class": "out_of_scope",
       "ecl_surfaces": [],
-      "evidence": [],
       "residual_obligations": "ECL does not implement the ACS lifecycle hook names, payloads or negotiated optional hooks. Hook points connect as decision or enforcement points through the binding profile ACS-BINDING-1 in profiles/.",
       "assumptions": [
         "ECL execution and authority events are not ACS hook implementations.",
         "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
       ],
-      "validation_state": "internally_reviewed"
+      "validation_state": "internally_reviewed",
+      "evidence": []
     },
     {
       "framework_clause": "Dispositions",
@@ -97,22 +97,22 @@
         "DCMP2-014",
         "DCMP2-018"
       ],
+      "residual_obligations": "ALLOW/DENY have admit/deny analogues; ASK/DEFER have challenge/hold analogues with different semantics. MODIFY is absent and mandatory ACS disposition fields are not supplied; ACS dispositions connect to ECL decisions through the binding profile ACS-BINDING-1 in profiles/.",
+      "assumptions": [
+        "Vocabulary mapping does not establish ACS decision-honoring behavior.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "13a709ac4a57dac8a7f718677d1117be75d22a290e61114df1d1c6c32605a2ba"
+            "value": "4dad34f7d2e50e8a4047a2c92934d5ebb032db2a0af4c0664aa8f6bd17412fc9"
           }
         }
-      ],
-      "residual_obligations": "ALLOW/DENY have admit/deny analogues; ASK/DEFER have challenge/hold analogues with different semantics. MODIFY is absent and mandatory ACS disposition fields are not supplied; ACS dispositions connect to ECL decisions through the binding profile ACS-BINDING-1 in profiles/.",
-      "assumptions": [
-        "Vocabulary mapping does not establish ACS decision-honoring behavior.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "SessionContext and Intent",
@@ -127,15 +127,24 @@
         "EBMP2-022",
         "EBMP2-024",
         "ECL1N-0178",
-        "ECL1N-0179"
+        "ECL1N-0179",
+        "AC1-004",
+        "AC1-008",
+        "AC1-009"
       ],
+      "residual_obligations": "Digest-bound causal predecessors are not an append-only ACS ContextEntry store or published rolling chain head. Context accumulation and IBAC intent evaluation remain deployment work. ECL1N-0178 classifies each input by its source and derivation: actor-controlled context is actor_supplied; intent-alignment judgments are judgment. Either class may only make an outcome stricter (ECL1N-0179). Authenticated authoritative context can be verifiable only with the declared authority, independent validation, freshness, selection, completeness and derivation controls of ECL1N-0178. ACS-BINDING-1 retains and checks native chain heads (AC1-008, AC1-009); it does not implement the context store or IBAC evaluator.",
+      "assumptions": [
+        "Intent is optional in ACS-Core and normative when its IBAC paradigm is chosen.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "13a709ac4a57dac8a7f718677d1117be75d22a290e61114df1d1c6c32605a2ba"
+            "value": "4dad34f7d2e50e8a4047a2c92934d5ebb032db2a0af4c0664aa8f6bd17412fc9"
           }
         },
         {
@@ -143,7 +152,7 @@
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "ba776e14cd7323457051bf994b473fcc5ab7d833543e7aee24cadea4798148c6"
+            "value": "fe41d05c25fca144cd6bbf4074a0cbf006f6e9d9c410fbe5fc344b706b6690e0"
           }
         },
         {
@@ -151,16 +160,18 @@
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "6452a45b5a06885775128fe5c5d0d2c8c473c9b0782abb0c18568808d2c95bd3"
+            "value": "e5f2375234962ecb9b2225184d651c3eb657dc736d2715d79c3b393b1681ad7d"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:profiles/ACS-BINDING-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "886fb9772a18c709cfc13f8349d598bbe584f3c4c3a71929f8f06e616c380627"
           }
         }
-      ],
-      "residual_obligations": "Digest-bound causal predecessors are not an append-only ACS ContextEntry store or published rolling chain head. Context accumulation and IBAC intent evaluation stay with other tools by design; their results connect as judgment inputs that can only make a decision stricter (ECL1N-0178, ECL1N-0179).",
-      "assumptions": [
-        "Intent is optional in ACS-Core and normative when its IBAC paradigm is chosen.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "Replay protection",
@@ -178,13 +189,19 @@
         "DCMP2-040",
         "FR-104"
       ],
+      "residual_obligations": "ECL request identity, retry and expiry semantics support replay control; ACS UUID/timestamp wire fields and Guardian replay rules still need a dedicated adapter and deployment checks.",
+      "assumptions": [
+        "Runtime replay prevention must be enforced; timestamps alone do not provide it.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "13a709ac4a57dac8a7f718677d1117be75d22a290e61114df1d1c6c32605a2ba"
+            "value": "4dad34f7d2e50e8a4047a2c92934d5ebb032db2a0af4c0664aa8f6bd17412fc9"
           }
         },
         {
@@ -192,16 +209,10 @@
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "6452a45b5a06885775128fe5c5d0d2c8c473c9b0782abb0c18568808d2c95bd3"
+            "value": "e5f2375234962ecb9b2225184d651c3eb657dc736d2715d79c3b393b1681ad7d"
           }
         }
-      ],
-      "residual_obligations": "ECL request identity, retry and expiry semantics support replay control; ACS UUID/timestamp wire fields and Guardian replay rules still need a dedicated adapter and deployment checks.",
-      "assumptions": [
-        "Runtime replay prevention must be enforced; timestamps alone do not provide it.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "Baseline integrity",
@@ -217,13 +228,19 @@
         "IE1-010",
         "TP1-001"
       ],
+      "residual_obligations": "ECL asymmetric envelopes use a different mechanism from ACS-Core per-session HKDF/HMAC-SHA256. They do not implement that HMAC wire requirement; no blanket strength ranking is inferred.",
+      "assumptions": [
+        "Optional ACS-Crypto has further mechanisms outside this Core-only comparison.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:protocols/INTEGRITY-ENVELOPE-1.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "43383e10e6d20d808036e401b86146f17ab3a0b6067c910605eaf784fa73e6e8"
+            "value": "0a01a232bcb2707c384d36c980f6c67fde8d7828b3109c9883db0e0610ba6758"
           }
         },
         {
@@ -231,16 +248,10 @@
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "59b49033fec310594576f9c3d2ed1325ea10f15d10c0c8e3febfd3f2ae3bd388"
+            "value": "71506dd9db5e070a0fcd6e56ade3159af638fdb2568795881c41f2361a2b1922"
           }
         }
-      ],
-      "residual_obligations": "ECL asymmetric envelopes use a different mechanism from ACS-Core per-session HKDF/HMAC-SHA256. They do not implement that HMAC wire requirement; no blanket strength ranking is inferred.",
-      "assumptions": [
-        "Optional ACS-Crypto has further mechanisms outside this Core-only comparison.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "Decision honoring",
@@ -253,15 +264,22 @@
         "TS1-018",
         "SF1-001",
         "SF1-002",
-        "DCMP2-040"
+        "DCMP2-040",
+        "AC1-006"
       ],
+      "residual_obligations": "ACS-Core's default-proceed posture on decision failure conflicts with ECL's requirement to fail closed when required proof is missing or invalid. ACS permits a different configured posture; a deployment claiming ACS-BINDING-1 must negotiate deny and configure startup refuse under AC1-006. This stricter binding does not provide the complete ACS decision-honoring implementation. This row is not a gap to implement by allowing fail-open.",
+      "assumptions": [
+        "An ACS deployment may configure a different posture, but the captured Core default must not be silently equated with ECL.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:protocols/TIMING-SAFE-STATE-1.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "08efebd8db96f6c4afb12bc69f185cc9b891684eead6e14db1af2b3450ee7c2b"
+            "value": "c6f68f2d78f633e3f20b43e74854575d3f622c36b7c4fe3a86b61230fa931f4d"
           }
         },
         {
@@ -269,16 +287,26 @@
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "034e2f7931dcda6c0e25fc6cc97c5f575e72b935b7e05a7c50e00ac92a12ec39"
+            "value": "d7008c36601347f5007a684a44b867e33404b9b638c6a6fd0bdd122b8d946d1c"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:protocols/DCMP-2.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "4dad34f7d2e50e8a4047a2c92934d5ebb032db2a0af4c0664aa8f6bd17412fc9"
+          }
+        },
+        {
+          "uri": "urn:example:ecl:artifact:profiles/ACS-BINDING-1.md",
+          "media_type": "text/plain",
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "886fb9772a18c709cfc13f8349d598bbe584f3c4c3a71929f8f06e616c380627"
           }
         }
-      ],
-      "residual_obligations": "Normative conflict: ACS-Core permits a default-proceed posture on decision failure. ECL requires the safe state for missing or invalid proof dependencies, so an ECL enforcement point that receives ACS dispositions resolves the conflict by failing closed when the Guardian does not answer. This row is not a gap to implement by allowing fail-open.",
-      "assumptions": [
-        "An ACS deployment may configure a different posture, but the captured Core default must not be silently equated with ECL.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "Liveness",
@@ -290,22 +318,22 @@
       "ecl_surfaces": [
         "AC1-006"
       ],
+      "residual_obligations": "No ACS system/ping method is specified or implemented, and ACS-BINDING-1 maps none: ECL-1 relies on the decision timeout, after which a Guardian that has not answered is a decision failure that releases nothing (AC1-006).",
+      "assumptions": [
+        "HTTP health endpoints are not the ACS liveness wire method.",
+        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
+      ],
+      "validation_state": "internally_reviewed",
       "evidence": [
         {
           "uri": "urn:example:ecl:artifact:profiles/ACS-BINDING-1.md",
           "media_type": "text/plain",
           "digest": {
             "algorithm": "ecl.digest.sha-256.v1",
-            "value": "a4f9f4a1c5fc6e9b22fac279115ecf71cb1bee393bf8048f7edf1e5b9fa3fbf7"
+            "value": "886fb9772a18c709cfc13f8349d598bbe584f3c4c3a71929f8f06e616c380627"
           }
         }
-      ],
-      "residual_obligations": "No ACS system/ping method is specified or implemented, and ACS-BINDING-1 maps none: ECL-1 relies on the decision timeout, after which a Guardian that has not answered is a decision failure that releases nothing (AC1-006).",
-      "assumptions": [
-        "HTTP health endpoints are not the ACS liveness wire method.",
-        "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
-      ],
-      "validation_state": "internally_reviewed"
+      ]
     },
     {
       "framework_clause": "Wrapped MCP",
@@ -315,25 +343,29 @@
       },
       "support_class": "out_of_scope",
       "ecl_surfaces": [],
-      "evidence": [],
       "residual_obligations": "No protocols/MCP ACS wrapper is specified or implemented. An MCP tool gateway connects under the binding profile MCP-GATEWAY-1, and the ACS wrapper under ACS-BINDING-1, both in profiles/.",
       "assumptions": [
         "Tool use through an MCP gateway under MCP-GATEWAY-1 is not ACS wrapped-MCP support.",
         "Classification identifies the cited ECL support; it does not establish satisfaction of the entire external clause. Deployment evidence remains necessary."
       ],
-      "validation_state": "internally_reviewed"
+      "validation_state": "internally_reviewed",
+      "evidence": []
     }
   ],
   "global_assumptions": [
-    "Authored snapshot: 2026-09-30. No external framework assessment, benchmark, working-group process or owner validation was engaged.",
+    "Original mapping authored: 2026-09-30. No external framework assessment, benchmark, working-group process or owner validation was engaged.",
     "Internally reviewed means operator review of this mapping, not independent assessment or a certification decision.",
     "Direct runtime support identifies a cited control surface for part of an obligation; supporting evidence identifies linkage only; neither class asserts whole-clause equivalence.",
-    "Resource URNs under urn:example:ecl:artifact: resolve to the suffix as a repository-relative path, with the recorded SHA-256 binding its bytes. The system boundary is the text of ECL-1 Version 1.0, not a production deployment.",
+    "Resource URNs under urn:example:ecl:artifact: resolve to the suffix as a repository-relative path, with the recorded SHA-256 binding its bytes. The system boundary is ECL-1 Version 1 public-review source build 1.0.2-review.1, not a production deployment.",
     "The v0.1.0 edition label identifies the specification version. Source capture is pinned to repository release tag v0.1.2 (commit 7743826b2ec02e3daf47a08c82170fc7a43b0838), the release that ACS-BINDING-1 pins and that carries specification 0.1.0; the file served at that tag has the recorded digest. Packet version 3 (2026-10-03) moved the capture from the 2026-09-10 source commit 5110a7a4232c9153095a4e1585b9c4e31d5ee00f, a later commit than the release: the two files differ only by an informative profile diagram that the later commit added, its ten ACS-Core bullets are byte for byte those of the earlier capture, every obligation digest was recomputed from the release and is unchanged, and no row's meaning changed. Only the ten ACS-Core elements are mapped; optional profiles are outside this comparison.",
     "Each obligation digest covers its one ACS-Core Markdown bullet, including its terminating LF. Request/response envelope and hook taxonomy are separate upstream elements.",
     "Packet version 4 (2026-10-04) removed the release label from the packet identifier and the resource URNs, which are now under urn:example:ecl:artifact:, and corrected the Liveness row, which had named a connection through ACS-BINDING-1 that the profile does not make; no other row changed.",
     "Packet version 5 (2026-10-09) gave the edition the date of the pinned release commit, 2026-09-09, where it had given 2026-09-01, a date that no ACS source states, and corrected the account of packet version 3: the profile diagram that distinguishes the two captures was added by the later commit, not removed by the release; no mapping row changed.",
-    "Packet version 6 (2026-10-16) stated the system boundary and the Wrapped MCP assumption for ECL-1 Version 1.0, without reference to a test deployment; no mapped clause, support class or cited surface changed."
+    "Packet version 6 (2026-10-16) stated the system boundary and the Wrapped MCP assumption for ECL-1 Version 1.0, without reference to a test deployment; no mapped clause, support class or cited surface changed.",
+    "Every cited requirement retains its level, applicability conditions and profile-declaration scope. A cited optional profile is not silently made mandatory for every ECL claim.",
+    "This packet version reconciles all mapping rows against the named public-review source. Earlier packet versions remain historical mappings of their own digest-bound source bytes.",
+    "Earlier packet version 11 is preserved byte-for-byte at conformance/crosswalks/history/owasp-acs-core.version-11.json.",
+    "Earlier packet version 12 is preserved byte-for-byte at conformance/crosswalks/history/owasp-acs-core.version-12.json."
   ],
   "non_endorsement": {
     "claims_framework_certification": false,

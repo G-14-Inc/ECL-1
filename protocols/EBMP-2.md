@@ -1,7 +1,8 @@
 # EBMP-2: Evidence Bundle and Manifest Protocol
 
 Version: 2.0 (wire `schema_version` `2.0`)
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 Schemas: `schemas/ebmp-2.schema.json`; signed evidence bundles
 `schemas/ecl-evidence-bundle-v1.schema.json`; native adapter bindings
 `schemas/ecl-adapter-binding-v1.schema.json`
@@ -86,9 +87,10 @@ record its outcome, and bind the evaluated policy.
 **EBMP2-007** — An authority event MUST identify the authority and its state:
 `issued`, `active`, `consumed`, `revoked`, `expired`, or `superseded`.
 
-**EBMP2-008** — Consumption MUST be separately recorded for a single-use
-authority. A release without provable consumption is nonconformant where the
-profile requires replay prevention.
+**EBMP2-008** — Consumption MUST be separately recorded for each DCMP-2
+single-use authority. A release without provable consumption is nonconformant.
+Recording consumption more than once MUST NOT create additional release
+authority (DCMP2-050, EBMP2-073).
 
 **EBMP2-009** — Revocation, expiry, and supersession MUST NOT delete an
 authority record and MUST NOT be treated as proof that a prior release did not
@@ -127,7 +129,14 @@ execution outcome nor a non-execution terminal disposition, and an event of any
 other type whose `event.state` is one of them, with
 `ecl.rule.terminal-execution-state-consistent.v1`.
 
-The states of one attempt move only forward along the progression above. This
+**EBMP2-065** — The execution events of one attempt, those with the same
+`event.action_id` and `event.attempt_id`, taken in ascending order of
+`workflow.sequence` and then of `object_id`, MUST carry states in which every
+state after the first is one that the table lists for the state before it. A
+consumer MUST reject a bundle with an attempt that does not with
+`ecl.rule.execution-state-transition-valid.v1`.
+
+**EBMP2-065 (continued)** — The states of one attempt move only forward along the progression above. This
 table gives, for each state, the states that may follow it in the same attempt;
 an attempt's first state may be any state, and nothing follows a terminal
 outcome or a non-execution terminal disposition.
@@ -135,16 +144,9 @@ outcome or a non-execution terminal disposition.
 | State | States that may follow it |
 |---|---|
 | `not_started` | `prepared`, `denied`, `held`, `challenged`, `expired_before_release` |
-| `prepared` | `released`, `cancelled`, `timed_out`, `denied`, `held`, `expired_before_release` |
+| `prepared` | `released`, `cancelled`, `timed_out`, `denied`, `held`, `challenged`, `expired_before_release` |
 | `released` | `running`, `succeeded`, `failed`, `partially_succeeded`, `cancelled`, `timed_out`, `unknown` |
 | `running` | `succeeded`, `failed`, `partially_succeeded`, `cancelled`, `timed_out`, `rolled_back`, `compensated`, `unknown` |
-
-**EBMP2-065** — The execution events of one attempt, those with the same
-`event.action_id` and `event.attempt_id`, taken in ascending order of
-`workflow.sequence` and then of `object_id`, MUST carry states in which every
-state after the first is one that the table lists for the state before it. A
-consumer MUST reject a bundle with an attempt that does not with
-`ecl.rule.execution-state-transition-valid.v1`.
 
 **EBMP2-066** — Every execution event with the same `event.action_id`,
 `workflow.workflow_id` and `workflow.attempt` MUST carry the same
@@ -240,7 +242,7 @@ after the table:
 | `ecl.obligation.verify-witness.v1`, a deferred witness result included | A `verification` event whose `decision` is `pass` and whose `subject.uri` is the witness | One of its `causal_predecessors` names the decision request by `message_id` and digest | The `source` of the witness result, when the response gives one; otherwise the decision names none |
 | Any other type | Any EBMP-2 event record; a decision request or a decision response is never a proof | One of its `causal_predecessors` names the decision request by `message_id` and digest | None |
 
-These checks belong to stage 8 of EBMP2-068 and read the members that are
+**EBMP2-070 (continued)** — These checks belong to stage 8 of EBMP2-068 and read the members that are
 present with the types their value schema gives them (DCMP2-043). An entry
 with defect 1 is not checked further. The result and time checks in 2 to 4,
 and the entry's own `fresh_until` check in 7, apply to every remaining entry.
@@ -368,8 +370,9 @@ every edge of the causal graph within one workflow, DCMP-2 messages and
 observations included (EBMP2-059). A producer gives a record a sequence greater
 than the sequence of every predecessor that it names in the same workflow. A
 producer that shares no counter with the others, such as an independent observer
-or an approval service, uses one more than the greatest such predecessor, which
-it can always do because it holds those predecessors.
+or an approval service, can use one more than the greatest predecessor sequence
+when that value is within the permitted range. At the range limit, it cannot
+create a valid successor in the same sequence domain.
 
 **EBMP2-026** — Timestamps MUST NOT be used to fabricate missing causal edges
 or override contradictory sequence and digest evidence.
@@ -385,13 +388,38 @@ recalculation yields any open action or unresolved required predecessor.
 causal order from authenticated references and profile rules.
 
 **EBMP2-077** — A causal predecessor MUST have its successor's
-`workflow.root_trace_id`, and MUST be in its successor's workflow or in the
-workflow that its successor's `workflow.parent_workflow_id` names, as a
-child workflow names its parent. A predecessor in its successor's workflow
+`workflow.root_trace_id`, and MUST be in its successor's workflow, in the
+workflow that its successor's `workflow.parent_workflow_id` names, or in a
+child workflow whose own `workflow.parent_workflow_id` names the successor's
+workflow. The last case permits a parent to join its child's recorded result
+(DW1-002, DW1-009); it does not permit a reference to an unrelated or sibling
+workflow. For a child-to-parent join, the child record MUST have a causal path
+to the exact creating or delegating object in its declared parent workflow.
+The path consists of zero or more predecessor edges within the child workflow,
+followed by a predecessor edge to that parent object. Every edge MUST bind the
+predecessor's logical identifier and canonical digest; every child record on
+the path MUST identify the same parent and root trace. A declared parent
+identifier alone does not establish this relationship.
+Held ancestors in that child workflow MUST agree on its declared parent,
+including when another predecessor is absent.
+
+**EBMP2-077 (continued)** — If no such path exists in the held graph and no named absent predecessor could
+complete it, the verifier MUST report
+`ecl.rule.bundle-causal-context-consistent.v1`. When no held path establishes
+the origin, a named absent predecessor on a possible path leaves it unresolved and MUST prevent causal-completeness
+scope, including when that predecessor is declared external. A later child
+record can inherit its origin through earlier child records; it need not
+repeat the direct reference to the parent object.
+
+**EBMP2-077 (continued)** — A predecessor in its successor's workflow
 MUST NOT have a greater `workflow.attempt` than its successor: a later attempt
 can follow an earlier one, never the reverse. A verifier MUST report a
 predecessor that the bundle holds and that fails this rule with
 `ecl.rule.bundle-causal-context-consistent.v1`.
+Sequence and attempt counters in different workflows are separate domains;
+neither counter supplies a global order. Digest resolution, acyclicity and
+required-child closure still apply. An absent child record leaves a required
+join unresolved, rather than establishing the child's completion.
 
 ## 5. Identity and integrity
 
@@ -529,8 +557,8 @@ mismatch with `ecl.rule.event-type-kind-consistent.v1`. The state of an
 These rules state what binds an event to the request and response it records.
 An execution event binds its request and response when it meets EBMP2-047,
 EBMP2-048, the admitting-response and authorization-identifier checks of
-EBMP2-049, and, for `execution_released`, belongs to an `admit` response
-(EBMP2-050), or, for `execution_terminal`, meets EBMP2-051. An
+EBMP2-049, and, for `execution_released` or `execution_observed`, belongs to an
+`admit` response (EBMP2-050), or, for `execution_terminal`, meets EBMP2-051. An
 `authority_issued` or `authority_consumed` event binds its response under
 EBMP2-052. Each event's core binding check follows the listed order and stops
 at its first failure, using the rule's named error code or
@@ -550,8 +578,8 @@ An object's digest is its `ecl.digest.sha-256.v1` digest over restricted
 canonical JSON. A member that a rule reads and that is missing or has the wrong
 type fails that rule.
 
-**EBMP2-047** — An `execution_released` or `execution_terminal` event MUST bind
-its request: `event.action_id` MUST equal the request's `action.action_id`; when
+**EBMP2-047** — A `release_prepared`, `execution_released`, `execution_observed`
+or `execution_terminal` event MUST bind its request: `event.action_id` MUST equal the request's `action.action_id`; when
 the event carries them, `event.operation`, the algorithm and value of
 `event.parameters_digest`, and `event.target.uri` MUST equal those of the
 request's action; and the event's `workflow_id`, `root_trace_id` and `attempt`
@@ -569,10 +597,17 @@ an `admit` response; `event.authority.uri` MUST equal the authorization's
 `authorization_id`, and `event.authority.digest` MUST be the digest of the
 response's `authorization` object (otherwise `ecl.error.digest-mismatch.v1`).
 
-**EBMP2-050** — An `execution_released` event MUST belong to an `admit`
-response, its `observed_at` MUST NOT be earlier than the authorization's
-`valid_from`, and its `observed_at` plus its `release_guard_ms` MUST be earlier
-than the authorization's `valid_until` (otherwise `ecl.error.expired.v1`).
+**EBMP2-050** — An `execution_released` or `execution_observed` event MUST
+belong to an `admit` response. For `execution_released`, its `observed_at` MUST
+NOT be earlier than the authorization's `valid_from`, and its `observed_at`
+plus its `release_guard_ms` MUST be earlier than the authorization's
+`valid_until` (otherwise `ecl.error.expired.v1`).
+
+Running execution can continue after a release made inside the authority's
+window; its observation time is not a second release time. Generic
+`release_prepared` evidence alone does not assert admission or release. A
+profile can impose a narrower preparation sequence, as MCP-GATEWAY-1 does
+under MG1-014.
 
 **EBMP2-072** — A verifier MUST report with `ecl.error.expired.v1`, as a finding
 of stage 7 of EBMP2-068, an `execution_terminal` event that binds its request
@@ -594,9 +629,9 @@ fail-closed deny, `held` requires `hold`; `challenged` requires `challenge`;
 `denied` requires `deny`, an `admit` later denied at enforcement, or no response;
 and every other terminal state requires `admit`.
 
-**EBMP2-075** — When a request carries `ecl.ext.mcp-binding.v1`, an
-`execution_released` or `execution_terminal` event of its action that carries
-the extension MUST carry, in each occurrence, every member of the request's
+**EBMP2-075** — When a request carries `ecl.ext.mcp-binding.v1`, a
+`release_prepared`, `execution_released`, `execution_observed` or
+`execution_terminal` event of its action that carries the extension MUST carry, in each occurrence, every member of the request's
 value with the same value, so that the evidence names the call that was decided;
 and an `execution_terminal` event in state `succeeded` or `failed` MUST carry
 the extension with `response_digest`, the digest of the server's response. A
@@ -616,15 +651,14 @@ response with the response's digest (otherwise `ecl.error.digest-mismatch.v1`);
 and its `workflow_id`, `root_trace_id` and `attempt` MUST equal the response's.
 
 **EBMP2-073** — An `authority_consumed` event in state `consumed` that binds its
-response under EBMP2-052 and carries `use_count` MUST give a value from 1 to the
-number of uses that the authorization allows: 1 when its `use_policy` is
-`single_use`, and otherwise its `max_uses` when it has one. A bundle MUST NOT
-hold, for one authorization, more `authority_consumed` events in state
-`consumed` that bind its response under EBMP2-052 than the authorization allows,
-whether or not those events carry `use_count`. Any two of those events that
-carry `use_count` MUST carry different values. A verifier MUST report a bundle that
-breaks this with `ecl.error.decision-binding-invalid.v1`, as a finding of stage
-7 of EBMP2-068.
+response under EBMP2-052 MUST refer to a `single_use` authorization whose
+`max_uses` is absent or the integer 1. If the event carries `use_count`, it MUST
+be the integer 1. A bundle MUST NOT hold, for one authorization, more than one
+`authority_consumed` event in state `consumed` that binds its response under
+EBMP2-052, whether or not the event carries `use_count`. A verifier MUST report a
+bundle that breaks this with `ecl.error.decision-binding-invalid.v1`, as a
+finding of stage 7 of EBMP2-068. An unsupported authorization policy MUST NOT
+be interpreted as an unlimited use count.
 
 **EBMP2-053** — For one action attempt, a non-execution terminal state
 (`denied`, `held`, `challenged`, `expired_before_release`) MUST NOT coexist with
@@ -637,7 +671,9 @@ and a digest the reference carries MUST be that message's digest. A
 `decision_recorded` event's `outcome` and `policy` MUST equal those of the
 response it references.
 
-**EBMP2-055** — A `succeeded` attempt MUST have an `authority_consumed` event in
+**EBMP2-055** — An attempt with an `execution_observed` event in state `running`,
+or whose terminal state is `succeeded`, `failed`, `partially_succeeded`, `unknown`,
+`rolled_back` or `compensated`, MUST have an `authority_consumed` event in
 state `consumed` that binds its response under EBMP2-052, and an
 `execution_released` event for the same attempt that binds its request and
 response (section 10). A verifier MUST apply this rule to every attempt of the
@@ -645,10 +681,14 @@ bundle, whatever the causal closure of the rest of the bundle, except an attempt
 one of whose objects in the bundle (its request, its response or one of its
 events) names a causal predecessor that the bundle does not hold, since that
 predecessor could be the event that the rule asks for (EBMP2-059).
+Running and these terminal states record an execution attempt after release;
+a refusal or expiry before release uses its non-execution state. A `cancelled` or `timed_out`
+terminal may describe either side of the release boundary and does not alone
+establish release. A recorded release remains subject to EBMP2-074 in every
+terminal state.
 
 **EBMP2-074** — An action attempt with an `execution_released` event that binds
-its request and response, and whose authorization's `use_policy` is
-`single_use`, MUST also have an `authority_consumed` event in state `consumed`
+its request and response MUST also have an `authority_consumed` event in state `consumed`
 (EBMP2-008), whatever its terminal state. A verifier MUST apply this rule to
 every such attempt, whatever the causal closure of the rest of the bundle,
 except an attempt one of whose objects in the bundle names a causal predecessor
@@ -673,7 +713,7 @@ versions of it (TRUST-POLICY-1), the evaluation time and the verification
 profile (EBMP2-067). A bundle carries decision requests, decision responses and
 EBMP-2 events; the bundle verifier does not verify the other DCMP-2 message
 types. The evaluation time is the instant at which the verifier evaluates
-current status. It is not a cutoff: Version 1.0 does not define an as-of
+current status. It is not a cutoff: ECL-1 Version 1 does not define an as-of
 assessment, and a verifier does not report what a bundle established at an
 earlier instant.
 
@@ -724,8 +764,11 @@ the continuation's workflow, attempt, `action`, `actor`, `subject` and
 `authority_request` relate to the continued request's as DCMP2-056 requires;
 that the continuation lists the response and the approval that `continues`
 names among its `workflow.causal_predecessors`, each by identifier and digest;
-and that no other request of the bundle continues the same response. When the
-continuation's response is an `admit`, the verifier MUST also check that every
+and that no two requests of the bundle which continue the same response have
+decision responses whose `outcome` is `admit`. A continuation answered with
+`deny` or `challenge` does not violate this uniqueness condition; its remaining
+binding and causal checks still apply. When the continuation's response is an
+`admit`, the verifier MUST also check that every
 key that signed the approval holds `ecl.purpose.approval.v1` in the
 trust-policy version that the approval names, and that no key that signed it is
 bound to the request's actor, as EBMP2-070 condition 5 asks of an approval
@@ -807,7 +850,7 @@ in the bundle. The stages are:
 
 1. the input, where a failure stops verification: the earlier policy versions that the caller supplies (TP1-001), `ecl.error.signature-policy-invalid.v1`; the bundle's shape, `ecl.error.schema-invalid.v1`; its limits on envelopes and observations (EBMP2-062), `ecl.error.resource-limit-exceeded.v1`; then its schema, `ecl.error.schema-invalid.v1`;
 2. the payloads: each envelope's payload under INTEGRITY-ENVELOPE-1 IE1-040 step 3, whose strict parse takes the nodes that remain of the payload node limit of EBMP2-062 as its value limit (IE1-037, check 3), so that a payload that exceeds them stops verification before its later checks; `ecl.error.resource-limit-exceeded.v1` before `ecl.error.integrity-invalid.v1`;
-3. the objects: each object's schema and semantic rules, with the findings that DCMP2-043 gives the object, an object that fails its schema making its envelope not historically valid with `ecl.error.schema-invalid.v1` and one that satisfies its schema but fails a semantic rule with `ecl.error.semantic-invalid.v1`; unique object identifiers; the decision-basis rules of DCMP2-053 (`ecl.rule.decision-basis-required.v1`, `ecl.rule.decision-basis-matches-register.v1`, and `ecl.rule.decision-basis-one-way.v1` for an input recorded as `verifiable` whose source is the request's actor); and the kind of each observation (EBMP2-057); `ecl.error.schema-invalid.v1`, then the registered rules in ascending order of precedence, then `ecl.error.semantic-invalid.v1`, so that a bundle whose only defect is one object has the primary finding that DCMP2-043 gives that object;
+3. the objects: each object's schema and semantic rules, with the findings that DCMP2-043 gives the object, an object that fails its schema making its envelope not historically valid with `ecl.error.schema-invalid.v1` and one that satisfies its schema but fails a semantic rule with `ecl.error.semantic-invalid.v1`; the extension-consumer rules of EXTENSION-REGISTRY-1 for each envelope's own `extensions`; unique object identifiers; the decision-basis rules of DCMP2-053 (`ecl.rule.decision-basis-required.v1`, `ecl.rule.decision-basis-matches-register.v1`, and `ecl.rule.decision-basis-one-way.v1` for an input recorded as `verifiable` whose source is the request's actor); and the kind of each observation (EBMP2-057); `ecl.error.schema-invalid.v1`, then the registered rules in ascending order of precedence, then `ecl.error.semantic-invalid.v1`, so that a bundle whose only defect is one object has the primary finding that DCMP2-043 gives that object;
 4. the signers: each other envelope's historical validity (EBMP2-057, IE1-032 to IE1-036, IE1-040, TRUST-POLICY-1 TP1-006); `ecl.error.clock-regressed.v1`, `ecl.error.signature-policy-invalid.v1`, `ecl.error.trusted-time-invalid.v1`, `ecl.error.trusted-time-required.v1`, `ecl.error.revoked.v1`, `ecl.error.expired.v1`, `ecl.error.resource-limit-exceeded.v1`, `ecl.error.integrity-invalid.v1`, then `ecl.error.threshold-not-met.v1`;
 5. pairing (EBMP2-058, EBMP2-066, EBMP2-078); `ecl.error.schema-invalid.v1`, then `ecl.error.decision-binding-invalid.v1`;
 6. the binding of each response to its request (DCMP2-044 to DCMP2-051), each pair stopping at its first failure; `ecl.error.request-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, `ecl.error.audience-mismatch.v1`, then `ecl.error.scope-mismatch.v1`;
@@ -824,6 +867,10 @@ names, and the reference verification profile
 `ecl.verification-profile.reference.v1` when the caller names none; a bundle
 does not select its profile. The verifier MUST report the profile it applied
 with the verdict.
+The registered reference profiles use zero response clock skew. A verifier
+MUST refuse a nonzero `response_clock_skew_seconds` input for one of those
+profiles rather than report a reference-profile result under different time
+rules. Every report MUST state the effective `response_clock_skew_seconds`.
 
 **EBMP2-076** — With each verdict a verifier MUST report its scope, as the two
 lists of the table below: `established`, the checks that it made for the bundle
@@ -857,19 +904,30 @@ event records a `forward_completed_at` at or after the authorization's
 `valid_until` (EBMP2-072); the member is not a finding and changes no verdict.
 An offline package has the scope of the report that IE1-022 gives it.
 
+**EBMP2-076 (continued)** — The qualifying verdicts used below are `verified`, `current-trust-failed` and
+`incomplete`. A qualifying verdict is necessary but is not sufficient: each
+item must also pass every check on its complete object set in the scope-check
+registry. Object-signing dependencies and time-attestation-signing dependencies
+are distinct sets. All signatures on a time attestation must meet the
+historical eligibility and revocation checks for `trusted-time` to be
+established, including signatures not needed to meet its threshold. A valid
+threshold alone does not establish that scope item. `current-trust` includes
+both dependency sets.
+
 | Item | What it says | When it is established |
 |---|---|---|
-| `envelope-signatures` | Each envelope's and observation's payload digest and signatures verify under the trust-policy version that its object names, at the object's own time or its trusted time, and the caller's current policy revokes none of its trust dependencies at or before its time (EBMP2-057, TRUST-POLICY-1 TP1-006). | The verdict is `verified`, `current-trust-failed` or `incomplete`. |
+| `envelope-signatures` | Each envelope's and observation's payload digest and signatures verify under the trust-policy version that its object names, at the object's own time or its trusted time, and the caller's current policy revokes none of its object-signing dependencies at or before its time (EBMP2-057, TRUST-POLICY-1 TP1-006). | A qualifying verdict and every required registry check over the complete object-signing dependency set. |
 | `current-trust` | Each trust dependency, each signing key of each envelope and observation and of each time attestation, is acceptable under the caller's current trust policy at the evaluation time (EBMP2-060, TRUST-POLICY-1 TP1-006). | The verdict is `verified` or `incomplete` and every trust dependency's current status is valid; an acceptance of current trust failures never establishes it. |
-| `trusted-time` | A separate time authority attests a time for each signature of each envelope and observation, binding that signature (IE1-033), and each signature was valid at that time (IE1-032 to IE1-035); each time authority's key is valid at its attested time under the policy version its attestation names and is not revoked by the caller's current policy at or before that time (TRUST-POLICY-1 TP1-006). | As `envelope-signatures`, and every signature of every envelope and observation is covered by a valid trusted-time countersignature. |
-| `object-rules` | Each signed object satisfies its schema and its semantic rules, the one-way rule for a recorded decision basis among them (EBMP2-068, stage 3). | As `envelope-signatures`. |
-| `decision-basis-recorded` | Each decision response records its decision basis (DCMP2-053). | As `envelope-signatures`. |
-| `decision-basis-register` | Each decision basis agrees with the Consequential Action Register that the caller supplied (DCMP2-053). | As `envelope-signatures`. It applies only when the caller supplies a register. |
-| `bindings` | Each response binds its request, each event binds its request, response and authority, with the digests and use counts that they name, each continuation binds the request, challenge and approval that it continues, and each terminal event carries the outcome reason that its state and response require (DCMP2-044 to DCMP2-051, EBMP2-047 to EBMP2-054, EBMP2-056, EBMP2-073, EBMP2-075, EBMP2-078). | As `envelope-signatures`. |
-| `release-within-authority` | Each recorded release time lies within the authorization's validity window with the release guard added, and no terminal event records that a release may have come after `valid_until` (EBMP2-050, EBMP2-072). | As `envelope-signatures`, when the bundle records a release; when it records none, it is not established, with the reason `no-release-recorded`. |
+| `trusted-time` | A separate time authority attests a time for each signature of each envelope and observation, binding that signature (IE1-033), and each signature was valid at that time (IE1-032 to IE1-035); each time authority's key is valid at its attested time under the policy version its attestation names and is not revoked by the caller's current policy at or before that time (TRUST-POLICY-1 TP1-006). | A qualifying verdict and every required registry check over the item's complete object set, and every signature of every envelope and observation is covered by a valid trusted-time countersignature. |
+| `object-rules` | Each signed object satisfies its schema and its semantic rules, the one-way rule for a recorded decision basis among them (EBMP2-068, stage 3). | A qualifying verdict and every required registry check over the item's complete object set. |
+| `decision-basis-recorded` | Each decision response records its decision basis (DCMP2-053). | A qualifying verdict and every required registry check over the item's complete object set. |
+| `decision-basis-register` | Each decision basis names the supplied register version and matches its declared inputs, classes, required flags, sources and derivations. Recorded input timing is compared with declared deadlines and maximum ages only when the necessary fields are supplied (DCMP2-053). This check does not re-evaluate policy or approval thresholds. | A qualifying verdict and every required registry check over the item's complete object set. It applies only when the caller supplies a register. |
+| `decision-input-timing` | The recorded ages and acquisition times of every available input with a declared temporal constraint meet the supplied register's maximum ages and deadlines. This does not establish that any recorded time is true. | Applies only when a register is supplied and at least one available input has a declared maximum age or deadline. Established only with a qualifying verdict, every required registry check over the decision responses, and all operands needed for those comparisons present; otherwise not established, with `input-times-not-recorded` when a needed timestamp is absent or unreadable. Unavailable, late or malformed inputs create no available-input timing check. |
+| `bindings` | Each response binds its request, each event binds its request, response and authority, with the digests and use counts that they name, each continuation binds the request, challenge and approval that it continues, and each terminal event carries the outcome reason that its state and response require (DCMP2-044 to DCMP2-051, EBMP2-047 to EBMP2-054, EBMP2-056, EBMP2-073, EBMP2-075, EBMP2-078). | A qualifying verdict and every required registry check over the item's complete object set. |
+| `release-within-authority` | Each recorded release time lies within the authorization's validity window with the release guard added, and no terminal event records that a release may have come after `valid_until` (EBMP2-050, EBMP2-072). | A qualifying verdict and every required registry check over the item's complete object set, when the bundle records a release; when it records none, it is not established, with the reason `no-release-recorded`. |
 | `causal-completeness` | Over every object that the bundle holds, the DCMP-2 messages and EBMP-2 events in `envelopes` and the observations: every causal predecessor is in the bundle with the digest that names it, in the workflow, trace and attempt that EBMP2-077 allows, the graph is acyclic and identifiers are unique, and every request has a terminal event (section 4, EBMP2-055, EBMP2-059, EBMP2-074, EBMP2-077). | The verdict is `verified` or `current-trust-failed`. |
-| `prerelease-obligations-discharge-recorded` | Each release records a discharge of every obligation that its decision left to Enforcement before the release, checked no later than the release was observed and fresh at the release (EBMP2-070). | As `envelope-signatures`. It applies only when the verifier applied EBMP2-070 to an `execution_released` event whose response carries such an obligation. |
-| `prerelease-obligations-proofs-verified` | Each pre-release discharge carries its proof, and each proof is a valid ECL object under the trust policy, signed by the issuer the obligation names, of a type the obligation admits, bound to this exchange and fresh at the release (EBMP2-070). | As `prerelease-obligations-discharge-recorded`, and only when every entry's proof is an ECL object that the bundle carries and that passes conditions 5 to 8 of EBMP2-070; when an entry's proof is not an ECL object that the bundle carries, it is not established, with the reason `proof-not-ecl-object`, and when the decision names no issuer for an obligation, with the reason `issuer-not-named`; when both apply, the report gives `proof-not-ecl-object`. |
+| `prerelease-obligations-discharge-recorded` | Each release records a discharge of every obligation that its decision left to Enforcement before the release, checked no later than the release was observed and fresh at the release (EBMP2-070). | A qualifying verdict and every required registry check over the item's complete object set. It applies only when the verifier applied EBMP2-070 to an `execution_released` event whose response carries such an obligation. |
+| `prerelease-obligations-proofs-verified` | Each pre-release discharge carries its proof, and each proof is a valid ECL object under the trust policy, signed by the issuer the obligation names, of a type the obligation admits, bound to this exchange and fresh at the release (EBMP2-070). | As `prerelease-obligations-discharge-recorded`, and only when every entry's proof is an ECL object that the bundle carries and that passes conditions 5, 7 and 8 of EBMP2-070, with the discharge checks (including condition 6) already satisfied; when an entry's proof is not an ECL object that the bundle carries, it is not established, with the reason `proof-not-ecl-object`, and when the decision names no issuer for an obligation, with the reason `issuer-not-named`; when both apply, the report gives `proof-not-ecl-object`. |
 | `prerelease-obligations-met` | That each pre-release obligation was met: the verifier checks a proof's signatures, issuer, type, binding and freshness, not what the proof shows. | Never; it applies as `prerelease-obligations-discharge-recorded` does. |
 | `post-release-obligations-met` | That the obligations to be met during or after execution were met, which the verifier does not check. | Never; it applies only when the response that an `execution_released` event records carries an obligation whose `satisfaction` is `during_execution` or `after_execution`. |
 | `recorded-times-true` | That each recorded time is the true time of its event: each producer states its own times (EBMP2-004, EBMP2-071). | Never. |
@@ -884,4 +942,3 @@ of the bundle's limit, so that it builds no payload beyond that limit (IE1-029),
 and MUST refuse a bundle that exceeds them before verifying signatures, with
 `ecl.error.resource-limit-exceeded.v1`. For example, a verifier can declare
 limits of 256 envelopes, 256 observations and 100 000 nodes.
-

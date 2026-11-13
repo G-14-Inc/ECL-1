@@ -5,10 +5,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math/big"
+	"strings"
 	"unicode/utf8"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
+	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/registry"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 )
 
@@ -32,11 +35,12 @@ const (
 	RuleOAuthRefusal      = "ecl.rule.oauth-refusal-named.v1"
 
 	// The codes of the presentation table (OA1-011).
-	errorAudienceMismatch = "ecl.error.audience-mismatch.v1"
-	errorScopeMismatch    = "ecl.error.scope-mismatch.v1"
-	errorExpired          = "ecl.error.expired.v1"
-	errorReplay           = "ecl.error.replay.v1"
-	errorIntegrityInvalid = "ecl.error.integrity-invalid.v1"
+	errorAudienceMismatch   = "ecl.error.audience-mismatch.v1"
+	errorScopeMismatch      = "ecl.error.scope-mismatch.v1"
+	errorExpired            = "ecl.error.expired.v1"
+	errorReplay             = "ecl.error.replay.v1"
+	errorIntegrityInvalid   = "ecl.error.integrity-invalid.v1"
+	errorBindingUnsupported = "ecl.error.binding-unsupported.v1"
 )
 
 // codedProblem is a reason a resource server must refuse a presentation, with the error code of
@@ -67,8 +71,8 @@ func pyInteger(value any) (*big.Int, bool) {
 
 func times(value *big.Int) *big.Int { return new(big.Int).Mul(value, nanosecond) }
 
-// AuthorizationDetailsEntry is the ECL authorization_details entry for an admit, as the
-// profile's entry table gives it.
+// AuthorizationDetailsEntry projects the entry table's members. Callers verify the admit
+// and supported use policy separately; this builder does not accept or release authority.
 func AuthorizationDetailsEntry(request, response map[string]any, withDecision bool) map[string]any {
 	authorization, _ := response["authorization"].(map[string]any)
 	action, _ := request["action"].(map[string]any)
@@ -130,6 +134,15 @@ func joseProblem(err error, path, message string) problem {
 		raise(err)
 	}
 	return problem{path, message + refusal.Reason + " check"}
+}
+
+func validOAuthThumbprint(value any) bool {
+	text, ok := value.(string)
+	if !ok || len(text) != 43 {
+		return false
+	}
+	raw, err := B64URLDecode(text)
+	return err == nil && len(raw) == 32
 }
 
 func oauthIssue(record, request, response map[string]any, token string) []problem {
@@ -194,7 +207,7 @@ func oauthIssue(record, request, response map[string]any, token string) []proble
 	begins, beginsOK := pyInteger(beginsValue)
 	expires, expiresOK := pyInteger(claims["exp"])
 	valid := issuedOK && beginsOK && expiresOK && start != nil && end != nil &&
-		times(begins).Cmp(start) >= 0 && times(expires).Cmp(end) <= 0
+		times(begins).Cmp(start) >= 0 && times(expires).Cmp(end) <= 0 && begins.Cmp(expires) < 0
 	if valid {
 		lifetime := new(big.Int).Sub(expires, issued)
 		valid = lifetime.Sign() > 0 && lifetime.Cmp(big.NewInt(maxLifetime)) <= 0
@@ -203,16 +216,29 @@ func oauthIssue(record, request, response map[string]any, token string) []proble
 		problems = append(problems, problem{"/token/exp", "the token's validity is not inside the window and bound"})
 	}
 	subject, actor := subjectAndActor(request)
-	if !pyjson.Equal(claims["sub"], subject) || (actor != nil && !pyjson.Equal(member(claims, "act", "sub"), actor)) {
+	malformedActor := false
+	if holds(claims, "act") {
+		var nested any = claims["act"]
+		for {
+			object, ok := nested.(map[string]any)
+			if !ok {
+				malformedActor = true
+				break
+			}
+			if !holds(object, "act") {
+				break
+			}
+			nested = object["act"]
+		}
+	}
+	if !pyjson.Equal(claims["sub"], subject) || malformedActor || ((actor != nil || holds(claims, "act")) && !pyjson.Equal(member(claims, "act", "sub"), member(request, "actor", "id"))) {
 		problems = append(problems, problem{"/token/act", "the subject and actor are not the request's"})
 	}
 	confirmation, isObject := claims["cnf"].(map[string]any)
 	single := false
 	if isObject && len(confirmation) == 1 {
 		// OA1-004: one key, named by a string; a jkt or x5t#S256 of null names no key.
-		_, jkt := confirmation["jkt"].(string)
-		_, certificate := confirmation["x5t#S256"].(string)
-		single = jkt || certificate
+		single = validOAuthThumbprint(confirmation["jkt"]) || validOAuthThumbprint(confirmation["x5t#S256"])
 	}
 	if !single {
 		problems = append(problems, problem{"/token/cnf", "the token is not sender-constrained by one key"})
@@ -243,6 +269,22 @@ func issuerKeys(record map[string]any) map[string]map[string]any {
 }
 
 func oauthSignature(record map[string]any, token string) []problem {
+	// OA1-007: refuse ambiguous identifiers before constructing the key map.
+	seen := map[string]bool{}
+	var problems []problem
+	for index, entry := range array(record, "issuer_keys", "keys") {
+		keyID, valid := textOf(entry, "kid")
+		if !valid {
+			continue // The record schema checks every entry's shape and member types.
+		}
+		if seen[keyID] {
+			problems = append(problems, problem{fmt.Sprintf("/issuer_keys/keys/%d/kid", index), "issuer key identifiers must be distinct"})
+		}
+		seen[keyID] = true
+	}
+	if len(problems) > 0 {
+		return problems
+	}
 	_, claims, err := VerifyJWS(token, issuerKeys(record), AccessType)
 	if err != nil {
 		return []problem{joseProblem(err, "/token", "the token fails the ")}
@@ -257,18 +299,33 @@ func oauthSignature(record map[string]any, token string) []problem {
 // when the URI cannot be split.
 func htu(uri string) (string, bool) {
 	parts, ok := schema.SplitURI(uri)
-	if !ok {
+	if !ok || parts.Scheme == "" {
 		return "", false
 	}
-	return schema.URIParts{Scheme: parts.Scheme, Netloc: parts.Netloc, Path: parts.Path}.String(), true
+	// OA1-004 preserves every other character, including an empty authority's slashes.
+	end := strings.IndexAny(uri, "?#")
+	if end < 0 {
+		end = len(uri)
+	}
+	return parts.Scheme + uri[strings.IndexByte(uri, ':'):end], true
 }
 
 func oauthPossession(record, claims map[string]any, token string, presentation map[string]any, presented *big.Int) []codedProblem {
 	confirmation, _ := claims["cnf"].(map[string]any)
+	_, certificatePresent := confirmation["x5t#S256"]
+	_, keyPresent := confirmation["jkt"]
+	if len(confirmation) != 1 || (!certificatePresent && !keyPresent) {
+		return []codedProblem{{"/token/cnf", "the token is not sender-constrained by one key", errorIntegrityInvalid}}
+	}
+	for _, thumbprint := range confirmation {
+		if !validOAuthThumbprint(thumbprint) {
+			return []codedProblem{{"/token/cnf", "the token is not sender-constrained by one key", errorIntegrityInvalid}}
+		}
+	}
 	if certificate, bound := confirmation["x5t#S256"]; bound {
 		// The bound thumbprint is a string: a null one is not matched by a presentation that
 		// carries no client certificate.
-		if _, isText := certificate.(string); !isText || !pyjson.Equal(presentation["client_certificate_sha256"], certificate) {
+		if !validOAuthThumbprint(certificate) || !pyjson.Equal(presentation["client_certificate_sha256"], certificate) {
 			return []codedProblem{{"/presentation", "the client certificate is not the bound one", errorIntegrityInvalid}}
 		}
 		return nil
@@ -335,7 +392,7 @@ func oauthWithinValidity(record, claims map[string]any, entries []any, presented
 	}
 	begins, beginsOK := pyInteger(beginsValue)
 	expires, expiresOK := pyInteger(claims["exp"])
-	if presented == nil || !beginsOK || !expiresOK {
+	if presented == nil || !beginsOK || !expiresOK || begins.Cmp(expires) >= 0 {
 		return false
 	}
 	allowance := big.NewInt(skew)
@@ -367,18 +424,28 @@ func oauthPresentationChecks(record map[string]any) []codedProblem {
 	if !isObject {
 		presentation = map[string]any{}
 	}
+	found := detailsEntries(claims)
+	entry := map[string]any{}
+	supported := true
+	if len(found) == 1 {
+		entry = found[0].(map[string]any)
+		limitValid := true
+		if raw, present := entry["max_uses"]; present {
+			count, ok := pyInteger(raw)
+			limitValid = ok && count.Cmp(big.NewInt(1)) == 0
+		}
+		supported = entry["use_policy"] == "single_use" && limitValid
+	}
 	var problems []codedProblem
 	if !pyjson.Equal(claims["aud"], record["resource_server"]) {
 		problems = append(problems, codedProblem{"/token/aud", "the token is for another audience", errorAudienceMismatch})
 	}
 	presented := nanos(presentation["presented_at"])
-	found := detailsEntries(claims)
-	entry := map[string]any{}
-	if len(found) == 1 {
-		entry = found[0].(map[string]any)
-	}
 	if !oauthWithinValidity(record, claims, found, presented) {
 		problems = append(problems, codedProblem{"/presentation/presented_at", "outside the token's validity", errorExpired})
+	}
+	if !supported {
+		return append(problems, codedProblem{"/token/authorization_details", "only single_use with max_uses absent or 1 is supported", errorBindingUnsupported})
 	}
 	problems = append(problems, oauthPossession(record, claims, token, presentation, presented)...)
 	actions, _ := entry["actions"].([]any)
@@ -386,12 +453,8 @@ func oauthPresentationChecks(record map[string]any) []codedProblem {
 		!sameDigest(presentation["parameters_digest"], entry["parameters_digest"]) {
 		problems = append(problems, codedProblem{"/presentation", "another target, operation or parameter digest", errorScopeMismatch})
 	}
-	limit, limited := pyInteger(entry["max_uses"])
-	if pyjson.Equal(entry["use_policy"], "single_use") {
-		limit, limited = big.NewInt(1), true
-	}
 	used, usedOK := integer(presentation, "use_count")
-	if !usedOK || (limited && big.NewInt(used).Cmp(limit) > 0) {
+	if !usedOK || used != 1 {
 		problems = append(problems, codedProblem{"/presentation/use_count", "beyond the entry's use policy", errorReplay})
 	}
 	return problems
@@ -421,7 +484,13 @@ func oauthRefusalProblems(record map[string]any) []codedProblem {
 func oauthRefusal(record map[string]any) []problem {
 	problems := oauthRefusalProblems(record)
 	if len(problems) == 0 {
-		return nil
+		named := member(record, "result", "error")
+		for _, entry := range registry.Entries("error-codes") {
+			if named == entry.ID {
+				return nil
+			}
+		}
+		return []problem{{"/result/error", "a refusal must name a registered error code"}}
 	}
 	expected := problems[0].code
 	if !pyjson.Equal(member(record, "result", "error"), expected) {
@@ -470,6 +539,8 @@ func checkOAuth(record map[string]any) []Finding {
 	for _, row := range oauthIssuerRules {
 		out = append(out, findings(row.rule, row.check(record, request, response, token))...)
 	}
+	out = append(out, findings(ruleOneWay, oneWayResponseProblems(record, [2][]string{{"request"}, {"response"}}))...)
+	out = append(out, messageFindings(record, []string{"request"}, []string{"response"})...)
 	accepted := member(record, "result", "accepted")
 	if accepted == false {
 		for _, row := range oauthRefusalRules {
@@ -479,6 +550,9 @@ func checkOAuth(record map[string]any) []Finding {
 	}
 	if accepted != true {
 		return out
+	}
+	if result, ok := object(record, "result"); ok && holds(result, "error") {
+		out = append(out, findings(RuleOAuthRefusal, []problem{{"/result/error", "an accepted presentation must not carry an error"}})...)
 	}
 	for _, row := range oauthAcceptanceRules {
 		out = append(out, findings(row.rule, row.check(record, token))...)

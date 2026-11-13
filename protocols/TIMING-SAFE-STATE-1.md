@@ -1,7 +1,8 @@
 # ECL Timing, Availability, and Safe-State Semantics 1
 
 Version: 1.0
-Status: normative companion of ECL-1 Version 1.0, a published version
+Status: normative companion in the ECL-1 Version 1 public-review local candidate
+Source build: `1.0.2-review.1`; prepared `2026-11-10`
 
 Requirement identifiers are allocated in the order requirements were added and
 never reused, so a later identifier appears among earlier ones where its subject
@@ -74,7 +75,9 @@ and safe-state rules without an undeclared network dependency.
 staleness budgets MUST be separately declared.
 
 **TS1-013** — Exceeding a staleness budget MUST cause the specified restricted,
-degraded, deny, quarantine, or halt state.
+degraded, deny, quarantine, or halt state, except where a fail-open disposition
+satisfies the scoped advisory exception in TS1-016, TS1-017 and TS1-033. A loss of
+required proof remains subject to TS1-018 and TS1-032.
 
 **TS1-014** — Recovery after partition MUST reconcile policy epochs,
 revocations, consumed authorities, buffered evidence, unresolved effects, and
@@ -87,6 +90,10 @@ emergency halt MUST be treated as distinct dispositions.
 
 **TS1-016** — Fail-open MUST be an explicit action-class policy decision with
 owner, rationale, expiry, evidence obligations, and prohibited conditions.
+A safe-state profile MUST declare each `action_class` only once. A consumer
+MUST reject repeated action-class declarations with
+`ecl.rule.action-class-policy-unambiguous.v1`; list order does not resolve
+conflicting policies.
 
 **TS1-017** — Fail-open MUST NOT be used for an action when the invoked
 profile, law, contract, or irreversible-risk classification requires
@@ -97,9 +104,14 @@ critical extension, or pre-release evidence MUST fail closed.
 
 **TS1-031** — A consumer MUST treat required proof as the set of inputs that
 TS1-018 names: policy, identity, authority, integrity, critical-extension handling,
-and pre-release evidence. A consumer MUST classify a dependency as advisory for
-an action exactly when its loss leaves required proof present, valid, and
-unexpired, and leaves locally validatable authority sufficient for that action.
+and pre-release evidence. The dependency `class` describes its delivery path
+(`hot_path`, `cached` or `asynchronous`) or its advisory role. A consumer MAY
+classify a dependency as `advisory` for an action only when its loss leaves
+required proof present, valid and unexpired, and leaves locally validatable
+authority sufficient for that action. A dependency declared `advisory` MUST
+declare `supplies_required_proof` as `false`. Other delivery classes MUST
+separately state whether they supply required proof; a cached or asynchronous
+path does not establish that its output is advisory.
 
 **TS1-032** — A failure whose consequence is that any required proof is absent,
 invalid, expired, or unavailable MUST be classified as missing required proof
@@ -114,6 +126,14 @@ reject any other disposition for it, `restricted` and `degraded` included, with
 
 **TS1-033** — A fail-open policy under TS1-016 MUST name the advisory dependencies
 it covers, and MUST NOT cover any dependency whose loss removes required proof.
+In a safe-state profile document, `fail_open_authorization.covered_advisory_dependencies`
+MUST list those dependency identifiers, each once and each declared as `advisory`
+with `supplies_required_proof` set to `false`. A dependency identifier MUST be
+declared only once. A consumer MUST reject missing, ambiguous or non-advisory
+coverage with `ecl.rule.dependency-classification-consistent.v1`. At a failure
+transition, fail-open additionally requires that all failed dependencies are
+within this declared advisory scope and that required proof remains present,
+valid and unexpired; an unknown proof state cannot establish that exception.
 
 The core standard sets which action classes a loss of required proof restricts
 and when the restriction ends (ECL1N-0191 to ECL1N-0193). Under the claim's

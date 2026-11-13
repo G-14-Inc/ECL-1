@@ -1,0 +1,164 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 86 and seed -4208676216413982034 with 1 worker on 32 cores with 1333MB heap and 64MB offheap memory [pid: 453] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/formal/tla/MC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/formal/tla/ECLCore.tla
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/scratch/TLC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/scratch/Integers.tla
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/scratch/FiniteSets.tla
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/scratch/Sequences.tla
+Parsing file /workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/validation/formal-boundaries-001/horizon-submission-times-out/scratch/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Starting... (2026-11-07 13:35:27)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-07 13:35:28.
+Error: Invariant WitnessNoTimeout is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 2: <Tick line 453, col 5 to line 467, col 75 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 3: <Sync line 379, col 5 to line 388, col 69 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 1, revoked |-> {}])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 4: <Tick line 453, col 5 to line 467, col 75 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 1, revoked |-> {}])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 5: <Submit line 198, col 5 to line 205, col 61 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 1, revoked |-> {}])
+/\ submitted = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+    deadline |-> 2 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 6: <Next line 473, col 8 to line 473, col 44 of module ECLCore>
+/\ dsUp = TRUE
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [epoch |-> 0, synced |-> 1, revoked |-> {}])
+/\ submitted = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+8 states generated, 8 distinct states found, 2 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 2 (minimum is 1, the maximum 3 and the 95th percentile is 3).
+Finished in 00s at (2026-11-07 13:35:28)

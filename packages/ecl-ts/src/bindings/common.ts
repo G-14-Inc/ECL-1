@@ -11,6 +11,7 @@
  * the reference does with `same_json`, under which a boolean never equals a number.
  */
 
+import { interpretedExtension } from "../registry/registries.js";
 import { BindingError, checkResponseBinding } from "../binding/binding.js";
 import { equalBytes, fromCanonicalBase64 } from "../crypto/bytes.js";
 import { CanonicalizationError, objectDigest } from "../json/canonical.js";
@@ -55,6 +56,22 @@ export const ONE_WAY_RULE = "ecl.rule.decision-basis-one-way.v1";
 
 /** One reason a record breaks a rule: a JSON Pointer into the record, and why. */
 export type Problem = readonly [path: string, message: string];
+
+/** AB1-002/AC1-003: every retained response answers its own request, for every outcome. */
+export function responseBindingFindings(record: JsonObject, ...pairs: readonly (readonly [string, string])[]): Finding[] {
+  const result: Finding[] = [];
+  for (const [requestName, responseName] of pairs) {
+    if (!holds(record, responseName)) continue;
+    try {
+      checkResponseBinding(obj(record, requestName), obj(record, responseName));
+    } catch (error) {
+      if (!(error instanceof BindingError)) throw error;
+      result.push({ ruleId: "ecl.error.request-binding-invalid.v1", path: "/" + responseName,
+        message: `the retained response does not bind its request: ${error.code}: ${error.message}` });
+    }
+  }
+  return result;
+}
 
 const hasOwn = (value: object, key: string): boolean => Object.prototype.hasOwnProperty.call(value, key);
 
@@ -274,7 +291,7 @@ export function binds(request: unknown, response: unknown): boolean {
 export function extensionValues(value: unknown, identifier: string): JsonObject[] {
   const found: JsonObject[] = [];
   for (const item of array(value, "extensions")) {
-    if (isObject(item) && pythonEquals(at(item, "id"), identifier)) {
+    if (isObject(item) && pythonEquals(at(item, "id"), identifier) && interpretedExtension(value, item)) {
       const content = at(item, "value");
       if (isObject(content)) {
         found.push(content);
@@ -286,7 +303,7 @@ export function extensionValues(value: unknown, identifier: string): JsonObject[
 
 /** The whole extension entries with this identifier, with their `critical` flags. */
 export function extensionEntries(value: unknown, identifier: string): JsonObject[] {
-  return array(value, "extensions").filter((item): item is JsonObject => isObject(item) && pythonEquals(at(item, "id"), identifier));
+  return array(value, "extensions").filter((item): item is JsonObject => isObject(item) && pythonEquals(at(item, "id"), identifier) && interpretedExtension(value, item));
 }
 
 /** A decision request of a record and the response to it, if the record has one. */
@@ -513,7 +530,7 @@ export function oneWayResponseProblems(
     const prefix = `/${responsePath.join("/")}/extensions`;
     const carried: Array<[number, JsonObject]> = [];
     array(response, "extensions").forEach((item, index) => {
-      if (isObject(item) && pythonEquals(at(item, "id"), DECISION_BASIS)) {
+      if (isObject(item) && pythonEquals(at(item, "id"), DECISION_BASIS) && interpretedExtension(response, item)) {
         carried.push([index, item]);
       }
     });
@@ -553,7 +570,7 @@ export function basisClassProblems(record: JsonObject, responsePath: readonly st
   }
   const prefix = `/${responsePath.join("/")}/extensions`;
   array(response, "extensions").forEach((item, index) => {
-    if (!isObject(item) || !pythonEquals(at(item, "id"), DECISION_BASIS)) {
+    if (!isObject(item) || !pythonEquals(at(item, "id"), DECISION_BASIS) || !interpretedExtension(response, item)) {
       return;
     }
     array(at(item, "value"), "inputs").forEach((entry, position) => {
@@ -573,7 +590,7 @@ export function basisClassProblems(record: JsonObject, responsePath: readonly st
 function singleBasis(record: JsonObject, name: string): [number, JsonObject] | null {
   const found: Array<[number, JsonValue]> = [];
   array(obj(record, name), "extensions").forEach((item, index) => {
-    if (isObject(item) && pythonEquals(at(item, "id"), DECISION_BASIS)) {
+    if (isObject(item) && pythonEquals(at(item, "id"), DECISION_BASIS) && interpretedExtension(obj(record, name), item)) {
       found.push([index, at(item, "value")]);
     }
   });
@@ -734,7 +751,7 @@ export function basisProblems(record: JsonObject, marker: string): Problem[] {
   const extensions = array(response, "extensions");
   const positions: number[] = [];
   extensions.forEach((item, index) => {
-    if (isObject(item) && at(item, "id") === DECISION_BASIS) {
+    if (isObject(item) && at(item, "id") === DECISION_BASIS && interpretedExtension(response, item)) {
       positions.push(index);
     }
   });
@@ -794,7 +811,7 @@ export function basisProblems(record: JsonObject, marker: string): Problem[] {
       }
     }
     const recorded: JsonObject = isObject(entry) ? entry : {};
-    const keys = [...new Set([...Object.keys(own), ...Object.keys(recorded)])].sort();
+    const keys = [...new Set([...Object.keys(own), ...Object.keys(recorded)])].sort(compareCodePoints);
     for (const key of keys) {
       const inOwn = Object.prototype.hasOwnProperty.call(own, key);
       const inRecorded = Object.prototype.hasOwnProperty.call(recorded, key);

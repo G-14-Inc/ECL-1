@@ -58,7 +58,7 @@ bundle of at most 1 MiB. The options:
 | `--now RFC3339` | the evaluation time at which current trust is checked; the clock when omitted |
 | `--require-trusted-time` | require a valid countersignature covering every signature entry (IE1-035) |
 | `--register FILE` | check each decision basis against this Consequential Action Register (DCMP2-053) |
-| `--accept-current-trust-failure` | report `verified`, with the acceptance stated, when a trust dependency is not acceptable now and the evidence remains historically valid |
+| `--accept-current-trust-failure` | accept a current failure of the bundle's trust dependencies when the evidence remains historically valid; does not waive offline-package expiry |
 | `--json` | the report as canonical JSON |
 
 ### Exit status
@@ -107,6 +107,9 @@ the exact signature entries in `covered.signatures`; historical validity and
 current acceptability are reported for every trust dependency, time authorities
 included. Current compromise knowledge matches key identifiers or public keys,
 and accepting a current trust failure cannot restore historically invalid evidence.
+The acceptance flag records the bundle trust waiver even when an enclosing
+offline package has expired: that package remains `current-trust-failed`
+(exit 4), with `accepted_current_trust_failure=true` for the inner bundle.
 An object or attested time later than `--now` is invalid; no as-of assessment is
 provided. Each report states its evaluation time, dependencies, checks and covered
 objects for every established scope item. `unresolved_predecessor_ids` is present

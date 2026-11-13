@@ -1,0 +1,796 @@
+{
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "contract": "MG1-010 explicit consistency strengthening: exact first-cause error reason in a retained non-release terminal; preserve EBMP2-051 states and recovery uncertainty.",
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "cases": [
+    {
+      "id": "earlier-tool-change-denied-matching",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-matching.json",
+      "sha256": "f326033c90a2dee3d8f39c7792a24cc13138adf61b7653f5e3a45ba06c28ea35",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "baseline_sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+      }
+    },
+    {
+      "id": "earlier-tool-change-denied-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-missing.json",
+      "sha256": "f37d1a546a6b5e534254c43e3dff36230eaa7ce54a3ac63d746a778af6a38fb4",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "baseline_sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+      }
+    },
+    {
+      "id": "earlier-tool-change-denied-different",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-different.json",
+      "sha256": "4c2344e0f913b6196105bb3465b81a07cd9974ff50d29ba9fb273b439ba07f7c",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "baseline_sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+      }
+    },
+    {
+      "id": "earlier-server-change-denied-matching",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-denied-matching.json",
+      "sha256": "2483368dddfda69f31cd9ad3408f2c064b0af6bf4b9ebfaeb10d9c05ef4f6ce3",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "baseline_sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+      }
+    },
+    {
+      "id": "earlier-server-change-denied-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-denied-missing.json",
+      "sha256": "483cde9930b0894ba81a55578c0e81f69b987ac87fbdfdfdc7806fb2fb787f8c",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "baseline_sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+      }
+    },
+    {
+      "id": "earlier-server-change-denied-different",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-denied-different.json",
+      "sha256": "dfc68aec36afcb7a22deb5ae28ad97a16dd9becc3551d2c1252a17fa0e1b0a25",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+        "baseline_sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9"
+      }
+    },
+    {
+      "id": "earlier-tool-change-held-matching",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-matching.json",
+      "sha256": "62db5927279ce667df06e4b6f01fbc33e5cdae938550a51e8c2dd1c590b04511",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "baseline_sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+      }
+    },
+    {
+      "id": "earlier-tool-change-held-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-missing.json",
+      "sha256": "21f2ec649beb06d96b9b7cb2eb9a3d823ee16d5b4591d241b896172ff9ec9545",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "baseline_sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+      }
+    },
+    {
+      "id": "earlier-tool-change-held-different",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-different.json",
+      "sha256": "58d5b32c022654ba6fb63cb862ebda30d228e63996a5e2df3da5570d6bfee4dd",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "baseline_sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+      }
+    },
+    {
+      "id": "earlier-server-change-held-matching",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-held-matching.json",
+      "sha256": "28625b459b4f43fcb89519754685b750b25a26a8047005b77ed90d82d66e5ee7",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "baseline_sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+      }
+    },
+    {
+      "id": "earlier-server-change-held-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-held-missing.json",
+      "sha256": "29bfb67b9f1c6f71fbec3d2d25dbe18ccaede8256c403b69e1537d010614d526",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "baseline_sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+      }
+    },
+    {
+      "id": "earlier-server-change-held-different",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-held-different.json",
+      "sha256": "e6d9ddc620fc8c68651d6b8878de95d5496678078fc4607de7848593a2bf2586",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+        "baseline_sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4"
+      }
+    },
+    {
+      "id": "earlier-tool-change-challenged-matching",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-matching.json",
+      "sha256": "d94b589e0a0ef13cb73f946209a0ffaa7aefc6784b47173da77ad2c7961ecb9e",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "baseline_sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+      }
+    },
+    {
+      "id": "earlier-tool-change-challenged-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-missing.json",
+      "sha256": "c657d61ba86266752b527f2785c4715e6311a82dce4285863c14e4db08c4fd0d",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "baseline_sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+      }
+    },
+    {
+      "id": "earlier-tool-change-challenged-different",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-different.json",
+      "sha256": "bf27ff8bcef0176daeb5ad97211bbeb32e31813d163fae613f0d9d4a05008d94",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "baseline_sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+      }
+    },
+    {
+      "id": "earlier-server-change-challenged-matching",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-challenged-matching.json",
+      "sha256": "df9ee3493f0aa638cc13c3386ca217d1794149e09254fa26eae4023524b0af89",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "baseline_sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+      }
+    },
+    {
+      "id": "earlier-server-change-challenged-missing",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-challenged-missing.json",
+      "sha256": "242684f10df92ede1d89b34787669cba04d1b2771eb3f35a8481cc1372f0dea8",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "baseline_sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+      }
+    },
+    {
+      "id": "earlier-server-change-challenged-different",
+      "path": "tests/fixtures/mcp-terminal-reasons/earlier-server-change-challenged-different.json",
+      "sha256": "2273f5566db66a546d50ff498796d50a6e46e5f248dcf0a70e1015eb3308a33a",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "Ordinary refusal: the earlier mapping change supplies the terminal reason; the retained decision still governs its non-release state.",
+      "source": {
+        "prepared_input": "inputs/CASE-INPUTS.json",
+        "prepared_input_sha256": "27c3689f27d3c5c23efc3083f8e1a7809fed3e2d9dd3cc1e790edfff71319519",
+        "baseline_path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+        "baseline_sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4"
+      }
+    },
+    {
+      "id": "recorded-no-return-denied-matching",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-denied-matching.json",
+      "sha256": "4b1f036e5e28dd8e75a0534c94f103caad57452b2339c4061d41c2302e2c1f2d",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-matching.json",
+        "sha256": "f326033c90a2dee3d8f39c7792a24cc13138adf61b7653f5e3a45ba06c28ea35",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-denied-matching",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-denied-matching.json",
+      "sha256": "1a95c760d7c0fe336e45e2840dafc600b4444a6f3c9fdd556463fd2c9454cc68",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-matching.json",
+        "sha256": "f326033c90a2dee3d8f39c7792a24cc13138adf61b7653f5e3a45ba06c28ea35",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+        "recovery_template_sha256": "fae6f9b6116c7a9738c502e018e82d0177717a287ad35c39767c9b777405f413",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "recorded-no-return-denied-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-denied-missing.json",
+      "sha256": "8c6c270d695fa33feb07a1113330d070a923caca989f6fc39ff23c09b852f2f8",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-missing.json",
+        "sha256": "f37d1a546a6b5e534254c43e3dff36230eaa7ce54a3ac63d746a778af6a38fb4",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-denied-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-denied-missing.json",
+      "sha256": "1f36a9ece436f72f7e19768a115573b5bfa0a809577634398f451a7aac66956f",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-missing.json",
+        "sha256": "f37d1a546a6b5e534254c43e3dff36230eaa7ce54a3ac63d746a778af6a38fb4",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+        "recovery_template_sha256": "fae6f9b6116c7a9738c502e018e82d0177717a287ad35c39767c9b777405f413",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "settled-no-return-denied-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-no-return-denied-missing.json",
+      "sha256": "1096d03c92b4813f4a0a27f665e1af0011664a1b3b49314295a7b271577da659",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "Without a retained return or original terminal, recovery does not invent an exact original refusal cause; the retained verified non-admit still governs state.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-missing.json",
+        "sha256": "f37d1a546a6b5e534254c43e3dff36230eaa7ce54a3ac63d746a778af6a38fb4",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+        "recovery_template_sha256": "fae6f9b6116c7a9738c502e018e82d0177717a287ad35c39767c9b777405f413",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response. Then remove returned and returned_at; the original terminal cause is not retained."
+      }
+    },
+    {
+      "id": "recorded-no-return-denied-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-denied-different.json",
+      "sha256": "1837b8aebddbe737d0d884b7fa55038ff7cce6f5a024dfcd6f078eb86413275e",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-different.json",
+        "sha256": "4c2344e0f913b6196105bb3465b81a07cd9974ff50d29ba9fb273b439ba07f7c",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-denied-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-denied-different.json",
+      "sha256": "7d5a9e7e75fee0db91231be654c27a5eb9cbeabc493a88d5b864c996f9c86109",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "denied",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-different.json",
+        "sha256": "4c2344e0f913b6196105bb3465b81a07cd9974ff50d29ba9fb273b439ba07f7c",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+        "recovery_template_sha256": "fae6f9b6116c7a9738c502e018e82d0177717a287ad35c39767c9b777405f413",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "settled-no-return-denied-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-no-return-denied-different.json",
+      "sha256": "61c73db6d445e8c2b2e3e99762a6b57570f374aa2396cb24726f9e4582326f48",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "Without a retained return or original terminal, recovery does not invent an exact original refusal cause; the retained verified non-admit still governs state.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-denied-different.json",
+        "sha256": "4c2344e0f913b6196105bb3465b81a07cd9974ff50d29ba9fb273b439ba07f7c",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+        "recovery_template_sha256": "fae6f9b6116c7a9738c502e018e82d0177717a287ad35c39767c9b777405f413",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response. Then remove returned and returned_at; the original terminal cause is not retained."
+      }
+    },
+    {
+      "id": "decision-outcome-denied-control",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
+      "sha256": "be77bb657c57771ae16548c797acd34e3086eee673197771286efa8a9234d8d9",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "When the first cause is the verified decision outcome, no exact terminal error-code reason is imposed."
+    },
+    {
+      "id": "recorded-no-return-held-matching",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-held-matching.json",
+      "sha256": "6c6c96103a16f5a311aa734e4bd17fe7697b2da4c4d31988a75622085ee13932",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-matching.json",
+        "sha256": "62db5927279ce667df06e4b6f01fbc33e5cdae938550a51e8c2dd1c590b04511",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-held-matching",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-held-matching.json",
+      "sha256": "a5081d3051b1a96384a6d422d82a0f89d22277acc72dfa986f538519cb839181",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-matching.json",
+        "sha256": "62db5927279ce667df06e4b6f01fbc33e5cdae938550a51e8c2dd1c590b04511",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+        "recovery_template_sha256": "7d99d33ff61aa0d498a048f2e15ccb5607f1ed6ee8a723c25160014f0782e089",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "recorded-no-return-held-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-held-missing.json",
+      "sha256": "f0ec6aab1ccd653cdd475d230828cf9e0967b89d5dd1d68aa67df5a71e5b4a51",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-missing.json",
+        "sha256": "21f2ec649beb06d96b9b7cb2eb9a3d823ee16d5b4591d241b896172ff9ec9545",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-held-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-held-missing.json",
+      "sha256": "3b1b9e71968f8631a0b1e000eaef53ae03dfd563781540b50bc6fcf2573eea24",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-missing.json",
+        "sha256": "21f2ec649beb06d96b9b7cb2eb9a3d823ee16d5b4591d241b896172ff9ec9545",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+        "recovery_template_sha256": "7d99d33ff61aa0d498a048f2e15ccb5607f1ed6ee8a723c25160014f0782e089",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "settled-no-return-held-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-no-return-held-missing.json",
+      "sha256": "2a48c7d829fe239e4998f9c79f3a7a9322112784165198b54ee4c2deee8b940f",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "Without a retained return or original terminal, recovery does not invent an exact original refusal cause; the retained verified non-admit still governs state.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-missing.json",
+        "sha256": "21f2ec649beb06d96b9b7cb2eb9a3d823ee16d5b4591d241b896172ff9ec9545",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+        "recovery_template_sha256": "7d99d33ff61aa0d498a048f2e15ccb5607f1ed6ee8a723c25160014f0782e089",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response. Then remove returned and returned_at; the original terminal cause is not retained."
+      }
+    },
+    {
+      "id": "recorded-no-return-held-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-held-different.json",
+      "sha256": "b99323abbc62792e9d227b2a2f594594b954e49e1fa19d5ea7d486c17e6d3198",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-different.json",
+        "sha256": "58d5b32c022654ba6fb63cb862ebda30d228e63996a5e2df3da5570d6bfee4dd",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-held-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-held-different.json",
+      "sha256": "93b826561efb0b2365efa6f60be97945c9aef91c015eb9558652e59fb6cd36e6",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "held",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-different.json",
+        "sha256": "58d5b32c022654ba6fb63cb862ebda30d228e63996a5e2df3da5570d6bfee4dd",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+        "recovery_template_sha256": "7d99d33ff61aa0d498a048f2e15ccb5607f1ed6ee8a723c25160014f0782e089",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "settled-no-return-held-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-no-return-held-different.json",
+      "sha256": "28739021d3011966e5c7ea85311e9404a0a2a83a5d822ed145c2dafff998e2f1",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "Without a retained return or original terminal, recovery does not invent an exact original refusal cause; the retained verified non-admit still governs state.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-held-different.json",
+        "sha256": "58d5b32c022654ba6fb63cb862ebda30d228e63996a5e2df3da5570d6bfee4dd",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+        "recovery_template_sha256": "7d99d33ff61aa0d498a048f2e15ccb5607f1ed6ee8a723c25160014f0782e089",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response. Then remove returned and returned_at; the original terminal cause is not retained."
+      }
+    },
+    {
+      "id": "decision-outcome-held-control",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-held-refused.json",
+      "sha256": "1b0d2607647a3b9d028ea9e91f72892559c701758af74ac3d0eed2091dec2df4",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "held",
+      "purpose": "When the first cause is the verified decision outcome, no exact terminal error-code reason is imposed."
+    },
+    {
+      "id": "recorded-no-return-challenged-matching",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-challenged-matching.json",
+      "sha256": "aa0a8c62f03bb4ccb27c243ba63af326abd7b7c2e1b01b5384b9eee107590a0b",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-matching.json",
+        "sha256": "d94b589e0a0ef13cb73f946209a0ffaa7aefc6784b47173da77ad2c7961ecb9e",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-challenged-matching",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-challenged-matching.json",
+      "sha256": "17ccb398a2f5a02dc156ce47b9abfbbdb6fd8ea208d38ddcbbc84cc4773cd80d",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-matching.json",
+        "sha256": "d94b589e0a0ef13cb73f946209a0ffaa7aefc6784b47173da77ad2c7961ecb9e",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+        "recovery_template_sha256": "5c47078cb842541b8198197307526136d707e887035bca6877d454d415f2e348",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "recorded-no-return-challenged-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-challenged-missing.json",
+      "sha256": "ee195bc3a1df534117b3f863696a933090fcf0d59e26684fd596c64fdd60f2a3",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-missing.json",
+        "sha256": "c657d61ba86266752b527f2785c4715e6311a82dce4285863c14e4db08c4fd0d",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-challenged-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-challenged-missing.json",
+      "sha256": "4b8b4c1e1c64e2132fe736b92cb4de2158349cabf548125a96532bd1a9d49d4b",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-missing.json",
+        "sha256": "c657d61ba86266752b527f2785c4715e6311a82dce4285863c14e4db08c4fd0d",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+        "recovery_template_sha256": "5c47078cb842541b8198197307526136d707e887035bca6877d454d415f2e348",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "settled-no-return-challenged-missing",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-no-return-challenged-missing.json",
+      "sha256": "e7a0c8240b9dddca1a4dae9efd04dc3b3cc937971d9afc05a22f108d2fea740c",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "Without a retained return or original terminal, recovery does not invent an exact original refusal cause; the retained verified non-admit still governs state.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-missing.json",
+        "sha256": "c657d61ba86266752b527f2785c4715e6311a82dce4285863c14e4db08c4fd0d",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+        "recovery_template_sha256": "5c47078cb842541b8198197307526136d707e887035bca6877d454d415f2e348",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response. Then remove returned and returned_at; the original terminal cause is not retained."
+      }
+    },
+    {
+      "id": "recorded-no-return-challenged-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/recorded-no-return-challenged-different.json",
+      "sha256": "9166fe7dec4948622ffcfa3a8c999ac238b4c279b6be7a10364e75d49a141a24",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "Known earlier cause in retained outcome-recorded evidence remains checkable without a returned response.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-different.json",
+        "sha256": "bf27ff8bcef0176daeb5ad97211bbeb32e31813d163fae613f0d9d4a05008d94",
+        "mutation": "Add outcome-recorded recovery; remove returned and returned_at only."
+      }
+    },
+    {
+      "id": "settled-with-return-challenged-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-with-return-challenged-different.json",
+      "sha256": "509b7943c437fbca458299cd8f6d26dc1684d63467fc7aa07b21a5bb6a6249bd",
+      "accepted": false,
+      "schema_valid": true,
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "expected_state": "challenged",
+      "purpose": "A newly settled recovery retains a returned refusal that identifies the earlier cause.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-different.json",
+        "sha256": "bf27ff8bcef0176daeb5ad97211bbeb32e31813d163fae613f0d9d4a05008d94",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+        "recovery_template_sha256": "5c47078cb842541b8198197307526136d707e887035bca6877d454d415f2e348",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response."
+      }
+    },
+    {
+      "id": "settled-no-return-challenged-different",
+      "path": "tests/fixtures/mcp-multicause-reasons/settled-no-return-challenged-different.json",
+      "sha256": "34fa928a05704e1d714651609a9b5d0a1e189c69f9624235041dbb11adb0a7d6",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "Without a retained return or original terminal, recovery does not invent an exact original refusal cause; the retained verified non-admit still governs state.",
+      "source": {
+        "path": "tests/fixtures/mcp-terminal-reasons/earlier-tool-change-challenged-different.json",
+        "sha256": "bf27ff8bcef0176daeb5ad97211bbeb32e31813d163fae613f0d9d4a05008d94",
+        "recovery_template": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+        "recovery_template_sha256": "5c47078cb842541b8198197307526136d707e887035bca6877d454d415f2e348",
+        "mutation": "Add not-released recovery and its terminal time and MCP binding; retain the recorded returned response. Then remove returned and returned_at; the original terminal cause is not retained."
+      }
+    },
+    {
+      "id": "decision-outcome-challenged-control",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-challenged-refused.json",
+      "sha256": "77a28f644afc4c9711d2b819f2f7d3bea4b918e33d52e03c016d9483ee7c07f4",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "challenged",
+      "purpose": "When the first cause is the verified decision outcome, no exact terminal error-code reason is imposed."
+    },
+    {
+      "id": "newly-recovered-cancelled-unknown-cause",
+      "path": "tests/fixtures/mcp-terminal-reasons/newly-recovered-cancelled-unknown-cause.json",
+      "sha256": "4d0a7c6e4add7580e20788baa325261a821ca3d9f8fd7048776723a5a493f68d",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "cancelled",
+      "purpose": "Retain the existing recovery or cancellation boundary unchanged."
+    },
+    {
+      "id": "recorded-journal-preempts-final-halt",
+      "path": "tests/fixtures/mcp-terminal-reasons/recorded-journal-preempts-final-halt.json",
+      "sha256": "7f83efb731eb061185f3b4c186319cbd8ee8a2629537f6f8cfac650eaeb31509",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "cancelled",
+      "purpose": "Retain the existing recovery or cancellation boundary unchanged."
+    },
+    {
+      "id": "recovered-unconsumed-control",
+      "path": "tests/fixtures/mcp-terminal-reasons/recovered-unconsumed-control.json",
+      "sha256": "6771fbd9b78679df7accb5d8921591c4df86f1b155f5722a9b201b4cf253bb23",
+      "accepted": true,
+      "schema_valid": true,
+      "expected_rules": [],
+      "expected_state": "denied",
+      "purpose": "Retain the existing recovery or cancellation boundary unchanged."
+    }
+  ]
+}

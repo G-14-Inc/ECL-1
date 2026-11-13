@@ -20,6 +20,8 @@
 package bindings
 
 import (
+	"fmt"
+
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/schema"
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/semantic"
@@ -122,7 +124,8 @@ func FindingsWithKeys(value any, exportKeys map[string]ExportKey) (out []Finding
 
 // EvaluateRecord is the conformance runner's binding stage for a parsed record and the schema
 // that the vector names: one schema finding when the value is not an object or fails that
-// schema, else the profile's findings, holding no export key.
+// schema, else the profile's findings, holding no export key. An unsupported schema
+// identifier is a caller configuration error.
 func EvaluateRecord(schemaID string, value any) ([]Finding, error) {
 	return EvaluateRecordWithKeys(schemaID, value, nil)
 }
@@ -130,6 +133,11 @@ func EvaluateRecord(schemaID string, value any) ([]Finding, error) {
 // EvaluateRecordWithKeys is EvaluateRecord with the OpenTelemetry export keys that the caller
 // holds.
 func EvaluateRecordWithKeys(schemaID string, value any, exportKeys map[string]ExportKey) ([]Finding, error) {
+	switch schemaID {
+	case AARMExchangeSchema, ACSExchangeSchema, MCPExchangeSchema, OTelExportSchema, OAuthPresentationSchema:
+	default:
+		return nil, fmt.Errorf("unsupported binding record schema: %s", schemaID)
+	}
 	if _, isObject := value.(map[string]any); !isObject {
 		return []Finding{{RuleID: schemaInvalid, Path: "/", Detail: "a binding record is a JSON object"}}, nil
 	}

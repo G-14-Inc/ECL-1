@@ -1,0 +1,22 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { test } from "node:test";
+import { SemanticValidator } from "../../src/semantic/rules.js";
+import { validateSafeStateProfile } from "../../src/semantic/safe-state.js";
+import { parseStrictJson } from "../../src/json/strict.js";
+import type { JsonObject } from "../../src/json/value.js";
+import { repoRoot } from "./helpers.js";
+const root=join(repoRoot(),"tests/fixtures/core-contract-regressions");
+const read=(name:string)=>parseStrictJson(readFileSync(join(root,name))) as JsonObject;
+const cases=read("manifest.json")["cases"] as JsonObject[];
+for(const row of cases) test("core contract: "+row["id"],()=>{
+ const value=read(row["file"] as string);
+ if(row["mutation"]==="fractional_parameter") (value["action"] as JsonObject)["parameters"]={number:1.5};
+ const before=JSON.stringify(value);
+ const found=row["kind"]==="safe-state"?validateSafeStateProfile(value):new SemanticValidator().validate(value);
+ const rules=new Set(found.map(x=>x.ruleId));
+ for(const rule of row["required"] as string[]) assert(rules.has(rule),JSON.stringify(found));
+ for(const rule of row["absent"] as string[]) assert(!rules.has(rule),JSON.stringify(found));
+ assert.equal(JSON.stringify(value),before);
+});

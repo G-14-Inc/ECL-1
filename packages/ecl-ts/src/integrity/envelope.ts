@@ -16,7 +16,9 @@ import { equalBytes } from "../crypto/bytes.js";
 import { MAX_JSON_NODES, NODE_BUDGET_MESSAGE, parseStrictJson, StrictJsonError } from "../json/strict.js";
 import { get, isArray, isInteger, isObject, pythonEquals, pythonStr, schemaEquals, truthy } from "../json/value.js";
 import type { JsonObject, JsonValue } from "../json/value.js";
-import { InstantError, instantMicroseconds } from "../time.js";
+import { InstantError, instantNanoseconds } from "../time.js";
+import { SemanticValidator } from "../semantic/rules.js";
+import { rulePrecedence } from "../registry/registries.js";
 
 export const INTEGRITY_INVALID = "ecl.error.integrity-invalid.v1";
 export const SIGNATURE_POLICY_INVALID = "ecl.error.signature-policy-invalid.v1";
@@ -247,9 +249,9 @@ function decodeSignature(value: JsonValue | undefined): Uint8Array {
   return decoded;
 }
 
-function micros(value: string): bigint {
+function nanoseconds(value: string): bigint {
   try {
-    return instantMicroseconds(value);
+    return instantNanoseconds(value);
   } catch (error) {
     if (error instanceof InstantError) {
       throw new IntegrityError(`invalid UTC timestamp: ${JSON.stringify(value)}`);
@@ -286,7 +288,7 @@ function validateContext(policy: JsonObject, context: VerificationContext): bigi
   if (!pythonEquals(get(policy, "revocation_policy"), context.revocationPolicy)) {
     throw policyError("verification context does not match signed revocation policy");
   }
-  return micros(context.evaluatedAt);
+  return nanoseconds(context.evaluatedAt);
 }
 
 /**
@@ -305,21 +307,22 @@ function keyIneligibility(key: VerificationKey, payloadType: string, context: Ve
     return "unacceptable";
   }
   for (const revocation of context.revocations) {
-    if (revocation.keyId === key.keyId && evaluatedAt >= micros(revocation.effectiveAt)) {
+    if (revocation.keyId === key.keyId && evaluatedAt >= nanoseconds(revocation.effectiveAt)) {
       return "revoked";
     }
   }
-  if (key.validFrom !== undefined && evaluatedAt < micros(key.validFrom)) {
+  if (key.validFrom !== undefined && evaluatedAt < nanoseconds(key.validFrom)) {
     return "expired";
   }
-  if (key.validUntil !== undefined && evaluatedAt >= micros(key.validUntil)) {
+  if (key.validUntil !== undefined && evaluatedAt >= nanoseconds(key.validUntil)) {
     return "expired";
   }
   return undefined;
 }
 
 function policyStringSet(policy: JsonObject, name: string): Set<string> {
-  const raw = get(policy, name);
+  const present = get(policy, name);
+  const raw = present === undefined && ["eligible_key_ids", "required_key_ids"].includes(name) ? [] : present;
   if (!isArray(raw) || raw.some((entry) => typeof entry !== "string" || entry === "")) {
     throw policyError(`${name} must be an array of identifiers`);
   }
@@ -338,13 +341,19 @@ function policyStringSet(policy: JsonObject, name: string): Set<string> {
  * invalid for a policy that cannot hold, and for signatures that do not meet the policy the code
  * of the earliest reason a signature has (signature-policy-invalid, revoked, expired), or
  * threshold-not-met. Step 1, the envelope schema, is the caller's.
+ * A hand-built keyring and context that admit a recognized suite without an implemented
+ * provider can instead raise UnsupportedSuiteError from verifySignature. That library
+ * capability exception has no registered evidence code; ordinary trust-policy loading rejects
+ * unsupported providers before verification. This API does not implement ML-DSA-65.
  *
  * `keyTimes`, when given, evaluates the key of each signature it names at its own instant instead
  * of the context's `evaluatedAt` (IE1-034: a signature that a trusted-time countersignature covers
  * is evaluated at its attested time, any other at the object's own time); step 7 then counts each
  * signature as evaluated at its own instant.
+ * A context provider is invoked only after resource, payload/media and policy
+ * preflight, so deriving the context from the payload preserves that order.
  */
-export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string, VerificationKey>, context: VerificationContext, keyTimes?: ReadonlyMap<string, string>): VerificationResult {
+export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string, VerificationKey>, contextInput: VerificationContext | ((payload: JsonValue) => VerificationContext), keyTimes?: ReadonlyMap<string, string>): VerificationResult {
   if (!isObject(envelope)) {
     throw new IntegrityError("integrity envelope must be an object");
   }
@@ -389,6 +398,13 @@ export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string,
   if (!isObject(policy)) {
     throw new IntegrityError("signed payload lacks integrity_policy");
   }
+  const precedence = rulePrecedence();
+  const outerFindings = new SemanticValidator().extensionFindings(envelope).sort((left, right) =>
+    (precedence.get(left.ruleId) ?? -1) - (precedence.get(right.ruleId) ?? -1));
+  if (outerFindings.length > 0) {
+    const finding = outerFindings[0]!;
+    throw new IntegrityError(finding.message, finding.ruleId);
+  }
   // Step 4: the payload-bound policy, its lists' declared limit first.
   for (const name of ["accepted_suites", "eligible_key_ids", "required_key_ids"]) {
     const raw = get(policy, name);
@@ -413,6 +429,14 @@ export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string,
   if (requiredKeys.size > 0 && threshold < requiredKeys.size) {
     throw policyError("threshold cannot be lower than required key count");
   }
+  // Resolve payload-derived caller context only after steps 2–4 have checked it.
+  let context: VerificationContext;
+  try {
+    context = typeof contextInput === "function" ? contextInput(payload) : contextInput;
+    if (context === null || typeof context !== "object") throw new Error("no verification context");
+  } catch (error) {
+    throw policyError(`verification context provider refused the payload: ${error instanceof Error ? error.message : String(error)}`);
+  }
   const evaluatedAt = validateContext(policy, context);
   const role = rolePurpose(payload);
   const allowed = new Set(context.allowedSuites);
@@ -427,11 +451,9 @@ export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string,
     if (!isObject(entry)) {
       throw new IntegrityError("integrity signature entry must be an object");
     }
-    const rawKeyId = get(entry, "key_id");
-    const rawSuiteId = get(entry, "suite_id");
-    const keyId = truthy(rawKeyId) ? pythonStr(rawKeyId) : "";
-    const suiteId = truthy(rawSuiteId) ? pythonStr(rawSuiteId) : "";
-    if (keyId === "" || suiteId === "") {
+    const keyId = get(entry, "key_id");
+    const suiteId = get(entry, "suite_id");
+    if (typeof keyId !== "string" || keyId === "" || typeof suiteId !== "string" || suiteId === "") {
       throw new IntegrityError("integrity signature identity is incomplete");
     }
     const identity = JSON.stringify([keyId, suiteId]);
@@ -449,6 +471,7 @@ export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string,
     // (a) an acceptable key for this suite, payload and policy.
     const key = keyring.get(keyId);
     if (
+      (protocol === "DCMP-2" && role === undefined) ||
       !acceptedSuites.has(suiteId) ||
       !allowed.has(suiteId) ||
       prohibited.has(suiteId) ||
@@ -462,7 +485,7 @@ export function verifyEnvelope(envelope: JsonValue, keyring: ReadonlyMap<string,
     }
     // (a) to (c): the key's trust policy, payload type, role, revocation and validity.
     const own = keyTimes?.get(keyId);
-    const reason = keyIneligibility(key, payloadType, context, own === undefined ? evaluatedAt : micros(own), role);
+    const reason = keyIneligibility(key, payloadType, context, own === undefined ? evaluatedAt : nanoseconds(own), role);
     if (reason !== undefined) {
       reasons.add(reason);
       continue;

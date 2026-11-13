@@ -339,8 +339,24 @@ func TestCallerArgumentsAreCheckedBeforeThePackageIsRead(t *testing.T) {
 		if _, err := Verify(data, trusted, Options{Options: evidence.Options{Now: now, ResponseClockSkewSeconds: -1}}); !errors.Is(err, evidence.ErrNegativeSkew) {
 			t.Errorf("skew: %v", err)
 		}
+		if _, err := Verify(data, trusted, Options{Options: evidence.Options{Now: now, ResponseClockSkewSeconds: 1}}); !errors.Is(err, evidence.ErrReferenceSkew) {
+			t.Errorf("positive reference skew: %v", err)
+		}
 		if _, err := Verify(data, trusted, Options{Options: evidence.Options{Now: now}, Limits: &zero}); !errors.Is(err, ErrInvalidLimits) {
 			t.Errorf("limits: %v", err)
+		}
+	}
+}
+
+func TestBytesInterfaceClassifiesNonzeroReferenceSkewAsCallerInput(t *testing.T) {
+	policyBytes := repository(t, suite+"/trust-policy.json")
+	for _, data := range [][]byte{valid(t), []byte("not an archive")} {
+		for _, skew := range []int64{-1, 1} {
+			report, trusted, err := VerifyBytes(data, policyBytes, nil, Options{Options: evidence.Options{Now: now, ResponseClockSkewSeconds: skew}})
+			var input *evidence.InputError
+			if report != nil || trusted != nil || !errors.As(err, &input) {
+				t.Errorf("skew %d: report=%v policy=%v error=%v", skew, report, trusted, err)
+			}
 		}
 	}
 }

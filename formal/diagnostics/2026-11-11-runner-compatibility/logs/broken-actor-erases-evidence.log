@@ -1,0 +1,327 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 50 and seed -4176148899107844598 with 1 worker on 32 cores with 1333MB heap and 64MB offheap memory [pid: 1174] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/ecl-1/work/ecl-1-validation-20261110-1/probes/formal-comment-provenance-001/source/formal/tla/MC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-validation-20261110-1/probes/formal-comment-provenance-001/source/formal/tla/ECLCore.tla
+Parsing file /tmp/ecl-formal-z5y1utvq/TLC.tla
+Parsing file /tmp/ecl-formal-z5y1utvq/Integers.tla
+Parsing file /tmp/ecl-formal-z5y1utvq/FiniteSets.tla
+Parsing file /tmp/ecl-formal-z5y1utvq/Sequences.tla
+Parsing file /tmp/ecl-formal-z5y1utvq/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Starting... (2026-11-11 04:19:20)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-11 04:19:20.
+Error: Action property LogAppendOnly is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] )
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] @@
+  e2 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 0
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 2: <Submit line 270, col 5 to line 278, col 278 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] )
+/\ submitted = {[id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1]}
+/\ issued = {}
+/\ pending = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    deadline |-> 1 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] @@
+  e2 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 0
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 3: <Next line 649, col 8 to line 649, col 77 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] )
+/\ submitted = {[id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1]}
+/\ issued = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    until |-> 2,
+    epoch |-> 0,
+    from |-> 0,
+    aud |-> e1 ] }
+/\ pending = {}
+/\ decisions = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    outcome |-> "admit",
+    at |-> 0,
+    epoch |-> 0 ] }
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] @@
+  e2 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 0
+/\ liftLog = <<>>
+/\ effects = {}
+
+State 4: <Next line 655, col 8 to line 655, col 70 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<[n |-> 0, kind |-> "effect"]>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    until |-> 2,
+    epoch |-> 0,
+    from |-> 0,
+    aud |-> e1 ] }
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] )
+/\ submitted = {[id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1]}
+/\ issued = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    until |-> 2,
+    epoch |-> 0,
+    from |-> 0,
+    aud |-> e1 ] }
+/\ pending = {}
+/\ decisions = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    outcome |-> "admit",
+    at |-> 0,
+    epoch |-> 0 ] }
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] @@
+  e2 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 0
+/\ liftLog = <<>>
+/\ effects = { [ at |-> 0,
+    up |-> TRUE,
+    auth |->
+        [ req |->
+              [ id |-> r1,
+                action |-> [target |-> t1, params |-> p1],
+                aud |-> e1 ],
+          until |-> 2,
+          epoch |-> 0,
+          from |-> 0,
+          aud |-> e1 ],
+    ep |-> e1,
+    upSince |-> 0,
+    downSince |-> -1,
+    n |-> 0,
+    scope |-> [id |-> r1, action |-> [target |-> t1, params |-> p1]],
+    synced |-> 0 ] }
+
+State 5: <EraseEvidence line 318, col 5 to line 323, col 70 of module ECLCore>
+/\ approvals = {}
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ rejected = {}
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    until |-> 2,
+    epoch |-> 0,
+    from |-> 0,
+    aud |-> e1 ] }
+/\ view = ( e1 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] @@
+  e2 :> [epoch |-> 0, synced |-> 0, revoked |-> {}, recovery |-> 0] )
+/\ submitted = {[id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1]}
+/\ issued = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    until |-> 2,
+    epoch |-> 0,
+    from |-> 0,
+    aud |-> e1 ] }
+/\ pending = {}
+/\ decisions = { [ req |-> [id |-> r1, action |-> [target |-> t1, params |-> p1], aud |-> e1],
+    outcome |-> "admit",
+    at |-> 0,
+    epoch |-> 0 ] }
+/\ halted = (e1 :> FALSE @@ e2 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ restriction = ( e1 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] @@
+  e2 :>
+      [ generation |-> 0,
+        active |-> FALSE,
+        proof |-> 0,
+        lifted |-> 0,
+        faultAt |-> -1 ] )
+/\ continuations = {}
+/\ closed = {}
+/\ held = {}
+/\ revokedApprovals = {}
+/\ outages = 0
+/\ liftLog = <<>>
+/\ effects = { [ at |-> 0,
+    up |-> TRUE,
+    auth |->
+        [ req |->
+              [ id |-> r1,
+                action |-> [target |-> t1, params |-> p1],
+                aud |-> e1 ],
+          until |-> 2,
+          epoch |-> 0,
+          from |-> 0,
+          aud |-> e1 ],
+    ep |-> e1,
+    upSince |-> 0,
+    downSince |-> -1,
+    n |-> 0,
+    scope |-> [id |-> r1, action |-> [target |-> t1, params |-> p1]],
+    synced |-> 0 ] }
+
+3509 states generated, 1405 distinct states found, 1149 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 6 (minimum is 1, the maximum 19 and the 95th percentile is 13).
+Finished in 00s at (2026-11-11 04:19:20)

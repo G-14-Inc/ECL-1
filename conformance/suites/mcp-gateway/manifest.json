@@ -68,7 +68,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward on an admit whose decision basis rests on a judgment input alone, recorded as an answered decision"
       },
@@ -90,7 +90,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "record a refusal after the use was consumed as expired before release"
       },
@@ -114,7 +114,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "declare a budget debit of -7 in the decision request, with the admit bound to that request"
       },
@@ -123,8 +123,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-forward-requires-admit.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-forward-requires-admit.v1"
+      ],
       "id": "mcp-invalid-duplicated-obligation-forwarded",
       "negates": [
         "MG1-014"
@@ -136,7 +138,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-duplicated-obligation-refused.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "hold the admit that names the approval obligation twice as answered, and forward on it with a discharge of the approval"
       },
@@ -182,7 +184,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "decide on and forward a call held in encoded form whose jsonrpc is 1.0"
       },
@@ -230,7 +232,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "decide on a call with the id null, held in encoded form for a fractional _meta member, and forward it without an id"
       },
@@ -322,7 +324,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "Remove the terminal from a non-forwarded attempt whose prepared or released event records consumption."
       },
@@ -344,7 +346,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward on an answered admit that carries no decision basis"
       },
@@ -366,7 +368,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward at the end of the authorization's window"
       },
@@ -388,7 +390,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "discharge the witness and not the approval obligation"
       },
@@ -410,7 +412,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "record the time of the first check as the time of the forward"
       },
@@ -432,7 +434,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward the call with another repository than the admit binds"
       },
@@ -455,7 +457,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "decide and forward a call with the id 1, whose _meta holds 0.5, so that the record holds it in encoded form, and forward it with the id true, which the record schema refuses in either form"
       },
@@ -477,7 +479,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "decide a call with the id 1 and forward it with the id \"1\""
       },
@@ -499,7 +501,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward on an admit with a witness and an approval obligation, with a release event that records no discharge"
       },
@@ -523,7 +525,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A forwarded terminal names the correct authority URI but changes its digest."
       },
@@ -545,7 +547,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward a second time under a single-use authorization"
       },
@@ -567,7 +569,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward the call with a tasks-extension task member and a _meta member that the call did not carry and the admit does not bind"
       },
@@ -594,7 +596,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-unmapped-tool-refused.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward a call to a tool that has no mapping, with no decision"
       },
@@ -616,7 +618,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward to a tool whose description changed after review"
       },
@@ -643,7 +645,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-decision-unavailable-refused.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward the call and return the server's result while the decision service is unavailable"
       },
@@ -667,7 +669,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "release 200 milliseconds before the window's end under a release guard of 250"
       },
@@ -691,7 +693,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-denied-refused.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward the call that the decision denied"
       },
@@ -713,7 +715,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-obligations-discharged.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "discharge the witness obligation but not the witness result that the admit defers"
       },
@@ -735,7 +737,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-input-required-unknown.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "record a request for input as a succeeded action"
       },
@@ -759,7 +761,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A live cancelled terminal with foreign-authority."
       },
@@ -768,8 +770,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-live-cancelled-no-residual",
       "negates": [
         "MG1-010",
@@ -783,7 +787,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A non-forwarded terminal violates its no-effects or cancellation residual-state requirement."
       },
@@ -807,7 +811,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A non-forwarded terminal violates its no-effects or cancellation residual-state requirement."
       },
@@ -831,9 +835,9 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
-        "mutation": "A live cancelled terminal with without-authority."
+        "mutation": "A live cancelled terminal omits its authority reference."
       },
       "stage": "binding"
     },
@@ -855,7 +859,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A live cancelled terminal with wrong-authority-digest."
       },
@@ -879,7 +883,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A live cancelled terminal with wrong-decision-digest."
       },
@@ -977,7 +981,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "leave out the response returned to the governed AI system from a record that is not a recovery"
       },
@@ -1001,7 +1005,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-final-check-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A recorded cancellation still needs its authority reference."
       },
@@ -1034,8 +1038,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-recorded-denied-wrong-state",
       "negates": [
         "MG1-010",
@@ -1097,7 +1103,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "Unconsumed recovered admit with names-authority."
       },
@@ -1121,9 +1127,9 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
-        "mutation": "Unconsumed recovered admit with with-prepared."
+        "mutation": "An unconsumed recovered admit incorrectly retains a prepared event."
       },
       "stage": "binding"
     },
@@ -1131,7 +1137,9 @@
       "covers": [],
       "expected": "fail",
       "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_secondary_ids": [
+        "ecl.error.semantic-invalid.v1"
+      ],
       "id": "mcp-invalid-recovered-admit-denied-without-reason",
       "negates": [
         "MG1-010",
@@ -1145,9 +1153,9 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
-        "mutation": "Unconsumed recovered admit with without-reason."
+        "mutation": "An unconsumed recovered admit omits the required refusal reason."
       },
       "stage": "binding"
     },
@@ -1169,7 +1177,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "Unconsumed recovered admit with wrong-reason."
       },
@@ -1193,7 +1201,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A recovered cancelled terminal with foreign-authority."
       },
@@ -1217,9 +1225,9 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
-        "mutation": "A recovered cancelled terminal with without-authority."
+        "mutation": "A recovered cancelled terminal omits its authority reference."
       },
       "stage": "binding"
     },
@@ -1241,7 +1249,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A recovered cancelled terminal with wrong-authority-digest."
       },
@@ -1265,7 +1273,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "A recovered cancelled terminal with wrong-decision-digest."
       },
@@ -1274,8 +1282,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-recovered-challenged-as-cancelled",
       "negates": [
         "MG1-010",
@@ -1346,8 +1356,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-recovered-denied-as-cancelled",
       "negates": [
         "MG1-010",
@@ -1418,8 +1430,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-recovered-held-as-cancelled",
       "negates": [
         "MG1-010",
@@ -1503,7 +1517,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-outcome-unknown.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "record a released request whose outcome the journal does not hold as succeeded"
       },
@@ -1512,8 +1526,11 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.terminal-execution-state-consistent.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-recovered-unverified-as-cancelled",
       "negates": [
         "MG1-010",
@@ -1554,7 +1571,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-recovered-not-released.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "name a recovery classification that the record schema does not define"
       },
@@ -1631,7 +1648,9 @@
       "covers": [],
       "expected": "fail",
       "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
-      "expected_secondary_ids": [],
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-refusal-not-first-cause",
       "negates": [
         "MG1-006"
@@ -1759,7 +1778,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "declare a release guard of 100 milliseconds in the release event while the record names 250"
       },
@@ -1768,8 +1787,10 @@
     {
       "covers": [],
       "expected": "fail",
-      "expected_primary_id": "ecl.rule.mcp-result-bound.v1",
-      "expected_secondary_ids": [],
+      "expected_primary_id": "ecl.rule.mcp-refusal-defined.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-release-guard-exceeded-cancelled-without-terminal",
       "negates": [
         "MG1-010",
@@ -1785,7 +1806,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-release-guard-exceeded-cancelled.json",
-        "generator": "scripts/generate_mcp_recovery_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "Remove the terminal from a non-forwarded attempt whose prepared or released event records consumption."
       },
@@ -1809,7 +1830,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "record, as the gateway's own observation, that the write returned at or after the window's end (released_after_valid_until), the answer arriving later still"
       },
@@ -1835,7 +1856,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-release-order.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "leave the release guard out of the release event, which the event schema requires on execution_released"
       },
@@ -1857,7 +1878,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "ask for a decision on an action class the mapping does not declare"
       },
@@ -1883,7 +1904,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "receive and forward a call with a vendor _meta member that the decision request's params digest does not cover"
       },
@@ -1909,7 +1930,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "ask for a decision on fewer parameters than the call's arguments, and forward the call's arguments, which the admit does not bind"
       },
@@ -1919,7 +1940,9 @@
       "covers": [],
       "expected": "fail",
       "expected_primary_id": "ecl.rule.mcp-request-from-call.v1",
-      "expected_secondary_ids": [],
+      "expected_secondary_ids": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
       "id": "mcp-invalid-request-without-binding",
       "negates": [
         "MG1-004"
@@ -1931,7 +1954,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "ask for a decision without the critical mcp-binding extension"
       },
@@ -1981,7 +2004,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "bind another response's digest in the terminal evidence"
       },
@@ -2003,7 +2026,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "return to the governed AI system a response other than the one the evidence binds"
       },
@@ -2026,7 +2049,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-float-content-forwarded.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "return the server's result, held in encoded form, with its isError false written as 0"
       },
@@ -2048,7 +2071,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-server-error-recoded.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "return the server's own error with -31001, a code of the error table, unchanged"
       },
@@ -2121,7 +2144,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forward-failed-unknown.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "return a successful result for a forwarded call whose server never answered"
       },
@@ -2143,7 +2166,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "decide and forward a call, and its forward, that carry the same top-level member outside params, which neither the arguments nor params_digest binds"
       },
@@ -2168,7 +2191,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-unmapped-method-refused.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward a resources/read that the claim neither maps nor lists, with no decision"
       },
@@ -2192,7 +2215,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "forward on an admit whose decision basis rests on a verifiable input whose source is the requesting agent, recorded as an answered decision"
       },
@@ -2214,7 +2237,7 @@
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
         "base_vector": "conformance/suites/mcp-gateway/mcp-valid-forwarded-on-admit.json",
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "mutation",
         "mutation": "decide and forward a call whose _meta holds 2^53 + 1, with params_digest taken over the rounded value that RFC 8785 writes"
       },
@@ -2237,7 +2260,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2301,7 +2324,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2431,7 +2454,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2500,7 +2523,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2564,7 +2587,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2586,7 +2609,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2615,7 +2638,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2643,7 +2666,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2668,7 +2691,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2711,7 +2734,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2736,21 +2759,21 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
     },
     {
-      "covers": [
-        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root",
-        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/requestContent/oneOf#oneOf[1]",
-        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/responseContent/oneOf#oneOf[1]"
-      ],
-      "expected": "pass",
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
       "expected_secondary_ids": [],
-      "id": "mcp-valid-noncharacter-id-forwarded",
-      "path": "conformance/suites/mcp-gateway/mcp-valid-noncharacter-id-forwarded.json",
+      "id": "mcp-invalid-encoded-noncharacter-id-forwarded",
+      "negates": [
+        "MG1-012"
+      ],
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-encoded-noncharacter-id-forwarded.json",
       "requirement_ids": [
         "MG1-005",
         "MG1-010",
@@ -2758,8 +2781,30 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_binding_input_migration.py",
         "kind": "authored"
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "mcp-valid-supplementary-id-forwarded",
+      "path": "conformance/suites/mcp-gateway/mcp-valid-supplementary-id-forwarded.json",
+      "requirement_ids": [
+        "MG1-005",
+        "MG1-010",
+        "MG1-012"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "conformance/suites/mcp-gateway/mcp-invalid-encoded-noncharacter-id-forwarded.json",
+        "generator": "scripts/generate_binding_input_migration.py",
+        "kind": "mutation",
+        "mutation": "replace the forbidden JSON-RPC ID with a valid supplementary scalar in every message and recompute the terminal response digest"
       },
       "stage": "binding"
     },
@@ -2801,7 +2846,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2958,7 +3003,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -2979,7 +3024,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -3040,7 +3085,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -3061,7 +3106,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"
@@ -3084,7 +3129,7 @@
       ],
       "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
       "source": {
-        "generator": "scripts/generate_mcp_gateway_vectors.py",
+        "generator": "scripts/generate_mcp_public_review_migration.py",
         "kind": "authored"
       },
       "stage": "binding"

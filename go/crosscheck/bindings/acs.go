@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"strconv"
 	"strings"
 
 	"externalcontrollayer.ai/ecl-1/go/crosscheck/internal/pyjson"
@@ -85,11 +86,33 @@ func pointer(path string) ([]string, bool) {
 	if !strings.HasPrefix(path, "/") {
 		return nil, false
 	}
+	for index := 0; index < len(path); index++ {
+		if path[index] == '~' {
+			if index+1 >= len(path) || (path[index+1] != '0' && path[index+1] != '1') {
+				return nil, false
+			}
+			index++
+		}
+	}
 	parts := strings.Split(path, "/")[1:]
 	for index, part := range parts {
 		parts[index] = strings.ReplaceAll(strings.ReplaceAll(part, "~1", "/"), "~0", "~")
 	}
 	return parts, true
+}
+
+// pointerIndex is an RFC 6901 array index; '-' names no existing value.
+func pointerIndex(token string, length int) (int, bool) {
+	if len(token) == 0 || (len(token) > 1 && token[0] == '0') {
+		return 0, false
+	}
+	for _, digit := range token {
+		if digit < '0' || digit > '9' {
+			return 0, false
+		}
+	}
+	index, err := strconv.ParseUint(token, 10, 64)
+	return int(index), err == nil && index < uint64(length)
 }
 
 func overlaps(first, second []string) bool {
@@ -107,7 +130,7 @@ func overlaps(first, second []string) bool {
 
 // EffectiveParameters returns the tool arguments after a modify decision's modifications, or
 // false when there are none: a modifications object that the pinned text forbids (a wholesale
-// replacement with edits, or edits whose targets overlap), that cannot be applied (a redaction
+// replacement with edits, or a redaction whose target overlaps an override), that cannot be applied (a redaction
 // path that does not resolve inside the arguments), or that yields arguments outside the
 // restricted canonical profile. Each of these ends in a deny of the original with no new request
 // (AC1-005).
@@ -125,7 +148,7 @@ func EffectiveParameters(arguments map[string]any, modifications any) (map[strin
 	if holds(changes, "parameter_overrides") {
 		overrides = changes["parameter_overrides"]
 	}
-	if wholesale != nil {
+	if holds(changes, "modified_content") {
 		if holds(changes, "redactions") || holds(changes, "parameter_overrides") {
 			return nil, false
 		}
@@ -175,20 +198,40 @@ func EffectiveParameters(arguments map[string]any, modifications any) (map[strin
 		if holds(entry, "replacement") {
 			replacement = entry["replacement"]
 		}
-		var container any = result
-		for _, step := range parts[:len(parts)-1] {
-			if current, isObject := container.(map[string]any); isObject {
-				container = current[step]
-			} else {
-				container = nil
-			}
-		}
-		target, isObject := container.(map[string]any)
-		last := parts[len(parts)-1]
-		if !isObject || !holds(target, last) {
+		if _, isText := replacement.(string); !isText {
 			return nil, false
 		}
-		target[last] = replacement
+		var container any = result
+		for _, step := range parts[:len(parts)-1] {
+			switch current := container.(type) {
+			case map[string]any:
+				container = current[step]
+			case []any:
+				position, ok := pointerIndex(step, len(current))
+				if !ok {
+					return nil, false
+				}
+				container = current[position]
+			default:
+				return nil, false
+			}
+		}
+		last := parts[len(parts)-1]
+		switch target := container.(type) {
+		case map[string]any:
+			if !holds(target, last) {
+				return nil, false
+			}
+			target[last] = replacement
+		case []any:
+			position, ok := pointerIndex(last, len(target))
+			if !ok {
+				return nil, false
+			}
+			target[position] = replacement
+		default:
+			return nil, false
+		}
 	}
 	if digestOf(result) == nil {
 		return nil, false
@@ -252,11 +295,18 @@ func EntryHash(entry map[string]any) (string, bool) {
 func chainProblems(entries []any) []problem {
 	var problems []problem
 	var previous any
+	entryIDs := map[string]bool{}
 	for index, item := range entries {
 		entry, isObject := item.(map[string]any)
 		if !isObject {
 			problems = append(problems, problem{pointerTo("/chain", index), "a ContextEntry is not an object"})
 			continue
+		}
+		if id, isText := entry["entry_id"].(string); isText {
+			if entryIDs[id] {
+				problems = append(problems, problem{pointerTo("/chain", index) + "/entry_id", "a ContextEntry identifier is repeated within the session"})
+			}
+			entryIDs[id] = true
 		}
 		if !pyjson.Equal(entry["previous_hash"], previous) {
 			problems = append(problems, problem{pointerTo("/chain", index) + "/previous_hash", "the link is not the prior head"})
@@ -283,10 +333,10 @@ func acsDeadline(record map[string]any, disposition string) *big.Int {
 	received := nanos(member(record, "guardian", "observed_at"))
 	var span *big.Int
 	if disposition == "ask" {
-		if seconds, ok := integer(record, "guardian", "result", "ask_details", "timeout_seconds"); ok {
+		if seconds, ok := integer(record, "guardian", "result", "ask_details", "timeout_seconds"); ok && seconds >= 1 {
 			span = new(big.Int).Mul(big.NewInt(seconds), nanosecond)
 		}
-	} else if milliseconds, ok := integer(record, "guardian", "result", "defer_details", "resolution_timeout_ms"); ok {
+	} else if milliseconds, ok := integer(record, "guardian", "result", "defer_details", "resolution_timeout_ms"); ok && milliseconds >= 0 {
 		span = new(big.Int).Mul(big.NewInt(milliseconds), millisecond)
 	}
 	if received == nil || span == nil {
@@ -339,7 +389,11 @@ func acsExpiry(view acsView) []problem {
 	}
 	var problems []problem
 	if view.outcome == "hold" || view.outcome == "challenge" {
-		problems = append(problems, deferralProblems(member(view.record, "response"), acsDeadline(view.record, disposition))...)
+		bound := acsDeadline(view.record, disposition)
+		if bound == nil {
+			problems = append(problems, problem{"/guardian/result", "a waiting response requires a valid Guardian timeout"})
+		}
+		problems = append(problems, deferralProblems(member(view.record, "response"), bound)...)
 		expires := nanos(member(view.record, "response", "expires_at"))
 		released := nanos(member(view.record, "release", "released_at"))
 		if expires != nil && released != nil && released.Cmp(expires) >= 0 {
@@ -450,35 +504,25 @@ func acsJudgment(view acsView) []problem {
 		path := fmt.Sprintf("/inputs/%d", index)
 		derived, isList := member(item, "derived_from").([]any)
 		name, hasName := textOf(item, "input")
-		var expected string
-		switch {
-		case evaluator != acsDeterministic || !acsAuthenticated(channel):
-			expected = GuardianClass(evaluator, nil, channel)
-		case !isList:
-			recorded, hasClass := textOf(item, "class")
-			if hasClass && recorded == "verifiable" {
-				problems = append(problems, problem{path + "/derived_from", "a verifiable Guardian decision names the inputs its request carried"})
-			} else if hasName && hasClass {
-				required[semantic.InputKey(name)] = recorded
-			}
+		if !isList && text(view.record, "guardian", "status") == "decided" {
+			problems = append(problems, problem{path + "/derived_from", "a Guardian decision explicitly names every input its request carried, or an empty list"})
 			continue
-		default:
-			var carried []any
-			for offset, candidate := range derived {
-				name, isText := candidate.(string)
-				key := ""
-				if isText {
-					key = semantic.InputKey(name)
-				}
-				if _, known := classes[key]; !isText || !known {
-					problems = append(problems, problem{fmt.Sprintf("%s/derived_from/%d", path, offset), "the record lists no such input"})
-				}
-				if isText {
-					carried = append(carried, classes[key])
-				}
-			}
-			expected = GuardianClass(evaluator, carried, channel)
 		}
+		var carried []any
+		for offset, candidate := range derived {
+			name, isText := candidate.(string)
+			key := ""
+			if isText {
+				key = semantic.InputKey(name)
+			}
+			if _, known := classes[key]; !isText || !known {
+				problems = append(problems, problem{fmt.Sprintf("%s/derived_from/%d", path, offset), "the record lists no such input"})
+			}
+			if isText {
+				carried = append(carried, classes[key])
+			}
+		}
+		expected := GuardianClass(evaluator, carried, channel)
 		if text(item, "class") != expected {
 			problems = append(problems, problem{path + "/class", "this input must be " + expected})
 		}
@@ -520,15 +564,24 @@ func acsRelease(view acsView) []problem {
 }
 
 func acsRecorded(view acsView) []problem {
+	// Retained native evidence is checked even after failure or an incomplete decision.
+	chain := array(view.record, "chain")
+	chainErrors := chainProblems(chain)
 	result, hasResult := object(view.record, "guardian", "result")
 	response, hasResponse := object(view.record, "response")
-	if text(view.record, "guardian", "status") != "decided" || !hasResult || !hasResponse {
-		return nil
+	if text(view.record, "guardian", "status") != "decided" {
+		return chainErrors
+	}
+	if !hasResult {
+		return append([]problem{{"/guardian/result", "a decided Guardian exchange retains its result"}}, chainErrors...)
+	}
+	if !hasResponse {
+		return chainErrors
 	}
 	entries := extensionEntries(response, acsDecision)
 	values := extensionValues(response, acsDecision)
 	if len(entries) != 1 || len(values) != 1 {
-		return []problem{{"/response/extensions", "the response records the Guardian decision once"}}
+		return append([]problem{{"/response/extensions", "the response records the Guardian decision once"}}, chainErrors...)
 	}
 	value := values[0]
 	var problems []problem
@@ -546,16 +599,24 @@ func acsRecorded(view acsView) []problem {
 			problems = append(problems, problem{"/response/extensions/" + expected.name, "the recorded " + expected.name + " is not the Guardian's"})
 		}
 	}
-	if member(view.record, "audit_profile") == true {
+	if member(view.record, "audit_profile") == true || (text(view.record, "guardian", "channel") == "signed" && len(array(view.record, "chain")) > 0) {
 		if _, isText := value["request_hash"].(string); !isText {
-			problems = append(problems, problem{"/response/extensions/request_hash", "ACS-Audit records the request hash"})
+			problems = append(problems, problem{"/response/extensions/request_hash", "ACS-Audit or a signed request chain records the request hash"})
 		}
 	}
-	chain := array(view.record, "chain")
+	if params, present := object(view.record, "guardian", "request_params"); present && holds(value, "request_hash") {
+		expected, err := JCSDigest(params)
+		if err != nil && !errors.Is(err, ErrJCS) {
+			raise(err)
+		}
+		if err != nil || !pyjson.Equal(value["request_hash"], expected["value"]) {
+			problems = append(problems, problem{"/response/extensions/request_hash", "the recorded request hash does not match the evaluated request params"})
+		}
+	}
 	if len(chain) == 0 {
 		return problems
 	}
-	problems = append(problems, chainProblems(chain)...)
+	problems = append(problems, chainErrors...)
 	var step map[string]any
 	for _, item := range chain {
 		if entry, isObject := item.(map[string]any); isObject && pyjson.Equal(entry["step_id"], value["request_id"]) {
@@ -563,11 +624,94 @@ func acsRecorded(view acsView) []problem {
 			break
 		}
 	}
-	switch {
-	case step == nil || !pyjson.Equal(step["entry_hash"], value["chain_hash"]):
+	if step == nil || !pyjson.Equal(step["entry_hash"], value["chain_hash"]) {
 		problems = append(problems, problem{"/response/extensions/chain_hash", "the recorded head is not the step's chain head"})
-	case holds(value, "request_hash") && !pyjson.Equal(step["request_hash"], value["request_hash"]):
+	}
+	if step != nil && holds(value, "request_hash") && !pyjson.Equal(step["request_hash"], value["request_hash"]) {
 		problems = append(problems, problem{"/response/extensions/request_hash", "the recorded request hash is not the step's"})
+	}
+	return problems
+}
+
+// acsSignedRequestBinding checks the adapter's recorded context, not the absent signature.
+func acsSignedRequestBinding(view acsView) []problem {
+	record := view.record
+	if text(record, "guardian", "channel") != "signed" {
+		return nil
+	}
+	params, hasParams := object(record, "guardian", "request_params")
+	if text(record, "guardian", "status") == "failed" {
+		// A failed route asserts no verified decision; retained submitted params
+		// still bind their local digest without inventing a signed result.
+		guardian, _ := object(record, "guardian")
+		if !holds(guardian, "request_params") && !holds(guardian, "request_digest") {
+			return nil
+		}
+		if !hasParams || !holds(guardian, "request_digest") {
+			return []problem{{"/guardian", "retained request params and their digest occur together"}}
+		}
+		expected, err := JCSDigest(params)
+		if err != nil {
+			if !errors.Is(err, ErrJCS) {
+				raise(err)
+			}
+			return []problem{{"/guardian/request_params", "the request binding has no RFC 8785 canonical form"}}
+		}
+		if !sameDigest(guardian["request_digest"], expected) {
+			return []problem{{"/guardian/request_digest", "the recorded digest does not bind this request"}}
+		}
+		return nil
+	}
+	context, hasContext := object(record, "guardian", "authenticated_context")
+	request, hasRequest := object(record, "request")
+	if !hasParams || !hasContext || !hasRequest {
+		return []problem{{"/guardian", "a signed channel records the evaluated params and authenticated context"}}
+	}
+	paramsDigest, err := JCSDigest(params)
+	if err != nil {
+		return []problem{{"/guardian/request_params", "the request binding has no RFC 8785 canonical form"}}
+	}
+	requestDigest, err := JCSDigest(request)
+	if err != nil {
+		return []problem{{"/guardian/request_params", "the request binding has no RFC 8785 canonical form"}}
+	}
+	var problems []problem
+	for _, item := range []struct {
+		path             string
+		actual, expected any
+	}{
+		{"/guardian/request_digest", member(record, "guardian", "request_digest"), paramsDigest},
+		{"/guardian/authenticated_context/request_digest", context["request_digest"], paramsDigest},
+		{"/guardian/authenticated_context/dcmp_request_digest", context["dcmp_request_digest"], requestDigest},
+	} {
+		if !sameDigest(item.actual, item.expected) {
+			problems = append(problems, problem{item.path, "the recorded digest does not bind this request"})
+		}
+	}
+	for _, item := range []struct {
+		name     string
+		expected any
+	}{
+		{"session_id", record["session_id"]},
+		{"request_id", member(record, "guardian", "result", "request_id")},
+		{"method", record["hook"]},
+	} {
+		if !pyjson.Equal(context[item.name], item.expected) {
+			problems = append(problems, problem{"/guardian/authenticated_context/" + item.name, "the authenticated context is not this session and step"})
+		}
+	}
+	chain := array(record, "chain")
+	if len(chain) > 0 {
+		var step map[string]any
+		for _, item := range chain {
+			if entry, ok := item.(map[string]any); ok && pyjson.Equal(entry["step_id"], context["request_id"]) {
+				step = entry
+				break
+			}
+		}
+		if step == nil || !pyjson.Equal(step["request_hash"], paramsDigest["value"]) {
+			problems = append(problems, problem{"/chain", "the signed step must commit to the evaluated request params"})
+		}
 	}
 	return problems
 }
@@ -584,7 +728,7 @@ var acsRules = []struct {
 	{RuleACSJudgment, acsJudgment},
 	{RuleACSOutcome, acsOutcome},
 	{RuleACSRelease, acsRelease},
-	{RuleACSRecorded, acsRecorded},
+	{RuleACSRecorded, func(view acsView) []problem { return append(acsRecorded(view), acsSignedRequestBinding(view)...) }},
 	{RuleACSBasis, func(view acsView) []problem {
 		return append(basisProblems(view.record, "guardian"), modificationBasisProblems(view.record)...)
 	}},
@@ -609,5 +753,6 @@ func checkACS(record map[string]any) []Finding {
 	// own rule, which is not one of the profile's.
 	out = append(out, findings(ruleOneWay, oneWayResponseProblems(record, [2][]string{{"request"}, {"response"}}, [2][]string{{"modification_request"}, {"modification_response"}}))...)
 	// AC1-012: each DCMP-2 message that the record holds satisfies the semantic rules of DCMP-2.
+	out = append(out, responseBindingFindings(record, [2]string{"request", "response"}, [2]string{"modification_request", "modification_response"})...)
 	return append(out, messageFindings(record, []string{"request"}, []string{"response"}, []string{"modification_request"}, []string{"modification_response"})...)
 }

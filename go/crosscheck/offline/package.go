@@ -36,7 +36,7 @@
 //
 // Otherwise the package has its bundle's verdict, except that a package whose expires_at is not
 // later than the evaluation time is current-trust-failed, with the expired code, where its bundle
-// is verified. Times are compared to the microsecond, as the reference compares them. A package
+// is verified. Times are compared exactly to the nanosecond. A package
 // that exceeds a declared limit of the verifier (IE1-028) is invalid with
 // ecl.error.resource-limit-exceeded.v1 at the check that meets the limit: the archive's limits at
 // check 1, the artifact count and path bytes at check 4, and at checks 3 and 7 a strict JSON
@@ -215,9 +215,9 @@ func pathProblem(artifacts []map[string]any, limits Limits) *evidence.BundleFind
 	return nil
 }
 
-func micro(value any) instant.Instant {
+func packageInstant(value any) instant.Instant {
 	parsed, _ := instant.Parse(value)
-	return parsed.Micro()
+	return parsed
 }
 
 func digestHex(data []byte) string {
@@ -323,12 +323,12 @@ func Verify(data []byte, policy *trust.Policy, options Options) (*evidence.Repor
 		sort.Strings(unnamed)
 		return failed(evidence.Invalid, issue(semanticInvalid, "the archive holds a member the manifest does not name: "+unnamed[0]))
 	}
-	// 5. The package's validity interval, to the microsecond.
-	createdAt, expiresAt := micro(manifest["created_at"]), micro(manifest["expires_at"])
+	// 5. The package's validity interval, to the nanosecond.
+	createdAt, expiresAt := packageInstant(manifest["created_at"]), packageInstant(manifest["expires_at"])
 	if instant.Compare(expiresAt, createdAt) <= 0 {
 		return failed(evidence.Invalid, issue(expiredCode, "the package expires no later than it was created"))
 	}
-	expired := instant.Compare(micro(options.Now), expiresAt) >= 0
+	expired := instant.Compare(packageInstant(options.Now), expiresAt) >= 0
 	// 6. Size and digest of every artifact the archive holds; check 1 bounded them by the limits.
 	carried := map[string][]byte{}
 	absent := []string{}
@@ -466,9 +466,9 @@ func Verify(data []byte, policy *trust.Policy, options Options) (*evidence.Repor
 // Identifiers returns a package report's identifiers in order, each once, the primary first, as
 // the runner's package stage reports them (IE1-022, EBMP2-068; the reference's
 // reported_package_identifiers): the codes of its findings in the order of the checks that gave
-// them; for a current-trust-failed package, after the expired code of a package that has
-// expired, the current status of each envelope that is not valid, in the order of stage 4 of
-// EBMP2-068; and for an incomplete package without findings the causal-closure code.
+// them. For a current-trust-failed package, existing findings come first, then current-status
+// codes in EBMP2-068 order. IE1-022 step 12 adds a package-expiry finding only when the inner
+// bundle verdict is verified. An incomplete package without findings reports the causal-closure code.
 func Identifiers(report *evidence.Report) []string {
 	codes := []string{}
 	seen := map[string]bool{}

@@ -14,6 +14,7 @@
  * - `contains` needs at least one item that its schema accepts (the default `minContains` of 1;
  *   `minContains` and `maxContains` are not used by the ECL schemas and are refused).
  *
+ * Nested `$id` scopes and root `$id` aliases are unsupported and refused.
  * Any other keyword is refused when the schema set is built, so a schema that needs more than
  * this validator implements fails loudly instead of being half-checked.
  */
@@ -97,6 +98,46 @@ interface Resolved {
   base: string;
 }
 
+// Reject malformed constraints before any instance is evaluated.
+function keywordDomains(node: JsonObject, base: string, where: string, root: boolean): void {
+  const bad = (key: string): never => {
+    throw new Error(`${where}: invalid or unsupported value for schema keyword ${key}`);
+  };
+  const names = (value: unknown, nonempty = false): value is string[] =>
+    Array.isArray(value) && (!nonempty || value.length > 0)
+    && value.every(item => typeof item === "string") && new Set(value).size === value.length;
+  if (has(node, "$id") && (!root || node["$id"] !== base)) bad("$id");
+  for (const key of ["$ref", "pattern"]) {
+    if (has(node, key) && typeof node[key] !== "string") bad(key);
+  }
+  for (const key of ["minLength", "maxLength", "minItems", "maxItems", "minProperties", "maxProperties"]) {
+    const value = node[key];
+    if (has(node, key) && (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0)) bad(key);
+  }
+  for (const key of ["minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum"]) {
+    if (has(node, key) && (typeof node[key] !== "number" || !Number.isFinite(node[key]))) bad(key);
+  }
+  if (has(node, "uniqueItems") && typeof node["uniqueItems"] !== "boolean") bad("uniqueItems");
+  if (has(node, "required") && !names(node["required"])) bad("required");
+  if (has(node, "enum") && !isArray(node["enum"])) bad("enum");
+  if (has(node, "type")) {
+    const types = typeof node["type"] === "string" ? [node["type"]] : node["type"];
+    const supported = new Set(["null", "boolean", "object", "array", "number", "integer", "string"]);
+    if (!names(types, true) || !types.every(type => supported.has(type))) bad("type");
+  }
+  for (const key of ["properties", "patternProperties", "dependentSchemas", "$defs"]) {
+    if (has(node, key) && !isObject(node[key])) bad(key);
+  }
+  if (has(node, "dependentRequired")) {
+    const value = node["dependentRequired"];
+    if (!isObject(value) || Object.values(value).some(entry => !names(entry))) bad("dependentRequired");
+  }
+  for (const key of ["allOf", "anyOf", "oneOf", "prefixItems"]) {
+    const value = node[key];
+    if (has(node, key) && (!isArray(value) || value.length === 0)) bad(key);
+  }
+}
+
 /** A schema set: documents by `$id`, with every reference resolvable within the set. */
 export class SchemaSet {
   private readonly documents = new Map<string, JsonObject>();
@@ -111,7 +152,7 @@ export class SchemaSet {
       this.documents.set(identifier, document);
     }
     for (const [identifier, document] of this.documents) {
-      this.prepare(document, identifier, identifier);
+      this.prepare(document, identifier, identifier, true);
     }
   }
 
@@ -120,7 +161,7 @@ export class SchemaSet {
     return [...this.documents.keys()];
   }
 
-  private prepare(node: JsonValue, base: string, where: string): void {
+  private prepare(node: JsonValue, base: string, where: string, root = false): void {
     if (typeof node === "boolean") {
       return;
     }
@@ -132,8 +173,9 @@ export class SchemaSet {
         throw new Error(`${where}: unsupported schema keyword ${keyword}`);
       }
     }
+    keywordDomains(node, base, where, root);
     const format = node["format"];
-    if (format !== undefined && (typeof format !== "string" || !(format in FORMATS))) {
+    if (format !== undefined && (typeof format !== "string" || !Object.hasOwn(FORMATS, format))) {
       throw new Error(`${where}: unsupported format ${String(format)}`);
     }
     const pattern = node["pattern"];
@@ -624,10 +666,16 @@ function push(out: SchemaError[], limit: number, path: string, keyword: string, 
   }
 }
 
+function plainObject(value: unknown): boolean {
+  if (!isObject(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
 function hasType(instance: JsonValue, type: string): boolean {
   switch (type) {
     case "object":
-      return isObject(instance);
+      return plainObject(instance);
     case "array":
       return isArray(instance);
     case "string":
@@ -635,7 +683,7 @@ function hasType(instance: JsonValue, type: string): boolean {
     case "integer":
       return typeof instance === "number" && Number.isInteger(instance);
     case "number":
-      return typeof instance === "number";
+      return typeof instance === "number" && Number.isFinite(instance);
     case "boolean":
       return typeof instance === "boolean";
     case "null":
@@ -686,8 +734,15 @@ function describe(value: JsonValue): string {
   if (isArray(value)) {
     return "array";
   }
+  // Host values outside JsonValue may reach an untyped caller. Describe their
+  // type without invoking arbitrary serialization or throwing on BigInt.
+  if (typeof value === "number" && !Number.isFinite(value)) return "non-finite number";
+  if (typeof value === "bigint" || typeof value === "symbol" || typeof value === "function" || value === undefined) {
+    return typeof value;
+  }
   const text = JSON.stringify(value);
-  return text.length > 60 ? text.slice(0, 59) + "…" : text;
+  const characters = Array.from(text);
+  return characters.length > 60 ? characters.slice(0, 59).join("") + "…" : text;
 }
 
 let defaultSet: SchemaSet | undefined;
@@ -708,7 +763,7 @@ export function recordSchemas(): SchemaSet {
   return recordSet;
 }
 
-/** Validate `instance` against an embedded ECL schema (by `$id`, optionally with a fragment). */
+/** Validate against an embedded wire schema. For binding and document schemas use recordSchemas(). */
 export function validateSchema(reference: string, instance: JsonValue): SchemaError[] {
   return eclSchemas().errors(reference, instance);
 }
