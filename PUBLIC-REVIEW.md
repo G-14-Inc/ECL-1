@@ -3,8 +3,8 @@
 Robert F. Tilley Jr. and G-14, Inc. invite public review of the External Control
 Layer Standard and its supporting specifications, verifiers and test corpus.
 
-The review opens **13 November 2026, 20:00:00 UTC** and closes **12 January 2027, 20:00:00 UTC**,
-a period of 60 full days. The draft is frozen throughout that period.
+The review opens **13 November 2026, 20:00:00 UTC** and closes **11 January 2027, 20:00:00 UTC**,
+a period of 59 full days. The draft is frozen throughout that period.
 
 ## Read and review
 
@@ -35,7 +35,7 @@ and its consequence, and provide a reproducer or proposed change where possible.
 | Manifest SHA-256 | `49a6a7aacacb9865265a0761ee35f2627261e4f00b7a728bca70ab30f357d6e5` |
 | Review issue label | `public-review` |
 | Opens, UTC | `2026-11-13T20:00:00Z` |
-| Closes, UTC | `2027-01-12T20:00:00Z` |
+| Closes, UTC | `2027-01-11T20:00:00Z` |
 
 The frozen files record their preparation as a local candidate. This
 announcement opens public review of those exact files. The reference edition
@@ -68,6 +68,14 @@ Each comment receives a written disposition under the
 The editors will publish the disposition log. Changes are made in a subsequent
 editors' draft, preserving this frozen review. Adoption follows the procedure's
 comment, appeal and further-review requirements.
+
+## Review schedule amendment
+
+On 14 November 2026, G-14, Inc. moved the closing date from 12 January to
+**11 January 2027, 20:00 UTC**. The opening date remains 13 November 2026,
+20:00 UTC, giving this review 59 elapsed days. This is a one-time exception to
+the published procedure's 60-day window and rule against shortening a review.
+The frozen draft and all other review procedures remain unchanged.
 
 ## File integrity
 

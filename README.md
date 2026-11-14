@@ -8,7 +8,7 @@ actions, enforces the authorized action at the point of effect, and records
 evidence that others can verify. It covers actions such as changing a record,
 issuing a payment, sending a message or operating equipment.
 
-**Public review: 13 November 2026, 20:00:00 UTC through 12 January 2027, 20:00:00 UTC.**
+**Public review: 13 November 2026, 20:00:00 UTC through 11 January 2027, 20:00:00 UTC.**
 Engineers, safety professionals, security researchers, assessors and prospective
 implementers are invited to examine the specification and its supporting tools.
 
