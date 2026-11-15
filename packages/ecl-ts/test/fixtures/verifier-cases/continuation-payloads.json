@@ -1,0 +1,427 @@
+{
+  "approval": {
+    "event": {
+      "actor": {
+        "id": "urn:example:human:owner",
+        "trust_domain": "urn:example:trust-domain:control",
+        "type": "ecl.principal.human.v1"
+      },
+      "authority": {
+        "uri": "urn:example:approval-service:bundle#approval-authority"
+      },
+      "expires_at": "2026-09-29T10:00:05.000000Z",
+      "intervention_id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27#approval",
+      "issued_at": "2026-09-29T10:00:00.150000Z",
+      "kind": "intervention",
+      "operation": "approve",
+      "reason": {
+        "code": "ecl.reason.native-policy-disposition.v1"
+      },
+      "target_id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27"
+    },
+    "event_type": "human_intervention",
+    "extensions": [
+      {
+        "critical": true,
+        "id": "ecl.ext.approval-record.v1",
+        "value": {
+          "minimum_review_seconds": 0,
+          "presented": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7200e9a1300d5ba0ffdc4a12f8bfc180ddc3cfc357d82285b09c4c19df85e0ef"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27#presented-action"
+          },
+          "presented_at": "2026-09-29T10:00:00.150000Z"
+        },
+        "version": 1
+      }
+    ],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bundle-approval-service"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bundle-approval-service"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "7c121317dfd43fd5c88bc100fffec09d0f8babaaf8cb225ad3a61429f5d38cf7"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bundle",
+        "version": "1"
+      },
+      "verification_time_policy": "ecl.time.observed-at.v1"
+    },
+    "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/acf65f7d9b18da362e869ed02b95781a979e9fa9cc23f69bfacaa670a3b73a16",
+    "object_type": "event_record",
+    "observed_at": "2026-09-29T10:00:00.150000Z",
+    "producer": {
+      "id": "urn:example:approval-service:bundle",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.service.v1"
+    },
+    "protocol": "EBMP-2",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "5825812956f75e57bc1b3f6d0447b7745f4afdf5a5deb674545dda2c70a6959a"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/53c54aafa1e396805e9343d543921ad9846a77dbd793d71954f3b221ee55e21a",
+          "relation": "ecl.relation.follows.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:events-1",
+      "sequence": 13,
+      "workflow_id": "urn:example:workflow:events-1"
+    }
+  },
+  "challenge_response": {
+    "challenge_id": "https://externalcontrollayer.ai/ns/challenge/sha256/34133a72a4e0d2f3df2699621cbd41d8920b59f8f1701a94297b035aeb00e969",
+    "decision_id": "https://externalcontrollayer.ai/ns/decision/sha256/f5bf49b96cea9eba209593d6278778fbb9ada96d6b0f211cd2fccbeb9f654d84",
+    "evaluated_at": "2026-09-29T10:00:00.100000Z",
+    "expires_at": "2026-09-29T10:00:15.100000Z",
+    "extensions": [
+      {
+        "critical": true,
+        "id": "ecl.ext.decision-basis.v1",
+        "value": {
+          "inputs": [
+            {
+              "class": "verifiable",
+              "effect": "restricts",
+              "input": "urn:example:input:bundle:grant",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "1111111111111111111111111111111111111111111111111111111111111111"
+                },
+                "uri": "urn:example:input-value:bundle:grant"
+              },
+              "required": true,
+              "source": "urn:example:policy-plane:bundle",
+              "status": "available"
+            },
+            {
+              "class": "verifiable",
+              "effect": "none",
+              "input": "urn:example:input:bundle:control-state",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "2222222222222222222222222222222222222222222222222222222222222222"
+                },
+                "uri": "urn:example:input-value:bundle:control-state"
+              },
+              "required": true,
+              "source": "urn:example:emergency-plane:bundle",
+              "status": "available"
+            },
+            {
+              "class": "judgment",
+              "effect": "none",
+              "input": "urn:example:input:bundle:anomaly-score",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "3333333333333333333333333333333333333333333333333333333333333333"
+                },
+                "uri": "urn:example:input-value:bundle:anomaly-score"
+              },
+              "required": false,
+              "source": "urn:example:detector:bundle-anomaly",
+              "status": "available"
+            }
+          ],
+          "register": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "a7286006d08609d7bd47f311d0e8b3b6bb75da0c19d65ebba9a9b81ef15cfe28"
+            },
+            "uri": "urn:example:register:bundle",
+            "version": "1"
+          }
+        },
+        "version": 1
+      }
+    ],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:test-dcmp-1"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:test-dcmp-1"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:events",
+        "version": "2026-09-29"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-29T10:00:00.100000Z",
+    "issuer": {
+      "id": "urn:example:decision-service:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.service.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/53c54aafa1e396805e9343d543921ad9846a77dbd793d71954f3b221ee55e21a",
+    "message_type": "decision_response",
+    "obligations": [],
+    "outcome": "challenge",
+    "policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "epoch": 1,
+      "id": "urn:example:policy:test-decision",
+      "version": "1"
+    },
+    "protocol": "DCMP-2",
+    "reasons": [
+      {
+        "code": "ecl.reason.native-policy-disposition.v1",
+        "detail": "the policy said so",
+        "retryable": false
+      }
+    ],
+    "request_id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27",
+    "safe_state": "ecl.state.restricted.v1",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "4beb1ac1e32c8cc44ae2952f06392aebd4ff28d9fa3d2e0c4b5cd9cc850fa49c"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27",
+          "relation": "ecl.relation.responds-to.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:events-1",
+      "sequence": 12,
+      "workflow_id": "urn:example:workflow:events-1"
+    }
+  },
+  "continuation_request": {
+    "action": {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "action_id": "https://externalcontrollayer.ai/ns/action/sha256/a71319f67ab68b78388bfaed1a7eb03fadafe9c3139569947d4aa23bca97ac5d",
+      "operation": "records.update",
+      "parameters": {
+        "patch": {
+          "status": "closed"
+        },
+        "record_id": "r-1"
+      },
+      "parameters_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f65639bb433b900ea16ab77da6949d20c13204685a6365257d84de18eb5b251f"
+      },
+      "required_evidence_profile": "ecl.evidence.standard.v1",
+      "risk_class": "ecl.risk.high.v1",
+      "target": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "fca01a85827b7275e118f35d09638a73fd679279696fda729b59399d6ebbc8e5"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/target/sha256/fca01a85827b7275e118f35d09638a73fd679279696fda729b59399d6ebbc8e5"
+      }
+    },
+    "actor": {
+      "id": "urn:example:agent:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.workload.v1"
+    },
+    "authority_request": {
+      "audience": "urn:example:ep:test",
+      "requested_validity_seconds": 15,
+      "use_policy": "single_use"
+    },
+    "constraints": {},
+    "continues": {
+      "approval_id": "https://externalcontrollayer.ai/ns/receipt/sha256/acf65f7d9b18da362e869ed02b95781a979e9fa9cc23f69bfacaa670a3b73a16",
+      "request_id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27",
+      "response_id": "https://externalcontrollayer.ai/ns/message/sha256/53c54aafa1e396805e9343d543921ad9846a77dbd793d71954f3b221ee55e21a"
+    },
+    "delegation_chain": [],
+    "expires_at": "2026-09-29T10:00:31.000000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:test-dcmp-1"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:test-dcmp-1"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:events",
+        "version": "2026-09-29"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-29T10:00:01.000000Z",
+    "issuer": {
+      "id": "urn:example:agent:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/103330c541b2654eac985cef40df6e139b8d98f99797ad481183908535f64124",
+    "message_type": "decision_request",
+    "protocol": "DCMP-2",
+    "schema_version": "2.0",
+    "subject": {
+      "id": "urn:example:tenant:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.tenant.v1"
+    },
+    "workflow": {
+      "attempt": 2,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "5825812956f75e57bc1b3f6d0447b7745f4afdf5a5deb674545dda2c70a6959a"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/53c54aafa1e396805e9343d543921ad9846a77dbd793d71954f3b221ee55e21a",
+          "relation": "ecl.relation.follows.v1"
+        },
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "9187d84669c8fc8856505487f892d6932670d27f62046f932b788abc20de5775"
+          },
+          "id": "https://externalcontrollayer.ai/ns/receipt/sha256/acf65f7d9b18da362e869ed02b95781a979e9fa9cc23f69bfacaa670a3b73a16",
+          "relation": "ecl.relation.follows.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:events-1",
+      "sequence": 14,
+      "workflow_id": "urn:example:workflow:events-1"
+    }
+  },
+  "continued_request": {
+    "action": {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "action_id": "https://externalcontrollayer.ai/ns/action/sha256/a71319f67ab68b78388bfaed1a7eb03fadafe9c3139569947d4aa23bca97ac5d",
+      "operation": "records.update",
+      "parameters": {
+        "patch": {
+          "status": "closed"
+        },
+        "record_id": "r-1"
+      },
+      "parameters_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "f65639bb433b900ea16ab77da6949d20c13204685a6365257d84de18eb5b251f"
+      },
+      "required_evidence_profile": "ecl.evidence.standard.v1",
+      "risk_class": "ecl.risk.high.v1",
+      "target": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "fca01a85827b7275e118f35d09638a73fd679279696fda729b59399d6ebbc8e5"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/target/sha256/fca01a85827b7275e118f35d09638a73fd679279696fda729b59399d6ebbc8e5"
+      }
+    },
+    "actor": {
+      "id": "urn:example:agent:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.workload.v1"
+    },
+    "authority_request": {
+      "audience": "urn:example:ep:test",
+      "requested_validity_seconds": 15,
+      "use_policy": "single_use"
+    },
+    "constraints": {},
+    "delegation_chain": [],
+    "expires_at": "2026-09-29T10:00:30.000000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:test-dcmp-1"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:test-dcmp-1"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:events",
+        "version": "2026-09-29"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-29T10:00:00.000000Z",
+    "issuer": {
+      "id": "urn:example:agent:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/4130c854d806245cfc66795ae0ec79f5d302e3d0c3a1f9ec1e2849b0acf87e27",
+    "message_type": "decision_request",
+    "protocol": "DCMP-2",
+    "schema_version": "2.0",
+    "subject": {
+      "id": "urn:example:tenant:test-1",
+      "trust_domain": "urn:example:trust-domain:control",
+      "type": "ecl.principal.tenant.v1"
+    },
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:events-1",
+      "sequence": 11,
+      "workflow_id": "urn:example:workflow:events-1"
+    }
+  },
+  "description": "DCMP-2 DCMP2-056: a continuation after a challenge. The continued request (attempt 1) keeps its one response, the challenge; the approval is an EBMP-2 human_intervention event whose operation is approve, whose target is the continued request and whose causal predecessor is the challenge; the continuation is a new request (attempt 2) with the same action, actor, subject and requested authority, which names the three in continues and lists the challenge and the approval among its causal predecessors. Each object is shown as the payload that an ECL-IE-1 envelope signs. Example identifiers only."
+}

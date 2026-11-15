@@ -1,0 +1,805 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "public-review-causal-origin",
+  "vectors": [
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "child-origin-direct-control",
+      "path": "conformance/suites/public-review-causal-origin/child-origin-direct-control.json",
+      "requirement_ids": [
+        "EBMP2-077",
+        "DW1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: direct-control"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "child-origin-indirect-control",
+      "path": "conformance/suites/public-review-causal-origin/child-origin-indirect-control.json",
+      "requirement_ids": [
+        "EBMP2-077",
+        "DW1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: indirect-control"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "child-origin-indirect-reversed-control",
+      "path": "conformance/suites/public-review-causal-origin/child-origin-indirect-reversed-control.json",
+      "requirement_ids": [
+        "EBMP2-077",
+        "DW1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: indirect-reversed-control"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "child-origin-two-children-control",
+      "path": "conformance/suites/public-review-causal-origin/child-origin-two-children-control.json",
+      "requirement_ids": [
+        "EBMP2-077",
+        "DW1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: two-children-control"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-absent-declaration",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-absent-declaration.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: absent-declaration"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-detached-correct-branch",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-detached-correct-branch.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: detached-correct-branch"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-sibling-cannot-supply-origin",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-sibling-cannot-supply-origin.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: sibling-cannot-supply-origin"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-predecessor-digest-valid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-bad-origin-digest",
+      "negates": [
+        "DW1-002",
+        "EBMP2-024",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-bad-origin-digest.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-024",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: bad-origin-digest"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-predecessor-digest-valid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-bad-progress-digest",
+      "negates": [
+        "DW1-002",
+        "EBMP2-024",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-bad-progress-digest.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-024",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: bad-progress-digest"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-changed-parent",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-changed-parent.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: changed-parent"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-changed-parent-with-absent-branch",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-changed-parent-with-absent-branch.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: changed-parent-with-absent-branch"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-missing-parent-declaration",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-missing-parent-declaration.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: missing-parent-declaration"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-origin-wrong-root",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-origin-wrong-root.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: origin-wrong-root"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-origin-wrong-parent",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-origin-wrong-parent.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: origin-wrong-parent"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "child-origin-named-origin-unavailable",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-named-origin-unavailable.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-023",
+        "EBMP2-059",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: named-origin-unavailable"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "child-origin-external-origin-unavailable",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-external-origin-unavailable.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-023",
+        "EBMP2-059",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: external-origin-unavailable"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "child-origin-named-intermediate-unavailable",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-named-intermediate-unavailable.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-023",
+        "EBMP2-059",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: named-intermediate-unavailable"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "child-origin-external-intermediate-unavailable",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-external-intermediate-unavailable.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-023",
+        "EBMP2-059",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: external-intermediate-unavailable"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-unrelated-absence-cannot-excuse-orphan",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-unrelated-absence-cannot-excuse-orphan.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: unrelated-absence-cannot-excuse-orphan"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "child-origin-held-origin-with-external-branch",
+      "negates": [
+        "EBMP2-023",
+        "EBMP2-059"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-held-origin-with-external-branch.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-023",
+        "EBMP2-059",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: held-origin-with-external-branch"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "child-origin-increasing-attempt-control",
+      "path": "conformance/suites/public-review-causal-origin/child-origin-increasing-attempt-control.json",
+      "requirement_ids": [
+        "EBMP2-077",
+        "DW1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: increasing-attempt-control"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-backward-attempt",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-backward-attempt.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: backward-attempt"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-backward-sequence",
+      "negates": [
+        "DW1-002",
+        "EBMP2-025",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-backward-sequence.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-025",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: backward-sequence"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-predecessor-digest-valid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-bad-digest-with-absent-branch",
+      "negates": [
+        "EBMP2-024"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-bad-digest-with-absent-branch.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-024",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: bad-digest-with-absent-branch"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-wrong-root-with-absent-branch",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-wrong-root-with-absent-branch.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: wrong-root-with-absent-branch"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-held-origin-and-parent-conflict",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-held-origin-and-parent-conflict.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: held-origin-and-parent-conflict"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "child-origin-nested-child-progression-control",
+      "path": "conformance/suites/public-review-causal-origin/child-origin-nested-child-progression-control.json",
+      "requirement_ids": [
+        "EBMP2-077",
+        "DW1-002"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: nested-child-progression-control"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-grandchild-route-cannot-supply-origin",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-grandchild-route-cannot-supply-origin.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: grandchild-route-cannot-supply-origin"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.bundle-causal-context-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "child-origin-one-orphan-among-two-joins",
+      "negates": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "path": "conformance/suites/public-review-causal-origin/child-origin-one-orphan-among-two-joins.json",
+      "requirement_ids": [
+        "DW1-002",
+        "EBMP2-077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/evidence-bundle/bundle-valid-succeeded.json",
+        "generator": "scripts/generate_causal_origin_vectors.py",
+        "kind": "mutation",
+        "mutation": "ROOT-037 synthetic child-origin graph: one-orphan-among-two-joins"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+    }
+  ]
+}

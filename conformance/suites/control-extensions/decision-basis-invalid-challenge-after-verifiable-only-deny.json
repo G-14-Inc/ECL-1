@@ -1,0 +1,154 @@
+{
+  "challenge_id": "urn:example:challenge:transfer-approval-0001",
+  "decision_id": "https://externalcontrollayer.ai/ns/decision/example-001",
+  "evaluated_at": "2026-07-27T04:30:00.090000Z",
+  "expires_at": "2026-07-27T04:30:05.100000Z",
+  "extensions": [
+    {
+      "critical": true,
+      "id": "ecl.ext.decision-basis.v1",
+      "value": {
+        "inputs": [
+          {
+            "class": "verifiable",
+            "effect": "restricts",
+            "input": "urn:example:input:payee-allow-list",
+            "reference": {
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "1111111111111111111111111111111111111111111111111111111111111111"
+              },
+              "uri": "urn:example:record:payee-allow-list-v12"
+            },
+            "required": true,
+            "source": "urn:example:system-of-record:vendor-master",
+            "status": "available"
+          },
+          {
+            "class": "verifiable",
+            "effect": "none",
+            "input": "urn:example:input:principal-transfer-mandate",
+            "reference": {
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2222222222222222222222222222222222222222222222222222222222222222"
+              },
+              "uri": "urn:example:mandate:ap-clerk-transfers"
+            },
+            "required": true,
+            "source": "urn:example:identity-provider:corporate",
+            "status": "available"
+          },
+          {
+            "class": "judgment",
+            "effect": "none",
+            "input": "urn:example:input:transfer-anomaly-score",
+            "reference": {
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "3333333333333333333333333333333333333333333333333333333333333333"
+              },
+              "uri": "urn:example:score:transfer-anomaly-0001"
+            },
+            "required": false,
+            "source": "urn:example:detector:transfer-anomaly",
+            "status": "available"
+          },
+          {
+            "class": "actor_supplied",
+            "effect": "none",
+            "input": "urn:example:input:agent-justification",
+            "reference": {
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "4444444444444444444444444444444444444444444444444444444444444444"
+              },
+              "uri": "urn:example:statement:agent-justification-0001"
+            },
+            "required": false,
+            "source": "urn:example:agent:payments-1",
+            "status": "available"
+          }
+        ],
+        "register": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "9999999999999999999999999999999999999999999999999999999999999999"
+          },
+          "uri": "urn:example:register:payments",
+          "version": "2026-07-27"
+        },
+        "verifiable_only_outcome": "deny"
+      },
+      "version": 1
+    }
+  ],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:decision-service-1"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:decision-service-1"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "epoch": 11,
+      "id": "urn:example:policy:trust-control",
+      "version": "2026-07-27"
+    },
+    "verification_time_policy": "ecl.time.issued-at.v1"
+  },
+  "issued_at": "2026-07-27T04:30:00.100000Z",
+  "issuer": {
+    "id": "urn:example:decision-service:payments",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.service.v1"
+  },
+  "message_id": "https://externalcontrollayer.ai/ns/message/resp-001",
+  "message_type": "decision_response",
+  "obligations": [],
+  "outcome": "challenge",
+  "policy": {
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "epoch": 42,
+    "id": "urn:example:policy:transfer-control",
+    "version": "42"
+  },
+  "protocol": "DCMP-2",
+  "reasons": [
+    {
+      "code": "ecl.reason.native-policy-disposition.v1"
+    }
+  ],
+  "request_id": "https://externalcontrollayer.ai/ns/message/req-001",
+  "safe_state": "ecl.state.restricted.v1",
+  "schema_version": "2.0",
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [
+      {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "id": "https://externalcontrollayer.ai/ns/message/req-001",
+        "relation": "ecl.relation.responds-to.v1"
+      }
+    ],
+    "root_trace_id": "https://externalcontrollayer.ai/ns/trace/example-001",
+    "sequence": 2,
+    "workflow_id": "https://externalcontrollayer.ai/ns/workflow/example-001"
+  }
+}

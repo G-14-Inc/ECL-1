@@ -1,0 +1,225 @@
+{
+  "acs_version": "0.1.0",
+  "guardian": {
+    "failure": "timeout",
+    "observed_at": "2026-09-30T09:00:05.000000Z",
+    "status": "failed"
+  },
+  "hook": "steps/toolCallRequest",
+  "inputs": [
+    {
+      "class": "verifiable",
+      "effect": "none",
+      "input": "urn:example:input:records-policy",
+      "reference": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "d393bf4ad89de8035c052c84e3e49c28879b80271d3cfef6360e53372a9a5643"
+        },
+        "uri": "urn:example:input-value:records-policy"
+      },
+      "required": true,
+      "source": "urn:example:source:records-policy",
+      "status": "available"
+    }
+  ],
+  "on_decision_failure": "deny",
+  "request": {
+    "action": {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "action_id": "https://externalcontrollayer.ai/ns/action/sha256/5591087ebfc975036c3f4030369b60b6db3dc96be1dffa5d0726d44143966ed0",
+      "operation": "records.update",
+      "parameters": {
+        "note": "The customer asked to close case 4411",
+        "patch": {
+          "status": "closed"
+        },
+        "record_id": "r-17"
+      },
+      "parameters_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "fba2059ded1ad7e06ac84aa15b5448420eaec4c15be0039208d956939f8bc371"
+      },
+      "required_evidence_profile": "ecl.evidence.standard.v1",
+      "risk_class": "ecl.risk.high.v1",
+      "target": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "012957913534d275cb76eac18acf965fab30e67eea609b33053a002fa0276945"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/target/sha256/012957913534d275cb76eac18acf965fab30e67eea609b33053a002fa0276945"
+      }
+    },
+    "actor": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "authority_request": {
+      "audience": "urn:example:enforcement-point:bindings",
+      "requested_validity_seconds": 30,
+      "use_policy": "single_use"
+    },
+    "constraints": {},
+    "delegation_chain": [],
+    "expires_at": "2026-09-30T09:00:30.000000Z",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.000000Z",
+    "issuer": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/9eaa3287a6b1aa2908ae331c4b89593d7c822dae9479c3ba15ae75964c5b661b",
+    "message_type": "decision_request",
+    "protocol": "DCMP-2",
+    "schema_version": "2.0",
+    "subject": {
+      "id": "urn:example:tenant:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.tenant.v1"
+    },
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:acs-failure-deny-deny",
+      "sequence": 1,
+      "workflow_id": "urn:example:workflow:acs-failure-deny-deny"
+    }
+  },
+  "response": {
+    "decision_id": "https://externalcontrollayer.ai/ns/decision/sha256/0a2c925f57a459d2ff7dfd4561c5897d43d5b145cf1f42629746f3e9ed3d5630",
+    "evaluated_at": "2026-09-30T09:00:00.100000Z",
+    "expires_at": "2026-09-30T09:00:15.100000Z",
+    "extensions": [
+      {
+        "critical": true,
+        "id": "ecl.ext.decision-basis.v1",
+        "value": {
+          "inputs": [
+            {
+              "class": "verifiable",
+              "effect": "none",
+              "input": "urn:example:input:records-policy",
+              "reference": {
+                "digest": {
+                  "algorithm": "ecl.digest.sha-256.v1",
+                  "value": "d393bf4ad89de8035c052c84e3e49c28879b80271d3cfef6360e53372a9a5643"
+                },
+                "uri": "urn:example:input-value:records-policy"
+              },
+              "required": true,
+              "source": "urn:example:source:records-policy",
+              "status": "available"
+            }
+          ],
+          "register": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "623fcf140727bacfacf4eb3a651ee945cfd430fb62107390354108c08603c52b"
+            },
+            "uri": "urn:example:register:bindings",
+            "version": "2026-09-30"
+          }
+        },
+        "version": 1
+      }
+    ],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-dcmp"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.100000Z",
+    "issuer": {
+      "id": "urn:example:decision-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.service.v1"
+    },
+    "message_id": "https://externalcontrollayer.ai/ns/message/sha256/bfcf1deb6dd7eda9e791bb90ad1cfc6c5844e930b306f4f44be442d7093a5ea5",
+    "message_type": "decision_response",
+    "obligations": [],
+    "outcome": "deny",
+    "policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "epoch": 1,
+      "id": "urn:example:policy:bindings",
+      "version": "2026-09-30"
+    },
+    "protocol": "DCMP-2",
+    "reasons": [
+      {
+        "code": "ecl.error.dependency-unavailable.v1",
+        "detail": "the policy did not permit it",
+        "retryable": false
+      }
+    ],
+    "request_id": "https://externalcontrollayer.ai/ns/message/sha256/9eaa3287a6b1aa2908ae331c4b89593d7c822dae9479c3ba15ae75964c5b661b",
+    "safe_state": "ecl.state.restricted.v1",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "977d5f770a9d7367e625af221500a27cdd16b3e0e7ad90b26919de98ff8978c5"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/9eaa3287a6b1aa2908ae331c4b89593d7c822dae9479c3ba15ae75964c5b661b",
+          "relation": "ecl.relation.responds-to.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:acs-failure-deny-deny",
+      "sequence": 2,
+      "workflow_id": "urn:example:workflow:acs-failure-deny-deny"
+    }
+  },
+  "schema_version": "ecl_acs_exchange_v1",
+  "session_id": "sess-acs-0001"
+}

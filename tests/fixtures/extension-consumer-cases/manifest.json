@@ -1,0 +1,256 @@
+{
+  "evaluated_at": "2026-09-29T10:00:00.000000Z",
+  "custom_identifier": "com.example.validated.v1",
+  "custom_value_schema": "https://externalcontrollayer.ai/ns/schema/extension/consequence-coupling/1",
+  "cases": [
+    {
+      "id": "envelope-control",
+      "file": "envelope-control.json",
+      "kind": "envelope",
+      "expected": null,
+      "sha256": "e467ea91260755bfa1bbda3102161ae438ad6368019ab3d696b8564fa80b7ad8"
+    },
+    {
+      "id": "envelope-private-critical",
+      "file": "envelope-private-critical.json",
+      "kind": "envelope",
+      "expected": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "sha256": "3f10ddb40d2c4f4c077520fe5402bd64b4e7b6f13e5367506087088e2ab0b467"
+    },
+    {
+      "id": "envelope-coupling-critical",
+      "file": "envelope-coupling-critical.json",
+      "kind": "envelope",
+      "expected": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "sha256": "38e0e20b5dc7fc2e6d8c86c354fffd0d25c20f2f5bb2b6e0f09d3af82dac84e3"
+    },
+    {
+      "id": "envelope-approval-critical",
+      "file": "envelope-approval-critical.json",
+      "kind": "envelope",
+      "expected": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "sha256": "4a4c6a62db5dc7f6e8b802eca32be2ec27cbc23fd2dfa97192acb23bf3d3d171"
+    },
+    {
+      "id": "envelope-coupling-noncritical",
+      "file": "envelope-coupling-noncritical.json",
+      "kind": "envelope",
+      "expected": null,
+      "sha256": "ce2a30b2433f38afde73de280be2654ef4695a84e8deb5028e5338725eca047f"
+    },
+    {
+      "id": "envelope-private-noncritical",
+      "file": "envelope-private-noncritical.json",
+      "kind": "envelope",
+      "expected": null,
+      "sha256": "67849e764502d80f08555c677be0a235eb80f013a330f3a2531e807766cbf08d"
+    },
+    {
+      "id": "step3-missing-policy",
+      "file": "step3-missing-policy.json",
+      "kind": "envelope",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "sha256": "81bae28175bdc1adf80c19c43239bf31746334ee762559a7d7aa6ef6ce363d9a"
+    },
+    {
+      "id": "step3-null-policy",
+      "file": "step3-null-policy.json",
+      "kind": "envelope",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "sha256": "76d6bbe0b79424360d11e6bbe84e40d5cb75ba4acb739c309791a4fcb7c9583b"
+    },
+    {
+      "id": "step3-array-policy",
+      "file": "step3-array-policy.json",
+      "kind": "envelope",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "sha256": "73082475f152b3e6e639e1a0d5caf1039732362200c61428b9cadc51cddb2b13"
+    },
+    {
+      "id": "step3-array-payload",
+      "file": "step3-array-payload.json",
+      "kind": "envelope",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "sha256": "5d802556bda66749d1758d8c96aba7a49ac9b086a18d03606861cf9bc77a540c"
+    },
+    {
+      "id": "step3-scalar-payload",
+      "file": "step3-scalar-payload.json",
+      "kind": "envelope",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "sha256": "56adbb9ae55b2851915480fd6ad993550747077da2259dc846c3dcb1f06103da"
+    },
+    {
+      "id": "step3-invalid-digest",
+      "file": "step3-invalid-digest.json",
+      "kind": "envelope",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "sha256": "a610e55ec154fd1819f1c9bcba1d0fe19994b6e6cda85f249fde0687babf4824"
+    },
+    {
+      "id": "request-control",
+      "file": "request-control.json",
+      "kind": "semantic",
+      "expected": [],
+      "sha256": "c77d636194183d4073b48cf4b5a97ee79fc55812aae57a257f375e75dd68a4c2"
+    },
+    {
+      "id": "request-approval",
+      "file": "request-approval.json",
+      "kind": "semantic",
+      "expected": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "sha256": "182652aaba79c1a70be2cefa558dcedd0dc0cd35626f09a396185c40f0ad6832"
+    },
+    {
+      "id": "request-applicable-valid",
+      "file": "request-applicable-valid.json",
+      "kind": "semantic",
+      "expected": [],
+      "sha256": "d69ac9cbf0ff171ec36410b771376d066eb998287eb4f5d8c07966865343899c"
+    },
+    {
+      "id": "request-applicable-invalid",
+      "file": "request-applicable-invalid.json",
+      "kind": "semantic",
+      "expected": [
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "sha256": "7b81df86d270f136d651acd3f854bae1dfa575420f663ba47c2f8ee64c7ca64f"
+    },
+    {
+      "id": "request-future-noncritical",
+      "file": "request-future-noncritical.json",
+      "kind": "semantic",
+      "expected": [],
+      "sha256": "e7081e5a2f8488b008d4fdf4fde8bc01ccd2926b4d3186c7c59e30f4356d4eb0"
+    },
+    {
+      "id": "request-future-critical",
+      "file": "request-future-critical.json",
+      "kind": "semantic",
+      "expected": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "sha256": "8c7be242dc1ee7818473f7da92332428f6378eac4614b51fd22f287fc788c804"
+    },
+    {
+      "id": "work-control",
+      "file": "work-control.json",
+      "kind": "semantic",
+      "expected": [],
+      "sha256": "8c9f60b082c550b09a635f8c5b823c822e84a413bdfbe9dd8ca81bc1c55bc384"
+    },
+    {
+      "id": "work-approval",
+      "file": "work-approval.json",
+      "kind": "semantic",
+      "expected": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "sha256": "b586ebdc523a0b4caa0ff80ee0dbb9fa2b46fa2a97f2158ed37a819336444576"
+    },
+    {
+      "id": "work-coupling",
+      "file": "work-coupling.json",
+      "kind": "semantic",
+      "expected": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "sha256": "f5e0f79230cce2a8c8d8a61961ddd2028e236eb42ab116c618df0ec3c26c7856"
+    },
+    {
+      "id": "work-noncritical",
+      "file": "work-noncritical.json",
+      "kind": "semantic",
+      "expected": [],
+      "sha256": "f6d11526f644c0d67426c218ee92e585e669c1eedd5ee2110eb476ec455eb23b"
+    },
+    {
+      "id": "response-future-semantics",
+      "file": "response-future-semantics.json",
+      "kind": "semantic",
+      "expected": [],
+      "sha256": "e1a7bb33f7f52b1b77899fd211f781a18f29b4014aba4de5cb013c1df65b56e8"
+    },
+    {
+      "id": "custom-request-valid",
+      "file": "custom-request-valid.json",
+      "kind": "custom",
+      "expected": [],
+      "sha256": "a1031b3576e92cfa35f34a22dad7a2371c641445d1124ba891c2ec359f098ac2"
+    },
+    {
+      "id": "custom-request-invalid",
+      "file": "custom-request-invalid.json",
+      "kind": "custom",
+      "expected": [
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "sha256": "c51d1c36fd1a11b309cc5d0e4d0d94ccd15bca5faae87422f0078b899ff0c682"
+    },
+    {
+      "id": "custom-event-valid",
+      "file": "custom-event-valid.json",
+      "kind": "custom",
+      "expected": [],
+      "sha256": "b77a34621b8e3e9813616c2381b120f30382e65b7ef4e2714acbcd9ed0fb45e8"
+    },
+    {
+      "id": "custom-event-invalid",
+      "file": "custom-event-invalid.json",
+      "kind": "custom",
+      "expected": [
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "sha256": "5fd7110c9b7fb63d1234a3cbf1de34f022397856a5305428a37d0eb6a6328459"
+    },
+    {
+      "id": "custom-envelope-valid",
+      "file": "custom-envelope-valid.json",
+      "kind": "custom",
+      "expected": [],
+      "sha256": "597c54df1a1169b728ea5bac3ea15b7be20becf9689eb28660942cedebdadf89"
+    },
+    {
+      "id": "custom-envelope-invalid",
+      "file": "custom-envelope-invalid.json",
+      "kind": "custom",
+      "expected": [
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "sha256": "3351c44be79a8446a7b03a94e2850f1dcdd9d39cec3be19350652b07a9eb17a3"
+    },
+    {
+      "id": "custom-work-valid",
+      "file": "custom-work-valid.json",
+      "kind": "custom",
+      "expected": [],
+      "sha256": "23946f9d0a1abc101b7e5686ea29069534bd98877996e57334d6fbee409dd2f7"
+    },
+    {
+      "id": "custom-work-invalid",
+      "file": "custom-work-invalid.json",
+      "kind": "custom",
+      "expected": [
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "sha256": "87e5b822b6a6aadd0881b486f178a3374cc1ec46a5758f2ecd43bfd0f78ccd04"
+    },
+    {
+      "id": "bundle-control",
+      "file": "bundle-control.json",
+      "kind": "bundle",
+      "expected": "verified",
+      "sha256": "e891ebf2778652d519a2dcc3dd4eabcb8c8bc0d1f11971ee1aee8cfc269e9a80"
+    },
+    {
+      "id": "bundle-outer-inapplicable",
+      "file": "bundle-outer-inapplicable.json",
+      "kind": "bundle",
+      "expected": "invalid",
+      "sha256": "6d73fc9003aef9f5e6bab479c1ecb871713b08c6d47b86ebd9ba640bd20170ac"
+    }
+  ]
+}

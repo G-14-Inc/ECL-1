@@ -1,0 +1,419 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-offline-package",
+  "vectors": [
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.expired.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "current-trust-failed",
+      "id": "package-current-trust-failed-expired",
+      "negates": [
+        "IE1-022"
+      ],
+      "path": "conformance/suites/offline-package/package-current-trust-failed-expired.zip",
+      "requirement_ids": [
+        "IE1-022"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the package's expiry before the evaluation time"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.revoked.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "current-trust-failed",
+      "id": "package-current-trust-failed-revoked",
+      "negates": [
+        "EBMP2-060",
+        "IE1-022"
+      ],
+      "path": "conformance/suites/offline-package/package-current-trust-failed-revoked.zip",
+      "requirement_ids": [
+        "EBMP2-060",
+        "IE1-022"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "verify under a current caller policy that revoked every signer after the evidence was signed, while the package carries the earlier policy"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [
+        "conformance/suites/offline-package/trust-policy.json"
+      ],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy-revoked-after-use.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "package-incomplete-artifact-missing",
+      "negates": [
+        "EBMP2-033",
+        "IE1-021"
+      ],
+      "path": "conformance/suites/offline-package/package-incomplete-artifact-missing.zip",
+      "requirement_ids": [
+        "EBMP2-033",
+        "IE1-021"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out of the archive the time evidence that the manifest names"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "incomplete",
+      "id": "package-incomplete-payload-missing",
+      "negates": [
+        "IE1-021"
+      ],
+      "path": "conformance/suites/offline-package/package-incomplete-payload-missing.zip",
+      "requirement_ids": [
+        "IE1-021"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "leave out the payload artifact of one packaged envelope"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-artifact-digest",
+      "negates": [
+        "IE1-021"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-artifact-digest.zip",
+      "requirement_ids": [
+        "IE1-021"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "reorder the members of one envelope artifact after the manifest bound its digest"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-carried-trust-is-evidence",
+      "negates": [
+        "EBMP2-057",
+        "IE1-022"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-carried-trust-is-evidence.zip",
+      "requirement_ids": [
+        "EBMP2-057",
+        "IE1-022"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "re-sign the observation with a key that only the package's own trust policy holds, and carry that policy as the package's trust_policy artifact"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.resource-limit-exceeded.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-entry-name-over-limit",
+      "negates": [
+        "IE1-022",
+        "IE1-028"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-entry-name-over-limit.zip",
+      "requirement_ids": [
+        "IE1-022",
+        "IE1-028"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the verification keys, in the manifest and in the archive, with a path of 4,105 bytes, over the verifier's declared limit of 4,096 path bytes"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-manifest-path-outside-portable-set",
+      "negates": [
+        "IE1-022",
+        "IE1-031"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-manifest-path-outside-portable-set.zip",
+      "requirement_ids": [
+        "IE1-022",
+        "IE1-031"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "name in the manifest an artifact whose path has a space, which no archive of the profile can hold"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-name-case-alias",
+      "negates": [
+        "IE1-030",
+        "IE1-031"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-name-case-alias.zip",
+      "requirement_ids": [
+        "IE1-030",
+        "IE1-031"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry a second member, named by the manifest, whose name differs from the trust policy's only in ASCII case"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-name-outside-portable-set",
+      "negates": [
+        "IE1-031"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-name-outside-portable-set.zip",
+      "requirement_ids": [
+        "IE1-031"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "name the time evidence, in the manifest and in the archive, with a letter outside the POSIX portable filename characters"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-not-stored",
+      "negates": [
+        "IE1-031"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-not-stored.zip",
+      "requirement_ids": [
+        "IE1-031"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "store one member deflated instead of stored"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-parent-traversal",
+      "negates": [
+        "IE1-030"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-parent-traversal.zip",
+      "requirement_ids": [
+        "IE1-030"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a member whose name climbs out of the package root"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.integrity-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-payload-not-in-evidence",
+      "negates": [
+        "IE1-021"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-payload-not-in-evidence.zip",
+      "requirement_ids": [
+        "IE1-021"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "carry, beside each true payload, a payload artifact that no packaged envelope signs"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.semantic-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "package-invalid-unnamed-member",
+      "negates": [
+        "IE1-021"
+      ],
+      "path": "conformance/suites/offline-package/package-invalid-unnamed-member.zip",
+      "requirement_ids": [
+        "IE1-021"
+      ],
+      "source": {
+        "base_vector": "conformance/suites/offline-package/package-valid-verified.zip",
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "mutation",
+        "mutation": "add a member that the manifest does not name"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "package-valid-corroborated",
+      "path": "conformance/suites/offline-package/package-valid-corroborated.zip",
+      "requirement_ids": [
+        "EBMP2-033",
+        "EBMP2-060",
+        "IE1-021",
+        "IE1-022",
+        "IE1-030",
+        "IE1-031"
+      ],
+      "source": {
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-10-01T00:00:00Z",
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "expected_verdict": "verified",
+      "id": "package-valid-verified",
+      "path": "conformance/suites/offline-package/package-valid-verified.zip",
+      "requirement_ids": [
+        "EBMP2-033",
+        "EBMP2-060",
+        "IE1-021",
+        "IE1-022",
+        "IE1-030",
+        "IE1-031"
+      ],
+      "source": {
+        "generator": "scripts/generate_package_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "package",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/offline-package/trust-policy.json"
+    }
+  ]
+}

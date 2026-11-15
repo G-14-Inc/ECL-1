@@ -1,0 +1,273 @@
+{
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "decisions": [
+    {
+      "compatibility_effect": "Previously accepted admitting pairs evaluated at or after request expiry are now refused. No new authorization-end bound is imposed by request expiry.",
+      "contract": "An admit requires evaluated_at < request.expires_at, without expiry skew. deny, hold and challenge may be evaluated at or after expiry. Resulting authorization may outlive the request within DCMP2-049 bounds.",
+      "diagnostic": "ecl.error.request-binding-invalid.v1",
+      "id": "DESIGN-05",
+      "order": "After request identity/digest and issued-at chronology, before admit audience, scope and authority checks.",
+      "requirements": [
+        "DCMP2-047",
+        "DCMP2-049"
+      ]
+    },
+    {
+      "compatibility_effect": "A complete history containing one admitted continuation and denied or challenged reuse can verify. A missing approval alone leaves it incomplete. Two admits remain invalid, including when the named approval is missing.",
+      "contract": "Only two admitted continuations of the same challenge response violate continuation uniqueness. Refusal histories retain all other binding, approval, expiry and causal checks.",
+      "diagnostic": "ecl.error.decision-binding-invalid.v1",
+      "id": "DESIGN-08",
+      "requirements": [
+        "DCMP2-057",
+        "EBMP2-078"
+      ]
+    }
+  ],
+  "fixture_generator": "scripts/generate_design_decision_vectors.py",
+  "historical_fixture_id_policy": "Keep the released fixture IDs and paths, including their historical invalid prefix, so the changed expectation is explicit and traceable.",
+  "historical_source": "Published v1.0.1 is preserved as the comparison baseline.",
+  "migrations": [
+    {
+      "after": {
+        "covers": [],
+        "evaluated_at": "2026-10-01T00:00:00Z",
+        "expected": "pass",
+        "expected_scope": {
+          "established": [
+            "envelope-signatures",
+            "current-trust",
+            "object-rules",
+            "decision-basis-recorded",
+            "bindings",
+            "release-within-authority",
+            "causal-completeness"
+          ],
+          "not_established": [
+            "trusted-time",
+            "recorded-times-true",
+            "effects-occurred",
+            "deployment-assessed",
+            "statements-true"
+          ],
+          "reasons": {}
+        },
+        "expected_secondary_ids": [],
+        "expected_verdict": "verified",
+        "id": "bundle-invalid-continuation-second-of-one-challenge",
+        "path": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "requirement_ids": [
+          "DCMP2-021",
+          "DCMP2-056",
+          "EBMP2-078"
+        ],
+        "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+        "source": {
+          "base_vector": "conformance/suites/evidence-bundle/bundle-valid-continuation-after-challenge.json",
+          "generator": "scripts/generate_bundle_vectors.py",
+          "kind": "mutation",
+          "mutation": "DESIGN-08 migration: preserve the released signed history containing one admitted continuation and a second denied continuation; only admitted continuations count toward uniqueness"
+        },
+        "stage": "evidence-bundle",
+        "trust_policy_history_paths": [],
+        "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+      },
+      "before": {
+        "covers": [],
+        "evaluated_at": "2026-10-01T00:00:00Z",
+        "expected": "fail",
+        "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+        "expected_scope": {
+          "established": [],
+          "not_established": [
+            "envelope-signatures",
+            "current-trust",
+            "trusted-time",
+            "object-rules",
+            "decision-basis-recorded",
+            "bindings",
+            "release-within-authority",
+            "causal-completeness",
+            "recorded-times-true",
+            "effects-occurred",
+            "deployment-assessed",
+            "statements-true"
+          ],
+          "reasons": {}
+        },
+        "expected_secondary_ids": [],
+        "expected_verdict": "invalid",
+        "id": "bundle-invalid-continuation-second-of-one-challenge",
+        "negates": [
+          "DCMP2-021",
+          "DCMP2-056",
+          "EBMP2-078"
+        ],
+        "path": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+        "requirement_ids": [
+          "DCMP2-021",
+          "DCMP2-056",
+          "EBMP2-078"
+        ],
+        "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+        "source": {
+          "base_vector": "conformance/suites/evidence-bundle/bundle-valid-continuation-after-challenge.json",
+          "generator": "scripts/generate_bundle_vectors.py",
+          "kind": "mutation",
+          "mutation": "continue the same challenge a second time, with a request answered by a deny"
+        },
+        "stage": "evidence-bundle",
+        "trust_policy_history_paths": [],
+        "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+      },
+      "changed_fields": [
+        "expected",
+        "expected_primary_id",
+        "expected_scope",
+        "expected_verdict",
+        "negates",
+        "source"
+      ],
+      "fixture": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge.json",
+      "fixture_bytes_unchanged": true,
+      "fixture_sha256_after": "2e4902f66475485fe184c970cfbb6598d4280eedf949e587039811a1637c7b5a",
+      "fixture_sha256_before": "2e4902f66475485fe184c970cfbb6598d4280eedf949e587039811a1637c7b5a",
+      "id": "bundle-invalid-continuation-second-of-one-challenge",
+      "manifest_row_sha256_after": "08ac56dacbc23ed56c4309f7a351665e67d357394d5f8fc60fd3fa54b8d9c5c0",
+      "manifest_row_sha256_before": "f73e3b53d69c4a9617c188462c9165c68b36fd7e3bd476b40697a21faccc2663",
+      "row_digest_encoding": "UTF-8 JSON, sorted keys, compact separators, no trailing newline"
+    },
+    {
+      "after": {
+        "covers": [],
+        "evaluated_at": "2026-10-01T00:00:00Z",
+        "expected": "fail",
+        "expected_primary_id": "ecl.error.causal-closure-incomplete.v1",
+        "expected_scope": {
+          "established": [
+            "envelope-signatures",
+            "current-trust",
+            "object-rules",
+            "decision-basis-recorded",
+            "release-within-authority"
+          ],
+          "not_established": [
+            "trusted-time",
+            "bindings",
+            "causal-completeness",
+            "recorded-times-true",
+            "effects-occurred",
+            "deployment-assessed",
+            "statements-true"
+          ],
+          "reasons": {}
+        },
+        "expected_secondary_ids": [],
+        "expected_unresolved_predecessor_ids": [
+          "https://externalcontrollayer.ai/ns/receipt/sha256/479ca8ea736f923c797f7c8cc42011112ae1bed682996ba7d65e6ce7155afba6"
+        ],
+        "expected_verdict": "incomplete",
+        "id": "bundle-invalid-continuation-second-of-one-challenge-approval-absent",
+        "negates": [
+          "EBMP2-023",
+          "EBMP2-059"
+        ],
+        "path": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge-approval-absent.json",
+        "requirement_ids": [
+          "DCMP2-021",
+          "DCMP2-056",
+          "EBMP2-023",
+          "EBMP2-059",
+          "EBMP2-078"
+        ],
+        "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+        "source": {
+          "base_vector": "conformance/suites/evidence-bundle/bundle-valid-continuation-after-challenge.json",
+          "generator": "scripts/generate_bundle_vectors.py",
+          "kind": "mutation",
+          "mutation": "DESIGN-08 migration: preserve the released signed history containing one admitted continuation and a second denied continuation; approval absent leaves causal closure incomplete"
+        },
+        "stage": "evidence-bundle",
+        "trust_policy_history_paths": [],
+        "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+      },
+      "before": {
+        "covers": [],
+        "evaluated_at": "2026-10-01T00:00:00Z",
+        "expected": "fail",
+        "expected_primary_id": "ecl.error.decision-binding-invalid.v1",
+        "expected_scope": {
+          "established": [],
+          "not_established": [
+            "envelope-signatures",
+            "current-trust",
+            "trusted-time",
+            "object-rules",
+            "decision-basis-recorded",
+            "bindings",
+            "release-within-authority",
+            "causal-completeness",
+            "recorded-times-true",
+            "effects-occurred",
+            "deployment-assessed",
+            "statements-true"
+          ],
+          "reasons": {}
+        },
+        "expected_secondary_ids": [],
+        "expected_verdict": "invalid",
+        "id": "bundle-invalid-continuation-second-of-one-challenge-approval-absent",
+        "negates": [
+          "DCMP2-021",
+          "DCMP2-056",
+          "EBMP2-078"
+        ],
+        "path": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge-approval-absent.json",
+        "requirement_ids": [
+          "DCMP2-021",
+          "DCMP2-056",
+          "EBMP2-078"
+        ],
+        "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+        "source": {
+          "base_vector": "conformance/suites/evidence-bundle/bundle-valid-continuation-after-challenge.json",
+          "generator": "scripts/generate_bundle_vectors.py",
+          "kind": "mutation",
+          "mutation": "continue the same challenge twice and leave out the approval both name"
+        },
+        "stage": "evidence-bundle",
+        "trust_policy_history_paths": [],
+        "trust_policy_path": "conformance/suites/evidence-bundle/trust-policy.json"
+      },
+      "changed_fields": [
+        "expected_primary_id",
+        "expected_scope",
+        "expected_unresolved_predecessor_ids",
+        "expected_verdict",
+        "negates",
+        "requirement_ids",
+        "source"
+      ],
+      "fixture": "conformance/suites/evidence-bundle/bundle-invalid-continuation-second-of-one-challenge-approval-absent.json",
+      "fixture_bytes_unchanged": true,
+      "fixture_sha256_after": "240050ff3694fd7807ec2d879b699634f4aa59377be29e2e4a4ca5a4128c8f52",
+      "fixture_sha256_before": "240050ff3694fd7807ec2d879b699634f4aa59377be29e2e4a4ca5a4128c8f52",
+      "id": "bundle-invalid-continuation-second-of-one-challenge-approval-absent",
+      "manifest_row_sha256_after": "935a5bde24ddc19a493d57b22f581fa0728d03336f3d071ca58110dd13c17b79",
+      "manifest_row_sha256_before": "2d3be189c8e75e7f8cc56a8ca5a8329c17f002c12067d5c75dcc1fbc70c7db5b",
+      "row_digest_encoding": "UTF-8 JSON, sorted keys, compact separators, no trailing newline"
+    }
+  ],
+  "new_signed_vector_count": 21,
+  "new_signed_vector_manifest": "conformance/suites/public-review-design-decisions/manifest.json",
+  "preparation_date": "2026-11-10",
+  "record_type": "public-review-contract-decisions-and-fixture-migration",
+  "source_version": "1.0.2-review.1",
+  "status": "Implemented for the public-review candidate; this preparation record is not artifact-bound release approval.",
+  "unchanged_assurance_limits": [
+    "No additional approval-time ordering, digest-bound approval causal path or human-principal independence requirement is introduced by these decisions (DESIGN-01).",
+    "No generic proof-own-time versus checked_at requirement is introduced (DESIGN-04)."
+  ]
+}

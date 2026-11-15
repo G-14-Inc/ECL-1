@@ -1,0 +1,55 @@
+--- previous-current/formal/run_checks.py
++++ current/formal/run_checks.py
+@@ -173,8 +173,9 @@
+ _TRACE_STATE = re.compile(r"^State \d+:", re.MULTILINE)
+ _ILL_FORMED = re.compile(r"wellformedness checks? failed")
+ _SUMMARY = re.compile(
+-    r"^\s+(\w+) \((?:all-traces|exists-trace)\): "
+-    r"(verified|falsified - found trace|analysis incomplete)(?: \((\d+) steps\))?",
++    r"^\s+(\w+) \((all-traces|exists-trace)\): "
++    r"(verified|falsified - found trace|falsified - no trace found|analysis incomplete)"
++    r"(?: \((\d+) steps\))?",
+     re.MULTILINE,
+ )
+ 
+@@ -354,9 +355,10 @@
+         result = parse_tlc(name, expected, output, seconds) if tlc else parse_tamarin(
+             name, lemma, output, seconds
+         )
+-        # TLC uses nonzero status for expected counterexamples. A success banner
+-        # accompanying abnormal exit is not a successful exhaustive check.
+-        if returncode != 0 and (not tlc or result.observed == "pass"):
++        # TLC 1.7.4 uses 12/13 for safety/liveness counterexamples. Neither a
++        # success nor a violation banner can override an abnormal process exit.
++        valid_code = returncode == 0 if not tlc or result.observed == "pass" else returncode in (12, 13)
++        if not valid_code:
+             result.observed, result.passed = "tool-error", False
+     except subprocess.TimeoutExpired as error:
+         def decoded(value: str | bytes | None) -> str:
+@@ -404,8 +406,9 @@
+ 
+ def parse_tamarin(name: str, lemma: str | None, output: str, seconds: float) -> Result:
+     found = _SUMMARY.findall(output)
+-    lemmas = {match[0]: match[1] for match in found}
+-    steps = {match[0]: int(match[2]) for match in found if match[2]}
++    quantifiers = {match[0]: match[1] for match in found}
++    lemmas = {match[0]: match[2] for match in found}
++    steps = {match[0]: int(match[3]) for match in found if match[3]}
+     wellformed = _ILL_FORMED.search(output) is None
+     if lemma is None:
+         expected = "all verified"
+@@ -416,9 +419,13 @@
+         )
+     else:
+         expected = f"{lemma} falsified"
++        falsified_status = {
++            "all-traces": "falsified - found trace",
++            "exists-trace": "falsified - no trace found",
++        }.get(quantifiers.get(lemma, ""))
+         observed = (
+             f"{lemma} falsified"
+-            if wellformed and lemmas.get(lemma) == "falsified - found trace"
++            if wellformed and falsified_status is not None and lemmas.get(lemma) == falsified_status
+             else f"{lemma} {lemmas.get(lemma, 'not analyzed')}"
+         )
+     result = Result(name, "tamarin", expected, observed, observed == expected, round(seconds, 1))

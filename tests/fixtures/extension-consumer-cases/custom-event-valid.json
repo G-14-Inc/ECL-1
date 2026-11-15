@@ -1,0 +1,93 @@
+{
+  "event": {
+    "action_id": "https://externalcontrollayer.ai/ns/action/sha256/a71319f67ab68b78388bfaed1a7eb03fadafe9c3139569947d4aa23bca97ac5d",
+    "attempt_id": "urn:example:attempt:events-1-1",
+    "authority": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "e820bc57193af8eca709cd88e6016dc2d340fc65aa40455b5574080e414e89d0"
+      },
+      "uri": "https://externalcontrollayer.ai/ns/authority/sha256/92dc441b3b0b3d0183884aa2570977b2b1cec9e369d3c2daaf753b416e905e8d"
+    },
+    "decision": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aa3044be739bf531eeda97960b70b38aa4987d034153d824a93bec83eaa434e5"
+      },
+      "media_type": "application/vnd.ecl.dcmp+json",
+      "uri": "https://externalcontrollayer.ai/ns/message/sha256/434147b4a372e5b36cb9b2db2bac1e8d07443392a54e1a69d01b2b6cbb7c4dd1"
+    },
+    "kind": "execution",
+    "side_effects": [
+      {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "uri": "urn:example:record:bundle-r1"
+      }
+    ],
+    "state": "succeeded"
+  },
+  "event_type": "execution_terminal",
+  "extensions": [
+    {
+      "id": "com.example.validated.v1",
+      "version": 1,
+      "critical": true,
+      "value": {
+        "witness_requirement": "urn:example:witness"
+      }
+    }
+  ],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:bundle-ep"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:bundle-ep"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "7c121317dfd43fd5c88bc100fffec09d0f8babaaf8cb225ad3a61429f5d38cf7"
+      },
+      "epoch": 1,
+      "id": "urn:example:trust-policy:bundle",
+      "version": "1"
+    },
+    "verification_time_policy": "ecl.time.observed-at.v1"
+  },
+  "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/8d9e5be3f3efd7552006801fa49ff50c57e84382d14423920a9a66dbe44376ad",
+  "object_type": "event_record",
+  "observed_at": "2026-09-29T10:00:00.400000Z",
+  "producer": {
+    "id": "urn:example:ep:test",
+    "trust_domain": "urn:example:trust-domain:control",
+    "type": "ecl.principal.enforcement-point.v1"
+  },
+  "protocol": "EBMP-2",
+  "schema_version": "2.0",
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [
+      {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "7f86b9dfc60c1072ea401c5def1a4e3fbdd8051d802a16f6ee516076a5b5e2ed"
+        },
+        "id": "https://externalcontrollayer.ai/ns/receipt/sha256/8aae38a4d0b0ab115a6d57c617972244df81c4cce1855c319c124e0aa31734b6",
+        "relation": "ecl.relation.follows.v1"
+      }
+    ],
+    "root_trace_id": "urn:example:trace:events-1",
+    "sequence": 15,
+    "workflow_id": "urn:example:workflow:events-1"
+  }
+}

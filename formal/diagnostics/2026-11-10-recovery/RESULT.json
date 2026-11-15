@@ -1,0 +1,263 @@
+{
+  "purpose": "ROOT-051 affected model regressions, new recovery safety, witness and mutant",
+  "scope": "Three existing correct configurations with their original bounds/properties plus recovery safety; one recovery mutant; one recovery reachability witness; original counterexample regression. Historical32TLC/9Tamarin unchanged.",
+  "started_utc": "2026-11-10T23:36:31.251527+00:00",
+  "tool_sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88",
+  "java_version": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment (build 17.0.20.1+1-1-22.04-Ubuntu)\nOpenJDK 64-Bit Server VM (build 17.0.20.1+1-1-22.04-Ubuntu, mixed mode, sharing)\n",
+  "source_hashes": {
+    "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+    "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+  },
+  "new_formal_execution": true,
+  "cases": [
+    {
+      "name": "correct-binding",
+      "expected": "no error",
+      "argv": [
+        "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+        "-Xmx1800m",
+        "-XX:+UseParallelGC",
+        "-Djava.io.tmpdir=/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-binding",
+        "-cp",
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tla2tools-1.7.4.jar",
+        "tlc2.TLC",
+        "-workers",
+        "2",
+        "-metadir",
+        "/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-binding/states",
+        "-config",
+        "case.cfg",
+        "RecoveryReview.tla"
+      ],
+      "inputs": {
+        "case.cfg": "81f912bc0599dbdd19378048631537c3c32e2d653125ff4138488cfa0e091cad",
+        "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+        "RecoveryReview.tla": "ef8fb363b8ff1b79c299a897b333968739c39a65831d986e1a75b6e6697438ef",
+        "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+      },
+      "timeout_seconds": 1200,
+      "returncode": 0,
+      "elapsed_seconds": 8.48,
+      "outputs": {
+        "stdout.log": "4c4bd2eb98f3d85c6a045858a11af189610aa2272cac4e52a5b27ef47ce7d83e",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "passed": true,
+      "statistics": [
+        "Progress(11) at 2026-11-10 18:36:34: 533,637 states generated (533,637 s/min), 198,676 distinct states found (198,676 ds/min), 84,141 states left on queue.",
+        "  because two distinct states had the same fingerprint:",
+        "1081821 states generated, 453291 distinct states found, 0 states left on queue.",
+        "The depth of the complete state graph search is 14.",
+        "Finished in 10s at (2026-11-10 18:36:42)"
+      ]
+    },
+    {
+      "name": "correct-control",
+      "expected": "no error",
+      "argv": [
+        "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+        "-Xmx1800m",
+        "-XX:+UseParallelGC",
+        "-Djava.io.tmpdir=/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-control",
+        "-cp",
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tla2tools-1.7.4.jar",
+        "tlc2.TLC",
+        "-workers",
+        "2",
+        "-metadir",
+        "/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-control/states",
+        "-config",
+        "case.cfg",
+        "RecoveryReview.tla"
+      ],
+      "inputs": {
+        "case.cfg": "14a64e29db0739e07c8cd21fa9245dc5268e36f34150c3b87b96e5529e67f6be",
+        "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+        "RecoveryReview.tla": "ef8fb363b8ff1b79c299a897b333968739c39a65831d986e1a75b6e6697438ef",
+        "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+      },
+      "timeout_seconds": 1200,
+      "returncode": 0,
+      "elapsed_seconds": 91.582,
+      "outputs": {
+        "stdout.log": "b047616992f55e6b06c8edf355b0e7ed042ff69d3ee1e1274bc13e7aea85af9f",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "passed": true,
+      "statistics": [
+        "Progress(13) at 2026-11-10 18:36:45: 867,224 states generated (867,224 s/min), 339,193 distinct states found (339,193 ds/min), 167,104 states left on queue.",
+        "Progress(20) at 2026-11-10 18:37:51: 19,851,535 states generated (18,984,311 s/min), 5,343,274 distinct states found (5,004,081 ds/min), 808,863 states left on queue.",
+        "  because two distinct states had the same fingerprint:",
+        "28484105 states generated, 6936232 distinct states found, 0 states left on queue.",
+        "The depth of the complete state graph search is 26.",
+        "Finished in 01min 37s at (2026-11-10 18:38:19)"
+      ]
+    },
+    {
+      "name": "correct-liveness",
+      "expected": "no error",
+      "argv": [
+        "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+        "-Xmx1800m",
+        "-XX:+UseParallelGC",
+        "-Djava.io.tmpdir=/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness",
+        "-cp",
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tla2tools-1.7.4.jar",
+        "tlc2.TLC",
+        "-workers",
+        "2",
+        "-metadir",
+        "/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness/states",
+        "-config",
+        "case.cfg",
+        "RecoveryReview.tla"
+      ],
+      "inputs": {
+        "case.cfg": "9071dd43a357226a3323286db81ca86c99f239c0fd4631d3449493aa9142cb6e",
+        "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+        "RecoveryReview.tla": "ef8fb363b8ff1b79c299a897b333968739c39a65831d986e1a75b6e6697438ef",
+        "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+      },
+      "timeout_seconds": 1200,
+      "returncode": 0,
+      "elapsed_seconds": 9.482,
+      "outputs": {
+        "stdout.log": "51fd098a10bcbacdb8e6df2b1b5e891d3b870d3780a3166f127e61a833bbe2fb",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "passed": true,
+      "statistics": [
+        "Checking 5 branches of temporal properties for the current state space with 202745 total distinct states at (2026-11-10 18:38:26)",
+        "Progress(13) at 2026-11-10 18:38:26: 89,118 states generated (89,118 s/min), 40,549 distinct states found (40,549 ds/min), 13,208 states left on queue.",
+        "Progress(18) at 2026-11-10 18:38:30: 222,073 states generated, 89,491 distinct states found, 0 states left on queue.",
+        "Checking 5 branches of temporal properties for the complete state space with 447455 total distinct states at (2026-11-10 18:38:30)",
+        "  because two distinct states had the same fingerprint:",
+        "222073 states generated, 89491 distinct states found, 0 states left on queue.",
+        "The depth of the complete state graph search is 18.",
+        "Finished in 11s at (2026-11-10 18:38:31)"
+      ]
+    },
+    {
+      "name": "broken-recovery-without-reconciliation",
+      "expected": "RecoveryBeforeNormal",
+      "argv": [
+        "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+        "-Xmx1800m",
+        "-XX:+UseParallelGC",
+        "-Djava.io.tmpdir=/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-recovery-without-reconciliation",
+        "-cp",
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tla2tools-1.7.4.jar",
+        "tlc2.TLC",
+        "-workers",
+        "2",
+        "-metadir",
+        "/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-recovery-without-reconciliation/states",
+        "-config",
+        "case.cfg",
+        "RecoveryReview.tla"
+      ],
+      "inputs": {
+        "case.cfg": "41f0c67476872f0600906b87c112c1cec230ca534e09fd35f084eefe5973d389",
+        "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+        "RecoveryReview.tla": "ef8fb363b8ff1b79c299a897b333968739c39a65831d986e1a75b6e6697438ef",
+        "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+      },
+      "timeout_seconds": 1200,
+      "returncode": 13,
+      "elapsed_seconds": 0.716,
+      "outputs": {
+        "stdout.log": "469eb8c8635ee48fe93e3708051df88443ac93c576dc3decfb4139c0771d0a97",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "passed": true,
+      "statistics": [
+        "69 states generated, 50 distinct states found, 39 states left on queue.",
+        "The depth of the complete state graph search is 4.",
+        "Finished in 00s at (2026-11-10 18:38:32)"
+      ]
+    },
+    {
+      "name": "witness-effect-after-reconciliation",
+      "expected": "WitnessNoEffectAfterRecovery",
+      "argv": [
+        "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+        "-Xmx1800m",
+        "-XX:+UseParallelGC",
+        "-Djava.io.tmpdir=/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/witness-effect-after-reconciliation",
+        "-cp",
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tla2tools-1.7.4.jar",
+        "tlc2.TLC",
+        "-workers",
+        "2",
+        "-metadir",
+        "/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/witness-effect-after-reconciliation/states",
+        "-config",
+        "case.cfg",
+        "RecoveryReview.tla"
+      ],
+      "inputs": {
+        "case.cfg": "373a2f92006365b913448bc7ee5bd0a3b71ebdb5b15e41ce3b373414bac24455",
+        "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+        "RecoveryReview.tla": "ef8fb363b8ff1b79c299a897b333968739c39a65831d986e1a75b6e6697438ef",
+        "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+      },
+      "timeout_seconds": 1200,
+      "returncode": 13,
+      "elapsed_seconds": 0.966,
+      "outputs": {
+        "stdout.log": "e43cbd89e24a8bdbfee05b32936360bcac680140bfe93e35726274d0ebd8831d",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "passed": true,
+      "statistics": [
+        "9620 states generated, 4635 distinct states found, 3139 states left on queue.",
+        "The depth of the complete state graph search is 8.",
+        "Finished in 00s at (2026-11-10 18:38:33)"
+      ]
+    },
+    {
+      "name": "original-recovery-counterexample-regression",
+      "expected": "no error",
+      "argv": [
+        "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+        "-Xmx1800m",
+        "-XX:+UseParallelGC",
+        "-Djava.io.tmpdir=/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/original-recovery-counterexample-regression",
+        "-cp",
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tla2tools-1.7.4.jar",
+        "tlc2.TLC",
+        "-workers",
+        "2",
+        "-metadir",
+        "/workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/original-recovery-counterexample-regression/states",
+        "-config",
+        "case.cfg",
+        "RecoveryReview.tla"
+      ],
+      "inputs": {
+        "case.cfg": "f07464dd2965105864e023780d71413eca51ec2ff326671832afcbe62aa247ad",
+        "ECLCore.tla": "4b8c9f73a7849ea401b46bf51ab52fab312eea57aceaa3c534bfa1c5408ea465",
+        "RecoveryReview.tla": "ef8fb363b8ff1b79c299a897b333968739c39a65831d986e1a75b6e6697438ef",
+        "MC.tla": "cc6dc3675e5da054912f126bb9ad5ec1d6ffb65b6f6ebcbbe483804cfb59fadc"
+      },
+      "timeout_seconds": 1200,
+      "returncode": 0,
+      "elapsed_seconds": 90.93,
+      "outputs": {
+        "stdout.log": "5aad01c26caf532bd0d7f1d4c302c05e68c83e155b99fc563a51b90262d5a160",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "passed": true,
+      "statistics": [
+        "Progress(13) at 2026-11-10 18:38:37: 876,889 states generated (876,889 s/min), 341,983 distinct states found (341,983 ds/min), 168,555 states left on queue.",
+        "Progress(20) at 2026-11-10 18:39:42: 20,012,663 states generated (19,135,774 s/min), 5,383,770 distinct states found (5,041,787 ds/min), 800,036 states left on queue.",
+        "  because two distinct states had the same fingerprint:",
+        "28484105 states generated, 6936232 distinct states found, 0 states left on queue.",
+        "The depth of the complete state graph search is 26.",
+        "Finished in 01min 38s at (2026-11-10 18:40:12)"
+      ]
+    }
+  ],
+  "status": "passed",
+  "finished_utc": "2026-11-10T23:40:13.318952+00:00"
+}

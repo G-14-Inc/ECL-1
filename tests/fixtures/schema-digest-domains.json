@@ -1,0 +1,2398 @@
+[
+  {
+    "id": "acs-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "d3d907d01a0f2faad6a32fd583b7b428efa3e755cd61bfc9595c8215754fb4d2"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": true
+  },
+  {
+    "id": "acs-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "aarm-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "dd53a9c09a49a91ec2bcf7d9d34df189c3cc226eaec718738f3e508530ca1062"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": true
+  },
+  {
+    "id": "aarm-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": false
+  },
+  {
+    "id": "aarm-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": false
+  },
+  {
+    "id": "aarm-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": false
+  },
+  {
+    "id": "aarm-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": false
+  },
+  {
+    "id": "aarm-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": false
+  },
+  {
+    "id": "aarm-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/aarm-receipt/1",
+    "value": {
+      "decision": "ALLOW",
+      "receipt_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      },
+      "receipt_id": "rct-allow-0001"
+    },
+    "valid": false
+  },
+  {
+    "id": "basis-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "623fcf140727bacfacf4eb3a651ee945cfd430fb62107390354108c08603c52b"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "basis-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-512.v1",
+          "value": "abababababababababababababababababababababababababababababababab"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "basis-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.principal.human.v1",
+          "value": "abababababababababababababababababababababababababababababababab"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "basis-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "abababababababababababababababab"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "basis-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "basis-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "basis-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/decision-basis/1",
+    "value": {
+      "inputs": [
+        {
+          "class": "verifiable",
+          "effect": "supports",
+          "input": "urn:example:input:payments-policy",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "d7c1fbc8fa10cb2db45f0eaa29248a6d7c67529b887091c43c85711b3897ab91"
+            },
+            "uri": "urn:example:input-value:payments-policy"
+          },
+          "required": true,
+          "source": "urn:example:source:payments-policy",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-session-context",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "96a80f6a9890eda4b471686b80f890a79b6cea1263feff65d014d8e965d49635"
+            },
+            "uri": "urn:example:input-value:aarm-session-context"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-session-context",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-intent-alignment",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "f8973af94d9237a2649374268dff283c3c06afacaf05ac1b0a5e5603cc740b96"
+            },
+            "uri": "urn:example:input-value:aarm-intent-alignment"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-intent-alignment",
+          "status": "available"
+        },
+        {
+          "class": "judgment",
+          "effect": "none",
+          "input": "urn:example:input:aarm-semantic-distance",
+          "reference": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7c913708601e586709366115d92c5d81e46f1be6af4c6f0b29fae50a0db5d067"
+            },
+            "uri": "urn:example:input-value:aarm-semantic-distance"
+          },
+          "required": false,
+          "source": "urn:example:source:aarm-semantic-distance",
+          "status": "available"
+        }
+      ],
+      "register": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+        },
+        "uri": "urn:example:register:bindings",
+        "version": "2026-09-30"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "time-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "ae9189f75423b2fe771028dd0e0181d14c56f014f3359a96f5caa03fc5152b68"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": true
+  },
+  {
+    "id": "time-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.digest.sha-512.v1",
+              "value": "abababababababababababababababababababababababababababababababab"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": false
+  },
+  {
+    "id": "time-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.principal.human.v1",
+              "value": "abababababababababababababababababababababababababababababababab"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": false
+  },
+  {
+    "id": "time-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "abababababababababababababababab"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": false
+  },
+  {
+    "id": "time-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": false
+  },
+  {
+    "id": "time-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": false
+  },
+  {
+    "id": "time-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/time-attestation/1",
+    "value": {
+      "attestation_id": "urn:example:time-attestation:0f1c2077448fe32c",
+      "claim": "ecl.claim.trusted-time.v1",
+      "covered": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "0f1c2077448fe32cb0929cb462cd36022e76e4d4eab3c5e41b3b02b5e1f1c175"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "signatures": [
+          {
+            "key_id": "urn:example:key:bundle-agent",
+            "signature_digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+            },
+            "suite": "ecl.sig.ed25519.v1"
+          }
+        ]
+      },
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bundle-time-authority"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "8aecdbc0b60e9ef74ec58efa4d00103e7cbc8b713c3e82d05ace919c2f40ba94"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bundle",
+          "version": "1"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-29T10:00:00.900000Z",
+      "issuer": {
+        "id": "urn:example:time-authority:bundle",
+        "trust_domain": "urn:example:trust-domain:time",
+        "type": "ecl.principal.service.v1"
+      },
+      "schema_version": "ecl_time_attestation_v1"
+    },
+    "valid": false
+  },
+  {
+    "id": "tool_definition_digest-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "tool_definition_digest-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "tool_definition_digest-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "tool_definition_digest-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "tool_definition_digest-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "tool_definition_digest-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "tool_definition_digest-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "params_digest-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "params_digest-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "params_digest-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "params_digest-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "params_digest-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "params_digest-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "params_digest-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "input_responses_digest-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "input_responses_digest-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "input_responses_digest-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "input_responses_digest-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "input_responses_digest-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "input_responses_digest-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "input_responses_digest-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "request_state_digest-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "request_state_digest-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "request_state_digest-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "request_state_digest-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "request_state_digest-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "request_state_digest-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "request_state_digest-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "response_digest-valid",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "response_digest-unknown-algorithm",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-512.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "response_digest-non-digest-id",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.principal.human.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "response_digest-short32",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "response_digest-short63",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "response_digest-long65",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "response_digest-long128",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/mcp-binding/1",
+    "value": {
+      "mapping_id": "urn:example:mapping:issues-create",
+      "mcp_revision": "2026-07-28",
+      "method": "tools/call",
+      "params_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "11dc14bf3c9d2548685842e6d55358a33d338ab34db68dc6fdbfb04cb2fe6231"
+      },
+      "recovered_at": "2026-09-30T09:00:09.000000Z",
+      "server_id": "urn:example:mcp-server:issues",
+      "server_name": "issue-tracker",
+      "server_version": "2.3.0",
+      "tool": "create_issue",
+      "tool_definition_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+      },
+      "input_responses_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "request_state_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababab"
+      },
+      "response_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-modify-missing-digest",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "modify",
+      "evaluator": "deterministic",
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": false
+  },
+  {
+    "id": "acs-allow-carried-valid-digest",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "allow",
+      "evaluator": "deterministic",
+      "modifications_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "d3d907d01a0f2faad6a32fd583b7b428efa3e755cd61bfc9595c8215754fb4d2"
+      },
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": true
+  },
+  {
+    "id": "acs-allow-without-digest",
+    "schema": "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1",
+    "value": {
+      "chain_hash": "f848cdb13dbc656191fb5332ca6b00e3e1cf68b2ef0642e5acb332b39407c513",
+      "decision": "allow",
+      "evaluator": "deterministic",
+      "request_id": "3f2b8a4e-1c6d-4e7f-9a0b-5c6d7e8f9a0b"
+    },
+    "valid": true
+  }
+]

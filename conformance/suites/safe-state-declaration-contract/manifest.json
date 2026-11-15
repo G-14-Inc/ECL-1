@@ -1,0 +1,203 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-safe-state-declaration-contract",
+  "vectors": [
+    {
+      "covers": [
+        "ecl.rule.action-class-policy-unambiguous.v1"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-distinct-classes-control",
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-distinct-classes-control.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "distinct-classes-control"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "ecl.rule.action-class-policy-unambiguous.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.action-class-policy-unambiguous.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-duplicate-conflicting",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-duplicate-conflicting.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate-conflicting"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "ecl.rule.action-class-policy-unambiguous.v1"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.action-class-policy-unambiguous.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-duplicate-conflicting-reversed",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-duplicate-conflicting-reversed.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate-conflicting-reversed"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.dependency-classification-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-duplicate-dependency",
+      "negates": [
+        "TS1-033"
+      ],
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-duplicate-dependency.json",
+      "requirement_ids": [
+        "TS1-033"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate-dependency"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.action-class-policy-unambiguous.v1"
+      ],
+      "id": "safe-state-declaration-contract-duplicate-identical",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-duplicate-identical.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate-identical"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.action-class-policy-unambiguous.v1"
+      ],
+      "id": "safe-state-declaration-contract-duplicate-identical-reversed",
+      "negates": [
+        "TS1-016"
+      ],
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-duplicate-identical-reversed.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "duplicate-identical-reversed"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-empty-additional-prohibitions-control",
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-empty-additional-prohibitions-control.json",
+      "requirement_ids": [
+        "TS1-016",
+        "TS1-018",
+        "TS1-033"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "empty-additional-prohibitions-control"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-empty-restricted-set-control",
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-empty-restricted-set-control.json",
+      "requirement_ids": [
+        "TS1-020"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "empty-restricted-set-control"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "ecl.rule.action-class-policy-unambiguous.v1"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "safe-state-declaration-contract-single-class-control",
+      "path": "conformance/suites/safe-state-declaration-contract/safe-state-declaration-contract-single-class-control.json",
+      "requirement_ids": [
+        "TS1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "base_vector": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+        "generator": "scripts/generate_work_intent_vectors.py",
+        "kind": "mutation",
+        "mutation": "single-class-control"
+      },
+      "stage": "safe-state-profile"
+    }
+  ]
+}

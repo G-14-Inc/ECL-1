@@ -1,0 +1,453 @@
+{
+  "cases": [
+    {
+      "bundle": "control-running-after-expiry.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": null
+      },
+      "id": "control-running-after-expiry",
+      "note": "Release occurs inside the authorization window; running/terminal later than expiry is allowed.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "running-no-release-or-consumption-cancelled.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "running-no-release-or-consumption-cancelled",
+      "note": "Running proves post-release execution although this terminal alone does not.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "running-no-release-or-consumption-timed_out.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "running-no-release-or-consumption-timed_out",
+      "note": "Running proves post-release execution although this terminal alone does not.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "running-with-deny-response.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "running-with-deny-response",
+      "note": "Open attempt with running state but no admit.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-with-deny-response.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-with-deny-response",
+      "note": "Prepared before denied terminal; test declared generic versus MCP-specific obligation.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "running-with-absent-response.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "running-with-absent-response",
+      "note": "Open attempt with running state but no admit.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-with-absent-response.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-with-absent-response",
+      "note": "Prepared before denied terminal; test declared generic versus MCP-specific obligation.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "control-denied-without-preparation.json",
+      "direct": {},
+      "id": "control-denied-without-preparation",
+      "note": "Valid non-release denial control.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "control-prepared-then-denied-at-enforcement.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "control-prepared-then-denied-at-enforcement",
+      "note": "Post-admit/pre-release enforcement refusal remains valid.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "release_prepared-foreign-operation.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "release_prepared-foreign-operation",
+      "note": "One repeated action field differs from the request, with otherwise valid signed release evidence.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "release_prepared-foreign-parameters_digest.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "release_prepared-foreign-parameters_digest",
+      "note": "One repeated action field differs from the request, with otherwise valid signed release evidence.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "release_prepared-foreign-target.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "release_prepared-foreign-target",
+      "note": "One repeated action field differs from the request, with otherwise valid signed release evidence.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "release_prepared-matching-repeats-control.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": null
+      },
+      "id": "release_prepared-matching-repeats-control",
+      "note": "All optional repeated action fields equal the request.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "execution_observed-foreign-operation.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1",
+        "release_prepared": null
+      },
+      "id": "execution_observed-foreign-operation",
+      "note": "One repeated action field differs from the request, with otherwise valid signed release evidence.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "execution_observed-foreign-parameters_digest.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1",
+        "release_prepared": null
+      },
+      "id": "execution_observed-foreign-parameters_digest",
+      "note": "One repeated action field differs from the request, with otherwise valid signed release evidence.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "execution_observed-foreign-target.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1",
+        "release_prepared": null
+      },
+      "id": "execution_observed-foreign-target",
+      "note": "One repeated action field differs from the request, with otherwise valid signed release evidence.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "execution_observed-matching-repeats-control.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": null
+      },
+      "id": "execution_observed-matching-repeats-control",
+      "note": "All optional repeated action fields equal the request.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "control-running-open-after-release.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "control-running-open-after-release",
+      "note": "Open attempt has bound consumption and release; incomplete only because terminal is absent.",
+      "policy": "policy.json",
+      "primary": "ecl.error.causal-closure-incomplete.v1",
+      "verdict": "incomplete"
+    },
+    {
+      "bundle": "running-no-consumption.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "running-no-consumption",
+      "note": "Recorded release without consumption already has an independent refusal.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "running-no-release.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "running-no-release",
+      "note": "Bound consumption alone cannot establish release.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "control-cancelled-before-release.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "control-cancelled-before-release",
+      "note": "Cancelled without running or release can describe pre-release abort.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "running-with-hold-response.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "running-with-hold-response",
+      "note": "A non-admit cannot authorize an already-running attempt.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-with-hold-response.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-with-hold-response",
+      "note": "Generic preparation versus an MCP-specific post-admit preparation rule.",
+      "policy": "policy.json",
+      "primary": "ecl.error.causal-closure-incomplete.v1",
+      "verdict": "incomplete"
+    },
+    {
+      "bundle": "running-with-challenge-response.json",
+      "direct": {
+        "execution_observed": "ecl.error.decision-binding-invalid.v1"
+      },
+      "id": "running-with-challenge-response",
+      "note": "A non-admit cannot authorize an already-running attempt.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-with-challenge-response.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-with-challenge-response",
+      "note": "Generic preparation versus an MCP-specific post-admit preparation rule.",
+      "policy": "policy.json",
+      "primary": "ecl.error.causal-closure-incomplete.v1",
+      "verdict": "incomplete"
+    },
+    {
+      "bundle": "control-running-own-unresolved-predecessor.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "control-running-own-unresolved-predecessor",
+      "note": "The attempt itself names missing evidence, so its required release may be unheld; report remains incomplete.",
+      "policy": "policy.json",
+      "primary": "ecl.error.causal-closure-incomplete.v1",
+      "verdict": "incomplete"
+    },
+    {
+      "bundle": "running-missing-release-unrelated-incomplete-attempt.json",
+      "direct": {
+        "execution_observed": null
+      },
+      "id": "running-missing-release-unrelated-incomplete-attempt",
+      "note": "An unrelated missing predecessor cannot waive missing release evidence for this closed attempt.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "release_prepared-target-metadata-control.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": null
+      },
+      "id": "release_prepared-target-metadata-control",
+      "note": "Only repeated target URI binds; target version and digest can change with effect.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "execution_observed-target-metadata-control.json",
+      "direct": {
+        "execution_observed": null,
+        "release_prepared": null
+      },
+      "id": "execution_observed-target-metadata-control",
+      "note": "Only repeated target URI binds; target version and digest can change with effect.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "control-prepared-then-challenged.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "control-prepared-then-challenged",
+      "note": "Appends to the unchanged generic prepared-challenge prefix; terminal binding, attempt identity and terminal finality remain enforced.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "control-prepared-then-held.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "control-prepared-then-held",
+      "note": "Appends to the unchanged generic prepared-hold prefix; terminal binding, attempt identity and terminal finality remain enforced.",
+      "policy": "policy.json",
+      "primary": null,
+      "verdict": "verified"
+    },
+    {
+      "bundle": "prepared-challenge-wrong-held.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-challenge-wrong-held",
+      "note": "Appends to the unchanged generic prepared-challenge prefix; terminal binding, attempt identity and terminal finality remain enforced.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-hold-wrong-challenged.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-hold-wrong-challenged",
+      "note": "Appends to the unchanged generic prepared-hold prefix; terminal binding, attempt identity and terminal finality remain enforced.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-challenge-changes-attempt.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-challenge-changes-attempt",
+      "note": "Appends to the unchanged generic prepared-challenge prefix; terminal binding, attempt identity and terminal finality remain enforced.",
+      "policy": "policy.json",
+      "primary": "ecl.error.decision-binding-invalid.v1",
+      "verdict": "invalid"
+    },
+    {
+      "bundle": "prepared-after-challenged-terminal.json",
+      "direct": {
+        "release_prepared": null
+      },
+      "id": "prepared-after-challenged-terminal",
+      "note": "Appends to the unchanged generic prepared-challenge prefix; terminal binding, attempt identity and terminal finality remain enforced.",
+      "policy": "policy.json",
+      "primary": "ecl.rule.execution-state-transition-valid.v1",
+      "verdict": "invalid"
+    }
+  ],
+  "now": "2026-09-29T21:00:00Z",
+  "reconstructed_scopes": [
+    {
+      "id": "control",
+      "remove": []
+    },
+    {
+      "id": "signer-historical-invalid",
+      "remove": [
+        "envelope-signatures",
+        "trusted-time"
+      ]
+    },
+    {
+      "id": "time-authority-historical-invalid",
+      "remove": [
+        "trusted-time"
+      ]
+    },
+    {
+      "id": "missing-trusted-time",
+      "remove": [
+        "trusted-time"
+      ]
+    },
+    {
+      "id": "envelope-historical-invalid",
+      "remove": [
+        "envelope-signatures",
+        "trusted-time"
+      ]
+    },
+    {
+      "id": "current-signer-invalid",
+      "remove": [
+        "current-trust"
+      ]
+    },
+    {
+      "id": "missing-signer-dependency",
+      "remove": [
+        "envelope-signatures"
+      ]
+    },
+    {
+      "id": "invalid-verdict",
+      "remove": "all"
+    }
+  ],
+  "source_sha256": {
+    "conformance/suites/evidence-bundle/bundle-valid-succeeded.json": "b6a3c7a7714eb5357759e4ba72c6a9eb934cc7fae77f6d4af49014ed3d8c0e18",
+    "conformance/suites/evidence-bundle/bundle-valid-trusted-time.json": "021906a7f9acefefaeada80587627fc93a6bc18a9ddf6ebd4d65e096de31641a",
+    "conformance/suites/evidence-bundle/trust-policy-time-authority.json": "5c03d8b945dedfc01f0aada85eaae754dbdd855fc46c61e3d93d45a1d13c5cd0",
+    "conformance/suites/evidence-bundle/trust-policy.json": "e38e3ac3c29882ae32a81854c782ab6f487b275fd0c078806b566189a4574f99"
+  }
+}

@@ -1,0 +1,2264 @@
+[
+  {
+    "name": "parent-to-children",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:a",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:a",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:b",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:b",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      }
+    ],
+    "status": "complete",
+    "required_findings": []
+  },
+  {
+    "name": "children-to-parent-join",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:a",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:a",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:b",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:b",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:join",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 2,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:a",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "7ba5534e9ad92efc96338b9f85b5afc79555bf026e7354066eb1e6a3d0ce8500"
+              },
+              "relation": "ecl.relation.follows.v1"
+            },
+            {
+              "id": "urn:example:repair:record:b",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "9292a4f56012981298191b00942e35a57c6521091d92d4577b1474df5620cd50"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      }
+    ],
+    "status": "complete",
+    "required_findings": []
+  },
+  {
+    "name": "same-workflow",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:same",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 2,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      }
+    ],
+    "status": "complete",
+    "required_findings": []
+  },
+  {
+    "name": "missing-child",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:a",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:a",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:join",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 2,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:a",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "7ba5534e9ad92efc96338b9f85b5afc79555bf026e7354066eb1e6a3d0ce8500"
+              },
+              "relation": "ecl.relation.follows.v1"
+            },
+            {
+              "id": "urn:example:repair:record:b",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "9292a4f56012981298191b00942e35a57c6521091d92d4577b1474df5620cd50"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      }
+    ],
+    "status": "incomplete",
+    "required_findings": []
+  },
+  {
+    "name": "unrelated",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:alien",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:alien",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      }
+    ],
+    "status": "indeterminate",
+    "required_findings": [
+      "ecl.rule.bundle-causal-context-consistent.v1"
+    ]
+  },
+  {
+    "name": "sibling-edge",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:a",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:a",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:sibling",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:b",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 2,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:a",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "7ba5534e9ad92efc96338b9f85b5afc79555bf026e7354066eb1e6a3d0ce8500"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      }
+    ],
+    "status": "indeterminate",
+    "required_findings": [
+      "ecl.rule.bundle-causal-context-consistent.v1"
+    ]
+  },
+  {
+    "name": "wrong-root",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:a",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:a",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:b",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:b",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:repair:wf:parent"
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:join",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:other:trace",
+          "attempt": 1,
+          "sequence": 2,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:a",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "7ba5534e9ad92efc96338b9f85b5afc79555bf026e7354066eb1e6a3d0ce8500"
+              },
+              "relation": "ecl.relation.follows.v1"
+            },
+            {
+              "id": "urn:example:repair:record:b",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "9292a4f56012981298191b00942e35a57c6521091d92d4577b1474df5620cd50"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      }
+    ],
+    "status": "indeterminate",
+    "required_findings": [
+      "ecl.rule.bundle-causal-context-consistent.v1"
+    ]
+  },
+  {
+    "name": "backward-sequence",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:same",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 2,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:back",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:same",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "1d533f4aa8b66f2c9475ff03fbabd27f7097a359820913c094c6019c79a2d909"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ]
+        }
+      }
+    ],
+    "status": "indeterminate",
+    "required_findings": [
+      "ecl.rule.bundle-causal-sequence-monotonic.v1"
+    ]
+  },
+  {
+    "name": "wrong-parent",
+    "records": [
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:start",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:parent",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": []
+        }
+      },
+      {
+        "event": {
+          "decision": "pass",
+          "evidence_boundary": "Synthetic graph-context fixture; no actual execution or delegation claim.",
+          "findings": [],
+          "kind": "verification",
+          "registry_snapshot": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "9999999999999999999999999999999999999999999999999999999999999999"
+            },
+            "uri": "urn:example:registry-snapshot:rc4"
+          },
+          "rules": [
+            "ecl.rule.terminal-execution-state-consistent.v1"
+          ],
+          "subject": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "7e052effb46b33a57b8a1cf2782e2bc9267ce744fc02dbbc4b3ab29e7222ef38"
+            },
+            "uri": "https://externalcontrollayer.ai/ns/receipt/execution-terminal-001"
+          },
+          "verifier": {
+            "id": "urn:example:verifier:independent-1",
+            "type": "ecl.principal.service.v1"
+          }
+        },
+        "event_type": "verification",
+        "extensions": [],
+        "integrity_policy": {
+          "accepted_suites": [
+            "ecl.sig.ed25519.v1"
+          ],
+          "eligible_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "required": true,
+          "required_key_ids": [
+            "urn:example:key:payments-gate-1"
+          ],
+          "revocation_policy": "ecl.revocation.offline-bundle.v1",
+          "threshold": 1,
+          "trust_policy": {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "epoch": 11,
+            "id": "urn:example:policy:trust-control",
+            "version": "2026-07-27"
+          },
+          "verification_time_policy": "ecl.time.observed-at.v1"
+        },
+        "monotonic_observation": {
+          "clock_id": "urn:example:clock:payments-gate-boot-77",
+          "ticks": "9283746500",
+          "unit": "nanosecond"
+        },
+        "object_id": "urn:example:repair:record:a",
+        "object_type": "event_record",
+        "observed_at": "2026-07-27T04:30:01.500000Z",
+        "producer": {
+          "id": "urn:example:enforcement:payments-gate-1",
+          "trust_domain": "urn:example:trust-domain:control",
+          "type": "ecl.principal.enforcement-point.v1"
+        },
+        "protocol": "EBMP-2",
+        "schema_version": "2.0",
+        "workflow": {
+          "workflow_id": "urn:example:repair:wf:a",
+          "root_trace_id": "urn:example:repair:trace:join",
+          "attempt": 1,
+          "sequence": 1,
+          "causal_predecessors": [
+            {
+              "id": "urn:example:repair:record:start",
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "2d2c37d7977bf6ef5bf1cb3bda8b9d2d1237758450faf64e4cf9c8c6bfa704fe"
+              },
+              "relation": "ecl.relation.follows.v1"
+            }
+          ],
+          "parent_workflow_id": "urn:example:other:parent"
+        }
+      }
+    ],
+    "status": "indeterminate",
+    "required_findings": [
+      "ecl.rule.bundle-causal-context-consistent.v1"
+    ]
+  }
+]

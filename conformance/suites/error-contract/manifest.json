@@ -1,0 +1,362 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-error-contract",
+  "trust_policy_path": "conformance/suites/error-contract/trust-policy.json",
+  "vectors": [
+    {
+      "covers": [],
+      "evaluated_at": "2026-09-29T10:00:00.000000Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "error-contract-invalid-bundle-extra-ineligible-key",
+      "negates": [
+        "IE1-040",
+        "EBMP2-057"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-ineligible-key.json",
+      "requirement_ids": [
+        "IE1-040",
+        "EBMP2-057"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "bundle verification applies the payload eligible-key restriction to every signature, counted or not"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/error-contract/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-09-29T10:00:00.000000Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "error-contract-invalid-bundle-extra-mismatched-suite",
+      "negates": [
+        "IE1-040",
+        "EBMP2-057"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-mismatched-suite.json",
+      "requirement_ids": [
+        "IE1-040",
+        "EBMP2-057"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "the extra signature is both payload-unaccepted and mismatched to the trust-policy key suite"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/error-contract/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-09-29T10:00:00.000000Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "error-contract-invalid-bundle-extra-unaccepted-suite",
+      "negates": [
+        "IE1-040",
+        "EBMP2-057"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-unaccepted-suite.json",
+      "requirement_ids": [
+        "IE1-040",
+        "EBMP2-057"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "bundle verification applies the payload accepted-suite restriction to every signature, counted or not"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/error-contract/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "evaluated_at": "2026-09-29T10:00:00.000000Z",
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.integrity-threshold-consistent.v1",
+      "expected_secondary_ids": [],
+      "expected_verdict": "invalid",
+      "id": "error-contract-invalid-bundle-payload-policy",
+      "negates": [
+        "IE1-013",
+        "EBMP2-068"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-payload-policy.json",
+      "requirement_ids": [
+        "IE1-013",
+        "EBMP2-068"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/evidence-bundle/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "place the payload with a required key outside its eligible list in a bundle; object semantics is stage 3"
+      },
+      "stage": "evidence-bundle",
+      "trust_policy_history_paths": [],
+      "trust_policy_path": "conformance/suites/error-contract/trust-policy.json"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.threshold-not-met.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-envelope-required-key-absent",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-envelope-required-key-absent.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "require an ineligible key that supplies no signature; step 6 records no failure for the valid present key"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-envelope-required-key-ineligible",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-envelope-required-key-ineligible.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "add the required but ineligible key signature; step 6 records its rejection"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-envelope-threshold-below-required",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-envelope-threshold-below-required.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "set the threshold below the required-key count; standalone verification rejects the policy at step 4"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.integrity-threshold-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-payload-required-key-not-eligible",
+      "negates": [
+        "IE1-013"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-payload-required-key-not-eligible.json",
+      "requirement_ids": [
+        "IE1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "decode the payload and require a key outside its nonempty eligible-key list"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.integrity-threshold-consistent.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-payload-threshold-below-required",
+      "negates": [
+        "IE1-013"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-payload-threshold-below-required.json",
+      "requirement_ids": [
+        "IE1-013"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "decode the payload and set its threshold below the number of required signers"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-step6-ineligible-first",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-step6-ineligible-first.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "reverse the two rejected signatures; the sub-step-priority error remains the same"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.signature-policy-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "error-contract-invalid-step6-revoked-first",
+      "negates": [
+        "IE1-040"
+      ],
+      "path": "conformance/suites/error-contract/error-contract-invalid-step6-revoked-first.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "examine a revoked key before an ineligible key; the earlier sub-step reason still wins over signature-list order"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "error-contract-valid-empty-eligible-list",
+      "path": "conformance/suites/error-contract/error-contract-valid-empty-eligible-list.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "use the empty eligible-key list as unrestricted and retain the required signer"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "error-contract-valid-extra-ineligible-key",
+      "path": "conformance/suites/error-contract/error-contract-valid-extra-ineligible-key.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "append a valid signature by a trusted but payload-ineligible key; the required signer meets the threshold"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "error-contract-valid-extra-registered-unaccepted-suite",
+      "path": "conformance/suites/error-contract/error-contract-valid-extra-registered-unaccepted-suite.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "append a valid P-256 signature under a matching trusted and eligible key, while the payload accepts only Ed25519"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "error-contract-valid-extra-unaccepted-suite",
+      "path": "conformance/suites/error-contract/error-contract-valid-extra-unaccepted-suite.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "base_vector": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "mutation",
+        "mutation": "append an uncounted signature using an unaccepted suite; required signer and threshold remain satisfied"
+      },
+      "stage": "envelope"
+    },
+    {
+      "covers": [],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "error-contract-valid-policy-baseline",
+      "path": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+      "requirement_ids": [
+        "IE1-040"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/integrity-envelope/1",
+      "source": {
+        "generator": "scripts/generate_error_contract_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "envelope"
+    }
+  ]
+}

@@ -1,0 +1,516 @@
+{
+  "checks": [
+    {
+      "name": "protocol-correct",
+      "tool": "tamarin",
+      "expected": "all verified",
+      "observed": "all verified",
+      "passed": true,
+      "seconds": 15.7,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "executable": "verified",
+        "request_origin": "verified",
+        "response_authenticity": "verified",
+        "request_response_binding": "verified",
+        "authorization_scope_and_audience": "verified",
+        "single_use": "verified",
+        "one_effect_per_request": "verified",
+        "execution_request_binding": "verified",
+        "agent_signed_executable": "verified",
+        "request_context_origin": "verified",
+        "execution_preserves_request": "verified",
+        "consumer_authorization_binding": "verified"
+      },
+      "steps": {
+        "executable": 14,
+        "request_origin": 7,
+        "response_authenticity": 19,
+        "request_response_binding": 19,
+        "authorization_scope_and_audience": 18,
+        "single_use": 188,
+        "one_effect_per_request": 180,
+        "execution_request_binding": 18,
+        "agent_signed_executable": 19,
+        "request_context_origin": 8,
+        "execution_preserves_request": 12,
+        "consumer_authorization_binding": 19
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:10:31.849294+00:00",
+      "finished_utc": "2026-11-11T07:10:50.483074+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "b60e34b8d310b227d0618ab3b3ffe72572af897bc51c7a49bb1b33c6c3a0b356",
+      "log_file": "protocol-correct.log"
+    },
+    {
+      "name": "protocol-skip-context-signature",
+      "tool": "tamarin",
+      "expected": "request_context_origin falsified",
+      "observed": "request_context_origin falsified",
+      "passed": true,
+      "seconds": 4.4,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "request_context_origin": "falsified - found trace"
+      },
+      "steps": {
+        "request_context_origin": 5
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:10:50.485407+00:00",
+      "finished_utc": "2026-11-11T07:10:54.888782+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=request_context_origin",
+        "-D=skip_context_signature",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "e5cdb64a147230218576ab1c8ed547ba4c6564d6be46bbb72ae5c3048c7f7d07",
+      "log_file": "protocol-skip-context-signature.log"
+    },
+    {
+      "name": "protocol-presentation-context-not-bound",
+      "tool": "tamarin",
+      "expected": "execution_preserves_request falsified",
+      "observed": "execution_preserves_request falsified",
+      "passed": true,
+      "seconds": 4.9,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "execution_preserves_request": "falsified - found trace"
+      },
+      "steps": {
+        "execution_preserves_request": 14
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:10:54.889316+00:00",
+      "finished_utc": "2026-11-11T07:10:59.822748+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=execution_preserves_request",
+        "-D=presentation_context_not_bound",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "8d57ddfa88cda5d2cd3856b1593e0b1616d8b372facc55dd567685a108692a10",
+      "log_file": "protocol-presentation-context-not-bound.log"
+    },
+    {
+      "name": "protocol-skip-response-signature",
+      "tool": "tamarin",
+      "expected": "response_authenticity falsified",
+      "observed": "response_authenticity falsified",
+      "passed": true,
+      "seconds": 5.5,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "response_authenticity": "falsified - found trace"
+      },
+      "steps": {
+        "response_authenticity": 8
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:10:59.823273+00:00",
+      "finished_utc": "2026-11-11T07:11:05.307216+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=response_authenticity",
+        "-D=skip_response_signature",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "1f4e2a345fba63233f61cd5b7b217130dfcbbc82f468987ed504c874048e7479",
+      "log_file": "protocol-skip-response-signature.log"
+    },
+    {
+      "name": "protocol-shared-role-key",
+      "tool": "tamarin",
+      "expected": "response_authenticity falsified",
+      "observed": "response_authenticity falsified",
+      "passed": true,
+      "seconds": 8.1,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "response_authenticity": "falsified - found trace"
+      },
+      "steps": {
+        "response_authenticity": 13
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:05.307753+00:00",
+      "finished_utc": "2026-11-11T07:11:13.414606+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=response_authenticity",
+        "-D=shared_role_key",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "d50f705934077a24207be3b0e6ba41080a4b9579060f0a1cb0e3050a233ac34f",
+      "log_file": "protocol-shared-role-key.log"
+    },
+    {
+      "name": "protocol-response-not-bound",
+      "tool": "tamarin",
+      "expected": "request_response_binding falsified",
+      "observed": "request_response_binding falsified",
+      "passed": true,
+      "seconds": 5.1,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "request_response_binding": "falsified - found trace"
+      },
+      "steps": {
+        "request_response_binding": 14
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:13.415170+00:00",
+      "finished_utc": "2026-11-11T07:11:18.488070+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=request_response_binding",
+        "-D=response_not_bound",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "92038a651659b01138993b6708de5e9893866270918f245a14e2b48d2ccbab3a",
+      "log_file": "protocol-response-not-bound.log"
+    },
+    {
+      "name": "protocol-presentation-not-bound",
+      "tool": "tamarin",
+      "expected": "execution_request_binding falsified",
+      "observed": "execution_request_binding falsified",
+      "passed": true,
+      "seconds": 5.4,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "execution_request_binding": "falsified - found trace"
+      },
+      "steps": {
+        "execution_request_binding": 16
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:18.488665+00:00",
+      "finished_utc": "2026-11-11T07:11:26.825627+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=execution_request_binding",
+        "-D=presentation_not_bound",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "9cd1ee88610e4d09c56a4c5f37f72972a8f0bddf1efd539ad1a95460e7aafd0f",
+      "log_file": "protocol-presentation-not-bound.log"
+    },
+    {
+      "name": "protocol-no-scope-check",
+      "tool": "tamarin",
+      "expected": "consumer_authorization_binding falsified",
+      "observed": "consumer_authorization_binding falsified",
+      "passed": true,
+      "seconds": 4.8,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "consumer_authorization_binding": "falsified - found trace"
+      },
+      "steps": {
+        "consumer_authorization_binding": 12
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:26.826321+00:00",
+      "finished_utc": "2026-11-11T07:11:31.639759+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=consumer_authorization_binding",
+        "-D=no_scope_check",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "5b1d41888f0834f580de8a9fd689d09bf3bba223809b0e90e19cdcb8ea05fc07",
+      "log_file": "protocol-no-scope-check.log"
+    },
+    {
+      "name": "protocol-no-audience-check",
+      "tool": "tamarin",
+      "expected": "authorization_scope_and_audience falsified",
+      "observed": "authorization_scope_and_audience falsified",
+      "passed": true,
+      "seconds": 5.1,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "authorization_scope_and_audience": "falsified - found trace"
+      },
+      "steps": {
+        "authorization_scope_and_audience": 14
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:31.640346+00:00",
+      "finished_utc": "2026-11-11T07:11:36.753769+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=authorization_scope_and_audience",
+        "-D=no_audience_check",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "70f9b142b954b0edbf9dcc7bde063ed4a29009568f8406400a02128520a71d15",
+      "log_file": "protocol-no-audience-check.log"
+    },
+    {
+      "name": "protocol-no-single-use",
+      "tool": "tamarin",
+      "expected": "single_use falsified",
+      "observed": "single_use falsified",
+      "passed": true,
+      "seconds": 16.1,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "single_use": "falsified - found trace"
+      },
+      "steps": {
+        "single_use": 18
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:36.754365+00:00",
+      "finished_utc": "2026-11-11T07:11:52.849592+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=single_use",
+        "-D=no_single_use",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "314fba2c77a3e0ab16df1f47b32448efe1e45d9f2f1467f3002fd81a3d096fc2",
+      "log_file": "protocol-no-single-use.log"
+    },
+    {
+      "name": "protocol-dp-no-message-identity",
+      "tool": "tamarin",
+      "expected": "one_effect_per_request falsified",
+      "observed": "one_effect_per_request falsified",
+      "passed": true,
+      "seconds": 19.7,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "one_effect_per_request": "falsified - found trace"
+      },
+      "steps": {
+        "one_effect_per_request": 21
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:11:52.850207+00:00",
+      "finished_utc": "2026-11-11T07:12:16.193087+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=one_effect_per_request",
+        "-D=dp_no_message_identity",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "9c049ddfb8e0b1d30e53e83888a7244e0195c0016bd5b2b0106d016f05fa4859",
+      "log_file": "protocol-dp-no-message-identity.log"
+    },
+    {
+      "name": "protocol-dp-skips-request-signature",
+      "tool": "tamarin",
+      "expected": "request_origin falsified",
+      "observed": "request_origin falsified",
+      "passed": true,
+      "seconds": 5.2,
+      "states_generated": null,
+      "distinct_states": null,
+      "depth": null,
+      "trace_states": null,
+      "lemmas": {
+        "request_origin": "falsified - found trace"
+      },
+      "steps": {
+        "request_origin": 5
+      },
+      "inputs": {
+        "protocol/DCMP2_Binding.spthy": "73d097fe8a89338e6853212be70b920420cd09ca69def10bc650afd121cf6e2e"
+      },
+      "started_utc": "2026-11-11T07:12:16.194190+00:00",
+      "finished_utc": "2026-11-11T07:12:21.367484+00:00",
+      "java": null,
+      "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+      "command": [
+        "/workspace/ecl-1/work/ecl-1-source-repairs-20261107-1/tooling/formal-pins/tamarin-prover",
+        "--derivcheck-timeout=10",
+        "--prove=request_origin",
+        "-D=dp_skips_request_signature",
+        "DCMP2_Binding.spthy",
+        "+RTS",
+        "-N1",
+        "-M1500m",
+        "-RTS"
+      ],
+      "returncode": 0,
+      "output_sha256": "38c66f68878cb59c42915d54be54143684fc11ebc1c83c6ba512c7d133df8fe0",
+      "log_file": "protocol-dp-skips-request-signature.log"
+    }
+  ],
+  "complete": true,
+  "all_expected": true,
+  "runner_sha256": "8c5092a7f13672b0f17f7267e444b7aacacf5eb0bbfc4e9533b216a8e20aa623",
+  "script_sha256": "48e4779333f6648793fcedf7f1b830a6148c444b385aa14d80319111c6d85f88",
+  "pins": {
+    "tla2tools": {
+      "version": "1.7.4",
+      "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+    },
+    "tamarin": {
+      "version": "1.12.0",
+      "archive_sha256": "201be06f469e47cff554df6ca93db8366fc2c69d70c61fcbd1370a1074b469c6",
+      "sha256": "9d3fcbaa65aeea244cff5b8074338d129427161cc8b02e5aee72d30ee072acc9"
+    },
+    "maude": {
+      "version": "3.5.1",
+      "archive_sha256": "72ed1ca87e3b3d0dfc6ee1436baf154bf04c45ff97d521bec040c5e8dfc8f92c",
+      "sha256": "9dd4044e693944aae97ad72086bc70275fa34bf635f9b377a5b2100bf3ed8655"
+    }
+  },
+  "timeout_seconds": 120,
+  "derivcheck_timeout": 10,
+  "candidate_written": false
+}

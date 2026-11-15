@@ -1,0 +1,131 @@
+{
+  "schema_version": "ecl_deployment_profile_v1",
+  "profile_id": "urn:example:ecl:profile:federated-local-gate",
+  "profile_version": "1",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "4141414141414141414141414141414141414141414141414141414141414141"
+  },
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:federated",
+    "version": "1"
+  },
+  "claim_level": 3,
+  "model": "federated-multi-domain",
+  "delivery_surfaces": [
+    "local_gate",
+    "hosted_control_plane",
+    "self_managed_control_plane",
+    "offline_verifier"
+  ],
+  "release_path": {
+    "enforcement_location": "in_process",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true,
+    "decision_timeout_milliseconds": 20,
+    "network_loss_disposition": "bounded_degraded_then_restricted"
+  },
+  "dependencies": [
+    {
+      "dependency_id": "urn:example:ecl:dependency:federated-trust-cache",
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 3600,
+      "integrity_required": true,
+      "failure_disposition": "restricted"
+    }
+  ],
+  "timing_case": {
+    "uses_default_baseline": true,
+    "connected_revocation_seconds": 300,
+    "offline_staleness_seconds": 3600,
+    "evidence_export_seconds": 14400,
+    "federated_exchange_seconds": 300,
+    "trusted_time_or_secure_monotonic": true,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:federated-l3",
+      "version": "1"
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "entry_conditions": [
+        "peer trust domain is temporarily unreachable"
+      ],
+      "signed_cached_state_required": true,
+      "bounded_actions": [
+        "locally authorized actions with no new cross-domain delegation"
+      ],
+      "expires_to": "restricted"
+    },
+    "restricted": {
+      "entry_conditions": [
+        "federated trust or revocation exchange exceeds timing case"
+      ],
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ]
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "trust-bundle integrity or authority narrowing fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ]
+  },
+  "evidence_custody": {
+    "local_append_only_buffer": true,
+    "export_integrity": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:federated",
+      "version": "1"
+    },
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:cross-domain",
+      "version": "1"
+    }
+  },
+  "topology_controls": {
+    "federated": {
+      "trust_bundle_exchange": {
+        "uri": "urn:example:ecl:protocol:trust-bundle-exchange",
+        "version": "1"
+      },
+      "delegation_semantics": {
+        "uri": "urn:example:ecl:protocol:narrowing-delegation",
+        "version": "1"
+      },
+      "cross_domain_verification": {
+        "uri": "urn:example:ecl:protocol:cross-domain-verification",
+        "version": "1"
+      },
+      "authority_context_fields": [
+        "trust_domain",
+        "issuer_or_trust_bundle",
+        "decision_contract_version",
+        "root_trace_id",
+        "actor",
+        "subject",
+        "authorization_or_capability",
+        "resource_scope",
+        "expiry",
+        "policy_reference",
+        "evidence_profile",
+        "unique_token_id",
+        "delegation_depth"
+      ]
+    }
+  },
+  "residual_risks": [
+    "A peer-domain outage removes new cross-domain delegation until reconciliation."
+  ]
+}

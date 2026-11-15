@@ -1,0 +1,905 @@
+{
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "cases": [
+    {
+      "expected_rule": null,
+      "id": "forward-complete-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-complete-control.json",
+      "root_ids": [
+        "ROOT-064",
+        "ROOT-079",
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "obligations-complete-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/obligations-complete-control.json",
+      "root_ids": [
+        "ROOT-001"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-obligations-discharged.v1",
+      "id": "approval-at-observation",
+      "path": "tests/fixtures/mcp-public-review-repairs/approval-at-observation.json",
+      "root_ids": [
+        "ROOT-001"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-obligations-discharged.v1",
+      "id": "approval-at-guard",
+      "path": "tests/fixtures/mcp-public-review-repairs/approval-at-guard.json",
+      "root_ids": [
+        "ROOT-001"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "approval-after-guard",
+      "path": "tests/fixtures/mcp-public-review-repairs/approval-after-guard.json",
+      "root_ids": [
+        "ROOT-001"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "stale-proof-explicit-observation",
+      "path": "tests/fixtures/mcp-public-review-repairs/stale-proof-explicit-observation.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "stale-proof-wrong-data",
+      "path": "tests/fixtures/mcp-public-review-repairs/stale-proof-wrong-data.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "stale-proof-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/stale-proof-wrong-code.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "delayed-return-does-not-prove-staleness",
+      "path": "tests/fixtures/mcp-public-review-repairs/delayed-return-does-not-prove-staleness.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "denied-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/denied-control.json",
+      "root_ids": [
+        "ROOT-004"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "denied-missing-terminal",
+      "path": "tests/fixtures/mcp-public-review-repairs/denied-missing-terminal.json",
+      "root_ids": [
+        "ROOT-004"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "held-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/held-control.json",
+      "root_ids": [
+        "ROOT-004"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "held-missing-terminal",
+      "path": "tests/fixtures/mcp-public-review-repairs/held-missing-terminal.json",
+      "root_ids": [
+        "ROOT-004"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "challenged-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/challenged-control.json",
+      "root_ids": [
+        "ROOT-004"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "challenged-missing-terminal",
+      "path": "tests/fixtures/mcp-public-review-repairs/challenged-missing-terminal.json",
+      "root_ids": [
+        "ROOT-004"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "forward-missing-prepared",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-missing-prepared.json",
+      "root_ids": [
+        "ROOT-064"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "forward-missing-released",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-missing-released.json",
+      "root_ids": [
+        "ROOT-064"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "forward-missing-release_guard_milliseconds",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-missing-release_guard_milliseconds.json",
+      "root_ids": [
+        "ROOT-064"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "forward-missing-release_observations",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-missing-release_observations.json",
+      "root_ids": [
+        "ROOT-064"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "forward-missing-initial-observation",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-missing-initial-observation.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "forward-missing-final-observation",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-missing-final-observation.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-action",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-action.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-decision-digest",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-decision-digest.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-authority-digest",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-authority-digest.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-workflow",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-workflow.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-root-trace",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-root-trace.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-attempt",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-attempt.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "prepared-wrong-event-type",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-event-type.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-attempt-id",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-attempt-id.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-action",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-action.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-decision-digest",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-decision-digest.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-authority-digest",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-authority-digest.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-workflow",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-workflow.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-root-trace",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-root-trace.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-attempt",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-attempt.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "released-wrong-event-type",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-event-type.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "released-wrong-attempt-id",
+      "path": "tests/fixtures/mcp-public-review-repairs/released-wrong-attempt-id.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "unconsumed-halt-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-halt-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "unconsumed-halt-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-halt-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "unconsumed-halt-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-halt-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "unconsumed-quarantine-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-quarantine-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "unconsumed-quarantine-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-quarantine-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "unconsumed-quarantine-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-quarantine-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "unconsumed-revoked-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-revoked-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "unconsumed-revoked-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-revoked-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "unconsumed-revoked-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-revoked-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "unconsumed-stale-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-stale-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "unconsumed-stale-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-stale-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "unconsumed-stale-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-stale-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "unconsumed-unavailable-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-unavailable-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "unconsumed-unavailable-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-unavailable-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "unconsumed-unavailable-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/unconsumed-unavailable-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "consumed-halt-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-halt-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "consumed-halt-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-halt-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "consumed-halt-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-halt-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "consumed-quarantine-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-quarantine-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "consumed-quarantine-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-quarantine-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "consumed-quarantine-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-quarantine-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "consumed-revoked-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-revoked-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "consumed-revoked-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-revoked-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "consumed-revoked-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-revoked-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "consumed-stale-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-stale-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "consumed-stale-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-stale-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "consumed-stale-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-stale-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "consumed-unavailable-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-unavailable-refusal.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "consumed-unavailable-wrong-code",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-unavailable-wrong-code.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "consumed-unavailable-forwarded",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-unavailable-forwarded.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "halt-after-release-before-dispatch",
+      "path": "tests/fixtures/mcp-public-review-repairs/halt-after-release-before-dispatch.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "control-freshness-at-guard",
+      "path": "tests/fixtures/mcp-public-review-repairs/control-freshness-at-guard.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "control-freshness-after-guard",
+      "path": "tests/fixtures/mcp-public-review-repairs/control-freshness-after-guard.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "live-response-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/live-response-control.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "live-wrong-state",
+      "path": "tests/fixtures/mcp-public-review-repairs/live-wrong-state.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "live-wrong-response-digest",
+      "path": "tests/fixtures/mcp-public-review-repairs/live-wrong-response-digest.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "live-wrong-completion",
+      "path": "tests/fixtures/mcp-public-review-repairs/live-wrong-completion.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "live-wrong-action",
+      "path": "tests/fixtures/mcp-public-review-repairs/live-wrong-action.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "recovered-response-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/recovered-response-control.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "recovered-wrong-state",
+      "path": "tests/fixtures/mcp-public-review-repairs/recovered-wrong-state.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "recovered-wrong-response-digest",
+      "path": "tests/fixtures/mcp-public-review-repairs/recovered-wrong-response-digest.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "recovered-wrong-completion",
+      "path": "tests/fixtures/mcp-public-review-repairs/recovered-wrong-completion.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "recovered-wrong-action",
+      "path": "tests/fixtures/mcp-public-review-repairs/recovered-wrong-action.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "recovered-unavailable-server-response",
+      "path": "tests/fixtures/mcp-public-review-repairs/recovered-unavailable-server-response.json",
+      "root_ids": [
+        "ROOT-088"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "unproven-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/unproven-control.json",
+      "root_ids": [
+        "ROOT-089"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-decision-failure-not-forwarded.v1",
+      "id": "duplicate-obligation-consumed-refusal",
+      "path": "tests/fixtures/mcp-public-review-repairs/duplicate-obligation-consumed-refusal.json",
+      "root_ids": [
+        "ROOT-089"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "duplicate-obligation-refused-before-consumption",
+      "path": "tests/fixtures/mcp-public-review-repairs/duplicate-obligation-refused-before-consumption.json",
+      "root_ids": [
+        "ROOT-089"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "tasks-update-cannot-forward",
+      "path": "tests/fixtures/mcp-public-review-repairs/tasks-update-cannot-forward.json",
+      "root_ids": [
+        "ROOT-091"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "tasks-update-refused",
+      "path": "tests/fixtures/mcp-public-review-repairs/tasks-update-refused.json",
+      "root_ids": [
+        "ROOT-091"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "resources-read-cannot-forward",
+      "path": "tests/fixtures/mcp-public-review-repairs/resources-read-cannot-forward.json",
+      "root_ids": [
+        "ROOT-091"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "resources-read-refused",
+      "path": "tests/fixtures/mcp-public-review-repairs/resources-read-refused.json",
+      "root_ids": [
+        "ROOT-091"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": null,
+      "id": "forward-failed-complete-control",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-failed-complete-control.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "forward-failed-missing-error-data",
+      "path": "tests/fixtures/mcp-public-review-repairs/forward-failed-missing-error-data.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "consumed-before-authority-valid",
+      "path": "tests/fixtures/mcp-public-review-repairs/consumed-before-authority-valid.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-result-bound.v1",
+      "id": "stale-proof-terminal-wrong-reason",
+      "path": "tests/fixtures/mcp-public-review-repairs/stale-proof-terminal-wrong-reason.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-repeated-operation",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-repeated-operation.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "prepared-wrong-repeated-target",
+      "path": "tests/fixtures/mcp-public-review-repairs/prepared-wrong-repeated-target.json",
+      "root_ids": [
+        "ROOT-079"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": null,
+      "id": "clock-comparison-explicit-failure",
+      "path": "tests/fixtures/mcp-public-review-repairs/clock-comparison-explicit-failure.json",
+      "root_ids": [
+        "ROOT-002",
+        "ROOT-035"
+      ],
+      "valid": true
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-refusal-defined.v1",
+      "id": "clock-failure-must-be-recorded",
+      "path": "tests/fixtures/mcp-public-review-repairs/clock-failure-must-be-recorded.json",
+      "root_ids": [
+        "ROOT-002"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-forward-requires-admit.v1",
+      "id": "clock-failure-cannot-forward",
+      "path": "tests/fixtures/mcp-public-review-repairs/clock-failure-cannot-forward.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.error.schema-invalid.v1",
+      "id": "clock-marker-not-initial",
+      "path": "tests/fixtures/mcp-public-review-repairs/clock-marker-not-initial.json",
+      "root_ids": [
+        "ROOT-035"
+      ],
+      "valid": false
+    },
+    {
+      "expected_rule": "ecl.rule.mcp-obligations-discharged.v1",
+      "id": "unrequested-discharge-cannot-hide",
+      "path": "tests/fixtures/mcp-public-review-repairs/unrequested-discharge-cannot-hide.json",
+      "root_ids": [
+        "ROOT-001"
+      ],
+      "valid": false
+    }
+  ],
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "signed_bundle_scope": false,
+  "status": "synthetic reconstructed regression controls; no historical observation claim"
+}

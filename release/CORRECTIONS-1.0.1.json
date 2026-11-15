@@ -1,0 +1,1527 @@
+{
+  "schema_version": "ecl_corrections_v1",
+  "release": "v1.0.1",
+  "corrects": "v1.0",
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "original_source_archive_sha256": "94b9afe0c60f2f92c911ec6a7cb2f1681a34ee1a79bbb67f4e097632af6a9927",
+  "scope": "Exact changed requirement text and source-path inventory; counts are not counts of distinct defects. Final hashes are in the release manifest. File-level edits are available by comparing the two source archives.",
+  "requirement_count": 628,
+  "requirements_added": [],
+  "requirements_removed": [],
+  "changed_requirement_text": [
+    {
+      "requirement_id": "AB1-004",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "before": "A MODIFY decision MUST NOT release the original action. The modified action, if it is to go ahead, MUST be submitted as a new DCMP-2 decision request that carries the modified parameters, as the same JSON values, in `action.parameters` and `action.parameters_digest`, carries the original request's `issuer`, `actor`, `subject`, `delegation_chain`, `authority_request`, `constraints` and `integrity_policy`, and its `action` with only `action_id`, `parameters` and `parameters_digest` changed, names the original request as a causal predecessor by identifier and digest with the relation `ecl.relation.modification-of.v1`, and is evaluated and admitted on its own; an enforcement point MUST release only the parameters that the new request's `admit` binds. A MODIFY whose modified parameters change the action's target or operation, as the deployment derives them from the parameters, MUST end in `deny` of the original with no new request. An exchange record of a MODIFY that holds neither a `modification_request` nor a `release` records a `deny` of the original with no new request and MUST NOT be reported for the missing new request, since the record does not show why the modified action did not go ahead; one that holds a `modification_response` without its `modification_request` MUST be reported as `ecl.rule.aarm-modification-new-request.v1`. A decision other than MODIFY has no new request: the enforcement point MUST release the action, if at all, only on the `admit` of the original request, and an exchange record whose `aarm_decision` is not MODIFY and that holds a `modification_request` or a `modification_response` MUST be reported as `ecl.rule.aarm-modification-new-request.v1`.",
+      "after": "A MODIFY decision MUST NOT release the original action. The modified action, if it is to go ahead, MUST be submitted as a new DCMP-2 decision request that carries the modified parameters as the same JSON values in `action.parameters`, and their digest in `action.parameters_digest`, carries the original request's `issuer`, `actor`, `subject`, `delegation_chain`, `authority_request`, `constraints` and `integrity_policy`, and its `action` with only `action_id`, `parameters` and `parameters_digest` changed, names the original request as a causal predecessor by identifier and digest with the relation `ecl.relation.modification-of.v1`, and is evaluated and admitted on its own; an enforcement point MUST release only the parameters that the new request's `admit` binds. A MODIFY whose modified parameters change the action's target or operation, as the deployment derives them from the parameters, MUST end in `deny` of the original with no new request. An exchange record of a MODIFY that holds neither a `modification_request` nor a `release` records a `deny` of the original with no new request and MUST NOT be reported for the missing new request, since the record does not show why the modified action did not go ahead; one that holds a `modification_response` without its `modification_request` MUST be reported as `ecl.rule.aarm-modification-new-request.v1`. A decision other than MODIFY has no new request: the enforcement point MUST release the action, if at all, only on the `admit` of the original request, and an exchange record whose `aarm_decision` is not MODIFY and that holds a `modification_request` or a `modification_response` MUST be reported as `ecl.rule.aarm-modification-new-request.v1`.",
+      "before_text_sha256": "9068e536fde850dc117dc78359d0d972062f9b9cbeaa2844bb86b7dc4b48a8ef",
+      "after_text_sha256": "8e7e81e992e3438b373fe20cc925a424fa16b2ad1d468484aef17179da6a4e19"
+    },
+    {
+      "requirement_id": "AB1-013",
+      "source_path": "profiles/AARM-BINDING-1.md",
+      "before": "The `inputs` of an exchange record MUST be the entries of the decision basis that its `response` records in `ecl.ext.decision-basis.v1`: each input of the record, without its `aarm_requirement`, MUST equal the entry of the extension's value whose `input` is the same, and each entry MUST appear in the record exactly once. A response that does not carry the extension records no inputs, and a response that carries it more than once matches no record. A record that breaks this MUST be reported as the verification finding `ecl.rule.aarm-inputs-match-basis.v1`. The record's `response`, and its `modification_response` when it holds one, MUST each carry exactly one `ecl.ext.decision-basis.v1` and MUST also satisfy DCMP2-053, each with the record's `request` or `modification_request` as the request it answers, with the response clock-skew allowance of the reference verification profile, zero (DCMP2-047); a record whose response fails either MUST be reported with `ecl.rule.decision-basis-one-way.v1`. Each DCMP-2 message that the record holds MUST satisfy the semantic rules of DCMP-2, and a record that holds one that fails a rule MUST be reported with that rule. The decision basis of the record's `modification_response` MUST carry the `register` reference of the decision basis of the `response`, member for member, and MUST record the same inputs, compared as input names are, each with the `class`, `required`, `source` and `derived_from` that the record's `inputs` give it; a record that breaks this MUST be reported as `ecl.rule.aarm-inputs-match-basis.v1`.",
+      "after": "The `inputs` of an exchange record MUST be the entries of the decision basis that its `response` records in `ecl.ext.decision-basis.v1`: each input of the record, without its `aarm_requirement`, MUST equal the entry of the extension's value whose `input` is the same, and each entry MUST appear in the record exactly once. A response that does not carry the extension records no inputs, and a response that carries it more than once matches no record. A record that breaks this MUST be reported as the verification finding `ecl.rule.aarm-inputs-match-basis.v1`. The record's `response`, and its `modification_response` when it holds one, MUST each carry exactly one `ecl.ext.decision-basis.v1` and MUST also satisfy DCMP2-053, each with the record's `request` or `modification_request` as the request it answers, with the response clock-skew allowance of the reference verification profile, zero (DCMP2-047); a record whose response fails either MUST be reported with `ecl.rule.decision-basis-one-way.v1`. Each DCMP-2 message that the record holds MUST satisfy the semantic rules of DCMP-2, and a record that holds one that fails a rule MUST be reported with that rule. The decision basis of the record's `modification_response` MUST carry the `register` reference of the decision basis of the `response`, member for member, and MUST record the same inputs, compared as input names are, each with the `class`, `required`, `source` and `derived_from` that the record's `inputs` give it; a record that breaks this MUST be reported as `ecl.rule.aarm-inputs-match-basis.v1`. The modification request MUST be decided under the register version of the first decision. If that version is no longer in force, the Decision Layer MUST NOT admit the modification.",
+      "before_text_sha256": "53c1d7943afc3e8f153ee9c30b4b8f7d5ee682e879617c564d2ed0bf97dad0c9",
+      "after_text_sha256": "fd4c472104b28ddcc8510c051a6785ec932ea4dd632d85d0e614c7856de5947a"
+    },
+    {
+      "requirement_id": "AC1-005",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "before": "A `modify` decision MUST NOT release the original action. The action that the modification produces, if it is to go ahead, MUST be submitted as a new DCMP-2 decision request that carries the effective parameters after the modification, as the same JSON values, in `action.parameters` and `action.parameters_digest`, carries the original request's `issuer`, `actor`, `subject`, `delegation_chain`, `authority_request`, `constraints` and `integrity_policy`, and its `action` with only `action_id`, `parameters` and `parameters_digest` changed, names the original request as a causal predecessor by identifier and digest with the relation `ecl.relation.modification-of.v1`, and is evaluated and admitted on its own; an enforcement point MUST release only the parameters that the new request's `admit` binds, and a `modifications` object that the pinned text forbids (a wholesale replacement combined with edits, or edits with overlapping targets), or one that cannot be applied under the next section, MUST end in `deny` of the original with no new request. An exchange record of a `modify` that holds neither a `modification_request` nor a `release` records a `deny` of the original with no new request and MUST NOT be reported for the missing new request, since the record does not show why the modified action did not go ahead; one that holds a `modification_response` without its `modification_request` MUST be reported as `ecl.rule.acs-modification-new-request.v1`. A decision other than `modify`, and a decision failure, has no new request: the enforcement point MUST release the action, if at all, only on the `admit` of the original request, and an exchange record that records a decision failure, or a Guardian decision other than `modify`, and that holds a `modification_request` or a `modification_response` MUST be reported as `ecl.rule.acs-modification-new-request.v1`.",
+      "after": "A `modify` decision MUST NOT release the original action. The action that the modification produces, if it is to go ahead, MUST be submitted as a new DCMP-2 decision request that carries the effective parameters after the modification as the same JSON values in `action.parameters`, and their digest in `action.parameters_digest`, carries the original request's `issuer`, `actor`, `subject`, `delegation_chain`, `authority_request`, `constraints` and `integrity_policy`, and its `action` with only `action_id`, `parameters` and `parameters_digest` changed, names the original request as a causal predecessor by identifier and digest with the relation `ecl.relation.modification-of.v1`, and is evaluated and admitted on its own; an enforcement point MUST release only the parameters that the new request's `admit` binds, and a `modifications` object that the pinned text forbids (a wholesale replacement combined with edits, or edits with overlapping targets), or one that cannot be applied under the next section, MUST end in `deny` of the original with no new request. An exchange record of a `modify` that holds neither a `modification_request` nor a `release` records a `deny` of the original with no new request and MUST NOT be reported for the missing new request, since the record does not show why the modified action did not go ahead; one that holds a `modification_response` without its `modification_request` MUST be reported as `ecl.rule.acs-modification-new-request.v1`. A decision other than `modify`, and a decision failure, has no new request: the enforcement point MUST release the action, if at all, only on the `admit` of the original request, and an exchange record that records a decision failure, or a Guardian decision other than `modify`, and that holds a `modification_request` or a `modification_response` MUST be reported as `ecl.rule.acs-modification-new-request.v1`.",
+      "before_text_sha256": "c62dd5d559f210bedda71bbef302c147e26114cf1ab7e934ab00970d89152ca5",
+      "after_text_sha256": "fa58fbce36a4fd106f1ca78db265335eda533953d0eb42daed9167fcabbc1f42"
+    },
+    {
+      "requirement_id": "AC1-012",
+      "source_path": "profiles/ACS-BINDING-1.md",
+      "before": "When an exchange record holds a `response`, the record's `inputs` MUST be the entries of the decision basis that the response records in `ecl.ext.decision-basis.v1`: each input of the record, without its `guardian` marker, MUST equal the entry of the extension's value whose `input` is the same, and each entry MUST appear in the record exactly once. A response that does not carry the extension records no inputs, and a response that carries it more than once matches no record. A record that breaks this MUST be reported as the verification finding `ecl.rule.acs-inputs-match-basis.v1`. The record's `response`, and its `modification_response` when it holds one, MUST each carry exactly one `ecl.ext.decision-basis.v1` and MUST also satisfy DCMP2-053, each with the record's `request` or `modification_request` as the request it answers, with the response clock-skew allowance of the reference verification profile, zero (DCMP2-047); a record whose response fails either MUST be reported with `ecl.rule.decision-basis-one-way.v1`. Each DCMP-2 message that the record holds MUST satisfy the semantic rules of DCMP-2, and a record that holds one that fails a rule MUST be reported with that rule. The decision basis of the record's `modification_response` MUST carry the `register` reference of the decision basis of the `response`, member for member, and MUST record the same inputs, compared as input names are, each with the `class`, `required`, `source` and `derived_from` that the record's `inputs` give it; a record that breaks this MUST be reported as `ecl.rule.acs-inputs-match-basis.v1`.",
+      "after": "When an exchange record holds a `response`, the record's `inputs` MUST be the entries of the decision basis that the response records in `ecl.ext.decision-basis.v1`: each input of the record, without its `guardian` marker, MUST equal the entry of the extension's value whose `input` is the same, and each entry MUST appear in the record exactly once. A response that does not carry the extension records no inputs, and a response that carries it more than once matches no record. A record that breaks this MUST be reported as the verification finding `ecl.rule.acs-inputs-match-basis.v1`. The record's `response`, and its `modification_response` when it holds one, MUST each carry exactly one `ecl.ext.decision-basis.v1` and MUST also satisfy DCMP2-053, each with the record's `request` or `modification_request` as the request it answers, with the response clock-skew allowance of the reference verification profile, zero (DCMP2-047); a record whose response fails either MUST be reported with `ecl.rule.decision-basis-one-way.v1`. Each DCMP-2 message that the record holds MUST satisfy the semantic rules of DCMP-2, and a record that holds one that fails a rule MUST be reported with that rule. The decision basis of the record's `modification_response` MUST carry the `register` reference of the decision basis of the `response`, member for member, and MUST record the same inputs, compared as input names are, each with the `class`, `required`, `source` and `derived_from` that the record's `inputs` give it; a record that breaks this MUST be reported as `ecl.rule.acs-inputs-match-basis.v1`. The modification request MUST be decided under the register version of the first decision. If that version is no longer in force, the Decision Layer MUST NOT admit the modification.",
+      "before_text_sha256": "9c6f3a2cd08bb467e2be80744c5d31d2e44dd8469245f2d2af63103e5026804c",
+      "after_text_sha256": "3e5a740e1db2c15197c4827d82fae6cefb9a90df3f9c414b0eec605a6cc16fbd"
+    },
+    {
+      "requirement_id": "DCMP2-008",
+      "source_path": "protocols/DCMP-2.md",
+      "before": "A mutable resource reference used in a consequential decision MUST include a digest, version, immutable snapshot reference, or a profile- defined witness that makes the evaluated state reconstructable.",
+      "after": "A mutable resource reference used in a consequential decision MUST include a digest, version, immutable snapshot reference, or a profile-defined witness that makes the evaluated state reconstructable.",
+      "before_text_sha256": "89dcc1a441e9d8ea41a597b1ce7a88fa9fd603662ac7529b4b4fc7fbdce54923",
+      "after_text_sha256": "088d0b4765bf30ec50278fc54b6db3bdc60f431a04095f5d63be259ea339350a"
+    },
+    {
+      "requirement_id": "DCMP2-010",
+      "source_path": "protocols/DCMP-2.md",
+      "before": "Each delegation hop MUST be independently referencable, integrity-verifiable, audience-bound, expiry-bounded, and scope-attenuating. An elevation is a new authority root, not an attenuation hop.",
+      "after": "Each delegation hop MUST be independently referenceable, integrity-verifiable, audience-bound, expiry-bounded, and scope-attenuating. An elevation is a new authority root, not an attenuation hop.",
+      "before_text_sha256": "34f9e430ec2ee67e492bb40682c385239441b092e0ef8e192db88a5b05124528",
+      "after_text_sha256": "e8ad84409097e7c7e27ad9cf115c78b2b9785afcf1c463a37286990c80d59c21"
+    },
+    {
+      "requirement_id": "DCMP2-034",
+      "source_path": "protocols/DCMP-2.md",
+      "before": "A verifier MUST apply the declared verification-time and clock- skew policy. A local parser default is not a trust policy.",
+      "after": "A verifier MUST apply the declared verification-time and clock-skew policy. A local parser default is not a trust policy.",
+      "before_text_sha256": "bc59013ca43978d923396c86cdfc584dd90c535db846bbf06825491f4624727c",
+      "after_text_sha256": "cf4b6bafb63aedec3681ba3129abf2f48dab73ae57aa19d9300b8543d8307073"
+    },
+    {
+      "requirement_id": "DCMP2-053",
+      "source_path": "protocols/DCMP-2.md",
+      "before": "A response that carries `ecl.ext.decision-basis.v1` MUST NOT list one `input` more than once, MUST NOT record an `actor_supplied` or `judgment` input, or an input whose `status` is not `available`, with the `effect` `supports`, and MUST NOT record as `verifiable` an input whose `derived_from` names an input that is not `verifiable`; each name in `derived_from` MUST be the `input` of another entry of the record, and the inputs that `derived_from` names, followed through other entries, MUST NOT include the entry itself. An `admit` response that carries it MUST record at least one `verifiable` input with the `effect` `supports`, and MUST NOT record an input whose `required` is `true` and whose `status` is not `available`. When the extension gives `verifiable_only_outcome`, the response's `outcome` MUST NOT come before it in the strictness order `admit`, `challenge`, `hold`, `deny` of ECL-1 Section 4.3; an entry MUST NOT have the `effect` `supports` unless it is `admit`; and when it is `admit`, at least one `verifiable` entry MUST have the `effect` `supports`, and an entry whose `class` is `verifiable` and whose `required` is `true` MUST have the `status` `available`. In these conditions an input also counts as not `available` when its `derived_from` names, directly or through other entries, an input whose `status` is not `available` (ECL-1 Section 4.3). An entry whose `obtained_at` is later than the response's `evaluated_at` MUST NOT be `available`, and an extension whose entries give `obtained_at` MUST give `received_at`, no later than `evaluated_at`. When the extension gives `received_at`, every entry whose `status` is `available` MUST give `obtained_at` and `value_at`. An entry's `value_at` MUST NOT be later than its `obtained_at` or than the response's `evaluated_at`. Input names are compared, within the record and with a register, after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1: the URI scheme, the namespace identifier of a URN and the host of an `http` or `https` URI are lowercased, and the two hexadecimal digits of each percent-encoding are uppercased; no other normalization is applied. A consumer MUST reject a response that fails these conditions with `ecl.rule.decision-basis-one-way.v1`, after validating the extension's value against its value schema (XR1-023). An evidence verifier MUST reject a decision response that does not carry the extension with `ecl.rule.decision-basis-required.v1`, and MUST reject, with `ecl.rule.decision-basis-one-way.v1`, a response whose extension records as `verifiable` an input whose `source` is the `actor` of the response's request, compared as input names are, because an input that the governed AI system produces is `actor_supplied` (ECL-1 Section 4.3, ECL1N-0178), or gives a `received_at` earlier than the request's `issued_at` by more than the response clock-skew allowance of DCMP2-047. A verifier MUST refuse, as a usage error, a register that fails its schema or `ecl.rule.register-declarations-consistent.v1` (ECL1N-0178), among them a register that declares an action class, or an input of one class, more than once. A verifier given a version of the register MUST reject, with `ecl.rule.decision-basis-matches-register.v1`, a response whose extension names another register version; whose `inputs` are not exactly the inputs that the register declares for the request's action class, each once, with its declared class, required flag, `derived_from` (an absent `derived_from` naming no input) and `source`, the source compared as input names are; or that records as `available` an input whose `obtained_at` is more than its declared `deadline_milliseconds` after `received_at`, or whose `value_at` is more than its declared `maximum_age_seconds` before the response's `evaluated_at`.",
+      "after": "A response that carries `ecl.ext.decision-basis.v1` MUST NOT list one `input` more than once, MUST NOT record an `actor_supplied` or `judgment` input, or an input whose `status` is not `available`, with the `effect` `supports`, and MUST NOT record as `verifiable` an input whose `derived_from` names an input that is not `verifiable`; each name in `derived_from` MUST be the `input` of another entry of the record, and the inputs that `derived_from` names, followed through other entries, MUST NOT include the entry itself. An `admit` response that carries it MUST record at least one `verifiable` input with the `effect` `supports`, and MUST NOT record an input whose `required` is `true` and whose `status` is not `available`. When the extension gives `verifiable_only_outcome`, the response's `outcome` MUST NOT come before it in the strictness order `admit`, `challenge`, `hold`, `deny` of ECL-1 Section 4.3; an entry MUST NOT have the `effect` `supports` unless `verifiable_only_outcome` is `admit`; and when `verifiable_only_outcome` is `admit`, at least one `verifiable` entry MUST have the `effect` `supports`, and an entry whose `class` is `verifiable` and whose `required` is `true` MUST have the `status` `available`. In these conditions an input also counts as not `available` when its `derived_from` names, directly or through other entries, an input whose `status` is not `available` (ECL-1 Section 4.3). An entry whose `obtained_at` is later than the response's `evaluated_at` MUST NOT be `available`, and an extension whose entries give `obtained_at` MUST give `received_at`, no later than `evaluated_at`. When the extension gives `received_at`, every entry whose `status` is `available` MUST give `obtained_at` and `value_at`. An entry's `value_at` MUST NOT be later than its `obtained_at` or than the response's `evaluated_at`. Input names are compared, within the record and with a register, after the case normalization of RFC 3986 section 6.2.2.1 and RFC 8141 section 3.1: the URI scheme, the namespace identifier of a URN and the host of an `http` or `https` URI are lowercased, and the two hexadecimal digits of each percent-encoding are uppercased; no other normalization is applied. A consumer MUST reject a response that fails these conditions with `ecl.rule.decision-basis-one-way.v1`, after validating the extension's value against its value schema (XR1-023). An evidence verifier MUST reject a decision response that does not carry the extension with `ecl.rule.decision-basis-required.v1`, and MUST reject, with `ecl.rule.decision-basis-one-way.v1`, a response whose extension records as `verifiable` an input whose `source` is the `actor` of the response's request, compared as input names are, because an input that the governed AI system produces is `actor_supplied` (ECL-1 Section 4.3, ECL1N-0178), or gives a `received_at` earlier than the request's `issued_at` by more than the response clock-skew allowance of DCMP2-047. A verifier MUST refuse, as a usage error, a register that fails its schema or `ecl.rule.register-declarations-consistent.v1` (ECL1N-0178), among them a register that declares an action class, or an input of one class, more than once. A verifier given a version of the register MUST reject, with `ecl.rule.decision-basis-matches-register.v1`, a response whose extension names another register version; whose `inputs` are not exactly the inputs that the register declares for the request's action class, each once, with its declared class, required flag, `derived_from` (an absent `derived_from` naming no input) and `source`, the source compared as input names are; or that records as `available` an input whose `obtained_at` is more than its declared `deadline_milliseconds` after `received_at`, or whose `value_at` is more than its declared `maximum_age_seconds` before the response's `evaluated_at`.",
+      "before_text_sha256": "a6f41ddc9656363267246fb37172483073c33e99682f4cded0358af4cf776cc0",
+      "after_text_sha256": "dc9140f06171b2799682c36825119424f2db5d04b8168defc948fdd3dab9df56"
+    },
+    {
+      "requirement_id": "DCMP2-056",
+      "source_path": "protocols/DCMP-2.md",
+      "before": "A request that continues a request answered with a decision response whose outcome is `challenge` MUST be a new decision request (DCMP2-021, DCMP2-026): a new `message_id`; the continued request's `workflow.workflow_id` and `workflow.root_trace_id`; a `workflow.attempt` greater than the continued request's; and an `action`, `actor`, `subject` and `authority_request` equal to the continued request's. It MUST carry `continues` with `request_id`, the continued request's `message_id`; `response_id`, the `message_id` of the challenge response; and `approval_id`, the `object_id` of the EBMP-2 `human_intervention` event whose `operation` is `approve` and whose `target_id` is the continued request's `message_id`. It MUST list that response and that event among its `workflow.causal_predecessors`, each by identifier and digest. The continued request keeps its one response, the challenge, and its attempt ends in the `challenged` state; the continuation's response is the one that can authorize a release. `protocols/examples/dcmp-2-continuation.json` shows a continuation with the objects it names.",
+      "after": "A request that continues a request answered with a decision response whose outcome is `challenge` MUST be a new decision request (DCMP2-021, DCMP2-026): a new `message_id`; the continued request's `workflow.workflow_id` and `workflow.root_trace_id`; a `workflow.attempt` greater than the continued request's; and an `action`, `actor`, `subject` and `authority_request` equal to the continued request's. It MUST carry `continues` with `request_id`, the continued request's `message_id`; `response_id`, the `message_id` of the `decision_response` whose `outcome` is `challenge`; and `approval_id`, the `object_id` of the EBMP-2 `human_intervention` event whose `operation` is `approve` and whose `target_id` is the continued request's `message_id`. It MUST list that response and that event among its `workflow.causal_predecessors`, each by identifier and digest. The continued request keeps its one response, the challenge, and its attempt ends in the `challenged` state; the continuation's response is the one that can authorize a release. `protocols/examples/dcmp-2-continuation.json` shows a continuation with the objects it names.",
+      "before_text_sha256": "2ea5d227cf3d38df7f2a9a1218c3416a4a59955680c866c17c2f714a2a786541",
+      "after_text_sha256": "4b21993375b4eaa08da7b58886b35f31a4b024857f74fa6fb6def89414ba7004"
+    },
+    {
+      "requirement_id": "DCMP2-057",
+      "source_path": "protocols/DCMP-2.md",
+      "before": "The Decision Layer MUST evaluate a continuation afresh under the policy in force at its evaluation and MUST NOT copy the outcome, authorization or obligations of the continued response. The approval is a decision input of that evaluation and nothing more: it stands only for the action, actor, subject and requested authority of the continued request, as presented to the approver (ECL-1 ECL1N-0174), and a continuation that changes any of them is not covered by it. The Decision Layer MUST NOT admit a continuation on an approval that was issued after the challenge's deadline, whose `expires_at` is at or before the continuation's evaluation, whose approver or approval key is revoked at that evaluation, or that a control message has revoked; nor on an approval that another continuation has already used; nor when the policy in force no longer accepts that approver for the action. It MUST then answer the continuation with a new response, a new `challenge` or a `deny`, and never by changing an earlier response.",
+      "after": "The Decision Layer MUST evaluate a continuation afresh under the policy in force at its evaluation and MUST NOT copy the outcome, authorization or obligations of the continued response. The approval is a decision input of that evaluation and nothing more: it stands only for the action, actor, subject and requested authority of the continued request, as presented to the approver (ECL-1 ECL1N-0174), and a continuation that changes any of them is not covered by it. The Decision Layer MUST NOT admit a continuation on an approval that was issued after the challenge's deadline, whose `expires_at` is at or before the continuation's evaluation, whose approver or approval key is revoked at that evaluation, or that a control message has revoked; nor on an approval that another continuation has already used; nor when the policy in force no longer accepts that approver for the action. It MUST then answer the continuation with a new `decision_response` under the applicable decision rules, including `challenge` or `deny` when appropriate, and never by changing an earlier response.",
+      "before_text_sha256": "83b1559433ea38293a6bc1d9c18e822401eaacac3831ba554e071044e6c96ebd",
+      "after_text_sha256": "d8cff588a1bc909c80bf3003668e16738011a1e05ad3ced74d461a1bed23065f"
+    },
+    {
+      "requirement_id": "DHB1-006",
+      "source_path": "profiles/DCMP2-HTTP-1.md",
+      "before": "Status mapping MUST be 401 for unauthenticated requests, 400 for invalid well-framed requests, 411 for invalid Content-Length or Transfer-Encoding framing, 413 for an exceeded byte cap, 503 with body {\"error\": \"retry\"} for a retryable condition with nothing issued, and 500 for an internal failure; the only success status for the decision exchange MUST be 200.",
+      "after": "Malformed-message handling MUST follow the HTTP version in use before application status mapping. For HTTP/1.1, a request with invalid Content-Length or Transfer-Encoding framing, or with both fields, MUST be rejected with 400 and connection closure (RFC 9112, Sections 6.1 and 6.3). An otherwise well-framed request without the Content-Length required by DHB1-001 MUST receive 411, including an otherwise valid chunked HTTP/1.1 request (RFC 9110, Section 15.5.12; RFC 9112, Section 6.3). HTTP/2 and HTTP/3 stream and connection error requirements (RFC 9113, Section 8.1.1; RFC 9114, Section 4.1.2) take precedence over this status mapping; an HTTP error response alone does not satisfy a required stream reset. For requests that pass framing checks, status mapping MUST be 401 for unauthenticated requests, 400 for invalid requests within the byte cap, 413 for an exceeded byte cap, 503 with body {\"error\": \"retry\"} for a retryable condition with nothing issued, and 500 for an internal failure. The only success status for the decision exchange MUST be 200.",
+      "before_text_sha256": "0c2a1a5df0247ecfc66d1f5c79b6c4ae4e65ad773dbf657b86c9b5d05e00f4c8",
+      "after_text_sha256": "4b96f329a116331b3456fccf30912683b63e0060e34b3d2ae47ea600a00f70e4"
+    },
+    {
+      "requirement_id": "EBMP2-017",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "An approval MUST expire, be supersedable, and be transaction- bound. A generic chat statement or interface click without this binding is not release authority.",
+      "after": "An approval MUST expire, be supersedable, and be transaction-bound. A generic chat statement or interface click without this binding is not release authority.",
+      "before_text_sha256": "ef1a65af8a6a0e3077f364944b626e22e062958ded9f968be1ecfbfacab97546",
+      "after_text_sha256": "ebed5680e959f2dfda928ca455cbbdd981dd6332341a5df5487c402329a67486"
+    },
+    {
+      "requirement_id": "EBMP2-030",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "A storage path, database primary key, display label, or tenant- local sequence MUST NOT substitute for canonical content identity.",
+      "after": "A storage path, database primary key, display label, or tenant-local sequence MUST NOT substitute for canonical content identity.",
+      "before_text_sha256": "df7a6e42294f36a38e43776c06e8c1e69ad64c65b147ae041fc93211b7ace635",
+      "after_text_sha256": "a3e23b544e5416805618d911b6e1ba940a5369bcd4174670ea4f54f925b63870"
+    },
+    {
+      "requirement_id": "EBMP2-037",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "Redaction MUST NOT preserve a claim whose required verifier- critical evidence was removed. The claim becomes bounded, indeterminate, or failed as defined by the profile.",
+      "after": "Redaction MUST NOT preserve a claim whose required verifier-critical evidence was removed. The claim becomes bounded, indeterminate, or failed as defined by the profile.",
+      "before_text_sha256": "90fbaf7d5334874276141d1380fc2336a2f1e4ac683975dc55dd23bae1cea124",
+      "after_text_sha256": "7e5a660e56b3951ebbb91497036727b39946f8ad44777a44064613ef340d640d"
+    },
+    {
+      "requirement_id": "EBMP2-041",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "Legal hold MUST take precedence over scheduled destruction until a separately authorized release-hold event.",
+      "after": "Legal hold MUST take precedence over scheduled destruction until a separately authorized release-hold event, subject to the recorded legal determination under ECL1N-0195 to ECL1N-0199.",
+      "before_text_sha256": "f73048603507affc39fe473dc8853c6b4b498a1009dc41dda471ebd6fbe5005d",
+      "after_text_sha256": "00a41508526e3b1736132b7cd4185fd8fc7f0389ae6151c65a05c143e3175993"
+    },
+    {
+      "requirement_id": "EBMP2-055",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "A `succeeded` attempt MUST have an `authority_consumed` event in state `consumed` and an `execution_released` event for the same attempt. A verifier MUST apply this rule to every attempt of the bundle, whatever the causal closure of the rest of the bundle, except an attempt one of whose objects in the bundle (its request, its response or one of its events) names a causal predecessor that the bundle does not hold, since that predecessor could be the event that the rule asks for (EBMP2-059).",
+      "after": "A `succeeded` attempt MUST have an `authority_consumed` event in state `consumed` that binds its response under EBMP2-052, and an `execution_released` event for the same attempt that binds its request and response (section 10). A verifier MUST apply this rule to every attempt of the bundle, whatever the causal closure of the rest of the bundle, except an attempt one of whose objects in the bundle (its request, its response or one of its events) names a causal predecessor that the bundle does not hold, since that predecessor could be the event that the rule asks for (EBMP2-059).",
+      "before_text_sha256": "33cae44f13f5d165fd9476f134fa5506f42482b74122310749db30d68583743f",
+      "after_text_sha256": "e7d081b2e2f3ba2180d339d22262a45cd04cec62b86cff3515634e35e836da8e"
+    },
+    {
+      "requirement_id": "EBMP2-061",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "A verifier MUST report the evidence level of each terminal effect: `none` when the terminal is not historically valid; `issuer-asserted` when it is; and `corroborated` only when the report establishes `envelope-signatures` and `causal-completeness` (EBMP2-076) and, for every side effect of a `succeeded` terminal, some observation is a historically valid `verification` event with decision `pass` whose `subject` has the side effect's `uri` and digest, that names the terminal event among its causal predecessors by `object_id` and digest, that has the terminal's `workflow.workflow_id`, `workflow.root_trace_id` and `workflow.attempt`, observed no earlier than the terminal, produced by a principal other than the terminal's producer, and signed only with key material disjoint from the terminal's. Corroboration therefore binds one observation to one terminal event of one attempt.",
+      "after": "A verifier MUST report the evidence level of each terminal effect: `none` when the terminal is not historically valid; `issuer-asserted` when it is; and `corroborated` only when the terminal state is `succeeded`, the terminal lists at least one side effect, the report establishes `envelope-signatures` and `causal-completeness` (EBMP2-076), and every listed side effect has an observation that is a historically valid `verification` event with decision `pass` whose `subject` has the side effect's `uri` and digest, that names the terminal event among its causal predecessors by `object_id` and digest, that has the terminal's `workflow.workflow_id`, `workflow.root_trace_id` and `workflow.attempt`, observed no earlier than the terminal, produced by a principal other than the terminal's producer, and signed only with key material disjoint from the terminal's. Corroboration therefore binds one observation to one terminal event of one attempt.",
+      "before_text_sha256": "e7c39c963102b6afada61f1e34e58de27e55fc22101c08a3ca4d1aae061ecd0f",
+      "after_text_sha256": "812ff41d8c704727bda3d9bc60404b7d421fc5cb1217fff43a19a39f1c8dac2d"
+    },
+    {
+      "requirement_id": "EBMP2-068",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "A verifier MAY stop at the first of the stages below that has a finding, and need not report a bundle's other findings as secondary findings, but MUST report as the primary finding of an invalid bundle the first finding of the earliest stage that has one and, within that stage, the finding that comes first in the order the stage gives, whatever the positions of the objects in the bundle. The stages are: 1. the input, where a failure stops verification: the earlier policy versions that the caller supplies (TP1-001), `ecl.error.signature-policy-invalid.v1`; the bundle's shape, `ecl.error.schema-invalid.v1`; its limits on envelopes and observations (EBMP2-062), `ecl.error.resource-limit-exceeded.v1`; then its schema, `ecl.error.schema-invalid.v1`; 2. the payloads: each envelope's payload under INTEGRITY-ENVELOPE-1 IE1-040 step 3, whose strict parse takes the nodes that remain of the payload node limit of EBMP2-062 as its value limit (IE1-037, check 3), so that a payload that exceeds them stops verification before its later checks; `ecl.error.resource-limit-exceeded.v1` before `ecl.error.integrity-invalid.v1`; 3. the objects: each object's schema and semantic rules, with the findings that DCMP2-043 gives the object, an object that fails its schema making its envelope not historically valid with `ecl.error.schema-invalid.v1` and one that satisfies its schema but fails a semantic rule with `ecl.error.semantic-invalid.v1`; unique object identifiers; the decision-basis rules of DCMP2-053 (`ecl.rule.decision-basis-required.v1`, `ecl.rule.decision-basis-matches-register.v1`, and `ecl.rule.decision-basis-one-way.v1` for an input recorded as `verifiable` whose source is the request's actor); and the kind of each observation (EBMP2-057); `ecl.error.schema-invalid.v1`, then the registered rules in ascending order of precedence, then `ecl.error.semantic-invalid.v1`, so that a bundle whose only defect is one object has the primary finding that DCMP2-043 gives that object; 4. the signers: each other envelope's historical validity (EBMP2-057, IE1-032 to IE1-036, IE1-040, TRUST-POLICY-1 TP1-006); `ecl.error.clock-regressed.v1`, `ecl.error.signature-policy-invalid.v1`, `ecl.error.trusted-time-invalid.v1`, `ecl.error.trusted-time-required.v1`, `ecl.error.revoked.v1`, `ecl.error.expired.v1`, `ecl.error.resource-limit-exceeded.v1`, `ecl.error.integrity-invalid.v1`, then `ecl.error.threshold-not-met.v1`; 5. pairing (EBMP2-058, EBMP2-066, EBMP2-078); `ecl.error.schema-invalid.v1`, then `ecl.error.decision-binding-invalid.v1`; 6. the binding of each response to its request (DCMP2-044 to DCMP2-051), each pair stopping at its first failure; `ecl.error.request-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, `ecl.error.audience-mismatch.v1`, then `ecl.error.scope-mismatch.v1`; 7. the binding of each event (EBMP2-047 to EBMP2-054, EBMP2-072, EBMP2-073 and EBMP2-075); `ecl.error.decision-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, then `ecl.error.expired.v1`; 8. causal analysis (section 4 over every object of the bundle, EBMP2-059, EBMP2-077, EBMP2-055 and EBMP2-074); `ecl.error.resource-limit-exceeded.v1`, then the registered rules in ascending order of precedence, then `ecl.error.decision-binding-invalid.v1`; 9. outcome reasons (EBMP2-056); `ecl.error.semantic-invalid.v1`.",
+      "after": "A verifier MAY stop at the first of the stages below that has a finding, and need not report a bundle's other findings as secondary findings, but MUST report as the primary finding of an invalid bundle the first finding of the earliest stage that has one and, within that stage, the finding that comes first in the order the stage gives, whatever the positions of the objects in the bundle. The stages are: 1. the input, where a failure stops verification: the earlier policy versions that the caller supplies (TP1-001), `ecl.error.signature-policy-invalid.v1`; the bundle's shape, `ecl.error.schema-invalid.v1`; its limits on envelopes and observations (EBMP2-062), `ecl.error.resource-limit-exceeded.v1`; then its schema, `ecl.error.schema-invalid.v1`; 2. the payloads: each envelope's payload under INTEGRITY-ENVELOPE-1 IE1-040 step 3, whose strict parse takes the nodes that remain of the payload node limit of EBMP2-062 as its value limit (IE1-037, check 3), so that a payload that exceeds them stops verification before its later checks; `ecl.error.resource-limit-exceeded.v1` before `ecl.error.integrity-invalid.v1`; 3. the objects: each object's schema and semantic rules, with the findings that DCMP2-043 gives the object, an object that fails its schema making its envelope not historically valid with `ecl.error.schema-invalid.v1` and one that satisfies its schema but fails a semantic rule with `ecl.error.semantic-invalid.v1`; unique object identifiers; the decision-basis rules of DCMP2-053 (`ecl.rule.decision-basis-required.v1`, `ecl.rule.decision-basis-matches-register.v1`, and `ecl.rule.decision-basis-one-way.v1` for an input recorded as `verifiable` whose source is the request's actor); and the kind of each observation (EBMP2-057); `ecl.error.schema-invalid.v1`, then the registered rules in ascending order of precedence, then `ecl.error.semantic-invalid.v1`, so that a bundle whose only defect is one object has the primary finding that DCMP2-043 gives that object; 4. the signers: each other envelope's historical validity (EBMP2-057, IE1-032 to IE1-036, IE1-040, TRUST-POLICY-1 TP1-006); `ecl.error.clock-regressed.v1`, `ecl.error.signature-policy-invalid.v1`, `ecl.error.trusted-time-invalid.v1`, `ecl.error.trusted-time-required.v1`, `ecl.error.revoked.v1`, `ecl.error.expired.v1`, `ecl.error.resource-limit-exceeded.v1`, `ecl.error.integrity-invalid.v1`, then `ecl.error.threshold-not-met.v1`; 5. pairing (EBMP2-058, EBMP2-066, EBMP2-078); `ecl.error.schema-invalid.v1`, then `ecl.error.decision-binding-invalid.v1`; 6. the binding of each response to its request (DCMP2-044 to DCMP2-051), each pair stopping at its first failure; `ecl.error.request-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, `ecl.error.audience-mismatch.v1`, then `ecl.error.scope-mismatch.v1`; 7. the binding of each event and cross-event binding rules (EBMP2-047 to EBMP2-054, EBMP2-071, EBMP2-072, EBMP2-073 and EBMP2-075), ordered across all stage-7 findings of the bundle: `ecl.error.decision-binding-invalid.v1`, `ecl.error.digest-mismatch.v1`, then `ecl.error.expired.v1`; 8. causal analysis and pre-release obligation discharge (section 4 over every object of the bundle, EBMP2-059, EBMP2-077, EBMP2-070, EBMP2-055 and EBMP2-074); `ecl.error.resource-limit-exceeded.v1`, then the registered rules in ascending order of precedence, then `ecl.error.decision-binding-invalid.v1`, then `ecl.error.obligation-unproven.v1`; 9. outcome reasons (EBMP2-056); `ecl.error.semantic-invalid.v1`.",
+      "before_text_sha256": "b4d65ae4619b7be79d3681d19b791f2288dfd8d294aa9aa0d6f7c4d9d1ee79bd",
+      "after_text_sha256": "e56b8eb02d6e4765ad5487c124481d8772dc2569c221af6eee29366453e0eea5"
+    },
+    {
+      "requirement_id": "EBMP2-070",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "When the decision response that an `execution_released` event records carries an obligation whose `satisfaction` is `before_release`, or carries in `ecl.ext.consequence-coupling.v1` a `witness_result` whose `outcome` is `required_before_release`, the event MUST carry `ecl.ext.obligation-discharge.v1` with an entry for each such obligation: for an obligation, an entry whose `obligation_id` and `type` are the obligation's `id` and `type`; for the witness result, one whose `obligation_id` is the `uri` of the result's `reference` and whose `type` is `ecl.obligation.verify-witness.v1`. Each entry MUST record the `result` `satisfied`, the proof that Enforcement checked by `reference` and by the `ecl.digest.sha-256.v1` digest of the proof's RFC 8785 canonical form, the proof's `issuer`, when the proof was obtained (`obtained_at`), when Enforcement checked it (`checked_at`) and, whenever the proof's type declares a freshness bound, `fresh_until`, the instant after which the proof no longer shows the obligation met, which MUST NOT be later than the bound that the proof declares. The obligations that need an entry are those of the signed response that the bundle holds and that EBMP2-058 pairs with the event, never a list that the producer states elsewhere. When the proof is an ECL object, a signed envelope of a registered type, the entry MUST carry it: the object that `reference` names by its `message_id` or `object_id` is in the bundle as its own object, a `verification` event among the `observations` and any other object among the `envelopes`, and `digest` is that object's digest; a proof that is not an ECL object is recorded by `kind`, `reference` and `digest` only. The table after this rule gives, for each obligation type, the object admitted as its proof, the member that binds the proof to the exchange and the issuer that the decision names for it. A verifier MUST report with `ecl.rule.prerelease-obligations-discharged.v1` an `execution_released` event that binds its request and response (section 10) and that lacks the extension or an entry for one of these obligations, or that carries an entry that: 1. names an obligation that the response does not carry, or one that another entry also names; 2. records a `result` other than `satisfied`; 3. has a `checked_at` later than the event's `observed_at`, or earlier than the response's `issued_at` by more than the response clock-skew allowance of DCMP2-047; 4. has a proof whose `obtained_at` is later than the entry's `checked_at`; 5. carries a proof whose signers, as the trust policy binds their keys to principals, are not exactly the issuer that the decision names for the obligation, compared as exact strings with no decoding and no normalization, or any of whose signing keys the trust policy binds to the requesting actor, or, for an approval obligation, carries an approval record whose signing keys do not all hold `ecl.purpose.approval.v1` in the trust-policy version that the record names; the entry's `issuer` is a label and is not the test; 6. names as its proof the `message_id` or `object_id` of an object in the bundle and gives a `digest` that is not that object's digest; 7. has a `fresh_until` that is not later than the event's `observed_at` plus its `release_guard_ms`, or carries a proof that declares a bound of its own, an approval record's `expires_at`, that is not later than the event's `observed_at` plus its `release_guard_ms`, whether or not the entry records `fresh_until`, or has a `fresh_until` later than that bound; or 8. carries a proof that is not a valid envelope under the trust policy, whose object type is not one that the obligation's type admits by the table, or that does not bind this exchange by the member that the table gives.",
+      "after": "When the decision response that an `execution_released` event records carries an obligation whose `satisfaction` is `before_release`, or carries in `ecl.ext.consequence-coupling.v1` a `witness_result` whose `outcome` is `required_before_release`, the event MUST carry `ecl.ext.obligation-discharge.v1` with an entry for each such obligation: for an obligation, an entry whose `obligation_id` and `type` are the obligation's `id` and `type`; for the witness result, one whose `obligation_id` is the `uri` of the result's `reference` and whose `type` is `ecl.obligation.verify-witness.v1`. Each entry MUST record the `result` `satisfied`, the proof that Enforcement checked by `reference` and by the `ecl.digest.sha-256.v1` digest of the proof's RFC 8785 canonical form, the proof's `issuer`, when the proof was obtained (`obtained_at`), when Enforcement checked it (`checked_at`) and, whenever the proof's type declares a freshness bound, `fresh_until`, the instant after which the proof no longer shows the obligation met, which MUST NOT be later than the bound that the proof declares. The obligations that need an entry are those of the signed response that the bundle holds and that EBMP2-058 pairs with the event, never a list that the producer states elsewhere. When the proof is an ECL object, a signed envelope of a registered type, the entry MUST carry it: the object that `reference` names by its `message_id` or `object_id` is in the bundle as its own object, a `verification` event among the `observations` and any other object among the `envelopes`, and `digest` is that object's digest; a proof that is not an ECL object is recorded by `kind`, `reference` and `digest` only. The table after this rule gives, for each obligation type, the object admitted as its proof, the member that binds the proof to the exchange and the issuer that the decision names for it. For an `execution_released` event that binds its request and response (section 10), a verifier MUST report `ecl.rule.prerelease-obligations-discharged.v1` when the extension or an entry for a required obligation is missing, or an entry exhibits defect 1, 2, 3, 4, or 6 below. It MUST report `ecl.error.obligation-unproven.v1` for defect 5, 7, or 8. These are the entry defects, subject to the checks and gates described after the table: 1. names an obligation that the response does not carry, or one that another entry also names; 2. records a `result` other than `satisfied`; 3. has a `checked_at` later than the event's `observed_at`, or earlier than the response's `issued_at` by more than the response clock-skew allowance of DCMP2-047; 4. has a proof whose `obtained_at` is later than the entry's `checked_at`; 5. carries a proof whose signers, as the trust policy binds their keys to principals, are not exactly the issuer that the decision names for the obligation, compared as exact strings with no decoding and no normalization, or any of whose signing keys the trust policy binds to the requesting actor, or, for an approval obligation, carries an approval record whose signing keys do not all hold `ecl.purpose.approval.v1` in the trust-policy version that the record names; the entry's `issuer` is a label and is not the test; 6. names as its proof the `message_id` or `object_id` of an object in the bundle and gives a `digest` that is not that object's digest; 7. has a `fresh_until` that is not later than the event's `observed_at` plus its `release_guard_ms`, or carries a proof that declares a bound of its own, an approval record's `expires_at`, that is not later than the event's `observed_at` plus its `release_guard_ms`, whether or not the entry records `fresh_until`, or has a `fresh_until` later than that bound; or 8. carries a proof that is not a valid envelope under the trust policy, whose object type is not one that the obligation's type admits by the table, or that does not bind this exchange by the member that the table gives.",
+      "before_text_sha256": "901d1f3a734d6dbd0e6f407757323105bece9741bae6321b8f5674846fd550ae",
+      "after_text_sha256": "02c91c26e7e41988a9ff9dbca339da9c587b33d07f3f88c43de94ef9d13f40ea"
+    },
+    {
+      "requirement_id": "EBMP2-073",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "An `authority_consumed` event in state `consumed` that binds its response under EBMP2-052 and carries `use_count` MUST give a value from 1 to the number of uses that the authorization allows: 1 when its `use_policy` is `single_use`, and otherwise its `max_uses` when it has one. A bundle MUST NOT hold, for one authorization, more such events than the authorization allows, or two such events with the same `use_count`. A verifier MUST report a bundle that breaks this with `ecl.error.decision-binding-invalid.v1`, as a finding of stage 7 of EBMP2-068.",
+      "after": "An `authority_consumed` event in state `consumed` that binds its response under EBMP2-052 and carries `use_count` MUST give a value from 1 to the number of uses that the authorization allows: 1 when its `use_policy` is `single_use`, and otherwise its `max_uses` when it has one. A bundle MUST NOT hold, for one authorization, more `authority_consumed` events in state `consumed` that bind its response under EBMP2-052 than the authorization allows, whether or not those events carry `use_count`. Any two of those events that carry `use_count` MUST carry different values. A verifier MUST report a bundle that breaks this with `ecl.error.decision-binding-invalid.v1`, as a finding of stage 7 of EBMP2-068.",
+      "before_text_sha256": "a56890eee4788138ec30f7968d8dcf8f2cf61b2d0dcb004f5fbfb3c39bb3dd2a",
+      "after_text_sha256": "4ffc9d2de13f69f5d9b34221423647f5048ab0757c35215e7de0ccc0829429c7"
+    },
+    {
+      "requirement_id": "EBMP2-078",
+      "source_path": "protocols/EBMP-2.md",
+      "before": "A bundle MAY hold a continued request and its continuation (DCMP-2 DCMP2-056), each with its own response and attempt, and then verifies as one history. For a request that carries `continues`, a verifier MUST check that the bundle's objects that `continues` names are the decision request that `request_id` names; the decision response that `response_id` names, whose `request_id` is that request's `message_id` and whose `outcome` is `challenge`; and the `human_intervention` event that `approval_id` names, whose `operation` is `approve` and whose `target_id` is the continued request's `message_id`; that the continuation's workflow, attempt, `action`, `actor`, `subject` and `authority_request` relate to the continued request's as DCMP2-056 requires; that the continuation lists the response and the approval that `continues` names among its `workflow.causal_predecessors`, each by identifier and digest; and that no other request of the bundle continues the same response. When the continuation's response is an `admit`, the verifier MUST also check that every key that signed the approval holds `ecl.purpose.approval.v1` in the trust-policy version that the approval names, and that no key that signed it is bound to the request's actor, as EBMP2-070 condition 5 asks of an approval record; and that the approval's `expires_at`, when present, is later than the `evaluated_at` of that response. A continuation answered with a `deny` or a new `challenge`, as DCMP2-057 requires for an approval that is late, expired or not acceptable, is correct evidence and is not refused for its approval. A verifier MUST report a continuation that fails a check with `ecl.error.decision-binding-invalid.v1`, as a finding of stage 5 of EBMP2-068. A named object that the bundle does not hold leaves the causal closure incomplete (EBMP2-059) and keeps `bindings` out of `established` (EBMP2-076); it exempts no other check of this rule.",
+      "after": "A bundle MAY hold a continued request and its continuation (DCMP-2 DCMP2-056), each with its own response and attempt, and then verifies as one history. For a request that carries `continues`, a verifier MUST check that the bundle's objects that `continues` names are the decision request that `request_id` names; the decision response that `response_id` names, whose `request_id` is that request's `message_id` and whose `outcome` is `challenge`; and the `human_intervention` event that `approval_id` names, whose `operation` is `approve` and whose `target_id` is the continued request's `message_id`; that the continuation's workflow, attempt, `action`, `actor`, `subject` and `authority_request` relate to the continued request's as DCMP2-056 requires; that the continuation lists the response and the approval that `continues` names among its `workflow.causal_predecessors`, each by identifier and digest; and that no other request of the bundle continues the same response. When the continuation's response is an `admit`, the verifier MUST also check that every key that signed the approval holds `ecl.purpose.approval.v1` in the trust-policy version that the approval names, and that no key that signed it is bound to the request's actor, as EBMP2-070 condition 5 asks of an approval record; and that the approval's required `expires_at` is later than the `evaluated_at` of that response. A continuation answered with a `deny` or a new `challenge`, as DCMP2-057 requires for an approval that is late, expired or not acceptable, is correct evidence and is not refused for its approval. A verifier MUST report a continuation that fails a check with `ecl.error.decision-binding-invalid.v1`, as a finding of stage 5 of EBMP2-068. A named object that the bundle does not hold leaves the causal closure incomplete (EBMP2-059) and keeps `bindings` out of `established` (EBMP2-076); it exempts no other check of this rule.",
+      "before_text_sha256": "d81c70482af6525d89246cfd8da41602b9d07161f3a4adf863a757e4bdb1b35e",
+      "after_text_sha256": "8a6f8d8937bca9ddfd08c7f110cf45cfb0365866eaf45870d76846181ce64feb"
+    },
+    {
+      "requirement_id": "ECL1N-0008",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "For `full-system-mediation` and `bounded-action-class-mediation` claims, the Consequential Action Register MUST be validated against the actual runtime capability inventory, including tool manifests, API permissions, delegated authority paths, workflow triggers, and external service bindings reachable by the SoI. Any reachable capability path not represented in the register MUST be included in scope or disclosed in the Negative Boundary Annex.",
+      "after": "For `full-system-mediation` and `bounded-action-class-mediation` claims, the Consequential Action Register MUST be validated against the actual runtime capability inventory, including tool manifests, API permissions, delegated authority paths, workflow triggers, and external service bindings reachable by the System of Interest (SoI). Any reachable capability path not represented in the register MUST be included in scope or disclosed in the Negative Boundary Annex.",
+      "before_text_sha256": "11a98965a6254653c0c8f92d618ac2885d9ed30b30e60b62e355a1be129305ec",
+      "after_text_sha256": "3e4f6fb81918aa0b332eed46b7da67d7995dd8aef885f8cb6c3afc779ef9650d"
+    },
+    {
+      "requirement_id": "ECL1N-0024",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "An implementation claim MUST cite the reference identifier used by each control assertion in Sections 6, 7, 10, and 11.",
+      "after": "For each control that an ECL-1 conformance claim asserts from Sections 6, 7, 10, or 11, the claim MUST cite the control's requirement or checklist identifier, or its section when no such identifier is assigned, and each normative or bibliographic reference on which the assertion relies. A reference in Section 3 or the Bibliography MUST be cited by its bracketed reference identifier in this standard, such as `[ECL-DCMP2]` or `[NIST-RMF]`, with the edition or immutable reference required by ECL1N-0021 and ECL1N-0025. This applies within the stated boundary of a full-system mediation, bounded action-class mediation, or component or profile implementation claim.",
+      "before_text_sha256": "45e05759f3700e7facae308c68fd3b0aef43b203a3d7c71ee13c8124fdecb954",
+      "after_text_sha256": "b4bf601ac051762fb1e21637681576614388f4327182bb759520396592abe605"
+    },
+    {
+      "requirement_id": "ECL1N-0039",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Evidence of complete mediation is always bounded by the declared path- enumeration method, exercised negative tests, and the reachable capability inventory available at assessment time. A conformant claim MUST therefore document the enumeration method, exercised interception points, and any residual untested path classes rather than presenting no-bypass as a mere assertion or as a metaphysically complete proof.",
+      "after": "Evidence of complete mediation is always bounded by the declared path-enumeration method, exercised negative tests, and the reachable capability inventory available at assessment time. A conformant claim MUST therefore document the enumeration method, exercised interception points, and any residual untested path classes rather than presenting no-bypass as a mere assertion or as a metaphysically complete proof.",
+      "before_text_sha256": "dee0b36acb0d3a6f8b50d64e7799e09a70b56a1291acda2a9bfddfbcb0f7d3ee",
+      "after_text_sha256": "01a1d80df34af96be0d98ec2b5ea67515b395d1acd1f5c8922dc77829553eb12"
+    },
+    {
+      "requirement_id": "ECL1N-0043",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "The Enforcement Layer MUST: - intercept all in-scope consequential actions before execution; - apply Decision and Authority outcomes without silent fallback; - fail closed on control-path ambiguity, policy ambiguity, or integrity failure; - preserve a separately auditable control path for emergency halt or quarantine; and - restrict the emergency control plane to halt, quarantine, or other pre- declared containment actions rather than ordinary runtime policy editing.",
+      "after": "The Enforcement Layer MUST: - intercept all in-scope consequential actions before execution; - apply Decision and Authority outcomes without silent fallback; - fail closed on control-path ambiguity, policy ambiguity, or integrity failure; - preserve a separately auditable control path for emergency halt or quarantine; and - restrict the emergency control plane to halt, quarantine, or other pre-declared containment actions rather than ordinary runtime policy editing.",
+      "before_text_sha256": "e16c0db0719dd4f8ae69d5b34e44de7c6ac8a471dfc5326e997f6cf6f44cf863",
+      "after_text_sha256": "52fa6677b3a13d81bb0dee4bb1a474887ee0a494f36cc2aa3071df1275cf6a32"
+    },
+    {
+      "requirement_id": "ECL1N-0050",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Evidence bundles MUST be retained for at least the longer of: - the active assessment cycle for the claimed level; - any applicable regulatory, contractual, or legal retention requirement; or - 12 months from creation.",
+      "after": "Evidence bundles MUST be retained for at least the longest of: - the active assessment cycle for the claimed level; - any applicable regulatory, contractual, or legal retention requirement; and - 12 months from creation.",
+      "before_text_sha256": "237ad116ad32b623e7def02c12fd9368bef7c18c8e730684014a0a71bf667bad",
+      "after_text_sha256": "bc8be348f6a371a5b8f45a3fa611b91502d83abe9a3be845dc8091bf54398f06"
+    },
+    {
+      "requirement_id": "ECL1N-0058",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "For `L2` and above, the companion interoperability artifact set, which is part of the normative assessment surface at every level (ECL1N-0022), MUST include a public vector-coverage manifest. Every schema branch and semantic rule MUST have a positive case where applicable and at least one negative or mutation case that fails for the intended primary error. Passing an arbitrary vector count without rule coverage is insufficient.",
+      "after": "For `L2` and above, the claimant MUST include or immutably reference the public vector-coverage manifest for its version-locked companion interoperability artifact set, as part of the claim package under ECL1N-0069. Every schema branch and semantic rule in that artifact set MUST have a positive case where applicable and at least one negative or mutation case that fails for the intended primary error. Passing an arbitrary vector count without rule coverage is insufficient.",
+      "before_text_sha256": "7782678ee9b32ffac7994e7603eae81e151533b50e203860c2d3d1782d0eab9e",
+      "after_text_sha256": "8c84aeb4cc289f8537ae1154dd21c923042dee5f2f814701b46e17a564649fe6"
+    },
+    {
+      "requirement_id": "ECL1N-0066",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Conformance claims MUST NOT represent compliance with this section as proof of liveness guarantees, business-outcome guarantees, or universal model correctness.",
+      "after": "Conformance claims MUST NOT represent compliance with the functional requirements in Section 6 as proof of liveness guarantees, business-outcome guarantees, or universal model correctness.",
+      "before_text_sha256": "df2c152e28f4d595ee7a8918edbe83dcc895999931358697d686af7161eef312",
+      "after_text_sha256": "544f1f5ad2952828589a3a02305d4fba86e310793a2a683964834546369addd1"
+    },
+    {
+      "requirement_id": "ECL1N-0072",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "If any dimension cannot be defensibly scored due to missing information, the scorer MUST assign the next higher provisional level until evidence is provided.",
+      "after": "If any dimension cannot be defensibly scored due to missing information, the scorer MUST identify the missing dimensions and assign a provisional level. Its baseline is the highest defensibly scored dimension, or `L1` when none can be scored; the provisional level MUST be one level above that baseline, capped at `L4`. A baseline of `L4` therefore remains provisionally `L4`. The result MUST remain identified as provisional until the missing information is provided and all dimensions can be scored under ECL1N-0071.",
+      "before_text_sha256": "cbb87ee6350e5b6270c5b3a8fa3afe26459f7290855a16f1640d13957c7dbabc",
+      "after_text_sha256": "f9d1c5a6e4b5a7c2bafd3e515a36185918b3af4626bcb4f0dba106ee5fe2f2ac"
+    },
+    {
+      "requirement_id": "ECL1N-0086",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "`L2`: independent assessor or assessor team with no direct implementation, managed-operation, or claim-approval authority over the SoI during the assessment period or prior 24 months; compensation MUST NOT be contingent on claim issuance; material affiliate or reseller relationships with the assessed SoI operator MUST be disclosed and are disqualifying unless a sector authority explicitly permits and publishes the exception.",
+      "after": "`L2`: the assessment MUST be performed by an independent assessor or assessor team with no direct implementation, managed-operation, or claim-approval authority over the SoI during the assessment period or prior 24 months; compensation MUST NOT be contingent on claim issuance; material affiliate or reseller relationships with the assessed SoI operator MUST be disclosed and are disqualifying unless a sector authority explicitly permits and publishes the exception.",
+      "before_text_sha256": "72371fe69a5a077d3f8827cee7dbc8d4a900fbb4e870b74e159f6feb1792d45b",
+      "after_text_sha256": "f928be55875de8d888fa0102d3cc5ec98d52514e50797abc5889217c6018a854"
+    },
+    {
+      "requirement_id": "ECL1N-0097",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Each conformance claim MUST publish a declared timing case covering the following control intervals. For each bound, the case MUST state the TS1-034 elements: observation points, objective type, measuring clock, and load and fault conditions: - connected revocation propagation; - maximum offline control-state staleness before restricted mode or halt; - delay from first approved transfer path to evidence export completion.",
+      "after": "Each conformance claim MUST publish a declared timing case covering the following control intervals. For each bound, the case MUST state the TS1-034 elements: observation points, objective type, measuring clock, and load and fault conditions: - connected revocation propagation; - maximum offline control-state staleness before restricted mode or halt; - delay from the first availability of an approved transfer path to evidence export completion.",
+      "before_text_sha256": "4af541dfcf220a42841daddfd52ada35117a2856e0bfe327bf5877f3a2307288",
+      "after_text_sha256": "cf5654d5ff3b1587cf986185991c996351a292be298ca50e4e70321d3a20de6e"
+    },
+    {
+      "requirement_id": "ECL1N-0098",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "The table below is the default baseline. A sector profile or engineering timing case MAY adopt stricter values, and the claim packet MUST then publish the rationale, control assumptions, and residual risk. A claim MUST NOT adopt a less strict value unless, in addition, its assessor has approved the deviation and the claim packet records that approval.",
+      "after": "The table below is the default baseline. A sector profile or engineering timing case MAY adopt stricter values. For every value that differs from the default, the claim packet MUST publish the rationale, control assumptions, and residual risk. A claim MUST NOT adopt a less strict value unless its assessor has approved the deviation and the claim packet records that approval.",
+      "before_text_sha256": "f838317f3919bb5b197415ae47557199461c04b1e9d6965541e0ef9f92b7d234",
+      "after_text_sha256": "6fe6880976922fcfe66a9aa0723e12a21f474230bf56da215a09ce0005442387"
+    },
+    {
+      "requirement_id": "ECL1N-0109",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Conforming implementations MUST assume at least: - malicious or compromised agent principals; - compromised plugins, tools, or upstream dependencies; - external attackers with network and supply-chain access attempts; - privileged insider misuse against policy, keys, or evidence surfaces; - boundary manipulation by a claimant seeking to narrow scope while preserving marketing language.",
+      "after": "Conforming implementations MUST assume at least: - malicious or compromised agent principals; - compromised plugins, tools, or upstream dependencies; - external attackers attempting network or supply-chain access; - privileged insider misuse against policy, keys, or evidence surfaces; - boundary manipulation by a claimant seeking to narrow scope while preserving marketing language.",
+      "before_text_sha256": "ee6d75a51433cabc00f98fe82ea9ca6ed2620ebbc31e014959f6dcc82eb2c386",
+      "after_text_sha256": "fb8abd3cd1e3e4409f518a1db46cac26b126a843e2b0081003eccc4ea822be6f"
+    },
+    {
+      "requirement_id": "ECL1N-0112",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Security controls SHOULD minimize sensitive-data exposure: - secrets SHOULD be passed via reference-based mechanisms where possible;",
+      "after": "Security controls SHOULD minimize sensitive-data exposure. Secrets SHOULD be passed via reference-based mechanisms where possible.",
+      "before_text_sha256": "006995e08e94be411a28c13864ee09fde26c3f9ca7e6e41d718772ae74ebff7c",
+      "after_text_sha256": "8bb2dc80d11abe545d711523c9e8534103f702daa98da6e9459efe1b1a99e498"
+    },
+    {
+      "requirement_id": "ECL1N-0113",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Evidence bundles SHOULD support redaction or partitioning while preserving auditability;",
+      "after": "Evidence bundles SHOULD support redaction or partitioning while preserving auditability.",
+      "before_text_sha256": "0c2458407ae27aa40fe019c50caca90d14e7f90e994d4b8c37c60e6a1054f33f",
+      "after_text_sha256": "3875f16b29d46ad9d300ce6a38232ffb614f9004a612cccd77b4b8ae1a3ef014"
+    },
+    {
+      "requirement_id": "ECL1N-0114",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "Provenance exports SHOULD preserve required accountability with least necessary disclosure;",
+      "after": "Provenance exports SHOULD preserve required accountability with least necessary disclosure.",
+      "before_text_sha256": "b0b357d15b790359e4593feaa9f25f4e6ac9d33e14b647ddefa8f0784bb389f1",
+      "after_text_sha256": "3becee9afbb68afe9d10367dd4c5b147b3435c956be6acb257e315bc9db5e691"
+    },
+    {
+      "requirement_id": "ECL1N-0181",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "The evidence of each decision MUST identify, by reference and digest, the version of the Consequential Action Register under which the decision was made, and each decision input that the Decision Layer consulted and each that the register declares for the action class, each input once, with its declared class, whether the action class requires it, whether it was available, late, unavailable, or malformed, its reference and digest when it was available, and its effect on the outcome: `supports` when it is part of the basis on which the verifiable-only outcome permits the action, whatever the final outcome; `restricts` when it made the outcome stricter; and `none` when it had no effect. The decision response MUST carry this record in the registered extension `ecl.ext.decision-basis.v1` (DCMP2-053).",
+      "after": "The evidence of each decision MUST identify, by reference and digest, the version of the Consequential Action Register under which the decision was made, and each decision input that the Decision Layer consulted and each that the register declares for the action class, each input once, with its declared class, whether the action class requires it, whether it was available, late, unavailable, or malformed, its reference and digest when it was available, and its effect on the outcome. The decision response MUST carry this record in the registered extension `ecl.ext.decision-basis.v1` (DCMP2-053). Effects are relative to the verifiable-only outcome of Section 4.3 and the authorization, obligations, consequence-budget debits, and human-approval requirements that accompany it: - `supports`: the input is part of the basis on which the verifiable-only outcome permits the action, whatever the final outcome. An input that belongs to both the permitting and restricting bases MUST be recorded as `supports`; - `restricts`: the input is part of the basis on which the verifiable-only outcome refuses or narrows the action, through a `verifiable` input's value or the absence of a required `verifiable` input; or it is part of the basis on which the final outcome is stricter than the verifiable-only outcome, through an `actor_supplied` or `judgment` input or an unavailable, late, or malformed optional input (ECL1N-0179, ECL1N-0182); - `none`: the input is part of neither basis.",
+      "before_text_sha256": "6bb9ec956c4ae579fc03c96a089cc4fd823130089f3121e85ba7e31717df30e9",
+      "after_text_sha256": "8fed7f00f35ac789c4734a0a049959139c7eff469856d219c93b7e541fa2194e"
+    },
+    {
+      "requirement_id": "ECL1N-0191",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "The state that ECL1N-0146 requires for missing proof, for a critical integrity failure and for an emergency control activation MUST cover at least the scope that the following table gives for the fault, determined under the claim's dependency model (ECL1N-0192), and a fault that matches more than one row MUST bring the widest scope and the strictest state of the rows it matches. An action class outside the scope MUST continue only while all of its own required proof (TS1-031) and controls are intact, and a dependency that supplies an action class's required proof MUST NOT be treated as advisory for that class in order to keep the class outside the scope (TS1-032).",
+      "after": "The state that ECL1N-0146 requires for missing proof, for a critical integrity failure, for an emergency control activation, and for an operator-safety condition requiring cessation MUST cover at least the scope that the following table gives for the fault, determined under the claim's dependency model (ECL1N-0192), and a fault that matches more than one row MUST bring the widest scope and the strictest state of the rows it matches. An action class outside the scope MUST continue only while all of its own required proof (TS1-031) and controls are intact, and a dependency that supplies an action class's required proof MUST NOT be treated as advisory for that class in order to keep the class outside the scope (TS1-032).",
+      "before_text_sha256": "aafe22572dbdbb75b7c769473d6735066b40ea14716fcf21a90e752d7be691ba",
+      "after_text_sha256": "3c2e553088cedb1d8aea041b674de9310fa2d9dd3097dc714bc0299af8019c64"
+    },
+    {
+      "requirement_id": "ECL1N-0193",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "The claim's mode definitions MUST state, for each trigger of ECL1N-0146, which authorization, if any, is needed to lift the restriction that the trigger brings. A restriction MUST NOT be lifted for an action class until required proof for that class has been obtained again after the fault, not taken from state cached or recorded before it, and until that authorization, or one that another requirement of this standard requires, has been recorded; a deployment-wide state brought by a critical integrity failure or an emergency control activation MUST be lifted only by a recorded control action that the claim's mode definitions authorize (ECL1N-0168, TS1-014, TS1-027).",
+      "after": "The claim's mode definitions MUST state, for each trigger of ECL1N-0146, which authorization, if any, is needed to lift the restriction that the trigger brings. A restriction MUST NOT be lifted for an action class until required proof for that class has been obtained again after the fault, not taken from state cached or recorded before it, and until that authorization, or one that another requirement of this standard requires, has been recorded; a deployment-wide state brought by a critical integrity failure, an emergency control activation, or operator safety requiring cessation MUST be lifted only by a recorded control action that the claim's mode definitions authorize (ECL1N-0168, TS1-014, TS1-027). An operator-safety halt MUST NOT be lifted until the condition requiring cessation has been resolved and that resolution is recorded.",
+      "before_text_sha256": "03d2fab97368b9e8d3141ae03c70ce42dd269179ea38d7567e1e0ed018fdaea2",
+      "after_text_sha256": "78d0711b81a3a491daa1db991032f7b3a44190cbc4f88687c007c246ff236fe1"
+    },
+    {
+      "requirement_id": "ECL1N-0199",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "The claim MUST disclose unavailable evidence; a verifier MUST NOT treat its destruction record as the missing evidence or claim the original bundle is complete. For EBMP-2 bundle verification, the verifier MUST apply that protocol's defined verdict and primary-finding rules to the evidence present; lawful destruction MUST NOT introduce an additional success verdict. The assessor MUST separately record the consequence for the claim under Section 7.6, preserving the distinction between assessment status and a bundle's verification verdict.",
+      "after": "The claim MUST disclose unavailable evidence; a verifier MUST NOT treat the destruction record for unavailable evidence as that missing evidence or claim the original bundle is complete. For EBMP-2 bundle verification, the verifier MUST apply that protocol's defined verdict and primary-finding rules to the evidence present; lawful destruction MUST NOT introduce an additional success verdict. The assessor MUST separately record the consequence for the claim under Section 7.6, preserving the distinction between assessment status and a bundle's verification verdict.",
+      "before_text_sha256": "5991c6f372633be044f929d22f4744939404058f0d0d4ee6984ba217b3806776",
+      "after_text_sha256": "f05b4c7733fffd347b68083db224b25f80fb345194c7db3f15565139eb4da858"
+    },
+    {
+      "requirement_id": "EL1-027",
+      "source_path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "before": "Conflicting lifecycle instructions MUST enter hold or indeterminate state until an authorized precedence decision is recorded under ECL1N-0050, within the applicable deadline. A hold MUST NOT authorize retention that the legal determination prohibits. Unavailable evidence MUST remain disclosed, with verification and assessment limited to the evidence retained.",
+      "after": "Conflicting lifecycle instructions MUST enter hold or indeterminate state until an authorized precedence decision is recorded within the applicable deadline. A conflict about legal retention obligations MUST follow ECL1N-0195 to ECL1N-0199; other conflicts MUST be resolved under the declared lifecycle policy and the applicable profile's authority and change-control requirements (EL1-002, EL1-003 and EL1-010). A hold MUST NOT authorize retention that the legal determination prohibits. Unavailable evidence MUST remain disclosed, with verification and assessment limited to the evidence retained.",
+      "before_text_sha256": "25250c877de4eb6126a7d861a7f875ad19efec48f83c365011a6b1f5ea5129c6",
+      "after_text_sha256": "565fdd0a1c83fca703e91eec8141ebc05645b8c8e71222501ccce1a05fbc9c8d"
+    },
+    {
+      "requirement_id": "FR-201",
+      "source_path": "standard/ECL-1_Standard.md",
+      "before": "| FR-201 | L3 | The implementation MUST verify absence of bypass paths at least annually and after major architecture changes using adversarial negative testing rather than documentation review alone. | Independent architecture assessment, penetration test report, remediation log. |",
+      "after": "| FR-201 | L3 | The implementation MUST test for bypass paths at least annually and after major architecture changes using adversarial negative testing rather than documentation review alone, and MUST document the tested scope and residual untested path classes. | Independent architecture assessment, penetration test report, remediation log. |",
+      "before_text_sha256": "61d294579e18eae1f4f8a53001d89c8fd89cd1a8b68655d54b46e6914e0eae68",
+      "after_text_sha256": "3804fd0708b1e563dd1566d7969ce2e5ac5deeba0ce92307cab8ce71d0208f5c"
+    },
+    {
+      "requirement_id": "IE1-022",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "before": "Verification material that an envelope or an offline package carries MUST be treated as evidence and MUST NOT automatically be treated as a trust anchor. A verifier MUST verify an offline package under the trust policy, the earlier versions of that policy and the evaluation time that its caller supplies, never under a policy or time that the package carries. The manifest is not authenticated: its `expires_at` is the producer's statement and limits only a holder who does not change it. The verifier MUST make these checks in order and report the verdict of EBMP2-060 and the error code that the first check to fail gives; a package that exceeds a declared limit of the verifier (IE1-028) is `invalid`, with `ecl.error.resource-limit-exceeded.v1`, at the check that meets the limit: 1. the archive is in `ecl.zip.store.v1` form (IE1-030, IE1-031): `invalid`, `ecl.error.semantic-invalid.v1`; 2. the archive holds `manifest.json`: `incomplete`, `ecl.error.causal-closure-incomplete.v1`; 3. the manifest is strict JSON (IE1-002) that satisfies `https://externalcontrollayer.ai/ns/schema/offline-verification-package/1`, its `created_at` and `expires_at` are valid instants, and every artifact entry and every `trust_policy`, `revocation_snapshot`, `registry_snapshots` and `time_evidence` reference in it has an `ecl.digest.sha-256.v1` digest: `invalid`, `ecl.error.schema-invalid.v1`; 4. the manifest's artifact paths could be the entry names of one `ecl.zip.store.v1` archive together with `manifest.json` (IE1-030, IE1-031), and they name every other member of the archive: `invalid`, `ecl.error.semantic-invalid.v1`; 5. the manifest's `expires_at` is later than its `created_at`: `invalid`, `ecl.error.expired.v1`; 6. every artifact that the archive holds has the size and SHA-256 digest of its manifest entry: `invalid`, `ecl.error.integrity-invalid.v1`; 7. every `envelope` and `observation` artifact is strict JSON and a JSON object: `invalid`, `ecl.error.schema-invalid.v1`; these artifacts are the envelopes and observations of the package's evidence bundle; 8. every `payload` artifact is the payload of a packaged envelope or observation: `invalid`, `ecl.error.integrity-invalid.v1`; 9. when the package carries an envelope, its bundle, verified with the caller's inputs as EBMP2-057 to EBMP2-062 require, is not `invalid`: `invalid`, with the bundle's findings; 10. the archive holds every artifact that the manifest names or IE1-021 requires and the payload of every packaged envelope and observation, and the package carries an envelope: `incomplete`, `ecl.error.causal-closure-incomplete.v1`; 11. the bundle is not `incomplete`: `incomplete`, with the bundle's findings; 12. otherwise the package has its bundle's verdict and findings, except that a package whose `expires_at` is not later than the evaluation time is `current-trust-failed`, with `ecl.error.expired.v1`, where its bundle is `verified`.",
+      "after": "Verification material that an envelope or an offline package carries MUST be treated as evidence and MUST NOT automatically be treated as a trust anchor. A verifier MUST verify an offline package under the trust policy, the earlier versions of that policy and the evaluation time that its caller supplies, never under a policy or time that the package carries. Bundle verification uses the caller-selected verification profile, or the default when the caller selects none, as EBMP2-067 requires. The manifest is not authenticated: its `expires_at` is the producer's statement and limits only a holder who does not change it. The verifier MUST make these checks in order and report the verdict of EBMP2-060 and the error code that the first check to fail gives; a package that exceeds a declared limit of the verifier (IE1-028) is `invalid`, with `ecl.error.resource-limit-exceeded.v1`, at the check that meets the limit: 1. the archive is in `ecl.zip.store.v1` form (IE1-030, IE1-031): `invalid`, `ecl.error.semantic-invalid.v1`; 2. the archive holds `manifest.json`: `incomplete`, `ecl.error.causal-closure-incomplete.v1`; 3. the manifest is strict JSON (IE1-002) that satisfies `https://externalcontrollayer.ai/ns/schema/offline-verification-package/1`, its `created_at` and `expires_at` are valid instants, and every artifact entry and every `trust_policy`, `revocation_snapshot`, `registry_snapshots` and `time_evidence` reference in it has an `ecl.digest.sha-256.v1` digest: `invalid`, `ecl.error.schema-invalid.v1`; 4. the manifest's artifact paths could be the entry names of one `ecl.zip.store.v1` archive together with `manifest.json` (IE1-030, IE1-031), and they name every other member of the archive: `invalid`, `ecl.error.semantic-invalid.v1`; 5. the manifest's `expires_at` is later than its `created_at`: `invalid`, `ecl.error.expired.v1`; 6. every artifact that the archive holds has the size and SHA-256 digest of its manifest entry: `invalid`, `ecl.error.integrity-invalid.v1`; 7. every `envelope` and `observation` artifact is strict JSON and a JSON object: `invalid`, `ecl.error.schema-invalid.v1`; these artifacts are the envelopes and observations of the package's evidence bundle; 8. every `payload` artifact is the payload of a packaged envelope or observation: `invalid`, `ecl.error.integrity-invalid.v1`; 9. when the package carries an envelope, its bundle, verified with the caller's inputs under EBMP-2 section 11, is not `invalid`: `invalid`, with the bundle's findings; 10. the archive holds every artifact that the manifest names or IE1-021 requires and the payload of every packaged envelope and observation, and the package carries an envelope: `incomplete`, `ecl.error.causal-closure-incomplete.v1`; 11. the bundle is not `incomplete`: `incomplete`, with the bundle's findings; 12. otherwise the package has its bundle's verdict and findings, except that a package whose `expires_at` is not later than the evaluation time is `current-trust-failed`, with `ecl.error.expired.v1`, where its bundle is `verified`.",
+      "before_text_sha256": "4167f22430e5a4b9aa36b856d7d4faca7c06a10d29368b02048c5de1ca5fee52",
+      "after_text_sha256": "a63547047d64f779b3855bc3224c994a9eb3b2c4a854673b4b0a5a7bb06a4df5"
+    },
+    {
+      "requirement_id": "IE1-023",
+      "source_path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "before": "Verification at issue time, observation time, trusted timestamp time, current time, or another declared time are distinct policies. A verifier MUST state which policy it applied.",
+      "after": "The policies for verification at issue time, observation time, trusted timestamp time, current time, and other declared times are distinct. A verifier MUST state which policy it applied.",
+      "before_text_sha256": "0f58fc98e8108f789cda9865a3af8c7f3fc4a17b78d69a7923eb085acc972486",
+      "after_text_sha256": "832df4c7e2541de55de5407385477eef07f037ce0ab3d298a34c3692d52f6a6e"
+    },
+    {
+      "requirement_id": "MG1-005",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "The gateway MUST forward a side-effecting request only after it has verified a DCMP-2 `admit` for exactly that request under DCMP2-HTTP-1 and the claim's trust policy, only within its use policy, only after it has discharged every pre-release obligation of the admit (MG1-013), and only through the release order of MG1-014, at a final observation of its clock that is no earlier than the authorization's `valid_from` and that, with the release guard added, is earlier than its `valid_until`; it MUST forward exactly the call that the admitted request binds: the forwarded request's `method` and `params` MUST be the call's, `params` MUST have the digest `params_digest`, and the gateway MUST NOT add, remove or change any member of the call. The gateway counts the uses of an authorization in the instance that holds them, so a deployment MUST route every use of an authorization through one gateway instance, or share the use store among its instances by a mechanism that this profile does not specify, so that the count of ECL1N-0186 item 3 covers every instance.",
+      "after": "The gateway MUST forward a side-effecting request only after it has verified a DCMP-2 `admit` for exactly that request under DCMP2-HTTP-1 and the claim's trust policy, only within its use policy, only after it has discharged every pre-release obligation of the admit (MG1-013), and only through the release order of MG1-014, at a final observation of its clock that is no earlier than the authorization's `valid_from` and that, with the release guard added, is earlier than its `valid_until`; it MUST forward exactly the call that the admitted request binds: the forwarded request's `method` and `params` MUST be the call's, `params` MUST have the digest `params_digest`, and the gateway MUST NOT add, remove or change any member of the call. The gateway MUST count every use of an authorization in one authoritative store shared by all instances that can use it, or route every use through the one instance that owns that store. Under the lock of MG1-014 step 1, it MUST atomically and durably commit both the next use count and the complete signed `authority_consumed` event, bound to the exchange's persistent identity (MG1-016), its request and its response. That commit is consumption; step 2 copies the same event into the exchange journal. Repeating the commit for the same exchange identity MUST return the existing result and MUST NOT count a second use. The store MUST order commits for an authorization across all instances and enforce its use policy against the committed count atomically; two exchanges MUST NOT commit the same use count. The committed event MUST carry `use_count`, equal to the count committed with that event (EBMP2-073), including count 1 for a single-use authorization. The store MUST preserve these bindings and consumed-use counts across every failure that the claim declares covered, including restarts and retirement of exchange journals. Cancellation MUST NOT restore a committed use. Before another use, the gateway MUST establish the complete committed count. If a commit's result is unknown, it MUST block further uses of that authorization until the store resolves that operation as committed or as not committed and unable to commit later. A missing journal entry is not such a resolution. Unavailable, unreadable or inconsistent consumption state MUST NOT be treated as unused authority. If the state cannot be established or durably updated, the gateway MUST refuse with -31011 under MG1-006's precedence rules. An in-memory cache alone does not satisfy this requirement (ECL1N-0186 item 3, ECL1N-0189). The storage and transaction mechanism is a deployment choice.",
+      "before_text_sha256": "b1ef49270046527b80f69bd8d7dcb5239e5d73856416789bfa50df050eb55252",
+      "after_text_sha256": "434f1c7c868224c48f24303c52ee87f7ffeb0bfeacff6bc5e1483d41c52baaa3"
+    },
+    {
+      "requirement_id": "MG1-006",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "For every request that it does not forward, the gateway MUST return a JSON-RPC error response with the code that the error table of this profile gives for the cause and a `data.ecl` member naming the cause and its registered reason, and MUST NOT return a `result`; the codes lie outside the range that JSON-RPC 2.0 reserves (-32768 to -32000), as the pinned MCP text asks of application-defined errors. When more than one cause holds, the gateway MUST return the code of the first that holds in this order: -31007, -31008, -31004, -31005, then the code of the decision's outcome (-31001, -31002 or -31003), then -31010, -31011 and -31006. A pre-release obligation that the gateway has not discharged when it refuses is unproven, so the refusal of an admit that carries one is -31010, whether or not its authorization is also unusable. A record cannot show that the gateway's journal failed (-31011, MG1-017), so a checker that reads a record whose refusal is -31011 checks only that no earlier cause holds.",
+      "after": "For every request that it does not forward, the gateway MUST return a JSON-RPC error response with the code that the error table of this profile gives for the cause and a `data.ecl` member naming the cause and its registered reason, and MUST NOT return a `result`; the codes lie outside the range that JSON-RPC 2.0 reserves (-32768 to -32000), as the pinned MCP text asks of application-defined errors. When more than one cause holds, the gateway MUST return the code of the first that holds in this order: -31007, -31008, -31004, -31005, then the code of the decision's outcome (-31001, -31002 or -31003), then -31010, -31011 and -31006, with one exception: after a use has been consumed, a journal failure that cancels the attempt under MG1-017 is reported as -31011 before -31010 or -31006. Earlier mapping, decision-service and decision-outcome causes retain their precedence. Otherwise, a pre-release obligation not discharged when the gateway refuses is unproven, so an admit carrying one is refused with -31010 even when its authorization is also unusable. A record cannot establish that the journal actually failed. For a claimed -31011, a checker checks the visible earlier causes, applying the stated exception when the terminal state is `cancelled`; it does not attest to the storage failure.",
+      "before_text_sha256": "2643ed33f4f8a22d69aa29c06e033d01a96dcdf3801c40bf154892a51a6664c9",
+      "after_text_sha256": "8f1307e69809fa7742faad986988661cd8effa9173dd2203b8aa3533b284d35f"
+    },
+    {
+      "requirement_id": "MG1-010",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "The gateway MUST record EBMP-2 evidence for each side-effecting request as an enforcement point: for a forwarded request, `authority_consumed`, `release_prepared`, `execution_released`, which carries the discharge of MG1-013 when the admit carries a pre-release obligation, and an `execution_terminal` event that carries `ecl.ext.mcp-binding.v1` with the `ecl.digest.sha-256.v1` digest of the RFC 8785 canonical form of the response the server returned and the forward's completion (MG1-015); for a refused request, an `execution_terminal` event in the non-release state that EBMP2-051 gives, or in state `cancelled` when the gateway consumed the authorization before it refused (MG1-014). The response the gateway returns to the governed AI system for a forwarded request MUST be the response whose digest the evidence records, with one exception: the gateway MUST NOT return a server error that uses a code of the error table, and returns such an error with its `error.code` replaced by -32603 and every other member unchanged.",
+      "after": "The gateway MUST record EBMP-2 evidence for each side-effecting request as an enforcement point: for a forwarded request, `authority_consumed`, `release_prepared`, `execution_released`, which carries the discharge of MG1-013 when the admit carries a pre-release obligation, and an `execution_terminal` event that carries `ecl.ext.mcp-binding.v1` with the `ecl.digest.sha-256.v1` digest of the RFC 8785 canonical form of the response the server returned and the forward's completion (MG1-015); for a refused request, an `execution_terminal` event in the non-release state that EBMP2-051 gives, or in state `cancelled` when the gateway consumed the authorization before it refused (MG1-014). A `cancelled` terminal for a consumed use MUST carry `event.authority` bound to that authorization under EBMP2-049. The response the gateway returns to the governed AI system for a forwarded request MUST be the response whose digest the evidence records, with one exception: the gateway MUST NOT return a server error that uses a code of the error table, and returns such an error with its `error.code` replaced by -32603 and every other member unchanged.",
+      "before_text_sha256": "99a74b06721432ef0f05aea08bc588d505fb790217a81776fa4a6f137c243727",
+      "after_text_sha256": "73b218b5c7f6c975f69098b8842d5476c6488a696b51ccc345f1a1c9676c0a05"
+    },
+    {
+      "requirement_id": "MG1-013",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "Before it releases a request, the gateway MUST discharge each obligation of the admit whose `satisfaction` is `before_release` and each `witness_result` of `ecl.ext.consequence-coupling.v1` whose `outcome` is `required_before_release` (DCMP2-017). For each, it MUST obtain a proof that is authenticated under the claim's trust policy as issued by a principal that the claim accepts for that obligation, never the governed AI system, and, for an approval record, signed only by keys that the trust policy marks with `ecl.purpose.approval.v1`; that names this decision request by its `message_id`, with the request's digest or the digest of its action; that is fresh under the rule that the claim declares for the obligation's type, both when the gateway checks it and at the final observation of MG1-014; and that the gateway has not used for another release. It MUST check the proof with the verifier that the claim declares for the obligation's type. The claim MUST declare the obligation types its gateway discharges, with the verifier, the accepted issuers and the freshness rule of each. The gateway MUST refuse with -31010, and forward nothing, when the admit carries a pre-release obligation of a type that the claim does not declare, or when a proof is absent, not authenticated, bound to another request, stale or already used, or fails its check. It MUST NOT treat the recognition of an obligation's type, or the signed `admit` itself, as a proof. A deferred witness that an `ecl.obligation.verify-witness.v1` obligation of the admit names is discharged with that obligation's proof, and any other deferred witness as an obligation of that type whose value is the witness's URI. The gateway MUST record the discharge in the `execution_released` event, in `ecl.ext.obligation-discharge.v1`, with an entry for each obligation and each deferred witness as EBMP-2 EBMP2-070 gives them, and in the record's `obligation_discharge`. Each entry MUST give `fresh_until`, the instant after which the proof no longer shows the obligation met, whenever the proof's type declares a freshness bound, and MUST NOT give one later than the proof declares: for an approval record, no later than the `expires_at` of the `human_intervention` event; for a witness result, the proof's `observed_at` plus the maximum age that the claim declares for the witness; a proof of a type that declares no bound has no `fresh_until`. The gateway MUST carry each proof that is an ECL object, a signed envelope of a registered type, in the evidence bundle of the exchange, a witness's `verification` event among its `observations` and any other proof among its `envelopes`, with the entry's `reference` naming that object and its `digest` the object's digest (EBMP2-070); a proof that is not an ECL object is recorded by its kind, reference and digest only.",
+      "after": "Before it releases a request, the gateway MUST discharge each obligation of the admit whose `satisfaction` is `before_release` and each `witness_result` of `ecl.ext.consequence-coupling.v1` whose `outcome` is `required_before_release` (DCMP2-017). For each, it MUST obtain a proof that is authenticated under the claim's trust policy as issued by a principal that the claim accepts for that obligation, never the governed AI system, and, for an approval record, signed only by keys that the trust policy marks with `ecl.purpose.approval.v1`; that names this decision request by its `message_id` and binds the proof to it as follows: an ECL object uses the binding member specified for its type in EBMP2-070, including a causal predecessor naming the request by `message_id` and digest; a proof that is not an ECL object uses the request's digest or the digest of its action; that is fresh under the rule that the claim declares for the obligation's type, both when the gateway checks it and at the final observation of MG1-014; and that the gateway has not used for another release. It MUST check the proof with the verifier that the claim declares for the obligation's type. The claim MUST declare the obligation types its gateway discharges, with the verifier, the accepted issuers and the freshness rule of each. The gateway MUST refuse with -31010, and forward nothing, when the admit carries a pre-release obligation of a type that the claim does not declare, or when a proof is absent, not authenticated, bound to another request, stale or already used, or fails its check. It MUST NOT treat the recognition of an obligation's type, or the signed `admit` itself, as a proof. A deferred witness that an `ecl.obligation.verify-witness.v1` obligation of the admit names is discharged with that obligation's proof, and any other deferred witness as an obligation of that type whose value is the witness's URI. The gateway MUST record the discharge in the `execution_released` event, in `ecl.ext.obligation-discharge.v1`, with an entry for each obligation and each deferred witness as EBMP-2 EBMP2-070 gives them, and in the record's `obligation_discharge`. Each entry MUST give `fresh_until`, the instant after which the proof no longer shows the obligation met, whenever the proof's type declares a freshness bound, and MUST NOT give one later than the proof declares: for an approval record, no later than the `expires_at` of the `human_intervention` event; for a witness result, the proof's `observed_at` plus the maximum age that the claim declares for the witness; a proof of a type that declares no bound has no `fresh_until`. The gateway MUST carry each proof that is an ECL object, a signed envelope of a registered type, in the evidence bundle of the exchange, a witness's `verification` event among its `observations` and any other proof among its `envelopes`, with the entry's `reference` naming that object and its `digest` the object's digest (EBMP2-070); a proof that is not an ECL object is recorded by its kind, reference and digest only.",
+      "before_text_sha256": "b2b3c4b99ff1bc07623d065c5d6650b0f1f08544fb56f71d29256a458a23297d",
+      "after_text_sha256": "b2a117e76972fd6cf728bcd57d77e69c0b619ab4d618d1cc292c42420a10debe"
+    },
+    {
+      "requirement_id": "MG1-014",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "The gateway's release boundary is the write of the forwarded request to the server's transport. Its effect boundary is the server's execution of the call, which comes after the release boundary and which the gateway does not observe, so a check at the release boundary does not show that the authorization was valid when the server acted (ECL1N-0185, ECL1N-0188). An admit whose obligation list names one obligation `id` more than once fails the gateway's reading of the decision: the gateway MUST refuse it with -31005 before step 1 and consume no use. On a verified `admit` the gateway MUST take these steps in this order, and MUST NOT write the request unless every step passes: (1) under a lock that orders it with every other use of the same authorization, after it holds the lock, read a monotonic clock and then its wall clock and, only when the wall reading is no earlier than the authorization's `valid_from`, the reading plus the release guard is earlier than its `valid_until`, and the use policy allows another use, consume one use; (2) record `authority_consumed`; (3) record `release_prepared`, which names the attempt; (4) discharge the pre-release obligations (MG1-013); (5) under the lock, read the monotonic clock first and the wall clock after it, so that a pause between the two readings shortens what remains of the window and never extends it; the wall reading is the final observation, and the gateway MUST release only when it passes the test of step 1 and, with the release guard added, is earlier than every `fresh_until` of the discharge, and MUST refuse with -31006 and the outcome reason `ecl.error.clock-regressed.v1` when the final observation is earlier than the wall reading of step 1, or when the wall time elapsed since step 1 differs from the monotonic time elapsed since step 1 by more than the release guard; (6) record `execution_released`, whose `observed_at` is the final observation and whose `release_guard_ms` is the release guard, and then write the request. The release guard is the bound that the claim declares on the delay from the final observation to the write. Immediately before the write, after the connection to the server is open, the gateway MUST check that the time elapsed since the final observation, measured by the monotonic clock, is within the release guard and that the final observation plus that time is earlier than `valid_until` and than every `fresh_until`, and MUST NOT write the request otherwise. When it refuses after step 1, the gateway MUST record an `execution_terminal` event in state `cancelled`, with no side effect, a `residual_state` stating that the request was not written, and the registered reason of the refusal in `ecl.ext.outcome-reason.v1`, since a non-release state would contradict the consumed authority (EBMP2-053); it returns -31010 when a proof is stale at step 5, whether or not the authorization is also unusable, and -31006 when the authorization would not be valid at the write, when the write would not begin within the release guard, or when the clock regressed. A failure of the evidence sink at any of these steps ends the attempt as MG1-017 gives, and nothing is written to the server before `execution_released` is durable.",
+      "after": "The gateway's release boundary is the write of the forwarded request to the server's transport. Its effect boundary is the server's execution of the call, which comes after the release boundary and which the gateway does not observe, so a check at the release boundary does not show that the authorization was valid when the server acted (ECL1N-0185, ECL1N-0188). An admit whose obligation list names one obligation `id` more than once fails the gateway's reading of the decision: the gateway MUST refuse it with -31005 before step 1 and consume no use. An admit that carries a pre-release obligation of a type that the claim does not declare, or for which the claim declares no verifier or source (MG1-013), MUST be refused with -31010 before step 1 and consume no use. On a verified `admit` the gateway MUST take these steps in this order, and MUST NOT write the request unless every step passes: (1) under a lock that orders it with every other use of the same authorization, after it holds the lock, read a monotonic clock and then its wall clock and, only when the wall reading is no earlier than the authorization's `valid_from`, the reading plus the release guard is earlier than its `valid_until`, and the use policy allows another use, commit one use as MG1-005 requires; (2) record the committed `authority_consumed` event in the exchange journal; (3) record `release_prepared`, which names the attempt; (4) discharge the pre-release obligations (MG1-013); (5) under the lock, read the monotonic clock first and the wall clock after it, so that a pause between the two readings shortens what remains of the window and never extends it; the wall reading is the final observation, and the gateway MUST release only when it satisfies the `valid_from` and `valid_until` comparisons of step 1, using the use consumed at step 1 and consuming no other, and, with the release guard added, is earlier than every `fresh_until` of the discharge, and MUST refuse with -31006 and the outcome reason `ecl.error.clock-regressed.v1` when the final observation is earlier than the wall reading of step 1, or when the wall time elapsed since step 1 differs from the monotonic time elapsed since step 1 by more than the release guard; (6) record `execution_released`, whose `observed_at` is the final observation and whose `release_guard_ms` is the release guard, and then write the request. The release guard is the bound that the claim declares on the delay from the final observation to the write. Immediately before the write, after the connection to the server is open, the gateway MUST check that the time elapsed since the final observation, measured by the monotonic clock, is within the release guard and that the final observation plus that time is earlier than `valid_until` and than every `fresh_until`, and MUST NOT write the request otherwise. When it refuses after step 1, the gateway MUST keep the use consumed at step 1 consumed and, when the evidence sink can accept it (MG1-017), MUST record an `execution_terminal` event in state `cancelled`, with no side effect, a `residual_state` stating that the request was not written, and the registered reason of the refusal in `ecl.ext.outcome-reason.v1`, since a non-release state would contradict the consumed authority (EBMP2-053); it returns -31010 when a proof is stale at step 5, whether or not the authorization is also unusable, and -31006 when the authorization would not be valid at the write, when the write would not begin within the release guard, or when the clock regressed. A failure of the evidence sink at any of these steps ends the attempt as MG1-017 gives, and nothing is written to the server before `execution_released` is durable.",
+      "before_text_sha256": "99b8c8eab70705a7fe4ba3c0414130fccbdea3132e4da81e5221a06622599577",
+      "after_text_sha256": "de3e82aac2c563febfacfd0dd2ea4d95bdc3933b418f4bf5cac79cddfe766be2"
+    },
+    {
+      "requirement_id": "MG1-016",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "A gateway that retains exchange records MUST record each EBMP-2 event of a side-effecting request in a journal, together with the exchange record and the signed decision messages once the decision is known, and MUST make each entry durable, by flushing the journal file and, when it creates the file, its directory to storage, before it takes the step that the entry evidences. The gateway MUST hold an exclusive lock on its evidence directory, taken before it reads, settles or writes any journal there and held for as long as it can write there, so that one instance at a time owns the directory; a gateway, a recovery command or a library caller that finds the lock held MUST stop before it reads or writes anything else in the directory. It MUST create the evidence directory and the directories of its journals, records and bundles accessible to its own account only, and MUST flush each new directory into its parent. One journal holds exactly one exchange: only the entry that opens the exchange creates its journal, and every later entry is appended to the journal that exists; when no journal exists for an entry before `execution_released` has been journaled, the gateway MUST refuse the request with -31011 and restore the use, and after `execution_released` it MUST report the condition and still record the terminal event from what it holds in memory; an opening entry for a journal that already exists MUST be refused with -31011 before any use is consumed. The gateway MUST keep an exchange's journal until the exchange's record and evidence bundle are durable, and MUST NOT delete a journal when it recovers. When it starts, under the lock, it MUST settle each journal that remains by what the journal holds, never by what it lacks, and MUST NOT retry the request. It MUST first truncate an incomplete final line, as the gateway also does before it appends to a journal. An exchange whose journal holds `execution_released` and no `execution_terminal` event has an unknown outcome, recorded by a terminal event in state `unknown` with no side effect known and a `residual_state` that states the uncertainty; an exchange whose journal holds no `execution_released` was not sent, and is recorded as `cancelled` after an `admit` and in the non-release state that the decision gives otherwise; and an exchange whose journal holds its terminal event keeps it. A journal that does not open with the entry that opens an exchange, that holds entries of more than one exchange, or that cannot be parsed beyond an incomplete final line is damaged: recovery MUST keep it in place, list it in its report with the reason, settle nothing from it and restore no use. For each journal that it settles, recovery MUST append to the journal, and make durable, an entry that records its decision, the outcome and the identifiers of the records it will write, before it writes any record or bundle, and an entry that records completion after it has written them; a journal with a recorded decision and no completion MUST be completed from the decision, and a journal with a recorded completion MUST be skipped. Record identifiers MUST derive from the journal, from the exchange's identity and the entry's kind, so that a repeated recovery writes the same files; a record that already exists under its identifier MUST be left as it is and never signed again, and recovery MUST NOT produce a second signed terminal event for one exchange. A terminal event that recovery records MUST carry `recovered_at` in its `ecl.ext.mcp-binding.v1`, and its record MUST carry `recovery`, with the time of the recovery and what the journal showed. The claim MUST declare which of these failures its journal survives: the exit of the gateway's process, a crash of its host, a failure of its storage, and the loss of an evidence service that it writes to.",
+      "after": "A gateway that retains exchange records MUST record each EBMP-2 event of a side-effecting request in a journal, together with the exchange record and the signed decision messages once the decision is known. It MUST make each entry durable by flushing the journal file and, when it creates the file, its directory to storage. The order is MG1-014: the use consumed at step 1 is committed with its `authority_consumed` event in the authoritative use store; the same event is journaled at step 2. Required journal writes MUST be durable before proceeding to the next release step, and `execution_released` MUST be durable before the request is written to the transport. The gateway MUST hold an exclusive lock on its evidence directory, taken before it reads, settles or writes any journal there and held for as long as it can write there, so that one instance at a time owns the directory; a gateway, a recovery command or a library caller that finds the lock held MUST stop before it reads or writes anything else in the directory. It MUST create the evidence directory and the directories of its journals, records and bundles accessible to its own account only, and MUST flush each new directory into its parent. One journal holds exactly one exchange. Before step 1, the gateway MUST durably open the exchange with a gateway-assigned persistent identity unique across instances and restarts; that identity MUST bind the journal to the request and any consumption commit, and the signed decision messages MUST be durable in the journal before step 1, so that a journal bound to a committed use always holds the admit that the commit binds. A client-controlled JSON-RPC `id` is not this identity. Only the entry that opens the exchange creates its journal, and every later entry is appended to the journal that exists; when no journal exists for an entry before `execution_released` has been journaled, the gateway MUST refuse the request with -31011, keep consumed any use already consumed and report the missing journal, and after `execution_released` it MUST report the condition and, when the evidence sink can write it, still record the terminal event from what it holds in memory; an opening entry for a journal that already exists MUST be refused with -31011 before any use is consumed. The gateway MUST keep an exchange's journal until the exchange's record and evidence bundle are durable, MUST NOT delete a journal when it recovers, and MUST NOT retire a settled journal unless the consumed-use count and the binding from each consumed use to its exchange identity and signed consumption event remain durable under MG1-005. When it starts, under the lock, it MUST settle each journal using the retained journal and the authoritative consumption record, and MUST NOT retry the request or infer unused authority from a missing journal entry. It MUST first truncate an incomplete final line, as the gateway also does before it appends to a journal. An exchange whose journal holds `execution_released` and no `execution_terminal` event has an unknown outcome, recorded by a terminal event in state `unknown` with no side effect known and a `residual_state` that states the uncertainty; an exchange whose intact journal holds no `execution_released` was not sent; and an exchange whose journal holds its terminal event keeps it. For an unsettled exchange without a release event, recovery MUST resolve consumption by the persistent exchange identity before it records a terminal. A committed use requires `cancelled`, no side effect, an authority reference bound under EBMP2-049, and a residual state saying the request was not written. If the journal lacks the consumption event, recovery MUST copy the exact signed event from the authoritative store, retaining its original identifiers, time, bindings and use count; it MUST NOT consume another use or invent the event. If the store establishes that the exchange consumed no use and cannot commit one later, an answered `admit` requires `denied`, no authority reference and `ecl.error.evidence-unavailable.v1` as the outcome reason; an answered `deny`, `hold` or `challenge` requires `denied`, `held` or `challenged`, respectively; and an exchange without a verified decision requires `denied`. If consumption cannot be resolved, or its record conflicts with the journal, recovery MUST preserve and report that uncertainty, emit no terminal that asserts a resolved consumption state, and block further uses of the authorization under MG1-005. A journal without any verified admit cannot establish that it consumed a use. A journal that does not open with the entry that opens an exchange, that holds entries of more than one exchange, or that cannot be parsed beyond an incomplete final line is damaged: recovery MUST keep it in place, list it in its report with the reason, settle nothing from it and restore no use. For each journal that it settles, recovery MUST append to the journal, and make durable, an entry that records its decision, the outcome and the identifiers of the records it will write, before it writes any record or bundle, and an entry that records completion after it has written them; a journal with a recorded decision and no completion MUST be completed from the decision, and a journal with a recorded completion MUST be skipped. Record identifiers MUST derive from the journal, from the exchange's identity and the entry's kind, so that a repeated recovery writes the same files; a record that already exists under its identifier MUST be left as it is and never signed again, and recovery MUST NOT produce a second signed terminal event for one exchange. A terminal event that recovery records MUST carry `recovered_at` in its `ecl.ext.mcp-binding.v1`, and its record MUST carry `recovery`, with the time of the recovery and what the journal showed. The claim MUST declare which of these failures its journal and its authoritative use store survive: the exit of the gateway's process, a crash of its host, a failure of its storage, and the loss of an evidence service that it writes to (ECL1N-0190).",
+      "before_text_sha256": "b1215ab34289cb8b8b3c6da0ffcb2d3c7de6a3e2a49b2ab3911bc0e31077f989",
+      "after_text_sha256": "6f5f64e505f64aa088ad1e708a553a766efc85c3257ac36f7b119d6fe5eebcb2"
+    },
+    {
+      "requirement_id": "MG1-017",
+      "source_path": "profiles/MCP-GATEWAY-1.md",
+      "before": "When the gateway cannot make durable an entry that MG1-016 requires before the release, because a write or a flush fails, its storage is exhausted or its evidence sink fails in any other way, it MUST NOT release the request and MUST NOT take the step that the entry would evidence, and it MUST return -31011 unless an earlier cause of MG1-006 holds. The gateway MUST catch every error that the evidence sink raises, so that none ends the exchange with a use consumed and no terminal recorded. When the failure comes after the use was consumed, the gateway MUST restore the use and record the attempt as `cancelled` when the journal can take the entry; when it cannot, the journal shows `release_prepared` without `execution_released`, which recovery settles as not released. Once `execution_released` is durable, a failure of the sink MUST NOT stop the write: the gateway reports the failure, and the records that it could not write are produced by the next recovery from the journal. Only a release that was durably journaled and whose terminal event is missing is recorded as `unknown` on recovery.",
+      "after": "When the gateway cannot make durable an entry that MG1-016 requires before the release, because a write or a flush fails, its storage is exhausted or its evidence sink fails in any other way, it MUST NOT release the request or proceed to the next release step, and MUST return -31011 under the precedence and cancellation exception of MG1-006. A committed use remains consumed. When the journal can accept it and consumption is known, the gateway MUST record the terminal state that MG1-016 requires; a failure before consumption MUST NOT be recorded as consuming or cancelling a use. An unknown commit result MUST be handled under MG1-005, never by restoring or consuming another use. If no terminal can be made durable, the gateway MUST report that failure and preserve all recovery information it can retain; it MUST NOT claim that a terminal was recorded. An intact journal with no `execution_released` establishes non-release, whether or not it contains `release_prepared`, but a missing or damaged journal establishes neither non-release nor unused authority. A later exchange is subject to the original request binding, time window and remaining-use limit; it cannot restore or reuse a consumed use. Once `execution_released` is durable, a sink failure by itself MUST NOT stop the write, but every final timing and proof-freshness check of MG1-014 still applies. The gateway reports the failure, and recovery produces only records supported by retained evidence. A durably journaled release with no terminal is recovered as `unknown`, not retried.",
+      "before_text_sha256": "63dee6cd820de0e65cf0e05fabeeb70ab352544052027974c640e8f4b759c28b",
+      "after_text_sha256": "5de0d23f12762dabd641ba1f8d4d4b4b67609c025496abc617757b67ddf54740"
+    },
+    {
+      "requirement_id": "OA1-008",
+      "source_path": "profiles/OAUTH-AUTHORITY-1.md",
+      "before": "An authority issuer MUST issue a token only for a verified `admit`, never for `deny`, `hold` or `challenge` (DCMP2-014); when the admit's `authorization.token_reference` names the token, its digest MUST be the SHA-256 of the token's compact serialization; and when the ECL authorization is revoked, the token MUST become unusable within the declared revocation propagation bound, through introspection or a lifetime no longer than that bound. Version 1.0 of this profile supports only an admit whose `obligations` list is empty. An issuer MUST NOT issue a token for any admit carrying an obligation, including one claimed to have been discharged, and the presentation verifier MUST reject such an issuance with `ecl.rule.oauth-token-expresses-admit.v1`. A token, custom claim or successful issuance MUST NOT be treated as discharging an obligation at a later release boundary. Actions requiring obligations use a declared DCMP-2 enforcement path with release-time proofs; they are outside this profile's Version 1.0 capability. Grant revocation and policy changes MUST invalidate or narrow authority within their declared propagation bounds; token lifetime alone is sufficient only when it is within every applicable bound.",
+      "after": "An authority issuer MUST issue a token only for a verified `admit`, never for `deny`, `hold` or `challenge` (DCMP2-014); when the admit's `authorization.token_reference` names the token, its digest MUST be the SHA-256 of the token's compact serialization; and when the ECL authorization is revoked, the token MUST become unusable within the declared revocation propagation bound, through introspection or a lifetime no longer than that bound. Version 1.0 of this profile supports only an admit whose `obligations` list is empty. An issuer MUST NOT issue a token for any admit carrying an obligation, including one claimed to have been discharged, and a verifier of an `ecl_oauth_presentation_v1` record MUST reject a record of such an issuance with `ecl.rule.oauth-token-expresses-admit.v1`. A token, custom claim or successful issuance MUST NOT be treated as discharging an obligation at a later release boundary. Actions requiring obligations use a declared DCMP-2 enforcement path with release-time proofs; they are outside this profile's Version 1.0 capability. Grant revocation and policy changes MUST invalidate or narrow authority within their declared propagation bounds; token lifetime alone is sufficient only when it is within every applicable bound.",
+      "before_text_sha256": "140b97310cbcca1d08fd1784c9658d4cb394200c9586012d6e903ab429c28af2",
+      "after_text_sha256": "91d43cbd17b47759e30ba9721047a8634e41f205e6c1d29a66f705ae55019261"
+    },
+    {
+      "requirement_id": "TS1-022",
+      "source_path": "protocols/TIMING-SAFE-STATE-1.md",
+      "before": "Evidence buffer exhaustion MUST NOT silently drop verifier- critical events.",
+      "after": "Evidence buffer exhaustion MUST NOT silently drop verifier-critical events.",
+      "before_text_sha256": "61bed3a04b8be0a7955b83677fd3ac39635c9b68c0219a9eb1e24fbc42701f59",
+      "after_text_sha256": "afd2b24ad8f91d7178d3a86bb6b2247541e5fb0f370f1eb28fe4c79305ee56cf"
+    }
+  ],
+  "source_paths_changed_before_packaging": [
+    {
+      "path": "CHANGELOG.md",
+      "original_sha256": "5825151286c759e68126e13dfda4b4389711b515a4b8cc00aa24020d2e803ad6"
+    },
+    {
+      "path": "CITATION.cff",
+      "original_sha256": "e4e303d595a41d58ce0e6be3a4428c0d8fd3935bcf470abcaa832a98c0fb8079"
+    },
+    {
+      "path": "LICENSING.md",
+      "original_sha256": "71f0f5a8999017aee969794fbb9dc752c26c074e2bc2866b1737dddfdb26188e"
+    },
+    {
+      "path": "README.md",
+      "original_sha256": "71cef8e9152eedaeaf991aa129b34df75ebdc3143089db03b4657ba8515e4c3a"
+    },
+    {
+      "path": "RELEASE-NOTES-1.0.md",
+      "original_sha256": "9a47d637ee4003b17ebb67c43aae6835018778b6342a4fb8096577f28b7f4510"
+    },
+    {
+      "path": "SECURITY.md",
+      "original_sha256": "ab9473068eca5a401a76723c6268f358bb1befe29be796f495ff786c1663bb66"
+    },
+    {
+      "path": "community/WORKING_GROUP.md",
+      "original_sha256": "77afb5175769610be10477c7ad71ec3e7c6d95f2c48f302b348c0fe2f9867394"
+    },
+    {
+      "path": "community/settings.yaml",
+      "original_sha256": "6963d9ad37f9e28d20b026173da7e1dc321ae9581225f0ca57d50fb5e15b4803"
+    },
+    {
+      "path": "conformance/EXTERNAL_IMPLEMENTATION_PROFILE.md",
+      "original_sha256": "f29211c9c6cb9c3880a55ab69f220dd45b8571c2ec69d32995727f4083feb313"
+    },
+    {
+      "path": "conformance/README.md",
+      "original_sha256": "c998220707e2847978d4a9cf7d99aafafab982dae58ebce319b644528fd4f6f6"
+    },
+    {
+      "path": "conformance/crosswalks/aarm-r1-r9.json",
+      "original_sha256": "68199370236f20592ae72971edef20be26519b7a1bb826b33f1b9e4e7b8ccaa9"
+    },
+    {
+      "path": "conformance/crosswalks/owasp-acs-core.json",
+      "original_sha256": "44c2f89e152ecc2b93f393c1e0d03a776ffa7dbad57e019ea162c81b2ab4b324"
+    },
+    {
+      "path": "conformance/report-template-v3.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/requirement-evaluations.json",
+      "original_sha256": "090571a125654978886d6b4207a2104281eb84b42aa331a1003ddd736871dae6"
+    },
+    {
+      "path": "conformance/scenarios/README.md",
+      "original_sha256": "6266e81bc8da63b5e7ab2e59181306200ec900345dd7ed282410d03828a1ec1f"
+    },
+    {
+      "path": "conformance/shared-corpus.json",
+      "original_sha256": "2534477cb1d04d6e8f6b46360f80ac25e13e1ac7bbecfdc68e014024e0d9ceb0"
+    },
+    {
+      "path": "conformance/suites/control-extensions/decision-basis-valid-deny-required-input-unavailable.json",
+      "original_sha256": "01a537b253e4c9db70feca5a12f0637814870c8babb1ab8e2d24bd9b92ca168d"
+    },
+    {
+      "path": "conformance/suites/control-extensions/decision-basis-valid-deny-required-judgment-unavailable.json",
+      "original_sha256": "e4ec1b0ec067196df6f1aae8acbb0756e540097a35efb3347ed234cac62cba69"
+    },
+    {
+      "path": "conformance/suites/control-extensions/manifest.json",
+      "original_sha256": "fc34ef489b8eda0baa42ac2f0d9c675816591d604bfd2e4adce40200bdb856cc"
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-ineligible-key.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-mismatched-suite.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-unaccepted-suite.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-payload-policy.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-envelope-required-key-absent.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-envelope-required-key-ineligible.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-envelope-threshold-below-required.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-payload-required-key-not-eligible.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-payload-threshold-below-required.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-step6-ineligible-first.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-invalid-step6-revoked-first.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-valid-empty-eligible-list.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-valid-extra-ineligible-key.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-valid-extra-registered-unaccepted-suite.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-valid-extra-unaccepted-suite.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/manifest.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/error-contract/trust-policy.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/manifest.json",
+      "original_sha256": "81452258914d686caf252dd358bd10abcbc3a1e4111e3d6954ae6063d647c9c4"
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-final-check-cancelled-without-terminal.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-forwarded-terminal-authority-digest.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-foreign-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-no-residual.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-side-effects.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-without-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-wrong-authority-digest.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-cancelled-wrong-decision-digest.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-decision-unavailable-as-held.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-denied-side-effects.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-live-held-as-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-cancelled-without-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-denied-names-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-denied-wrong-state.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recorded-held-wrong-state.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-names-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-with-prepared.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-without-reason.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-admit-denied-wrong-reason.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-foreign-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-without-authority.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-wrong-authority-digest.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-cancelled-wrong-decision-digest.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-challenged-as-cancelled.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-challenged-as-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-challenged-as-held.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-denied-as-cancelled.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-denied-as-challenged.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-denied-as-held.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-held-as-cancelled.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-held-as-challenged.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-held-as-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-recovered-unverified-as-cancelled.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-invalid-release-guard-exceeded-cancelled-without-terminal.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recorded-admit-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recorded-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recorded-held.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-challenged.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-held.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-unconsumed-admit-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "conformance/suites/mcp-gateway/mcp-valid-recovered-unverified-decision-denied.json",
+      "original_sha256": null
+    },
+    {
+      "path": "docs/authzen-binding.md",
+      "original_sha256": "49b37235b42886217f384b775c227f06034e73aa97cd3f1435b1ca886a49dda9"
+    },
+    {
+      "path": "docs/availability.md",
+      "original_sha256": "cb1d71a03b902e8dd31021dffef399d0e74d3b6d9fad80eb15b8fbf697eb20da"
+    },
+    {
+      "path": "docs/bindings.md",
+      "original_sha256": "4a0324a72646a86cc75ab8228ab21233fd8f13346d339c9981f0aa5489df67e2"
+    },
+    {
+      "path": "docs/buyer-summary.md",
+      "original_sha256": "6e0e9bd0041f7f1fd64de9d035453a02d41acb3aa9681e4a6c1d31081a9db7c0"
+    },
+    {
+      "path": "docs/crosswalk.md",
+      "original_sha256": "7e9ab26073070ec0f50ba8b36e6e9df6f1b62b9c707b487352fbbfeaf00c9cef"
+    },
+    {
+      "path": "docs/decision-examples.md",
+      "original_sha256": "9eb69b6713f3adff2fb37738022aa32e08d894bbed88377c45ef387e77421e28"
+    },
+    {
+      "path": "docs/gap-coverage.md",
+      "original_sha256": "e2798d55ae4c0e53ee7446070c8ce8e39762145bde4e521d057a9796849b27c9"
+    },
+    {
+      "path": "docs/implementer-guide.md",
+      "original_sha256": "ec827ec52a9b0c8934b5cc400b6b1acf0e95389759058fbe03f0386c81b9b064"
+    },
+    {
+      "path": "docs/integration-contract.md",
+      "original_sha256": "12ee0c1a5fa449901cb70aacac4e4ee067bbed36a4ef2775ddd38b4343b82de2"
+    },
+    {
+      "path": "docs/l1-minimum.md",
+      "original_sha256": "0f45605732c7fd20f6d69599113f8a7f6f692b118379587d118845cc17d6fa40"
+    },
+    {
+      "path": "docs/quickstart.md",
+      "original_sha256": "b76c0f91f8df727984f397b1fa65d16d24bc8fb9f236695f55641f64e2996cff"
+    },
+    {
+      "path": "docs/release-brief.md",
+      "original_sha256": "d3d02206ca95cef34b2507e20b6dc7e55b8b430c75c71097c8da51656737587e"
+    },
+    {
+      "path": "docs/reviewer-guide.md",
+      "original_sha256": "0bd0c3040825bb007fce8a88d99eaca12518bc476e09e0b98829063e1b7f3036"
+    },
+    {
+      "path": "docs/threat-model.md",
+      "original_sha256": "b79cab9da69275b9e167888b9f6f37af41c875e12302ab351a393aa4b801a571"
+    },
+    {
+      "path": "formal/README.md",
+      "original_sha256": "4f1dc4d90aeb1f446551033a093645349cde700947e2bf23ff7c83336e5307a2"
+    },
+    {
+      "path": "formal/evidence/broken-actor-erases-evidence.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-actor-writes-authority.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-actor-writes-decision.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-bypass.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-evidence-not-atomic.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-halt-ack-lost.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-halt-unbounded.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-hold-never-times-out.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-ignore-halt.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-ignore-revocation.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-ignore-staleness.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-judgment-admits.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-late-decision-used.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-audience-binding.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-decision-timeout.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-digest-binding.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-propagation-deadline.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-single-use.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-target-binding.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-no-window.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-outage-proceeds.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/broken-self-report-admits.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/correct-binding.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/correct-control.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/correct-liveness.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-correct.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-dp-no-message-identity.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-dp-skips-request-signature.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-no-audience-check.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-no-scope-check.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-no-single-use.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-response-not-bound.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-shared-role-key.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/protocol-skip-response-signature.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/run_checks-3efec1e622b390f725df67da2e0843d547b4c49dd9f5e1b81638e8f5e45b12fd.py",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-admit-after-hold.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-collision-deny.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-effect-during-outage.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-effect-in-halt-window.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-effect-in-revocation-window.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-effect.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/evidence/witness-timeout.log",
+      "original_sha256": null
+    },
+    {
+      "path": "formal/protocol/DCMP2_Binding.spthy",
+      "original_sha256": "d16298f606b79b75467ea8764875993e944833315415e4ee45cda19dbade9507"
+    },
+    {
+      "path": "formal/results.json",
+      "original_sha256": "a7b13a199383c47d354213f4ae5621e7d881d3894c50fbb02bad1a89756ff7d4"
+    },
+    {
+      "path": "formal/run_checks.py",
+      "original_sha256": "ed881e828ca1d084fdbc409cb51a57efaca720770d901a4cb98044e8b5b978e3"
+    },
+    {
+      "path": "formal/tla/ECLCore.tla",
+      "original_sha256": "a458bf867e88416bd0f63039d56a6a2fdcfdb9d9275767e0137ee8b422be8025"
+    },
+    {
+      "path": "formal/tla/MC.tla",
+      "original_sha256": "fed52eab08d85bdc9b5f827c2faad9146c49a220424c3606c2a48c184616c0be"
+    },
+    {
+      "path": "formal/tla/configs/correct-binding.cfg",
+      "original_sha256": "86a51731353c48ef03306f2ec161c824fa1ed62aa324cfd3c9f622a2a8eb11bb"
+    },
+    {
+      "path": "formal/tla/configs/correct-control.cfg",
+      "original_sha256": "286ecd25ad3aff026b39b3d2821031c1aeda514fae8da5b061487f6b6859e035"
+    },
+    {
+      "path": "formal/tla/configs/correct-liveness.cfg",
+      "original_sha256": "2bd6b846cad16b8346dc8774e5d1827aeaa264238a6bec6df5a41e57a3a92979"
+    },
+    {
+      "path": "go/crosscheck/README.md",
+      "original_sha256": "08b9287076b214e73cc3ee555e3cdeea6480078abc5c489fe6f24823b2a7fdeb"
+    },
+    {
+      "path": "go/crosscheck/bindings/mcp.go",
+      "original_sha256": "9bae32f47a91fc37d9b5d113f4f0b6efbe4d19408e47e824aa80ac44a9bddab8"
+    },
+    {
+      "path": "go/crosscheck/cmd/ecl-verify-go/limits_test.go",
+      "original_sha256": "8550aa6d17e9cbd9627da925457068ba9875434b3267c66705ac5d4befff3f42"
+    },
+    {
+      "path": "go/crosscheck/cmd/ecl-verify-go/main.go",
+      "original_sha256": "5c6dfb216efb306c021f32eafb53bd22cf9b3bc723c329b7c1bd0979491d7add"
+    },
+    {
+      "path": "go/crosscheck/evidence/bundle_gating_test.go",
+      "original_sha256": null
+    },
+    {
+      "path": "go/crosscheck/evidence/verify.go",
+      "original_sha256": "74eb6a73726f6178ed3d0b96b55f452f87f591af7d4d2c65d0510aa4a9827e28"
+    },
+    {
+      "path": "go/crosscheck/internal/corpus/corpus.go",
+      "original_sha256": "ee47f32943adc87911c983249341ba5a47f2f219113572b1e23fbbbc3b089e11"
+    },
+    {
+      "path": "go/crosscheck/internal/corpus/expected.go",
+      "original_sha256": "ce116f2cfac49604690cfa12ccb8c9984b5cf6ed177d8ca2370adf6e9eeaf632"
+    },
+    {
+      "path": "go/crosscheck/internal/corpus/observations.go",
+      "original_sha256": null
+    },
+    {
+      "path": "go/crosscheck/internal/corpus/observations_test.go",
+      "original_sha256": null
+    },
+    {
+      "path": "go/crosscheck/internal/generated/generated.go",
+      "original_sha256": "b5258c8ae274943f1c5d6c7f088df18ca11842a505e6c049a1c4cacdcb62eb01"
+    },
+    {
+      "path": "go/crosscheck/internal/generated/registries.json",
+      "original_sha256": "30fb70b380dd920116f90586e4efbdaf867506243c7c168cd0ed126df74592eb"
+    },
+    {
+      "path": "go/crosscheck/internal/generated/schemas.json",
+      "original_sha256": "03e8881e0fd496a679a77dcd767f3d9f4f24f23de4d2e0c818591cc30cad008f"
+    },
+    {
+      "path": "governance/CHANGE_CONTROL.md",
+      "original_sha256": "27d2bfaf5b4b6be073ea8d0fb1602ed609945eae827a24beaa6e7823545e79f2"
+    },
+    {
+      "path": "governance/CHARTER.md",
+      "original_sha256": "6128036256ee794a1703ae102cbefdf40994bf0627ea4ef32e4eb519d7b14eae"
+    },
+    {
+      "path": "governance/CONFORMANCE_CLAIMS.md",
+      "original_sha256": "93806cdbc5bd0f24f49f1f5900b9f324198290caf0576c514835113195409055"
+    },
+    {
+      "path": "governance/CONTRIBUTING.md",
+      "original_sha256": "760bd4f28f1aa7be23dddaea8adc5c8b339e8902fce4843204c879968e3ccfc5"
+    },
+    {
+      "path": "governance/ERRATA.md",
+      "original_sha256": "fee4d17f4fd8dcf3e496f60e337ae79efb157c5a17de6aed31bf6f0474b80633"
+    },
+    {
+      "path": "governance/ERRATA_AND_DISCLOSURE.md",
+      "original_sha256": "dc038043eabc722446786df3b748a1cdd247da5dfe0a569b5c819ad5e48fd22b"
+    },
+    {
+      "path": "governance/PUBLIC_REVIEW.md",
+      "original_sha256": "9719a59a65c0781574c6275fd13b29024229bf5cf855ec3bbd86c3a494f7c523"
+    },
+    {
+      "path": "governance/RELEASE_POLICY.md",
+      "original_sha256": "9a003d044d1716aee1cf7490804cebf03870c8bee6cf5202626356a781d228a6"
+    },
+    {
+      "path": "governance/SECURITY.md",
+      "original_sha256": "18289cc2116db9a55a39dd4a182f8ba9ee5b10158ed25b0867055713abac2853"
+    },
+    {
+      "path": "governance/TRADEMARKS_AND_MARKS.md",
+      "original_sha256": "839125d980c2ff1aaf6c69ca4015592ec32a0d51a27cc23736381b4eba59fb00"
+    },
+    {
+      "path": "licenses/ATTRIBUTION.md",
+      "original_sha256": "e9693c49aae728f99e971564d687fe55538eb79332217997a57fe79831202fec"
+    },
+    {
+      "path": "licenses/THIRD_PARTY_NOTICES.md",
+      "original_sha256": "bb00d0923f28e528c187ff656da8ed51bd79a3b30b3ca9ecfb86f54bc9c28bd6"
+    },
+    {
+      "path": "packages/ecl-ts/README.md",
+      "original_sha256": "644a9068e5cf0d24993aed253e5c8afa94ebdd311f201db9aaa8c65afc490303"
+    },
+    {
+      "path": "packages/ecl-ts/src/bindings/mcp.ts",
+      "original_sha256": "73a73023850dcd4e1fc43a7bdc856b682c3328ab22ce9a6bd25bbde475053467"
+    },
+    {
+      "path": "packages/ecl-ts/src/cli/ecl-verify.ts",
+      "original_sha256": "e7184346fbc8c72907002dc5a556cbbe733030e85b079e7d673e184ce2c64ca9"
+    },
+    {
+      "path": "packages/ecl-ts/src/conformance/corpus.ts",
+      "original_sha256": "edc29b72c03f48ef360fb699f82c9b6f2ff3f728758106d95ffa15b4ac574208"
+    },
+    {
+      "path": "packages/ecl-ts/src/evidence/verify.ts",
+      "original_sha256": "5355c12a7838cfa759ab7bd363b84e8350d76761b8e62d20eb2e1b91c7e578cb"
+    },
+    {
+      "path": "packages/ecl-ts/src/generated/record-schemas.ts",
+      "original_sha256": "116b4f0b0180af80105c2a17b194c107a2a824a3679215de13b1f6c960d538fd"
+    },
+    {
+      "path": "packages/ecl-ts/src/generated/registries.ts",
+      "original_sha256": "4d8bd5c665e5e6df93a35e64f32c06062d0372307392075dbd9a2676b65403e2"
+    },
+    {
+      "path": "packages/ecl-ts/src/generated/schemas.ts",
+      "original_sha256": "f26dce347d464515c66107f3c4466d82184d9f59790839255507ba2b61b3bc40"
+    },
+    {
+      "path": "packages/ecl-ts/src/generated/types.ts",
+      "original_sha256": "3f2fb71e281e0b621a5303a1e0b11c709c6661a05aeec93f7e4badcb53c9c3db"
+    },
+    {
+      "path": "packages/ecl-ts/test/unit/bundle-gating.test.ts",
+      "original_sha256": null
+    },
+    {
+      "path": "packages/ecl-ts/test/unit/cli.test.ts",
+      "original_sha256": "262217006dca7aa2d1b9309a674d5c49b81519f43d8a0922e052fd8694548fff"
+    },
+    {
+      "path": "packages/ecl-ts/test/unit/corpus-observations.test.ts",
+      "original_sha256": null
+    },
+    {
+      "path": "packages/ecl-ts/test/unit/decision-basis.test.ts",
+      "original_sha256": "f61d554d3ea0cde773c25049529dcd412f5c130df8b778a824c93a179b16a749"
+    },
+    {
+      "path": "packages/ecl-verify/README.md",
+      "original_sha256": "cbb6c5bbfb36dd144033283d651ebbef5e09fccf8fd6a52e541b8886ef49f73d"
+    },
+    {
+      "path": "packages/ecl-verify/src/ecl_verify/bindings/mcp.py",
+      "original_sha256": "55fa8594052ef770bd7570582efa2f624de600ad7f5b0af5b408914adc45f4b4"
+    },
+    {
+      "path": "packages/ecl-verify/src/ecl_verify/bundle_verification.py",
+      "original_sha256": "3167fb5fbd3a3e19155372b87b5985526b08e53834392778d9fae58fb6da73d1"
+    },
+    {
+      "path": "packages/ecl-verify/src/ecl_verify/claims.py",
+      "original_sha256": "84e83e8fafb8ee8fa0ce996e36ddef226439a731441161245357caeb73e0fd33"
+    },
+    {
+      "path": "packages/ecl-verify/src/ecl_verify/cli.py",
+      "original_sha256": "39a8107c135863d16fa4e4347e72705340db83ce39d0ea9a471f0ce7fd34687d"
+    },
+    {
+      "path": "packages/ecl-verify/src/ecl_verify/resources.py",
+      "original_sha256": "c9d4a6d8d6c3535c00fad3687c08fbcd6820369c3c684bcadf286bc5322bc08a"
+    },
+    {
+      "path": "packages/ecl-verify/tests/test_ecl_verify_package.py",
+      "original_sha256": "7898f6e7c9ff7b68ff98a408e145a5e9c0a23da95b2aea6dd633cf18c48b9379"
+    },
+    {
+      "path": "profiles/AARM-BINDING-1.md",
+      "original_sha256": "e9e5fb4ef76c840acff993082ff10659802213153b8905c717dd158fb3f7460c"
+    },
+    {
+      "path": "profiles/ACS-BINDING-1.md",
+      "original_sha256": "36f9642549b338ca1f738c04dc90b680624ac40006ad93bd0ab1312b510ad5d8"
+    },
+    {
+      "path": "profiles/DCMP2-HTTP-1.md",
+      "original_sha256": "664a53a36e89a002da088dbbabfbb87c7aca6ee0df0f11fea5b550422792c939"
+    },
+    {
+      "path": "profiles/MCP-GATEWAY-1.md",
+      "original_sha256": "6acac63618156c4a9455bc865f3027035f1fe1ff5e08dda2f52e7c556c56462d"
+    },
+    {
+      "path": "profiles/OAUTH-AUTHORITY-1.md",
+      "original_sha256": "dfa51b9755e4e9d92107964a92d18b16904b313cf63ce7ffc791cbb9e4a5bbc9"
+    },
+    {
+      "path": "profiles/OFFLINE-VERIFICATION-1.md",
+      "original_sha256": "fcf4ab18cca8fb47dd601b550e066ff52df2868b35859c4242bbe85027f2e278"
+    },
+    {
+      "path": "profiles/OTEL-EVIDENCE-EXPORT-1.md",
+      "original_sha256": "97a631d95d939e9ba9f4c919a5581011facfdc056865fdcc68ad0915d24304b2"
+    },
+    {
+      "path": "profiles/README.md",
+      "original_sha256": "2dfb2c366ea76cf73ce2b49343ef302693f724245105c805ee67210ae77e2d20"
+    },
+    {
+      "path": "profiles/TRANSACTIONAL-EFFECT-1.md",
+      "original_sha256": "c4b7db9ab00a1d8b0d12037d8f68512e120da6dd1ceef2d5e16876df9c0ae071"
+    },
+    {
+      "path": "protocols/DCMP-2.md",
+      "original_sha256": "952e76040e53e64b76d488cda7d4750864a17637cea19e9b7954b077b5da3204"
+    },
+    {
+      "path": "protocols/EBMP-2.md",
+      "original_sha256": "0119ed46f4ab60fb73646abe6e41cb532fc2cfdf3d45533ff025cfb8aa4fcf3b"
+    },
+    {
+      "path": "protocols/EVIDENCE-LIFECYCLE-1.md",
+      "original_sha256": "6f1b0be7b15c0cb737adfa3baf0f7c3e1bf818b67fca7c694069960482c24e74"
+    },
+    {
+      "path": "protocols/INTEGRITY-ENVELOPE-1.md",
+      "original_sha256": "e62354456ea1bb398f318e2453debef08a0625058d6580eb8dd75c4008680afe"
+    },
+    {
+      "path": "protocols/README.md",
+      "original_sha256": "cecd72eb427e5910d5afcb64917fde4ca90d2a141b5923410f114e3e5007a3c8"
+    },
+    {
+      "path": "protocols/TIMING-SAFE-STATE-1.md",
+      "original_sha256": "4ab9b769aac73c151a455f0e9b21f8cfadbf1785ff355d71a4fd643dc9fa8623"
+    },
+    {
+      "path": "registries/README.md",
+      "original_sha256": "95bf74fd0bf70686c1b5f4416f862dac75ea47d89cbbecd5c8236f1bca477a7e"
+    },
+    {
+      "path": "registries/gap-coverage.json",
+      "original_sha256": "6f326c212eaba1ff87fd14e23cd99bd017b958713a32b46598de2ce5cf6be721"
+    },
+    {
+      "path": "registries/guarantee-trace.json",
+      "original_sha256": "94a46e3c4d9e6753a181c57c8560b5afc804abcffddc07940e159d8717f61fc7"
+    },
+    {
+      "path": "registries/requirements-compiled.json",
+      "original_sha256": "6d719ac53be3fa6868195429536ac1ec91e1bbe0d1d5aa4da871ad6dd01d71ac"
+    },
+    {
+      "path": "registries/scope-checks.json",
+      "original_sha256": "71a735eae24f72f818b12601d0264095150ed55bf548ff968ea052165a1d9541"
+    },
+    {
+      "path": "registries/semantic-rules.json",
+      "original_sha256": "15493cf5c87b2652aa9b3899fa6774abb107014b2ab718e5a5835ebba6e29b8a"
+    },
+    {
+      "path": "release/CORRECTIONS-1.0.1.json",
+      "original_sha256": null
+    },
+    {
+      "path": "release/VERSION_SET.json",
+      "original_sha256": "d50e1ed00043477329d6837bd4a985aa72826ee22e7c4cde72e65e526a7cbe53"
+    },
+    {
+      "path": "render/aarm-binding-1.html",
+      "original_sha256": "b34390899cbf7a1990dc8e7def1c33f9fe6c9ae8f499768713eef7f9bee9b281"
+    },
+    {
+      "path": "render/acs-binding-1.html",
+      "original_sha256": "6974ce329313ee7e2c2910b01c2cd63876ece3c4d82dab4be80b4f23a694a94f"
+    },
+    {
+      "path": "render/authzen-binding-1.html",
+      "original_sha256": "3e1a2e0705a70185b05a1ce9b1026a2e959548ad83e1b8033d35c262ef79c7dd"
+    },
+    {
+      "path": "render/changelog.html",
+      "original_sha256": null
+    },
+    {
+      "path": "render/conformance-claims-1.html",
+      "original_sha256": "5b23129f43b251a46f3aa87d698d8edbd0cb45da79c5635a4cbe315cf2ccb259"
+    },
+    {
+      "path": "render/dcmp-2.html",
+      "original_sha256": "36b0688872b431d19b181bd948966bcd6b915662ec6317430f78ca89fb0ebafb"
+    },
+    {
+      "path": "render/dcmp2-http-1.html",
+      "original_sha256": "5727d392805b6d2366acfc2c809451e354af779fcc6dfe939d7b29246a79154f"
+    },
+    {
+      "path": "render/deployment-profiles-1.html",
+      "original_sha256": "14d438f638a87fc07f5db873c322446dafb1981bc9dbde3f9f82890f50bb7f71"
+    },
+    {
+      "path": "render/distributed-workflow-1.html",
+      "original_sha256": "378da990140eadd9640aca0e59fbc0553a10b9441fc57e90cdda5b29ad2b634c"
+    },
+    {
+      "path": "render/ebmp-2.html",
+      "original_sha256": "a3f5324928381a32277229223bc2e505dbfe90c932cb870ef3bc90d2f5cbab5e"
+    },
+    {
+      "path": "render/ecl-1_standard.html",
+      "original_sha256": "fd65c42dac39d2d8a51a54a2a8f97d380849f06d374c4b02f5ebccfba2b35b83"
+    },
+    {
+      "path": "render/evidence-lifecycle-1.html",
+      "original_sha256": "aa9a7f1f8ecacb709e5646b0687dddb59d8d3cfd171ed7d1aaa62053bfdbcceb"
+    },
+    {
+      "path": "render/extension-registry-1.html",
+      "original_sha256": "dd2586878b1c61cebf8216aaa47d5b7457c8ce1ea80b655c8cc07a69b701c806"
+    },
+    {
+      "path": "render/index.html",
+      "original_sha256": "1815e49496a8c4c03111347cf6bc180a7458805fec92b2cb0ac7e46a169f0369"
+    },
+    {
+      "path": "render/integrity-envelope-1.html",
+      "original_sha256": "f43719de96f02dc9845be7dd40baa6e61bc4c6c52e841504cf2437ef288ec797"
+    },
+    {
+      "path": "render/issues.html",
+      "original_sha256": "d6c679f51c230937ae8af0311f6915b443b003a697e56e10b53e1061a641ae82"
+    },
+    {
+      "path": "render/mcp-gateway-1.html",
+      "original_sha256": "8609ea0847a58b79dc2ac6c7135e1e4fd04acd6ba7b9c9fff7cc6965b33a0989"
+    },
+    {
+      "path": "render/oauth-authority-1.html",
+      "original_sha256": "5db25751641d19f7bf0f846b13b4529ad9dc3c8e59da611e1be8a978784cef8b"
+    },
+    {
+      "path": "render/offline-verification-1.html",
+      "original_sha256": "a51932c6ca1fe061bbff28b51a24b4ef944cec3f592307d19fb1fea07d2f5896"
+    },
+    {
+      "path": "render/otel-evidence-export-1.html",
+      "original_sha256": "0bfac716b69e8d0a9ff2adfc0a46a75a1ffb0d1f91037288080a444559c1cdea"
+    },
+    {
+      "path": "render/strict-failure-1.html",
+      "original_sha256": "0edbcde80fb264f7e12aac25dec3f8ff333e6584e252bec778b423ad974591d1"
+    },
+    {
+      "path": "render/timing-safe-state-1.html",
+      "original_sha256": "321e276a20136f7816cf4cc451a6d6d0ee2a3006c505627b7342f19c969f700b"
+    },
+    {
+      "path": "render/transactional-effect-1.html",
+      "original_sha256": "33eb1bb18f50ae5732f328c858990b57974a0dab96e57c6ba846106a54c6dac5"
+    },
+    {
+      "path": "render/trust-policy-1.html",
+      "original_sha256": "e063dc8f18682ec302c4269e869761be1f7a1439c645e8f4f9f9b2809d50a608"
+    },
+    {
+      "path": "schemas/ecl-action-register-v1.schema.json",
+      "original_sha256": "d144c55af657244f3eccc941ac341e9926851d05c3c27920443eb9daf9d5eeea"
+    },
+    {
+      "path": "schemas/ecl-cross-implementation-report-v3.schema.json",
+      "original_sha256": null
+    },
+    {
+      "path": "schemas/ecl-ext-decision-basis-v1.schema.json",
+      "original_sha256": "e37305edd2d90dddeed03aec340c253898c39f7b1d838b66855d07e54cefe787"
+    },
+    {
+      "path": "schemas/ecl-external-vector-raw-result-v3.schema.json",
+      "original_sha256": null
+    },
+    {
+      "path": "scripts/external_report_v2.py",
+      "original_sha256": "83d0531f63db46949ae73f5fb6125ba61e15e8777246b17be79296e0b701f979"
+    },
+    {
+      "path": "scripts/external_report_v3.py",
+      "original_sha256": null
+    },
+    {
+      "path": "scripts/generate_bundle_gating_fixtures.py",
+      "original_sha256": null
+    },
+    {
+      "path": "scripts/generate_correction_changelog.py",
+      "original_sha256": null
+    },
+    {
+      "path": "scripts/generate_error_contract_vectors.py",
+      "original_sha256": null
+    },
+    {
+      "path": "scripts/generate_mcp_recovery_vectors.py",
+      "original_sha256": null
+    },
+    {
+      "path": "scripts/verify_external_implementation_report.py",
+      "original_sha256": "da5af0a554390869adbb96427a7cff19fa9751aaf95bfde8b482f19a8c8a1e59"
+    },
+    {
+      "path": "standard/ECL-1_Standard.md",
+      "original_sha256": "fe279a04cd1c9cf2833507abb5e29a80c92e9d8b01342872a20dd681fd110b00"
+    },
+    {
+      "path": "standard/ISSUES.md",
+      "original_sha256": "bab4bdbdb1c6cb3ea160113b5e8f9e8e48f3614a9de00138fa921e3e361a16f5"
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/core-binding-gates-release-window.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/cross-event-code-order.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/expected.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/proof-digest-gates-proof-checks.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/proof-digest-matching-control.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/stage8-binding-before-unproven.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/fixtures/bundle-gating/trust-dependencies.json",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/test_bundle_gating.py",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/test_external_report_v3.py",
+      "original_sha256": null
+    },
+    {
+      "path": "tests/test_formal_runner.py",
+      "original_sha256": null
+    },
+    {
+      "path": "web/verifier/README.md",
+      "original_sha256": "da199625fbde9d9bb83fc11d2a7504db54fee40ed3d3d02bdca861bd62f04ccf"
+    },
+    {
+      "path": "web/verifier/verifier.js",
+      "original_sha256": "096945d19748d30d6e17b52e50a0ac1f375559d6dc740c09d59c0b28bcf8f5c1"
+    }
+  ],
+  "erratum_id": "ERR-1.0-001",
+  "decision_date": "2026-11-09",
+  "defect_classes": [
+    "editorial",
+    "technical",
+    "conformance"
+  ],
+  "severity": "Important",
+  "affected_versions": [
+    "1.0"
+  ],
+  "detection_date": "2026-11-06",
+  "detection_period": [
+    "2026-11-06",
+    "2026-11-09"
+  ],
+  "change_class": "corrective and editorial",
+  "original_behavior": "The exact changed requirement texts are recorded below. The original release also contained the verifier, model, evidence-binding, test-reference and explanatory defects described in RELEASE-NOTES-1.0.md.",
+  "corrected_behavior": "The corrected source resolves the recorded defects and retains all 628 requirement identifiers. Exact executable and documentary changes are recoverable by comparing the original and corrected archives, whose digests the release manifest records.",
+  "compatibility_effect": "Core and companion protocol version strings are retained. Corrected validation rejects cases excluded by the controlling requirements. Cross-implementation report profile 3 introduces explicitly versioned report and raw-result schemas; older report profiles retain their narrower scope. For an offline package above the 1 GiB archive limit, the three command-line verifiers return an invalid report on standard output with exit status 1 and ecl.error.resource-limit-exceeded.v1 instead of a usage error with exit status 2; invalid caller inputs keep exit status 2.",
+  "tests": [
+    {
+      "record": "formal/results.json",
+      "scope": "Recorded November 7, 2026 runs: 32 TLC and nine Tamarin expected outcomes; per-check input and output hashes are retained."
+    },
+    {
+      "record": "conformance/manifest.json and conformance/suites/*/manifest.json",
+      "scope": "The corrected corpus contains 1,011 vectors, including 42 added MCP cases and 16 integrity-policy cases. Vector inventories are not a claim that every requirement is proved."
+    },
+    {
+      "record": "Maintainer correction-review evidence",
+      "scope": "Affected verifier, generator, schema, model, private gateway and PDF regressions are retained by the maintainer. The release manifest identifies the source snapshot to which they are bound."
+    }
+  ],
+  "migration": "Use the v1.0.1 source archive and corrected verifiers. Recheck results that depended on the affected behavior; produce cross-implementation reports with profile 3 when reporting its expanded checks. Cite the correction release and retain its manifest and archive digest. Protocol wire versions remain unchanged.",
+  "prior_claims_reassessment": "Claims that relied on the corrected assessment text or defective verification behavior require review and, where their supporting evidence changes, reassessment under ECL1N-0152. The correction record does not invalidate or certify every prior implementation claim. The implementers registry in this correction package is empty as of November 9, 2026, so no registry listing is affected.",
+  "process_exception": "governance/RELEASE_POLICY.md#correction-release-exception-v101"
+}

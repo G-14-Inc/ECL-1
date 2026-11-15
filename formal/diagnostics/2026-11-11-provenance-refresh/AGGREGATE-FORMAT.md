@@ -1,0 +1,20 @@
+# Formal results aggregate v3
+
+`ecl_formal_results_v3` is an aggregate of already-recorded checks. Assembly performs no formal-tool execution. The structural schema is `result-schema.json`; the checks below are required in addition to shape validation.
+
+Top-level keys are exactly `schema_version`, `tools`, `sources`, `check_sources`, `runners`, `current_runner`, and `checks`. There is deliberately no global timeout, Java version or invocation date.
+
+- `tools` is the common pinned tool metadata, equal to every source's `tools` or `pins` and the final current runner's pin registry.
+- `sources` contains unique IDs. Each entry has exactly `id`, `path`, `sha256`, `format`, and `settings`. Paths are canonical relative packet paths; hash each retained file before interpreting it.
+- Source `tlc` uses `format: ecl_formal_results_v2`, path `invocations/tlc-results.json`, and its exact original `settings` object (`java_heap: -Xmx1500m`, `tlc_workers: 1`, `timeout_seconds: 900`, `derivcheck_timeout: 10`). That record contains all 58 registered TLC checks executed on the comment-corrected bytes; every entry retains its actual command, dates and Java runtime.
+- Source `tamarin` uses `format: tamarin-check-receipt`, path `invocations/tamarin-results.json`, and `settings: {timeout_seconds: 120, derivcheck_timeout: 10}`. Its original receipt has no schema-version field. Require `complete` and `all_expected` to be true; map its `pins`, `timeout_seconds` and `derivcheck_timeout` exactly. Preserve its file bytes instead of rewriting it into a supposedly original v2 record. Per-check commands retain the actual `-N1` and `-M1500m` runtime flags.
+- `checks` contains each original per-check dictionary unchanged. Names are unique. For every source, index its checks by unique name. Reject repeated names, unexpected omissions, failed outcomes, or any aggregate/source dictionary difference.
+- `check_sources` maps every check name to exactly one known source ID. Its key set equals the aggregate check-name set, and every source check occurs exactly once in the aggregate. This is a complete partition, not a preferred-source fallback.
+- `runners` maps each distinct `runner_sha256` to the retained exact runner file, `runners/<digest>/run_checks.py`. Its keys equal the digests used by the check entries. Every source's own declared runner digest, when present, must agree with its check entries.
+- `current_runner` identifies `inputs/formal/run_checks.py` and its exact final digest. This is checked separately from invocation runners. The aggregate's check names, tools, expectations, per-check input paths and digests must equal the current registered checks and current model/theory/configuration bytes. A historical check with the same name is not a substitute.
+
+All source records, runners, model/theory/configuration inputs and logs are listed and hash-bound in the packet `MANIFEST.json`. Each check's `output_sha256` must match `logs/<log_file>`; log names are one path component. Every recorded input must match both `inputs/formal/<recorded_path>` and the corresponding current `formal/<recorded_path>` when the packet is accepted into the current source tree. Preserve historical packets under their own paths and rules.
+
+The combined packet is at `formal/diagnostics/2026-11-11-provenance-refresh`. A packet README should provide separate reproduction commands with fresh output paths and the recorded per-source limits. Re-running the retained latest runner can reproduce the current checked definitions; it does not retroactively change which runner performed an earlier invocation.
+
+The PDF input guard must verify this provenance partition and retained runner map. It must not require an earlier symbolic invocation's runner hash to equal the later final runner whose unrelated TLC registry was expanded. The final current source compatibility check remains mandatory. Formal counts and the generated explanatory text derive from this current aggregate and registry; old result tables keep their historical counts.

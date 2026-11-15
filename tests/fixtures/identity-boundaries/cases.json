@@ -1,0 +1,1349 @@
+{
+  "causal": [
+    {
+      "name": "missing-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "missing-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "null-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": null
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "null-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": null
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "empty-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": ""
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "empty-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": ""
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "false-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": false
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "false-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": false
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "true-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": true
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "true-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": true
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "zero-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": 0
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "zero-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": 0
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "one-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": 1
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "one-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": 1
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "array-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": []
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "array-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": []
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "array-value-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": [
+            1
+          ]
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "array-value-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": [
+            1
+          ]
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "object-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": {}
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "object-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": {}
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "object-value-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": {
+            "x": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "object-value-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": {
+            "x": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "index-object-denied",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": {
+            "2": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "index-object-not_started",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": {
+            "2": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "numeric-object-key-order-false",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": {
+            "2": 1
+          }
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": {
+            "b": 1,
+            "1": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "valid-beside-malformed-false",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "good",
+            "attempt_id": "good-attempt",
+            "state": "denied"
+          },
+          "object_id": "good"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "bad",
+            "attempt_id": "bad-attempt",
+            "state": "denied"
+          },
+          "object_id": {
+            "b": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [
+          "good"
+        ],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "valid-string-order-false",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "a"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "b"
+        }
+      ],
+      "expected": {
+        "status": "complete",
+        "terminal": [
+          "act-1"
+        ],
+        "open": [],
+        "rules": []
+      }
+    },
+    {
+      "name": "numeric-object-key-order-true",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": {
+            "b": 1,
+            "1": 1
+          }
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": {
+            "2": 1
+          }
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "valid-beside-malformed-true",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "bad",
+            "attempt_id": "bad-attempt",
+            "state": "denied"
+          },
+          "object_id": {
+            "b": 1
+          }
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "good",
+            "attempt_id": "good-attempt",
+            "state": "denied"
+          },
+          "object_id": "good"
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [
+          "good"
+        ],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "valid-string-order-true",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "b"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "a"
+        }
+      ],
+      "expected": {
+        "status": "complete",
+        "terminal": [
+          "act-1"
+        ],
+        "open": [],
+        "rules": []
+      }
+    },
+    {
+      "name": "duplicate-identity",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "a"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "a"
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      }
+    },
+    {
+      "name": "valid-open",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "a"
+        }
+      ],
+      "expected": {
+        "status": "incomplete",
+        "terminal": [],
+        "open": [
+          "act-1"
+        ],
+        "rules": []
+      }
+    },
+    {
+      "name": "invalid-state-progression",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "a"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "b"
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.execution-state-transition-valid.v1"
+        ]
+      }
+    },
+    {
+      "name": "custom-identifier-tie-break",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "z",
+          "message_id": "a"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "x",
+          "message_id": "b"
+        }
+      ],
+      "expected": {
+        "status": "complete",
+        "terminal": [
+          "act-1"
+        ],
+        "open": [],
+        "rules": []
+      },
+      "identifier_members": [
+        "message_id",
+        "object_id"
+      ]
+    },
+    {
+      "name": "custom-identifier-without-object-id",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": {},
+          "message_id": "b"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "message_id": "a"
+        }
+      ],
+      "expected": {
+        "status": "complete",
+        "terminal": [
+          "act-1"
+        ],
+        "open": [],
+        "rules": []
+      },
+      "identifier_members": [
+        "message_id",
+        "object_id"
+      ]
+    },
+    {
+      "name": "custom-invalid-first-member-no-fallback",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "valid",
+          "message_id": {}
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      },
+      "identifier_members": [
+        "message_id",
+        "object_id"
+      ]
+    },
+    {
+      "name": "custom-duplicate-identity",
+      "records": [
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "not_started"
+          },
+          "object_id": "a",
+          "message_id": "same"
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "b",
+          "message_id": "same"
+        }
+      ],
+      "expected": {
+        "status": "indeterminate",
+        "terminal": [],
+        "open": [],
+        "rules": [
+          "ecl.rule.bundle-object-identifiers-unique.v1"
+        ]
+      },
+      "identifier_members": [
+        "message_id",
+        "object_id"
+      ]
+    },
+    {
+      "name": "mixed-message-and-event",
+      "records": [
+        {
+          "message_id": "message",
+          "message_type": "decision_request",
+          "workflow": {
+            "sequence": 0
+          }
+        },
+        {
+          "workflow": {
+            "sequence": 0
+          },
+          "event": {
+            "kind": "execution",
+            "action_id": "act-1",
+            "attempt_id": "act-1-attempt",
+            "state": "denied"
+          },
+          "object_id": "event"
+        }
+      ],
+      "expected": {
+        "status": "complete",
+        "terminal": [
+          "act-1"
+        ],
+        "open": [],
+        "rules": []
+      },
+      "identifier_members": [
+        "message_id",
+        "object_id"
+      ]
+    }
+  ],
+  "envelopes": [
+    {
+      "name": "valid-signed",
+      "operation": "unchanged",
+      "expected": ""
+    },
+    {
+      "name": "duplicate-string-identity",
+      "operation": "duplicate",
+      "expected": "ecl.error.integrity-invalid.v1"
+    },
+    {
+      "name": "unknown-string-key",
+      "operation": "replace",
+      "member": "key_id",
+      "value": "urn:example:key:unknown",
+      "expected": "ecl.error.signature-policy-invalid.v1"
+    },
+    {
+      "name": "object-key-order-collision",
+      "operation": "object-pair",
+      "expected": "ecl.error.integrity-invalid.v1"
+    },
+    {
+      "name": "key_id-missing",
+      "operation": "remove",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1"
+    },
+    {
+      "name": "key_id-null",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": null
+    },
+    {
+      "name": "key_id-empty",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": ""
+    },
+    {
+      "name": "key_id-false",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": false
+    },
+    {
+      "name": "key_id-true",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": true
+    },
+    {
+      "name": "key_id-zero",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": 0
+    },
+    {
+      "name": "key_id-one",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": 1
+    },
+    {
+      "name": "key_id-array",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": []
+    },
+    {
+      "name": "key_id-array-value",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": [
+        1
+      ]
+    },
+    {
+      "name": "key_id-object",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": {}
+    },
+    {
+      "name": "key_id-object-value",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": {
+        "x": 1
+      }
+    },
+    {
+      "name": "key_id-index-object",
+      "operation": "replace",
+      "member": "key_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": {
+        "2": 1
+      }
+    },
+    {
+      "name": "suite_id-missing",
+      "operation": "remove",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1"
+    },
+    {
+      "name": "suite_id-null",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": null
+    },
+    {
+      "name": "suite_id-empty",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": ""
+    },
+    {
+      "name": "suite_id-false",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": false
+    },
+    {
+      "name": "suite_id-true",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": true
+    },
+    {
+      "name": "suite_id-zero",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": 0
+    },
+    {
+      "name": "suite_id-one",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": 1
+    },
+    {
+      "name": "suite_id-array",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": []
+    },
+    {
+      "name": "suite_id-array-value",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": [
+        1
+      ]
+    },
+    {
+      "name": "suite_id-object",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": {}
+    },
+    {
+      "name": "suite_id-object-value",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": {
+        "x": 1
+      }
+    },
+    {
+      "name": "suite_id-index-object",
+      "operation": "replace",
+      "member": "suite_id",
+      "expected": "ecl.error.integrity-invalid.v1",
+      "value": {
+        "2": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "cases": [
+    {
+      "id": "control-valid",
+      "file": "control-valid.json",
+      "required": [],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "control-self-approval-invalid-expires_at",
+      "file": "control-self-approval-invalid-expires_at.json",
+      "required": [
+        "ecl.rule.control-change-approved-and-bounded.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "control-self-approval-invalid-effective_at",
+      "file": "control-self-approval-invalid-effective_at.json",
+      "required": [
+        "ecl.rule.control-change-approved-and-bounded.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "control-mixed-occurrences-false",
+      "file": "control-mixed-occurrences-false.json",
+      "required": [
+        "ecl.rule.control-change-approved-and-bounded.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "control-mixed-occurrences-true",
+      "file": "control-mixed-occurrences-true.json",
+      "required": [
+        "ecl.rule.control-change-approved-and-bounded.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "approval-too-soon",
+      "file": "approval-too-soon.json",
+      "required": [
+        "ecl.rule.approval-review-time-respected.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "approval-mixed-occurrences-false",
+      "file": "approval-mixed-occurrences-false.json",
+      "required": [
+        "ecl.rule.approval-review-time-respected.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "approval-mixed-occurrences-true",
+      "file": "approval-mixed-occurrences-true.json",
+      "required": [
+        "ecl.rule.approval-review-time-respected.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "parameters-noncanonical-direct-value",
+      "file": "parameters-noncanonical-direct-value.json",
+      "required": [
+        "ecl.rule.parameters-digest-matches.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": "fractional_parameter"
+    },
+    {
+      "id": "deny-none-control",
+      "file": "deny-none-control.json",
+      "required": [],
+      "absent": [
+        "ecl.error.schema-invalid.v1",
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "deny-actor_supplied-restricts",
+      "file": "deny-actor_supplied-restricts.json",
+      "required": [
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "deny-judgment-restricts",
+      "file": "deny-judgment-restricts.json",
+      "required": [
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "absent": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "hold-judgment-restricts-control",
+      "file": "hold-judgment-restricts-control.json",
+      "required": [],
+      "absent": [
+        "ecl.error.schema-invalid.v1",
+        "ecl.rule.decision-basis-one-way.v1"
+      ],
+      "kind": "semantic",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-advisory-valid",
+      "file": "safe-state-advisory-valid.json",
+      "required": [],
+      "absent": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-missing-scope",
+      "file": "safe-state-missing-scope.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-empty-scope",
+      "file": "safe-state-empty-scope.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-unknown-dependency",
+      "file": "safe-state-unknown-dependency.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-duplicate-covered",
+      "file": "safe-state-duplicate-covered.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-covered-proof",
+      "file": "safe-state-covered-proof.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-covered-not-advisory",
+      "file": "safe-state-covered-not-advisory.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    },
+    {
+      "id": "safe-state-duplicate-identity",
+      "file": "safe-state-duplicate-identity.json",
+      "required": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "absent": [],
+      "kind": "safe-state",
+      "mutation": null
+    }
+  ]
+}

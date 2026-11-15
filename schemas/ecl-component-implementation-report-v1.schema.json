@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/component-implementation-report/1",
+  "title": "ECL Component or Profile Implementation Report v1",
+  "description": "A scoped report about a component or profile implementation. It carries no ECL conformance level and does not establish runtime mediation or deployment conformance. Applicable requirements and unassessed work remain explicit.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "component",
+    "version_set",
+    "capabilities",
+    "applicable_requirements",
+    "evidence",
+    "limitations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_component_implementation_report_v1"
+    },
+    "report_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "artifact"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+        }
+      }
+    },
+    "version_set": {
+      "type": "object",
+      "required": [
+        "core_version",
+        "profile_versions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "core_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_versions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "applicable_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "requirement_id",
+          "applicability",
+          "result",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          },
+          "applicability": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "enum": [
+              "pass",
+              "fail",
+              "not_assessed"
+            ]
+          },
+          "evidence_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "result": {
+                  "enum": [
+                    "pass",
+                    "fail"
+                  ]
+                }
+              },
+              "required": [
+                "result"
+              ]
+            },
+            "then": {
+              "properties": {
+                "evidence_refs": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/resourceReference"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

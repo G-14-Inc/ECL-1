@@ -1,0 +1,37 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 96 and seed -4736079696403296678 with 2 workers on 32 cores with 1600MB heap and 64MB offheap memory [pid: 156] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/reports/recovery-checks-attempt001/correct-liveness/RecoveryReview.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/reports/recovery-checks-attempt001/correct-liveness/MC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/reports/recovery-checks-attempt001/correct-liveness/ECLCore.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness/TLC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness/Integers.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness/FiniteSets.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness/Sequences.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/correct-liveness/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Semantic processing of module RecoveryReview
+Starting... (2026-11-10 18:38:20)
+Implied-temporal checking--satisfiability problem has 5 branches.
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-10 18:38:20.
+Checking 5 branches of temporal properties for the current state space with 202745 total distinct states at (2026-11-10 18:38:26)
+Finished checking temporal properties in 00s at 2026-11-10 18:38:26
+Progress(13) at 2026-11-10 18:38:26: 89,118 states generated (89,118 s/min), 40,549 distinct states found (40,549 ds/min), 13,208 states left on queue.
+Progress(18) at 2026-11-10 18:38:30: 222,073 states generated, 89,491 distinct states found, 0 states left on queue.
+Checking 5 branches of temporal properties for the complete state space with 447455 total distinct states at (2026-11-10 18:38:30)
+Finished checking temporal properties in 00s at 2026-11-10 18:38:31
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 6.4E-10
+  based on the actual fingerprints:  val = 2.2E-10
+222073 states generated, 89491 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 18.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 3).
+Finished in 11s at (2026-11-10 18:38:31)

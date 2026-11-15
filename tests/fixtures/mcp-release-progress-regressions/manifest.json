@@ -1,0 +1,219 @@
+{
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "cases": [
+    {
+      "expected_rules": [],
+      "id": "pre-consumption-control-refusal",
+      "path": "tests/fixtures/mcp-release-progress-regressions/pre-consumption-control-refusal.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "prepared-final-control-refusal",
+      "path": "tests/fixtures/mcp-release-progress-regressions/prepared-final-control-refusal.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1"
+      ],
+      "id": "final-without-prepared-cancelled",
+      "path": "tests/fixtures/mcp-release-progress-regressions/final-without-prepared-cancelled.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "final-without-prepared-denied",
+      "path": "tests/fixtures/mcp-release-progress-regressions/final-without-prepared-denied.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "final-without-prepared-terminal",
+      "path": "tests/fixtures/mcp-release-progress-regressions/final-without-prepared-terminal.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [],
+      "id": "discharged-prepared-final-refusal",
+      "path": "tests/fixtures/mcp-release-progress-regressions/discharged-prepared-final-refusal.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "discharged-without-prepared-denied",
+      "path": "tests/fixtures/mcp-release-progress-regressions/discharged-without-prepared-denied.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-forward-requires-admit.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "discharged-before-consumption-denied",
+      "path": "tests/fixtures/mcp-release-progress-regressions/discharged-before-consumption-denied.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [],
+      "id": "answered-with-completion",
+      "path": "tests/fixtures/mcp-release-progress-regressions/answered-with-completion.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "answered-completion-both-absent",
+      "path": "tests/fixtures/mcp-release-progress-regressions/answered-completion-both-absent.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "answered-completion-terminal-only",
+      "path": "tests/fixtures/mcp-release-progress-regressions/answered-completion-terminal-only.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "answered-completion-forwarded-only",
+      "path": "tests/fixtures/mcp-release-progress-regressions/answered-completion-forwarded-only.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "answered-completion-mismatch",
+      "path": "tests/fixtures/mcp-release-progress-regressions/answered-completion-mismatch.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-answer-with-completion",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-answer-with-completion.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-answer-completion-both-absent",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-answer-completion-both-absent.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-answer-completion-terminal-only",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-answer-completion-terminal-only.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-answer-completion-forwarded-only",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-answer-completion-forwarded-only.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-answer-completion-mismatch",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-answer-completion-mismatch.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-no-answer-completion-both-absent",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-no-answer-completion-both-absent.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-no-answer-completion-terminal-only",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-no-answer-completion-terminal-only.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-no-answer-completion-forwarded-only",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-no-answer-completion-forwarded-only.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "id": "recovered-no-answer-completion-mismatch",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-no-answer-completion-mismatch.json",
+      "valid": false
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-outcome-unknown",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-outcome-unknown.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-not-released",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-not-released.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-unconsumed-admit-denied",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-unconsumed-admit-denied.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "recorded-admit-denied",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recorded-admit-denied.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "recovered-unverified-decision-denied",
+      "path": "tests/fixtures/mcp-release-progress-regressions/recovered-unverified-decision-denied.json",
+      "valid": true
+    },
+    {
+      "expected_rules": [],
+      "id": "ordinary-no-answer-unknown",
+      "path": "tests/fixtures/mcp-release-progress-regressions/ordinary-no-answer-unknown.json",
+      "valid": true
+    }
+  ],
+  "requirements": [
+    "MG1-010",
+    "MG1-014",
+    "MG1-015",
+    "MG1-016",
+    "MG1-017"
+  ],
+  "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+  "status": "synthetic unsigned regression controls; no historical observation claim"
+}

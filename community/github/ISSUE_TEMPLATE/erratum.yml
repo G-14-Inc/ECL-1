@@ -1,0 +1,42 @@
+name: Report an erratum
+description: Report an error in a published version of ECL-1.
+title: "Erratum: "
+labels: ["erratum"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        `governance/ERRATA.md` says how errata are classified and published. An error that could let an action bypass a control, forge or hide evidence, widen authority or produce a false conformance pass goes privately to the security contact (`governance/SECURITY.md`), not here.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The published version that has the error, for example 1.0.
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Document, section and requirement IDs
+    validations:
+      required: true
+  - type: textarea
+    id: says
+    attributes:
+      label: What the text or artifact says
+    validations:
+      required: true
+  - type: textarea
+    id: should
+    attributes:
+      label: What it should say, and why
+      description: The evidence that the published text does not say what it was intended to say.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Proposed text
+      options:
+        - label: Text I propose here is offered under the contribution terms of `governance/CONTRIBUTING.md`.
+          required: false

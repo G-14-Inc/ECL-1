@@ -1,0 +1,126 @@
+{
+  "claim_level": 4,
+  "delivery_surfaces": [
+    "local_gate",
+    "offline_verifier",
+    "air_gap_transfer_station"
+  ],
+  "dependencies": [
+    {
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 900,
+      "dependency_id": "urn:example:ecl:dependency:air-gap-policy-root",
+      "failure_disposition": "emergency_halt",
+      "integrity_required": true
+    }
+  ],
+  "evidence_custody": {
+    "export_integrity": true,
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:air-gap",
+      "version": "1"
+    },
+    "local_append_only_buffer": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:air-gap",
+      "version": "1"
+    },
+    "transfer_custody": {
+      "uri": "urn:example:ecl:custody:dual-control-transfer",
+      "version": "1"
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "bounded_actions": [
+        "containment actions within frozen capability manifest"
+      ],
+      "entry_conditions": [
+        "approved transfer interval missed"
+      ],
+      "expires_to": "emergency_halt",
+      "signed_cached_state_required": true
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "integrity, quorum, or independent enforcement path fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ],
+    "restricted": {
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ],
+      "entry_conditions": [
+        "one required control channel is unavailable"
+      ]
+    }
+  },
+  "model": "air-gapped-segmented",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "3131313131313131313131313131313131313131313131313131313131313131"
+  },
+  "profile_id": "urn:example:ecl:profile:air-gapped-local-gate",
+  "profile_version": "1",
+  "release_path": {
+    "decision_timeout_milliseconds": 10,
+    "enforcement_location": "local_network_appliance",
+    "network_loss_disposition": "immediate_emergency_halt",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true
+  },
+  "residual_risks": [
+    "Physical transfer latency bounds revocation and export timing; emergency halt limits continued action."
+  ],
+  "schema_version": "ecl_deployment_profile_v1",
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:air-gapped",
+    "version": "1"
+  },
+  "timing_case": {
+    "connected_revocation_seconds": 60,
+    "evidence_export_seconds": 3600,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:air-gap-l4",
+      "version": "1"
+    },
+    "offline_staleness_seconds": 900,
+    "trusted_time_or_secure_monotonic": true,
+    "uses_default_baseline": true
+  },
+  "topology_controls": {
+    "air_gapped": {
+      "disconnected_incident_workflow": {
+        "uri": "urn:example:ecl:workflow:disconnected-incident",
+        "version": "1"
+      },
+      "disconnected_revocation_workflow": {
+        "uri": "urn:example:ecl:workflow:disconnected-revocation",
+        "version": "1"
+      },
+      "emergency_policy_dual_control": {
+        "uri": "urn:example:ecl:control:emergency-dual-control",
+        "version": "1"
+      },
+      "export_integrity": {
+        "uri": "urn:example:ecl:control:export-integrity",
+        "version": "1"
+      },
+      "update_media_integrity": {
+        "uri": "urn:example:ecl:control:update-media-integrity",
+        "version": "1"
+      }
+    }
+  }
+}

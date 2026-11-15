@@ -1,0 +1,29 @@
+# MCP reconstruction inputs
+
+Robert F. Tilley Jr.; G-14, Inc.
+
+`mcp-reconstruction-baseline.zip` retains the exact synthetic inputs required by
+`generate_mcp_public_review_migration.py`: 139 record files and their original
+pre-migration manifest. The adjacent JSON inventory records every member's hash
+and provenance. These are test fixtures, not historical gateway execution data.
+The generator pins the archive hash independently and never changes these inputs.
+
+From the source root, use:
+
+```sh
+python scripts/generate_mcp_public_review_migration.py --write --report /tmp/mcp-migration.json
+python scripts/generate_mcp_public_review_migration.py --check --report /tmp/mcp-migration-check.json
+```
+
+The pinned archive is the default. `--baseline-dir` may instead name a retained
+extracted copy; every JSON member must match the archive byte for byte. An empty,
+changed or incomplete directory is refused. No input is seeded from the outputs.
+The generator applies the explicit noncharacter-ID migration and the six retained
+terminal-state diagnostic-order corrections, then checks the resulting records
+against those fixed expectations. It does not derive new expectations from the
+current verifier. It writes and checks the entire reconstructed suite manifest,
+including non-binding rows, and removes the retired noncharacter positive path.
+
+The archive has sorted members, fixed timestamps and modes, and no symlinks. Its
+bytes were created twice and compared. Any intentional input or oracle revision
+requires a corresponding source change and review of these pins and controls.

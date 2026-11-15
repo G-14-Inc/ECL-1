@@ -1,0 +1,228 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-public-review-single-use-policy",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "single-use-request-absent-maximum-control",
+      "path": "conformance/suites/single-use-policy/single-use-request-absent-maximum-control.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "request absent maximum control"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/decisionRequest/allOf/1/properties/authority_request/properties/use_policy/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "single-use-request-bounded-policy-unsupported",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "path": "conformance/suites/single-use-policy/single-use-request-bounded-policy-unsupported.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "Reject reserved bounded_multi_use while max_uses=1 isolates the unsupported policy."
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "single-use-request-maximum-two-refused",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "path": "conformance/suites/single-use-policy/single-use-request-maximum-two-refused.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "request maximum two refused"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "single-use-request-boolean-maximum-refused",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "path": "conformance/suites/single-use-policy/single-use-request-boolean-maximum-refused.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "request boolean maximum refused"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/authorization/properties/use_policy/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "single-use-admit-absent-maximum-control",
+      "path": "conformance/suites/single-use-policy/single-use-admit-absent-maximum-control.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit absent maximum control"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root",
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2#/$defs/authorization/properties/use_policy/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "single-use-admit-bounded-policy-unsupported",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "path": "conformance/suites/single-use-policy/single-use-admit-bounded-policy-unsupported.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "Reject reserved bounded_multi_use while max_uses=1 isolates the unsupported policy."
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "single-use-admit-maximum-two-refused",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "path": "conformance/suites/single-use-policy/single-use-admit-maximum-two-refused.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit maximum two refused"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/dcmp/2##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "single-use-admit-boolean-maximum-refused",
+      "negates": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "path": "conformance/suites/single-use-policy/single-use-admit-boolean-maximum-refused.json",
+      "requirement_ids": [
+        "DCMP2-001",
+        "DCMP2-013",
+        "DCMP2-050"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "admit boolean maximum refused"
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "single-use-dpop-other-authorization-cache-control",
+      "path": "conformance/suites/single-use-policy/single-use-dpop-other-authorization-cache-control.json",
+      "requirement_ids": [
+        "OA1-004",
+        "OA1-005"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "source": {
+        "generator": "scripts/generate_single_use_policy_vectors.py",
+        "kind": "mutation",
+        "mutation": "Valid first use of a distinct authorization at the same proof key, method and htu; its dpop-0001 identifier supplies the replay-cache state for the migrated timing/replay fixtures."
+      },
+      "stage": "binding"
+    }
+  ]
+}

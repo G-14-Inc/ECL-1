@@ -1,0 +1,344 @@
+{
+  "call": {
+    "rfc8785": "eyJpZCI6bnVsbCwianNvbnJwYyI6IjIuMCIsIm1ldGhvZCI6InRvb2xzL2NhbGwiLCJwYXJhbXMiOnsiX21ldGEiOnsiZXhhbXBsZS5vcmcvc2FtcGxpbmciOjAuNSwiaW8ubW9kZWxjb250ZXh0cHJvdG9jb2wvY2xpZW50Q2FwYWJpbGl0aWVzIjp7fSwiaW8ubW9kZWxjb250ZXh0cHJvdG9jb2wvcHJvdG9jb2xWZXJzaW9uIjoiMjAyNi0wNy0yOCJ9LCJhcmd1bWVudHMiOnsiYm9keSI6IlRoZSBzZWNyZXQgYXBwZWFyZWQgaW4gYSBzdXBwb3J0IHRpY2tldC4iLCJyZXBvc2l0b3J5IjoidXJuOmV4YW1wbGU6cmVwbzpwYXltZW50cy1zZXJ2aWNlIiwidGl0bGUiOiJSb3RhdGUgdGhlIHdlYmhvb2sgc2VjcmV0In0sIm5hbWUiOiJjcmVhdGVfaXNzdWUifX0="
+  },
+  "decision": {
+    "response": {
+      "decision_id": "https://externalcontrollayer.ai/ns/decision/sha256/a1acd0460319937e78377f28771070cc115568a724a2b30bcfe98e3a958307b8",
+      "evaluated_at": "2026-09-30T09:00:00.100000Z",
+      "expires_at": "2026-09-30T09:00:15.100000Z",
+      "extensions": [
+        {
+          "critical": true,
+          "id": "ecl.ext.decision-basis.v1",
+          "value": {
+            "inputs": [
+              {
+                "class": "verifiable",
+                "effect": "none",
+                "input": "urn:example:input:bindings-target-record",
+                "reference": {
+                  "digest": {
+                    "algorithm": "ecl.digest.sha-256.v1",
+                    "value": "65c40a329b6c8cb587a47e844a1734bd8f0382dfc32f0f8e22ad450840a518b5"
+                  },
+                  "uri": "urn:example:input-value:bindings-target-record"
+                },
+                "required": true,
+                "source": "urn:example:system-of-record:bindings",
+                "status": "available"
+              }
+            ],
+            "register": {
+              "digest": {
+                "algorithm": "ecl.digest.sha-256.v1",
+                "value": "623fcf140727bacfacf4eb3a651ee945cfd430fb62107390354108c08603c52b"
+              },
+              "uri": "urn:example:register:bindings",
+              "version": "2026-09-30"
+            }
+          },
+          "version": 1
+        }
+      ],
+      "integrity_policy": {
+        "accepted_suites": [
+          "ecl.sig.ed25519.v1"
+        ],
+        "eligible_key_ids": [
+          "urn:example:key:bindings-dcmp"
+        ],
+        "required": true,
+        "required_key_ids": [
+          "urn:example:key:bindings-dcmp"
+        ],
+        "revocation_policy": "ecl.revocation.offline-bundle.v1",
+        "threshold": 1,
+        "trust_policy": {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          "epoch": 1,
+          "id": "urn:example:trust-policy:bindings",
+          "version": "2026-09-30"
+        },
+        "verification_time_policy": "ecl.time.issued-at.v1"
+      },
+      "issued_at": "2026-09-30T09:00:00.100000Z",
+      "issuer": {
+        "id": "urn:example:decision-point:bindings",
+        "trust_domain": "urn:example:trust-domain:bindings",
+        "type": "ecl.principal.service.v1"
+      },
+      "message_id": "https://externalcontrollayer.ai/ns/message/sha256/a95e6189232d57c4fbfa47b2cb2188ce6ddec7af301eddb92c8a64b35d2f6435",
+      "message_type": "decision_response",
+      "obligations": [],
+      "outcome": "deny",
+      "policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        "epoch": 1,
+        "id": "urn:example:policy:bindings",
+        "version": "2026-09-30"
+      },
+      "protocol": "DCMP-2",
+      "reasons": [
+        {
+          "code": "ecl.reason.native-policy-disposition.v1",
+          "detail": "the policy did not permit it",
+          "retryable": false
+        }
+      ],
+      "request_id": "urn:example:message:mcp-null-id-deny-request",
+      "safe_state": "ecl.state.restricted.v1",
+      "schema_version": "2.0",
+      "workflow": {
+        "attempt": 1,
+        "causal_predecessors": [
+          {
+            "digest": {
+              "algorithm": "ecl.digest.sha-256.v1",
+              "value": "6716e9dab2c9becb3d7f3baedb7b77c06877e1d4731674d866d5a3c4bcf5d244"
+            },
+            "id": "urn:example:message:mcp-null-id-deny-request",
+            "relation": "ecl.relation.responds-to.v1"
+          }
+        ],
+        "root_trace_id": "urn:example:trace:mcp-null-id-deny",
+        "sequence": 2,
+        "workflow_id": "urn:example:workflow:mcp-null-id-deny"
+      }
+    },
+    "status": "answered"
+  },
+  "decision_request": {
+    "action": {
+      "action_class": "ecl.action.ai-proposed-operation.v1",
+      "action_id": "urn:example:action:mcp-null-id-deny",
+      "operation": "issues.create",
+      "parameters": {
+        "body": "The secret appeared in a support ticket.",
+        "repository": "urn:example:repo:payments-service",
+        "title": "Rotate the webhook secret"
+      },
+      "parameters_digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "149ba059e5a629a5585fa78c178d799825ec1e9591977c6f4c64294a8091dd8f"
+      },
+      "required_evidence_profile": "ecl.evidence.standard.v1",
+      "risk_class": "ecl.risk.high.v1",
+      "target": {
+        "uri": "urn:example:repo:payments-service"
+      }
+    },
+    "actor": {
+      "id": "urn:example:agent:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.workload.v1"
+    },
+    "authority_request": {
+      "audience": "urn:example:enforcement-point:bindings",
+      "requested_validity_seconds": 30,
+      "use_policy": "single_use"
+    },
+    "constraints": {},
+    "delegation_chain": [],
+    "expires_at": "2026-09-30T09:00:30.000000Z",
+    "extensions": [
+      {
+        "critical": true,
+        "id": "ecl.ext.mcp-binding.v1",
+        "value": {
+          "mapping_id": "urn:example:mapping:issues-create",
+          "mcp_revision": "2026-07-28",
+          "method": "tools/call",
+          "params_digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "5bb15cd87dd8a31bfb4c2ad474ff35530e6a15f0240da4f808adf4ac8d657726"
+          },
+          "server_id": "urn:example:mcp-server:issues",
+          "server_name": "issue-tracker",
+          "server_version": "2.3.0",
+          "tool": "create_issue",
+          "tool_definition_digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+          }
+        },
+        "version": 1
+      }
+    ],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bindings-gateway"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bindings-gateway"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.issued-at.v1"
+    },
+    "issued_at": "2026-09-30T09:00:00.000000Z",
+    "issuer": {
+      "id": "urn:example:enforcement-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.enforcement-point.v1"
+    },
+    "message_id": "urn:example:message:mcp-null-id-deny-request",
+    "message_type": "decision_request",
+    "protocol": "DCMP-2",
+    "schema_version": "2.0",
+    "subject": {
+      "id": "urn:example:tenant:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.tenant.v1"
+    },
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [],
+      "root_trace_id": "urn:example:trace:mcp-null-id-deny",
+      "sequence": 1,
+      "workflow_id": "urn:example:workflow:mcp-null-id-deny"
+    }
+  },
+  "mapping": {
+    "action_class": "ecl.action.ai-proposed-operation.v1",
+    "evidence_profile": "ecl.evidence.standard.v1",
+    "mapping_id": "urn:example:mapping:issues-create",
+    "operation": "issues.create",
+    "risk_class": "ecl.risk.high.v1",
+    "server_id": "urn:example:mcp-server:issues",
+    "server_name": "issue-tracker",
+    "server_version": "2.3.0",
+    "target_argument": "repository",
+    "tool": "create_issue",
+    "tool_definition_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "2a520e7ae0ae8b0e0e443cea4fd0d26e5bf837f6a4069bd068691d9c445874a6"
+    }
+  },
+  "mcp_revision": "2026-07-28",
+  "received_at": "2026-09-30T09:00:00.000000Z",
+  "returned": {
+    "rfc8785": "eyJlcnJvciI6eyJjb2RlIjotMzEwMDEsImRhdGEiOnsiZWNsIjp7ImNvZGUiOiJkZW5pZWQiLCJyZWFzb24iOiJlY2wucmVhc29uLm5hdGl2ZS1wb2xpY3ktZGlzcG9zaXRpb24udjEiLCJyZXF1ZXN0X2lkIjoidXJuOmV4YW1wbGU6bWVzc2FnZTptY3AtbnVsbC1pZC1kZW55LXJlcXVlc3QifSwicmV0cnlfYWZ0ZXJfc2Vjb25kcyI6MC41fSwibWVzc2FnZSI6IlRoZSByZXF1ZXN0IHdhcyBkZW5pZWQuIn0sImpzb25ycGMiOiIyLjAifQ=="
+  },
+  "returned_at": "2026-09-30T09:00:00.450000Z",
+  "schema_version": "ecl_mcp_gateway_exchange_v1",
+  "server": {
+    "id": "urn:example:mcp-server:issues",
+    "name": "issue-tracker",
+    "version": "2.3.0"
+  },
+  "terminal": {
+    "event": {
+      "action_id": "urn:example:action:mcp-null-id-deny",
+      "attempt_id": "urn:example:attempt:mcp-null-id-deny-1",
+      "decision": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "e11f1dddaeb943e47b5782990ef6025b9ef27a1f45c90e842a76e5cac387a8bd"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "uri": "https://externalcontrollayer.ai/ns/message/sha256/a95e6189232d57c4fbfa47b2cb2188ce6ddec7af301eddb92c8a64b35d2f6435"
+      },
+      "kind": "execution",
+      "state": "denied"
+    },
+    "event_type": "execution_terminal",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "38e8b9c5b7bb8a0efe3043524ffb05b509720b132b26c5c79abe2be6e125cdf4"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.observed-at.v1"
+    },
+    "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/6fea160bca776f162ecd219718471e48e88c1ac53463998b9b37e09f9ee0ad5c",
+    "object_type": "event_record",
+    "observed_at": "2026-09-30T09:00:00.400000Z",
+    "producer": {
+      "id": "urn:example:enforcement-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.enforcement-point.v1"
+    },
+    "protocol": "EBMP-2",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "e11f1dddaeb943e47b5782990ef6025b9ef27a1f45c90e842a76e5cac387a8bd"
+          },
+          "id": "https://externalcontrollayer.ai/ns/message/sha256/a95e6189232d57c4fbfa47b2cb2188ce6ddec7af301eddb92c8a64b35d2f6435",
+          "relation": "ecl.relation.follows.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:mcp-null-id-deny",
+      "sequence": 3,
+      "workflow_id": "urn:example:workflow:mcp-null-id-deny"
+    }
+  },
+  "tool_definition": {
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false
+    },
+    "description": "Create an issue in a repository.",
+    "inputSchema": {
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "title"
+      ],
+      "type": "object"
+    },
+    "name": "create_issue",
+    "title": "Create issue"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/external-vector-raw-result/2",
+  "title": "ECL External Implementation Raw Vector Result v2",
+  "description": "One raw result of a cross-implementation report v2: exactly three members. The report row's raw_result_sha256 is the SHA-256 of the exact bytes of the evidence file that holds this object.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_revision",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ecl_external_vector_raw_result_v2"
+    },
+    "implementation_revision": {
+      "description": "The report's implementation.source_revision, unchanged.",
+      "type": "string",
+      "minLength": 1
+    },
+    "result": {
+      "description": "The report row this raw result is bound to, without its raw_result_sha256 member: every other member of the row, with the same values.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "suite",
+        "artifact_sha256",
+        "expected",
+        "status",
+        "observed_secondary_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The SHA-256 of the exact bytes of the vector's artifact."
+        },
+        "expected": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "suite": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "met",
+            "not-met",
+            "unsupported"
+          ]
+        },
+        "observed_primary_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "observed_secondary_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unsupported_capability": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unsupported"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "unsupported_capability"
+            ],
+            "not": {
+              "required": [
+                "observed_primary_id"
+              ]
+            },
+            "properties": {
+              "observed_secondary_ids": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "observed_primary_id"
+            ],
+            "not": {
+              "required": [
+                "unsupported_capability"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "observed_primary_id"
+            ],
+            "properties": {
+              "observed_primary_id": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "observed_secondary_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

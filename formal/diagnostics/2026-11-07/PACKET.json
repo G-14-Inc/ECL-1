@@ -1,0 +1,302 @@
+{
+  "scope": "17 historical focused diagnostics recorded 2026-11-07, separately from32standardTLC/9Tamarin. Exact recovered bytes, no rerun.",
+  "cases": [
+    {
+      "group": "formal-boundaries-001",
+      "name": "priority-correct",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/priority-correct.cfg": "0d4c21f256729b843fa50db6bc6f485ad219e15d72c6b987248b9d493900099b"
+      },
+      "output_sha256": "0e566855eb34bcb2674bc6aa1b6561f187d2982fb638c8435c7eac4891a812c9"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "priority-judgment-override",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/priority-judgment-override.cfg": "9354dbda390601e3596f241679d42a75f0b91758eef05a54135d038cdd11f5e9"
+      },
+      "output_sha256": "7af080b54b5a652093967fde4c4c163479b46cf6c5221640f0a321a19bb7be0c"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "priority-self-report-override",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/priority-self-report-override.cfg": "69ddf8f0e295afbe756fccf14334e8e68aca64462fe58b83a86cfb41f61f1e7b"
+      },
+      "output_sha256": "f6b15d2fa97901f515a857a6e9bb399b748970c9d929037ef27f552b313831d9"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "zero-decision-safe",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/zero-decision-safe.cfg": "d71202b28b254f5ca6a8527839bbc94baec8cd9717052e9e789cd0098913c28b"
+      },
+      "output_sha256": "9d8d0dbdbc13df18fe3c155f16f11a3e60fa0fcf14d712abd9bd4f7124b1eb40"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "zero-decision-times-out",
+      "expected": "WitnessNoTimeout",
+      "observed": "WitnessNoTimeout",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/zero-decision-times-out.cfg": "5564a8f0051d1acfe3a25eafacc47bc0c77bdb5a6c76fdc3d76250436c822477"
+      },
+      "output_sha256": "6fc7da1e440b9ea291803bc765321b18641d21553b45888485e0ecee1f33090e"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "zero-hold-safe",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/zero-hold-safe.cfg": "e520e1095c9e4c86e9024c60b643eab247dc9312dffc018ce65ae0825f735567"
+      },
+      "output_sha256": "0f29dc3f2217967d0acb7fd1cd511fc68c4a9ac2fa362ba1ad933d9296541e7f"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "one-tick-boundaries",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/one-tick-boundaries.cfg": "6c8ebf8362dd56e60806c5290ec3455e68b3a3e04461e37cfbecfbf929f525e2"
+      },
+      "output_sha256": "6104a2af2c353851a9a78c7122df263f1eb7e2b0c52d5ca1072ee7418d9f28f3"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "horizon-submission-safe",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "551a7abd285c2f39ab92312cade1f859ae6465be74e71cb5eb996ddf54c5e119",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/horizon-submission-safe.cfg": "6678b32debc38f113e7dc41573e95b2fe6979b3a0c96285c827435743f56bf39"
+      },
+      "output_sha256": "09a7807997abd60c46580aa7a3b1a6dc38ccea915f699d9714e5cf9af806f202"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "horizon-submission-times-out",
+      "expected": "WitnessNoTimeout",
+      "observed": "WitnessNoTimeout",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "551a7abd285c2f39ab92312cade1f859ae6465be74e71cb5eb996ddf54c5e119",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/horizon-submission-times-out.cfg": "b43eb4364eff03a184ee9bfd7d900eeed810383d7b8a6c002d234f378885a2a1"
+      },
+      "output_sha256": "cde7d3af32db6903d4d9d2f1357b90243477e51d839cfe2df55c5a113375e1d9"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "horizon-shortened-deadline",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "7f61e118e5a428e473025bdd94966669453af65a660de827576fb657dff085d5",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/horizon-shortened-deadline.cfg": "6ff2def12fc2f5d4e1fba7304891996eacfb20b54d4d2f5c123c1ba1ed32f7b6"
+      },
+      "output_sha256": "73dda85a840af0a3219b5ec4984b87c4d1acc55569055ef5c051746de7f8faf0"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "mutate-decision-guard",
+      "expected": "NoLateDecision",
+      "observed": "NoLateDecision",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "4cab95a8ca3288d842b4ba37eef100d8778b79e504e7db26690bd704f10b0bed",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/mutate-decision-guard.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c"
+      },
+      "output_sha256": "bad36aae0ba7cd23be9b12847db4b43efc9fed154e26445762b3dfac2e960665"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "mutate-hold-guard",
+      "expected": "NoLateDecision",
+      "observed": "NoLateDecision",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "20946a6ca460b51a859871b3fb7f0ed63033bfb982c3fd72871b8a9e2069c794",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/mutate-hold-guard.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c"
+      },
+      "output_sha256": "82ff25267fa630baeb6c1ecb5eb4036a4884953bb2d065545927b707e1f6c12e"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "mutate-pending-tick",
+      "expected": "DeadlineBound",
+      "observed": "DeadlineBound",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "b0febd7ea5857fb459a85a46acd7e3855422a2a68dab5f4fbe89d0f5e46c50f6",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/mutate-pending-tick.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c"
+      },
+      "output_sha256": "9dd1fdd642fe41c8c0871e24b2889f47f30ef310a172681bbd1d4de245a2fb0f"
+    },
+    {
+      "group": "formal-boundaries-001",
+      "name": "mutate-held-tick",
+      "expected": "DeadlineBound",
+      "observed": "DeadlineBound",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d9e9f7dfbd33b6eab9f62bb77fec04018f4083f0a29b2e9e0ec2f5b0f12e7e1a",
+        "tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+        "tla/configs/mutate-held-tick.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c"
+      },
+      "output_sha256": "7236cc364c490e3b422fabafb2e80c40c89b55936d9017d9d9b502705524344c"
+    },
+    {
+      "group": "formal-delayed-decisions-001",
+      "name": "two-tick-safety-and-liveness",
+      "expected": "pass",
+      "observed": "pass",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "1e2ffa44593900015e4fda895575db639cff4e072bd98185cf996743c1de398f",
+        "tla/configs/two-tick-safety-and-liveness.cfg": "c04478fd60bf688aa562c2b2469b5e5ca18a269bb237ae28f7f4e0369acf850d"
+      },
+      "output_sha256": "0a9346aa63529e1d054f1351d81291875122dad006f63b6eeca3d28d48d2a2f4"
+    },
+    {
+      "group": "formal-delayed-decisions-001",
+      "name": "delayed-decision-witness",
+      "expected": "WitnessNoDelayedDecision",
+      "observed": "WitnessNoDelayedDecision",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "1e2ffa44593900015e4fda895575db639cff4e072bd98185cf996743c1de398f",
+        "tla/configs/delayed-decision-witness.cfg": "8c906d31589e96aca62f68d9a48e87b6b4f684d9f39a1038cc70a0caa2b0d042"
+      },
+      "output_sha256": "22ab83a02df26c113db15903027bb8bdbb9ac7d2c8cc554c4d3b56f7bafb4176"
+    },
+    {
+      "group": "formal-delayed-decisions-001",
+      "name": "delayed-resolution-witness",
+      "expected": "WitnessNoDelayedResolution",
+      "observed": "WitnessNoDelayedResolution",
+      "passed": true,
+      "inputs": {
+        "tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+        "tla/MC.tla": "1e2ffa44593900015e4fda895575db639cff4e072bd98185cf996743c1de398f",
+        "tla/configs/delayed-resolution-witness.cfg": "606c419d34e4d909c75e0e2c39294717d87207e76d535e6b9d15bc728da15150"
+      },
+      "output_sha256": "fae417f69ddb2024490aca49aabdcba01e8592c82a4a3739f9563ca9b9653179"
+    }
+  ],
+  "files": {
+    "formal-delayed-decisions-001/check_formal_delayed_decisions.py": "b17cff30540cdb3465bcb60ba6bbe9321a5058947337c184c8ebc6abdb1d43c8",
+    "formal-delayed-decisions-001/recorded-runner.py": "7f358385ea485bed265da817c7f162af617333f8c116cf644559cbed6dc929b5",
+    "formal-delayed-decisions-001/RUN.json": "11627442c1ea45093c987485f723bfcb02d5d5cede1b3127b9d1251843cd6c77",
+    "formal-delayed-decisions-001/delayed-decision-witness/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-delayed-decisions-001/delayed-decision-witness/formal/tla/MC.tla": "1e2ffa44593900015e4fda895575db639cff4e072bd98185cf996743c1de398f",
+    "formal-delayed-decisions-001/delayed-decision-witness/formal/tla/configs/delayed-decision-witness.cfg": "8c906d31589e96aca62f68d9a48e87b6b4f684d9f39a1038cc70a0caa2b0d042",
+    "formal-delayed-decisions-001/delayed-decision-witness/logs/delayed-decision-witness.log": "22ab83a02df26c113db15903027bb8bdbb9ac7d2c8cc554c4d3b56f7bafb4176",
+    "formal-delayed-decisions-001/delayed-resolution-witness/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-delayed-decisions-001/delayed-resolution-witness/formal/tla/MC.tla": "1e2ffa44593900015e4fda895575db639cff4e072bd98185cf996743c1de398f",
+    "formal-delayed-decisions-001/delayed-resolution-witness/formal/tla/configs/delayed-resolution-witness.cfg": "606c419d34e4d909c75e0e2c39294717d87207e76d535e6b9d15bc728da15150",
+    "formal-delayed-decisions-001/delayed-resolution-witness/logs/delayed-resolution-witness.log": "fae417f69ddb2024490aca49aabdcba01e8592c82a4a3739f9563ca9b9653179",
+    "formal-delayed-decisions-001/two-tick-safety-and-liveness/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-delayed-decisions-001/two-tick-safety-and-liveness/formal/tla/MC.tla": "1e2ffa44593900015e4fda895575db639cff4e072bd98185cf996743c1de398f",
+    "formal-delayed-decisions-001/two-tick-safety-and-liveness/formal/tla/configs/two-tick-safety-and-liveness.cfg": "c04478fd60bf688aa562c2b2469b5e5ca18a269bb237ae28f7f4e0369acf850d",
+    "formal-delayed-decisions-001/two-tick-safety-and-liveness/logs/two-tick-safety-and-liveness.log": "0a9346aa63529e1d054f1351d81291875122dad006f63b6eeca3d28d48d2a2f4",
+    "formal-boundaries-001/check_formal_boundaries.py": "1b5cef7fda0cc48490fa167626884c8598fab63977029decf4202933c864c02b",
+    "formal-boundaries-001/recorded-runner.py": "3efec1e622b390f725df67da2e0843d547b4c49dd9f5e1b81638e8f5e45b12fd",
+    "formal-boundaries-001/RUN.json": "62478ea59b3f5158be7c27a82ac33f4f3a9575a8b6f60a60fd0a8998761afe3e",
+    "formal-boundaries-001/priority-judgment-override/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/priority-judgment-override/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/priority-judgment-override/formal/tla/configs/priority-judgment-override.cfg": "9354dbda390601e3596f241679d42a75f0b91758eef05a54135d038cdd11f5e9",
+    "formal-boundaries-001/priority-judgment-override/logs/priority-judgment-override.log": "7af080b54b5a652093967fde4c4c163479b46cf6c5221640f0a321a19bb7be0c",
+    "formal-boundaries-001/mutate-decision-guard/formal/tla/ECLCore.tla": "4cab95a8ca3288d842b4ba37eef100d8778b79e504e7db26690bd704f10b0bed",
+    "formal-boundaries-001/mutate-decision-guard/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/mutate-decision-guard/formal/tla/configs/mutate-decision-guard.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c",
+    "formal-boundaries-001/mutate-decision-guard/logs/mutate-decision-guard.log": "bad36aae0ba7cd23be9b12847db4b43efc9fed154e26445762b3dfac2e960665",
+    "formal-boundaries-001/priority-self-report-override/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/priority-self-report-override/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/priority-self-report-override/formal/tla/configs/priority-self-report-override.cfg": "69ddf8f0e295afbe756fccf14334e8e68aca64462fe58b83a86cfb41f61f1e7b",
+    "formal-boundaries-001/priority-self-report-override/logs/priority-self-report-override.log": "f6b15d2fa97901f515a857a6e9bb399b748970c9d929037ef27f552b313831d9",
+    "formal-boundaries-001/zero-hold-safe/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/zero-hold-safe/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/zero-hold-safe/formal/tla/configs/zero-hold-safe.cfg": "e520e1095c9e4c86e9024c60b643eab247dc9312dffc018ce65ae0825f735567",
+    "formal-boundaries-001/zero-hold-safe/logs/zero-hold-safe.log": "0f29dc3f2217967d0acb7fd1cd511fc68c4a9ac2fa362ba1ad933d9296541e7f",
+    "formal-boundaries-001/horizon-submission-safe/formal/tla/ECLCore.tla": "551a7abd285c2f39ab92312cade1f859ae6465be74e71cb5eb996ddf54c5e119",
+    "formal-boundaries-001/horizon-submission-safe/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/horizon-submission-safe/formal/tla/configs/horizon-submission-safe.cfg": "6678b32debc38f113e7dc41573e95b2fe6979b3a0c96285c827435743f56bf39",
+    "formal-boundaries-001/horizon-submission-safe/logs/horizon-submission-safe.log": "09a7807997abd60c46580aa7a3b1a6dc38ccea915f699d9714e5cf9af806f202",
+    "formal-boundaries-001/zero-decision-safe/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/zero-decision-safe/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/zero-decision-safe/formal/tla/configs/zero-decision-safe.cfg": "d71202b28b254f5ca6a8527839bbc94baec8cd9717052e9e789cd0098913c28b",
+    "formal-boundaries-001/zero-decision-safe/logs/zero-decision-safe.log": "9d8d0dbdbc13df18fe3c155f16f11a3e60fa0fcf14d712abd9bd4f7124b1eb40",
+    "formal-boundaries-001/horizon-shortened-deadline/formal/tla/ECLCore.tla": "7f61e118e5a428e473025bdd94966669453af65a660de827576fb657dff085d5",
+    "formal-boundaries-001/horizon-shortened-deadline/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/horizon-shortened-deadline/formal/tla/configs/horizon-shortened-deadline.cfg": "6ff2def12fc2f5d4e1fba7304891996eacfb20b54d4d2f5c123c1ba1ed32f7b6",
+    "formal-boundaries-001/horizon-shortened-deadline/logs/horizon-shortened-deadline.log": "73dda85a840af0a3219b5ec4984b87c4d1acc55569055ef5c051746de7f8faf0",
+    "formal-boundaries-001/mutate-held-tick/formal/tla/ECLCore.tla": "d9e9f7dfbd33b6eab9f62bb77fec04018f4083f0a29b2e9e0ec2f5b0f12e7e1a",
+    "formal-boundaries-001/mutate-held-tick/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/mutate-held-tick/formal/tla/configs/mutate-held-tick.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c",
+    "formal-boundaries-001/mutate-held-tick/logs/mutate-held-tick.log": "7236cc364c490e3b422fabafb2e80c40c89b55936d9017d9d9b502705524344c",
+    "formal-boundaries-001/horizon-submission-times-out/formal/tla/ECLCore.tla": "551a7abd285c2f39ab92312cade1f859ae6465be74e71cb5eb996ddf54c5e119",
+    "formal-boundaries-001/horizon-submission-times-out/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/horizon-submission-times-out/formal/tla/configs/horizon-submission-times-out.cfg": "b43eb4364eff03a184ee9bfd7d900eeed810383d7b8a6c002d234f378885a2a1",
+    "formal-boundaries-001/horizon-submission-times-out/logs/horizon-submission-times-out.log": "cde7d3af32db6903d4d9d2f1357b90243477e51d839cfe2df55c5a113375e1d9",
+    "formal-boundaries-001/zero-decision-times-out/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/zero-decision-times-out/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/zero-decision-times-out/formal/tla/configs/zero-decision-times-out.cfg": "5564a8f0051d1acfe3a25eafacc47bc0c77bdb5a6c76fdc3d76250436c822477",
+    "formal-boundaries-001/zero-decision-times-out/logs/zero-decision-times-out.log": "6fc7da1e440b9ea291803bc765321b18641d21553b45888485e0ecee1f33090e",
+    "formal-boundaries-001/mutate-pending-tick/formal/tla/ECLCore.tla": "b0febd7ea5857fb459a85a46acd7e3855422a2a68dab5f4fbe89d0f5e46c50f6",
+    "formal-boundaries-001/mutate-pending-tick/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/mutate-pending-tick/formal/tla/configs/mutate-pending-tick.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c",
+    "formal-boundaries-001/mutate-pending-tick/logs/mutate-pending-tick.log": "9dd1fdd642fe41c8c0871e24b2889f47f30ef310a172681bbd1d4de245a2fb0f",
+    "formal-boundaries-001/one-tick-boundaries/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/one-tick-boundaries/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/one-tick-boundaries/formal/tla/configs/one-tick-boundaries.cfg": "6c8ebf8362dd56e60806c5290ec3455e68b3a3e04461e37cfbecfbf929f525e2",
+    "formal-boundaries-001/one-tick-boundaries/logs/one-tick-boundaries.log": "6104a2af2c353851a9a78c7122df263f1eb7e2b0c52d5ca1072ee7418d9f28f3",
+    "formal-boundaries-001/mutate-hold-guard/formal/tla/ECLCore.tla": "20946a6ca460b51a859871b3fb7f0ed63033bfb982c3fd72871b8a9e2069c794",
+    "formal-boundaries-001/mutate-hold-guard/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/mutate-hold-guard/formal/tla/configs/mutate-hold-guard.cfg": "ce1e405c9097f0c93f577ab4d0f9a0bf0c2777060d027c632f6fc503f70c7d7c",
+    "formal-boundaries-001/mutate-hold-guard/logs/mutate-hold-guard.log": "82ff25267fa630baeb6c1ecb5eb4036a4884953bb2d065545927b707e1f6c12e",
+    "formal-boundaries-001/priority-correct/formal/tla/ECLCore.tla": "d80fd10f1f67caf613382cee2647bf6b657e46a322257674c03340b483d7b661",
+    "formal-boundaries-001/priority-correct/formal/tla/MC.tla": "fcb544ef12130f1af3cb1f08fda61402cabc68540d303fedc35c71614bb153f5",
+    "formal-boundaries-001/priority-correct/formal/tla/configs/priority-correct.cfg": "0d4c21f256729b843fa50db6bc6f485ad219e15d72c6b987248b9d493900099b",
+    "formal-boundaries-001/priority-correct/logs/priority-correct.log": "0e566855eb34bcb2674bc6aa1b6561f187d2982fb638c8435c7eac4891a812c9"
+  }
+}

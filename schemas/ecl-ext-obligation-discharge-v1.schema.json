@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/obligation-discharge/1",
+  "title": "ECL obligation-discharge extension value v1",
+  "description": "The value of ecl.ext.obligation-discharge.v1 on an EBMP-2 execution_released event: for each obligation of the decision response that had to be met before the release, the proof that Enforcement checked, named by reference and by the ecl.digest.sha-256.v1 digest of the proof's RFC 8785 canonical form, the proof's issuer, when the proof was obtained, when Enforcement checked it and, when the proof's own type bounds its freshness, the instant after which it no longer shows the obligation met (DCMP2-017, EBMP2-070). An obligation is named by its id and type; a witness result whose outcome is required_before_release is named by the uri of its reference and the type ecl.obligation.verify-witness.v1. The record is the enforcement point's statement; a proof that is an ECL object travels in the bundle as its own object, and a verifier checks it there (EBMP2-070).",
+  "type": "object",
+  "required": [
+    "obligations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "obligations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/discharge"
+      }
+    }
+  },
+  "$defs": {
+    "discharge": {
+      "type": "object",
+      "required": [
+        "obligation_id",
+        "type",
+        "result",
+        "proof",
+        "checked_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "obligation_id": {
+          "description": "The id of the obligation, or the uri of the reference of a witness result whose outcome is required_before_release.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "type": {
+          "description": "The type of the obligation, or ecl.obligation.verify-witness.v1 for a witness result.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "result": {
+          "description": "An execution_released event records only obligations that were met; an obligation that was not met prevents the release (DCMP2-017).",
+          "const": "satisfied"
+        },
+        "proof": {
+          "$ref": "#/$defs/proof"
+        },
+        "checked_at": {
+          "description": "When Enforcement checked the proof, by its own clock; no later than the event's observed_at.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        },
+        "fresh_until": {
+          "description": "The instant after which the proof no longer shows the obligation met, as the proof's own type declares it: an approval record's expires_at; a witness result's observation time plus the maximum age the enforcement point declares for it. Absent for a proof type with no freshness bound. Never later than the bound the proof itself declares. A verifier requires the release's observed_at plus its release_guard_ms to be earlier than it (EBMP2-070).",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "required": [
+        "kind",
+        "reference",
+        "digest",
+        "issuer",
+        "obtained_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "description": "What kind of object the proof is, named by the deployment, for example an approval record or a witness snapshot.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "reference": {
+          "description": "The identifier of the proof object; when it is the message_id or object_id of an object in the same bundle, digest is that object's digest.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "digest": {
+          "description": "The ecl.digest.sha-256.v1 digest of the RFC 8785 canonical form of the proof object.",
+          "type": "object",
+          "required": [
+            "algorithm",
+            "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": {
+              "const": "ecl.digest.sha-256.v1"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "issuer": {
+          "description": "The principal that issued the proof; never the governed AI system that requested the action.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "obtained_at": {
+          "description": "When Enforcement obtained the proof; no later than checked_at.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+        }
+      }
+    }
+  }
+}

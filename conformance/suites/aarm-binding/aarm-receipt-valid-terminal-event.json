@@ -1,0 +1,89 @@
+{
+  "event": {
+    "action_id": "https://externalcontrollayer.ai/ns/action/sha256/f266b161524eb4640beb84782a58e892de1faaf667b8296393a6a48a6de5cf15",
+    "attempt_id": "urn:example:attempt:aarm-allow-1",
+    "authority": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "78e6aa3f4d9bcfffa0623d267fe33c1b26d6acf109e4fc83482bc701625c4942"
+      },
+      "uri": "https://externalcontrollayer.ai/ns/authority/sha256/df0273aa223bbea6dca4861742bab907c71b3ee4db1ca7eb857653b84e2314cf"
+    },
+    "decision": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "0cdcf509294c5bfbf1491789437a0ed83ebf77ab05cfb9cd0378362e87be32eb"
+      },
+      "media_type": "application/vnd.ecl.dcmp+json",
+      "uri": "https://externalcontrollayer.ai/ns/message/sha256/8af28d7899b67788caec7fc0b190c2c360a6f6bd5742a3e939a5eaa513d6cd5e"
+    },
+    "kind": "execution",
+    "state": "succeeded"
+  },
+  "event_type": "execution_terminal",
+  "extensions": [
+    {
+      "critical": false,
+      "id": "ecl.ext.aarm-receipt.v1",
+      "value": {
+        "decision": "ALLOW",
+        "receipt_digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "dd53a9c09a49a91ec2bcf7d9d34df189c3cc226eaec718738f3e508530ca1062"
+        },
+        "receipt_id": "rct-allow-0001"
+      },
+      "version": 1
+    }
+  ],
+  "integrity_policy": {
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:bundle-ep"
+    ],
+    "required": true,
+    "required_key_ids": [
+      "urn:example:key:bundle-ep"
+    ],
+    "revocation_policy": "ecl.revocation.offline-bundle.v1",
+    "threshold": 1,
+    "trust_policy": {
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "38e8b9c5b7bb8a0efe3043524ffb05b509720b132b26c5c79abe2be6e125cdf4"
+      },
+      "epoch": 1,
+      "id": "urn:example:trust-policy:bindings",
+      "version": "2026-09-30"
+    },
+    "verification_time_policy": "ecl.time.observed-at.v1"
+  },
+  "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/3e713511dea4d9757f021e757c269d4ce86bc8f1d9b29ca7dfa3327f03de6079",
+  "object_type": "event_record",
+  "observed_at": "2026-09-30T09:00:00.400000Z",
+  "producer": {
+    "id": "urn:example:enforcement-point:bindings",
+    "trust_domain": "urn:example:trust-domain:bindings",
+    "type": "ecl.principal.enforcement-point.v1"
+  },
+  "protocol": "EBMP-2",
+  "schema_version": "2.0",
+  "workflow": {
+    "attempt": 1,
+    "causal_predecessors": [
+      {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "e681d33cb68b01f4a8f91bf782d66fee6ad98274c0203b9345c0709adf058bf8"
+        },
+        "id": "https://externalcontrollayer.ai/ns/receipt/sha256/e7bcdc9121a938fad549554e3721159157fda7d11094817c835f05a4ea14ca55",
+        "relation": "ecl.relation.follows.v1"
+      }
+    ],
+    "root_trace_id": "urn:example:trace:aarm-allow",
+    "sequence": 5,
+    "workflow_id": "urn:example:workflow:aarm-allow"
+  }
+}

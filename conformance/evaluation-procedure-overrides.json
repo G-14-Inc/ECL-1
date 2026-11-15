@@ -1,0 +1,50 @@
+{
+  "requirements": {
+    "AB1-010": {
+      "fail_criteria": [
+        "A claimed point can be bypassed, disabled or changed by the governed AI system, has no register entry, or is claimed as either Soft or Hard Enforcement while it runs in an actor-modifiable process, container or account."
+      ],
+      "pass_criteria": [
+        "The governed AI system can neither bypass, disable nor change any claimed point, and each point is registered with its class, rationale and residual bypass risk."
+      ],
+      "procedure": [
+        "For each AARM interception point or ACS hook point claimed as an enforcement point, attempt from the governed AI system to bypass it, disable it and change the decision it applies (ECL1N-0033, ECL1N-0043, ECL1N-0046).",
+        "Check that the register records the point's enforcement class with its rationale and residual bypass risk (ECL1N-0044, ECL1N-0045).",
+        "Check that a point that runs in a process, container or account in which the governed AI system can execute code, or that the governed AI system can start, stop or reconfigure, is not claimed as an ECL enforcement point of either class. If it carries an upstream decision to an ECL decision point, assess that use under AB1-010 or AC1-002, including the latter's signature and input-class conditions."
+      ]
+    },
+    "AC1-002": {
+      "fail_criteria": [
+        "A claimed point can be bypassed, disabled or changed by the governed AI system, has no register entry, or is claimed as either Soft or Hard Enforcement while it runs in an actor-modifiable process, container or account."
+      ],
+      "pass_criteria": [
+        "The governed AI system can neither bypass, disable nor change any claimed point, and each point is registered with its class, rationale and residual bypass risk."
+      ],
+      "procedure": [
+        "For each AARM interception point or ACS hook point claimed as an enforcement point, attempt from the governed AI system to bypass it, disable it and change the decision it applies (ECL1N-0033, ECL1N-0043, ECL1N-0046).",
+        "Check that the register records the point's enforcement class with its rationale and residual bypass risk (ECL1N-0044, ECL1N-0045).",
+        "Check that a point that runs in a process, container or account in which the governed AI system can execute code, or that the governed AI system can start, stop or reconfigure, is not claimed as an ECL enforcement point of either class. If it carries an upstream decision to an ECL decision point, assess that use under AB1-010 or AC1-002, including the latter's signature and input-class conditions."
+      ]
+    },
+    "EBMP2-070": {
+      "fail_criteria": [
+        "A carried proof that is not a valid envelope, is signed by a principal other than the issuer the decision names, is of a type the obligation does not admit, binds another exchange or is stale at the release leaves the bundle verified, or two verifiers that the claim relies on differ on one of these bundles.",
+        "A negating vector is stale or missing, or is accepted or refused with another primary result."
+      ],
+      "pass_criteria": [
+        "A missing extension or required entry, or defect 1, 2, 3, 4 or 6, produces ecl.rule.prerelease-obligations-discharged.v1; defect 5, 7 or 8 produces ecl.error.obligation-unproven.v1, subject to the checks, gates and precedence specified by EBMP2-070. A bundle whose obligations and proofs satisfy those conditions verifies and reports scope according to EBMP2-076.",
+        "Every negating vector is refused with its exact expected primary result."
+      ],
+      "procedure": [
+        "Run the deterministic conformance harness on every vector that negates the requirement.",
+        "Confirm that each artifact digest matches and that the observed primary result is the manifest's expected primary.",
+        "Verify the evidence-bundle vectors that negate EBMP2-070, among them bundle-invalid-discharge-proof-signed-by-actor, bundle-invalid-discharge-proof-not-from-named-source and bundle-invalid-discharge-approval-signed-without-approval-purpose, with each verifier that the claim relies on.",
+        "For a carried proof, check conditions 5 to 8 of EBMP2-070 one at a time: the signer's identity under the trust policy against the issuer the decision names, the object type against the table, the binding member against the exchange, and fresh_until against the release time plus release_guard_ms and against the proof's own bound."
+      ]
+    }
+  },
+  "source_corrections": [
+    "ROOT-068",
+    "ROOT-084"
+  ]
+}

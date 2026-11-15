@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/extension/outcome-reason/1",
+  "title": "ECL outcome-reason extension value v1",
+  "description": "The value of ecl.ext.outcome-reason.v1: the registered primary reason of a terminal execution outcome (TRANSACTIONAL-EFFECT-1 outcome evidence table). It carries no free text. A cancelled attempt of an MCP gateway whose wall clock regressed between its first check and its final observation carries ecl.error.clock-regressed.v1 (MG1-014).",
+  "type": "object",
+  "required": [
+    "code"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+    }
+  }
+}

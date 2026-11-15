@@ -1,0 +1,650 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-public-review-repair-coverage",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-advisory-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-advisory-control.json",
+      "requirement_ids": [
+        "TS1-031"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic safe-state-profile-stage unit witness: advisory-control. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1#/properties/dependencies/items/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.dependency-classification-consistent.v1"
+      ],
+      "id": "repair-coverage-advisory-required-proof",
+      "negates": [
+        "TS1-031"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-advisory-required-proof.json",
+      "requirement_ids": [
+        "TS1-031"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic safe-state-profile-stage unit witness: advisory-required-proof. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-assessment-l1-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-assessment-l1-control.json",
+      "requirement_ids": [
+        "ECL1N-0077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic document-stage unit witness: assessment-l1-control. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/assessment-package/1#/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-assessment-conditional-l1",
+      "negates": [
+        "ECL1N-0077"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-assessment-conditional-l1.json",
+      "requirement_ids": [
+        "ECL1N-0077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/assessment-package/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic document-stage unit witness: assessment-conditional-l1. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/conformance-claim/1#/allOf/4/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-claim-l1-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-claim-l1-control.json",
+      "requirement_ids": [
+        "ECL1N-0077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic document-stage unit witness: claim-l1-control. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/conformance-claim/1#/allOf/4/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-claim-conditional-l1",
+      "negates": [
+        "ECL1N-0077"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-claim-conditional-l1.json",
+      "requirement_ids": [
+        "ECL1N-0077"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/conformance-claim/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic document-stage unit witness: claim-conditional-l1. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/terminal/properties/event/properties/state/enum#enum"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-aarm-terminal-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-aarm-terminal-control.json",
+      "requirement_ids": [
+        "AB1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: aarm-terminal-control. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1#/properties/terminal/properties/event/properties/state/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-aarm-nonterminal-state",
+      "negates": [
+        "AB1-007"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-aarm-nonterminal-state.json",
+      "requirement_ids": [
+        "AB1-007"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: aarm-nonterminal-state. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/releaseObservation/properties/control_state/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/releaseObservation/properties/control_state/if/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/releaseObservation/properties/control_state/properties/status/enum#enum",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-complete-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-complete-control.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: mcp-complete-control. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/releaseObservation/properties/control_state/if#if[0]",
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/releaseObservation/properties/control_state/if/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-control-without-freshness",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-control-without-freshness.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: mcp-control-without-freshness. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/$defs/releaseObservation/properties/control_state/properties/status/enum#enum"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-control-status-enum",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-control-status-enum.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: mcp-control-status-enum. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-forward-without-preparation",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-forward-without-preparation.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: mcp-forward-without-preparation. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/1/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-prepared-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-prepared-control.json",
+      "requirement_ids": [
+        "MG1-014",
+        "MG1-016"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: mcp-prepared-control. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-prepared-without-guard",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-prepared-without-guard.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Synthetic binding-stage unit witness: mcp-prepared-without-guard. The protocol stage checks structural schema acceptance, not MCP binding or dispatch."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-release-journal-shape",
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-release-journal-shape.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "tests/fixtures/mcp-public-review-repairs/halt-after-release-before-dispatch.json",
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain a valid halt-after-release-before-dispatch exchange; preserve its preparation, release journal and final observation. Binding-stage check; no dispatch or recovery outcome is fabricated."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-release-journal-without-guard",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-release-journal-without-guard.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "tests/fixtures/mcp-public-review-repairs/halt-after-release-before-dispatch.json",
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain a valid halt-after-release-before-dispatch exchange; remove only its release guard. Binding-stage check; no dispatch or recovery outcome is fabricated."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1#/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mcp-release-journal-without-final",
+      "negates": [
+        "MG1-014"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mcp-release-journal-without-final.json",
+      "requirement_ids": [
+        "MG1-014"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "source": {
+        "base_vector": "tests/fixtures/mcp-public-review-repairs/halt-after-release-before-dispatch.json",
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain a valid halt-after-release-before-dispatch exchange; remove only its final control observation. Binding-stage check; no dispatch or recovery outcome is fabricated."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1#/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-modify-digest-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-modify-digest-control.json",
+      "requirement_ids": [
+        "AC1-008",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "acs-valid-modify-new-request",
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Extract the original deny response carrying the modify decision and its modifications digest; protocol-stage extension-schema control only."
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/extension/acs-decision/1#/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.extension-value-valid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-modify-without-digest",
+      "negates": [
+        "AC1-008",
+        "AC1-010"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-modify-without-digest.json",
+      "requirement_ids": [
+        "AC1-008",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/dcmp/2",
+      "source": {
+        "base_vector": "acs-valid-modify-new-request",
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Extract the original deny response and remove only the modify decision's required modifications digest; protocol-stage extension-schema refusal only."
+      },
+      "stage": "protocol"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-failed-signed-paired-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-failed-signed-paired-control.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-006",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-signed-failed-timeout record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/2/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-failed-signed-before-submission-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-failed-signed-before-submission-control.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-006",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-signed-failed-before-submission record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-failed-signed-without-params",
+      "negates": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-failed-signed-without-params.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-signed-failed-no-params record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/2/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-failed-signed-without-digest",
+      "negates": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-failed-signed-without-digest.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-signed-failed-no-params-digest record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-decided-result-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-decided-result-control.json",
+      "requirement_ids": [
+        "AC1-004",
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-signed-control record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-decided-without-result",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-decided-without-result.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-prior-result-only-deletion record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1#/properties/guardian/allOf/0/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-acs-decided-without-result-and-dependencies",
+      "negates": [
+        "AC1-010"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-acs-decided-without-result-and-dependencies.json",
+      "requirement_ids": [
+        "AC1-010"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Retain the synthetic acs-missing-result-and-dependencies-direct record from tests/fixtures/acs-record-completeness/cases.json; validate its schema and, when schema-valid, its ACS binding rules."
+      },
+      "stage": "binding"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/mapping-packet/1#/$defs/obligation/allOf/1/if#if[0]"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mapping-supporting-evidence-control",
+      "path": "conformance/suites/repair-coverage/repair-coverage-mapping-supporting-evidence-control.json",
+      "requirement_ids": [
+        "ECL1N-0125"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Classify the first obligation in profiles/examples/claims/framework-mapping.json as supporting_evidence_only, retaining its explicit ECL surfaces and evidence. Synthetic document-schema control only."
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/mapping-packet/1#/$defs/obligation/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mapping-supporting-without-surface",
+      "negates": [
+        "ECL1N-0125"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mapping-supporting-without-surface.json",
+      "requirement_ids": [
+        "ECL1N-0125"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Classify the first obligation in profiles/examples/claims/framework-mapping.json as supporting_evidence_only, then remove only its ecl_surfaces. Synthetic document-schema refusal only."
+      },
+      "stage": "document"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/mapping-packet/1#/$defs/obligation/allOf/1/if#if[0]"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "repair-coverage-mapping-supporting-without-evidence",
+      "negates": [
+        "ECL1N-0125"
+      ],
+      "path": "conformance/suites/repair-coverage/repair-coverage-mapping-supporting-without-evidence.json",
+      "requirement_ids": [
+        "ECL1N-0125"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/mapping-packet/1",
+      "source": {
+        "generator": "scripts/generate_repair_coverage_vectors.py",
+        "kind": "mutation",
+        "mutation": "Classify the first obligation in profiles/examples/claims/framework-mapping.json as supporting_evidence_only, then remove only its evidence. Synthetic document-schema refusal only."
+      },
+      "stage": "document"
+    }
+  ]
+}

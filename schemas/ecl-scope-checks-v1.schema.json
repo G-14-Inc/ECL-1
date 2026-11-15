@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/scope-checks/1",
+  "title": "ECL Scope Checks v1",
+  "description": "The claim-to-check map of EBMP-2 EBMP2-076: for each item of a verification report's scope, the objects it covers, the checks that must hold over them, the trust knowledge those checks use and the waivers it permits; and the same for the corroborated evidence level of EBMP2-061. A waiver changes the verdict only and never establishes an item or narrows its object set. registries/scope-checks.json is its one instance.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "registry_id",
+    "version",
+    "requirements",
+    "object_sets",
+    "checks",
+    "trust_knowledge",
+    "waivers",
+    "items",
+    "evidence_levels"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_scope_checks_v1"
+    },
+    "registry_id": {
+      "const": "https://externalcontrollayer.ai/ns/registry/scope-checks"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+      }
+    },
+    "object_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/objectSet"
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    },
+    "trust_knowledge": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/knowledge"
+      }
+    },
+    "waivers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/waiver"
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "evidence_levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/level"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "objectSet": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "requirements"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          }
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "requirements",
+        "codes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          }
+        },
+        "codes": {
+          "description": "The registered codes that a failure of the check gives; empty when a failure gives no finding and only keeps the claim from being made.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^ecl\\.(?:error|rule)\\.[a-z0-9][a-z0-9.-]*\\.v[0-9]+$"
+          }
+        }
+      }
+    },
+    "knowledge": {
+      "type": "object",
+      "required": [
+        "id",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    },
+    "waiver": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "requirements"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,11}-[0-9]{3,5}$"
+          }
+        }
+      },
+      "description": "A caller's explicit acceptance that changes a report's verdict only: an item whose failure it accepts stays not established, and no item is established over less than its whole object set (EBMP2-076)."
+    },
+    "item": {
+      "type": "object",
+      "required": [
+        "item",
+        "established",
+        "object_set",
+        "required_checks",
+        "trust_knowledge",
+        "permitted_waivers",
+        "condition",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "item": {
+          "$ref": "#/$defs/id"
+        },
+        "established": {
+          "description": "checked: established when every required check held over the whole object set; never: no verification establishes it.",
+          "enum": [
+            "checked",
+            "never"
+          ]
+        },
+        "object_set": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required_checks": {
+          "$ref": "#/$defs/ids"
+        },
+        "trust_knowledge": {
+          "$ref": "#/$defs/ids"
+        },
+        "permitted_waivers": {
+          "description": "The waivers that the item admits. A waiver changes the verdict only (EBMP2-060): an item whose failure the waiver accepts stays not established, and no item is established over less than its whole object set (EBMP2-076).",
+          "$ref": "#/$defs/ids"
+        },
+        "condition": {
+          "description": "When the item applies to a bundle, in words, or null when it always applies.",
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reasons": {
+          "description": "The reasons that the report gives with the item when it is not established for them (EBMP2-076).",
+          "$ref": "#/$defs/ids"
+        }
+      },
+      "if": {
+        "properties": {
+          "established": {
+            "const": "never"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "object_set": {
+            "type": "null"
+          },
+          "required_checks": {
+            "maxItems": 0
+          },
+          "trust_knowledge": {
+            "maxItems": 0
+          },
+          "permitted_waivers": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "object_set": {
+            "$ref": "#/$defs/id"
+          },
+          "required_checks": {
+            "minItems": 1
+          },
+          "trust_knowledge": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "level": {
+      "type": "object",
+      "required": [
+        "level",
+        "object_set",
+        "required_checks",
+        "requires_items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "$ref": "#/$defs/id"
+        },
+        "object_set": {
+          "$ref": "#/$defs/id"
+        },
+        "required_checks": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ids"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        },
+        "requires_items": {
+          "$ref": "#/$defs/ids"
+        }
+      }
+    }
+  }
+}

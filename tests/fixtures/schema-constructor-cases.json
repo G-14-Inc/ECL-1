@@ -1,0 +1,1697 @@
+[
+  {
+    "id": "minLength-small",
+    "schema": {
+      "minLength": 2.0
+    },
+    "build": true,
+    "instance": "x",
+    "valid": false
+  },
+  {
+    "id": "minLength-large",
+    "schema": {
+      "minLength": 2.0
+    },
+    "build": true,
+    "instance": "xy",
+    "valid": true
+  },
+  {
+    "id": "minLength-invalid-0",
+    "schema": {
+      "minLength": "1"
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-1",
+    "schema": {
+      "minLength": true
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-2",
+    "schema": {
+      "minLength": -1
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-3",
+    "schema": {
+      "minLength": 0.5
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-4",
+    "schema": {
+      "minLength": null
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-5",
+    "schema": {
+      "minLength": []
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-6",
+    "schema": {
+      "minLength": {}
+    },
+    "build": false
+  },
+  {
+    "id": "minLength-invalid-7",
+    "schema": {
+      "minLength": 1e+100
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-small",
+    "schema": {
+      "maxLength": 1.0
+    },
+    "build": true,
+    "instance": "x",
+    "valid": true
+  },
+  {
+    "id": "maxLength-large",
+    "schema": {
+      "maxLength": 1.0
+    },
+    "build": true,
+    "instance": "xy",
+    "valid": false
+  },
+  {
+    "id": "maxLength-invalid-0",
+    "schema": {
+      "maxLength": "1"
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-1",
+    "schema": {
+      "maxLength": true
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-2",
+    "schema": {
+      "maxLength": -1
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-3",
+    "schema": {
+      "maxLength": 0.5
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-4",
+    "schema": {
+      "maxLength": null
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-5",
+    "schema": {
+      "maxLength": []
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-6",
+    "schema": {
+      "maxLength": {}
+    },
+    "build": false
+  },
+  {
+    "id": "maxLength-invalid-7",
+    "schema": {
+      "maxLength": 1e+100
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-small",
+    "schema": {
+      "minItems": 2.0
+    },
+    "build": true,
+    "instance": [
+      1
+    ],
+    "valid": false
+  },
+  {
+    "id": "minItems-large",
+    "schema": {
+      "minItems": 2.0
+    },
+    "build": true,
+    "instance": [
+      1,
+      2
+    ],
+    "valid": true
+  },
+  {
+    "id": "minItems-invalid-0",
+    "schema": {
+      "minItems": "1"
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-1",
+    "schema": {
+      "minItems": true
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-2",
+    "schema": {
+      "minItems": -1
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-3",
+    "schema": {
+      "minItems": 0.5
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-4",
+    "schema": {
+      "minItems": null
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-5",
+    "schema": {
+      "minItems": []
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-6",
+    "schema": {
+      "minItems": {}
+    },
+    "build": false
+  },
+  {
+    "id": "minItems-invalid-7",
+    "schema": {
+      "minItems": 1e+100
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-small",
+    "schema": {
+      "maxItems": 1.0
+    },
+    "build": true,
+    "instance": [
+      1
+    ],
+    "valid": true
+  },
+  {
+    "id": "maxItems-large",
+    "schema": {
+      "maxItems": 1.0
+    },
+    "build": true,
+    "instance": [
+      1,
+      2
+    ],
+    "valid": false
+  },
+  {
+    "id": "maxItems-invalid-0",
+    "schema": {
+      "maxItems": "1"
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-1",
+    "schema": {
+      "maxItems": true
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-2",
+    "schema": {
+      "maxItems": -1
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-3",
+    "schema": {
+      "maxItems": 0.5
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-4",
+    "schema": {
+      "maxItems": null
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-5",
+    "schema": {
+      "maxItems": []
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-6",
+    "schema": {
+      "maxItems": {}
+    },
+    "build": false
+  },
+  {
+    "id": "maxItems-invalid-7",
+    "schema": {
+      "maxItems": 1e+100
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-small",
+    "schema": {
+      "minProperties": 2.0
+    },
+    "build": true,
+    "instance": {
+      "x": 1
+    },
+    "valid": false
+  },
+  {
+    "id": "minProperties-large",
+    "schema": {
+      "minProperties": 2.0
+    },
+    "build": true,
+    "instance": {
+      "x": 1,
+      "y": 2
+    },
+    "valid": true
+  },
+  {
+    "id": "minProperties-invalid-0",
+    "schema": {
+      "minProperties": "1"
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-1",
+    "schema": {
+      "minProperties": true
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-2",
+    "schema": {
+      "minProperties": -1
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-3",
+    "schema": {
+      "minProperties": 0.5
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-4",
+    "schema": {
+      "minProperties": null
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-5",
+    "schema": {
+      "minProperties": []
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-6",
+    "schema": {
+      "minProperties": {}
+    },
+    "build": false
+  },
+  {
+    "id": "minProperties-invalid-7",
+    "schema": {
+      "minProperties": 1e+100
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-small",
+    "schema": {
+      "maxProperties": 1.0
+    },
+    "build": true,
+    "instance": {
+      "x": 1
+    },
+    "valid": true
+  },
+  {
+    "id": "maxProperties-large",
+    "schema": {
+      "maxProperties": 1.0
+    },
+    "build": true,
+    "instance": {
+      "x": 1,
+      "y": 2
+    },
+    "valid": false
+  },
+  {
+    "id": "maxProperties-invalid-0",
+    "schema": {
+      "maxProperties": "1"
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-1",
+    "schema": {
+      "maxProperties": true
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-2",
+    "schema": {
+      "maxProperties": -1
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-3",
+    "schema": {
+      "maxProperties": 0.5
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-4",
+    "schema": {
+      "maxProperties": null
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-5",
+    "schema": {
+      "maxProperties": []
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-6",
+    "schema": {
+      "maxProperties": {}
+    },
+    "build": false
+  },
+  {
+    "id": "maxProperties-invalid-7",
+    "schema": {
+      "maxProperties": 1e+100
+    },
+    "build": false
+  },
+  {
+    "id": "unicode-codepoint-length",
+    "schema": {
+      "maxLength": 1
+    },
+    "build": true,
+    "instance": "\ud83d\udd11",
+    "valid": true
+  },
+  {
+    "id": "zero-count-control",
+    "schema": {
+      "minItems": 0,
+      "maxItems": 0
+    },
+    "build": true,
+    "instance": [],
+    "valid": true
+  },
+  {
+    "id": "boolean-subschema",
+    "schema": {
+      "properties": {
+        "x": false
+      }
+    },
+    "build": true,
+    "instance": {
+      "x": 1
+    },
+    "valid": false
+  },
+  {
+    "id": "annotation-not-schema",
+    "schema": {
+      "default": {
+        "$id": "urn:annotation",
+        "required": 1
+      },
+      "const": {
+        "$id": "urn:value"
+      }
+    },
+    "build": true,
+    "instance": {
+      "$id": "urn:value"
+    },
+    "valid": true
+  },
+  {
+    "id": "empty-enum-control",
+    "schema": {
+      "enum": []
+    },
+    "build": true,
+    "instance": null,
+    "valid": false
+  },
+  {
+    "id": "empty-required-control",
+    "schema": {
+      "required": []
+    },
+    "build": true,
+    "instance": {},
+    "valid": true
+  },
+  {
+    "id": "type-union-control",
+    "schema": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "build": true,
+    "instance": null,
+    "valid": true
+  },
+  {
+    "id": "dependent-required-control",
+    "schema": {
+      "dependentRequired": {
+        "x": [
+          "y"
+        ]
+      }
+    },
+    "build": true,
+    "instance": {
+      "x": 1
+    },
+    "valid": false
+  },
+  {
+    "id": "invalid-domain-type-68",
+    "schema": {
+      "type": "unsupported"
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-type-69",
+    "schema": {
+      "type": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-type-70",
+    "schema": {
+      "type": [
+        "string",
+        "string"
+      ]
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-type-71",
+    "schema": {
+      "type": [
+        false
+      ]
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-required-72",
+    "schema": {
+      "required": "x"
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-required-73",
+    "schema": {
+      "required": [
+        1
+      ]
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-required-74",
+    "schema": {
+      "required": [
+        "x",
+        "x"
+      ]
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-enum-75",
+    "schema": {
+      "enum": 1
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-properties-76",
+    "schema": {
+      "properties": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-patternProperties-77",
+    "schema": {
+      "patternProperties": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-dependentSchemas-78",
+    "schema": {
+      "dependentSchemas": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-$defs-79",
+    "schema": {
+      "$defs": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-dependentRequired-80",
+    "schema": {
+      "dependentRequired": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-dependentRequired-81",
+    "schema": {
+      "dependentRequired": {
+        "x": "y"
+      }
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-dependentRequired-82",
+    "schema": {
+      "dependentRequired": {
+        "x": [
+          1
+        ]
+      }
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-dependentRequired-83",
+    "schema": {
+      "dependentRequired": {
+        "x": [
+          "y",
+          "y"
+        ]
+      }
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-allOf-84",
+    "schema": {
+      "allOf": true
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-allOf-85",
+    "schema": {
+      "allOf": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-anyOf-86",
+    "schema": {
+      "anyOf": {}
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-oneOf-87",
+    "schema": {
+      "oneOf": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-prefixItems-88",
+    "schema": {
+      "prefixItems": []
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-uniqueItems-89",
+    "schema": {
+      "uniqueItems": 1
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-$ref-90",
+    "schema": {
+      "$ref": 1
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-pattern-91",
+    "schema": {
+      "pattern": 1
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-minimum-92",
+    "schema": {
+      "minimum": "0"
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-domain-maximum-93",
+    "schema": {
+      "maximum": false
+    },
+    "build": false
+  },
+  {
+    "id": "root-id-control",
+    "schema": {
+      "$id": "urn:case",
+      "type": "string"
+    },
+    "build": true,
+    "instance": "x",
+    "valid": true
+  },
+  {
+    "id": "root-id-mismatch",
+    "schema": {
+      "$id": "urn:other",
+      "type": "string"
+    },
+    "build": false
+  },
+  {
+    "id": "nested-id-refused",
+    "schema": {
+      "$defs": {
+        "sub": {
+          "$id": "urn:sub",
+          "type": "string"
+        }
+      }
+    },
+    "build": false
+  },
+  {
+    "id": "lookahead-alternation",
+    "schema": {
+      "type": "string",
+      "pattern": "^a(?!b)c|ab"
+    },
+    "build": true,
+    "go_build": false,
+    "instance": "ab",
+    "valid": true
+  },
+  {
+    "id": "empty-class",
+    "schema": {
+      "type": "string",
+      "pattern": "^[]a]$"
+    },
+    "build": false,
+    "go_build": false,
+    "instance": "a",
+    "valid": false
+  },
+  {
+    "id": "negated-empty-class",
+    "schema": {
+      "type": "string",
+      "pattern": "^[^]$"
+    },
+    "build": true,
+    "go_build": false,
+    "instance": "a",
+    "valid": true
+  },
+  {
+    "id": "inline-flags",
+    "schema": {
+      "pattern": "(?i)a"
+    },
+    "build": false
+  },
+  {
+    "id": "re2-class",
+    "schema": {
+      "pattern": "[[:digit:]]"
+    },
+    "build": false
+  },
+  {
+    "id": "go-anchor",
+    "schema": {
+      "pattern": "\\Aa"
+    },
+    "build": false
+  },
+  {
+    "id": "go-end",
+    "schema": {
+      "pattern": "a\\z"
+    },
+    "build": false
+  },
+  {
+    "id": "quoted-escape",
+    "schema": {
+      "pattern": "\\Qa\\E"
+    },
+    "build": false
+  },
+  {
+    "id": "octal-escape",
+    "schema": {
+      "pattern": "\\123"
+    },
+    "build": false
+  },
+  {
+    "id": "go-property",
+    "schema": {
+      "pattern": "\\pL"
+    },
+    "build": false
+  },
+  {
+    "id": "lookahead-inner-alternation-control",
+    "schema": {
+      "pattern": "^a(?!b|c).$"
+    },
+    "build": true,
+    "instance": "ad",
+    "valid": true
+  },
+  {
+    "id": "lookahead-inner-alternation-refusal",
+    "schema": {
+      "pattern": "^a(?!b|c).$"
+    },
+    "build": true,
+    "instance": "ab",
+    "valid": false
+  },
+  {
+    "id": "ordinary-alternation-control",
+    "schema": {
+      "pattern": "^ac|ab"
+    },
+    "build": true,
+    "instance": "ab",
+    "valid": true
+  },
+  {
+    "id": "unsupported-format-constructor",
+    "schema": {
+      "format": "constructor"
+    },
+    "build": false
+  },
+  {
+    "id": "unsupported-format-toString",
+    "schema": {
+      "format": "toString"
+    },
+    "build": false
+  },
+  {
+    "id": "unsupported-format-__proto__",
+    "schema": {
+      "format": "__proto__"
+    },
+    "build": false
+  },
+  {
+    "id": "unsupported-format-unregistered",
+    "schema": {
+      "format": "unregistered"
+    },
+    "build": false
+  },
+  {
+    "id": "stray-close-class",
+    "schema": {
+      "pattern": "]"
+    },
+    "build": false
+  },
+  {
+    "id": "stray-close-brace",
+    "schema": {
+      "pattern": "a}"
+    },
+    "build": false
+  },
+  {
+    "id": "stray-open-brace",
+    "schema": {
+      "pattern": "a{"
+    },
+    "build": false
+  },
+  {
+    "id": "invalid-brace-content",
+    "schema": {
+      "pattern": "a{word}"
+    },
+    "build": false
+  },
+  {
+    "id": "escaped-close-class",
+    "schema": {
+      "pattern": "\\]"
+    },
+    "build": true,
+    "instance": "]",
+    "valid": true
+  },
+  {
+    "id": "escaped-open-brace",
+    "schema": {
+      "pattern": "\\{"
+    },
+    "build": true,
+    "instance": "{",
+    "valid": true
+  },
+  {
+    "id": "escaped-close-brace",
+    "schema": {
+      "pattern": "\\}"
+    },
+    "build": true,
+    "instance": "}",
+    "valid": true
+  },
+  {
+    "id": "quantifier-control",
+    "schema": {
+      "pattern": "a{1,2}"
+    },
+    "build": true,
+    "instance": "aa",
+    "valid": true
+  },
+  {
+    "id": "regex-quantified-lookahead-prefix-0",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c)?d$"
+    },
+    "build": false,
+    "instance": "ad"
+  },
+  {
+    "id": "regex-quantified-lookahead-start-0",
+    "schema": {
+      "type": "string",
+      "pattern": "^(?!c)?d$"
+    },
+    "build": false,
+    "instance": "d"
+  },
+  {
+    "id": "regex-quantified-lookahead-prefix-1",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c)*d$"
+    },
+    "build": false,
+    "instance": "ad"
+  },
+  {
+    "id": "regex-quantified-lookahead-start-1",
+    "schema": {
+      "type": "string",
+      "pattern": "^(?!c)*d$"
+    },
+    "build": false,
+    "instance": "d"
+  },
+  {
+    "id": "regex-quantified-lookahead-prefix-2",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c)+d$"
+    },
+    "build": false,
+    "instance": "ad"
+  },
+  {
+    "id": "regex-quantified-lookahead-start-2",
+    "schema": {
+      "type": "string",
+      "pattern": "^(?!c)+d$"
+    },
+    "build": false,
+    "instance": "d"
+  },
+  {
+    "id": "regex-quantified-lookahead-prefix-3",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c){1}d$"
+    },
+    "build": false,
+    "instance": "ad"
+  },
+  {
+    "id": "regex-quantified-lookahead-start-3",
+    "schema": {
+      "type": "string",
+      "pattern": "^(?!c){1}d$"
+    },
+    "build": false,
+    "instance": "d"
+  },
+  {
+    "id": "regex-quantified-lookahead-prefix-4",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c){0,2}d$"
+    },
+    "build": false,
+    "instance": "ad"
+  },
+  {
+    "id": "regex-quantified-lookahead-start-4",
+    "schema": {
+      "type": "string",
+      "pattern": "^(?!c){0,2}d$"
+    },
+    "build": false,
+    "instance": "d"
+  },
+  {
+    "id": "regex-quantified-start-anchor-0",
+    "schema": {
+      "type": "string",
+      "pattern": "^?a"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-end-anchor-0",
+    "schema": {
+      "type": "string",
+      "pattern": "a$?"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-start-anchor-1",
+    "schema": {
+      "type": "string",
+      "pattern": "^*a"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-end-anchor-1",
+    "schema": {
+      "type": "string",
+      "pattern": "a$*"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-start-anchor-2",
+    "schema": {
+      "type": "string",
+      "pattern": "^+a"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-end-anchor-2",
+    "schema": {
+      "type": "string",
+      "pattern": "a$+"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-start-anchor-3",
+    "schema": {
+      "type": "string",
+      "pattern": "^{1}a"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-end-anchor-3",
+    "schema": {
+      "type": "string",
+      "pattern": "a${1}"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-start-anchor-4",
+    "schema": {
+      "type": "string",
+      "pattern": "^{0,2}a"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-quantified-end-anchor-4",
+    "schema": {
+      "type": "string",
+      "pattern": "a${0,2}"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-invalid-identity-escape-0",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\a$"
+    },
+    "build": false,
+    "instance": "\u0007"
+  },
+  {
+    "id": "regex-invalid-identity-escape-1",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\e$"
+    },
+    "build": false,
+    "instance": "e"
+  },
+  {
+    "id": "regex-invalid-identity-escape-2",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\:$"
+    },
+    "build": false,
+    "instance": ":"
+  },
+  {
+    "id": "regex-invalid-identity-escape-3",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\@$"
+    },
+    "build": false,
+    "instance": "@"
+  },
+  {
+    "id": "regex-invalid-identity-escape-4",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\_$"
+    },
+    "build": false,
+    "instance": "_"
+  },
+  {
+    "id": "regex-invalid-identity-escape-5",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\-$"
+    },
+    "build": false,
+    "instance": "-"
+  },
+  {
+    "id": "regex-invalid-identity-escape-6",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\!$"
+    },
+    "build": false,
+    "instance": "!"
+  },
+  {
+    "id": "regex-invalid-identity-escape-7",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\%$"
+    },
+    "build": false,
+    "instance": "%"
+  },
+  {
+    "id": "regex-invalid-identity-escape-8",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\Z$"
+    },
+    "build": false,
+    "instance": "Z"
+  },
+  {
+    "id": "regex-lookahead-prefix-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c)d$"
+    },
+    "build": true,
+    "instance": "abd",
+    "valid": true
+  },
+  {
+    "id": "regex-lookahead-prefix-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^ab(?!c)d$"
+    },
+    "build": true,
+    "instance": "abcd",
+    "valid": false
+  },
+  {
+    "id": "regex-lookahead-start-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^(?!c)d$"
+    },
+    "build": true,
+    "instance": "d",
+    "valid": true
+  },
+  {
+    "id": "regex-escaped-anchor-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\^+\\$+$"
+    },
+    "build": true,
+    "instance": "^^$$",
+    "valid": true
+  },
+  {
+    "id": "regex-escaped-hyphen-class-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^[a\\-]+$"
+    },
+    "build": true,
+    "instance": "a-a",
+    "valid": true
+  },
+  {
+    "id": "regex-hex-escape-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\x41+$"
+    },
+    "build": true,
+    "instance": "AAA",
+    "valid": true
+  },
+  {
+    "id": "regex-control-escape-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\t\\n\\r\\f\\v$"
+    },
+    "build": true,
+    "instance": "\t\n\r\f\u000b",
+    "valid": true
+  },
+  {
+    "id": "regex-zero-escape-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\0$"
+    },
+    "build": true,
+    "instance": "\u0000",
+    "valid": true
+  },
+  {
+    "id": "regex-literal-backslash-d-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\\\d$"
+    },
+    "build": true,
+    "instance": "\\d",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-ascii-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "build": true,
+    "instance": "123",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-arabic-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "build": true,
+    "instance": "\u0661\u0662\u0663",
+    "valid": false
+  },
+  {
+    "id": "regex-digit-fullwidth-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "build": true,
+    "instance": "\uff11\uff12\uff13",
+    "valid": false
+  },
+  {
+    "id": "regex-digit-deva-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "build": true,
+    "instance": "\u0967\u0968\u0969",
+    "valid": false
+  },
+  {
+    "id": "regex-digit-astral-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "build": true,
+    "instance": "\ud835\udfd9\ud835\udfda\ud835\udfdb",
+    "valid": false
+  },
+  {
+    "id": "regex-nondigit-unicode-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\D+$"
+    },
+    "build": true,
+    "instance": "\u0661\u0662\u0663",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-ascii-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\D+$"
+    },
+    "build": true,
+    "instance": "123",
+    "valid": false
+  },
+  {
+    "id": "regex-digit-class-unicode-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\d]+$"
+    },
+    "build": true,
+    "instance": "\u0661\u0662\u0663",
+    "valid": false
+  },
+  {
+    "id": "regex-digit-class-ascii-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\d]+$"
+    },
+    "build": true,
+    "instance": "123",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-class-unicode-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\D]+$"
+    },
+    "build": true,
+    "instance": "\u0661\u0662\u0663",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-class-ascii-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\D]+$"
+    },
+    "build": true,
+    "instance": "123",
+    "valid": false
+  },
+  {
+    "id": "regex-negated-nondigit-class-unicode-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^[^\\D]+$"
+    },
+    "build": true,
+    "instance": "\u0661\u0662\u0663",
+    "valid": false
+  },
+  {
+    "id": "regex-negated-nondigit-class-ascii-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^[^\\D]+$"
+    },
+    "build": true,
+    "instance": "123",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-class-mixed-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\D0]+$"
+    },
+    "build": true,
+    "instance": "\u06610",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-class-newline-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\D]+$"
+    },
+    "build": true,
+    "instance": "\n",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-class-search-control",
+    "schema": {
+      "type": "string",
+      "pattern": "[\\d]"
+    },
+    "build": true,
+    "instance": "x1y",
+    "valid": true
+  },
+  {
+    "id": "regex-dollar-newline-refusal",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "build": true,
+    "instance": "123\n",
+    "valid": false
+  },
+  {
+    "id": "regex-invalid-class-range-0",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\d-a]$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-invalid-class-range-1",
+    "schema": {
+      "type": "string",
+      "pattern": "^[a-\\d]$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-invalid-class-range-2",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\D-a]$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-invalid-class-range-3",
+    "schema": {
+      "type": "string",
+      "pattern": "^[a-\\D]$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-digit-class-dash-final",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\d-]+$"
+    },
+    "build": true,
+    "instance": "1-",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-class-dash-first",
+    "schema": {
+      "type": "string",
+      "pattern": "^[-\\d]+$"
+    },
+    "build": true,
+    "instance": "-1",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-class-escaped-dash",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\d\\-]+$"
+    },
+    "build": true,
+    "instance": "1-",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-after-completed-range",
+    "schema": {
+      "type": "string",
+      "pattern": "^[a-z-\\d]+$"
+    },
+    "build": true,
+    "instance": "z-1",
+    "valid": true
+  },
+  {
+    "id": "regex-digit-after-completed-hex-range",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\x61-\\x7A-\\d]+$"
+    },
+    "build": true,
+    "instance": "z-1",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-after-completed-hex-range",
+    "schema": {
+      "type": "string",
+      "pattern": "^[a-\\x7A-\\D]+$"
+    },
+    "build": true,
+    "instance": "z-\u0661",
+    "valid": true
+  },
+  {
+    "id": "regex-nondigit-escaped-close-class",
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\D\\]]+$"
+    },
+    "build": true,
+    "instance": "\u0661]",
+    "valid": true
+  },
+  {
+    "id": "regex-quantifier-characters-in-class",
+    "schema": {
+      "type": "string",
+      "pattern": "^[?*+{}]$"
+    },
+    "build": true,
+    "instance": "+",
+    "valid": true
+  },
+  {
+    "id": "regex-ordinary-group-quantifier",
+    "schema": {
+      "type": "string",
+      "pattern": "^(ab)?d$"
+    },
+    "build": true,
+    "instance": "d",
+    "valid": true
+  },
+  {
+    "id": "regex-ordinary-range-positive",
+    "schema": {
+      "type": "string",
+      "pattern": "^a{1,2}$"
+    },
+    "build": true,
+    "instance": "aa",
+    "valid": true
+  },
+  {
+    "id": "regex-possessive-quantifier-0",
+    "schema": {
+      "type": "string",
+      "pattern": "^a*+$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-possessive-quantifier-1",
+    "schema": {
+      "type": "string",
+      "pattern": "^a++$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-possessive-quantifier-2",
+    "schema": {
+      "type": "string",
+      "pattern": "^a?+$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-possessive-quantifier-3",
+    "schema": {
+      "type": "string",
+      "pattern": "^a{1}+$"
+    },
+    "build": false,
+    "instance": "a"
+  },
+  {
+    "id": "regex-escaped-plus-quantifier-control",
+    "schema": {
+      "type": "string",
+      "pattern": "^\\++$"
+    },
+    "build": true,
+    "instance": "++",
+    "valid": true
+  }
+]

@@ -1,0 +1,411 @@
+{
+  "format": "public-review-core-regressions-1",
+  "authors_and_producers": [
+    "Robert F. Tilley Jr.",
+    "G-14, Inc."
+  ],
+  "description": "Retained synthetic review fixtures using public deterministic test keys. Expected outcomes are the repaired contract, not the historical results. No production credentials or events.",
+  "cases": [
+    {
+      "id": "trusted-time-cases-valid-control.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/trusted-time-cases/valid-control.json",
+      "policy": "tests/fixtures/core-public-review-repairs/trusted-time-cases/current-policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-012",
+        "ROOT-092"
+      ],
+      "history": [
+        "tests/fixtures/core-public-review-repairs/trusted-time-cases/historical-policy.json"
+      ],
+      "require_trusted_time": true,
+      "scope_present": [
+        "envelope-signatures",
+        "trusted-time"
+      ],
+      "scope_absent": [],
+      "expected_dependency_code": null
+    },
+    {
+      "id": "trusted-time-cases-invalid-extra-signer.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/trusted-time-cases/invalid-extra-signer.json",
+      "policy": "tests/fixtures/core-public-review-repairs/trusted-time-cases/current-policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-012",
+        "ROOT-092"
+      ],
+      "history": [
+        "tests/fixtures/core-public-review-repairs/trusted-time-cases/historical-policy.json"
+      ],
+      "require_trusted_time": true,
+      "scope_present": [],
+      "scope_absent": [
+        "trusted-time",
+        "envelope-signatures"
+      ],
+      "expected_dependency_code": null
+    },
+    {
+      "id": "counter-policy-cases-valid-control.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/counter-policy-cases/valid-control.json",
+      "policy": "tests/fixtures/core-public-review-repairs/counter-policy-cases/current-policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-013",
+        "ROOT-092"
+      ],
+      "history": [
+        "tests/fixtures/core-public-review-repairs/counter-policy-cases/historical-policy.json"
+      ],
+      "require_trusted_time": true,
+      "scope_present": [
+        "envelope-signatures",
+        "trusted-time"
+      ],
+      "scope_absent": [],
+      "expected_dependency_code": null
+    },
+    {
+      "id": "counter-policy-cases-invalid-extra-signer.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/counter-policy-cases/invalid-extra-signer.json",
+      "policy": "tests/fixtures/core-public-review-repairs/counter-policy-cases/current-policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "current-trust-failed",
+      "findings": [
+        "ROOT-013",
+        "ROOT-092"
+      ],
+      "history": [
+        "tests/fixtures/core-public-review-repairs/counter-policy-cases/historical-policy.json"
+      ],
+      "require_trusted_time": true,
+      "scope_present": [
+        "envelope-signatures"
+      ],
+      "scope_absent": [
+        "trusted-time"
+      ],
+      "expected_dependency_code": "ecl.error.signature-policy-invalid.v1"
+    },
+    {
+      "id": "signed-followup-cases-window-baseline.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/signed-followup-cases/window-baseline.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-080"
+      ],
+      "expected_primary": null
+    },
+    {
+      "id": "signed-followup-cases-window-valid_from-malformed.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/signed-followup-cases/window-valid_from-malformed.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-080"
+      ],
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "signed-followup-cases-window-valid_until-malformed.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/signed-followup-cases/window-valid_until-malformed.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-080"
+      ],
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "contract-boundary-cases-epoch-baseline.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/epoch-baseline.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-094"
+      ],
+      "expected_primary": null
+    },
+    {
+      "id": "contract-boundary-cases-response-policy-epoch-absent.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/response-policy-epoch-absent.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-094"
+      ],
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "contract-boundary-cases-response-policy-digest-absent-control.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/response-policy-digest-absent-control.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-094"
+      ],
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "contract-boundary-cases-attestation-baseline.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/attestation-baseline.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy-time-authority.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-071"
+      ],
+      "require_trusted_time": true
+    },
+    {
+      "id": "contract-boundary-cases-attestation-unknown-noncritical.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/attestation-unknown-noncritical.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy-time-authority.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ],
+      "require_trusted_time": true,
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "contract-boundary-cases-attestation-unknown-critical.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/attestation-unknown-critical.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy-time-authority.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ],
+      "require_trusted_time": true,
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "contract-boundary-cases-attestation-duplicate-pair.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/attestation-duplicate-pair.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy-time-authority.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ],
+      "require_trusted_time": true,
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "contract-boundary-cases-attestation-conflicting-versions.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/contract-boundary-cases/attestation-conflicting-versions.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy-time-authority.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ],
+      "require_trusted_time": true,
+      "expected_primary": "ecl.error.schema-invalid.v1"
+    },
+    {
+      "id": "missing-release-cases-complete-succeeded-control.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/complete-succeeded-control.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "missing-release-cases-succeeded-without-release-or-consumption.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/succeeded-without-release-or-consumption.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "missing-release-cases-failed-without-release-or-consumption.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/failed-without-release-or-consumption.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "missing-release-cases-partially_succeeded-without-release-or-consumption.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/partially_succeeded-without-release-or-consumption.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "missing-release-cases-unknown-without-release-or-consumption.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/unknown-without-release-or-consumption.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "missing-release-cases-rolled_back-without-release-or-consumption.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/rolled_back-without-release-or-consumption.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "missing-release-cases-compensated-without-release-or-consumption.json",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/missing-release-cases/compensated-without-release-or-consumption.json",
+      "policy": "tests/fixtures/core-public-review-repairs/missing-release-cases/policy.json",
+      "now": "2026-09-29T10:00:02Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-030"
+      ]
+    },
+    {
+      "id": "package-nanosecond-cases-attempt-002-baseline.zip",
+      "kind": "package",
+      "file": "tests/fixtures/core-public-review-repairs/package-nanosecond-cases-attempt-002/baseline.zip",
+      "policy": "conformance/suites/offline-package/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-069"
+      ]
+    },
+    {
+      "id": "package-nanosecond-cases-attempt-002-expiry-500ns-ahead.zip",
+      "kind": "package",
+      "file": "tests/fixtures/core-public-review-repairs/package-nanosecond-cases-attempt-002/expiry-500ns-ahead.zip",
+      "policy": "conformance/suites/offline-package/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-069"
+      ]
+    },
+    {
+      "id": "package-nanosecond-cases-attempt-002-expiry-equality.zip",
+      "kind": "package",
+      "file": "tests/fixtures/core-public-review-repairs/package-nanosecond-cases-attempt-002/expiry-equality.zip",
+      "policy": "conformance/suites/offline-package/trust-policy.json",
+      "now": "2026-10-01T00:00:00.000001Z",
+      "expected_verdict": "current-trust-failed",
+      "findings": [
+        "ROOT-069"
+      ]
+    },
+    {
+      "id": "package-nanosecond-cases-attempt-002-expiry-1000ns-ahead.zip",
+      "kind": "package",
+      "file": "tests/fixtures/core-public-review-repairs/package-nanosecond-cases-attempt-002/expiry-1000ns-ahead.zip",
+      "policy": "conformance/suites/offline-package/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-069"
+      ]
+    },
+    {
+      "id": "package-nanosecond-cases-attempt-002-expired-positive-800ns-interval.zip",
+      "kind": "package",
+      "file": "tests/fixtures/core-public-review-repairs/package-nanosecond-cases-attempt-002/expired-positive-800ns-interval.zip",
+      "policy": "conformance/suites/offline-package/trust-policy.json",
+      "now": "2026-10-01T00:00:00.000001Z",
+      "expected_verdict": "current-trust-failed",
+      "findings": [
+        "ROOT-069"
+      ]
+    },
+    {
+      "id": "outer-envelope-noncritical",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/outer-envelope-noncritical.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "verified",
+      "findings": [
+        "ROOT-071"
+      ]
+    },
+    {
+      "id": "outer-envelope-critical",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/outer-envelope-critical.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ]
+    },
+    {
+      "id": "outer-envelope-duplicate",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/outer-envelope-duplicate.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ]
+    },
+    {
+      "id": "outer-envelope-versions",
+      "kind": "bundle",
+      "file": "tests/fixtures/core-public-review-repairs/outer-envelope-versions.json",
+      "policy": "conformance/suites/evidence-bundle/trust-policy.json",
+      "now": "2026-10-01T00:00:00Z",
+      "expected_verdict": "invalid",
+      "findings": [
+        "ROOT-071"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1191 @@
+{
+  "schema_version": "adversarial-binding-regressions-v1",
+  "cases": [
+    {
+      "id": "acs-original-control",
+      "file": "acs-original-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "9f479ebacf76e6666a6d72f5479345ad9e81e808515ddfcb2b6d0747eaf86ca7"
+    },
+    {
+      "id": "acs-object-index",
+      "file": "acs-object-index.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "d7c5f7f677cf2eeac26083734f7162cb502dd9bafb87161cd1cb86bba2ce87c9"
+    },
+    {
+      "id": "acs-array-index",
+      "file": "acs-array-index.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "8d2e54c954f9fc03249842745f13c8a288458340a7cc27f793670470c22c685f"
+    },
+    {
+      "id": "acs-array-element",
+      "file": "acs-array-element.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "0fd42a4f6aff2c4fde20124759b2e8db4535e215b7754a3b7a51b45f337ad8c3"
+    },
+    {
+      "id": "acs-nested-array",
+      "file": "acs-nested-array.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "d1a746f96933e463017659577a4c74b830e8dbf1ca4176117864b60c63ff2ee7"
+    },
+    {
+      "id": "acs-array-leading-zero",
+      "file": "acs-array-leading-zero.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "ca2df3d4a5c03907fa0e5fc24bebcd32819943fe41751b00646ac17575cb568e"
+    },
+    {
+      "id": "acs-array-append",
+      "file": "acs-array-append.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "401c00f71c2b05e5907c8100fef0f7c0fecc621ea6571fd49015a4494bff013e"
+    },
+    {
+      "id": "acs-array-outside",
+      "file": "acs-array-outside.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "510004bdc0f6d41990a3165f0935f848407d909672a9236b389140385c96cc95"
+    },
+    {
+      "id": "acs-array-huge-index",
+      "file": "acs-array-huge-index.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "93d46b73bd1a2207262de4f619f3e74069f71d747e05be64d300414a0a0111a7"
+    },
+    {
+      "id": "acs-invalid-escape",
+      "file": "acs-invalid-escape.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "17b139284bdf0aedecf680efed6d33fd2d15d3db0c59f3571892f7e37305d8b8"
+    },
+    {
+      "id": "acs-invalid-trailing-escape",
+      "file": "acs-invalid-trailing-escape.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "5822440a1080a1b38535e8c82aed740591ff5b99fd6d83bd0fdc4f651d5b1d48"
+    },
+    {
+      "id": "acs-escaped-tilde",
+      "file": "acs-escaped-tilde.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "bce5aa6331912b6d057c76f68ef706f9261b63c93b7253bc8afd58a89464e18f"
+    },
+    {
+      "id": "acs-escaped-slash",
+      "file": "acs-escaped-slash.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "9a0c580df979a7765d8c73e1bb2c5f5ba62750c0d05d769bd74332311d43b9d3"
+    },
+    {
+      "id": "acs-empty-object-key",
+      "file": "acs-empty-object-key.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "84ce14b1c6a214118f8c7ea5e093602bd0393e13e399e2fb9e9024b47b412d1c"
+    },
+    {
+      "id": "acs-prototype-named-key",
+      "file": "acs-prototype-named-key.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "2b42a2e5d45338a19dd1050f24196c2aec9e96689bd9820cf361ccc49d9e89f1"
+    },
+    {
+      "id": "acs-replacement-object",
+      "file": "acs-replacement-object.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "8f87b1822d0490ec06f877cb12f9b3344caca59688a1154d35e074a8ad853a55"
+    },
+    {
+      "id": "acs-replacement-null",
+      "file": "acs-replacement-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "6e38e4bf3d1562f6108247efc686ee79d769069cbd2fd3de695b8d2ceba13e07"
+    },
+    {
+      "id": "acs-replacement-number",
+      "file": "acs-replacement-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "fe87e113808bf9cd508d58cba620f69896c77a0c9675f3fef83fb869d9bb9e6b"
+    },
+    {
+      "id": "acs-replacement-boolean",
+      "file": "acs-replacement-boolean.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "0a038a09030d7c934ade549711b5a4b3d149bcc82344d78f9e335e4a14635a9a"
+    },
+    {
+      "id": "acs-null-wholesale-with-edits",
+      "file": "acs-null-wholesale-with-edits.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-005"
+      ],
+      "sha256": "3d40a645cf43503413289956723db42db8bec5b87f23c6ca17c60904aaba7d0c"
+    },
+    {
+      "id": "mcp-live-control",
+      "file": "mcp-live-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "MG1-010"
+      ],
+      "sha256": "a8797008b8004f37a3c101c4c339ea16ee4c59b709a3db79e9ea1ff4afd3603b"
+    },
+    {
+      "id": "mcp-response-id-number",
+      "file": "mcp-response-id-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "fd09ac8f9f6bae42df9f0acebb45ae47d845f599dda57fe8351de2706626b1c3"
+    },
+    {
+      "id": "mcp-response-id-string",
+      "file": "mcp-response-id-string.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "0180e545cd16ade8c071c1160ec6616f8a6dbdf5292aee37e783030fa3bc7448"
+    },
+    {
+      "id": "mcp-response-id-null",
+      "file": "mcp-response-id-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "560b2993080b0961ea010f6d8245857934a94d42dee140f3b2379b60999c5b55"
+    },
+    {
+      "id": "mcp-response-id-boolean",
+      "file": "mcp-response-id-boolean.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.error.schema-invalid.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "3ede424ac08ee336e88cf454bc394be7291eeedb20b68597b48f9bb34a4830a9"
+    },
+    {
+      "id": "mcp-terminal-method",
+      "file": "mcp-terminal-method.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.extension-value-valid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "2c30044818c54e946fc50349d1fa7d6525a78bcf22a44aca8232ca03e88c912e"
+    },
+    {
+      "id": "mcp-terminal-mcp_revision",
+      "file": "mcp-terminal-mcp_revision.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.extension-value-valid.v1",
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "852b7413813de8fa16be9ac746cdd3fd8ec5fe8a8b14a0084b18e88697ee1a59"
+    },
+    {
+      "id": "mcp-prepared-unknown-critical",
+      "file": "mcp-prepared-unknown-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.extension-namespace-allocated.v1",
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "1d0c65c6c143c578cbedd89bcea91530b10c0458f80ffe4517bcfd02f2e90123"
+    },
+    {
+      "id": "mcp-released-unknown-critical",
+      "file": "mcp-released-unknown-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.extension-namespace-allocated.v1",
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "16e703f9425f970d3736731b5ab154c86ab0a1c670c3ab5df7066033f571443f"
+    },
+    {
+      "id": "mcp-terminal-unknown-critical",
+      "file": "mcp-terminal-unknown-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.extension-namespace-allocated.v1",
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "83c473626059ae31b8a791786730c9b09fd627a7af1a1ce6baddd96a81542da6"
+    },
+    {
+      "id": "mcp-unknown-without-residual",
+      "file": "mcp-unknown-without-residual.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.terminal-execution-state-consistent.v1"
+      ],
+      "requirements": [
+        "MG1-010"
+      ],
+      "sha256": "7775eaec47620979aa804c435439badc7b398e3193c3148e95f734395b6ecb01"
+    },
+    {
+      "id": "mcp-terminal-foreign-server_id",
+      "file": "mcp-terminal-foreign-server_id.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "544233daa653a9e694c2ec47f58441ee5cc152c060966a24d12119ba2bf1e26d"
+    },
+    {
+      "id": "mcp-terminal-foreign-server_name",
+      "file": "mcp-terminal-foreign-server_name.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "8007ffbacf723c4fb9e7ca7cd4e68560e14823b12920cddde92e3d7dc56b7fde"
+    },
+    {
+      "id": "mcp-terminal-foreign-server_version",
+      "file": "mcp-terminal-foreign-server_version.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "d48d04debad99652631bb3bf2244d974b16abec6a7e7e5e9bb2d66828f3d6b29"
+    },
+    {
+      "id": "mcp-terminal-foreign-tool",
+      "file": "mcp-terminal-foreign-tool.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "e2eb426be9fea3fb5b05bbf3f556cd77fc7c041c9cc58dfd305ffeb4febaec31"
+    },
+    {
+      "id": "mcp-terminal-foreign-mapping_id",
+      "file": "mcp-terminal-foreign-mapping_id.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "7c2cebb79131318bda324551488de71520cdb1cfadebbaecc1265b2676c7127e"
+    },
+    {
+      "id": "mcp-terminal-foreign-params_digest",
+      "file": "mcp-terminal-foreign-params_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "80739ce8c2434312b694472fdfb4c5aa3effd9d8e4cfbfd2305f7addb0066901"
+    },
+    {
+      "id": "mcp-terminal-foreign-tool_definition_digest",
+      "file": "mcp-terminal-foreign-tool_definition_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "d00052618f87187657cb423ed6397012f0b5fb48692d3331775db22bbc403ea5"
+    },
+    {
+      "id": "mcp-terminal-added-input_responses_digest",
+      "file": "mcp-terminal-added-input_responses_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "18b60876610b035c413849e1720a08f66e4b019f6f06b941f3e76d07954ed044"
+    },
+    {
+      "id": "mcp-terminal-added-request_state_digest",
+      "file": "mcp-terminal-added-request_state_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-012"
+      ],
+      "sha256": "8266a7eb7bfa8a16182c6556e2301b80f030ea12702d1004129e470acd714af4"
+    },
+    {
+      "id": "mcp-timeout-terminal-control",
+      "file": "mcp-timeout-terminal-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "90975d3e84e6cf773d6433d16870e00f97f1a201e6df29d802ecd8d06653c64b"
+    },
+    {
+      "id": "mcp-timeout-terminal-missing-binding",
+      "file": "mcp-timeout-terminal-missing-binding.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "071859a3f6b139686e52589822530e9dcab5e38e3ac49c3d8c331970684bf548"
+    },
+    {
+      "id": "mcp-recovery-terminal-control",
+      "file": "mcp-recovery-terminal-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "6fa84ab38b0f1438716a8d702a590dddb815fa068ae39874d350628dbab9901b"
+    },
+    {
+      "id": "mcp-recovery-terminal-missing-binding",
+      "file": "mcp-recovery-terminal-missing-binding.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "df348a2995bae6f3c807c7bbfaa178b5877ffa35d2539b84a34b7da49ceec02c"
+    },
+    {
+      "id": "mcp-live-terminal-control",
+      "file": "mcp-live-terminal-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "a8797008b8004f37a3c101c4c339ea16ee4c59b709a3db79e9ea1ff4afd3603b"
+    },
+    {
+      "id": "mcp-live-terminal-missing-binding",
+      "file": "mcp-live-terminal-missing-binding.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "644af81974b58fd88ea018621a374c5af07d69b8f3003cd38017b286e0cef87e"
+    },
+    {
+      "id": "mcp-refused-recovery-control",
+      "file": "mcp-refused-recovery-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "MG1-010",
+        "MG1-016"
+      ],
+      "sha256": "4d0a7c6e4add7580e20788baa325261a821ca3d9f8fd7048776723a5a493f68d"
+    },
+    {
+      "id": "mcp-optional-input-state-control",
+      "file": "mcp-optional-input-state-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "MG1-004",
+        "MG1-010"
+      ],
+      "sha256": "c68243084b491616660b71809b08b61c4790705e88bb3e7caf17c35e15b6fe21"
+    },
+    {
+      "id": "mcp-terminal-missing-input_responses_digest",
+      "file": "mcp-terminal-missing-input_responses_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010"
+      ],
+      "sha256": "8a7f75c0f2f0d7a9ee2722219bf28b26dcf454b567de6377f483a5ef166dad4c"
+    },
+    {
+      "id": "mcp-terminal-mismatch-input_responses_digest",
+      "file": "mcp-terminal-mismatch-input_responses_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010"
+      ],
+      "sha256": "0b3c09b3ea2e82775047b5f3fe6b2bfd6be472e0da6fed2d8c2b38e27b9749fb"
+    },
+    {
+      "id": "mcp-terminal-missing-request_state_digest",
+      "file": "mcp-terminal-missing-request_state_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010"
+      ],
+      "sha256": "86d0dec15779d44da01ab49556a8c6eb9369ad30f4734e17020f915f040dbe95"
+    },
+    {
+      "id": "mcp-terminal-mismatch-request_state_digest",
+      "file": "mcp-terminal-mismatch-request_state_digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/mcp-gateway-exchange/1",
+      "expected_rules": [
+        "ecl.rule.mcp-result-bound.v1"
+      ],
+      "requirements": [
+        "MG1-010"
+      ],
+      "sha256": "b42fe0cb08e4f86ed584ce540a4f7fe0dca5b4010196fa1ab594a9c06f1cf580"
+    },
+    {
+      "id": "oauth-b64-absent-control",
+      "file": "oauth-b64-absent-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "bcddd2aa76e2732c5df8b8cb41268a7fd3259ba3105a94e2ea72aea71bb94498"
+    },
+    {
+      "id": "oauth-token-b64-false",
+      "file": "oauth-token-b64-false.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "7d2aa5324063e2799fd93ee0d31ac1ee19b77e34884ac286e867b5a5270c9000"
+    },
+    {
+      "id": "oauth-token-b64-true",
+      "file": "oauth-token-b64-true.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "b6e5138c285d3858922075f43f8b4ecf68c7c938bf545f856e79e0030aeb8a83"
+    },
+    {
+      "id": "oauth-token-b64-string",
+      "file": "oauth-token-b64-string.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "27ff873724d47b36a82a9b86f7f1376e4af4190354f9e87252bc9aa7cf0b9fd1"
+    },
+    {
+      "id": "oauth-token-b64-null",
+      "file": "oauth-token-b64-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "0b991a0f65e8a544ecd48402343efc19f29b4a3a13ba35f949bbb1fdd0f93d3e"
+    },
+    {
+      "id": "oauth-token-b64-number",
+      "file": "oauth-token-b64-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "59b76c539fdda8283c4b940c55cf843619a144981555669fbd56a35d7501ed38"
+    },
+    {
+      "id": "oauth-token-b64-true-critical",
+      "file": "oauth-token-b64-true-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "599fbdb80a666108190dc4129057bbb89b9c15facf006b6191fd3cc7401883c6"
+    },
+    {
+      "id": "oauth-token-b64-false-critical",
+      "file": "oauth-token-b64-false-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-token-signature-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "33bdec835ae47357d94ab1f4332c0e9cb6de10ee57dc4051069823723a51f0fc"
+    },
+    {
+      "id": "oauth-proof-b64-false",
+      "file": "oauth-proof-b64-false.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "c57e63ec38f951ca62fd3619053dd0dc4837382233c250de30dbb302aed4421b"
+    },
+    {
+      "id": "oauth-proof-b64-true",
+      "file": "oauth-proof-b64-true.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "3742e7a166303ce1b7810930737bc760f3bf6509b3c935b14f8cb7854de70a51"
+    },
+    {
+      "id": "oauth-proof-b64-string",
+      "file": "oauth-proof-b64-string.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "e2ae78859d6573aceafa6fdaca525c3baa898aca248372785973474ed8219a45"
+    },
+    {
+      "id": "oauth-proof-b64-null",
+      "file": "oauth-proof-b64-null.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "a7243b43204cecde6f318f8937ef034d74c601977713bce283df53f10e1b2f6a"
+    },
+    {
+      "id": "oauth-proof-b64-number",
+      "file": "oauth-proof-b64-number.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "a1915bfe18edd717ad342d7465eaa85803cd7620935b68958571250064d99fec"
+    },
+    {
+      "id": "oauth-proof-b64-true-critical",
+      "file": "oauth-proof-b64-true-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "7aa023a2a3295d356f8badd8b17d791fd08b11f69b15d365c977c551f5a74556"
+    },
+    {
+      "id": "oauth-proof-b64-false-critical",
+      "file": "oauth-proof-b64-false-critical.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/oauth-presentation/1",
+      "expected_rules": [
+        "ecl.rule.oauth-presentation-checked.v1"
+      ],
+      "requirements": [
+        "OA1-007",
+        "OA1-011"
+      ],
+      "sha256": "2aef7aeff500042901cb19d60264243c42f8c3149fded277ea0e47e5cea3c5e5"
+    },
+    {
+      "id": "aarm-pair-deny-control",
+      "file": "aarm-pair-deny-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "27ec4da0eb159231fe7436b1fa0fa0f7d464309c61f390ed339aa1aff29b1908"
+    },
+    {
+      "id": "aarm-pair-hold-control",
+      "file": "aarm-pair-hold-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "be9e900a8fd289efd99f6899f74e7cc0010f1692f758c2fa249db9e0ad80f7b3"
+    },
+    {
+      "id": "aarm-pair-challenge-control",
+      "file": "aarm-pair-challenge-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "8027345363ebf08bf9b1c21b408edd234d086c7b9d5ca49177f3926dbef836b4"
+    },
+    {
+      "id": "aarm-pair-deny-request-id",
+      "file": "aarm-pair-deny-request-id.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "7910db5388dff90c57c9c35c9f6f5697f4c1816b618ffebbee5c64e72dc430b9"
+    },
+    {
+      "id": "aarm-pair-deny-workflow",
+      "file": "aarm-pair-deny-workflow.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "790be7813e6815e5113c94c2f34dbf1bb4d61ac6832d112d1e38fdd5606a2ab3"
+    },
+    {
+      "id": "aarm-pair-deny-root",
+      "file": "aarm-pair-deny-root.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "690fde882990064adeaf902e459e5b46dde7cc1b521202cd8e6c0ecd8ef0210b"
+    },
+    {
+      "id": "aarm-pair-deny-attempt",
+      "file": "aarm-pair-deny-attempt.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "bdb59be8d5dba431afe4fbd1e7d5b3b5b285c981cc3e6ee2e2bb8c1e17860a10"
+    },
+    {
+      "id": "aarm-pair-deny-predecessor-id",
+      "file": "aarm-pair-deny-predecessor-id.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "2daba459d1738252e034d841099aade71242d3b0624811dced1c1c28625f67f1"
+    },
+    {
+      "id": "aarm-pair-deny-predecessor-digest",
+      "file": "aarm-pair-deny-predecessor-digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "a520992cb6212988b5e53a477e7d44dd238d318ebeb3229e746205b69220f496"
+    },
+    {
+      "id": "aarm-pair-deny-no-predecessor",
+      "file": "aarm-pair-deny-no-predecessor.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "4057a53618cd6825a0149cfdc980d54a570ed8be8f4c017689508fd71f1c2bff"
+    },
+    {
+      "id": "aarm-pair-deny-before-request",
+      "file": "aarm-pair-deny-before-request.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "750f3b3dafdab378c497bf9ab4fc928d8f2c1521a57b95a2feb9d71be780307f"
+    },
+    {
+      "id": "aarm-pair-deny-after-request-expiry-control",
+      "file": "aarm-pair-deny-after-request-expiry-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AB1-002",
+        "DCMP2-047"
+      ],
+      "sha256": "a4e97b37eb6afa0d74a6e63a9b1a69b316aadf867336073ab146b091eb95dea0"
+    },
+    {
+      "id": "aarm-pair-modified-deny-control",
+      "file": "aarm-pair-modified-deny-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "d9fdf01b5937ff5dacd88b4d433863b01ab9765f5e013e399010ed3a32f9df7c"
+    },
+    {
+      "id": "aarm-pair-modified-deny-wrong-request",
+      "file": "aarm-pair-modified-deny-wrong-request.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "0d36a9215e9e316e837e6ef4023854ed30e60cd15756ea3dd68ff57544f3a04c"
+    },
+    {
+      "id": "aarm-pair-modified-deny-wrong-digest",
+      "file": "aarm-pair-modified-deny-wrong-digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "58500887209c1530a2f0fea7bb99b0444a4a0ad848ed742fe373f603623b2105"
+    },
+    {
+      "id": "aarm-pair-modified-deny-no-request",
+      "file": "aarm-pair-modified-deny-no-request.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.rule.aarm-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AB1-002"
+      ],
+      "sha256": "7d24cb679ec333b5b7f9c6730f2815c9c6812e3cb3d4e6bd4084361cab837427"
+    },
+    {
+      "id": "acs-pair-deny-control",
+      "file": "acs-pair-deny-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "495ae219fbfb9c1de10b628c0389d170fb931e332bb5485ca9e55b94aad2c281"
+    },
+    {
+      "id": "acs-pair-hold-control",
+      "file": "acs-pair-hold-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "0247e2f66867b7bb8c5fc78172fcd99524c3ac4fb1411c5ab68b1e1b325f6e42"
+    },
+    {
+      "id": "acs-pair-challenge-control",
+      "file": "acs-pair-challenge-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "8e6e7f2e3b75ebc32537155c272f59399461df349e4e54ca966f3d6521adf9b5"
+    },
+    {
+      "id": "acs-pair-deny-request-id",
+      "file": "acs-pair-deny-request-id.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "f6ac36b31e2c27e73734b092c36e2d99c64434dafdb0448f65628f26957e3e76"
+    },
+    {
+      "id": "acs-pair-deny-workflow",
+      "file": "acs-pair-deny-workflow.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "c573a51068b6a71dd4d2afda5b409a40a891a5792a024b45a12b0f8b5c5fa638"
+    },
+    {
+      "id": "acs-pair-deny-root",
+      "file": "acs-pair-deny-root.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "2af263fc207d1758dbb60e5c2190f83933c35c321bb1c35e33dee997d9b8b92f"
+    },
+    {
+      "id": "acs-pair-deny-attempt",
+      "file": "acs-pair-deny-attempt.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "d5e4f9b5587bd31cf944ce8f021c9c20f906480adee53cb30ca8ad8461505583"
+    },
+    {
+      "id": "acs-pair-deny-predecessor-id",
+      "file": "acs-pair-deny-predecessor-id.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "637a6baf0aef506931fb922fafd2c693530018030938f19f8148d58e3892d579"
+    },
+    {
+      "id": "acs-pair-deny-predecessor-digest",
+      "file": "acs-pair-deny-predecessor-digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "27ddc01b540026b7e5b09e9a12bbbdd09c1a2035a68d006ad9f5c693c80674bb"
+    },
+    {
+      "id": "acs-pair-deny-no-predecessor",
+      "file": "acs-pair-deny-no-predecessor.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "535d7166877a5f1c722feca8ad465312bc9ea99396ba0292f840467c44494f22"
+    },
+    {
+      "id": "acs-pair-deny-before-request",
+      "file": "acs-pair-deny-before-request.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "cf26b668e3f1aedba90a9c240d67722ea44a36e101d445b0fd46269f77ee48db"
+    },
+    {
+      "id": "acs-pair-deny-after-request-expiry-control",
+      "file": "acs-pair-deny-after-request-expiry-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-003",
+        "DCMP2-047"
+      ],
+      "sha256": "8c73726f58d09e136a460af45bebb2a00f5556ddb94313b3d0b37becd3e8b3c9"
+    },
+    {
+      "id": "acs-pair-modified-deny-control",
+      "file": "acs-pair-modified-deny-control.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "628436fcf63671459440db5ab7e0be7914045de9a1ad0a15babb2516973025c4"
+    },
+    {
+      "id": "acs-pair-modified-deny-wrong-request",
+      "file": "acs-pair-modified-deny-wrong-request.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "3127b56920df6939a7e223df8e9dfce189a859d992f339a75bde63c0246219ae"
+    },
+    {
+      "id": "acs-pair-modified-deny-wrong-digest",
+      "file": "acs-pair-modified-deny-wrong-digest.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "00996b84bc136b530180921ed7654eb08dae32fa49740eb9b38ea45a0bcacc3e"
+    },
+    {
+      "id": "acs-pair-modified-deny-no-request",
+      "file": "acs-pair-modified-deny-no-request.json",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/acs-exchange/1",
+      "expected_rules": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.rule.acs-modification-new-request.v1"
+      ],
+      "requirements": [
+        "AC1-003"
+      ],
+      "sha256": "802477d01c8a182496cf64624fe59f71f17257702c3153b9add23ac43fe523e2"
+    }
+  ]
+}

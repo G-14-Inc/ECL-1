@@ -1,0 +1,73 @@
+{
+  "trust_policy": "conformance/suites/error-contract/trust-policy.json",
+  "evaluated_at": "2026-09-29T10:00:00.000000Z",
+  "cases": [
+    {
+      "id": "invalid-bundle-extra-ineligible-key",
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-ineligible-key.json",
+      "wrap_envelope": false,
+      "expected_verdict": "invalid",
+      "expected_dependencies": [
+        {
+          "key_id": "urn:example:key:vector-ed",
+          "historical": "valid",
+          "current": "valid"
+        },
+        {
+          "key_id": "urn:example:key:error-contract-b",
+          "historical": "ecl.error.signature-policy-invalid.v1",
+          "current": "ecl.error.signature-policy-invalid.v1"
+        }
+      ]
+    },
+    {
+      "id": "invalid-bundle-extra-unaccepted-suite",
+      "path": "conformance/suites/error-contract/error-contract-invalid-bundle-extra-unaccepted-suite.json",
+      "wrap_envelope": false,
+      "expected_verdict": "invalid",
+      "expected_dependencies": [
+        {
+          "key_id": "urn:example:key:vector-ed",
+          "historical": "valid",
+          "current": "valid"
+        },
+        {
+          "key_id": "urn:example:key:error-contract-p256",
+          "historical": "ecl.error.signature-policy-invalid.v1",
+          "current": "ecl.error.signature-policy-invalid.v1"
+        }
+      ]
+    },
+    {
+      "id": "valid-policy-baseline",
+      "path": "conformance/suites/error-contract/error-contract-valid-policy-baseline.json",
+      "wrap_envelope": true,
+      "expected_verdict": "incomplete",
+      "expected_dependencies": [
+        {
+          "key_id": "urn:example:key:vector-ed",
+          "historical": "valid",
+          "current": "valid"
+        }
+      ]
+    },
+    {
+      "id": "valid-empty-eligible-list",
+      "path": "conformance/suites/error-contract/error-contract-valid-empty-eligible-list.json",
+      "wrap_envelope": true,
+      "expected_verdict": "incomplete",
+      "expected_dependencies": [
+        {
+          "key_id": "urn:example:key:vector-ed",
+          "historical": "valid",
+          "current": "valid"
+        },
+        {
+          "key_id": "urn:example:key:error-contract-b",
+          "historical": "valid",
+          "current": "valid"
+        }
+      ]
+    }
+  ]
+}

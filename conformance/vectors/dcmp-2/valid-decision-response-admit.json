@@ -1,0 +1,112 @@
+{
+  "protocol": "DCMP-2",
+  "schema_version": "2.0",
+  "message_type": "decision_response",
+  "message_id": "https://externalcontrollayer.ai/ns/message/resp-001",
+  "workflow": {
+    "workflow_id": "https://externalcontrollayer.ai/ns/workflow/example-001",
+    "root_trace_id": "https://externalcontrollayer.ai/ns/trace/example-001",
+    "attempt": 1,
+    "sequence": 2,
+    "causal_predecessors": [
+      {
+        "id": "https://externalcontrollayer.ai/ns/message/req-001",
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "relation": "ecl.relation.responds-to.v1"
+      }
+    ]
+  },
+  "issuer": {
+    "id": "urn:example:decision-service:payments",
+    "type": "ecl.principal.service.v1",
+    "trust_domain": "urn:example:trust-domain:control"
+  },
+  "issued_at": "2026-07-27T04:30:00.100000Z",
+  "expires_at": "2026-07-27T04:30:05.100000Z",
+  "request_id": "https://externalcontrollayer.ai/ns/message/req-001",
+  "decision_id": "https://externalcontrollayer.ai/ns/decision/example-001",
+  "outcome": "admit",
+  "evaluated_at": "2026-07-27T04:30:00.090000Z",
+  "policy": {
+    "id": "urn:example:policy:transfer-control",
+    "version": "42",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "epoch": 42
+  },
+  "reasons": [],
+  "obligations": [
+    {
+      "id": "https://externalcontrollayer.ai/ns/obligation/verify-balance-witness",
+      "type": "ecl.obligation.verify-witness.v1",
+      "value": "urn:example:witness:balance-before-transfer",
+      "satisfaction": "before_release",
+      "evidence_profile": "ecl.evidence.standard.v1"
+    }
+  ],
+  "authorization": {
+    "authorization_id": "https://externalcontrollayer.ai/ns/authority/example-001",
+    "audience": "urn:example:enforcement:payments-gate-1",
+    "scope_digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    },
+    "valid_from": "2026-07-27T04:30:00.100000Z",
+    "valid_until": "2026-07-27T04:30:05.100000Z",
+    "use_policy": "single_use",
+    "max_uses": 1
+  },
+  "safe_state": "ecl.state.restricted.v1",
+  "extensions": [
+    {
+      "id": "ecl.ext.consequence-coupling.v1",
+      "version": 1,
+      "critical": true,
+      "value": {
+        "budget_result": {
+          "budget_id": "urn:example:budget:daily-transfers",
+          "outcome": "authorized"
+        },
+        "quorum_result": {
+          "rule": "urn:example:quorum:two-of-three",
+          "outcome": "met"
+        },
+        "witness_result": {
+          "outcome": "required_before_release",
+          "reference": {
+            "uri": "urn:example:witness:balance-before-transfer"
+          }
+        }
+      }
+    }
+  ],
+  "integrity_policy": {
+    "required": true,
+    "accepted_suites": [
+      "ecl.sig.ed25519.v1"
+    ],
+    "eligible_key_ids": [
+      "urn:example:key:decision-service-1"
+    ],
+    "required_key_ids": [
+      "urn:example:key:decision-service-1"
+    ],
+    "threshold": 1,
+    "trust_policy": {
+      "id": "urn:example:policy:trust-control",
+      "version": "2026-07-27",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "epoch": 11
+    },
+    "verification_time_policy": "ecl.time.issued-at.v1",
+    "revocation_policy": "ecl.revocation.offline-bundle.v1"
+  }
+}

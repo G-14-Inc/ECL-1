@@ -1,0 +1,40 @@
+{
+  "epoch": 1,
+  "keys": [
+    {
+      "key_id": "urn:example:key:vector-ed",
+      "principal": "urn:example:agent:vector",
+      "public_key": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1",
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ed25519.v1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-01-01T00:00:00Z"
+    },
+    {
+      "key_id": "urn:example:key:vector-p256",
+      "principal": "urn:example:agent:vector",
+      "public_key": "BGsX0fLhLEJH+Lzm5WOkQPJ3A32BLeszoPShOUXYmMKWT+NC4v4af5uO5+tKfA+eFivOM1drMV7Oy7ZAaDe/UfU=",
+      "purposes": [
+        "ecl.purpose.decision-request.v1",
+        "ecl.purpose.evidence-event.v1"
+      ],
+      "suite_id": "ecl.sig.ecdsa-p256-sha256.v1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-01-01T00:00:00Z"
+    }
+  ],
+  "policy_id": "urn:example:trust-policy:vectors",
+  "revocation_policy": "ecl.revocation.offline-bundle.v1",
+  "revocations": [
+    {
+      "effective_at": "2027-02-01T00:00:00Z",
+      "key_id": "urn:example:key:vector-ed",
+      "reason": "test-only revocation after the key use window"
+    }
+  ],
+  "schema_version": "ecl_trust_policy_v1",
+  "version": "1"
+}

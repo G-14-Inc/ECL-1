@@ -1,0 +1,264 @@
+{
+  "bundle_id": "urn:example:bundle:otel-export-1",
+  "evidence_after": {
+    "event": {
+      "action_id": "https://externalcontrollayer.ai/ns/action/sha256/e90bc1042949eadef335814756ed857c5dbf94a5b9af3ee38826972a5e20919d",
+      "attempt_id": "urn:example:attempt:otel-transfer-1",
+      "authority": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "fddb89bc45aeeb2d8d460e81865132044cc8bcd854a8ca6591d331a5293dcc65"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/authority/sha256/e0a0bde7fce9ea1f03ae8aa483f0d91da2b34a7808232d4e8c5cae866a5a8701"
+      },
+      "decision": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "c7ae7ad549cf34cc4691590fbeddaba67d845bb113c8403d729ee28822ea8c28"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "uri": "https://externalcontrollayer.ai/ns/message/sha256/a555f0e735a1a708c0631ba2b457687ab329b16cb0b90fc57baf2f0312da5f11"
+      },
+      "kind": "execution",
+      "state": "succeeded"
+    },
+    "event_type": "execution_terminal",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "38e8b9c5b7bb8a0efe3043524ffb05b509720b132b26c5c79abe2be6e125cdf4"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.observed-at.v1"
+    },
+    "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/744acf408f415095d675618fc6b8a66e4f714572cc7865ae230aebcee4d486a5",
+    "object_type": "event_record",
+    "observed_at": "2026-09-30T09:00:00.400000Z",
+    "producer": {
+      "id": "urn:example:enforcement-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.enforcement-point.v1"
+    },
+    "protocol": "EBMP-2",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "253667bdd895ffe5b298ffcb6de28122995b75977058b323f794f9971b5accd6"
+          },
+          "id": "https://externalcontrollayer.ai/ns/receipt/sha256/02b0d3c741abb7cd4973e53e116f41b9e6bf1fe091db27abd94844c20ae90e85",
+          "relation": "ecl.relation.follows.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:otel-transfer",
+      "sequence": 5,
+      "workflow_id": "urn:example:workflow:otel-transfer"
+    }
+  },
+  "export": {
+    "attempted_at": "2026-09-30T09:00:01.000000Z",
+    "status": "exported"
+  },
+  "log_record": {
+    "attributes": [
+      {
+        "key": "ecl.action.id",
+        "value": {
+          "stringValue": "https://externalcontrollayer.ai/ns/action/sha256/e90bc1042949eadef335814756ed857c5dbf94a5b9af3ee38826972a5e20919d"
+        }
+      },
+      {
+        "key": "ecl.event.decision_id",
+        "value": {
+          "stringValue": "https://externalcontrollayer.ai/ns/message/sha256/a555f0e735a1a708c0631ba2b457687ab329b16cb0b90fc57baf2f0312da5f11"
+        }
+      },
+      {
+        "key": "ecl.event.kind",
+        "value": {
+          "stringValue": "execution"
+        }
+      },
+      {
+        "key": "ecl.event.state",
+        "value": {
+          "stringValue": "succeeded"
+        }
+      },
+      {
+        "key": "ecl.evidence.bundle",
+        "value": {
+          "stringValue": "urn:example:bundle:otel-export-1"
+        }
+      },
+      {
+        "key": "ecl.export.key_id",
+        "value": {
+          "stringValue": "urn:example:export-key:otel-vectors-1"
+        }
+      },
+      {
+        "key": "ecl.export.profile",
+        "value": {
+          "stringValue": "OTEL-EVIDENCE-EXPORT-1/1.0"
+        }
+      },
+      {
+        "key": "ecl.object.digest",
+        "value": {
+          "stringValue": "9f373826a78a82b0a745df4d5edf17e47f4b0bf28108ffbc3630542a18bfe742"
+        }
+      },
+      {
+        "key": "ecl.object.id",
+        "value": {
+          "stringValue": "https://externalcontrollayer.ai/ns/receipt/sha256/744acf408f415095d675618fc6b8a66e4f714572cc7865ae230aebcee4d486a5"
+        }
+      },
+      {
+        "key": "ecl.object.type",
+        "value": {
+          "stringValue": "execution_terminal"
+        }
+      },
+      {
+        "key": "ecl.producer.id",
+        "value": {
+          "stringValue": "urn:example:enforcement-point:bindings"
+        }
+      },
+      {
+        "key": "ecl.protocol",
+        "value": {
+          "stringValue": "EBMP-2"
+        }
+      },
+      {
+        "key": "ecl.workflow.attempt",
+        "value": {
+          "intValue": "1"
+        }
+      },
+      {
+        "key": "ecl.workflow.id",
+        "value": {
+          "stringValue": "urn:example:workflow:otel-transfer"
+        }
+      },
+      {
+        "key": "ecl.workflow.root_trace_id",
+        "value": {
+          "stringValue": "urn:example:trace:otel-transfer"
+        }
+      },
+      {
+        "key": "ecl.workflow.sequence",
+        "value": {
+          "intValue": "5"
+        }
+      }
+    ],
+    "eventName": "ecl.ebmp.execution_terminal",
+    "observedTimeUnixNano": "1790758801000000000",
+    "severityNumber": 9,
+    "severityText": "INFO",
+    "timeUnixNano": "1790758800400000000"
+  },
+  "object": {
+    "event": {
+      "action_id": "https://externalcontrollayer.ai/ns/action/sha256/e90bc1042949eadef335814756ed857c5dbf94a5b9af3ee38826972a5e20919d",
+      "attempt_id": "urn:example:attempt:otel-transfer-1",
+      "authority": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "fddb89bc45aeeb2d8d460e81865132044cc8bcd854a8ca6591d331a5293dcc65"
+        },
+        "uri": "https://externalcontrollayer.ai/ns/authority/sha256/e0a0bde7fce9ea1f03ae8aa483f0d91da2b34a7808232d4e8c5cae866a5a8701"
+      },
+      "decision": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "c7ae7ad549cf34cc4691590fbeddaba67d845bb113c8403d729ee28822ea8c28"
+        },
+        "media_type": "application/vnd.ecl.dcmp+json",
+        "uri": "https://externalcontrollayer.ai/ns/message/sha256/a555f0e735a1a708c0631ba2b457687ab329b16cb0b90fc57baf2f0312da5f11"
+      },
+      "kind": "execution",
+      "state": "succeeded"
+    },
+    "event_type": "execution_terminal",
+    "extensions": [],
+    "integrity_policy": {
+      "accepted_suites": [
+        "ecl.sig.ed25519.v1"
+      ],
+      "eligible_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "required": true,
+      "required_key_ids": [
+        "urn:example:key:bundle-ep"
+      ],
+      "revocation_policy": "ecl.revocation.offline-bundle.v1",
+      "threshold": 1,
+      "trust_policy": {
+        "digest": {
+          "algorithm": "ecl.digest.sha-256.v1",
+          "value": "38e8b9c5b7bb8a0efe3043524ffb05b509720b132b26c5c79abe2be6e125cdf4"
+        },
+        "epoch": 1,
+        "id": "urn:example:trust-policy:bindings",
+        "version": "2026-09-30"
+      },
+      "verification_time_policy": "ecl.time.observed-at.v1"
+    },
+    "object_id": "https://externalcontrollayer.ai/ns/receipt/sha256/744acf408f415095d675618fc6b8a66e4f714572cc7865ae230aebcee4d486a5",
+    "object_type": "event_record",
+    "observed_at": "2026-09-30T09:00:00.400000Z",
+    "producer": {
+      "id": "urn:example:enforcement-point:bindings",
+      "trust_domain": "urn:example:trust-domain:bindings",
+      "type": "ecl.principal.enforcement-point.v1"
+    },
+    "protocol": "EBMP-2",
+    "schema_version": "2.0",
+    "workflow": {
+      "attempt": 1,
+      "causal_predecessors": [
+        {
+          "digest": {
+            "algorithm": "ecl.digest.sha-256.v1",
+            "value": "253667bdd895ffe5b298ffcb6de28122995b75977058b323f794f9971b5accd6"
+          },
+          "id": "https://externalcontrollayer.ai/ns/receipt/sha256/02b0d3c741abb7cd4973e53e116f41b9e6bf1fe091db27abd94844c20ae90e85",
+          "relation": "ecl.relation.follows.v1"
+        }
+      ],
+      "root_trace_id": "urn:example:trace:otel-transfer",
+      "sequence": 5,
+      "workflow_id": "urn:example:workflow:otel-transfer"
+    }
+  },
+  "profile": "OTEL-EVIDENCE-EXPORT-1/1.0",
+  "schema_version": "ecl_otel_export_record_v1"
+}

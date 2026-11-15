@@ -1,0 +1,234 @@
+{
+  "schema": "single-use-capability-regressions-v1",
+  "cases": [
+    {
+      "id": "pair-both-absent",
+      "file": "pair-both-absent.json",
+      "kind": "pair",
+      "expected": null,
+      "sha256": "a9b83bb5981925c793fe0b872c637fae73f5059a70a3192afac2d83fdbfef4ff"
+    },
+    {
+      "id": "pair-grant-one",
+      "file": "pair-grant-one.json",
+      "kind": "pair",
+      "expected": null,
+      "sha256": "a80d482c0cf9af0a2b1abd7b33f4d53434c16dba68333c7dfd4a7eb92e8e5450"
+    },
+    {
+      "id": "pair-both-one",
+      "file": "pair-both-one.json",
+      "kind": "pair",
+      "expected": null,
+      "sha256": "0b42a9513eaa286eee99b56ac910cb9b97981fb02bb3bd59b21e986688396c67"
+    },
+    {
+      "id": "pair-missing-echo",
+      "file": "pair-missing-echo.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "b98995d697e73b4bbc3c63bfd975f9e6c722b6b4e8e756190054a59e41ced9bc"
+    },
+    {
+      "id": "pair-request-two",
+      "file": "pair-request-two.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "c997550e8d3f67d2aaff72bb8aeace0e717fc2df4d99d49068a0a52d8dd8d6af"
+    },
+    {
+      "id": "pair-grant-two",
+      "file": "pair-grant-two.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "2d4ac86fdf7a89bf5c619385fd6f7908051d18ed3ba863ed66ceaa5dcd59859d"
+    },
+    {
+      "id": "pair-request-boolean",
+      "file": "pair-request-boolean.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "b86783e062884a37ef04135287303290b2084f6150c911583e5a8e8ab7ec4963"
+    },
+    {
+      "id": "pair-grant-null",
+      "file": "pair-grant-null.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "a9fd69d69cfe06aa545e0f20de03eec0cde806ea7e59606d737c295780a1116c"
+    },
+    {
+      "id": "pair-bounded-two",
+      "file": "pair-bounded-two.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "4c3633440d7ef90c09dbd91bc020ef5fa07729ff08b94aac03957fee67d57f60"
+    },
+    {
+      "id": "pair-bounded-unlimited",
+      "file": "pair-bounded-unlimited.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "d760ce23b0c7d9b7bb9f79ac4e00339bbc45c2f4382d0370261b3df12fc52bdd"
+    },
+    {
+      "id": "pair-unknown",
+      "file": "pair-unknown.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "1e0fec9402c72102b3adc5986dfa374eebc05fb0794409e771602c16623d96c9"
+    },
+    {
+      "id": "pair-bounded-deny",
+      "file": "pair-bounded-deny.json",
+      "kind": "pair",
+      "expected": "ecl.error.request-binding-invalid.v1",
+      "sha256": "1611865c142a4e218b27c7bb2b0b067d47e2356fdf472cea528ec10dcdff6df4"
+    },
+    {
+      "id": "oauth-control",
+      "file": "oauth-control.json",
+      "kind": "oauth",
+      "expected": null,
+      "sha256": "28745b764c6dada341bff0b012ca4a4e2092a5c672af636433e7b6ebf5260966"
+    },
+    {
+      "id": "oauth-proof-replay",
+      "file": "oauth-proof-replay.json",
+      "kind": "oauth",
+      "expected": "ecl.error.replay.v1",
+      "sha256": "04f6695acdea196c9a557f90fc0d4dac50da3eaa1261a0607a9a3b3a731e7048"
+    },
+    {
+      "id": "oauth-second-use",
+      "file": "oauth-second-use.json",
+      "kind": "oauth",
+      "expected": "ecl.error.replay.v1",
+      "sha256": "468196e2a301403d0217ec5aa1f2beee5c3ac03a1a7c29e3b07a62dede565698"
+    },
+    {
+      "id": "oauth-bounded-two",
+      "file": "oauth-bounded-two.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "b2dec08b963b6ade49a65d58da8770b213150160aa65421ba50d43bf1f5a9931"
+    },
+    {
+      "id": "oauth-bad-signature-first",
+      "file": "oauth-bad-signature-first.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "200e54d4259dd901ea3f2d55910fecb17db931611f9b5cd3df67374c929ff9c9",
+      "refusal_expected": "ecl.error.integrity-invalid.v1"
+    },
+    {
+      "id": "oauth-audience-before-capability",
+      "file": "oauth-audience-before-capability.json",
+      "kind": "oauth",
+      "expected": "ecl.error.audience-mismatch.v1",
+      "sha256": "b0e7f297b5d7b90b01393702562fe4bf85fc9a17f497e7a7d03362a6f53f56bc"
+    },
+    {
+      "id": "oauth-expiry-before-capability",
+      "file": "oauth-expiry-before-capability.json",
+      "kind": "oauth",
+      "expected": "ecl.error.expired.v1",
+      "sha256": "a05e992a98bf97702694be084c0fc074005b5b6db5edf0cfacc25bf0fffa07e8"
+    },
+    {
+      "id": "oauth-bounded-unlimited",
+      "file": "oauth-bounded-unlimited.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "e890d8957a81440d679a66487a11921a0dec7ce6b6d4c7e4fc9a187617334811"
+    },
+    {
+      "id": "oauth-single-two",
+      "file": "oauth-single-two.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "bd9a7529a7a5064c9de8fb8faa0fd08896ec2d3659e5d9cc243addc4725c22ab"
+    },
+    {
+      "id": "oauth-single-boolean",
+      "file": "oauth-single-boolean.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "ca77921c748fc629177a03f232991bd5a1c678b05b1f552d8a8c1b0931eaf02c"
+    },
+    {
+      "id": "oauth-single-null",
+      "file": "oauth-single-null.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "bbb19f72f51bba24fad49c9cd5c9b733d19d96a976ddae5331c292be637a3166"
+    },
+    {
+      "id": "oauth-unknown",
+      "file": "oauth-unknown.json",
+      "kind": "oauth",
+      "expected": "ecl.error.binding-unsupported.v1",
+      "sha256": "bdd6ed09790495428c53c4fb9612be83d849bdbab3bba63dc8ab7a5fd5673de2"
+    },
+    {
+      "id": "mcp-single-use-control",
+      "file": "mcp-single-use-control.json",
+      "kind": "mcp",
+      "expected": null,
+      "sha256": "a8797008b8004f37a3c101c4c339ea16ee4c59b709a3db79e9ea1ff4afd3603b"
+    },
+    {
+      "id": "mcp-bounded-two",
+      "file": "mcp-bounded-two.json",
+      "kind": "mcp",
+      "expected": "ecl.rule.mcp-forward-requires-admit.v1",
+      "sha256": "a2a4c384c6edd5f7b6aae49d8ac7274be28938bc907e52b4cbd2865fdfc804a0"
+    },
+    {
+      "id": "mcp-bounded-unlimited",
+      "file": "mcp-bounded-unlimited.json",
+      "kind": "mcp",
+      "expected": "ecl.rule.mcp-forward-requires-admit.v1",
+      "sha256": "9822f2256c47f40254fe7f93a7ff7669d2d8e68117fa442e9c79544e57844622"
+    },
+    {
+      "id": "mcp-single-two",
+      "file": "mcp-single-two.json",
+      "kind": "mcp",
+      "expected": "ecl.rule.mcp-forward-requires-admit.v1",
+      "sha256": "121a9ad5442f3cde533139e48c50992350c1b6bf8daf6a4f5c6052db5223c175"
+    },
+    {
+      "id": "event-control",
+      "file": "event-control.json",
+      "kind": "event",
+      "expected": null,
+      "sha256": "4cf959743a0f2507267b12f9988c6c51af68334cb3a9b92436e3a43e4404182a",
+      "authority_expected": null
+    },
+    {
+      "id": "event-bounded-request",
+      "file": "event-bounded-request.json",
+      "kind": "event",
+      "expected": "ecl.error.decision-binding-invalid.v1",
+      "sha256": "8ad3c38b1e28b32ca19637a73aafa36cb86eef9d6a93b9088bc48ab56f0f4c1b",
+      "authority_expected": null
+    },
+    {
+      "id": "event-bounded-grant",
+      "file": "event-bounded-grant.json",
+      "kind": "event",
+      "expected": "ecl.error.decision-binding-invalid.v1",
+      "sha256": "2cde82a0d29498e8e9e7391361dae719f6d7287aa798d235b12ff92a63ce4999",
+      "authority_expected": "ecl.error.decision-binding-invalid.v1"
+    },
+    {
+      "id": "event-single-two",
+      "file": "event-single-two.json",
+      "kind": "event",
+      "expected": "ecl.error.decision-binding-invalid.v1",
+      "sha256": "0540435519f28006f0c062bf096203dc3f88541a62fb7033d987290aac01fe56",
+      "authority_expected": "ecl.error.decision-binding-invalid.v1"
+    }
+  ]
+}

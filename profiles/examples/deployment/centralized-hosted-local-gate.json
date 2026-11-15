@@ -1,0 +1,113 @@
+{
+  "schema_version": "ecl_deployment_profile_v1",
+  "profile_id": "urn:example:ecl:profile:centralized-hosted-local-gate",
+  "profile_version": "1",
+  "profile_digest": {
+    "algorithm": "ecl.digest.sha-256.v1",
+    "value": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "system_of_interest": {
+    "uri": "urn:example:ecl:soi:hosted",
+    "version": "1",
+    "digest": {
+      "algorithm": "ecl.digest.sha-256.v1",
+      "value": "1212121212121212121212121212121212121212121212121212121212121212"
+    }
+  },
+  "claim_level": 2,
+  "model": "centralized-distributed-enforcement",
+  "delivery_surfaces": [
+    "local_gate",
+    "hosted_control_plane",
+    "offline_verifier"
+  ],
+  "release_path": {
+    "enforcement_location": "in_process",
+    "remote_dependency_in_hot_path": false,
+    "signed_local_or_cached_state": true,
+    "decision_timeout_milliseconds": 25,
+    "network_loss_disposition": "bounded_degraded_then_restricted"
+  },
+  "dependencies": [
+    {
+      "dependency_id": "urn:example:ecl:dependency:signed-policy-cache",
+      "class": "signed_cached",
+      "control_state_staleness_seconds": 14400,
+      "integrity_required": true,
+      "failure_disposition": "restricted"
+    }
+  ],
+  "timing_case": {
+    "uses_default_baseline": true,
+    "connected_revocation_seconds": 900,
+    "offline_staleness_seconds": 14400,
+    "evidence_export_seconds": 86400,
+    "trusted_time_or_secure_monotonic": false,
+    "measurement_plan": {
+      "uri": "urn:example:ecl:measurement:hosted-l2",
+      "version": "1",
+      "digest": {
+        "algorithm": "ecl.digest.sha-256.v1",
+        "value": "1313131313131313131313131313131313131313131313131313131313131313"
+      }
+    }
+  },
+  "fallback": {
+    "degraded": {
+      "entry_conditions": [
+        "hosted control plane unreachable"
+      ],
+      "signed_cached_state_required": true,
+      "bounded_actions": [
+        "actions authorized by unexpired cached policy"
+      ],
+      "expires_to": "restricted"
+    },
+    "restricted": {
+      "entry_conditions": [
+        "cached policy exceeds staleness budget"
+      ],
+      "allowed_actions": [
+        "diagnose",
+        "recover",
+        "contain",
+        "safe_shutdown"
+      ]
+    },
+    "emergency_halt": {
+      "entry_conditions": [
+        "integrity verification fails"
+      ],
+      "release_allowed": false,
+      "separately_authenticated": true
+    },
+    "precedence": [
+      "emergency_halt",
+      "restricted",
+      "degraded",
+      "ordinary"
+    ]
+  },
+  "evidence_custody": {
+    "local_append_only_buffer": true,
+    "export_integrity": true,
+    "retention_profile": {
+      "uri": "urn:example:ecl:retention:standard",
+      "version": "1"
+    },
+    "independent_verification_path": {
+      "uri": "urn:example:ecl:verifier:offline",
+      "version": "1"
+    }
+  },
+  "topology_controls": {
+    "centralized": {
+      "low_latency_policy_distribution": true,
+      "central_audit": true,
+      "rapid_revocation": true
+    }
+  },
+  "residual_risks": [
+    "A prolonged control-plane outage reduces availability after cached state expires."
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "candidate_version": "1.0",
+  "schema_version": "ecl_conformance_vector_manifest_v3",
+  "suite": "ecl-1-v1.0-strict-failure",
+  "vectors": [
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-invalid-missing-flag",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/strict-failure/strict-failure-invalid-missing-flag.json",
+      "requirement_ids": [
+        "SF1-004",
+        "TS1-031"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.required-proof-dependency-fails-closed.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-invalid-proof-dependency-degraded",
+      "negates": [
+        "TS1-032"
+      ],
+      "path": "conformance/suites/strict-failure/strict-failure-invalid-proof-dependency-degraded.json",
+      "requirement_ids": [
+        "SF1-002",
+        "TS1-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.required-proof-dependency-fails-closed.v1",
+      "expected_secondary_ids": [
+        "ecl.rule.strict-profile-forbids-fail-open.v1"
+      ],
+      "id": "strict-failure-invalid-proof-dependency-fail-open",
+      "negates": [
+        "TS1-018",
+        "TS1-031",
+        "TS1-032",
+        "TS1-033"
+      ],
+      "path": "conformance/suites/strict-failure/strict-failure-invalid-proof-dependency-fail-open.json",
+      "requirement_ids": [
+        "SF1-001",
+        "TS1-018",
+        "TS1-031",
+        "TS1-032",
+        "TS1-033"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.required-proof-dependency-fails-closed.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-invalid-proof-dependency-restricted",
+      "negates": [
+        "TS1-032"
+      ],
+      "path": "conformance/suites/strict-failure/strict-failure-invalid-proof-dependency-restricted.json",
+      "requirement_ids": [
+        "SF1-002",
+        "TS1-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [],
+      "expected": "fail",
+      "expected_primary_id": "ecl.rule.strict-profile-forbids-fail-open.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-invalid-strict-profile-fail-open",
+      "negates": [
+        "SF1-001",
+        "SF1-002"
+      ],
+      "path": "conformance/suites/strict-failure/strict-failure-invalid-strict-profile-fail-open.json",
+      "requirement_ids": [
+        "SF1-001",
+        "SF1-002",
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "fail",
+      "expected_primary_id": "ecl.error.schema-invalid.v1",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-invalid-unstated-claims",
+      "negates": [
+        "SF1-004"
+      ],
+      "path": "conformance/suites/strict-failure/strict-failure-invalid-unstated-claims.json",
+      "requirement_ids": [
+        "SF1-004"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-valid-profile",
+      "path": "conformance/suites/strict-failure/strict-failure-valid-profile.json",
+      "requirement_ids": [
+        "SF1-001",
+        "SF1-002",
+        "SF1-004",
+        "TS1-018",
+        "TS1-031",
+        "TS1-032",
+        "TS1-033"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-valid-proof-dependencies-quarantine-and-halt",
+      "path": "conformance/suites/strict-failure/strict-failure-valid-proof-dependencies-quarantine-and-halt.json",
+      "requirement_ids": [
+        "SF1-002",
+        "TS1-032"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    },
+    {
+      "covers": [
+        "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1##root"
+      ],
+      "expected": "pass",
+      "expected_secondary_ids": [],
+      "id": "strict-failure-valid-unclaimed-advisory-fail-open",
+      "path": "conformance/suites/strict-failure/strict-failure-valid-unclaimed-advisory-fail-open.json",
+      "requirement_ids": [
+        "SF1-004",
+        "TS1-033"
+      ],
+      "schema": "https://externalcontrollayer.ai/ns/schema/safe-state-profile/1",
+      "source": {
+        "generator": "scripts/generate_strict_failure_vectors.py",
+        "kind": "authored"
+      },
+      "stage": "safe-state-profile"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/lifecycle-policy/1",
+  "title": "ECL Evidence Lifecycle Policy v1",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "version",
+    "digest",
+    "effective_at",
+    "retention_rules",
+    "hold_precedence",
+    "export",
+    "redaction",
+    "destruction",
+    "policy_requirements"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "policy_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/digest"
+    },
+    "effective_at": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc"
+    },
+    "retention_rules": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_class",
+          "start_event",
+          "duration",
+          "shortening_authority_class"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "evidence_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start_event": {
+            "type": "string",
+            "minLength": 1
+          },
+          "duration": {
+            "type": "string",
+            "pattern": "^P(?:(?:[0-9]+Y(?:[0-9]+M)?(?:[0-9]+D)?|[0-9]+M(?:[0-9]+D)?|[0-9]+D)(?:T(?:[0-9]+H(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+M(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+(?:\\.[0-9]+)?S))?|T(?:[0-9]+H(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+M(?:[0-9]+(?:\\.[0-9]+)?S)?|[0-9]+(?:\\.[0-9]+)?S))$",
+            "description": "Unsigned XSD-duration lexical subset: ordered Y/M/D and optional T followed by H/M/S; at least one component, digits on both sides of a seconds decimal point, no weeks, signs or whitespace. Zero is valid syntax. Retention adequacy is assessed under ECL1N-0050 and ECL1N-0195 to ECL1N-0199."
+          },
+          "shortening_authority_class": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "hold_precedence": {
+      "const": "legal_hold_over_scheduled_destruction"
+    },
+    "export": {
+      "type": "object",
+      "required": [
+        "custody_manifest_required",
+        "receipt_event_required",
+        "offline_material_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "custody_manifest_required": {
+          "const": true
+        },
+        "receipt_event_required": {
+          "const": true
+        },
+        "offline_material_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "required": [
+        "derivative_identity_required",
+        "sealed_source_binding_required",
+        "manifest_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "derivative_identity_required": {
+          "const": true
+        },
+        "sealed_source_binding_required": {
+          "const": true
+        },
+        "manifest_required": {
+          "const": true
+        }
+      }
+    },
+    "destruction": {
+      "type": "object",
+      "required": [
+        "proof_required",
+        "observation_boundary_required",
+        "minimum_lifecycle_proof_retained"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "proof_required": {
+          "type": "boolean"
+        },
+        "observation_boundary_required": {
+          "const": true
+        },
+        "minimum_lifecycle_proof_retained": {
+          "const": true
+        }
+      }
+    },
+    "policy_requirements": {
+      "type": "object",
+      "description": "EL1-002 declarations for the five policy areas not carried by the other structured fields. Each declaration states its evidence-class scope and requirement or precise policy reference; inapplicability includes its basis.",
+      "required": [
+        "supersession",
+        "revocation",
+        "residency",
+        "encryption",
+        "access"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "supersession": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "revocation": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "residency": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "encryption": {
+          "$ref": "#/$defs/policyRequirement"
+        },
+        "access": {
+          "$ref": "#/$defs/policyRequirement"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "policyRequirement": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "[^\t-\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]",
+      "description": "A nonblank declaration of applicability and the requirement or precise policy reference for this policy area."
+    }
+  }
+}

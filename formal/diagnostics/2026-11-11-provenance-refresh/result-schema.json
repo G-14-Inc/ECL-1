@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Aggregated recorded formal results with per-source invocation provenance",
+  "description": "Structural schema only. AGGREGATE-FORMAT.md specifies required identity,coverage,current-input and hash checks.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "tools",
+    "sources",
+    "check_sources",
+    "runners",
+    "current_runner",
+    "checks"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_formal_results_v3"
+    },
+    "tools": {
+      "type": "object",
+      "required": [
+        "tla2tools",
+        "tamarin",
+        "maude"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "format": {
+            "enum": [
+              "ecl_formal_results_v2",
+              "tamarin-check-receipt"
+            ]
+          },
+          "settings": {
+            "type": "object",
+            "properties": {
+              "timeout_seconds": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "derivcheck_timeout": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "java_heap": {
+                "type": "string"
+              },
+              "tlc_workers": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "timeout_seconds",
+              "derivcheck_timeout"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "sha256",
+          "format",
+          "settings"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "check_sources": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "runners": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+      }
+    },
+    "current_runner": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "expected": {
+            "type": "string"
+          },
+          "observed": {
+            "type": "string"
+          },
+          "started_utc": {
+            "type": "string"
+          },
+          "finished_utc": {
+            "type": "string"
+          },
+          "tool": {
+            "enum": [
+              "tlc",
+              "tamarin"
+            ]
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "java": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "runner_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "output_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "inputs": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "command": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "log_file": {
+            "type": "string",
+            "pattern": "^[^/\\\\]+\\.log$"
+          },
+          "returncode": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "lemmas": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "steps": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "states_generated": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "distinct_states": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "depth": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "trace_states": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "expected",
+          "observed",
+          "started_utc",
+          "finished_utc",
+          "tool",
+          "passed",
+          "seconds",
+          "java",
+          "runner_sha256",
+          "output_sha256",
+          "inputs",
+          "command",
+          "log_file",
+          "returncode",
+          "lemmas",
+          "steps",
+          "states_generated",
+          "distinct_states",
+          "depth",
+          "trace_states"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

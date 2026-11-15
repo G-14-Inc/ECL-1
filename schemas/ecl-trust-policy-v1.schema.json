@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://externalcontrollayer.ai/ns/schema/trust-policy/1",
+  "title": "ECL Trust Policy v1",
+  "description": "The keys a verifier trusts, the purposes and principal each is trusted for, the interval in which it is trusted, and the revocations the verifier knows. The caller of a verifier supplies it; an evidence bundle never does. Its digest is the SHA-256 of its canonical JSON (RFC 8785 with the ECL number profile).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "version",
+    "epoch",
+    "revocation_policy",
+    "keys",
+    "revocations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ecl_trust_policy_v1"
+    },
+    "policy_id": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+    },
+    "version": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/asciiToken"
+    },
+    "epoch": {
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/nonNegativeSafeInteger"
+    },
+    "revocation_policy": {
+      "description": "A revocation policy registered in the vocabulary registry.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+    },
+    "keys": {
+      "description": "At most 128 stored keys, allowing selection and rotation. Key identifiers and public keys are each unique; the loader checks that. The reference integrity-policy helper selects at most 64 eligible keys to match its verifier budget.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/key"
+      }
+    },
+    "revocations": {
+      "description": "Each names a key of this policy, and a key is named at most once (the loader checks that in linear time; uniqueItems would compare every pair). A key is revoked for any evaluation time at or after its effective_at. So there are at most as many as there are keys.",
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/revocation"
+      }
+    }
+  },
+  "$defs": {
+    "timestamp": {
+      "description": "RFC 3339 UTC: whole seconds, or three or six fractional digits, then Z. This is the trust-document timestamp profile; signed object timestamps and verifier context parsing follow their own declared profiles.",
+      "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/rfc3339Utc",
+      "pattern": "^[^.]+(\\.([0-9]{3}|[0-9]{6}))?Z$"
+    },
+    "key": {
+      "type": "object",
+      "required": [
+        "key_id",
+        "suite_id",
+        "public_key",
+        "principal",
+        "purposes",
+        "valid_from"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key_id": {
+          "description": "Names this key in an integrity policy and in an envelope's signature entries.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "suite_id": {
+          "description": "An active signature suite of the algorithm-suites registry that this version can carry: ecl.sig.ed25519.v1 or ecl.sig.ecdsa-p256-sha256.v1.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+        },
+        "public_key": {
+          "description": "Standard base64 (RFC 4648 section 4, with padding, canonical) of the public key: the raw 32 bytes for ecl.sig.ed25519.v1, or the 65-byte SEC1 uncompressed point (0x04, x, y) for ecl.sig.ecdsa-p256-sha256.v1. The loader checks the length for the suite and, for P-256, that the point is on the curve. One public key belongs to one key_id. For Ed25519 the loader also refuses a value that is not the canonical RFC 8032 encoding of a curve point, and a point of small order (8 times it is the identity), under which a signature made without any private key verifies.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "principal": {
+          "description": "The issuer or producer identifier that this key speaks for.",
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "purposes": {
+          "description": "Key purposes allocated in the vocabulary registry (category key_purpose). Each purpose limits the key to the objects of that role.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/eclRegistryId"
+          }
+        },
+        "valid_from": {
+          "description": "The key is trusted from this instant, inclusive.",
+          "$ref": "#/$defs/timestamp"
+        },
+        "valid_until": {
+          "description": "The key is trusted until this instant, exclusive. It is later than valid_from. Absent means no end.",
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "required": [
+        "key_id",
+        "effective_at",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key_id": {
+          "$ref": "https://externalcontrollayer.ai/ns/schema/common/1#/$defs/uri"
+        },
+        "effective_at": {
+          "description": "The key is not trusted for any evaluation time at or after this instant.",
+          "$ref": "#/$defs/timestamp"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    }
+  }
+}

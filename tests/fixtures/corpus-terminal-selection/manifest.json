@@ -1,0 +1,383 @@
+{
+  "contract": "conformance/README.md primary selection: strict/schema, one specific error, registered semantic rules, then semantic-invalid fallback; signed-bundle selection is unchanged.",
+  "record_cases": [
+    {
+      "id": "succeeded-without-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-without-reason.json",
+      "sha256": "12f66977e5a9bfbd3ec20d4f801628d479974f03e4d24a95d4282382bf8ef182",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "failed-with-active-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-with-active-reason.json",
+      "sha256": "62bb03a355dfa844de114e028c56c1430151765e11bd6b8615ba3e2ccbd7581c",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "expired-with-active-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-with-active-reason.json",
+      "sha256": "a90d23bce48529c9e0c345477c82e8ddf6e6765c5427feecb6b39252cd5e17f5",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "failed-without-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-without-reason.json",
+      "sha256": "1018e84b25732aab74b77c7de2d8f03e0cccdc33dcbc5ee81a15c6f7fb1b2651",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "denied-unpaired-without-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-unpaired-without-reason.json",
+      "sha256": "3ebc92904e5cf158217b1b0570e3b4fc322aefd46a9fd22764e26b1fe1bff09d",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "succeeded-future-noncritical-reason-ignored",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-future-noncritical-reason-ignored.json",
+      "sha256": "3a01b07a9def62363a39fd71caaa5e4691a42cd557c7243aaeb8a45f0d12d2d7",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "succeeded-active-reason-forbidden",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-active-reason-forbidden.json",
+      "sha256": "6016439077e26931becc7ac3f6013d730354c3342f6eafb4f3c1050ade2eb71b",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "expired-missing-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-missing-reason.json",
+      "sha256": "218d6e7817de7ce1764e67c6f14db3f643525cbedd5b5667ae85d7cf0b476bc5",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "failed-nonerror-identifier",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-nonerror-identifier.json",
+      "sha256": "794f9846cdcb4420ec6fced6aad97d1b6624879db8e348cefdfc2cf17bce795e",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "failed-unregistered-error",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-unregistered-error.json",
+      "sha256": "395f8010265d8fd928f841e2237c4559d0d30515afbbdddcd0b0ce6620e87dab",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "failed-nonexact-value",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-nonexact-value.json",
+      "sha256": "d6d62b25ef19a8425a8f4b7bdcec016e51c1541ebd6d49cce8def7c27d9abed2",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ],
+      "primary": "ecl.rule.extension-value-valid.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "failed-two-reasons",
+      "path": "tests/fixtures/terminal-outcome-reasons/failed-two-reasons.json",
+      "sha256": "5f9785824148ea8fc230303a6fa6afd8f1488df9770226dd69fa993725fef3df",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ],
+      "primary": "ecl.rule.extension-identifiers-unique.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "expired-future-reason-does-not-satisfy",
+      "path": "tests/fixtures/terminal-outcome-reasons/expired-future-reason-does-not-satisfy.json",
+      "sha256": "832fa452425707665f2a98c06a640b15621f9c9e3584b3c3763e7012858a23c7",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "succeeded-critical-future-reason-rejected",
+      "path": "tests/fixtures/terminal-outcome-reasons/succeeded-critical-future-reason-rejected.json",
+      "sha256": "ba26dd42296e123e6d2708fbc0939ee380523d364d1683f2d76d5e468dc9feea",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [
+        "ecl.rule.unknown-critical-extension-rejected.v1"
+      ],
+      "primary": "ecl.rule.unknown-critical-extension-rejected.v1",
+      "secondary": []
+    },
+    {
+      "id": "denied-with-active-reason",
+      "path": "tests/fixtures/terminal-outcome-reasons/denied-with-active-reason.json",
+      "sha256": "31500d4c350dddae015f717655f9b6c7bc81a6c3b86e9451448ccf137c4195d0",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "foreign-response-request-only",
+      "path": "tests/fixtures/corpus-terminal-selection/foreign-response-request-only.json",
+      "sha256": "14a2197916f8d834a5c4ab3e3b7f955e210bcb73db930aeef5534ea57b0b3aea",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source_mutation": {
+        "path": "tests/fixtures/terminal-outcome-reasons/succeeded-without-reason.json",
+        "sha256": "12f66977e5a9bfbd3ec20d4f801628d479974f03e4d24a95d4282382bf8ef182",
+        "change": "Set /response/request_id to urn:example:foreign-request; preserve all other members."
+      },
+      "observed": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.rule.aarm-release-requires-admit.v1"
+      ],
+      "primary": "ecl.error.request-binding-invalid.v1",
+      "secondary": [
+        "ecl.rule.aarm-release-requires-admit.v1"
+      ]
+    },
+    {
+      "id": "foreign-response-request-and-forbidden-reason",
+      "path": "tests/fixtures/corpus-terminal-selection/foreign-response-request-and-forbidden-reason.json",
+      "sha256": "8a6498c292dc4783eec0cf6fa4668e8c1c9f8e0aec7fd4ff5c5a444b18133d2b",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source_mutation": {
+        "path": "tests/fixtures/terminal-outcome-reasons/succeeded-active-reason-forbidden.json",
+        "sha256": "6016439077e26931becc7ac3f6013d730354c3342f6eafb4f3c1050ade2eb71b",
+        "change": "Set /response/request_id to urn:example:foreign-request; preserve all other members."
+      },
+      "observed": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.aarm-release-requires-admit.v1"
+      ],
+      "primary": "ecl.error.request-binding-invalid.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.aarm-release-requires-admit.v1"
+      ]
+    },
+    {
+      "id": "foreign-response-request-and-duplicate-reasons",
+      "path": "tests/fixtures/corpus-terminal-selection/foreign-response-request-and-duplicate-reasons.json",
+      "sha256": "8e8b3fbb96bec183f5cd76b92c61672596bf63fbf6f391a2b673dcfdf5abef3b",
+      "schema": "https://externalcontrollayer.ai/ns/schema/binding/aarm-exchange/1",
+      "source_mutation": {
+        "path": "tests/fixtures/terminal-outcome-reasons/failed-two-reasons.json",
+        "sha256": "5f9785824148ea8fc230303a6fa6afd8f1488df9770226dd69fa993725fef3df",
+        "change": "Set /response/request_id to urn:example:foreign-request; preserve all other members."
+      },
+      "observed": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.aarm-release-requires-admit.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ],
+      "primary": "ecl.error.request-binding-invalid.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.aarm-release-requires-admit.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ]
+    }
+  ],
+  "selection_cases": [
+    {
+      "id": "empty",
+      "observed": [],
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "id": "generic-only",
+      "observed": [
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "generic-duplicates",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.error.semantic-invalid.v1"
+      ],
+      "primary": "ecl.error.semantic-invalid.v1",
+      "secondary": []
+    },
+    {
+      "id": "registered-rule-before-generic",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ],
+      "primary": "ecl.rule.extension-identifiers-unique.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "lowest-rule-before-generic",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-value-valid.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ],
+      "primary": "ecl.rule.extension-identifiers-unique.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-value-valid.v1"
+      ]
+    },
+    {
+      "id": "specific-interface-before-rule-and-generic",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-identifiers-unique.v1",
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "primary": "ecl.error.request-binding-invalid.v1",
+      "secondary": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ]
+    },
+    {
+      "id": "specific-interface-without-generic",
+      "observed": [
+        "ecl.rule.extension-identifiers-unique.v1",
+        "ecl.error.request-binding-invalid.v1"
+      ],
+      "primary": "ecl.error.request-binding-invalid.v1",
+      "secondary": [
+        "ecl.rule.extension-identifiers-unique.v1"
+      ]
+    },
+    {
+      "id": "schema-before-specific-rule-and-generic",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-identifiers-unique.v1",
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.schema-invalid.v1"
+      ],
+      "primary": "ecl.error.schema-invalid.v1",
+      "secondary": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.extension-identifiers-unique.v1"
+      ]
+    },
+    {
+      "id": "strict-before-schema-specific-and-generic",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.error.schema-invalid.v1",
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.rule.json-no-duplicate-members.v1"
+      ],
+      "primary": "ecl.rule.json-no-duplicate-members.v1",
+      "secondary": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.schema-invalid.v1",
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "schema-retains-priority-over-multiple-specific",
+      "observed": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.digest-mismatch.v1",
+        "ecl.error.semantic-invalid.v1",
+        "ecl.error.schema-invalid.v1"
+      ],
+      "primary": "ecl.error.schema-invalid.v1",
+      "secondary": [
+        "ecl.error.digest-mismatch.v1",
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "strict-retains-priority-over-multiple-specific",
+      "observed": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.digest-mismatch.v1",
+        "ecl.error.semantic-invalid.v1",
+        "ecl.rule.json-no-duplicate-members.v1"
+      ],
+      "primary": "ecl.rule.json-no-duplicate-members.v1",
+      "secondary": [
+        "ecl.error.digest-mismatch.v1",
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.semantic-invalid.v1"
+      ]
+    },
+    {
+      "id": "multiple-specific-errors-still-refused",
+      "observed": [
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.digest-mismatch.v1"
+      ],
+      "error_contains": "ambiguous interface errors"
+    },
+    {
+      "id": "multiple-specific-with-generic-still-refused",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.error.request-binding-invalid.v1",
+        "ecl.error.digest-mismatch.v1"
+      ],
+      "error_contains": "ambiguous interface errors"
+    },
+    {
+      "id": "unknown-identifier-still-refused",
+      "observed": [
+        "ecl.error.semantic-invalid.v1",
+        "ecl.error.not-registered.v1"
+      ],
+      "error_contains": "unregistered finding"
+    }
+  ]
+}

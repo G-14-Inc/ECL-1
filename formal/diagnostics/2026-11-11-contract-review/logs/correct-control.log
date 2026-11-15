@@ -1,0 +1,35 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 50 and seed 7017916811460960862 with 1 worker on 32 cores with 1333MB heap and 64MB offheap memory [pid: 97] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/ecl-1/work/ecl-1-validation-20261110-1/previews/formal-contract-001/source/formal/tla/MC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-validation-20261110-1/previews/formal-contract-001/source/formal/tla/ECLCore.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/TLC.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/Integers.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/FiniteSets.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/Sequences.tla
+Parsing file /tmp/ecl-formal-hkhpvxmb/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Starting... (2026-11-10 23:38:20)
+Warning: The set ReqIds has been defined to be a symmetry set but contains less than two elements.
+(Use the -nowarning option to disable this warning.)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-10 23:38:20.
+Progress(12) at 2026-11-10 23:38:23: 395,942 states generated (395,942 s/min), 153,037 distinct states found (153,037 ds/min), 77,126 states left on queue.
+Progress(17) at 2026-11-10 23:39:29: 8,659,869 states generated (8,263,927 s/min), 2,807,390 distinct states found (2,654,353 ds/min), 1,028,430 states left on queue.
+Progress(19) at 2026-11-10 23:40:32: 16,823,242 states generated (8,163,373 s/min), 5,017,261 distinct states found (2,209,871 ds/min), 1,420,433 states left on queue.
+Progress(20) at 2026-11-10 23:41:39: 24,869,804 states generated (8,046,562 s/min), 6,866,371 distinct states found (1,849,110 ds/min), 1,284,556 states left on queue.
+Progress(22) at 2026-11-10 23:42:45: 33,193,409 states generated (8,323,605 s/min), 8,309,138 distinct states found (1,442,767 ds/min), 438,588 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.2E-5
+  based on the actual fingerprints:  val = 1.1E-6
+35121731 states generated, 8486409 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 25.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 8 and the 95th percentile is 3).
+Finished in 04min 42s at (2026-11-10 23:43:02)

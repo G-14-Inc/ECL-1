@@ -1,0 +1,405 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 17 and seed -5487416845474113387 with 2 workers on 32 cores with 1600MB heap and 64MB offheap memory [pid: 103] (Linux 6.18.40.1-microsoft-standard-WSL2 amd64, Ubuntu 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/reports/recovery-affected-variants-attempt003/broken-halt-ack-lost/RecoveryReview.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/reports/recovery-affected-variants-attempt003/broken-halt-ack-lost/MC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/reports/recovery-affected-variants-attempt003/broken-halt-ack-lost/ECLCore.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-halt-ack-lost/TLC.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-halt-ack-lost/Integers.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-halt-ack-lost/FiniteSets.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-halt-ack-lost/Sequences.tla
+Parsing file /workspace/ecl-1/work/ecl-1-public-review-repairs-20261110-1/runtime/recovery-tlc/broken-halt-ack-lost/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module ECLCore
+Semantic processing of module TLC
+Semantic processing of module MC
+Semantic processing of module RecoveryReview
+Starting... (2026-11-10 18:46:50)
+Implied-temporal checking--satisfiability problem has 1 branches.
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-10 18:46:50.
+Progress(17) at 2026-11-10 18:46:51: 100,363 states generated, 43,789 distinct states found, 0 states left on queue.
+Checking temporal properties for the complete state space with 43789 total distinct states at (2026-11-10 18:46:51)
+Error: Temporal properties were violated.
+
+Error: The following behavior constitutes a counter-example:
+
+State 1: <Initial predicate>
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = {}
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 2: <Submit line 207, col 5 to line 213, col 61 of module ECLCore>
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 0
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+    deadline |-> 1 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 3: <Tick line 500, col 5 to line 514, col 75 of module ECLCore>
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+    deadline |-> 1 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 0
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 0
+/\ effects = {}
+
+State 4: <Fail line 422, col 5 to line 428, col 45 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+    deadline |-> 1 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 5: <Submit line 207, col 5 to line 213, col 61 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+    deadline |-> 1 ],
+  [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    deadline |-> 2 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {}
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 6: <Next line 520, col 8 to line 520, col 44 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 1
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    deadline |-> 2 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 7: <Tick line 500, col 5 to line 514, col 75 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    deadline |-> 2 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = -1
+/\ trustEpoch = 0
+/\ closed = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 8: <HaltRequest line 477, col 5 to line 482, col 67 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = { [ req |-> [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1],
+    deadline |-> 2 ] }
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = 2
+/\ trustEpoch = 0
+/\ closed = {[action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1]}
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 9: <Next line 520, col 8 to line 520, col 44 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 2
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = 2
+/\ trustEpoch = 0
+/\ closed = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 10: <Tick line 500, col 5 to line 514, col 75 of module ECLCore>
+/\ dsUp = FALSE
+/\ operationMode = "unavailable"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = 1
+/\ now = 3
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = -1
+/\ recoveryChecks = {}
+/\ haltAt = 2
+/\ trustEpoch = 0
+/\ closed = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 11: <Recover line 431, col 5 to line 437, col 45 of module ECLCore>
+/\ dsUp = TRUE
+/\ operationMode = "reconciling"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 3
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 0, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 3
+/\ recoveryChecks = {}
+/\ haltAt = 2
+/\ trustEpoch = 0
+/\ closed = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 12: <Reconcile line 454, col 5 to line 463, col 53 of module ECLCore>
+/\ dsUp = TRUE
+/\ operationMode = "reconciling"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 3
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 3, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 3
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = 2
+/\ trustEpoch = 0
+/\ closed = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 13: <ResumeNormal line 466, col 5 to line 472, col 53 of module ECLCore>
+/\ dsUp = TRUE
+/\ operationMode = "normal"
+/\ revocations = {}
+/\ log = <<>>
+/\ unlogged = {}
+/\ downSince = -1
+/\ now = 3
+/\ trustChanges = {}
+/\ consumed = {}
+/\ view = (e1 :> [synced |-> 3, epoch |-> 0, revoked |-> {}])
+/\ submitted = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ issued = {}
+/\ pending = {}
+/\ decisions = {}
+/\ halted = (e1 :> FALSE)
+/\ upSince = 3
+/\ recoveryChecks = { "revocations",
+  "policy_epochs",
+  "consumed_authorities",
+  "buffered_evidence",
+  "unresolved_effects",
+  "clock_continuities" }
+/\ haltAt = 2
+/\ trustEpoch = 0
+/\ closed = { [action |-> [target |-> t1, params |-> p1], id |-> r1, aud |-> e1],
+  [action |-> [target |-> t1, params |-> p2], id |-> r1, aud |-> e1] }
+/\ held = {}
+/\ outages = 1
+/\ effects = {}
+
+State 14: Stuttering
+Finished checking temporal properties in 00s at 2026-11-10 18:46:51
+100363 states generated, 43789 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-11-10 18:46:51)
